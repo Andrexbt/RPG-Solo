@@ -1,0 +1,62 @@
+.pagina-ver-personagem {
+  width: min(1000px, 92%);
+  margin: 30px auto;
+}
+
+.area-ficha-personagem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.botao-link-card {
+  display: inline-block;
+  margin-top: 12px;
+  margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #8a6a44;
+  color: #fff2d0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.botao-link-card:hover {
+  background-color: #a98252;
+}
+
+@media (max-width: 800px) {
+  .area-ficha-personagem {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pagina-ver-personagem {
+  width: min(1100px, 92%);
+  margin: 30px auto;
+}
+
+.layout-ficha-salva {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.ficha-personagem-salva {
+  width: 420px;
+  max-width: 100%;
+}
+
+.item-habilidade-escolha {
+  font-weight: normal;
+}
+
+.habilidade-rotulo {
+  font-weight: bold;
+}
+
+.habilidade-valor {
+  font-weight: normal;
+  font-family: Georgia, serif;
+}
+

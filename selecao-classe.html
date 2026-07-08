@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Criação de Personagem</title>
+    <link rel="stylesheet" href="selecao-classe.css">
+</head>
+
+<body>
+
+  <header>
+  <h1>Criação de Personagem</h1>
+  </header>
+
+  <main class="criador-personagem">
+
+    <section class="coluna-ficha">
+
+      <header class="ficha-cabecalho">
+      <h2>Ficha de Personagem</h2>
+      </header>
+    
+      <aside class="ficha">
+
+        <section class="ficha-bloco">
+      <h3>Informações Básicas</h3>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Nome:</span>
+        <span class="ficha-valor" id="fichaNome"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Classe e Nível:</span>
+        <span class="ficha-valor" id="fichaClasseNivel"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Antecedente:</span>
+        <span class="ficha-valor" id="fichaAntecedente"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Espécie:</span>
+        <span class="ficha-valor" id="fichaEspecie"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Idiomas:</span>
+        <span class="ficha-valor" id="fichaIdiomas"></span>
+      </div>
+
+        </section>
+
+        <div class="ficha-detalhes">
+
+        <div class="coluna-vida">
+
+          <section class="ficha-bloco ficha-pontos-vida">
+            <h3>Pontos de Vida</h3>
+
+              <div class="linha-campos-ficha tres-colunas">
+
+                <div class="campo-mini">
+                  <span>Atuais</span>
+                  <div class="caixa-valor-pequena" id="pvAtuais"></div>
+                </div>
+         
+                <div class="campo-mini">
+                  <span>Temporários</span>
+                  <div class="caixa-valor-pequena" id="pvTemporarios"></div>
+                </div>
+
+
+                <div class="campo-mini">
+                  <span>Máximo</span>
+                  <div class="caixa-valor-pequena" id="pvMaximo"></div>
+                </div>
+
+              </div>
+
+          </section>
+        
+          <section class="ficha-bloco ficha-dados-vida">
+            <h3>Dados de Vida</h3>
+
+             <div class="linha-campos-ficha duas-colunas">
+
+              <div class="campo-mini">
+                <span>Utilizados</span>
+                <div class="caixa-valor-pequena" id="dadosVidaUsados"></div>
+              </div>
+
+              <div class="campo-mini">
+                <span>Máximos</span>
+                <div class="caixa-valor-pequena" id="dadosVidaMaximos"></div>
+              </div>
+
+             </div>
+          </section>
+
+          <section class="ficha-bloco ficha-death-saves">
+            <h3>Death Saves</h3>
+
+            <div class="linha-campos-ficha duas-colunas">
+
+              <div class="campo-mini">
+                <span>Sucessos</span>
+                <div class="caixa-valor-pequena" id="deathSavesSucessos"></div>
+              </div>
+
+              <div class="campo-mini">
+                <span>Falhas</span>
+                <div class="caixa-valor-pequena" id="deathSavesFalhas"></div>
+              </div>
+
+            </div>
+          </section>
+
+        </div>
+
+        <div class="coluna-valores-derivados">
+
+          <section class="ficha-bloco ficha-valores-derivados">
+
+            <div class="lista-valores-derivados">
+
+              <div class="campo-derivado">
+                <span>Classe de Armadura</span>
+                <div class="caixa-valor-pequena" id="fichaClasseArmadura"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Iniciativa</span>
+                <div class="caixa-valor-pequena" id="fichaIniciativa"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Velocidade</span>
+                <div class="caixa-valor-pequena" id="fichaVelocidade"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Tamanho</span>
+                <div class="caixa-valor-pequena" id="fichaTamanho"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Percepção Passiva</span>
+                <div class="caixa-valor-pequena" id="fichaPercepcaoPassiva"></div>
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        </div>
+
+        <div class="area-proficiencia">
+
+        <div class="caixa-bonus-proficiencia">
+          <span>Bônus de Proficiência</span>
+        </div>
+
+        <div class="valor-bonus-proficiencia">
+          <span>+2</span>
+        </div>
+
+        </div>
+
+        <section class="ficha-bloco">
+        <h3>Atributos e Perícias</h3>
+
+        <div class="grade-atributos-ficha">
+
+          <div class="atributo-card">
+            <h4>Força</h4>
+          
+            <div class="linha-valores-atributo">
+              <div class="valor-atributo" id="valfor"></div>
+
+              <div class="grupo-modificador">
+                <span class = "rotulo-modificador">Mod</span>
+                <div class="modificador" id="modfor"></div>
+              </div>
+
+            </div>
+
+            <ul>
+              <li class="linha-salvaguarda" data-salvaguarda="forca">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="atletismo">Atletismo</p>
+            </ul>
+
+          </div>
+
+          <div class="atributo-card">
+            <h4>Destreza</h4>
+          
+            <div class="linha-valores-atributo">
+              <div class="valor-atributo" id="valdes"></div>
+
+              <div class="grupo-modificador">
+                <span class = "rotulo-modificador">Mod</span>
+                <div class="modificador" id="moddes"></div>
+              </div>
+            </div>
+
+            <ul>
+              <li class="linha-salvaguarda" data-salvaguarda="destreza">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="acrobacia">Acrobacia</p>
+              <p class="linha-pericia" data-pericia="furtividade">Furtividade</p>
+              <p class="linha-pericia" data-pericia="prestidigitacao">Prestidigitação</p>
+            </ul>
+
+          </div>
+
+          <div class="atributo-card">
+          <h4>Constituição</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valcon"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modcon"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="constituicao">Salvaguarda</li>
+          </ul>
+          </div>
+
+          <div class="atributo-card">
+          <h4>Inteligência</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valint"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modint"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="inteligencia">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="arcanismo">Arcanismo</p>
+              <p class="linha-pericia" data-pericia="historia">História</p>
+              <p class="linha-pericia" data-pericia="investigacao">Investigação</p>
+              <p class="linha-pericia" data-pericia="natureza">Natureza</p>
+              <p class="linha-pericia" data-pericia="religiao">Religião</p>
+          </ul>
+          </div>
+
+          <div class="atributo-card">
+          <h4>Sabedoria</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valsab"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modsab"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="sabedoria">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="adestramento">Adestramento</p>
+              <p class="linha-pericia" data-pericia="intuicao">Intuição</p>
+              <p class="linha-pericia" data-pericia="medicina">Medicina</p>
+              <p class="linha-pericia" data-pericia="percepcao">Percepção</p>
+              <p class="linha-pericia" data-pericia="sobrevivencia">Sobrevivência</p>
+          </ul>
+          </div>
+
+          <div class="atributo-card">
+          <h4>Carisma</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valcar"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modcar"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="carisma">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="atuacao">Atuação</p>
+              <p class="linha-pericia" data-pericia="enganacao">Enganação</p>
+              <p class="linha-pericia" data-pericia="intimidacao">Intimidação</p>
+              <p class="linha-pericia" data-pericia="persuasao">Persuasão</p>
+          </ul>
+          </div>
+
+        </div>
+
+        </section>
+
+        <section class="ficha-bloco">
+        <h3>Equipamento</h3>
+
+          <section class="equipamentos-lista">
+          <h2>Armas e Armadura</h2>
+
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Armadura:</span>
+              <span class="ficha-valor" id="fichaArmadura"></span>
+            </div>
+
+            <div class="ficha-item">
+    <span class="ficha-rotulo">Armas:</span>
+    <span class="ficha-valor" id="fichaArmaPrincipal"></span>
+            </div>
+
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Arma Secundária:</span>
+              <span class="ficha-valor" id="fichaItemSecundario"></span>
+            </div>
+
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Proficiências:</span>
+              <span class="ficha-valor" id="fichaProficiencias"></span>
+            </div>
+
+          </section>
+
+          <section class="equipamentos-ataques">
+          <h2>Ataques</h2>
+
+             <div class="ficha-armas-ataques">
+               <div id="fichaArmasAtaques"></div>
+             </div>
+
+          </section>
+
+        </section>
+
+        <section class="ficha-bloco">
+        <h3>Habilidades</h3>
+
+        <ul class="lista-recursos" id="fichaHabilidades">
+            <li></li>
+        </ul>
+        </section>
+
+        <section class="ficha-bloco">
+        <h3>Talentos</h3>
+
+        <ul id="fichaTalentos">
+          <li></li>
+        </ul>
+        </section>
+
+        <section class="ficha-bloco">
+          <h3>Magias</h3>
+      
+        <ul class="lista-recursos" id="fichaMagias">
+            <li></li>
+        </ul>
+        </section>
+
+      </aside>
+
+    </section>
+
+    <section class="area-passo">
+
+     <section class="conteudo-passo" id="passo-classe">
+      <h2>Passo 1: Escolha sua Classe</h2>
+
+      <div class="grade-classes">
+        <article class="card-classe" data-classe="guerreiro">
+          <div class="imagem-classe">
+            <img src="imagens/classes/guerreiro.png" alt="Guerreiro">
+          </div>
+
+            <h3>Guerreiro</h3>
+
+            <p>
+            Mestres na utilização de armas, os guerreiros são combatentes resistentes,
+            com treinamento profissional em técnicas e estratégias de combate.
+            </p>
+        </article>
+
+        <article class="card-classe" data-classe="mago">
+            <div class="imagem-classe">
+              <img src="imagens/classes/mago.png" alt="Mago">
+            </div>
+
+            <h3>Mago</h3>
+
+            <p>
+            Por meio de práticas incansáveis de estudo, os magos buscam entender e
+            manipular os mistérios da magia, alterando a realidade das mais diversas formas.
+            </p>
+          </article>
+
+      <article class="card-classe" data-classe="ladino">
+            <div class="imagem-classe">
+              <img src="imagens/classes/ladino.png" alt="Ladino">
+            </div>
+
+            <h3>Ladino</h3>
+
+            <p>
+            Ágeis e precisos, os melhores ladinos só são vistos se assim o desejarem,
+            podendo se tornar armas letais de assassinato e infiltração.
+            </p>
+        </article>
+
+        <article class="card-classe" data-classe="clerigo">
+            <div class="imagem-classe">
+              <img src="imagens/classes/clérigo.png" alt="Clérigo">
+            </div>
+
+            <h3>Clérigo</h3>
+
+            <p>
+            A fé inabalável dos clérigos permite-lhes canalizar os poderes de sua divindade,
+            protegendo e curando seus aliados ou esmagando seus oponentes com fúria divina.
+            </p>
+        </article>
+        </div>
+
+        <div class="acoes-passo">
+          <p class="mensagem-passo" id="mensagemClasse"></p>
+
+          <button class="botao-proximo">
+           Próximo Passo
+          </button>
+        </div>
+     </section>
+
+     <section class="conteudo-passo escondida" id="passo-atributos">
+     <h2>Passo 3: Determine seus Atributos</h2>
+
+     <p class="texto-explicativo">
+     Aqui o jogador distribuirá os valores de Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma.
+     </p>
+
+     <button class="botao-rolar" id="gerar-atributos">Rolar Dados</button>
+
+     <div class="caixa-rolagem-dados">
+
+      <div class="dados-atributo" id="dadosAtributo">
+       <div class="dado" id="dado1">—</div>
+       <div class="dado" id="dado2">—</div>
+       <div class="dado" id="dado3">—</div>
+       <div class="dado" id="dado4">—</div>
+      </div>
+
+       <p class="resultado-rolagem" id="rolagemAtual"> </p>
+      </div>
+
+       <div class="resultados-atributos" id="resultadosAtributos">
+       <span>—</span>
+       <span>—</span>
+       <span>—</span>
+       <span>—</span>
+       <span>—</span>
+       <span>—</span>
+       </div>
+      </div>
+
+      <div class="bloco-distribuicao-atributos">
+    <h3>Distribua os valores rolados</h3>
+
+    <div class="linha-atributo">
+      <label for="atributoForca">Força</label>
+      <select id="atributoForca" data-atributo="forca"></select>
+    </div>
+
+    <div class="linha-atributo">
+      <label for="atributoDestreza">Destreza</label>
+      <select id="atributoDestreza" data-atributo="destreza"></select>
+    </div>
+
+    <div class="linha-atributo">
+      <label for="atributoConstituicao">Constituição</label>
+      <select id="atributoConstituicao" data-atributo="constituicao"></select>
+    </div>
+
+    <div class="linha-atributo">
+      <label for="atributoInteligencia">Inteligência</label>
+      <select id="atributoInteligencia" data-atributo="inteligencia"></select>
+    </div>
+
+    <div class="linha-atributo">
+      <label for="atributoSabedoria">Sabedoria</label>
+      <select id="atributoSabedoria" data-atributo="sabedoria"></select>
+    </div>
+
+    <div class="linha-atributo">
+      <label for="atributoCarisma">Carisma</label>
+      <select id="atributoCarisma" data-atributo="carisma"></select>
+    </div>
+  </div>
+
+  <p class="mensagem-passo" id="mensagemAtributos"></p>
+
+  <div class="acoes-passo">
+         <button class="botao-proximo">
+          Próximo Passo
+         </button>
+        </div>
+     </section>
+  
+     <section class="conteudo-passo escondida" id="passo-antecedente">
+      <h2>Passo 2: Defina seu Antecedente</h2>
+
+       <p class="texto-explicativo">
+      Seu antecedente representa o lugar, a ocupação ou a experiência que mais
+      marcou sua vida antes da aventura.
+    </p>
+
+     <div class="grade-opcoes">
+      <article class="card-opcao" data-antecedente="acolito">
+        <h4>Acólito</h4>
+
+        <p>
+          Você viveu ligado a um templo, ordem religiosa ou tradição espiritual.
+        </p>
+
+        <ul>
+          <li>Atributos: Inteligência, Sabedoria ou Carisma</li>
+          <li>Perícias: Intuição e Religião</li>
+          <li>Talento: Iniciado em Magia, Clérigo</li>
+        </ul>
+      </article>
+
+      <article class="card-opcao" data-antecedente="criminoso">
+        <h4>Criminoso</h4>
+
+        <p>
+          Você aprendeu a sobreviver à margem da lei, usando furtividade,
+          astúcia e contatos perigosos.
+        </p>
+
+        <ul>
+          <li>Atributos: Destreza, Constituição ou Inteligência</li>
+          <li>Perícias: Prestidigitação e Furtividade</li>
+          <li>Talento: Alerta</li>
+        </ul>
+      </article>
+
+      <article class="card-opcao" data-antecedente="sabio">
+        <h4>Sábio</h4>
+
+        <p>
+          Você dedicou boa parte da vida ao estudo, à pesquisa e à busca por
+          conhecimento.
+        </p>
+
+        <ul>
+          <li>Atributos: Constituição, Inteligência ou Sabedoria</li>
+          <li>Perícias: Arcanismo e História</li>
+          <li>Talento: Iniciado em Magia, Mago</li>
+        </ul>
+      </article>
+
+      <article class="card-opcao" data-antecedente="soldado">
+        <h4>Soldado</h4>
+
+        <p>
+          Você recebeu treinamento militar e conhece disciplina, armas,
+          hierarquia e os horrores da guerra.
+        </p>
+
+        <ul>
+          <li>Atributos: Força, Destreza ou Constituição</li>
+          <li>Perícias: Atletismo e Intimidação</li>
+          <li>Talento: Atacante Selvagem</li>
+        </ul>
+      </article>
+    </div>
+    <div class="acoes-passo">
+      <p class="mensagem-passo" id="mensagemAntecedente"></p>
+         <button class="botao-proximo">
+          Próximo Passo
+         </button>
+        </div>
+     </section>
+
+     <section class="conteudo-passo escondida" id="passo-especie">
+       <h3>Escolha sua Espécie</h3>
+
+       <p class="texto-explicativo">
+      Sua espécie determina suas características físicas e habilidades naturais.
+    </p>
+
+     <div class="grade-opcoes">
+
+       <article class="card-opcao" data-especie="humano">
+         <h4>Humano</h4>
+         <p>
+           Os humanos são uma espécie versátil e adaptável, com habilidades equilibradas em todos os aspectos.
+         </p>
+       </article>
+
+       <article class="card-opcao" data-especie="anao">
+         <h4>Anão</h4>
+         <p>
+           Os anões são uma espécie resistente e trabalhadora, com habilidades em mineração e artesanato.
+         </p>
+       </article>
+
+       <article class="card-opcao" data-especie="elfo">
+         <h4>Elfo</h4>
+         <p>
+           Os elfos são uma espécie ágil e longa-viva, com habilidades em arquearia e magia.
+         </p>
+       </article>
+
+       <article class="card-opcao" data-especie="halfling">
+         <h4>Halfling</h4>
+         <p>
+           Os halflings são uma espécie pequena e agil, com habilidades em furtividade e adaptação.
+         </p>
+       </article>
+       </div>
+
+    <div class="acoes-passo">
+      <p class="mensagem-passo" id="mensagemEspecie"></p>
+         <button class="botao-proximo">
+          Próximo Passo
+         </button>
+        </div>
+     </section>
+     
+     <section class="conteudo-passo escondida" id="passo-habilidades">
+     <h2>Passo 5: Habilidades</h2>
+
+      <div id="areaHabilidadesClasse">
+      <!-- O JavaScript vai preencher esta área -->
+      </div>
+
+      <div id="areaPericiasClasse">
+      <!-- O JavaScript vai preencher esta área -->
+      </div>
+
+     <div class="acoes-passo">
+      <p class="mensagem-passo" id="mensagemHabilidades"></p>
+         <button class="botao-proximo">
+          Próximo Passo
+         </button>
+        </div>
+
+     </section>
+
+     <section class="conteudo-passo escondida" id="passo-magias">
+     <h2>Passo 6: Magias</h2>
+
+     <div id="areaMagias">
+       <!-- O JavaScript vai preencher esta área -->
+     </div>
+
+     <div class="acoes-passo">
+      <p class="mensagem-passo" id="mensagemMagias"></p>
+         <button class="botao-proximo">
+          Próximo Passo
+         </button>
+        </div>
+     </section>
+
+     <section class="conteudo-passo escondida" id="passo-detalhes">
+     <h2>Passo 7: Detalhes</h2>
+
+       <section class="bloco-detalhes">
+       <h3>Nome</h3>
+
+         <label for="nomePersonagem">Nome do personagem</label>
+         <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
+
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Idiomas</h3>
+
+    <label for="idioma1">Idioma 1</label>
+  <select id="idioma1"></select>
+
+  <label for="idioma2">Idioma 2</label>
+  <select id="idioma2"></select>
+       </section>
+
+       <section class="bloco-detalhes">
+          <h3>Equipamentos, Armas e Proficiências</h3>
+
+          <div class="sub-bloco-detalhes">
+           <h4>Proficiências</h4>
+           <p id="proficienciasClasse">
+           As proficiências serão preenchidas conforme a classe escolhida.
+           </p>
+          </div>
+
+          <div class="sub-bloco-detalhes">
+            <h4>Equipamento inicial</h4>
+
+            <label for="armaduraInicial">Armadura</label>
+            <select id="armaduraInicial">
+      <option value="">Escolha</option>
+      <option value="semArmadura">Sem armadura</option>
+      <option value="couro">Armadura de couro</option>
+      <option value="cotaDeMalha">Cota de malha</option>
+            </select>
+
+            <label for="armaPrincipal">Arma principal</label>
+            <select id="armaPrincipal">
+      <option value="">Escolha</option>
+      <option value="espadaLonga">Espada longa</option>
+      <option value="machadoDeBatalha">Machado de batalha</option>
+      <option value="lanca">Lança</option>
+      <option value="arcoLongo">Arco longo</option>
+            </select>
+
+            <label for="itemSecundario">Item secundário</label>
+            <select id="itemSecundario">
+      <option value="">Escolha</option>
+      <option value="escudo">Escudo</option>
+      <option value="armaSecundaria">Arma secundária</option>
+      <option value="nada">Nada</option>
+            </select>
+
+            <div class="campo-formulario escondida" id="grupoArmaSecundaria">
+              <label for="armaSecundaria">Escolha a arma secundária</label>
+              <select id="armaSecundaria">
+              <option value="">Escolha uma arma</option>
+              </select>
+            </div>
+ 
+            <p class="aviso-equipamentos" id="avisoEquipamentos"></p>   
+
+          </div>
+
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Classe de Armadura</h3>
+   <p class="texto-explicativo">
+    A Classe de Armadura será calculada automaticamente com base na armadura,
+    escudo e modificador de Destreza.
+  </p>
+
+  <div class="resultado-detalhe">
+    <span>Classe de Armadura:</span>
+    <strong id="resultadoClasseArmadura">-</strong>
+  </div>
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Dado de Vida e Pontos de Vida</h3>
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Iniciativa</h3>
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Velocidade</h3>
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Tamanho</h3>
+       </section>
+
+       <section class="bloco-detalhes">
+    <h3>Percepção Passiva</h3>
+       </section>
+
+  <div class="acoes-passo">
+    <p class="mensagem-passo" id="mensagemDetalhes"></p>
+
+    <button class="botao-proximo">
+      Ir para o próximo passo
+    </button>
+  </div>
+     </section>
+
+     <section class="conteudo-passo escondida" id="passo-revisao">
+        <h2>Passo 8: Revisão</h2>
+
+        <p>
+        Revise as escolhas do personagem antes de finalizar.
+        </p>
+
+        <div id="areaRevisao">
+         <!-- O JavaScript vai preencher esta área -->
+        </div>
+
+        <div class="acoes-passo">
+          <p class="mensagem-passo" id="mensagemRevisao"></p>
+
+          <button class="botao-finalizar" id="botaoFinalizarPersonagem">
+            Finalizar Personagem
+          </button>
+        </div>
+
+        <div id="acoesPersonagemSalvo" class="acoes-personagem-salvo"></div>
+
+     </section>
+
+    </section>
+
+  </main>
+
+  <nav class="navegacao-passos">
+  <button class="passo atual" data-passo="classe">1. Classe</button>
+  <button class="passo" data-passo="atributos">2. Atributos</button>
+  <button class="passo" data-passo="antecedente">3. Antecedentes</button>
+  <button class="passo" data-passo="especie">4. Espécie</button>
+  <button class="passo" data-passo="habilidades">5. Habilidades</button>
+  <button class="passo" data-passo="magias">6. Magias</button>
+  <button class="passo" data-passo="detalhes">7. Detalhes</button>
+  <button class="passo" data-passo="revisao">8. Revisão</button>
+  </nav>
+
+  <p class="mensagem-navegacao" id="mensagemNavegacao"></p>
+
+ <div class="modal-overlay escondida" id="modalClasse">
+   <div class="modal">
+  
+    <div class="modal-cabecalho">
+    <h2 id="modalTituloClasse">Guerreiro</h2>
+  </div>
+
+  <div class="modal-corpo">
+
+    <div class="modal-imagem-container">
+      <img
+      class = "modal-imagem"
+      id = "modalImagemClasse"
+      src ="imagens/classes/guerreiro.png"
+      alt="Guerreiro">
+    </div> 
+
+    <div class="modal-textos">
+      <section class="modal-secao">
+        <h3>(pensar em subtítulos)</h3>
+
+        <p id="modalDescricaoClasse">
+          Aqui entrará um texto mais completo explicando como a classe funciona,
+          quais são suas principais características e qual papel ela costuma ocupar
+          dentro de uma aventura.
+        </p>
+        </section>
+
+        <section class="modal-secao">
+        <h3>Estilo de jogo recomendado (pensar)</h3>
+
+        <p id="modalEstiloJogoClasse">
+          Recomendado para jogadores que gostam de combate direto, presença na linha
+          de frente, resistência e uso estratégico de armas e armaduras (melhorar).
+        </p>
+      </section>
+
+      <section class="modal-secao">
+        <h3>Bônus e habilidades específicas (pensar)</h3>
+
+        <p id="modalHabilidadesClasse">
+          (Aqui entrarão os bônus, proficiências e habilidades da classe conforme
+          as regras usadas pelo jogo.)
+        </p>
+      </section>
+    </div>
+</div>
+
+<div class="modal-acoes">
+      <button class="botao-voltar" id="botaoVoltarModal">Voltar</button>
+      <button class="botao-selecionar" id="botaoSelecionarClasse">
+        Selecionar Classe
+      </button>
+    </div>
+
+  
+
+  
+
+  
+ </div>
+
+</body>
+
+<script src="banco-pericias.js"></script>
+<script src="banco-idiomas.js"></script>
+<script src="banco-talentos.js"></script>
+<script src="banco-antecedentes.js"></script>
+<script src="banco-classes.js"></script>
+<script src="banco-habilidades.js"></script>
+<script src="banco-magias.js"></script>
+<script src="banco-equipamentos.js"></script>
+<script src="banco-especies.js"></script>
+<script src="selecao-classe.js"></script>
+
+</html>
