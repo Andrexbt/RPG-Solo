@@ -439,12 +439,13 @@ function selecionarEspecie(cardClicado) {
     return;
   }
 
-  personagem.especie = nomeEspecie;
   personagem.especieId = especieId;
+  personagem.especie = dadosEspecie.nome;
+
   personagem.idiomasEspecie = [];
 
   if (dadosEspecie.idiomasFixos !== undefined) {
-  personagem.idiomasEspecie = [...dadosEspecie.idiomasFixos];
+    personagem.idiomasEspecie = [...dadosEspecie.idiomasFixos];
   }
 
   fichaEspecie.textContent = dadosEspecie.nome;
@@ -2561,17 +2562,17 @@ function preencherSelectIdioma(select, valorAtual, valoresEscolhidosEmOutrosSele
 }
 
 function atualizarSelectsIdiomas() {
-  const valorIdioma1 = idioma1.value;
-  const valorIdioma2 = idioma2.value;
+  const valorIdioma1 = seletorIdioma1.value;
+  const valorIdioma2 = seletorIdioma2.value;
 
   preencherSelectIdioma(
-    idioma1,
+    seletorIdioma1,
     valorIdioma1,
     [valorIdioma2]
   );
 
   preencherSelectIdioma(
-    idioma2,
+    seletorIdioma2,
     valorIdioma2,
     [valorIdioma1]
   );
@@ -2580,12 +2581,12 @@ function atualizarSelectsIdiomas() {
 function atualizarIdiomasEscolhidos() {
   personagem.idiomasEscolhidos = [];
 
-  if (idioma1.value !== "") {
-    personagem.idiomasEscolhidos.push(idioma1.value);
+  if (seletorIdioma1.value !== "") {
+    personagem.idiomasEscolhidos.push(seletorIdioma1.value);
   }
 
-  if (idioma2.value !== "") {
-    personagem.idiomasEscolhidos.push(idioma2.value);
+  if (seletorIdioma2.value !== "") {
+    personagem.idiomasEscolhidos.push(seletorIdioma2.value);
   }
 
   atualizarFichaIdiomas();
