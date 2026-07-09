@@ -7,7 +7,7 @@ window.bancoEspecies = {
       nome: "Humano",
       velocidade: "9 m",
       tamanho: "Médio",
-      idiomasFixos: ["comum"]
+      idiomasFixos: []
     },
 
     anao: {

@@ -433,7 +433,7 @@ function selecionarEspecie(cardClicado) {
   cardClicado.classList.add("selecionado");
 
   const especieId = cardClicado.dataset.especie;
-  const dadosEspecie = window.bancoEspecie.especies[especieId];
+  const dadosEspecie = window.bancoEspecies.especies[especieId];
 
   if (dadosEspecie === undefined) {
     return;
