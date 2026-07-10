@@ -1,12 +1,9 @@
 window.bancoAntecedentes = {
-  
   soldado: {
     id: "soldado",
     nome: "Soldado",
     descricaoCurta: "Você teve treinamento militar e experiência em combate.",
-
     pericias: ["atletismo", "intimidacao"],
-
     ferramentas: ["jogo"],
 
     idiomas: {
@@ -16,11 +13,7 @@ window.bancoAntecedentes = {
     },
 
     talentoOrigem: "atacanteSelvagem",
-
-    equipamento: [
-      "insigniaMilitar",
-      "kitExplorador"
-    ],
+    equipamento: ["insigniaMilitar", "kitExplorador"],
 
     moedas: {
       ouro: 10
@@ -33,9 +26,7 @@ window.bancoAntecedentes = {
     id: "sabio",
     nome: "Sábio",
     descricaoCurta: "Você estudou conhecimento, história e teoria.",
-
     pericias: ["arcanismo", "historia"],
-
     ferramentas: [],
 
     idiomas: {
@@ -45,12 +36,7 @@ window.bancoAntecedentes = {
     },
 
     talentoOrigem: "iniciadoMagia",
-
-    equipamento: [
-      "livro",
-      "pena",
-      "tinta"
-    ],
+    equipamento: ["livro", "pena", "tinta"],
 
     moedas: {
       ouro: 8
@@ -63,9 +49,7 @@ window.bancoAntecedentes = {
     id: "criminoso",
     nome: "Criminoso",
     descricaoCurta: "Você aprendeu a sobreviver à margem da lei.",
-
     pericias: ["furtividade", "enganacao"],
-
     ferramentas: ["ferramentasLadrao"],
 
     idiomas: {
@@ -75,11 +59,7 @@ window.bancoAntecedentes = {
     },
 
     talentoOrigem: "sortudo",
-
-    equipamento: [
-      "ferramentasLadrao",
-      "roupasComuns"
-    ],
+    equipamento: ["ferramentasLadrao", "roupasComuns"],
 
     moedas: {
       ouro: 15
