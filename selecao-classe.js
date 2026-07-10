@@ -562,7 +562,7 @@ function atualizarFichaHabilidades() {
     return;
   }
 
-  const dadosDaClasse = obterDadosHabilidade(idHabilidade);
+  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
 
   if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
     const item = document.createElement("li");
@@ -581,7 +581,7 @@ function atualizarFichaHabilidades() {
     return;
   }
 
-  const habilidade = obterDadosHabilidade(idHabilidade);
+  const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
 
   if (habilidade !== undefined) {
     const item = document.createElement("li");
@@ -820,7 +820,7 @@ function habilidadesEstaoEscolhidas(){
     return false;
   }
 
-  const dadosDaClasse = obterDadosHabilidade(idHabilidade);
+  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
 
   if (dadosDaClasse === undefined) {
     return true;
@@ -961,7 +961,7 @@ function montarTelaHabilidades() {
     return;
   }
 
-  const dadosDaClasse = obterDadosHabilidade(idHabilidade);
+  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
 
   if (dadosDaClasse === undefined) {
     areaHabilidadesClasse.textContent = "Ainda não há habilidades cadastradas para esta classe.";
@@ -1001,7 +1001,7 @@ function montarHabilidadesAutomaticas(dadosNivel) {
   grade.classList.add("grade-opcoes");
 
   habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = obterDadosHabilidade(idHabilidade);
+    const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
 
     const card = document.createElement("article");
     card.classList.add("card-opcao");
@@ -1691,8 +1691,11 @@ function montarRevisaoHabilidades() {
 
   const dadosNivel1 = dadosDaClasse.nivel1;
 
-  dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = obterDadosHabilidade(idHabilidade);
+  const habilidadesAutomaticas =
+  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+habilidadesAutomaticas.forEach(function(idHabilidade) {
+    const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
 
     if (habilidade !== undefined) {
       const item = document.createElement("li");
@@ -2715,7 +2718,7 @@ function obterDadosHabilidade(idHabilidade) {
 }
 
 function obterNomeHabilidade(idHabilidade) {
-  const habilidade = obterDadosHabilidade(idHabilidade);
+  const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
 
   if (habilidade === undefined) {
     return idHabilidade;

@@ -863,7 +863,10 @@ function obterTextoHabilidadesParaPdf(personagem) {
 
   const dadosNivel1 = dadosDaClasse.nivel1;
 
-  dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
+  const habilidadesAutomaticas =
+    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+  habilidadesAutomaticas.forEach(function(idHabilidade) {
   if (idHabilidade === "maestriaComArmas") {
     return;
   }
