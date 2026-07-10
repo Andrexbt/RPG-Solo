@@ -1,5 +1,4 @@
 window.bancoPropriedadesArmas = {
-    
   acuidade: {
     id: "acuidade",
     nome: "Acuidade",
@@ -35,5 +34,4 @@ window.bancoPropriedadesArmas = {
     nome: "Versátil",
     descricaoCurta: "A arma pode ser usada com uma ou duas mãos."
   }
-
 };
