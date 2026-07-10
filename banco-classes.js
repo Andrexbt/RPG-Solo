@@ -1,11 +1,9 @@
 window.bancoClasses = {
-
   guerreiro: {
     id: "guerreiro",
     nome: "Guerreiro",
     dadoVida: 10,
     habilidadePrimaria: ["Força", "Destreza"],
-
     salvaguardas: ["forca", "constituicao"],
 
     pericias: {
@@ -37,5 +35,4 @@ window.bancoClasses = {
       quantidade: 3
     }
   }
-  
 };
