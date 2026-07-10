@@ -1,7 +1,5 @@
 window.bancoEspecies = {
-
   especies: {
-    
     humano: {
       id: "humano",
       nome: "Humano",
