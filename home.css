@@ -1,13 +1,13 @@
 body {
+  margin: 0;
   background-color: #241c17;
   color: #c9a24d;
   font-family: Georgia, serif;
-  margin: 0px;
 }
 
 header {
-  text-align: center;
   padding: 30px 20px;
+  text-align: center;
 }
 
 main {
