@@ -7,6 +7,10 @@ console.log("Botão PDF:", botaoBaixarPdfEditavel);
 console.log("PDFLib:", window.PDFLib);
 
 const fichaArmasAtaques = document.getElementById("fichaArmasAtaques");
+const fichaArmadura = document.getElementById("fichaArmadura");
+const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
+const fichaItemSecundario = document.getElementById("fichaItemSecundario");
+const fichaProficiencias = document.getElementById("fichaProficiencias");
 
 const camposFichaPdf = {
   nome: "Text1",
@@ -309,23 +313,29 @@ function preencherEquipamentos(personagem) {
     return;
   }
 
-  document.getElementById("fichaArmadura").textContent =
-    obterNomeArmadura(equipamentos.armadura);
-
-  document.getElementById("fichaArmaPrincipal").textContent =
-    obterNomeArma(equipamentos.armaPrincipal);
+  fichaArmadura.textContent = obterNomeArmadura(equipamentos.armadura);
+  fichaArmaPrincipal.textContent = obterNomeArma(equipamentos.armaPrincipal);
 
   if (equipamentos.itemSecundario === "armaSecundaria") {
-  fichaItemSecundario.textContent =
-    obterNomeArma(equipamentos.armaSecundaria);
-} else {
-  fichaItemSecundario.textContent =
-    obterNomeItemSecundario(equipamentos.itemSecundario);
-}
+    fichaItemSecundario.textContent = obterNomeArma(equipamentos.armaSecundaria);
+  } else {
+    fichaItemSecundario.textContent = obterNomeItemSecundario(equipamentos.itemSecundario);
+  }
 
   if (equipamentos.proficiencias !== undefined) {
-    document.getElementById("fichaProficiencias").textContent =
-      equipamentos.proficiencias.join(", ");
+    fichaProficiencias.textContent = equipamentos.proficiencias.join(", ");
+    return;
+  }
+
+  const dadosClasse = window.bancoClasses[personagem.classeId];
+
+  if (dadosClasse !== undefined && dadosClasse.proficiencias !== undefined) {
+    const proficiencias = [
+      ...(dadosClasse.proficiencias.armaduras || []),
+      ...(dadosClasse.proficiencias.armas || [])
+    ];
+
+    fichaProficiencias.textContent = proficiencias.join(", ");
   }
 }
 
@@ -376,7 +386,10 @@ function preencherHabilidades(personagem) {
 
   const dadosNivel1 = dadosDaClasse.nivel1;
 
-  dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
+  const habilidadesAutomaticas =
+  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+habilidadesAutomaticas.forEach(function(idHabilidade) {
   if (idHabilidade === "maestriaComArmas") {
     return;
   }
@@ -535,7 +548,10 @@ function obterTextoHabilidades(personagem) {
 
   const dadosNivel1 = dadosDaClasse.nivel1;
 
-  dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
+  const habilidadesAutomaticas =
+  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+habilidadesAutomaticas.forEach(function(idHabilidade) {
     const habilidade = obterDadosHabilidade(idHabilidade);
 
     if (habilidade !== undefined) {
