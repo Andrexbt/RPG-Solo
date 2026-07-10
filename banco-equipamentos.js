@@ -32,7 +32,7 @@ window.bancoEquipamentos = {
       atributoAtaque: "forca",
       dano: "1d8",
       tipoDano: "cortante",
-      maestria: "Sap",
+      maestria: "sap",
       propriedades: ["versatil"]
     },
 
@@ -43,7 +43,7 @@ window.bancoEquipamentos = {
       atributoAtaque: "forca",
       dano: "1d8",
       tipoDano: "cortante",
-      maestria: "Topple",
+      maestria: "topple",
       propriedades: ["versatil"]
     },
 
@@ -54,7 +54,7 @@ window.bancoEquipamentos = {
       atributoAtaque: "forca",
       dano: "1d6",
       tipoDano: "perfurante",
-      maestria: "Sap",
+      maestria: "sap",
       propriedades: ["arremesso", "versatil"]
     },
 
@@ -65,7 +65,7 @@ window.bancoEquipamentos = {
       atributoAtaque: "destreza",
       dano: "1d8",
       tipoDano: "perfurante",
-      maestria: "Slow",
+      maestria: "slow",
       propriedades: ["duasMaos", "municao"]
     },
 
@@ -76,7 +76,7 @@ window.bancoEquipamentos = {
       atributoAtaque: "forca",
       dano: "1d6",
       tipoDano: "perfurante",
-      maestria: "Vex",
+      maestria: "vex",
       propriedades: ["leve", "acuidade"]
     },
 
@@ -87,7 +87,7 @@ window.bancoEquipamentos = {
       atributoAtaque: "forca",
       dano: "1d4",
       tipoDano: "perfurante",
-      maestria: "Nick",
+      maestria: "nick",
       propriedades: ["leve", "arremesso", "acuidade"]
     }
 

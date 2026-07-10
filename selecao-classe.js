@@ -1035,7 +1035,7 @@ function obterOpcoesDoGrupoEscolha(grupo) {
       return {
         id: idArma,
         nome: arma.nome,
-        descricaoCurta: "Maestria: " + arma.maestria
+        descricaoCurta: "Maestria: " + obterNomeMaestria(arma.maestria) + " | Propriedades: " + obterTextoPropriedadesArma(arma.propriedades)
       };
     });
   }
@@ -2059,7 +2059,7 @@ function calcularBonusAtaqueArma(personagemAtual, idArma) {
     return "";
   }
 
-  const atributoAtaque = arma.atributoAtaque;
+  const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
   const valorAtributo = personagemAtual.atributos[atributoAtaque];
 
   if (valorAtributo === undefined || valorAtributo === "") {
@@ -2089,7 +2089,7 @@ function calcularBonusDanoArma(personagemAtual, idArma) {
     return "";
   }
 
-  const atributoAtaque = arma.atributoAtaque;
+  const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
   const valorAtributo = personagemAtual.atributos[atributoAtaque];
 
   if (valorAtributo === undefined || valorAtributo === "") {
@@ -2161,7 +2161,7 @@ function obterResumoArma(personagemAtual, idArma) {
     nome: arma.nome,
     ataque: bonusAtaque === "" ? "" : formatarModificador(bonusAtaque),
     dano: formatarDanoArma(personagemAtual, idArma),
-    maestria: arma.maestria
+    maestria: obterNomeMaestria(arma.maestria)
   };
 }
 
@@ -2591,4 +2591,93 @@ function atualizarIdiomasEscolhidos() {
 
   atualizarFichaIdiomas();
   atualizarSelectsIdiomas();
+}
+
+function obterDadosMaestria(idMaestria) {
+  if (window.bancoMaestrias === undefined) {
+    return undefined;
+  }
+
+  return window.bancoMaestrias[idMaestria];
+}
+
+function obterNomeMaestria(idMaestria) {
+  const maestria = obterDadosMaestria(idMaestria);
+
+  if (maestria === undefined) {
+    return idMaestria;
+  }
+
+  return maestria.nome;
+}
+
+function obterDadosPropriedadeArma(idPropriedade) {
+  if (window.bancoPropriedadesArmas === undefined) {
+    return undefined;
+  }
+
+  return window.bancoPropriedadesArmas[idPropriedade];
+}
+
+function obterNomePropriedadeArma(idPropriedade) {
+  const propriedade = obterDadosPropriedadeArma(idPropriedade);
+
+  if (propriedade === undefined) {
+    return idPropriedade;
+  }
+
+  return propriedade.nome;
+}
+
+function obterTextoPropriedadesArma(propriedades) {
+  if (propriedades === undefined || propriedades.length === 0) {
+    return "";
+  }
+
+  const nomesPropriedades = propriedades.map(function(idPropriedade) {
+    return obterNomePropriedadeArma(idPropriedade);
+  });
+
+  return nomesPropriedades.join(", ");
+}
+
+function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
+  const arma = obterDadosArma(idArma);
+
+  if (arma === undefined) {
+    return undefined;
+  }
+
+  const propriedades = arma.propriedades || [];
+
+  if (propriedades.includes("acuidade") === false) {
+    return arma.atributoAtaque;
+  }
+
+  const forca = personagemAtual.atributos.forca;
+  const destreza = personagemAtual.atributos.destreza;
+
+  if (
+    (forca === undefined || forca === "") &&
+    (destreza === undefined || destreza === "")
+  ) {
+    return arma.atributoAtaque;
+  }
+
+  if (forca === undefined || forca === "") {
+    return "destreza";
+  }
+
+  if (destreza === undefined || destreza === "") {
+    return "forca";
+  }
+
+  const modificadorForca = calcularModificador(forca);
+  const modificadorDestreza = calcularModificador(destreza);
+
+  if (modificadorForca > modificadorDestreza) {
+    return "forca";
+  }
+
+  return "destreza";
 }
