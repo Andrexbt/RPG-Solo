@@ -1,5 +1,4 @@
 window.bancoTalentos = {
-
   alerta: {
     id: "alerta",
     nome: "Alerta",
@@ -22,10 +21,9 @@ window.bancoTalentos = {
   },
 
   atacanteSelvagem: {
-  id: "atacanteSelvagem",
-  nome: "Atacante Selvagem",
-  tipo: "origem",
-  descricaoCurta: "Você causa ataques físicos mais brutais, podendo melhorar uma rolagem de dano com arma."
+    id: "atacanteSelvagem",
+    nome: "Atacante Selvagem",
+    tipo: "origem",
+    descricaoCurta: "Você causa ataques físicos mais brutais, podendo melhorar uma rolagem de dano com arma."
   }
-
 };
