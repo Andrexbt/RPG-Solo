@@ -1,5 +1,4 @@
 window.bancoIdiomas = {
-    
   comum: {
     id: "comum",
     nome: "Comum",
@@ -89,5 +88,4 @@ window.bancoIdiomas = {
     nome: "Subcomum",
     tipo: "raro"
   }
-
 };
