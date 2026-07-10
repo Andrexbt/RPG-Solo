@@ -61,7 +61,7 @@ window.bancoEquipamentos = {
     arcoLongo: {
       nome: "Arco longo",
       tipo: "marcial",
-      categoria: "distância",
+      categoria: "distancia",
       atributoAtaque: "destreza",
       dano: "1d8",
       tipoDano: "perfurante",

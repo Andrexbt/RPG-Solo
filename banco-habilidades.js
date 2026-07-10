@@ -2,22 +2,38 @@
 
 window.bancoHabilidades = {
 
-  habilidades: {
+  traits: {},
+
+  feats: {},
+
+  classFeatures: {
 
     segundoFolego: {
       id: "segundoFolego",
       nome: "Segundo Fôlego",
-      tipo: "habilidade-classe",
-      descricaoCurta: "Habilidade automática do Guerreiro no nível 1."
+      categoria: "classFeature",
+      classe: "guerreiro",
+      nivel: 1,
+      descricaoCurta: "Você pode recuperar pontos de vida usando uma reserva limitada de usos.",
+
+      recurso: {
+        id: "segundoFolego",
+        nome: "Segundo Fôlego",
+        usosMaximos: 2,
+        recuperaEm: "descansoLongo",
+        efeito: "cura",
+        formula: "1d10 + nivelClasse"
+      }
     },
 
     maestriaComArmas: {
       id: "maestriaComArmas",
       nome: "Maestria com Armas",
-      tipo: "habilidade-classe",
+      categoria: "classFeature",
+      classe: "guerreiro",
+      nivel: 1,
       descricaoCurta: "Você escolhe armas para dominar suas propriedades de maestria."
-   }
-
+    }
   },
 
   gruposDeEscolha: {
@@ -66,7 +82,7 @@ window.bancoHabilidades = {
 
       nivel1: {
 
-        habilidadesAutomaticas: [
+        classFeaturesAutomaticas: [
           "segundoFolego",
           "maestriaComArmas"
         ],

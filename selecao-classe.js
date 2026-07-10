@@ -562,7 +562,7 @@ function atualizarFichaHabilidades() {
     return;
   }
 
-  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
+  const dadosDaClasse = obterDadosHabilidade(idHabilidade);
 
   if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
     const item = document.createElement("li");
@@ -573,12 +573,15 @@ function atualizarFichaHabilidades() {
 
   const dadosNivel1 = dadosDaClasse.nivel1;
 
-  dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
+  const habilidadesAutomaticas =
+  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+  habilidadesAutomaticas.forEach(function(idHabilidade) {
   if (idHabilidade === "maestriaComArmas") {
     return;
   }
 
-  const habilidade = window.bancoHabilidades.habilidades[idHabilidade];
+  const habilidade = obterDadosHabilidade(idHabilidade);
 
   if (habilidade !== undefined) {
     const item = document.createElement("li");
@@ -817,7 +820,7 @@ function habilidadesEstaoEscolhidas(){
     return false;
   }
 
-  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
+  const dadosDaClasse = obterDadosHabilidade(idHabilidade);
 
   if (dadosDaClasse === undefined) {
     return true;
@@ -958,7 +961,7 @@ function montarTelaHabilidades() {
     return;
   }
 
-  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
+  const dadosDaClasse = obterDadosHabilidade(idHabilidade);
 
   if (dadosDaClasse === undefined) {
     areaHabilidadesClasse.textContent = "Ainda não há habilidades cadastradas para esta classe.";
@@ -981,7 +984,7 @@ function montarTelaHabilidades() {
 }
 
 function montarHabilidadesAutomaticas(dadosNivel) {
-  const habilidadesAutomaticas = dadosNivel.habilidadesAutomaticas;
+  const habilidadesAutomaticas =  dadosNivel.classFeaturesAutomaticas || dadosNivel.habilidadesAutomaticas || [];
 
   if (habilidadesAutomaticas.length === 0) {
     return;
@@ -998,7 +1001,7 @@ function montarHabilidadesAutomaticas(dadosNivel) {
   grade.classList.add("grade-opcoes");
 
   habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = window.bancoHabilidades.habilidades[idHabilidade];
+    const habilidade = obterDadosHabilidade(idHabilidade);
 
     const card = document.createElement("article");
     card.classList.add("card-opcao");
@@ -1689,7 +1692,7 @@ function montarRevisaoHabilidades() {
   const dadosNivel1 = dadosDaClasse.nivel1;
 
   dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = window.bancoHabilidades.habilidades[idHabilidade];
+    const habilidade = obterDadosHabilidade(idHabilidade);
 
     if (habilidade !== undefined) {
       const item = document.createElement("li");
@@ -2680,4 +2683,43 @@ function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
   }
 
   return "destreza";
+}
+
+function obterDadosHabilidade(idHabilidade) {
+  if (window.bancoHabilidades === undefined) {
+    return undefined;
+  }
+
+  if (
+    window.bancoHabilidades.classFeatures !== undefined &&
+    window.bancoHabilidades.classFeatures[idHabilidade] !== undefined
+  ) {
+    return window.bancoHabilidades.classFeatures[idHabilidade];
+  }
+
+  if (
+    window.bancoHabilidades.feats !== undefined &&
+    window.bancoHabilidades.feats[idHabilidade] !== undefined
+  ) {
+    return window.bancoHabilidades.feats[idHabilidade];
+  }
+
+  if (
+    window.bancoHabilidades.traits !== undefined &&
+    window.bancoHabilidades.traits[idHabilidade] !== undefined
+  ) {
+    return window.bancoHabilidades.traits[idHabilidade];
+  }
+
+  return undefined;
+}
+
+function obterNomeHabilidade(idHabilidade) {
+  const habilidade = obterDadosHabilidade(idHabilidade);
+
+  if (habilidade === undefined) {
+    return idHabilidade;
+  }
+
+  return habilidade.nome;
 }

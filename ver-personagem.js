@@ -381,7 +381,7 @@ function preencherHabilidades(personagem) {
     return;
   }
 
-  const habilidade = window.bancoHabilidades.habilidades[idHabilidade];
+  const habilidade = obterDadosHabilidade(idHabilidade)
 
   if (habilidade !== undefined) {
     const item = document.createElement("li");
@@ -536,7 +536,7 @@ function obterTextoHabilidades(personagem) {
   const dadosNivel1 = dadosDaClasse.nivel1;
 
   dadosNivel1.habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = window.bancoHabilidades.habilidades[idHabilidade];
+    const habilidade = obterDadosHabilidade(idHabilidade);
 
     if (habilidade !== undefined) {
       linhas.push(habilidade.nome);
@@ -868,7 +868,7 @@ function obterTextoHabilidadesParaPdf(personagem) {
     return;
   }
 
-  const habilidade = window.bancoHabilidades.habilidades[idHabilidade];
+  const habilidade = obterDadosHabilidade(idHabilidade);
 
   if (habilidade !== undefined) {
     linhas.push(habilidade.nome);
@@ -1532,4 +1532,33 @@ function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
   }
 
   return "destreza";
+}
+
+function obterDadosHabilidade(idHabilidade) {
+  if (window.bancoHabilidades === undefined) {
+    return undefined;
+  }
+
+  if (
+    window.bancoHabilidades.classFeatures !== undefined &&
+    window.bancoHabilidades.classFeatures[idHabilidade] !== undefined
+  ) {
+    return window.bancoHabilidades.classFeatures[idHabilidade];
+  }
+
+  if (
+    window.bancoHabilidades.feats !== undefined &&
+    window.bancoHabilidades.feats[idHabilidade] !== undefined
+  ) {
+    return window.bancoHabilidades.feats[idHabilidade];
+  }
+
+  if (
+    window.bancoHabilidades.traits !== undefined &&
+    window.bancoHabilidades.traits[idHabilidade] !== undefined
+  ) {
+    return window.bancoHabilidades.traits[idHabilidade];
+  }
+
+  return undefined;
 }
