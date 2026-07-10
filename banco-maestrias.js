@@ -1,5 +1,4 @@
 window.bancoMaestrias = {
-    
   cleave: {
     id: "cleave",
     nome: "Cleave",
@@ -47,5 +46,4 @@ window.bancoMaestrias = {
     nome: "Vex",
     descricaoCurta: "Ajuda a criar vantagem contra o alvo."
   }
-
 };
