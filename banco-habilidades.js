@@ -1,13 +1,9 @@
-
-
 window.bancoHabilidades = {
-
   traits: {},
 
   feats: {},
 
   classFeatures: {
-
     segundoFolego: {
       id: "segundoFolego",
       nome: "Segundo Fôlego",
@@ -37,7 +33,6 @@ window.bancoHabilidades = {
   },
 
   gruposDeEscolha: {
-    
     estilosDeLuta: {
       id: "estilosDeLuta",
       nome: "Estilos de Luta",
@@ -72,16 +67,12 @@ window.bancoHabilidades = {
       nome: "Maestria com Armas",
       quantidadeEscolhas: 3,
       origemDasOpcoes: "armas"
-    },
-
+    }
   },
 
   progressaoClasses: {
-
     guerreiro: {
-
       nivel1: {
-
         classFeaturesAutomaticas: [
           "segundoFolego",
           "maestriaComArmas"
@@ -92,20 +83,12 @@ window.bancoHabilidades = {
             grupo: "estilosDeLuta",
             quantidade: 1
           },
-
           {
             grupo: "maestriasArmas",
             quantidade: 3
           }
-
         ]
-
       }
-
     }
-
   }
-
-}
-
-
+};
