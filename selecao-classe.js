@@ -984,7 +984,8 @@ function montarTelaHabilidades() {
 }
 
 function montarHabilidadesAutomaticas(dadosNivel) {
-  const habilidadesAutomaticas =  dadosNivel.classFeaturesAutomaticas || dadosNivel.habilidadesAutomaticas || [];
+  const habilidadesAutomaticas =
+    dadosNivel.classFeaturesAutomaticas || dadosNivel.habilidadesAutomaticas || [];
 
   if (habilidadesAutomaticas.length === 0) {
     return;
@@ -1001,7 +1002,12 @@ function montarHabilidadesAutomaticas(dadosNivel) {
   grade.classList.add("grade-opcoes");
 
   habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
+    const habilidade = obterDadosHabilidade(idHabilidade);
+
+    if (habilidade === undefined) {
+      console.warn("Habilidade não encontrada:", idHabilidade);
+      return;
+    }
 
     const card = document.createElement("article");
     card.classList.add("card-opcao");
