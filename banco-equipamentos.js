@@ -1,5 +1,4 @@
 window.bancoEquipamentos = {
-
   armaduras: {
     semArmadura: {
       nome: "Sem armadura",
@@ -24,7 +23,6 @@ window.bancoEquipamentos = {
   },
 
   armas: {
-
     espadaLonga: {
       nome: "Espada longa",
       tipo: "marcial",
@@ -69,7 +67,7 @@ window.bancoEquipamentos = {
       propriedades: ["duasMaos", "municao"]
     },
 
-     espadaCurta: {
+    espadaCurta: {
       nome: "Espada curta",
       tipo: "marcial",
       categoria: "corpo-a-corpo",
@@ -80,7 +78,7 @@ window.bancoEquipamentos = {
       propriedades: ["leve", "acuidade"]
     },
 
-     adaga: {
+    adaga: {
       nome: "Adaga",
       tipo: "simples",
       categoria: "corpo-a-corpo",
@@ -90,7 +88,6 @@ window.bancoEquipamentos = {
       maestria: "nick",
       propriedades: ["leve", "arremesso", "acuidade"]
     }
-
   },
 
   itensSecundarios: {
@@ -109,5 +106,4 @@ window.bancoEquipamentos = {
       bonusCA: 0
     }
   }
-
 };
