@@ -1,4 +1,3 @@
-
 window.bancoMagias = {
   progressaoMagias: {
     mago: {
