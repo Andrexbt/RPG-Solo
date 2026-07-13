@@ -2129,7 +2129,8 @@ function obterResumoArma(personagemAtual, idArma) {
     nome: arma.nome,
     ataque: bonusAtaque === "" ? "" : formatarModificador(bonusAtaque),
     dano: formatarDanoArma(personagemAtual, idArma),
-    maestria: obterNomeMaestria(arma.maestria)
+    maestria: obterNomeMaestria(arma.maestria),
+    maestriaId: arma.maestria
   };
 }
 
@@ -2244,11 +2245,17 @@ function criarLinhaAtaque(resumo) {
 
   const valoresAtaque = document.createElement("span");
   valoresAtaque.classList.add("ataque-valor");
-  valoresAtaque.textContent =
-    resumo.ataque + " / " + resumo.dano + " / " + resumo.maestria;
+  valoresAtaque.textContent = resumo.ataque + " / " + resumo.dano + " / ";
+
+  const botaoMaestria = window.criarReferenciaDetalhe(
+    "maestria",
+    resumo.maestriaId,
+    resumo.maestria
+  );
 
   linhaAtaque.appendChild(nomeArma);
   linhaAtaque.appendChild(valoresAtaque);
+  linhaAtaque.appendChild(botaoMaestria);
 
   return linhaAtaque;
 }
@@ -2435,9 +2442,11 @@ function atualizarFichaTalentos() {
   }
 
   personagem.talentos.forEach(function(idTalento) {
-    const item = document.createElement("li");
-    item.textContent = obterNomeTalento(idTalento);
+    const item = criarItemTalentoFicha(idTalento);
+    
+    if (item !== undefined) {
     fichaTalentos.appendChild(item);
+    }
   });
 }
 
@@ -2781,8 +2790,51 @@ function criarItemHabilidadeAutomaticaFicha(idHabilidade) {
     botao.appendChild(resumoRecurso);
   }
 
-  botao.addEventListener("click", function() {
-    abrirModalDetalheHabilidade(idHabilidade);
+  botao.addEventListener("click", function(evento) {
+  evento.stopPropagation();
+
+  window.abrirPopoverDetalhe(
+    "habilidade",
+    idHabilidade,
+    botao,
+    {
+      recursos: personagem.habilidades.recursos
+    }
+  );
+  });
+
+  item.appendChild(botao);
+
+  return item;
+}
+
+function criarItemTalentoFicha(idTalento) {
+  const talento = obterDadosTalento(idTalento);
+
+  if (talento === undefined) {
+    return undefined;
+  }
+
+  const item = document.createElement("li");
+
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.classList.add("botao-habilidade-ficha");
+
+  const nome = document.createElement("span");
+  nome.classList.add("nome-habilidade-ficha");
+  nome.textContent = talento.nome;
+
+  botao.appendChild(nome);
+
+  botao.addEventListener("click", function(evento) {
+  evento.stopPropagation();
+
+  window.abrirPopoverDetalhe(
+    "talento",
+    idTalento,
+    botao
+  );
   });
 
   item.appendChild(botao);
@@ -2791,39 +2843,13 @@ function criarItemHabilidadeAutomaticaFicha(idHabilidade) {
 }
 
 function abrirModalDetalheHabilidade(idHabilidade) {
-  const habilidade = obterDadosHabilidade(idHabilidade);
+  window.abrirModalDetalhe("habilidade", idHabilidade, {
+    recursos: personagem.habilidades.recursos
+  });
+}
 
-  if (habilidade === undefined || modalDetalheFicha === null) {
-    return;
-  }
-
-  modalDetalheTitulo.textContent = habilidade.nome;
-  modalDetalheDescricao.textContent =
-    habilidade.descricaoLonga || habilidade.descricaoCurta || "";
-
-  modalDetalheMecanica.innerHTML = "";
-
-  const recurso = personagem.habilidades.recursos[idHabilidade];
-
-  if (recurso !== undefined) {
-    const usos = document.createElement("p");
-    usos.innerHTML =
-      "<strong>Usos:</strong> " + recurso.usosAtuais + " / " + recurso.usosMaximos;
-
-    modalDetalheMecanica.appendChild(usos);
-
-    if (recurso.efeito === "cura" && recurso.formula !== "") {
-      const cura = document.createElement("p");
-      cura.innerHTML = "<strong>Cura:</strong> " + recurso.formula;
-      modalDetalheMecanica.appendChild(cura);
-    }
-
-    const recuperacao = document.createElement("p");
-    recuperacao.innerHTML = "<strong>Recupera em:</strong> descanso longo";
-    modalDetalheMecanica.appendChild(recuperacao);
-  }
-
-  modalDetalheFicha.classList.remove("escondida");
+function abrirModalDetalheMaestria(idMaestria) {
+  window.abrirModalDetalhe("maestria", idMaestria);
 }
 
 function fecharModalDetalheFicha() {
@@ -2847,3 +2873,8 @@ if (modalDetalheFicha !== null) {
     }
   });
 }
+
+function abrirModalDetalheTalento(idTalento) {
+  window.abrirModalDetalhe("talento", idTalento);
+}
+

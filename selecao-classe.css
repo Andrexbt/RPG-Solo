@@ -986,3 +986,57 @@ display: none;
   font-size: 0.9rem;
   opacity: 0.9;
 }
+
+.botao-detalhe-inline {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.botao-detalhe-inline:hover {
+  opacity: 0.75;
+}
+
+.popover-detalhe-ficha {
+  position: absolute;
+  z-index: 30;
+  width: min(280px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid #c9a24d;
+  border-radius: 10px;
+  background-color: #241c17;
+  color: #f4e6c1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.popover-detalhe-ficha h3 {
+  margin: 0 0 8px 0;
+  color: #f0d28a;
+  font-size: 1rem;
+}
+
+.popover-detalhe-ficha p {
+  margin: 0;
+  line-height: 1.4;
+  font-size: 0.9rem;
+}
+
+.botao-popover-detalhes {
+  margin-top: 10px;
+  border: 1px solid #c9a24d;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background-color: transparent;
+  color: #f4e6c1;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.botao-popover-detalhes:hover {
+  background-color: rgba(201, 162, 77, 0.16);
+}
