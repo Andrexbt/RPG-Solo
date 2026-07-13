@@ -1035,25 +1035,29 @@ function montarHabilidadesAutomaticas(dadosNivel) {
 
 function obterOpcoesDoGrupoEscolha(grupo) {
   if (grupo.origemDasOpcoes === "armas") {
-    return Object.keys(window.bancoEquipamentos.armas).map(function(idArma) {
-      const arma = window.bancoEquipamentos.armas[idArma];
+    return Object.keys(window.bancoEquipamentos.armas)
+      .filter(function(idArma) {
+        return personagemTemProficienciaComArma(personagem, idArma);
+      })
+      .map(function(idArma) {
+        const arma = window.bancoEquipamentos.armas[idArma];
 
-      if (typeof arma === "string") {
+        if (typeof arma === "string") {
+          return {
+            id: idArma,
+            nome: arma,
+            descricaoCurta: ""
+          };
+        }
+
         return {
           id: idArma,
-          nome: arma,
-          descricaoCurta: ""
+          nome: arma.nome,
+          descricaoCurta: "",
+          maestriaId: arma.maestria,
+          propriedades: arma.propriedades || []
         };
-      }
-
-      return {
-        id: idArma,
-        nome: arma.nome,
-        descricaoCurta: "",
-        maestriaId: arma.maestria,
-        propriedades: arma.propriedades || []
-      };
-    });
+      });
   }
 
   return grupo.opcoes;
@@ -2310,15 +2314,16 @@ function personagemTemProficienciaComArma(personagemAtual, idArma) {
 
   const dadosClasse = window.bancoClasses[personagemAtual.classeId];
 
-  if (
-    dadosClasse === undefined ||
-    dadosClasse.proficiencias === undefined ||
-    dadosClasse.proficiencias.armas === undefined
-  ) {
+  if (dadosClasse === undefined || dadosClasse.proficiencias === undefined) {
     return false;
   }
 
-  const proficienciasArmas = dadosClasse.proficiencias.armas;
+  const proficienciasArmas = dadosClasse.proficiencias.armas || [];
+  const armasEspecificas = dadosClasse.proficiencias.armasEspecificas || [];
+
+  if (armasEspecificas.includes(idArma)) {
+    return true;
+  }
 
   if (arma.tipo === "simples" && proficienciasArmas.includes("Armas simples")) {
     return true;

@@ -31,7 +31,38 @@ window.bancoHabilidades = {
       classe: "guerreiro",
       nivel: 1,
       descricaoCurta: "Você escolhe armas para dominar suas propriedades de maestria."
-    }
+    },
+
+    ataqueFurtivo: {
+      id: "ataqueFurtivo",
+      nome: "Ataque Furtivo",
+      categoria: "classFeature",
+      classe: "ladino",
+      nivel: 1,
+      descricaoCurta: "Você causa dano extra quando ataca explorando uma abertura.",
+      descricaoLonga: "O Ataque Furtivo representa a capacidade do Ladino de atingir pontos vulneráveis do inimigo. No nível 1, ele adiciona 1d6 de dano em certas condições. A automação completa dessas condições será implementada futuramente no sistema de combate."
+    },
+
+    especializacao: {
+      id: "especializacao",
+      nome: "Especialização",
+      categoria: "classFeature",
+      classe: "ladino",
+      nivel: 1,
+      descricaoCurta: "Você se torna excepcionalmente competente em algumas perícias.",
+      descricaoLonga: "A Especialização representa treinamento refinado em áreas específicas. Futuramente, o sistema permitirá escolher quais perícias recebem esse benefício e aplicará automaticamente o bônus ampliado."
+    },
+
+    giriaDeLadrao: {
+      id: "giriaDeLadrao",
+      nome: "Gíria de Ladrão",
+      categoria: "classFeature",
+      classe: "ladino",
+      nivel: 1,
+      descricaoCurta: "Você conhece códigos, sinais e expressões usados por criminosos e informantes.",
+      descricaoLonga: "A Gíria de Ladrão permite reconhecer e transmitir mensagens ocultas em conversas, símbolos e sinais discretos. No sistema, ela será tratada inicialmente como uma habilidade narrativa."
+    },
+
   },
 
   gruposDeEscolha: {
@@ -73,6 +104,7 @@ window.bancoHabilidades = {
   },
 
   progressaoClasses: {
+
     guerreiro: {
       nivel1: {
         classFeaturesAutomaticas: [
@@ -91,6 +123,26 @@ window.bancoHabilidades = {
           }
         ]
       }
+    },
+  
+   ladino: {
+      nivel1: {
+        classFeaturesAutomaticas: [
+          "ataqueFurtivo",
+          "especializacao",
+          "giriaDeLadrao",
+          "maestriaComArmas"
+        ],
+
+        escolhas: [
+         {
+            grupo: "maestriasArmas",
+            quantidade: 2
+         }
+        ]
+      }
     }
+
   }
+  
 };

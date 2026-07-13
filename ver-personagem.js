@@ -1152,15 +1152,16 @@ function personagemTemProficienciaComArma(personagemAtual, idArma) {
 
   const dadosClasse = window.bancoClasses[personagemAtual.classeId];
 
-  if (
-    dadosClasse === undefined ||
-    dadosClasse.proficiencias === undefined ||
-    dadosClasse.proficiencias.armas === undefined
-  ) {
+  if (dadosClasse === undefined || dadosClasse.proficiencias === undefined) {
     return false;
   }
 
-  const proficienciasArmas = dadosClasse.proficiencias.armas;
+  const proficienciasArmas = dadosClasse.proficiencias.armas || [];
+  const armasEspecificas = dadosClasse.proficiencias.armasEspecificas || [];
+
+  if (armasEspecificas.includes(idArma)) {
+    return true;
+  }
 
   if (arma.tipo === "simples" && proficienciasArmas.includes("Armas simples")) {
     return true;
