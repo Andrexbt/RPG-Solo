@@ -209,54 +209,66 @@
   }
 
   function inicializarModalDetalhe() {
-    const modalDetalheFicha = document.getElementById("modalDetalheFicha");
-    const botaoFecharModalDetalheFicha =
-      document.getElementById("botaoFecharModalDetalheFicha");
+  const modalDetalheFicha = document.getElementById("modalDetalheFicha");
+  const botaoFecharModalDetalheFicha =
+    document.getElementById("botaoFecharModalDetalheFicha");
 
-    if (modalDetalheFicha !== null) {
-      if (modalDetalheFicha.dataset.inicializado === "true") {
+  if (
+    modalDetalheFicha !== null &&
+    modalDetalheFicha.dataset.inicializado !== "true"
+  ) {
+    modalDetalheFicha.dataset.inicializado = "true";
+
+    modalDetalheFicha.addEventListener("click", function(evento) {
+      if (evento.target === modalDetalheFicha) {
+        fecharModalDetalhe();
+      }
+    });
+  }
+
+  if (
+    botaoFecharModalDetalheFicha !== null &&
+    botaoFecharModalDetalheFicha.dataset.inicializado !== "true"
+  ) {
+    botaoFecharModalDetalheFicha.dataset.inicializado = "true";
+
+    botaoFecharModalDetalheFicha.addEventListener("click", function() {
+      fecharModalDetalhe();
+    });
+  }
+
+  if (document.body.dataset.popoverDetalheInicializado !== "true") {
+    document.body.dataset.popoverDetalheInicializado = "true";
+
+    document.addEventListener("click", function(evento) {
+      const popoverAtual = document.getElementById("popoverDetalheFicha");
+
+      if (popoverAtual === null) {
         return;
       }
 
-      modalDetalheFicha.dataset.inicializado = "true";
+      if (popoverAtual.contains(evento.target)) {
+        return;
+      }
 
-      modalDetalheFicha.addEventListener("click", function(evento) {
-        if (evento.target === modalDetalheFicha) {
-          fecharModalDetalhe();
-        }
-        if (document.body.dataset.popoverDetalheInicializado !== "true") {
-  document.body.dataset.popoverDetalheInicializado = "true";
+      if (
+        evento.target.closest !== undefined &&
+        evento.target.closest(".botao-detalhe-inline") !== null
+      ) {
+        return;
+      }
 
-  document.addEventListener("click", function(evento) {
-    const popoverAtual = document.getElementById("popoverDetalheFicha");
-
-    if (popoverAtual === null) {
-      return;
-    }
-
-    if (popoverAtual.contains(evento.target)) {
-      return;
-    }
-
-    fecharPopoverDetalhe();
-  });
-
-  document.addEventListener("keydown", function(evento) {
-    if (evento.key === "Escape") {
       fecharPopoverDetalhe();
-      fecharModalDetalhe();
-    }
-  });
-}
-      });
-    }
+    });
 
-    if (botaoFecharModalDetalheFicha !== null) {
-      botaoFecharModalDetalheFicha.addEventListener("click", function() {
+    document.addEventListener("keydown", function(evento) {
+      if (evento.key === "Escape") {
+        fecharPopoverDetalhe();
         fecharModalDetalhe();
-      });
-    }
+      }
+    });
   }
+}
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", inicializarModalDetalhe);

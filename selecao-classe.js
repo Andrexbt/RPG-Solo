@@ -1041,17 +1041,17 @@ function obterOpcoesDoGrupoEscolha(grupo) {
       if (typeof arma === "string") {
         return {
           id: idArma,
-          nome: arma.nome,
-          descricaoCurta: "",
-          maestriaId: arma.maestria,
-          propriedades: arma.propriedades || []
+          nome: arma,
+          descricaoCurta: ""
         };
       }
 
       return {
         id: idArma,
         nome: arma.nome,
-        descricaoCurta: "Maestria: " + obterNomeMaestria(arma.maestria) + " | Propriedades: " + obterTextoPropriedadesArma(arma.propriedades)
+        descricaoCurta: "",
+        maestriaId: arma.maestria,
+        propriedades: arma.propriedades || []
       };
     });
   }
@@ -1175,16 +1175,11 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
          card.appendChild(descricao);
       }
 
-      card.addEventListener("click", function() {
-        selecionarOpcaoDeHabilidade(
-          escolha.grupo,
-          opcao.id,
-          quantidadeEscolhas
-        );
-      });
-
       card.addEventListener("click", function(evento) {
-  if (evento.target.closest(".botao-detalhe-inline") !== null) {
+  if (
+    evento.target.closest !== undefined &&
+    evento.target.closest(".botao-detalhe-inline") !== null
+  ) {
     return;
   }
 
@@ -1193,6 +1188,18 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
     opcao.id,
     quantidadeEscolhas
   );
+});
+
+card.addEventListener("keydown", function(evento) {
+  if (evento.key === "Enter" || evento.key === " ") {
+    evento.preventDefault();
+
+    selecionarOpcaoDeHabilidade(
+      escolha.grupo,
+      opcao.id,
+      quantidadeEscolhas
+    );
+  }
 });
 
  listaOpcoes.appendChild(card);
@@ -1643,7 +1650,7 @@ function montarTelaRevisao() {
     <p><strong>Classe:</strong> ${personagem.classe} 1</p>
     <p><strong>Antecedente:</strong> ${personagem.antecedente}</p>
     <p><strong>Espécie:</strong> ${personagem.especie}</p>
-    <p><strong>Idiomas:</strong> ${personagem.idiomas.join(", ")}</p>
+    <p><strong>Idiomas:</strong> ${personagem.idiomas.map(obterNomeIdioma).join(", ")}</p>
   `;
 
   areaRevisao.appendChild(blocoBasico);
@@ -1651,6 +1658,7 @@ function montarTelaRevisao() {
   montarRevisaoAtributos();
   montarRevisaoEquipamentos();
   montarRevisaoHabilidades();
+  montarRevisaoTalentos();
   montarRevisaoMagias();
 }
 
@@ -1672,31 +1680,168 @@ function montarRevisaoAtributos() {
   areaRevisao.appendChild(bloco);
 }
 
+function criarParagrafoRevisao(rotulo, valor) {
+  const paragrafo = document.createElement("p");
+
+  const destaque = document.createElement("strong");
+  destaque.textContent = rotulo + ": ";
+
+  paragrafo.appendChild(destaque);
+  paragrafo.appendChild(document.createTextNode(valor));
+
+  return paragrafo;
+}
+
+function criarLinhaArmaRevisao(idArma, rotulo) {
+  const container = document.createElement("div");
+  container.classList.add("linha-arma-revisao");
+
+  const titulo = document.createElement("p");
+
+  const destaque = document.createElement("strong");
+  destaque.textContent = rotulo + ": ";
+
+  titulo.appendChild(destaque);
+  titulo.appendChild(document.createTextNode(obterNomeArma(idArma)));
+
+  container.appendChild(titulo);
+
+  const resumo = obterResumoArma(personagem, idArma);
+
+  if (resumo !== undefined) {
+    const linhaAtaque = criarLinhaAtaque(resumo);
+    container.appendChild(linhaAtaque);
+  }
+
+  return container;
+}
+
 function montarRevisaoEquipamentos() {
   const bloco = document.createElement("section");
   bloco.classList.add("bloco-revisao");
 
+  const titulo = document.createElement("h3");
+  titulo.textContent = "Equipamentos e Valores";
+  bloco.appendChild(titulo);
+
   const equipamentos = personagem.detalhes.equipamentos;
 
+  if (equipamentos === undefined) {
+    bloco.appendChild(criarParagrafoRevisao("Equipamentos", "Nenhum equipamento selecionado."));
+    areaRevisao.appendChild(bloco);
+    return;
+  }
+
   const armadura = window.bancoEquipamentos.armaduras[equipamentos.armadura];
-  const itemSecundario = window.bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
+  const itemSecundario =
+    window.bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
 
-  bloco.innerHTML = `
-    <h3>Equipamentos e Valores</h3>
+  bloco.appendChild(
+    criarParagrafoRevisao(
+      "Armadura",
+      armadura !== undefined ? armadura.nome : ""
+    )
+  );
 
-    <p><strong>Armadura:</strong> ${armadura.nome}</p>
-    <p><strong>Arma principal:</strong> ${window.bancoEquipamentos.armas[equipamentos.armaPrincipal]}</p>
-    <p><strong>Item secundário:</strong> ${itemSecundario.nome}</p>
+  if (equipamentos.armaPrincipal !== undefined && equipamentos.armaPrincipal !== "") {
+    bloco.appendChild(
+      criarLinhaArmaRevisao(equipamentos.armaPrincipal, "Arma principal")
+    );
+  }
 
-    <p><strong>Classe de Armadura:</strong> ${fichaClasseArmadura.textContent}</p>
-    <p><strong>Pontos de Vida:</strong> ${pvMaximo.textContent}</p>
-    <p><strong>Iniciativa:</strong> ${fichaIniciativa.textContent}</p>
-    <p><strong>Velocidade:</strong> ${fichaVelocidade.textContent}</p>
-    <p><strong>Tamanho:</strong> ${fichaTamanho.textContent}</p>
-    <p><strong>Percepção Passiva:</strong> ${fichaPercepcaoPassiva.textContent}</p>
-  `;
+  if (equipamentos.itemSecundario === "armaSecundaria") {
+    if (
+      equipamentos.armaSecundaria !== undefined &&
+      equipamentos.armaSecundaria !== ""
+    ) {
+      bloco.appendChild(
+        criarLinhaArmaRevisao(equipamentos.armaSecundaria, "Arma secundária")
+      );
+    }
+  } else {
+    bloco.appendChild(
+      criarParagrafoRevisao(
+        "Item secundário",
+        itemSecundario !== undefined ? itemSecundario.nome : ""
+      )
+    );
+  }
+
+  bloco.appendChild(
+    criarParagrafoRevisao("Classe de Armadura", fichaClasseArmadura.textContent)
+  );
+
+  bloco.appendChild(
+    criarParagrafoRevisao("Pontos de Vida", pvMaximo.textContent)
+  );
+
+  bloco.appendChild(
+    criarParagrafoRevisao("Iniciativa", fichaIniciativa.textContent)
+  );
+
+  bloco.appendChild(
+    criarParagrafoRevisao("Velocidade", fichaVelocidade.textContent)
+  );
+
+  bloco.appendChild(
+    criarParagrafoRevisao("Tamanho", fichaTamanho.textContent)
+  );
+
+  bloco.appendChild(
+    criarParagrafoRevisao("Percepção Passiva", fichaPercepcaoPassiva.textContent)
+  );
 
   areaRevisao.appendChild(bloco);
+}
+
+function criarResumoArmaEscolhidaRevisao(idArma) {
+  const arma = obterDadosArma(idArma);
+
+  if (arma === undefined) {
+    return undefined;
+  }
+
+  const item = document.createElement("li");
+
+  item.appendChild(document.createTextNode(arma.nome));
+
+  if (arma.maestria !== undefined && arma.maestria !== "") {
+    item.appendChild(document.createTextNode(" — Maestria: "));
+
+    item.appendChild(
+      window.criarReferenciaDetalhe(
+        "maestria",
+        arma.maestria,
+        obterNomeMaestria(arma.maestria)
+      )
+    );
+  }
+
+  if (arma.propriedades !== undefined && arma.propriedades.length > 0) {
+    item.appendChild(document.createTextNode(" — Propriedades: "));
+
+    arma.propriedades.forEach(function(idPropriedade, indice) {
+      const propriedade = obterDadosPropriedadeArma(idPropriedade);
+
+      if (propriedade === undefined) {
+        return;
+      }
+
+      item.appendChild(
+        window.criarReferenciaDetalhe(
+          "propriedadeArma",
+          idPropriedade,
+          propriedade.nome
+        )
+      );
+
+      if (indice < arma.propriedades.length - 1) {
+        item.appendChild(document.createTextNode(", "));
+      }
+    });
+  }
+
+  return item;
 }
 
 function montarRevisaoHabilidades() {
@@ -1709,7 +1854,8 @@ function montarRevisaoHabilidades() {
 
   const lista = document.createElement("ul");
 
-  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[personagem.classeId];
+  const dadosDaClasse =
+    window.bancoHabilidades.progressaoClasses[personagem.classeId];
 
   if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
     const item = document.createElement("li");
@@ -1724,41 +1870,136 @@ function montarRevisaoHabilidades() {
   const dadosNivel1 = dadosDaClasse.nivel1;
 
   const habilidadesAutomaticas =
-  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
-
-    if (habilidade !== undefined) {
-      const item = document.createElement("li");
-      item.textContent = habilidade.nome;
-      lista.appendChild(item);
-    }
-  });
-
-  dadosNivel1.escolhas.forEach(function(escolha) {
-    const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
-    const idOpcaoEscolhida = personagem.habilidades.escolhas[escolha.grupo];
-
-    if (grupo === undefined || idOpcaoEscolhida === undefined) {
+  habilidadesAutomaticas.forEach(function(idHabilidade) {
+    if (idHabilidade === "maestriaComArmas") {
       return;
     }
 
-    const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
-      return opcao.id === idOpcaoEscolhida;
-    });
+    const habilidade = obterDadosHabilidade(idHabilidade);
 
-    if (opcaoEscolhida !== undefined) {
-      const item = document.createElement("li");
-      item.textContent = grupo.nome + ": " + opcaoEscolhida.nome;
-      lista.appendChild(item);
+    if (habilidade === undefined) {
+      return;
     }
+
+    const item = document.createElement("li");
+
+    item.appendChild(
+      window.criarReferenciaDetalhe(
+        "habilidade",
+        idHabilidade,
+        habilidade.nome,
+        {
+          recursos: personagem.habilidades.recursos
+        }
+      )
+    );
+
+    const recurso = personagem.habilidades.recursos[idHabilidade];
+
+    if (recurso !== undefined) {
+      item.appendChild(
+        document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
+      );
+    }
+
+    lista.appendChild(item);
   });
+
+  if (dadosNivel1.escolhas !== undefined) {
+    dadosNivel1.escolhas.forEach(function(escolha) {
+      const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
+      const valorEscolhido = personagem.habilidades.escolhas[escolha.grupo];
+
+      if (grupo === undefined || valorEscolhido === undefined) {
+        return;
+      }
+
+      if (grupo.origemDasOpcoes === "armas") {
+        const itemGrupo = document.createElement("li");
+        itemGrupo.textContent = grupo.nome + ":";
+
+        const sublista = document.createElement("ul");
+
+        const armasEscolhidas = Array.isArray(valorEscolhido)
+          ? valorEscolhido
+          : [valorEscolhido];
+
+        armasEscolhidas.forEach(function(idArma) {
+          const itemArma = criarResumoArmaEscolhidaRevisao(idArma);
+
+          if (itemArma !== undefined) {
+            sublista.appendChild(itemArma);
+          }
+        });
+
+        itemGrupo.appendChild(sublista);
+        lista.appendChild(itemGrupo);
+
+        return;
+      }
+
+      if (grupo.opcoes === undefined) {
+        return;
+      }
+
+      const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
+        return opcao.id === valorEscolhido;
+      });
+
+      if (opcaoEscolhida !== undefined) {
+        const item = document.createElement("li");
+        item.textContent = grupo.nome + ": " + opcaoEscolhida.nome;
+        lista.appendChild(item);
+      }
+    });
+  }
 
   if (lista.children.length === 0) {
     const item = document.createElement("li");
     item.textContent = "Nenhuma habilidade selecionada.";
     lista.appendChild(item);
+  }
+
+  bloco.appendChild(lista);
+  areaRevisao.appendChild(bloco);
+}
+
+function montarRevisaoTalentos() {
+  const bloco = document.createElement("section");
+  bloco.classList.add("bloco-revisao");
+
+  const titulo = document.createElement("h3");
+  titulo.textContent = "Talentos";
+  bloco.appendChild(titulo);
+
+  const lista = document.createElement("ul");
+
+  if (personagem.talentos.length === 0) {
+    const item = document.createElement("li");
+    item.textContent = "Nenhum talento selecionado.";
+    lista.appendChild(item);
+  } else {
+    personagem.talentos.forEach(function(idTalento) {
+      const talento = obterDadosTalento(idTalento);
+
+      if (talento === undefined) {
+        return;
+      }
+
+      const item = document.createElement("li");
+
+      item.appendChild(
+        window.criarReferenciaDetalhe(
+          "talento",
+          idTalento,
+          talento.nome
+        )
+      );
+
+      lista.appendChild(item);
+    });
   }
 
   bloco.appendChild(lista);
