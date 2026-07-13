@@ -1041,8 +1041,10 @@ function obterOpcoesDoGrupoEscolha(grupo) {
       if (typeof arma === "string") {
         return {
           id: idArma,
-          nome: arma,
-          descricaoCurta: ""
+          nome: arma.nome,
+          descricaoCurta: "",
+          maestriaId: arma.maestria,
+          propriedades: arma.propriedades || []
         };
       }
 
@@ -1055,6 +1057,56 @@ function obterOpcoesDoGrupoEscolha(grupo) {
   }
 
   return grupo.opcoes;
+}
+
+function criarDetalhesArmaOpcao(opcao) {
+  const container = document.createElement("div");
+  container.classList.add("detalhes-arma-opcao");
+
+  if (opcao.maestriaId !== undefined && opcao.maestriaId !== "") {
+    const linhaMaestria = document.createElement("p");
+
+    linhaMaestria.appendChild(document.createTextNode("Maestria: "));
+
+    const referenciaMaestria = window.criarReferenciaDetalhe(
+      "maestria",
+      opcao.maestriaId,
+      obterNomeMaestria(opcao.maestriaId)
+    );
+
+    linhaMaestria.appendChild(referenciaMaestria);
+    container.appendChild(linhaMaestria);
+  }
+
+  if (opcao.propriedades !== undefined && opcao.propriedades.length > 0) {
+    const linhaPropriedades = document.createElement("p");
+
+    linhaPropriedades.appendChild(document.createTextNode("Propriedades: "));
+
+    opcao.propriedades.forEach(function(idPropriedade, indice) {
+      const propriedade = obterDadosPropriedadeArma(idPropriedade);
+
+      if (propriedade === undefined) {
+        return;
+      }
+
+      const referenciaPropriedade = window.criarReferenciaDetalhe(
+        "propriedadeArma",
+        idPropriedade,
+        propriedade.nome
+      );
+
+      linhaPropriedades.appendChild(referenciaPropriedade);
+
+      if (indice < opcao.propriedades.length - 1) {
+        linhaPropriedades.appendChild(document.createTextNode(", "));
+      }
+    });
+
+    container.appendChild(linhaPropriedades);
+  }
+
+  return container;
 }
 
 function montarEscolhasDeHabilidades(dadosNivel1) {
@@ -1092,9 +1144,10 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
     areaHabilidadesClasse.appendChild(listaOpcoes);
 
     opcoes.forEach(function(opcao) {
-      const card = document.createElement("button");
-      card.type = "button";
+      const card = document.createElement("div");
       card.classList.add("card-opcao");
+      card.setAttribute("role", "button");
+      card.tabIndex = 0;
 
       const escolhaAtual = personagem.habilidades.escolhas[escolha.grupo];
 
@@ -1114,10 +1167,12 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
       titulo.textContent = opcao.nome;
       card.appendChild(titulo);
 
-      if (opcao.descricaoCurta !== undefined) {
+      if (opcao.maestriaId !== undefined || opcao.propriedades !== undefined) {
+        card.appendChild(criarDetalhesArmaOpcao(opcao));
+      } else if (opcao.descricaoCurta !== undefined && opcao.descricaoCurta !== "") {
         const descricao = document.createElement("p");
         descricao.textContent = opcao.descricaoCurta;
-        card.appendChild(descricao);
+         card.appendChild(descricao);
       }
 
       card.addEventListener("click", function() {
@@ -1128,10 +1183,25 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
         );
       });
 
-      listaOpcoes.appendChild(card);
+      card.addEventListener("click", function(evento) {
+  if (evento.target.closest(".botao-detalhe-inline") !== null) {
+    return;
+  }
+
+  selecionarOpcaoDeHabilidade(
+    escolha.grupo,
+    opcao.id,
+    quantidadeEscolhas
+  );
+});
+
+ listaOpcoes.appendChild(card);
     });
   });
 }
+    
+
+
 
 function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
   if (quantidadeEscolhas === 1) {
@@ -2130,7 +2200,8 @@ function obterResumoArma(personagemAtual, idArma) {
     ataque: bonusAtaque === "" ? "" : formatarModificador(bonusAtaque),
     dano: formatarDanoArma(personagemAtual, idArma),
     maestria: obterNomeMaestria(arma.maestria),
-    maestriaId: arma.maestria
+    maestriaId: arma.maestria,
+    propriedades: arma.propriedades || []
   };
 }
 
@@ -2257,7 +2328,41 @@ function criarLinhaAtaque(resumo) {
   linhaAtaque.appendChild(valoresAtaque);
   linhaAtaque.appendChild(botaoMaestria);
 
+   if (resumo.propriedades.length > 0) {
+    linhaAtaque.appendChild(document.createElement("br"));
+    linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
+  }
+
   return linhaAtaque;
+}
+
+function criarLinhaPropriedadesArma(propriedades) {
+  const linha = document.createElement("span");
+  linha.classList.add("linha-propriedades-arma");
+
+  linha.textContent = "Propriedades: ";
+
+  propriedades.forEach(function(idPropriedade, indice) {
+    const propriedade = obterDadosPropriedadeArma(idPropriedade);
+
+    if (propriedade === undefined) {
+      return;
+    }
+
+    const referencia = window.criarReferenciaDetalhe(
+      "propriedadeArma",
+      idPropriedade,
+      propriedade.nome
+    );
+
+    linha.appendChild(referencia);
+
+    if (indice < propriedades.length - 1) {
+      linha.appendChild(document.createTextNode(", "));
+    }
+  });
+
+  return linha;
 }
 
 function personagemTemEstiloDeLuta(idEstilo) {

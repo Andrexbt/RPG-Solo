@@ -1040,3 +1040,12 @@ display: none;
 .botao-popover-detalhes:hover {
   background-color: rgba(201, 162, 77, 0.16);
 }
+
+.detalhes-arma-opcao {
+  margin-top: 8px;
+}
+
+.detalhes-arma-opcao p {
+  margin: 4px 0;
+  line-height: 1.35;
+}

@@ -1283,7 +1283,8 @@ function obterResumoArma(personagemAtual, idArma) {
     ataque: bonusAtaque === "" ? "" : formatarModificador(bonusAtaque),
     dano: formatarDanoArma(personagemAtual, idArma),
     maestria: obterNomeMaestria(arma.maestria),
-    maestriaId: arma.maestria
+    maestriaId: arma.maestria,
+    propriedades: arma.propriedades || []
   };
 }
 
@@ -1355,7 +1356,41 @@ function criarLinhaAtaque(resumo) {
   linhaAtaque.appendChild(valoresAtaque);
   linhaAtaque.appendChild(botaoMaestria);
 
+  if (resumo.propriedades.length > 0) {
+    linhaAtaque.appendChild(document.createElement("br"));
+    linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
+  }
+
   return linhaAtaque;
+}
+
+function criarLinhaPropriedadesArma(propriedades) {
+  const linha = document.createElement("span");
+  linha.classList.add("linha-propriedades-arma");
+
+  linha.textContent = "Propriedades: ";
+
+  propriedades.forEach(function(idPropriedade, indice) {
+    const propriedade = obterDadosPropriedadeArma(idPropriedade);
+
+    if (propriedade === undefined) {
+      return;
+    }
+
+    const referencia = window.criarReferenciaDetalhe(
+      "propriedadeArma",
+      idPropriedade,
+      propriedade.nome
+    );
+
+    linha.appendChild(referencia);
+
+    if (indice < propriedades.length - 1) {
+      linha.appendChild(document.createTextNode(", "));
+    }
+  });
+
+  return linha;
 }
 
 function obterArmasDoPersonagem(personagem) {
