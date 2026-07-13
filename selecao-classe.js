@@ -166,6 +166,12 @@ const avisoEquipamentos = document.getElementById("avisoEquipamentos");
 
 const fichaTalentos = document.getElementById("fichaTalentos");
 
+const modalDetalheFicha = document.getElementById("modalDetalheFicha");
+const botaoFecharModalDetalheFicha = document.getElementById("botaoFecharModalDetalheFicha");
+const modalDetalheTitulo = document.getElementById("modalDetalheTitulo");
+const modalDetalheDescricao = document.getElementById("modalDetalheDescricao");
+const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
+
 const personagem = {
   
   classeId:"",
@@ -191,8 +197,8 @@ const personagem = {
   talentos: [],
 
   habilidades:{
-
      escolhas:{},
+     recursos: {},
   },
 
   magias:{},
@@ -223,6 +229,8 @@ function selecionarClasse(){
   atualizarPericiasPersonagem();
 
   personagem.habilidades.escolhas = {};
+  personagem.habilidades.recursos = {};
+  atualizarRecursosHabilidadesPersonagem();
   
   atualizarMarcadoresPericias();
   atualizarMarcadoresSalvaguardas();
@@ -581,12 +589,9 @@ function atualizarFichaHabilidades() {
     return;
   }
 
-  const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
+  const item = criarItemHabilidadeAutomaticaFicha(idHabilidade);
 
-  if (habilidade !== undefined) {
-    const item = document.createElement("li");
-    item.classList.add("habilidade-automatica");
-    item.textContent = habilidade.nome;
+  if (item !== undefined) {
     fichaHabilidades.appendChild(item);
   }
  });
@@ -1223,48 +1228,6 @@ nomePersonagem.addEventListener("input", function() {
   }
 });
 
-function montarSeletorIdioma(seletor, indiceDoSeletor) {
-  const valorAtual = idiomasEscolhidos[indiceDoSeletor];
-  const indiceDoOutroSeletor = indiceDoSeletor === 0 ? 1 : 0;
-  const valorDoOutroSeletor = idiomasEscolhidos[indiceDoOutroSeletor];
-
-  seletor.innerHTML = "";
-
-  const opcaoInicial = document.createElement("option");
-  opcaoInicial.value = "";
-  opcaoInicial.textContent = "Escolha";
-  seletor.appendChild(opcaoInicial);
-
-  idiomasDisponiveis.forEach(function(idioma) {
-    if (idioma === valorDoOutroSeletor) {
-      return;
-    }
-
-    const opcao = document.createElement("option");
-    opcao.value = idioma;
-    opcao.textContent = idioma;
-
-    seletor.appendChild(opcao);
-  });
-
-  seletor.value = valorAtual;
-}
-
-function montarSeletoresIdiomas() {
-  montarSeletorIdioma(seletorIdioma1, 0);
-  montarSeletorIdioma(seletorIdioma2, 1);
-}
-
-function salvarIdiomasNoPersonagem() {
-  personagem.idiomas = [];
-
-  idiomasEscolhidos.forEach(function(idioma) {
-    if (idioma !== "") {
-      personagem.idiomas.push(idioma);
-    }
-  });
-}
-
 function atualizarFichaIdiomas() {
   atualizarIdiomasPersonagem();
 
@@ -1280,12 +1243,6 @@ function atualizarFichaIdiomas() {
   fichaIdiomas.textContent = nomesIdiomas.join(", ");
 }
 
-function atualizarIdiomas() {
-  salvarIdiomasNoPersonagem();
-  atualizarFichaIdiomas();
-  montarSeletoresIdiomas();
-}
-
 seletorIdioma1.addEventListener("change", function() {
   atualizarIdiomasEscolhidos();
 });
@@ -1295,7 +1252,6 @@ seletorIdioma2.addEventListener("change", function() {
   atualizarIdiomasEscolhidos();
 });
 
-montarSeletoresIdiomas();
 atualizarSelectsIdiomas();
 atualizarFichaIdiomas();
 
@@ -2731,4 +2687,163 @@ function obterNomeHabilidade(idHabilidade) {
   }
 
   return habilidade.nome;
+}
+
+function formatarFormulaRecurso(formula) {
+  if (formula === undefined || formula === "") {
+    return "";
+  }
+
+  return formula.replace("nivelClasse", "1");
+}
+
+function atualizarRecursosHabilidadesPersonagem() {
+  personagem.habilidades.recursos = {};
+
+  const classeId = personagem.classeId;
+
+  if (classeId === "") {
+    return;
+  }
+
+  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
+
+  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
+    return;
+  }
+
+  const dadosNivel1 = dadosDaClasse.nivel1;
+
+  const habilidadesAutomaticas =
+    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+  habilidadesAutomaticas.forEach(function(idHabilidade) {
+    const habilidade = obterDadosHabilidade(idHabilidade);
+
+    if (habilidade === undefined || habilidade.recurso === undefined) {
+      return;
+    }
+
+    const recurso = habilidade.recurso;
+
+    personagem.habilidades.recursos[recurso.id] = {
+      id: recurso.id,
+      nome: recurso.nome,
+      usosAtuais: recurso.usosMaximos,
+      usosMaximos: recurso.usosMaximos,
+      recuperaEm: recurso.recuperaEm,
+      efeito: recurso.efeito,
+      formula: formatarFormulaRecurso(recurso.formula)
+    };
+  });
+}
+
+function obterTextoResumoRecurso(recurso) {
+  if (recurso === undefined) {
+    return "";
+  }
+
+  let texto = "Usos: " + recurso.usosAtuais + " / " + recurso.usosMaximos;
+
+  if (recurso.efeito === "cura" && recurso.formula !== "") {
+    texto = texto + " — Cura: " + recurso.formula;
+  }
+
+  return texto;
+}
+
+function criarItemHabilidadeAutomaticaFicha(idHabilidade) {
+  const habilidade = obterDadosHabilidade(idHabilidade);
+
+  if (habilidade === undefined) {
+    return undefined;
+  }
+
+  const item = document.createElement("li");
+
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.classList.add("botao-habilidade-ficha");
+
+  const nome = document.createElement("span");
+  nome.classList.add("nome-habilidade-ficha");
+  nome.textContent = habilidade.nome;
+
+  botao.appendChild(nome);
+
+  const recurso = personagem.habilidades.recursos[idHabilidade];
+
+  if (recurso !== undefined) {
+    const resumoRecurso = document.createElement("span");
+    resumoRecurso.classList.add("resumo-recurso-habilidade");
+    resumoRecurso.textContent = obterTextoResumoRecurso(recurso);
+
+    botao.appendChild(resumoRecurso);
+  }
+
+  botao.addEventListener("click", function() {
+    abrirModalDetalheHabilidade(idHabilidade);
+  });
+
+  item.appendChild(botao);
+
+  return item;
+}
+
+function abrirModalDetalheHabilidade(idHabilidade) {
+  const habilidade = obterDadosHabilidade(idHabilidade);
+
+  if (habilidade === undefined || modalDetalheFicha === null) {
+    return;
+  }
+
+  modalDetalheTitulo.textContent = habilidade.nome;
+  modalDetalheDescricao.textContent =
+    habilidade.descricaoLonga || habilidade.descricaoCurta || "";
+
+  modalDetalheMecanica.innerHTML = "";
+
+  const recurso = personagem.habilidades.recursos[idHabilidade];
+
+  if (recurso !== undefined) {
+    const usos = document.createElement("p");
+    usos.innerHTML =
+      "<strong>Usos:</strong> " + recurso.usosAtuais + " / " + recurso.usosMaximos;
+
+    modalDetalheMecanica.appendChild(usos);
+
+    if (recurso.efeito === "cura" && recurso.formula !== "") {
+      const cura = document.createElement("p");
+      cura.innerHTML = "<strong>Cura:</strong> " + recurso.formula;
+      modalDetalheMecanica.appendChild(cura);
+    }
+
+    const recuperacao = document.createElement("p");
+    recuperacao.innerHTML = "<strong>Recupera em:</strong> descanso longo";
+    modalDetalheMecanica.appendChild(recuperacao);
+  }
+
+  modalDetalheFicha.classList.remove("escondida");
+}
+
+function fecharModalDetalheFicha() {
+  if (modalDetalheFicha === null) {
+    return;
+  }
+
+  modalDetalheFicha.classList.add("escondida");
+}
+
+if (botaoFecharModalDetalheFicha !== null) {
+  botaoFecharModalDetalheFicha.addEventListener("click", function() {
+    fecharModalDetalheFicha();
+  });
+}
+
+if (modalDetalheFicha !== null) {
+  modalDetalheFicha.addEventListener("click", function(evento) {
+    if (evento.target === modalDetalheFicha) {
+      fecharModalDetalheFicha();
+    }
+  });
 }
