@@ -153,6 +153,37 @@ window.bancoMagias = {
     return linhas.join("\n");
   }
 
+  function adicionarTextoAoCampoPdfCorrigido(formulario, nomeCampo, textoNovo) {
+    if (textoNovo === undefined || textoNovo === "") {
+      return;
+    }
+
+    const camposParaTentar = [nomeCampo, "Text54"];
+
+    for (let indice = 0; indice < camposParaTentar.length; indice++) {
+      const campoAtual = camposParaTentar[indice];
+
+      if (campoAtual === undefined || campoAtual === "") {
+        continue;
+      }
+
+      try {
+        const campo = formulario.getTextField(campoAtual);
+        const textoAtual = campo.getText();
+
+        if (textoAtual === undefined || textoAtual === "") {
+          campo.setText(textoNovo);
+        } else if (textoAtual.includes(textoNovo) === false) {
+          campo.setText(textoAtual + "\n" + textoNovo);
+        }
+
+        return;
+      } catch (erro) {
+        console.warn("Campo não encontrado para texto adicional no PDF:", campoAtual);
+      }
+    }
+  }
+
   function obterRecursosPersonagemSeguro(personagemAtual) {
     if (typeof obterRecursosHabilidadesPersonagem === "function") {
       return obterRecursosHabilidadesPersonagem(personagemAtual);
@@ -271,6 +302,7 @@ window.bancoMagias = {
       obterTextoHabilidadesParaPdf = obterTextoHabilidadesParaPdfCorrigido;
       obterTextoHabilidades = obterTextoHabilidadesParaPdfCorrigido;
       preencherHabilidades = preencherHabilidadesCorrigido;
+      adicionarTextoAoCampoPdf = adicionarTextoAoCampoPdfCorrigido;
     } catch (erro) {
       console.warn("Não foi possível substituir funções da ficha salva:", erro);
     }
@@ -278,6 +310,7 @@ window.bancoMagias = {
     window.obterTextoHabilidadesParaPdf = obterTextoHabilidadesParaPdfCorrigido;
     window.obterTextoHabilidades = obterTextoHabilidadesParaPdfCorrigido;
     window.preencherHabilidades = preencherHabilidadesCorrigido;
+    window.adicionarTextoAoCampoPdf = adicionarTextoAoCampoPdfCorrigido;
 
     try {
       if (
