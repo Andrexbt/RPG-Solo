@@ -1054,3 +1054,11 @@ display: none;
   content: " ★";
   font-weight: bold;
 }
+
+.linha-ataque-furtivo {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.9;
+}

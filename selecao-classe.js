@@ -2497,8 +2497,41 @@ function obterResumoArma(personagemAtual, idArma) {
     dano: formatarDanoArma(personagemAtual, idArma),
     maestria: obterNomeMaestria(arma.maestria),
     maestriaId: arma.maestria,
-    propriedades: arma.propriedades || []
+    propriedades: arma.propriedades || [],
+    ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma)
   };
+}
+
+function armaPermiteAtaqueFurtivo(idArma) {
+  const arma = obterDadosArma(idArma);
+
+  if (arma === undefined) {
+    return false;
+  }
+
+  const propriedades = arma.propriedades || [];
+
+  if (arma.categoria === "distancia") {
+    return true;
+  }
+
+  if (propriedades.includes("acuidade")) {
+    return true;
+  }
+
+  return false;
+}
+
+function obterTextoAtaqueFurtivo(personagemAtual, idArma) {
+  if (personagemAtual.classeId !== "ladino") {
+    return "";
+  }
+
+  if (armaPermiteAtaqueFurtivo(idArma) === false) {
+    return "";
+  }
+
+  return "Ataque Furtivo: +1d6 quando aplicável";
 }
 
 function atualizarFichaArmasAtaques() {
@@ -2627,7 +2660,16 @@ function criarLinhaAtaque(resumo) {
    if (resumo.propriedades.length > 0) {
     linhaAtaque.appendChild(document.createElement("br"));
     linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
-  }
+
+    if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
+      linhaAtaque.appendChild(document.createElement("br"));
+
+      const linhaAtaqueFurtivo = document.createElement("span");
+      linhaAtaqueFurtivo.classList.add("linha-ataque-furtivo");
+      linhaAtaqueFurtivo.textContent = resumo.ataqueFurtivo;
+
+      linhaAtaque.appendChild(linhaAtaqueFurtivo);
+    }
 
   return linhaAtaque;
 }
@@ -3301,4 +3343,4 @@ function limparEspecializacoesInvalidas() {
     especializacoes.filter(function(idPericia) {
       return personagem.pericias.includes(idPericia);
     });
-}
+}}

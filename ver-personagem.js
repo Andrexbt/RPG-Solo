@@ -953,6 +953,14 @@ function obterOpcoesDoGrupoEscolha(grupo) {
 function obterTextoHabilidadesParaPdf(personagem) {
   const linhas = [];
 
+  if (
+    personagem === undefined ||
+    personagem.habilidades === undefined ||
+    personagem.habilidades.escolhas === undefined
+  ) {
+    return "";
+  }
+
   const dadosDaClasse =
     window.bancoHabilidades.progressaoClasses[personagem.classeId];
 
@@ -966,16 +974,20 @@ function obterTextoHabilidadesParaPdf(personagem) {
     dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
   habilidadesAutomaticas.forEach(function(idHabilidade) {
-  if (idHabilidade === "maestriaComArmas") {
-    return;
-  }
+    if (idHabilidade === "maestriaComArmas") {
+      return;
+    }
 
-  const habilidade = obterDadosHabilidade(idHabilidade);
+    const habilidade = obterDadosHabilidade(idHabilidade);
 
-  if (habilidade !== undefined) {
-    linhas.push(habilidade.nome);
+    if (habilidade !== undefined) {
+      linhas.push(habilidade.nome);
+    }
+  });
+
+  if (Array.isArray(dadosNivel1.escolhas) === false) {
+    return linhas.join("\n");
   }
- });
 
   dadosNivel1.escolhas.forEach(function(escolha) {
     const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
@@ -985,34 +997,36 @@ function obterTextoHabilidadesParaPdf(personagem) {
       return;
     }
 
-    const opcoes = obterOpcoesDoGrupoEscolha(grupo);
+    const idsEscolhidos = Array.isArray(valorEscolhido)
+      ? valorEscolhido
+      : [valorEscolhido];
 
-    if (Array.isArray(valorEscolhido)) {
-      const nomesEscolhidos = [];
-
-      valorEscolhido.forEach(function(idEscolhido) {
-        const opcaoEscolhida = opcoes.find(function(opcao) {
-          return opcao.id === idEscolhido;
-        });
-
-        if (opcaoEscolhida !== undefined) {
-          nomesEscolhidos.push(opcaoEscolhida.nome);
-        }
-      });
-
-      if (nomesEscolhidos.length > 0) {
-        linhas.push(grupo.nome + ": " + nomesEscolhidos.join(", "));
+    const nomesEscolhidos = idsEscolhidos.map(function(idEscolhido) {
+      if (grupo.origemDasOpcoes === "periciasProficientes") {
+        return obterNomePericia(idEscolhido);
       }
 
-      return;
-    }
+      if (grupo.origemDasOpcoes === "armas") {
+        return obterNomeArma(idEscolhido);
+      }
 
-    const opcaoEscolhida = opcoes.find(function(opcao) {
-      return opcao.id === valorEscolhido;
+      if (Array.isArray(grupo.opcoes) === false) {
+        return idEscolhido;
+      }
+
+      const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
+        return opcao.id === idEscolhido;
+      });
+
+      if (opcaoEscolhida === undefined) {
+        return idEscolhido;
+      }
+
+      return opcaoEscolhida.nome;
     });
 
-    if (opcaoEscolhida !== undefined) {
-      linhas.push(grupo.nome + ": " + opcaoEscolhida.nome);
+    if (nomesEscolhidos.length > 0) {
+      linhas.push(grupo.nome + ": " + nomesEscolhidos.join(", "));
     }
   });
 
@@ -1364,8 +1378,41 @@ function obterResumoArma(personagemAtual, idArma) {
     dano: formatarDanoArma(personagemAtual, idArma),
     maestria: obterNomeMaestria(arma.maestria),
     maestriaId: arma.maestria,
-    propriedades: arma.propriedades || []
+    propriedades: arma.propriedades || [],
+    ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma)
   };
+}
+
+function armaPermiteAtaqueFurtivo(idArma) {
+  const arma = obterDadosArma(idArma);
+
+  if (arma === undefined) {
+    return false;
+  }
+
+  const propriedades = arma.propriedades || [];
+
+  if (arma.categoria === "distancia") {
+    return true;
+  }
+
+  if (propriedades.includes("acuidade")) {
+    return true;
+  }
+
+  return false;
+}
+
+function obterTextoAtaqueFurtivo(personagemAtual, idArma) {
+  if (personagemAtual.classeId !== "ladino") {
+    return "";
+  }
+
+  if (armaPermiteAtaqueFurtivo(idArma) === false) {
+    return "";
+  }
+
+  return "Ataque Furtivo: +1d6 quando aplicável";
 }
 
 function preencherArmasAtaques(personagemAtual) {
@@ -1439,6 +1486,16 @@ function criarLinhaAtaque(resumo) {
   if (resumo.propriedades.length > 0) {
     linhaAtaque.appendChild(document.createElement("br"));
     linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
+
+    if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
+  linhaAtaque.appendChild(document.createElement("br"));
+
+  const linhaAtaqueFurtivo = document.createElement("span");
+  linhaAtaqueFurtivo.classList.add("linha-ataque-furtivo");
+  linhaAtaqueFurtivo.textContent = resumo.ataqueFurtivo;
+
+  linhaAtaque.appendChild(linhaAtaqueFurtivo);
+}
   }
 
   return linhaAtaque;
@@ -1526,6 +1583,16 @@ function armaEhSecundaria(personagemAtual, idArma) {
 
 function obterDadosPericia(idPericia) {
   return window.bancoPericias[idPericia];
+}
+
+function obterNomePericia(idPericia) {
+  const pericia = obterDadosPericia(idPericia);
+
+  if (pericia === undefined) {
+    return idPericia;
+  }
+
+  return pericia.nome;
 }
 
 function obterAtributoDaPericia(idPericia) {
@@ -1944,13 +2011,35 @@ function adicionarTextoAoCampoPdf(formulario, nomeCampo, textoNovo) {
     return;
   }
 
-  const campo = formulario.getTextField(nomeCampo);
-  const textoAtual = campo.getText();
+  const camposParaTentar = [
+    nomeCampo,
+    camposFichaPdf.caracteristicasClasse1
+  ];
 
-  if (textoAtual === undefined || textoAtual === "") {
-    campo.setText(textoNovo);
-    return;
+  for (let indice = 0; indice < camposParaTentar.length; indice++) {
+    const campoAtual = camposParaTentar[indice];
+
+    if (campoAtual === undefined || campoAtual === "") {
+      continue;
+    }
+
+    try {
+      const campo = formulario.getTextField(campoAtual);
+      const textoAtual = campo.getText();
+
+      if (textoAtual === undefined || textoAtual === "") {
+        campo.setText(textoNovo);
+        return;
+      }
+
+      if (textoAtual.includes(textoNovo) === false) {
+        campo.setText(textoAtual + "\n" + textoNovo);
+      }
+
+      return;
+    } catch (erro) {
+      console.warn("Campo não encontrado para texto adicional no PDF:", campoAtual);
+    }
   }
-
-  campo.setText(textoAtual + "\n" + textoNovo);
 }
+
