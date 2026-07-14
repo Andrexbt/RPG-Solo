@@ -379,82 +379,149 @@ function obterNomeItemSecundario(idItem) {
   return item.nome;
 }
 
-function preencherHabilidades(personagem) {
-  const lista = document.getElementById("fichaHabilidades");
-  lista.innerHTML = "";
+function preencherHabilidades(personagemAtual) {
+  fichaHabilidades.innerHTML = "";
 
   const dadosDaClasse =
-    window.bancoHabilidades.progressaoClasses[personagem.classeId];
+    window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
 
   if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
+    const item = document.createElement("li");
+    item.textContent = "Nenhuma habilidade cadastrada.";
+    fichaHabilidades.appendChild(item);
     return;
   }
 
   const dadosNivel1 = dadosDaClasse.nivel1;
 
   const habilidadesAutomaticas =
-  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
   habilidadesAutomaticas.forEach(function(idHabilidade) {
-  if (idHabilidade === "maestriaComArmas") {
+    if (idHabilidade === "maestriaComArmas") {
+      return;
+    }
+
+    const habilidade = obterDadosHabilidade(idHabilidade);
+
+    if (habilidade === undefined) {
+      return;
+    }
+
+    const item = document.createElement("li");
+
+    const botao = window.criarReferenciaDetalhe(
+      "habilidade",
+      idHabilidade,
+      habilidade.nome,
+      {
+        recursos: obterRecursosHabilidadesPersonagem(personagemAtual)
+      }
+    );
+
+    item.appendChild(botao);
+
+    const recursos = obterRecursosHabilidadesPersonagem(personagemAtual);
+    const recurso = recursos[idHabilidade];
+
+    if (recurso !== undefined) {
+      item.appendChild(
+        document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
+      );
+    }
+
+    fichaHabilidades.appendChild(item);
+  });
+
+  if (dadosNivel1.escolhas === undefined) {
     return;
   }
 
-  const item = criarItemHabilidadeAutomaticaFicha(personagem, idHabilidade);
-
-  if (item !== undefined) {
-    lista.appendChild(item);
-  }
- });
-
   dadosNivel1.escolhas.forEach(function(escolha) {
     const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
-    const valorEscolhido = personagem.habilidades.escolhas[escolha.grupo];
 
-    if (grupo === undefined || valorEscolhido === undefined) {
+    if (grupo === undefined) {
       return;
     }
 
-    const opcoes = obterOpcoesDoGrupoEscolha(grupo);
+    const valorEscolhido =
+      personagemAtual.habilidades.escolhas[escolha.grupo];
 
-    if (Array.isArray(valorEscolhido)) {
-      const nomesEscolhidos = [];
+    if (valorEscolhido === undefined) {
+      return;
+    }
 
-      valorEscolhido.forEach(function(idEscolhido) {
-        const opcaoEscolhida = opcoes.find(function(opcao) {
-          return opcao.id === idEscolhido;
-        });
+    if (grupo.origemDasOpcoes === "periciasProficientes") {
+      const itemGrupo = document.createElement("li");
+      itemGrupo.textContent = grupo.nome + ":";
 
-        if (opcaoEscolhida !== undefined) {
-          nomesEscolhidos.push(opcaoEscolhida.nome);
-        }
+      const sublista = document.createElement("ul");
+
+      const periciasEscolhidas = Array.isArray(valorEscolhido)
+        ? valorEscolhido
+        : [valorEscolhido];
+
+      periciasEscolhidas.forEach(function(idPericia) {
+        const itemPericia = document.createElement("li");
+        itemPericia.textContent = obterNomePericia(idPericia);
+        sublista.appendChild(itemPericia);
       });
 
-      if (nomesEscolhidos.length > 0) {
-        const item = criarItemHabilidadeComEscolha(
-       grupo.nome,
-       nomesEscolhidos.join(", ")
-      );
-
-fichaHabilidades.appendChild(item);
-      }
+      itemGrupo.appendChild(sublista);
+      fichaHabilidades.appendChild(itemGrupo);
 
       return;
     }
 
-    const opcaoEscolhida = opcoes.find(function(opcao) {
+    if (grupo.origemDasOpcoes === "armas") {
+      const itemGrupo = document.createElement("li");
+      itemGrupo.textContent = grupo.nome + ":";
+
+      const sublista = document.createElement("ul");
+
+      const armasEscolhidas = Array.isArray(valorEscolhido)
+        ? valorEscolhido
+        : [valorEscolhido];
+
+      armasEscolhidas.forEach(function(idArma) {
+        const arma = obterDadosArma(idArma);
+
+        if (arma === undefined) {
+          return;
+        }
+
+        const itemArma = document.createElement("li");
+        itemArma.textContent = arma.nome;
+
+        sublista.appendChild(itemArma);
+      });
+
+      itemGrupo.appendChild(sublista);
+      fichaHabilidades.appendChild(itemGrupo);
+
+      return;
+    }
+
+    if (grupo.opcoes === undefined) {
+      return;
+    }
+
+    const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
       return opcao.id === valorEscolhido;
     });
 
     if (opcaoEscolhida !== undefined) {
-      const item = criarItemHabilidadeComEscolha(
-  grupo.nome,
-  opcaoEscolhida.nome
-);
-
-fichaHabilidades.appendChild(item);
+      const item = document.createElement("li");
+      item.textContent = grupo.nome + ": " + opcaoEscolhida.nome;
+      fichaHabilidades.appendChild(item);
     }
   });
+
+  if (fichaHabilidades.children.length === 0) {
+    const item = document.createElement("li");
+    item.textContent = "Nenhuma habilidade registrada.";
+    fichaHabilidades.appendChild(item);
+  }
 }
 
 function preencherMagias(personagem) {
@@ -691,6 +758,12 @@ async function baixarPdfFichaEditavel(personagem) {
   camposFichaPdf.talentos,
   obterTextoTalentosParaPdf(personagem)
   );
+
+  adicionarTextoAoCampoPdf(
+  formulario,
+  camposFichaPdf.caracteristicasClasse2,
+  obterTextoEspecializacoesParaPdf(personagem)
+  );
   
   preencherArmasPdf(formulario, personagem);
   marcarCheckboxesPersonagemPdf(formulario, personagem);
@@ -764,14 +837,14 @@ function personagemTemProficienciaEmSalvaguarda(personagem, idAtributo) {
   return dadosClasse.salvaguardas.includes(idAtributo);
 }
 
-function calcularValorPericia(personagem, idPericia) {
-  const atributoBase = obterAtributoDaPericia(idPericia);
+function calcularValorPericia(personagemAtual, idPericia) {
+  const atributo = obterAtributoDaPericia(idPericia);
 
-  if (atributoBase === undefined) {
+  if (atributo === undefined) {
     return "";
   }
 
-  const valorAtributo = personagem.atributos[atributoBase];
+  const valorAtributo = personagemAtual.atributos[atributo];
 
   if (valorAtributo === undefined || valorAtributo === "") {
     return "";
@@ -779,8 +852,12 @@ function calcularValorPericia(personagem, idPericia) {
 
   let valorFinal = calcularModificador(valorAtributo);
 
-  if (personagemTemProficienciaEmPericia(personagem, idPericia)) {
-    valorFinal = valorFinal + calcularBonusProficiencia(personagem);
+  if (personagemTemProficienciaEmPericia(personagemAtual, idPericia)) {
+    valorFinal = valorFinal + calcularBonusProficiencia();
+
+    if (personagemTemEspecializacaoEmPericia(personagemAtual, idPericia)) {
+      valorFinal = valorFinal + calcularBonusProficiencia();
+    }
   }
 
   return valorFinal;
@@ -802,19 +879,21 @@ function calcularValorSalvaguarda(personagem, idAtributo) {
   return valorFinal;
 }
 
-function atualizarMarcadoresPericias(personagem) {
+function atualizarMarcadoresPericias(personagemAtual) {
   const linhasPericia = document.querySelectorAll("[data-pericia]");
 
   linhasPericia.forEach(function(linha) {
     const idPericia = linha.dataset.pericia;
 
-    if (
-      personagem.pericias !== undefined &&
-      personagem.pericias.includes(idPericia)
-    ) {
+    linha.classList.remove("proficiente");
+    linha.classList.remove("especializada");
+
+     if (personagemTemProficienciaEmPericia(personagemAtual, idPericia)) {
       linha.classList.add("proficiente");
-    } else {
-      linha.classList.remove("proficiente");
+    }
+
+    if (personagemTemEspecializacaoEmPericia(personagemAtual, idPericia)) {
+      linha.classList.add("especializada");
     }
   });
 }
@@ -1459,6 +1538,28 @@ function obterAtributoDaPericia(idPericia) {
   return pericia.atributo;
 }
 
+function obterEspecializacoesPericiasPersonagem(personagemAtual) {
+  if (
+    personagemAtual.habilidades === undefined ||
+    personagemAtual.habilidades.escolhas === undefined
+  ) {
+    return [];
+  }
+
+  const especializacoes =
+    personagemAtual.habilidades.escolhas.especializacoesPericias;
+
+  if (Array.isArray(especializacoes) === false) {
+    return [];
+  }
+
+  return especializacoes;
+}
+
+function personagemTemEspecializacaoEmPericia(personagemAtual, idPericia) {
+  return obterEspecializacoesPericiasPersonagem(personagemAtual).includes(idPericia);
+}
+
 function obterDadosTalento(idTalento) {
   if (window.bancoTalentos === undefined) {
     return undefined;
@@ -1814,4 +1915,42 @@ function criarItemTalentoFicha(idTalento) {
 
 function abrirModalDetalheMaestria(idMaestria) {
   window.abrirModalDetalhe("maestria", idMaestria);
+}
+
+function obterTextoEspecializacoesParaPdf(personagemAtual) {
+  if (
+    personagemAtual.habilidades === undefined ||
+    personagemAtual.habilidades.escolhas === undefined
+  ) {
+    return "";
+  }
+
+  const especializacoes =
+    personagemAtual.habilidades.escolhas.especializacoesPericias;
+
+  if (Array.isArray(especializacoes) === false || especializacoes.length === 0) {
+    return "";
+  }
+
+  const nomesEspecializacoes = especializacoes.map(function(idPericia) {
+    return obterNomePericia(idPericia);
+  });
+
+  return "Especialização: " + nomesEspecializacoes.join(", ");
+}
+
+function adicionarTextoAoCampoPdf(formulario, nomeCampo, textoNovo) {
+  if (textoNovo === undefined || textoNovo === "") {
+    return;
+  }
+
+  const campo = formulario.getTextField(nomeCampo);
+  const textoAtual = campo.getText();
+
+  if (textoAtual === undefined || textoAtual === "") {
+    campo.setText(textoNovo);
+    return;
+  }
+
+  campo.setText(textoAtual + "\n" + textoNovo);
 }

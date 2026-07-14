@@ -60,3 +60,7 @@
   font-family: Georgia, serif;
 }
 
+.linha-pericia.especializada::after {
+  content: " ★";
+  font-weight: bold;
+}

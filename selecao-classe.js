@@ -336,8 +336,8 @@ function irParaPasso(nomePasso) {
   });
 
     if (nomePasso === "habilidades") {
-    montarTelaHabilidades();
-    montarTelaPericiasClasse();
+      montarTelaPericiasClasse();
+      montarTelaHabilidades();
   }
 
   if (nomePasso === "magias") {
