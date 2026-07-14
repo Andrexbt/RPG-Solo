@@ -17,7 +17,3 @@ window.bancoMagias = {
     }
   }
 };
-
-if (window.FichaPersonagem === undefined) {
-  document.write('<script src="ficha-personagem.js"><\/script>');
-}
