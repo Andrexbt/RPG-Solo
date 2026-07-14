@@ -18,11 +18,7 @@ window.bancoMagias = {
   }
 };
 
-window.addEventListener("load", function() {
-  if (typeof window.obterTextoHabilidadesParaPdf !== "function") {
-    return;
-  }
-
+(function() {
   function obterNomePericiaParaTexto(idPericia) {
     if (
       window.bancoPericias === undefined ||
@@ -53,8 +49,8 @@ window.addEventListener("load", function() {
   }
 
   function obterNomeHabilidadeParaTexto(idHabilidade) {
-    if (typeof window.obterDadosHabilidade === "function") {
-      const habilidade = window.obterDadosHabilidade(idHabilidade);
+    if (typeof obterDadosHabilidade === "function") {
+      const habilidade = obterDadosHabilidade(idHabilidade);
 
       if (habilidade !== undefined) {
         return habilidade.nome;
@@ -96,7 +92,7 @@ window.addEventListener("load", function() {
     return opcaoEscolhida.nome;
   }
 
-  window.obterTextoHabilidadesParaPdf = function(personagem) {
+  function obterTextoHabilidadesParaPdfCorrigido(personagem) {
     const linhas = [];
 
     if (
@@ -155,7 +151,144 @@ window.addEventListener("load", function() {
     });
 
     return linhas.join("\n");
-  };
+  }
 
-  window.obterTextoHabilidades = window.obterTextoHabilidadesParaPdf;
-});
+  function obterRecursosPersonagemSeguro(personagemAtual) {
+    if (typeof obterRecursosHabilidadesPersonagem === "function") {
+      return obterRecursosHabilidadesPersonagem(personagemAtual);
+    }
+
+    if (
+      personagemAtual.habilidades !== undefined &&
+      personagemAtual.habilidades.recursos !== undefined
+    ) {
+      return personagemAtual.habilidades.recursos;
+    }
+
+    return {};
+  }
+
+  function preencherHabilidadesCorrigido(personagemAtual) {
+    const fichaHabilidadesElemento = document.getElementById("fichaHabilidades");
+
+    if (fichaHabilidadesElemento === null) {
+      return;
+    }
+
+    fichaHabilidadesElemento.innerHTML = "";
+
+    const dadosDaClasse =
+      window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
+
+    if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
+      const item = document.createElement("li");
+      item.textContent = "Nenhuma habilidade cadastrada.";
+      fichaHabilidadesElemento.appendChild(item);
+      return;
+    }
+
+    const dadosNivel1 = dadosDaClasse.nivel1;
+
+    const habilidadesAutomaticas =
+      dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+    habilidadesAutomaticas.forEach(function(idHabilidade) {
+      if (idHabilidade === "maestriaComArmas") {
+        return;
+      }
+
+      const item = document.createElement("li");
+      const nomeHabilidade = obterNomeHabilidadeParaTexto(idHabilidade);
+
+      if (typeof window.criarReferenciaDetalhe === "function") {
+        const botao = window.criarReferenciaDetalhe(
+          "habilidade",
+          idHabilidade,
+          nomeHabilidade,
+          {
+            recursos: obterRecursosPersonagemSeguro(personagemAtual)
+          }
+        );
+
+        item.appendChild(botao);
+      } else {
+        item.textContent = nomeHabilidade;
+      }
+
+      const recursos = obterRecursosPersonagemSeguro(personagemAtual);
+      const recurso = recursos[idHabilidade];
+
+      if (
+        recurso !== undefined &&
+        typeof obterTextoResumoRecurso === "function"
+      ) {
+        item.appendChild(
+          document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
+        );
+      }
+
+      fichaHabilidadesElemento.appendChild(item);
+    });
+
+    if (Array.isArray(dadosNivel1.escolhas) === true) {
+      dadosNivel1.escolhas.forEach(function(escolha) {
+        const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
+        const valorEscolhido = personagemAtual.habilidades.escolhas[escolha.grupo];
+
+        if (grupo === undefined || valorEscolhido === undefined) {
+          return;
+        }
+
+        const itemGrupo = document.createElement("li");
+        itemGrupo.textContent = grupo.nome + ":";
+
+        const sublista = document.createElement("ul");
+
+        const idsEscolhidos = Array.isArray(valorEscolhido)
+          ? valorEscolhido
+          : [valorEscolhido];
+
+        idsEscolhidos.forEach(function(idEscolhido) {
+          const itemEscolha = document.createElement("li");
+          itemEscolha.textContent = obterNomeEscolhaParaTexto(grupo, idEscolhido);
+          sublista.appendChild(itemEscolha);
+        });
+
+        itemGrupo.appendChild(sublista);
+        fichaHabilidadesElemento.appendChild(itemGrupo);
+      });
+    }
+
+    if (fichaHabilidadesElemento.children.length === 0) {
+      const item = document.createElement("li");
+      item.textContent = "Nenhuma habilidade registrada.";
+      fichaHabilidadesElemento.appendChild(item);
+    }
+  }
+
+  window.addEventListener("load", function() {
+    try {
+      obterTextoHabilidadesParaPdf = obterTextoHabilidadesParaPdfCorrigido;
+      obterTextoHabilidades = obterTextoHabilidadesParaPdfCorrigido;
+      preencherHabilidades = preencherHabilidadesCorrigido;
+    } catch (erro) {
+      console.warn("Não foi possível substituir funções da ficha salva:", erro);
+    }
+
+    window.obterTextoHabilidadesParaPdf = obterTextoHabilidadesParaPdfCorrigido;
+    window.obterTextoHabilidades = obterTextoHabilidadesParaPdfCorrigido;
+    window.preencherHabilidades = preencherHabilidadesCorrigido;
+
+    try {
+      if (
+        typeof personagemEncontrado !== "undefined" &&
+        personagemEncontrado !== undefined &&
+        typeof preencherFichaPersonagem === "function"
+      ) {
+        preencherFichaPersonagem(personagemEncontrado);
+      }
+    } catch (erro) {
+      console.error("Erro ao reaplicar correção da ficha salva:", erro);
+    }
+  });
+})();
