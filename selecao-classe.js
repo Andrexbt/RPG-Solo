@@ -388,18 +388,19 @@ botaoProximoPasso.forEach(function(botao) {
 });
 
 function selecionarAntecedente(cardClicado) {
+  const antecedenteId = cardClicado.dataset.antecedente;
+  const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
+
+  if (dadosAntecedente === undefined) {
+    console.warn("Antecedente não encontrado no banco:", antecedenteId);
+    return;
+  }
+
   cardsAntecedente.forEach(function(card) {
     card.classList.remove("selecionado");
   });
 
   cardClicado.classList.add("selecionado");
-
-  const antecedenteId = cardClicado.dataset.antecedente;
-  const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
-
-  if (dadosAntecedente === undefined) {
-    return;
-  }
 
   personagem.antecedenteId = antecedenteId;
   personagem.antecedente = dadosAntecedente.nome;
@@ -409,10 +410,11 @@ function selecionarAntecedente(cardClicado) {
   personagem.talentos = [];
 
   if (dadosAntecedente.talentoOrigem !== undefined) {
-     personagem.talentos.push(dadosAntecedente.talentoOrigem);
+    personagem.talentos.push(dadosAntecedente.talentoOrigem);
   }
 
   atualizarPericiasPersonagem();
+  limparEspecializacoesInvalidas();
 
   fichaAntecedente.textContent = dadosAntecedente.nome;
 
@@ -1060,6 +1062,16 @@ function obterOpcoesDoGrupoEscolha(grupo) {
       });
   }
 
+  if (grupo.origemDasOpcoes === "periciasProficientes") {
+    return personagem.pericias.map(function(idPericia) {
+      return {
+        id: idPericia,
+        nome: obterNomePericia(idPericia),
+        descricaoCurta: "O bônus de proficiência desta perícia é dobrado."
+      };
+    });
+  }
+
   return grupo.opcoes;
 }
 
@@ -1223,6 +1235,8 @@ function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
     atualizarClasseArmadura();
     atualizarFichaArmasAtaques();
     atualizarAvisosEquipamentos();
+    atualizarMarcadoresPericias();
+    atualizarPercepcaoPassiva();
 
     return;
   }
@@ -1259,6 +1273,9 @@ function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
   atualizarFichaHabilidades();
   atualizarClasseArmadura();
   atualizarFichaArmasAtaques();
+  atualizarAvisosEquipamentos();
+  atualizarMarcadoresPericias();
+  atualizarPercepcaoPassiva();
 }
 
 function montarTelaMagias() {
@@ -1920,6 +1937,28 @@ function montarRevisaoHabilidades() {
         return;
       }
 
+      if (grupo.origemDasOpcoes === "periciasProficientes") {
+  const itemGrupo = document.createElement("li");
+  itemGrupo.textContent = grupo.nome + ":";
+
+  const sublista = document.createElement("ul");
+
+  const periciasEscolhidas = Array.isArray(valorEscolhido)
+    ? valorEscolhido
+    : [valorEscolhido];
+
+  periciasEscolhidas.forEach(function(idPericia) {
+    const itemPericia = document.createElement("li");
+    itemPericia.textContent = obterNomePericia(idPericia);
+    sublista.appendChild(itemPericia);
+  });
+
+  itemGrupo.appendChild(sublista);
+  lista.appendChild(itemGrupo);
+
+  return;
+}
+
       if (grupo.origemDasOpcoes === "armas") {
         const itemGrupo = document.createElement("li");
         itemGrupo.textContent = grupo.nome + ":";
@@ -2191,6 +2230,8 @@ function selecionarPericiaClasse(idPericia) {
   }
 
   atualizarPericiasPersonagem();
+  limparEspecializacoesInvalidas();
+  montarTelaHabilidades();
 
   const mensagem = document.getElementById("mensagemHabilidades");
 
@@ -2209,10 +2250,15 @@ function atualizarMarcadoresPericias() {
   linhasPericia.forEach(function(linha) {
     const idPericia = linha.dataset.pericia;
 
+    linha.classList.remove("proficiente");
+    linha.classList.remove("especializada");
+
     if (personagem.pericias.includes(idPericia)) {
       linha.classList.add("proficiente");
-    } else {
-      linha.classList.remove("proficiente");
+    } 
+
+    if (personagemTemEspecializacaoEmPericia(idPericia)) {
+      linha.classList.add("especializada");
     }
   });
 }
@@ -2242,13 +2288,13 @@ function personagemTemProficienciaEmSalvaguarda(idAtributo) {
 }
 
 function calcularValorPericia(idPericia) {
-  const atributoBase = obterAtributoDaPericia(idPericia);
+  const atributo = obterAtributoDaPericia(idPericia);
 
-  if (atributoBase === undefined) {
+  if (atributo === undefined) {
     return "";
   }
 
-  const valorAtributo = personagem.atributos[atributoBase];
+  const valorAtributo = personagem.atributos[atributo];
 
   if (valorAtributo === undefined || valorAtributo === "") {
     return "";
@@ -2258,7 +2304,11 @@ function calcularValorPericia(idPericia) {
 
   if (personagemTemProficienciaEmPericia(idPericia)) {
     valorFinal = valorFinal + calcularBonusProficiencia();
+
+    if (personagemTemEspecializacaoEmPericia(idPericia)) {
+      valorFinal = valorFinal + calcularBonusProficiencia();
   }
+}
 
   return valorFinal;
 }
@@ -3229,3 +3279,26 @@ function abrirModalDetalheTalento(idTalento) {
   window.abrirModalDetalhe("talento", idTalento);
 }
 
+function obterEspecializacoesPericias() {
+  const especializacoes =
+    personagem.habilidades.escolhas.especializacoesPericias;
+
+  if (Array.isArray(especializacoes) === false) {
+    return [];
+  }
+
+  return especializacoes;
+}
+
+function personagemTemEspecializacaoEmPericia(idPericia) {
+  return obterEspecializacoesPericias().includes(idPericia);
+}
+
+function limparEspecializacoesInvalidas() {
+  const especializacoes = obterEspecializacoesPericias();
+
+  personagem.habilidades.escolhas.especializacoesPericias =
+    especializacoes.filter(function(idPericia) {
+      return personagem.pericias.includes(idPericia);
+    });
+}

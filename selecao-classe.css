@@ -1049,3 +1049,8 @@ display: none;
   margin: 4px 0;
   line-height: 1.35;
 }
+
+.linha-pericia.especializada::after {
+  content: " ★";
+  font-weight: bold;
+}

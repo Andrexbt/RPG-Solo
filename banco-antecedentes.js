@@ -1,4 +1,28 @@
 window.bancoAntecedentes = {
+
+  acolito: {
+    id: "acolito",
+    nome: "Acólito",
+    descricaoCurta: "Você viveu ligado a um templo, ordem religiosa ou tradição espiritual.",
+    pericias: ["intuicao", "religiao"],
+    ferramentas: [],
+
+    idiomas: {
+      quantidade: 0,
+      fixos: [],
+      opcoes: []
+    },
+
+    talentoOrigem: "iniciadoMagia",
+    equipamento: ["simboloSagrado", "livroDeOracoes"],
+
+    moedas: {
+      ouro: 15
+    },
+
+    atributosSugeridos: ["inteligencia", "sabedoria", "carisma"]
+  },
+
   soldado: {
     id: "soldado",
     nome: "Soldado",
@@ -49,7 +73,7 @@ window.bancoAntecedentes = {
     id: "criminoso",
     nome: "Criminoso",
     descricaoCurta: "Você aprendeu a sobreviver à margem da lei.",
-    pericias: ["furtividade", "enganacao"],
+    pericias: ["furtividade", "prestidigitacao"],
     ferramentas: ["ferramentasLadrao"],
 
     idiomas: {
@@ -58,7 +82,7 @@ window.bancoAntecedentes = {
       opcoes: []
     },
 
-    talentoOrigem: "sortudo",
+    talentoOrigem: "alerta",
     equipamento: ["ferramentasLadrao", "roupasComuns"],
 
     moedas: {

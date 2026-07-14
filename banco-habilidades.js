@@ -66,6 +66,7 @@ window.bancoHabilidades = {
   },
 
   gruposDeEscolha: {
+
     estilosDeLuta: {
       id: "estilosDeLuta",
       nome: "Estilos de Luta",
@@ -100,7 +101,15 @@ window.bancoHabilidades = {
       nome: "Maestria com Armas",
       quantidadeEscolhas: 3,
       origemDasOpcoes: "armas"
-    }
+    },
+
+    especializacoesPericias: {
+      id: "especializacoesPericias",
+      nome: "Especialização em Perícias",
+      quantidadeEscolhas: 2,
+      origemDasOpcoes: "periciasProficientes"
+    },
+
   },
 
   progressaoClasses: {
@@ -135,6 +144,12 @@ window.bancoHabilidades = {
         ],
 
         escolhas: [
+
+          {
+            grupo: "especializacoesPericias",
+            quantidade: 2
+          },
+          
          {
             grupo: "maestriasArmas",
             quantidade: 2
