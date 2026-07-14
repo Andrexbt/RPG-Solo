@@ -1,22 +1,12 @@
 const botaoImprimirFicha = document.getElementById("botaoImprimirFicha");
-const idPersonagem = pegarIdDaUrl();
-const personagemEncontrado = buscarPersonagemPorId(idPersonagem);
 const botaoBaixarPdfEditavel = document.getElementById("botaoBaixarPdfEditavel");
-
-console.log("Botão PDF:", botaoBaixarPdfEditavel);
-console.log("PDFLib:", window.PDFLib);
 
 const fichaArmasAtaques = document.getElementById("fichaArmasAtaques");
 const fichaArmadura = document.getElementById("fichaArmadura");
 const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
-
-const modalDetalheFicha = document.getElementById("modalDetalheFicha");
-const botaoFecharModalDetalheFicha = document.getElementById("botaoFecharModalDetalheFicha");
-const modalDetalheTitulo = document.getElementById("modalDetalheTitulo");
-const modalDetalheDescricao = document.getElementById("modalDetalheDescricao");
-const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
+const fichaTalentos = document.getElementById("fichaTalentos");
 
 const camposFichaPdf = {
   nome: "Text1",
@@ -67,51 +57,18 @@ const camposFichaPdf = {
   historiaPersonalidade: "Text97",
   idiomas: "Text98",
   equipamento: "Text99",
-  alinhamento: "Text100",
-
-  arma1Nome: "Text30",
-  arma1Ataque: "Text31",
-  arma1Dano: "Text32",
-  arma1Notas: "Text33"
+  alinhamento: "Text100"
 };
 
+window.camposFichaPdf = camposFichaPdf;
+
 const linhasArmasPdf = [
-  {
-    nome: "Text30",
-    ataque: "Text31",
-    dano: "Text32",
-    notas: "Text33"
-  },
-  {
-    nome: "Text34",
-    ataque: "Text35",
-    dano: "Text36",
-    notas: "Text37"
-  },
-  {
-    nome: "Text38",
-    ataque: "Text39",
-    dano: "Text40",
-    notas: "Text41"
-  },
-  {
-    nome: "Text42",
-    ataque: "Text43",
-    dano: "Text44",
-    notas: "Text45"
-  },
-  {
-    nome: "Text46",
-    ataque: "Text47",
-    dano: "Text48",
-    notas: "Text49"
-  },
-  {
-    nome: "Text50",
-    ataque: "Text51",
-    dano: "Text52",
-    notas: "Text53"
-  }
+  { nome: "Text30", ataque: "Text31", dano: "Text32", notas: "Text33" },
+  { nome: "Text34", ataque: "Text35", dano: "Text36", notas: "Text37" },
+  { nome: "Text38", ataque: "Text39", dano: "Text40", notas: "Text41" },
+  { nome: "Text42", ataque: "Text43", dano: "Text44", notas: "Text45" },
+  { nome: "Text46", ataque: "Text47", dano: "Text48", notas: "Text49" },
+  { nome: "Text50", ataque: "Text51", dano: "Text52", notas: "Text53" }
 ];
 
 const camposCheckboxPdf = {
@@ -126,23 +83,19 @@ const camposCheckboxPdf = {
 
   pericias: {
     atletismo: "Check Box38",
-
     acrobacia: "Check Box34",
     prestidigitacao: "Check Box35",
     furtividade: "Check Box36",
-
     arcanismo: "Check Box16",
     historia: "Check Box17",
     investigacao: "Check Box19",
     natureza: "Check Box20",
     religiao: "Check Box18",
-
     adestrarAnimais: "Check Box22",
     intuicao: "Check Box23",
     medicina: "Check Box25",
     percepcao: "Check Box31",
     sobrevivencia: "Check Box24",
-
     enganacao: "Check Box27",
     intimidacao: "Check Box28",
     performance: "Check Box30",
@@ -157,7 +110,25 @@ const camposCheckboxPdf = {
   }
 };
 
-const fichaTalentos = document.getElementById("fichaTalentos");
+const idPersonagem = pegarIdDaUrl();
+const personagemEncontrado = buscarPersonagemPorId(idPersonagem);
+
+function carregarPersonagensSalvos() {
+  return JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
+}
+
+function pegarIdDaUrl() {
+  const parametros = new URLSearchParams(window.location.search);
+  return parametros.get("id");
+}
+
+function buscarPersonagemPorId(idPersonagem) {
+  const personagens = carregarPersonagensSalvos();
+
+  return personagens.find(function(personagem) {
+    return personagem.id === idPersonagem;
+  });
+}
 
 function preencherFichaPersonagem(personagem) {
   preencherInformacoesBasicas(personagem);
@@ -178,7 +149,7 @@ function preencherInformacoesBasicas(personagem) {
   document.getElementById("fichaClasseNivel").textContent = personagem.classe + " 1";
   document.getElementById("fichaAntecedente").textContent = personagem.antecedente;
   document.getElementById("fichaEspecie").textContent = personagem.especie;
-  document.getElementById("fichaIdiomas").textContent = personagem.idiomas.join(", ");
+  document.getElementById("fichaIdiomas").textContent = (personagem.idiomas || []).join(", ");
 }
 
 function preencherAtributos(personagem) {
@@ -190,6 +161,21 @@ function preencherAtributos(personagem) {
   preencherUmAtributo("carisma", "valcar", "modcar", personagem);
 }
 
+function preencherUmAtributo(nomeAtributo, idValor, idModificador, personagem) {
+  const valor = personagem.atributos[nomeAtributo];
+  const campoValor = document.getElementById(idValor);
+  const campoModificador = document.getElementById(idModificador);
+
+  if (valor === undefined || valor === "") {
+    campoValor.textContent = "";
+    campoModificador.textContent = "";
+    return;
+  }
+
+  campoValor.textContent = valor;
+  campoModificador.textContent = formatarModificador(calcularModificador(valor));
+}
+
 function preencherCombate(personagem) {
   const pontosDeVida = personagem.detalhes.pontosDeVida || {};
 
@@ -199,24 +185,13 @@ function preencherCombate(personagem) {
   document.getElementById("pvAtuais").textContent = pontosDeVida.atuais || "";
   document.getElementById("pvTemporarios").textContent = pontosDeVida.temporarios ?? "";
   document.getElementById("pvMaximo").textContent = pontosDeVida.maximo || "";
+  document.getElementById("dadosVidaUsados").textContent = pontosDeVida.dadosVidaUsados ?? "";
+  document.getElementById("dadosVidaMaximos").textContent = pontosDeVida.dadoVida || "";
 
-  document.getElementById("dadosVidaUsados").textContent =
-    pontosDeVida.dadosVidaUsados ?? "";
-
-  document.getElementById("dadosVidaMaximos").textContent =
-    pontosDeVida.dadoVida || "";
-
-  document.getElementById("fichaIniciativa").textContent =
-    calcularIniciativa(personagem);
-
-  document.getElementById("fichaVelocidade").textContent =
-    obterVelocidade(personagem);
-
-  document.getElementById("fichaTamanho").textContent =
-    obterTamanho(personagem);
-
-  document.getElementById("fichaPercepcaoPassiva").textContent =
-    calcularPercepcaoPassiva(personagem);
+  document.getElementById("fichaIniciativa").textContent = calcularIniciativa(personagem);
+  document.getElementById("fichaVelocidade").textContent = obterVelocidade(personagem);
+  document.getElementById("fichaTamanho").textContent = obterTamanho(personagem);
+  document.getElementById("fichaPercepcaoPassiva").textContent = calcularPercepcaoPassiva(personagem);
 }
 
 function calcularIniciativa(personagem) {
@@ -227,61 +202,6 @@ function calcularIniciativa(personagem) {
   }
 
   return formatarModificador(calcularModificador(destreza));
-}
-
-function calcularPercepcaoPassiva(personagem) {
-  const valorPercepcao = calcularValorPericia(personagem, "percepcao");
-
-  if (valorPercepcao === "") {
-    return "";
-  }
-
-  return 10 + valorPercepcao;
-}
-
-function calcularClasseArmadura(personagem) {
-  const equipamentos = personagem.detalhes.equipamentos;
-
-  if (equipamentos === undefined) {
-    return "-";
-  }
-
-  const idArmadura = equipamentos.armadura;
-  const idItemSecundario = equipamentos.itemSecundario;
-
-  const armadura = window.bancoEquipamentos.armaduras[idArmadura];
-  const itemSecundario = window.bancoEquipamentos.itensSecundarios[idItemSecundario];
-
-  if (armadura === undefined) {
-    return "-";
-  }
-
-  let classeArmadura = armadura.caBase;
-
-  const destreza = personagem.atributos.destreza;
-
-  if (armadura.usaDestreza === true && destreza !== undefined && destreza !== "") {
-    const modificadorDestreza = calcularModificador(destreza);
-
-    if (armadura.limiteDestreza === null) {
-      classeArmadura += modificadorDestreza;
-    } else {
-      classeArmadura += Math.min(modificadorDestreza, armadura.limiteDestreza);
-    }
-  }
-
-  if (itemSecundario !== undefined && itemSecundario.bonusCA !== undefined) {
-    classeArmadura += itemSecundario.bonusCA;
-  }
-
-  if (
-    personagemTemEstiloDeLuta(personagem, "defesa") &&
-    idArmadura !== "semArmadura"
-  ) {
-    classeArmadura += 1;
-  }
-
-  return classeArmadura;
 }
 
 function obterDadosEspecie(personagem) {
@@ -328,208 +248,44 @@ function preencherEquipamentos(personagem) {
     fichaItemSecundario.textContent = obterNomeItemSecundario(equipamentos.itemSecundario);
   }
 
-  if (equipamentos.proficiencias !== undefined) {
-    fichaProficiencias.textContent = equipamentos.proficiencias.join(", ");
-    return;
+  fichaProficiencias.textContent = obterTextoProficiencias(personagem);
+}
+
+function obterTextoProficiencias(personagem) {
+  if (
+    personagem.detalhes !== undefined &&
+    personagem.detalhes.equipamentos !== undefined &&
+    personagem.detalhes.equipamentos.proficiencias !== undefined
+  ) {
+    return personagem.detalhes.equipamentos.proficiencias.join(", ");
   }
 
   const dadosClasse = window.bancoClasses[personagem.classeId];
 
-  if (dadosClasse !== undefined && dadosClasse.proficiencias !== undefined) {
-    const proficiencias = [
-      ...(dadosClasse.proficiencias.armaduras || []),
-      ...(dadosClasse.proficiencias.armas || [])
-    ];
-
-    fichaProficiencias.textContent = proficiencias.join(", ");
-  }
-}
-
-function obterNomeArmadura(idArmadura) {
-  const armadura = window.bancoEquipamentos.armaduras[idArmadura];
-
-  if (armadura === undefined) {
+  if (dadosClasse === undefined || dadosClasse.proficiencias === undefined) {
     return "";
   }
 
-  return armadura.nome;
-}
+  const proficiencias = [
+    ...(dadosClasse.proficiencias.armaduras || []),
+    ...(dadosClasse.proficiencias.armas || []),
+    ...(dadosClasse.proficiencias.armasEspecificas || []).map(obterNomeArma),
+    ...(dadosClasse.proficiencias.ferramentas || [])
+  ];
 
-function obterNomeArma(idArma) {
-  const arma = window.bancoEquipamentos.armas[idArma];
-
-  if (arma === undefined) {
-    return "";
-  }
-
-  if (typeof arma === "string") {
-    return arma;
-  }
-
-  return arma.nome;
-}
-
-function obterNomeItemSecundario(idItem) {
-  const item = window.bancoEquipamentos.itensSecundarios[idItem];
-
-  if (item === undefined) {
-    return "";
-  }
-
-  return item.nome;
-}
-
-function preencherHabilidades(personagemAtual) {
-  fichaHabilidades.innerHTML = "";
-
-  const dadosDaClasse =
-    window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
-
-  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
-    const item = document.createElement("li");
-    item.textContent = "Nenhuma habilidade cadastrada.";
-    fichaHabilidades.appendChild(item);
-    return;
-  }
-
-  const dadosNivel1 = dadosDaClasse.nivel1;
-
-  const habilidadesAutomaticas =
-    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
-
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
-    if (idHabilidade === "maestriaComArmas") {
-      return;
-    }
-
-    const habilidade = obterDadosHabilidade(idHabilidade);
-
-    if (habilidade === undefined) {
-      return;
-    }
-
-    const item = document.createElement("li");
-
-    const botao = window.criarReferenciaDetalhe(
-      "habilidade",
-      idHabilidade,
-      habilidade.nome,
-      {
-        recursos: obterRecursosHabilidadesPersonagem(personagemAtual)
-      }
-    );
-
-    item.appendChild(botao);
-
-    const recursos = obterRecursosHabilidadesPersonagem(personagemAtual);
-    const recurso = recursos[idHabilidade];
-
-    if (recurso !== undefined) {
-      item.appendChild(
-        document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
-      );
-    }
-
-    fichaHabilidades.appendChild(item);
-  });
-
-  if (dadosNivel1.escolhas === undefined) {
-    return;
-  }
-
-  dadosNivel1.escolhas.forEach(function(escolha) {
-    const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
-
-    if (grupo === undefined) {
-      return;
-    }
-
-    const valorEscolhido =
-      personagemAtual.habilidades.escolhas[escolha.grupo];
-
-    if (valorEscolhido === undefined) {
-      return;
-    }
-
-    if (grupo.origemDasOpcoes === "periciasProficientes") {
-      const itemGrupo = document.createElement("li");
-      itemGrupo.textContent = grupo.nome + ":";
-
-      const sublista = document.createElement("ul");
-
-      const periciasEscolhidas = Array.isArray(valorEscolhido)
-        ? valorEscolhido
-        : [valorEscolhido];
-
-      periciasEscolhidas.forEach(function(idPericia) {
-        const itemPericia = document.createElement("li");
-        itemPericia.textContent = obterNomePericia(idPericia);
-        sublista.appendChild(itemPericia);
-      });
-
-      itemGrupo.appendChild(sublista);
-      fichaHabilidades.appendChild(itemGrupo);
-
-      return;
-    }
-
-    if (grupo.origemDasOpcoes === "armas") {
-      const itemGrupo = document.createElement("li");
-      itemGrupo.textContent = grupo.nome + ":";
-
-      const sublista = document.createElement("ul");
-
-      const armasEscolhidas = Array.isArray(valorEscolhido)
-        ? valorEscolhido
-        : [valorEscolhido];
-
-      armasEscolhidas.forEach(function(idArma) {
-        const arma = obterDadosArma(idArma);
-
-        if (arma === undefined) {
-          return;
-        }
-
-        const itemArma = document.createElement("li");
-        itemArma.textContent = arma.nome;
-
-        sublista.appendChild(itemArma);
-      });
-
-      itemGrupo.appendChild(sublista);
-      fichaHabilidades.appendChild(itemGrupo);
-
-      return;
-    }
-
-    if (grupo.opcoes === undefined) {
-      return;
-    }
-
-    const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
-      return opcao.id === valorEscolhido;
-    });
-
-    if (opcaoEscolhida !== undefined) {
-      const item = document.createElement("li");
-      item.textContent = grupo.nome + ": " + opcaoEscolhida.nome;
-      fichaHabilidades.appendChild(item);
-    }
-  });
-
-  if (fichaHabilidades.children.length === 0) {
-    const item = document.createElement("li");
-    item.textContent = "Nenhuma habilidade registrada.";
-    fichaHabilidades.appendChild(item);
-  }
+  return proficiencias.join(", ");
 }
 
 function preencherMagias(personagem) {
   const lista = document.getElementById("fichaMagias");
+
+  if (lista === null) {
+    return;
+  }
+
   lista.innerHTML = "";
 
-  const dadosMagiaClasse =
-    window.bancoMagias.progressaoMagias[personagem.classeId];
+  const dadosMagiaClasse = window.bancoMagias.progressaoMagias[personagem.classeId];
 
   if (dadosMagiaClasse === undefined || dadosMagiaClasse.nivel1 === undefined) {
     return;
@@ -540,56 +296,171 @@ function preencherMagias(personagem) {
   lista.appendChild(item);
 }
 
-function preencherUmAtributo(nomeAtributo, idValor, idModificador, personagem) {
-  const valor = personagem.atributos[nomeAtributo];
-
-  const campoValor = document.getElementById(idValor);
-  const campoModificador = document.getElementById(idModificador);
-
-  if (valor === undefined || valor === "") {
-    campoValor.textContent = "";
-    campoModificador.textContent = "";
+function preencherArmasAtaques(personagem) {
+  if (fichaArmasAtaques === null) {
     return;
   }
 
-  const modificador = calcularModificador(valor);
+  fichaArmasAtaques.innerHTML = "";
 
-  campoValor.textContent = valor;
-  campoModificador.textContent = formatarModificador(modificador);
-}
+  const armasParaMostrar = obterArmasDoPersonagem(personagem);
 
-function carregarPersonagensSalvos() {
-  return JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
-}
+  if (armasParaMostrar.length === 0) {
+    fichaArmasAtaques.textContent = "";
+    return;
+  }
 
-function pegarIdDaUrl() {
-  const parametros = new URLSearchParams(window.location.search);
-  return parametros.get("id");
-}
+  armasParaMostrar.forEach(function(idArma) {
+    const resumo = obterResumoArma(personagem, idArma);
 
-function buscarPersonagemPorId(idPersonagem) {
-  const personagens = carregarPersonagensSalvos();
-
-  return personagens.find(function(personagem) {
-    return personagem.id === idPersonagem;
+    if (resumo !== undefined) {
+      fichaArmasAtaques.appendChild(criarLinhaAtaque(resumo));
+    }
   });
 }
 
-function calcularModificador(valor) {
-  return Math.floor((valor - 10) / 2);
-}
+function obterArmasDoPersonagem(personagem) {
+  const equipamentos = personagem.detalhes.equipamentos;
 
-function formatarModificador(modificador) {
-  if (modificador >= 0) {
-    return "+" + modificador;
+  if (equipamentos === undefined) {
+    return [];
   }
 
-  return String(modificador);
+  const armas = [];
+
+  if (equipamentos.armaPrincipal !== undefined && equipamentos.armaPrincipal !== "") {
+    armas.push(equipamentos.armaPrincipal);
+  }
+
+  if (
+    equipamentos.itemSecundario === "armaSecundaria" &&
+    equipamentos.armaSecundaria !== undefined &&
+    equipamentos.armaSecundaria !== ""
+  ) {
+    armas.push(equipamentos.armaSecundaria);
+  }
+
+  return armas;
 }
 
-if (botaoImprimirFicha !== null) {
-  botaoImprimirFicha.addEventListener("click", function() {
-    window.print();
+function obterDadosTalento(idTalento) {
+  if (window.bancoTalentos === undefined) {
+    return undefined;
+  }
+
+  return window.bancoTalentos[idTalento];
+}
+
+function obterNomeTalento(idTalento) {
+  const talento = obterDadosTalento(idTalento);
+
+  if (talento === undefined) {
+    return idTalento;
+  }
+
+  return talento.nome;
+}
+
+function preencherTalentos(personagem) {
+  if (fichaTalentos === null) {
+    return;
+  }
+
+  fichaTalentos.innerHTML = "";
+
+  if (personagem.talentos === undefined || personagem.talentos.length === 0) {
+    return;
+  }
+
+  personagem.talentos.forEach(function(idTalento) {
+    const item = criarItemTalentoFicha(idTalento);
+
+    if (item !== undefined) {
+      fichaTalentos.appendChild(item);
+    }
+  });
+}
+
+function criarItemTalentoFicha(idTalento) {
+  const talento = obterDadosTalento(idTalento);
+
+  if (talento === undefined) {
+    return undefined;
+  }
+
+  const item = document.createElement("li");
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.classList.add("botao-habilidade-ficha");
+
+  const nome = document.createElement("span");
+  nome.classList.add("nome-habilidade-ficha");
+  nome.textContent = talento.nome;
+
+  botao.appendChild(nome);
+
+  botao.addEventListener("click", function(evento) {
+    evento.stopPropagation();
+
+    if (typeof window.abrirPopoverDetalhe === "function") {
+      window.abrirPopoverDetalhe("talento", idTalento, botao);
+    }
+  });
+
+  item.appendChild(botao);
+  return item;
+}
+
+function obterTextoTalentosParaPdf(personagem) {
+  if (personagem.talentos === undefined || personagem.talentos.length === 0) {
+    return "";
+  }
+
+  const nomesTalentos = personagem.talentos.map(function(idTalento) {
+    return obterNomeTalento(idTalento);
+  });
+
+  return nomesTalentos.join("\n");
+}
+
+function atualizarMarcadoresPericias(personagem) {
+  const linhasPericia = document.querySelectorAll("[data-pericia]");
+
+  linhasPericia.forEach(function(linha) {
+    const idPericia = linha.dataset.pericia;
+
+    linha.classList.remove("proficiente");
+    linha.classList.remove("especializada");
+
+    if (personagemTemProficienciaEmPericia(personagem, idPericia)) {
+      linha.classList.add("proficiente");
+    }
+
+    if (personagemTemEspecializacaoEmPericia(personagem, idPericia)) {
+      linha.classList.add("especializada");
+    }
+  });
+}
+
+function atualizarMarcadoresSalvaguardas(personagem) {
+  const linhasSalvaguarda = document.querySelectorAll("[data-salvaguarda]");
+
+  linhasSalvaguarda.forEach(function(linha) {
+    linha.classList.remove("proficiente");
+  });
+
+  const dadosClasse = window.bancoClasses[personagem.classeId];
+
+  if (dadosClasse === undefined || dadosClasse.salvaguardas === undefined) {
+    return;
+  }
+
+  linhasSalvaguarda.forEach(function(linha) {
+    const idSalvaguarda = linha.dataset.salvaguarda;
+
+    if (dadosClasse.salvaguardas.includes(idSalvaguarda)) {
+      linha.classList.add("proficiente");
+    }
   });
 }
 
@@ -607,47 +478,14 @@ function preencherCampoTexto(formulario, nomeCampo, valor) {
   }
 }
 
-function obterTextoHabilidades(personagem) {
-  const linhas = [];
+function obterModificadorFormatado(personagem, idAtributo) {
+  const valor = personagem.atributos[idAtributo];
 
-  const dadosDaClasse =
-    window.bancoHabilidades.progressaoClasses[personagem.classeId];
-
-  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
+  if (valor === undefined || valor === "") {
     return "";
   }
 
-  const dadosNivel1 = dadosDaClasse.nivel1;
-
-  const habilidadesAutomaticas =
-  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
-
-habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = obterDadosHabilidade(idHabilidade);
-
-    if (habilidade !== undefined) {
-      linhas.push(habilidade.nome);
-    }
-  });
-
-  dadosNivel1.escolhas.forEach(function(escolha) {
-    const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
-    const idOpcaoEscolhida = personagem.habilidades.escolhas[escolha.grupo];
-
-    if (grupo === undefined || idOpcaoEscolhida === undefined) {
-      return;
-    }
-
-    const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
-      return opcao.id === idOpcaoEscolhida;
-    });
-
-    if (opcaoEscolhida !== undefined) {
-      linhas.push(grupo.nome + ": " + opcaoEscolhida.nome);
-    }
-  });
-
-  return linhas.join("\n");
+  return formatarModificador(calcularModificador(valor));
 }
 
 function obterTextoEquipamento(personagem) {
@@ -658,492 +496,16 @@ function obterTextoEquipamento(personagem) {
   }
 
   const linhas = [];
-
   linhas.push("Armadura: " + obterNomeArmadura(equipamentos.armadura));
   linhas.push("Arma principal: " + obterNomeArma(equipamentos.armaPrincipal));
-  linhas.push("Item secundário: " + obterNomeItemSecundario(equipamentos.itemSecundario));
+
+  if (equipamentos.itemSecundario === "armaSecundaria") {
+    linhas.push("Arma secundária: " + obterNomeArma(equipamentos.armaSecundaria));
+  } else {
+    linhas.push("Item secundário: " + obterNomeItemSecundario(equipamentos.itemSecundario));
+  }
 
   return linhas.join("\n");
-}
-
-async function baixarPdfFichaEditavel(personagem) {
-  const resposta = await fetch("pdfs/ficha-dnd-editavel.pdf");
-
-  if (resposta.ok === false) {
-    console.error("PDF não encontrado. Status:", resposta.status);
-    return;
-  }
-
-  const bytesPdf = await resposta.arrayBuffer();
-
-  const pdfDoc = await PDFLib.PDFDocument.load(bytesPdf);
-  const formulario = pdfDoc.getForm();
-
-  const pontosDeVida = personagem.detalhes.pontosDeVida || {};
-
-  preencherCampoTexto(formulario, camposFichaPdf.nome, personagem.detalhes.nome);
-  preencherCampoTexto(formulario, camposFichaPdf.classe, personagem.classe);
-  preencherCampoTexto(formulario, camposFichaPdf.nivel, "1");
-  preencherCampoTexto(formulario, camposFichaPdf.antecedente, personagem.antecedente);
-  preencherCampoTexto(formulario, camposFichaPdf.especie, personagem.especie);
-  preencherCampoTexto(formulario, camposFichaPdf.subclasse, "");
-  preencherCampoTexto(formulario, camposFichaPdf.xp, "0");
-
-  preencherCampoTexto(formulario, camposFichaPdf.forcaValor, personagem.atributos.forca);
-  preencherCampoTexto(formulario, camposFichaPdf.destrezaValor, personagem.atributos.destreza);
-  preencherCampoTexto(formulario, camposFichaPdf.constituicaoValor, personagem.atributos.constituicao);
-  preencherCampoTexto(formulario, camposFichaPdf.inteligenciaValor, personagem.atributos.inteligencia);
-  preencherCampoTexto(formulario, camposFichaPdf.sabedoriaValor, personagem.atributos.sabedoria);
-  preencherCampoTexto(formulario, camposFichaPdf.carismaValor, personagem.atributos.carisma);
-
-  preencherCampoTexto(
-    formulario,
-    camposFichaPdf.forcaMod,
-    formatarModificador(calcularModificador(personagem.atributos.forca))
-  );
-
-  preencherCampoTexto(
-    formulario,
-    camposFichaPdf.destrezaMod,
-    formatarModificador(calcularModificador(personagem.atributos.destreza))
-  );
-
-  preencherCampoTexto(
-    formulario,
-    camposFichaPdf.constituicaoMod,
-    formatarModificador(calcularModificador(personagem.atributos.constituicao))
-  );
-
-  preencherCampoTexto(
-    formulario,
-    camposFichaPdf.inteligenciaMod,
-    formatarModificador(calcularModificador(personagem.atributos.inteligencia))
-  );
-
-  preencherCampoTexto(
-    formulario,
-    camposFichaPdf.sabedoriaMod,
-    formatarModificador(calcularModificador(personagem.atributos.sabedoria))
-  );
-
-  preencherCampoTexto(
-    formulario,
-    camposFichaPdf.carismaMod,
-    formatarModificador(calcularModificador(personagem.atributos.carisma))
-  );
-
-  preencherCampoTexto(formulario, camposFichaPdf.classeArmadura, calcularClasseArmadura(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.pvAtual, pontosDeVida.atuais);
-  preencherCampoTexto(formulario, camposFichaPdf.pvTemporario, pontosDeVida.temporarios);
-  preencherCampoTexto(formulario, camposFichaPdf.pvMaximo, pontosDeVida.maximo);
-  preencherCampoTexto(formulario, camposFichaPdf.dadosVidaMaximos, pontosDeVida.dadoVida);
-  preencherCampoTexto(formulario, camposFichaPdf.dadosVidaUsados, pontosDeVida.dadosVidaUsados);
-
-  preencherCampoTexto(formulario, camposFichaPdf.bonusProficiencia, "+2");
-  preencherCampoTexto(formulario, camposFichaPdf.iniciativa, calcularIniciativa(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.velocidade, obterVelocidade(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.tamanho, obterTamanho(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.percepcaoPassiva, calcularPercepcaoPassiva(personagem));
-
-  preencherCampoTexto(formulario, camposFichaPdf.idiomas, personagem.idiomas.join(", "));
-
-  preencherCampoTexto(
-  formulario,
-  camposFichaPdf.caracteristicasClasse1,
-  obterTextoHabilidadesParaPdf(personagem)
-  );
-
-  preencherCampoTexto(
-  formulario,
-  camposFichaPdf.talentos,
-  obterTextoTalentosParaPdf(personagem)
-  );
-
-  adicionarTextoAoCampoPdf(
-  formulario,
-  camposFichaPdf.caracteristicasClasse2,
-  obterTextoEspecializacoesParaPdf(personagem)
-  );
-  
-  preencherArmasPdf(formulario, personagem);
-  marcarCheckboxesPersonagemPdf(formulario, personagem);
-  formulario.updateFieldAppearances();
-
-  const pdfFinal = await pdfDoc.save();
-
-  const blob = new Blob([pdfFinal], {
-    type: "application/pdf"
-  });
-
-  const url = URL.createObjectURL(blob);
-
-  const nomeArquivo =
-    "ficha-" +
-    personagem.detalhes.nome.toLowerCase().replaceAll(" ", "-") +
-    ".pdf";
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = nomeArquivo;
-  link.click();
-
-  URL.revokeObjectURL(url);
-}
-
-if (botaoBaixarPdfEditavel !== null) {
-  botaoBaixarPdfEditavel.addEventListener("click", function() {
-    console.log("Cliquei em baixar PDF editável");
-
-    if (personagemEncontrado === undefined) {
-      alert("Personagem não encontrado. Não foi possível gerar o PDF.");
-      return;
-    }
-
-    baixarPdfFichaEditavel(personagemEncontrado);
-  });
-}
-
-if (personagemEncontrado === undefined) {
-  alert("Personagem não encontrado.");
-} else {
-  preencherFichaPersonagem(personagemEncontrado);
-}
-
-function calcularBonusProficiencia(personagem) {
-  return 2;
-}
-
-function personagemTemProficienciaEmPericia(personagem, idPericia) {
-  if (personagem.pericias === undefined) {
-    return false;
-  }
-
-  return personagem.pericias.includes(idPericia);
-}
-
-function personagemTemProficienciaEmSalvaguarda(personagem, idAtributo) {
-  const classeId = personagem.classeId;
-
-  if (classeId === undefined || classeId === "") {
-    return false;
-  }
-
-  const dadosClasse = window.bancoClasses[classeId];
-
-  if (dadosClasse === undefined || dadosClasse.salvaguardas === undefined) {
-    return false;
-  }
-
-  return dadosClasse.salvaguardas.includes(idAtributo);
-}
-
-function calcularValorPericia(personagemAtual, idPericia) {
-  const atributo = obterAtributoDaPericia(idPericia);
-
-  if (atributo === undefined) {
-    return "";
-  }
-
-  const valorAtributo = personagemAtual.atributos[atributo];
-
-  if (valorAtributo === undefined || valorAtributo === "") {
-    return "";
-  }
-
-  let valorFinal = calcularModificador(valorAtributo);
-
-  if (personagemTemProficienciaEmPericia(personagemAtual, idPericia)) {
-    valorFinal = valorFinal + calcularBonusProficiencia();
-
-    if (personagemTemEspecializacaoEmPericia(personagemAtual, idPericia)) {
-      valorFinal = valorFinal + calcularBonusProficiencia();
-    }
-  }
-
-  return valorFinal;
-}
-
-function calcularValorSalvaguarda(personagem, idAtributo) {
-  const valorAtributo = personagem.atributos[idAtributo];
-
-  if (valorAtributo === undefined || valorAtributo === "") {
-    return "";
-  }
-
-  let valorFinal = calcularModificador(valorAtributo);
-
-  if (personagemTemProficienciaEmSalvaguarda(personagem, idAtributo)) {
-    valorFinal = valorFinal + calcularBonusProficiencia(personagem);
-  }
-
-  return valorFinal;
-}
-
-function atualizarMarcadoresPericias(personagemAtual) {
-  const linhasPericia = document.querySelectorAll("[data-pericia]");
-
-  linhasPericia.forEach(function(linha) {
-    const idPericia = linha.dataset.pericia;
-
-    linha.classList.remove("proficiente");
-    linha.classList.remove("especializada");
-
-     if (personagemTemProficienciaEmPericia(personagemAtual, idPericia)) {
-      linha.classList.add("proficiente");
-    }
-
-    if (personagemTemEspecializacaoEmPericia(personagemAtual, idPericia)) {
-      linha.classList.add("especializada");
-    }
-  });
-}
-
-function atualizarMarcadoresSalvaguardas(personagem) {
-  const linhasSalvaguarda = document.querySelectorAll("[data-salvaguarda]");
-
-  linhasSalvaguarda.forEach(function(linha) {
-    linha.classList.remove("proficiente");
-  });
-
-  const classeId = personagem.classeId;
-
-  if (classeId === undefined || classeId === "") {
-    return;
-  }
-
-  const dadosClasse = window.bancoClasses[classeId];
-
-  if (dadosClasse === undefined || dadosClasse.salvaguardas === undefined) {
-    return;
-  }
-
-  linhasSalvaguarda.forEach(function(linha) {
-    const idSalvaguarda = linha.dataset.salvaguarda;
-
-    if (dadosClasse.salvaguardas.includes(idSalvaguarda)) {
-      linha.classList.add("proficiente");
-    }
-  });
-}
-
-function obterOpcoesDoGrupoEscolha(grupo) {
-  if (grupo.origemDasOpcoes === "armas") {
-    return Object.keys(window.bancoEquipamentos.armas).map(function(idArma) {
-      const arma = window.bancoEquipamentos.armas[idArma];
-
-      if (typeof arma === "string") {
-        return {
-          id: idArma,
-          nome: arma,
-          descricaoCurta: ""
-        };
-      }
-
-      return {
-        id: idArma,
-        nome: arma.nome,
-        descricaoCurta: "Maestria: " + arma.maestria
-      };
-    });
-  }
-
-  return grupo.opcoes;
-}
-
-function obterTextoHabilidadesParaPdf(personagem) {
-  const linhas = [];
-
-  if (
-    personagem === undefined ||
-    personagem.habilidades === undefined ||
-    personagem.habilidades.escolhas === undefined
-  ) {
-    return "";
-  }
-
-  const dadosDaClasse =
-    window.bancoHabilidades.progressaoClasses[personagem.classeId];
-
-  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
-    return "";
-  }
-
-  const dadosNivel1 = dadosDaClasse.nivel1;
-
-  const habilidadesAutomaticas =
-    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
-
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
-    if (idHabilidade === "maestriaComArmas") {
-      return;
-    }
-
-    const habilidade = obterDadosHabilidade(idHabilidade);
-
-    if (habilidade !== undefined) {
-      linhas.push(habilidade.nome);
-    }
-  });
-
-  if (Array.isArray(dadosNivel1.escolhas) === false) {
-    return linhas.join("\n");
-  }
-
-  dadosNivel1.escolhas.forEach(function(escolha) {
-    const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
-    const valorEscolhido = personagem.habilidades.escolhas[escolha.grupo];
-
-    if (grupo === undefined || valorEscolhido === undefined) {
-      return;
-    }
-
-    const idsEscolhidos = Array.isArray(valorEscolhido)
-      ? valorEscolhido
-      : [valorEscolhido];
-
-    const nomesEscolhidos = idsEscolhidos.map(function(idEscolhido) {
-      if (grupo.origemDasOpcoes === "periciasProficientes") {
-        return obterNomePericia(idEscolhido);
-      }
-
-      if (grupo.origemDasOpcoes === "armas") {
-        return obterNomeArma(idEscolhido);
-      }
-
-      if (Array.isArray(grupo.opcoes) === false) {
-        return idEscolhido;
-      }
-
-      const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
-        return opcao.id === idEscolhido;
-      });
-
-      if (opcaoEscolhida === undefined) {
-        return idEscolhido;
-      }
-
-      return opcaoEscolhida.nome;
-    });
-
-    if (nomesEscolhidos.length > 0) {
-      linhas.push(grupo.nome + ": " + nomesEscolhidos.join(", "));
-    }
-  });
-
-  return linhas.join("\n");
-}
-
-function criarItemHabilidadeComEscolha(rotulo, valor) {
-  const item = document.createElement("li");
-  item.classList.add("item-habilidade-escolha");
-
-  const spanRotulo = document.createElement("span");
-  spanRotulo.classList.add("habilidade-rotulo");
-  spanRotulo.textContent = rotulo + ": ";
-
-  const spanValor = document.createElement("span");
-  spanValor.classList.add("habilidade-valor");
-  spanValor.textContent = valor;
-
-  item.appendChild(spanRotulo);
-  item.appendChild(spanValor);
-
-  return item;
-}
-
-
-
-
-
-async function gerarMapaCheckboxesPdf() {
-  const resposta = await fetch("pdfs/ficha-dnd-editavel.pdf");
-
-  if (resposta.ok === false) {
-    console.error("PDF não encontrado. Status:", resposta.status);
-    return;
-  }
-
-  const bytesPdf = await resposta.arrayBuffer();
-
-  const pdfDoc = await PDFLib.PDFDocument.load(bytesPdf);
-  const formulario = pdfDoc.getForm();
-  const campos = formulario.getFields();
-  const paginas = pdfDoc.getPages();
-
-  let totalCheckboxes = 0;
-
-  campos.forEach(function(campo) {
-    const nomeCampo = campo.getName();
-
-    console.log(
-      nomeCampo,
-      "tipo:",
-      campo.constructor.name,
-      "tem check:",
-      typeof campo.check
-    );
-
-    if (typeof campo.check !== "function") {
-      return;
-    }
-
-    totalCheckboxes = totalCheckboxes + 1;
-
-    campo.check();
-
-    const widgets = campo.acroField.getWidgets();
-
-    widgets.forEach(function(widget) {
-      const retangulo = widget.getRectangle();
-
-      let pagina = paginas[0];
-
-      const paginaDoWidget = widget.P();
-
-      const paginaEncontrada = paginas.find(function(paginaAtual) {
-        return paginaAtual.ref === paginaDoWidget;
-      });
-
-      if (paginaEncontrada !== undefined) {
-        pagina = paginaEncontrada;
-      }
-
-      pagina.drawText(nomeCampo, {
-        x: retangulo.x + 8,
-        y: retangulo.y,
-        size: 6,
-        color: PDFLib.rgb(1, 0, 0)
-      });
-
-      pagina.drawRectangle({
-        x: retangulo.x - 1,
-        y: retangulo.y - 1,
-        width: retangulo.width + 2,
-        height: retangulo.height + 2,
-        borderColor: PDFLib.rgb(1, 0, 0),
-        borderWidth: 0.5
-      });
-    });
-  });
-
-  console.log("Total de checkboxes encontrados:", totalCheckboxes);
-
-  formulario.updateFieldAppearances();
-
-  const pdfFinal = await pdfDoc.save();
-
-  const blob = new Blob([pdfFinal], {
-    type: "application/pdf"
-  });
-
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "mapa-checkboxes-ficha-dnd.pdf";
-  link.click();
-
-  URL.revokeObjectURL(url);
 }
 
 function marcarCheckboxPdf(formulario, nomeCampo) {
@@ -1152,8 +514,7 @@ function marcarCheckboxPdf(formulario, nomeCampo) {
   }
 
   try {
-    const checkbox = formulario.getCheckBox(nomeCampo);
-    checkbox.check();
+    formulario.getCheckBox(nomeCampo).check();
   } catch (erro) {
     console.warn("Checkbox não encontrado no PDF:", nomeCampo);
   }
@@ -1164,19 +525,13 @@ function marcarCheckboxesPersonagemPdf(formulario, personagem) {
 
   if (dadosClasse !== undefined && dadosClasse.salvaguardas !== undefined) {
     dadosClasse.salvaguardas.forEach(function(idSalvaguarda) {
-      marcarCheckboxPdf(
-        formulario,
-        camposCheckboxPdf.salvaguardas[idSalvaguarda]
-      );
+      marcarCheckboxPdf(formulario, camposCheckboxPdf.salvaguardas[idSalvaguarda]);
     });
   }
 
   if (personagem.pericias !== undefined) {
     personagem.pericias.forEach(function(idPericia) {
-      marcarCheckboxPdf(
-        formulario,
-        camposCheckboxPdf.pericias[idPericia]
-      );
+      marcarCheckboxPdf(formulario, camposCheckboxPdf.pericias[idPericia]);
     });
   }
 
@@ -1205,14 +560,6 @@ function marcarCheckboxesPersonagemPdf(formulario, personagem) {
   }
 }
 
-function obterDadosArma(idArma) {
-  if (idArma === undefined || idArma === "") {
-    return undefined;
-  }
-
-  return window.bancoEquipamentos.armas[idArma];
-}
-
 function preencherArmasPdf(formulario, personagem) {
   const armas = obterArmasDoPersonagem(personagem);
 
@@ -1229,817 +576,130 @@ function preencherArmasPdf(formulario, personagem) {
       return;
     }
 
+    const notas = [];
+
+    if (resumo.maestria !== undefined && resumo.maestria !== "") {
+      notas.push("Maestria: " + resumo.maestria);
+    }
+
+    if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
+      notas.push(resumo.ataqueFurtivo);
+    }
+
     preencherCampoTexto(formulario, linhaPdf.nome, resumo.nome);
     preencherCampoTexto(formulario, linhaPdf.ataque, resumo.ataque);
     preencherCampoTexto(formulario, linhaPdf.dano, resumo.dano);
-    preencherCampoTexto(formulario, linhaPdf.notas, "Maestria: " + resumo.maestria);
+    preencherCampoTexto(formulario, linhaPdf.notas, notas.join("\n"));
   });
 }
 
-function personagemTemProficienciaComArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
+async function baixarPdfFichaEditavel(personagem) {
+  const resposta = await fetch("pdfs/ficha-dnd-editavel.pdf");
 
-  if (arma === undefined) {
-    return false;
-  }
-
-  const dadosClasse = window.bancoClasses[personagemAtual.classeId];
-
-  if (dadosClasse === undefined || dadosClasse.proficiencias === undefined) {
-    return false;
-  }
-
-  const proficienciasArmas = dadosClasse.proficiencias.armas || [];
-  const armasEspecificas = dadosClasse.proficiencias.armasEspecificas || [];
-
-  if (armasEspecificas.includes(idArma)) {
-    return true;
-  }
-
-  if (arma.tipo === "simples" && proficienciasArmas.includes("Armas simples")) {
-    return true;
-  }
-
-  if (arma.tipo === "marcial" && proficienciasArmas.includes("Armas marciais")) {
-    return true;
-  }
-
-  return false;
-}
-
-function calcularBonusAtaqueArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return "";
-  }
-
-  const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
-  const valorAtributo = personagemAtual.atributos[atributoAtaque];
-
-  if (valorAtributo === undefined || valorAtributo === "") {
-    return "";
-  }
-
-  let bonusAtaque = calcularModificador(valorAtributo);
-
-  if (personagemTemProficienciaComArma(personagemAtual, idArma)) {
-    bonusAtaque = bonusAtaque + calcularBonusProficiencia(personagemAtual);
-  }
-
-  if (
-    personagemAtual.habilidades.escolhas.estilosDeLuta === "arquearia" &&
-    arma.categoria === "distancia"
-  ) {
-    bonusAtaque = bonusAtaque + 2;
-  }
-
-  return bonusAtaque;
-}
-
-function calcularBonusDanoArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return "";
-  }
-
-  const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
-  const valorAtributo = personagemAtual.atributos[atributoAtaque];
-
-  if (valorAtributo === undefined || valorAtributo === "") {
-    return "";
-  }
-
-  const modificadorAtributo = calcularModificador(valorAtributo);
-  const equipamentos = personagemAtual.detalhes.equipamentos;
-
-  const ehArmaSecundaria = armaEhSecundaria(personagemAtual, idArma);
-
-  let bonusDano = modificadorAtributo;
-
-  if (
-    ehArmaSecundaria &&
-    personagemAtual.habilidades.escolhas.estilosDeLuta !== "combateDuasArmas"
-  ) {
-    bonusDano = 0;
-  }
-
-  const usaDuelismo =
-    personagemAtual.habilidades.escolhas.estilosDeLuta === "duelismo" &&
-    equipamentos !== undefined &&
-    equipamentos.armaPrincipal === idArma &&
-    arma.categoria === "corpo-a-corpo" &&
-    equipamentos.itemSecundario !== "armaSecundaria";
-
-  if (usaDuelismo) {
-    bonusDano = bonusDano + 2;
-  }
-
-  return bonusDano;
-}
-
-function formatarDanoArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return "";
-  }
-
-  const bonusDano = calcularBonusDanoArma(personagemAtual, idArma);
-
-  if (bonusDano === "") {
-    return arma.dano + " " + arma.tipoDano;
-  }
-
-  if (bonusDano > 0) {
-    return arma.dano + " +" + bonusDano + " " + arma.tipoDano;
-  }
-
-  if (bonusDano < 0) {
-    return arma.dano + " " + bonusDano + " " + arma.tipoDano;
-  }
-
-  return arma.dano + " " + arma.tipoDano;
-}
-
-function obterResumoArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return undefined;
-  }
-
-  const bonusAtaque = calcularBonusAtaqueArma(personagemAtual, idArma);
-
-  return {
-    nome: arma.nome,
-    ataque: bonusAtaque === "" ? "" : formatarModificador(bonusAtaque),
-    dano: formatarDanoArma(personagemAtual, idArma),
-    maestria: obterNomeMaestria(arma.maestria),
-    maestriaId: arma.maestria,
-    propriedades: arma.propriedades || [],
-    ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma)
-  };
-}
-
-function armaPermiteAtaqueFurtivo(idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return false;
-  }
-
-  const propriedades = arma.propriedades || [];
-
-  if (arma.categoria === "distancia") {
-    return true;
-  }
-
-  if (propriedades.includes("acuidade")) {
-    return true;
-  }
-
-  return false;
-}
-
-function obterTextoAtaqueFurtivo(personagemAtual, idArma) {
-  if (personagemAtual.classeId !== "ladino") {
-    return "";
-  }
-
-  if (armaPermiteAtaqueFurtivo(idArma) === false) {
-    return "";
-  }
-
-  return "Ataque Furtivo: +1d6 quando aplicável";
-}
-
-function preencherArmasAtaques(personagemAtual) {
-  if (fichaArmasAtaques === null) {
+  if (resposta.ok === false) {
+    console.error("PDF não encontrado. Status:", resposta.status);
     return;
   }
 
-  fichaArmasAtaques.innerHTML = "";
+  const bytesPdf = await resposta.arrayBuffer();
+  const pdfDoc = await PDFLib.PDFDocument.load(bytesPdf);
+  const formulario = pdfDoc.getForm();
+  const pontosDeVida = personagem.detalhes.pontosDeVida || {};
 
-  const equipamentos = personagemAtual.detalhes.equipamentos;
+  preencherCampoTexto(formulario, camposFichaPdf.nome, personagem.detalhes.nome);
+  preencherCampoTexto(formulario, camposFichaPdf.classe, personagem.classe);
+  preencherCampoTexto(formulario, camposFichaPdf.nivel, "1");
+  preencherCampoTexto(formulario, camposFichaPdf.antecedente, personagem.antecedente);
+  preencherCampoTexto(formulario, camposFichaPdf.especie, personagem.especie);
+  preencherCampoTexto(formulario, camposFichaPdf.subclasse, "");
+  preencherCampoTexto(formulario, camposFichaPdf.xp, "0");
 
-  if (equipamentos === undefined) {
-    fichaArmasAtaques.textContent = "";
-    return;
-  }
+  preencherCampoTexto(formulario, camposFichaPdf.forcaValor, personagem.atributos.forca);
+  preencherCampoTexto(formulario, camposFichaPdf.destrezaValor, personagem.atributos.destreza);
+  preencherCampoTexto(formulario, camposFichaPdf.constituicaoValor, personagem.atributos.constituicao);
+  preencherCampoTexto(formulario, camposFichaPdf.inteligenciaValor, personagem.atributos.inteligencia);
+  preencherCampoTexto(formulario, camposFichaPdf.sabedoriaValor, personagem.atributos.sabedoria);
+  preencherCampoTexto(formulario, camposFichaPdf.carismaValor, personagem.atributos.carisma);
 
-  const armasParaMostrar = [];
+  preencherCampoTexto(formulario, camposFichaPdf.forcaMod, obterModificadorFormatado(personagem, "forca"));
+  preencherCampoTexto(formulario, camposFichaPdf.destrezaMod, obterModificadorFormatado(personagem, "destreza"));
+  preencherCampoTexto(formulario, camposFichaPdf.constituicaoMod, obterModificadorFormatado(personagem, "constituicao"));
+  preencherCampoTexto(formulario, camposFichaPdf.inteligenciaMod, obterModificadorFormatado(personagem, "inteligencia"));
+  preencherCampoTexto(formulario, camposFichaPdf.sabedoriaMod, obterModificadorFormatado(personagem, "sabedoria"));
+  preencherCampoTexto(formulario, camposFichaPdf.carismaMod, obterModificadorFormatado(personagem, "carisma"));
 
-  if (
-    equipamentos.armaPrincipal !== undefined &&
-    equipamentos.armaPrincipal !== ""
-  ) {
-    armasParaMostrar.push(equipamentos.armaPrincipal);
-  }
+  preencherCampoTexto(formulario, camposFichaPdf.classeArmadura, calcularClasseArmadura(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.pvAtual, pontosDeVida.atuais);
+  preencherCampoTexto(formulario, camposFichaPdf.pvTemporario, pontosDeVida.temporarios);
+  preencherCampoTexto(formulario, camposFichaPdf.pvMaximo, pontosDeVida.maximo);
+  preencherCampoTexto(formulario, camposFichaPdf.dadosVidaMaximos, pontosDeVida.dadoVida);
+  preencherCampoTexto(formulario, camposFichaPdf.dadosVidaUsados, pontosDeVida.dadosVidaUsados);
 
-  if (
-    equipamentos.itemSecundario === "armaSecundaria" &&
-    equipamentos.armaSecundaria !== undefined &&
-    equipamentos.armaSecundaria !== ""
-  ) {
-    armasParaMostrar.push(equipamentos.armaSecundaria);
-  }
+  preencherCampoTexto(formulario, camposFichaPdf.bonusProficiencia, "+2");
+  preencherCampoTexto(formulario, camposFichaPdf.iniciativa, calcularIniciativa(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.velocidade, obterVelocidade(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.tamanho, obterTamanho(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.percepcaoPassiva, calcularPercepcaoPassiva(personagem));
 
-  if (armasParaMostrar.length === 0) {
-    fichaArmasAtaques.textContent = "";
-    return;
-  }
+  preencherCampoTexto(formulario, camposFichaPdf.idiomas, (personagem.idiomas || []).join(", "));
+  preencherCampoTexto(formulario, camposFichaPdf.equipamento, obterTextoEquipamento(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.equipamentosArmas, obterTextoEquipamento(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.equipamentosFerramentas, obterTextoProficiencias(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.caracteristicasClasse1, obterTextoHabilidadesParaPdf(personagem));
+  preencherCampoTexto(formulario, camposFichaPdf.talentos, obterTextoTalentosParaPdf(personagem));
 
-  armasParaMostrar.forEach(function(idArma) {
-    const resumo = obterResumoArma(personagemAtual, idArma);
-
-    if (resumo !== undefined) {
-      const linhaAtaque = criarLinhaAtaque(resumo);
-      fichaArmasAtaques.appendChild(linhaAtaque);
-    }
-  });
-}
-
-function criarLinhaAtaque(resumo) {
-  const linhaAtaque = document.createElement("p");
-  linhaAtaque.classList.add("linha-ataque");
-
-  const nomeArma = document.createElement("span");
-  nomeArma.classList.add("ataque-rotulo");
-  nomeArma.textContent = resumo.nome + ": ";
-
-  const valoresAtaque = document.createElement("span");
-  valoresAtaque.classList.add("ataque-valor");
-  valoresAtaque.textContent = resumo.ataque + " / " + resumo.dano + " / ";
-
-  const botaoMaestria = window.criarReferenciaDetalhe(
-    "maestria",
-    resumo.maestriaId,
-    resumo.maestria
+  adicionarTextoAoCampoPdf(
+    formulario,
+    camposFichaPdf.caracteristicasClasse2,
+    obterTextoEspecializacoesParaPdf(personagem)
   );
 
-  linhaAtaque.appendChild(nomeArma);
-  linhaAtaque.appendChild(valoresAtaque);
-  linhaAtaque.appendChild(botaoMaestria);
+  preencherCampoTexto(formulario, camposFichaPdf.aparencia, personagem.detalhes.aparencia || "");
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.historiaPersonalidade,
+    personagem.detalhes.historia || personagem.detalhes.personalidade || ""
+  );
+  preencherCampoTexto(formulario, camposFichaPdf.alinhamento, personagem.detalhes.alinhamento || "");
 
-  if (resumo.propriedades.length > 0) {
-    linhaAtaque.appendChild(document.createElement("br"));
-    linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
+  preencherArmasPdf(formulario, personagem);
+  marcarCheckboxesPersonagemPdf(formulario, personagem);
+  formulario.updateFieldAppearances();
 
-    if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
-  linhaAtaque.appendChild(document.createElement("br"));
+  const pdfFinal = await pdfDoc.save();
+  const blob = new Blob([pdfFinal], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const nomePersonagem = personagem.detalhes.nome || "personagem";
 
-  const linhaAtaqueFurtivo = document.createElement("span");
-  linhaAtaqueFurtivo.classList.add("linha-ataque-furtivo");
-  linhaAtaqueFurtivo.textContent = resumo.ataqueFurtivo;
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ficha-" + nomePersonagem.toLowerCase().replaceAll(" ", "-") + ".pdf";
+  link.click();
 
-  linhaAtaque.appendChild(linhaAtaqueFurtivo);
+  URL.revokeObjectURL(url);
 }
-  }
 
-  return linhaAtaque;
+if (botaoImprimirFicha !== null) {
+  botaoImprimirFicha.addEventListener("click", function() {
+    window.print();
+  });
 }
 
-function criarLinhaPropriedadesArma(propriedades) {
-  const linha = document.createElement("span");
-  linha.classList.add("linha-propriedades-arma");
-
-  linha.textContent = "Propriedades: ";
-
-  propriedades.forEach(function(idPropriedade, indice) {
-    const propriedade = obterDadosPropriedadeArma(idPropriedade);
-
-    if (propriedade === undefined) {
+if (botaoBaixarPdfEditavel !== null) {
+  botaoBaixarPdfEditavel.addEventListener("click", function() {
+    if (personagemEncontrado === undefined) {
+      alert("Personagem não encontrado. Não foi possível gerar o PDF.");
       return;
     }
 
-    const referencia = window.criarReferenciaDetalhe(
-      "propriedadeArma",
-      idPropriedade,
-      propriedade.nome
-    );
-
-    linha.appendChild(referencia);
-
-    if (indice < propriedades.length - 1) {
-      linha.appendChild(document.createTextNode(", "));
-    }
-  });
-
-  return linha;
-}
-
-function obterArmasDoPersonagem(personagem) {
-  const equipamentos = personagem.detalhes.equipamentos;
-
-  if (equipamentos === undefined) {
-    return [];
-  }
-
-  const armas = [];
-
-  if (
-    equipamentos.armaPrincipal !== undefined &&
-    equipamentos.armaPrincipal !== ""
-  ) {
-    armas.push(equipamentos.armaPrincipal);
-  }
-
-  if (
-    equipamentos.itemSecundario === "armaSecundaria" &&
-    equipamentos.armaSecundaria !== undefined &&
-    equipamentos.armaSecundaria !== ""
-  ) {
-    armas.push(equipamentos.armaSecundaria);
-  }
-
-  return armas;
-}
-
-function personagemTemEstiloDeLuta(personagemAtual, idEstilo) {
-  if (
-    personagemAtual.habilidades === undefined ||
-    personagemAtual.habilidades.escolhas === undefined
-  ) {
-    return false;
-  }
-
-  return personagemAtual.habilidades.escolhas.estilosDeLuta === idEstilo;
-}
-
-function armaEhSecundaria(personagemAtual, idArma) {
-  const equipamentos = personagemAtual.detalhes.equipamentos;
-
-  if (equipamentos === undefined) {
-    return false;
-  }
-
-  return (
-    equipamentos.itemSecundario === "armaSecundaria" &&
-    equipamentos.armaSecundaria === idArma
-  );
-}
-
-function obterDadosPericia(idPericia) {
-  return window.bancoPericias[idPericia];
-}
-
-function obterNomePericia(idPericia) {
-  const pericia = obterDadosPericia(idPericia);
-
-  if (pericia === undefined) {
-    return idPericia;
-  }
-
-  return pericia.nome;
-}
-
-function obterAtributoDaPericia(idPericia) {
-  const pericia = obterDadosPericia(idPericia);
-
-  if (pericia === undefined) {
-    return undefined;
-  }
-
-  return pericia.atributo;
-}
-
-function obterEspecializacoesPericiasPersonagem(personagemAtual) {
-  if (
-    personagemAtual.habilidades === undefined ||
-    personagemAtual.habilidades.escolhas === undefined
-  ) {
-    return [];
-  }
-
-  const especializacoes =
-    personagemAtual.habilidades.escolhas.especializacoesPericias;
-
-  if (Array.isArray(especializacoes) === false) {
-    return [];
-  }
-
-  return especializacoes;
-}
-
-function personagemTemEspecializacaoEmPericia(personagemAtual, idPericia) {
-  return obterEspecializacoesPericiasPersonagem(personagemAtual).includes(idPericia);
-}
-
-function obterDadosTalento(idTalento) {
-  if (window.bancoTalentos === undefined) {
-    return undefined;
-  }
-
-  return window.bancoTalentos[idTalento];
-}
-
-function obterNomeTalento(idTalento) {
-  const talento = obterDadosTalento(idTalento);
-
-  if (talento === undefined) {
-    return idTalento;
-  }
-
-  return talento.nome;
-}
-
-function preencherTalentos(personagem) {
-  if (fichaTalentos === null) {
-    return;
-  }
-
-  fichaTalentos.innerHTML = "";
-
-  if (
-    personagem.talentos === undefined ||
-    personagem.talentos.length === 0
-  ) {
-    const item = document.createElement("li");
-    item.textContent = "";
-    fichaTalentos.appendChild(item);
-    return;
-  }
-
-  personagem.talentos.forEach(function(idTalento) {
-    const item = criarItemTalentoFicha(idTalento);
-
-  if (item !== undefined) {
-    fichaTalentos.appendChild(item);
-  }
+    baixarPdfFichaEditavel(personagemEncontrado).catch(function(erro) {
+      console.error("Erro ao baixar PDF editável:", erro);
+    });
   });
 }
 
-function obterTextoTalentosParaPdf(personagem) {
-  if (personagem.talentos === undefined || personagem.talentos.length === 0) {
-    return "";
-  }
-
-  const nomesTalentos = personagem.talentos.map(function(idTalento) {
-    return obterNomeTalento(idTalento);
-  });
-
-  return nomesTalentos.join("\n");
+if (personagemEncontrado === undefined) {
+  alert("Personagem não encontrado.");
+} else {
+  preencherFichaPersonagem(personagemEncontrado);
 }
-
-function obterDadosMaestria(idMaestria) {
-  if (window.bancoMaestrias === undefined) {
-    return undefined;
-  }
-
-  return window.bancoMaestrias[idMaestria];
-}
-
-function obterNomeMaestria(idMaestria) {
-  const maestria = obterDadosMaestria(idMaestria);
-
-  if (maestria === undefined) {
-    return idMaestria;
-  }
-
-  return maestria.nome;
-}function obterDadosPropriedadeArma(idPropriedade) {
-  if (window.bancoPropriedadesArmas === undefined) {
-    return undefined;
-  }
-
-  return window.bancoPropriedadesArmas[idPropriedade];
-}
-
-function obterNomePropriedadeArma(idPropriedade) {
-  const propriedade = obterDadosPropriedadeArma(idPropriedade);
-
-  if (propriedade === undefined) {
-    return idPropriedade;
-  }
-
-  return propriedade.nome;
-}
-
-function obterTextoPropriedadesArma(propriedades) {
-  if (propriedades === undefined || propriedades.length === 0) {
-    return "";
-  }
-
-  const nomesPropriedades = propriedades.map(function(idPropriedade) {
-    return obterNomePropriedadeArma(idPropriedade);
-  });
-
-  return nomesPropriedades.join(", ");
-}
-
-function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return undefined;
-  }
-
-  const propriedades = arma.propriedades || [];
-
-  if (propriedades.includes("acuidade") === false) {
-    return arma.atributoAtaque;
-  }
-
-  const forca = personagemAtual.atributos.forca;
-  const destreza = personagemAtual.atributos.destreza;
-
-  if (
-    (forca === undefined || forca === "") &&
-    (destreza === undefined || destreza === "")
-  ) {
-    return arma.atributoAtaque;
-  }
-
-  if (forca === undefined || forca === "") {
-    return "destreza";
-  }
-
-  if (destreza === undefined || destreza === "") {
-    return "forca";
-  }
-
-  const modificadorForca = calcularModificador(forca);
-  const modificadorDestreza = calcularModificador(destreza);
-
-  if (modificadorForca > modificadorDestreza) {
-    return "forca";
-  }
-
-  return "destreza";
-}
-
-function obterDadosHabilidade(idHabilidade) {
-  if (window.bancoHabilidades === undefined) {
-    return undefined;
-  }
-
-  if (
-    window.bancoHabilidades.classFeatures !== undefined &&
-    window.bancoHabilidades.classFeatures[idHabilidade] !== undefined
-  ) {
-    return window.bancoHabilidades.classFeatures[idHabilidade];
-  }
-
-  if (
-    window.bancoHabilidades.feats !== undefined &&
-    window.bancoHabilidades.feats[idHabilidade] !== undefined
-  ) {
-    return window.bancoHabilidades.feats[idHabilidade];
-  }
-
-  if (
-    window.bancoHabilidades.traits !== undefined &&
-    window.bancoHabilidades.traits[idHabilidade] !== undefined
-  ) {
-    return window.bancoHabilidades.traits[idHabilidade];
-  }
-
-  return undefined;
-}
-
-function formatarFormulaRecurso(formula) {
-  if (formula === undefined || formula === "") {
-    return "";
-  }
-
-  return formula.replace("nivelClasse", "1");
-}
-
-function obterRecursosHabilidadesPersonagem(personagem) {
-  if (
-    personagem.habilidades !== undefined &&
-    personagem.habilidades.recursos !== undefined
-  ) {
-    return personagem.habilidades.recursos;
-  }
-
-  const recursos = {};
-
-  const dadosDaClasse =
-    window.bancoHabilidades.progressaoClasses[personagem.classeId];
-
-  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
-    return recursos;
-  }
-
-  const dadosNivel1 = dadosDaClasse.nivel1;
-
-  const habilidadesAutomaticas =
-    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
-
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = obterDadosHabilidade(idHabilidade);
-
-    if (habilidade === undefined || habilidade.recurso === undefined) {
-      return;
-    }
-
-    const recurso = habilidade.recurso;
-
-    recursos[recurso.id] = {
-      id: recurso.id,
-      nome: recurso.nome,
-      usosAtuais: recurso.usosMaximos,
-      usosMaximos: recurso.usosMaximos,
-      recuperaEm: recurso.recuperaEm,
-      efeito: recurso.efeito,
-      formula: formatarFormulaRecurso(recurso.formula)
-    };
-  });
-
-  return recursos;
-}
-
-function obterTextoResumoRecurso(recurso) {
-  if (recurso === undefined) {
-    return "";
-  }
-
-  let texto = "Usos: " + recurso.usosAtuais + " / " + recurso.usosMaximos;
-
-  if (recurso.efeito === "cura" && recurso.formula !== "") {
-    texto = texto + " — Cura: " + recurso.formula;
-  }
-
-  return texto;
-}
-
-function criarItemHabilidadeAutomaticaFicha(personagem, idHabilidade) {
-  const habilidade = obterDadosHabilidade(idHabilidade);
-
-  if (habilidade === undefined) {
-    return undefined;
-  }
-
-  const item = document.createElement("li");
-
-  const botao = document.createElement("button");
-  botao.type = "button";
-  botao.classList.add("botao-habilidade-ficha");
-
-  const nome = document.createElement("span");
-  nome.classList.add("nome-habilidade-ficha");
-  nome.textContent = habilidade.nome;
-
-  botao.appendChild(nome);
-
-  const recursos = obterRecursosHabilidadesPersonagem(personagem);
-  const recurso = recursos[idHabilidade];
-
-  if (recurso !== undefined) {
-    const resumoRecurso = document.createElement("span");
-    resumoRecurso.classList.add("resumo-recurso-habilidade");
-    resumoRecurso.textContent = obterTextoResumoRecurso(recurso);
-
-    botao.appendChild(resumoRecurso);
-  }
-
-  botao.addEventListener("click", function(evento) {
-  evento.stopPropagation();
-
-  window.abrirPopoverDetalhe(
-    "habilidade",
-    idHabilidade,
-    botao,
-    {
-      recursos: personagem.habilidades.recursos
-    }
-  );
-  });
-
-  item.appendChild(botao);
-
-  return item;
-}
-
-function abrirModalDetalheHabilidade(personagem, idHabilidade) {
-  window.abrirModalDetalhe("habilidade", idHabilidade, {
-    recursos: obterRecursosHabilidadesPersonagem(personagem)
-  });
-}
-
-function fecharModalDetalheFicha() {
-  if (modalDetalheFicha === null) {
-    return;
-  }
-
-  modalDetalheFicha.classList.add("escondida");
-}
-
-if (botaoFecharModalDetalheFicha !== null) {
-  botaoFecharModalDetalheFicha.addEventListener("click", function() {
-    fecharModalDetalheFicha();
-  });
-}
-
-if (modalDetalheFicha !== null) {
-  modalDetalheFicha.addEventListener("click", function(evento) {
-    if (evento.target === modalDetalheFicha) {
-      fecharModalDetalheFicha();
-    }
-  });
-}
-
-function abrirModalDetalheTalento(idTalento) {
-  window.abrirModalDetalhe("talento", idTalento);
-}
-
-function criarItemTalentoFicha(idTalento) {
-  const talento = obterDadosTalento(idTalento);
-
-  if (talento === undefined) {
-    return undefined;
-  }
-
-  const item = document.createElement("li");
-
-  const botao = document.createElement("button");
-  botao.type = "button";
-  botao.classList.add("botao-habilidade-ficha");
-
-  const nome = document.createElement("span");
-  nome.classList.add("nome-habilidade-ficha");
-  nome.textContent = talento.nome;
-
-  botao.appendChild(nome);
-
-  botao.addEventListener("click", function(evento) {
-  evento.stopPropagation();
-
-  window.abrirPopoverDetalhe(
-    "talento",
-    idTalento,
-    botao
-  );
-  });
-
-  item.appendChild(botao);
-
-  return item;
-}
-
-function abrirModalDetalheMaestria(idMaestria) {
-  window.abrirModalDetalhe("maestria", idMaestria);
-}
-
-function obterTextoEspecializacoesParaPdf(personagemAtual) {
-  if (
-    personagemAtual.habilidades === undefined ||
-    personagemAtual.habilidades.escolhas === undefined
-  ) {
-    return "";
-  }
-
-  const especializacoes =
-    personagemAtual.habilidades.escolhas.especializacoesPericias;
-
-  if (Array.isArray(especializacoes) === false || especializacoes.length === 0) {
-    return "";
-  }
-
-  const nomesEspecializacoes = especializacoes.map(function(idPericia) {
-    return obterNomePericia(idPericia);
-  });
-
-  return "Especialização: " + nomesEspecializacoes.join(", ");
-}
-
-function adicionarTextoAoCampoPdf(formulario, nomeCampo, textoNovo) {
-  if (textoNovo === undefined || textoNovo === "") {
-    return;
-  }
-
-  const camposParaTentar = [
-    nomeCampo,
-    camposFichaPdf.caracteristicasClasse1
-  ];
-
-  for (let indice = 0; indice < camposParaTentar.length; indice++) {
-    const campoAtual = camposParaTentar[indice];
-
-    if (campoAtual === undefined || campoAtual === "") {
-      continue;
-    }
-
-    try {
-      const campo = formulario.getTextField(campoAtual);
-      const textoAtual = campo.getText();
-
-      if (textoAtual === undefined || textoAtual === "") {
-        campo.setText(textoNovo);
-        return;
-      }
-
-      if (textoAtual.includes(textoNovo) === false) {
-        campo.setText(textoAtual + "\n" + textoNovo);
-      }
-
-      return;
-    } catch (erro) {
-      console.warn("Campo não encontrado para texto adicional no PDF:", campoAtual);
-    }
-  }
-}
-
