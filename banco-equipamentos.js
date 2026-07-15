@@ -1,4 +1,20 @@
+// =====================================================
+// Banco de equipamentos
+// -----------------------------------------------------
+// Guarda armaduras, armas e itens secundários usados na
+// criação e na ficha do personagem. Este arquivo contém
+// apenas dados; os cálculos de CA, ataque e dano ficam nos
+// scripts de ficha/criação.
+// =====================================================
+
 window.bancoEquipamentos = {
+  // =====================================================
+  // Armaduras
+  // -----------------------------------------------------
+  // caBase: valor inicial da Classe de Armadura.
+  // usaDestreza: indica se o modificador de Destreza entra.
+  // limiteDestreza: limite máximo do modificador, quando houver.
+  // =====================================================
   armaduras: {
     semArmadura: {
       nome: "Sem armadura",
@@ -22,6 +38,14 @@ window.bancoEquipamentos = {
     }
   },
 
+  // =====================================================
+  // Armas
+  // -----------------------------------------------------
+  // tipo define proficiência simples/marcial.
+  // categoria separa corpo a corpo de distância.
+  // maestria aponta para banco-maestrias.js.
+  // propriedades aponta para banco-propriedades-armas.js.
+  // =====================================================
   armas: {
     espadaLonga: {
       nome: "Espada longa",
@@ -90,6 +114,12 @@ window.bancoEquipamentos = {
     }
   },
 
+  // =====================================================
+  // Itens secundários
+  // -----------------------------------------------------
+  // Representam o que o personagem usa na outra mão.
+  // Escudo altera CA; arma secundária ativa regras de duas armas.
+  // =====================================================
   itensSecundarios: {
     escudo: {
       nome: "Escudo",
