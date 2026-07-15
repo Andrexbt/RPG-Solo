@@ -1,5 +1,15 @@
-window.bancoClasses = {
+// =====================================================
+// Banco de classes
+// -----------------------------------------------------
+// Guarda os dados básicos das classes disponíveis na
+// criação de personagem. Este arquivo não controla a tela:
+// ele apenas fornece informações para os outros scripts.
+// =====================================================
 
+window.bancoClasses = {
+  // =====================================================
+  // Guerreiro
+  // =====================================================
   guerreiro: {
     id: "guerreiro",
     nome: "Guerreiro",
@@ -7,6 +17,7 @@ window.bancoClasses = {
     habilidadePrimaria: ["Força", "Destreza"],
     salvaguardas: ["forca", "constituicao"],
 
+    // Perícias que o Guerreiro pode escolher no nível 1.
     pericias: {
       quantidade: 2,
       opcoes: [
@@ -22,6 +33,7 @@ window.bancoClasses = {
       ]
     },
 
+    // Proficiências usadas pela ficha para equipamentos e ataques.
     proficiencias: {
       armas: ["Armas simples", "Armas marciais"],
       armaduras: [
@@ -32,11 +44,15 @@ window.bancoClasses = {
       ]
     },
 
+    // Quantidade de armas nas quais a classe pode escolher maestria.
     maestriasArmas: {
       quantidade: 3
     }
   },
 
+  // =====================================================
+  // Ladino
+  // =====================================================
   ladino: {
     id: "ladino",
     nome: "Ladino",
@@ -44,6 +60,7 @@ window.bancoClasses = {
     habilidadePrimaria: ["Destreza"],
     salvaguardas: ["destreza", "inteligencia"],
 
+    // Perícias que o Ladino pode escolher no nível 1.
     pericias: {
       quantidade: 4,
       opcoes: [
@@ -60,6 +77,8 @@ window.bancoClasses = {
       ]
     },
 
+    // O Ladino tem armas simples, espada curta, armadura leve
+    // e ferramentas de ladrão.
     proficiencias: {
       armas: ["Armas simples"],
       armasEspecificas: ["espadaCurta"],
@@ -71,5 +90,4 @@ window.bancoClasses = {
       quantidade: 2
     }
   }
-
 };
