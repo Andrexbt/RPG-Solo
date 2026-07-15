@@ -1,3 +1,15 @@
+// =====================================================
+// Visualização de personagem salvo
+// -----------------------------------------------------
+// Este arquivo controla ver-personagem.html. Ele busca um
+// personagem salvo no localStorage, preenche a ficha na tela
+// e gera a versão PDF editável da ficha.
+// =====================================================
+
+// =====================================================
+// 1. Elementos do HTML
+// =====================================================
+
 const botaoImprimirFicha = document.getElementById("botaoImprimirFicha");
 const botaoBaixarPdfEditavel = document.getElementById("botaoBaixarPdfEditavel");
 
@@ -7,6 +19,13 @@ const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
 const fichaTalentos = document.getElementById("fichaTalentos");
+
+// =====================================================
+// 2. Mapeamento dos campos da ficha PDF
+// -----------------------------------------------------
+// Estes nomes vêm do PDF editável. Se o PDF for trocado,
+// estes identificadores podem precisar ser atualizados.
+// =====================================================
 
 const camposFichaPdf = {
   nome: "Text1",
@@ -110,6 +129,10 @@ const camposCheckboxPdf = {
   }
 };
 
+// =====================================================
+// 3. Busca do personagem pela URL
+// =====================================================
+
 const idPersonagem = pegarIdDaUrl();
 const personagemEncontrado = buscarPersonagemPorId(idPersonagem);
 
@@ -129,6 +152,10 @@ function buscarPersonagemPorId(idPersonagem) {
     return personagem.id === idPersonagem;
   });
 }
+
+// =====================================================
+// 4. Preenchimento geral da ficha na tela
+// =====================================================
 
 function preencherFichaPersonagem(personagem) {
   preencherInformacoesBasicas(personagem);
@@ -175,6 +202,10 @@ function preencherUmAtributo(nomeAtributo, idValor, idModificador, personagem) {
   campoValor.textContent = valor;
   campoModificador.textContent = formatarModificador(calcularModificador(valor));
 }
+
+// =====================================================
+// 5. Combate, espécie e valores derivados
+// =====================================================
 
 function preencherCombate(personagem) {
   const pontosDeVida = personagem.detalhes.pontosDeVida || {};
@@ -232,6 +263,10 @@ function obterTamanho(personagem) {
   return dadosEspecie.tamanho;
 }
 
+// =====================================================
+// 6. Equipamentos, armas e ataques na ficha
+// =====================================================
+
 function preencherEquipamentos(personagem) {
   const equipamentos = personagem.detalhes.equipamentos;
 
@@ -274,26 +309,6 @@ function obterTextoProficiencias(personagem) {
   ];
 
   return proficiencias.join(", ");
-}
-
-function preencherMagias(personagem) {
-  const lista = document.getElementById("fichaMagias");
-
-  if (lista === null) {
-    return;
-  }
-
-  lista.innerHTML = "";
-
-  const dadosMagiaClasse = window.bancoMagias.progressaoMagias[personagem.classeId];
-
-  if (dadosMagiaClasse === undefined || dadosMagiaClasse.nivel1 === undefined) {
-    return;
-  }
-
-  const item = document.createElement("li");
-  item.textContent = "Magias a definir";
-  lista.appendChild(item);
 }
 
 function preencherArmasAtaques(personagem) {
@@ -341,6 +356,30 @@ function obterArmasDoPersonagem(personagem) {
   }
 
   return armas;
+}
+
+// =====================================================
+// 7. Magias e talentos
+// =====================================================
+
+function preencherMagias(personagem) {
+  const lista = document.getElementById("fichaMagias");
+
+  if (lista === null) {
+    return;
+  }
+
+  lista.innerHTML = "";
+
+  const dadosMagiaClasse = window.bancoMagias.progressaoMagias[personagem.classeId];
+
+  if (dadosMagiaClasse === undefined || dadosMagiaClasse.nivel1 === undefined) {
+    return;
+  }
+
+  const item = document.createElement("li");
+  item.textContent = "Magias a definir";
+  lista.appendChild(item);
 }
 
 function obterDadosTalento(idTalento) {
@@ -423,6 +462,10 @@ function obterTextoTalentosParaPdf(personagem) {
   return nomesTalentos.join("\n");
 }
 
+// =====================================================
+// 8. Marcadores visuais de proficiência
+// =====================================================
+
 function atualizarMarcadoresPericias(personagem) {
   const linhasPericia = document.querySelectorAll("[data-pericia]");
 
@@ -463,6 +506,10 @@ function atualizarMarcadoresSalvaguardas(personagem) {
     }
   });
 }
+
+// =====================================================
+// 9. Funções auxiliares para o PDF
+// =====================================================
 
 function preencherCampoTexto(formulario, nomeCampo, valor) {
   if (nomeCampo === undefined || nomeCampo === "") {
@@ -593,6 +640,10 @@ function preencherArmasPdf(formulario, personagem) {
   });
 }
 
+// =====================================================
+// 10. Geração do PDF editável
+// =====================================================
+
 async function baixarPdfFichaEditavel(personagem) {
   const resposta = await fetch("pdfs/ficha-dnd-editavel.pdf");
 
@@ -678,6 +729,10 @@ async function baixarPdfFichaEditavel(personagem) {
 
   URL.revokeObjectURL(url);
 }
+
+// =====================================================
+// 11. Eventos e inicialização da página
+// =====================================================
 
 if (botaoImprimirFicha !== null) {
   botaoImprimirFicha.addEventListener("click", function() {
