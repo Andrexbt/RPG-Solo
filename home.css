@@ -1,3 +1,11 @@
+/* =====================================================
+   ESTILO DA PÁGINA INICIAL
+   -----------------------------------------------------
+   Define a aparência básica da tela inicial do projeto:
+   fundo, tipografia, espaçamento e largura do conteúdo.
+   ===================================================== */
+
+/* Estrutura visual geral da página */
 body {
   margin: 0;
   background-color: #241c17;
@@ -5,11 +13,13 @@ body {
   font-family: Georgia, serif;
 }
 
+/* Cabeçalho da página inicial */
 header {
   padding: 30px 20px;
   text-align: center;
 }
 
+/* Área principal de conteúdo */
 main {
   max-width: 1100px;
   margin: 0 auto;
