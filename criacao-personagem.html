@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 
+<!-- =====================================================
+     Arquivo: criacao-personagem.html
+     -----------------------------------------------------
+     Estrutura visual da criação de personagem. A lógica fica
+     em criacao-personagem.js e nos arquivos compartilhados.
+     ===================================================== -->
+
 <html lang="pt-BR">
 
 <head>
@@ -14,9 +21,19 @@
   <h1>Criação de Personagem</h1>
   </header>
 
-  <main class="criador-personagem">
+    <!-- =====================================================
+       Layout principal
+       -----------------------------------------------------
+       Divide a tela entre ficha lateral e passos de criação.
+       ===================================================== -->
+<main class="criador-personagem">
 
-    <section class="coluna-ficha">
+      <!-- =====================================================
+       Ficha lateral
+       -----------------------------------------------------
+       Mostra o resumo do personagem enquanto ele é criado.
+       ===================================================== -->
+<section class="coluna-ficha">
 
       <header class="ficha-cabecalho">
       <h2>Ficha de Personagem</h2>
@@ -371,9 +388,17 @@
 
     </section>
 
-    <section class="area-passo">
+      <!-- =====================================================
+       Área dos passos
+       -----------------------------------------------------
+       Cada seção abaixo representa uma etapa da criação.
+       ===================================================== -->
+<section class="area-passo">
 
-     <section class="conteudo-passo" id="passo-classe">
+       <!-- =====================================================
+       Passo: classe
+       ===================================================== -->
+<section class="conteudo-passo" id="passo-classe">
       <h2>Passo 1: Escolha sua Classe</h2>
 
       <div class="grade-classes">
@@ -439,7 +464,10 @@
         </div>
      </section>
 
-     <section class="conteudo-passo escondida" id="passo-atributos">
+       <!-- =====================================================
+       Passo: atributos
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-atributos">
      <h2>Passo 3: Determine seus Atributos</h2>
 
      <p class="texto-explicativo">
@@ -513,7 +541,10 @@
         </div>
      </section>
   
-     <section class="conteudo-passo escondida" id="passo-antecedente">
+       <!-- =====================================================
+       Passo: antecedente
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-antecedente">
       <h2>Passo 2: Defina seu Antecedente</h2>
 
        <p class="texto-explicativo">
@@ -589,7 +620,10 @@
         </div>
      </section>
 
-     <section class="conteudo-passo escondida" id="passo-especie">
+       <!-- =====================================================
+       Passo: espécie
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-especie">
        <h3>Escolha sua Espécie</h3>
 
        <p class="texto-explicativo">
@@ -635,7 +669,10 @@
         </div>
      </section>
      
-     <section class="conteudo-passo escondida" id="passo-habilidades">
+       <!-- =====================================================
+       Passo: habilidades, perícias e maestrias
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-habilidades">
      <h2>Passo 5: Habilidades</h2>
 
       <div id="areaPericiasClasse">
@@ -655,7 +692,10 @@
 
      </section>
 
-     <section class="conteudo-passo escondida" id="passo-magias">
+       <!-- =====================================================
+       Passo: magias
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-magias">
      <h2>Passo 6: Magias</h2>
 
      <div id="areaMagias">
@@ -670,7 +710,12 @@
         </div>
      </section>
 
-     <section class="conteudo-passo escondida" id="passo-detalhes">
+       <!-- =====================================================
+       Passo: detalhes finais
+       -----------------------------------------------------
+       Nome, idiomas, equipamentos e valores derivados.
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-detalhes">
      <h2>Passo 7: Detalhes</h2>
 
        <section class="bloco-detalhes">
@@ -784,7 +829,10 @@
   </div>
      </section>
 
-     <section class="conteudo-passo escondida" id="passo-revisao">
+       <!-- =====================================================
+       Passo: revisão e salvamento
+       ===================================================== -->
+<section class="conteudo-passo escondida" id="passo-revisao">
         <h2>Passo 8: Revisão</h2>
 
         <p>
@@ -811,7 +859,10 @@
 
   </main>
 
-  <nav class="navegacao-passos">
+    <!-- =====================================================
+       Navegação entre passos
+       ===================================================== -->
+<nav class="navegacao-passos">
   <button class="passo atual" data-passo="classe">1. Classe</button>
   <button class="passo" data-passo="atributos">2. Atributos</button>
   <button class="passo" data-passo="antecedente">3. Antecedentes</button>
@@ -824,7 +875,12 @@
 
   <p class="mensagem-navegacao" id="mensagemNavegacao"></p>
 
- <div class="modal-overlay escondida" id="modalClasse">
+   <!-- =====================================================
+       Modal de classe
+       -----------------------------------------------------
+       Mostra detalhes da classe antes da confirmação.
+       ===================================================== -->
+<div class="modal-overlay escondida" id="modalClasse">
    <div class="modal">
   
     <div class="modal-cabecalho">
@@ -887,7 +943,12 @@
  </div>
  </div>
 
- <div id="modalDetalheFicha" class="modal-detalhe-ficha escondida">
+   <!-- =====================================================
+       Modal de detalhes da ficha
+       -----------------------------------------------------
+       Usada para habilidades, talentos, maestrias e propriedades.
+       ===================================================== -->
+<div id="modalDetalheFicha" class="modal-detalhe-ficha escondida">
   <div class="modal-detalhe-conteudo">
     <button
       type="button"
@@ -907,6 +968,11 @@
 
 </body>
 
+  <!-- =====================================================
+       Scripts
+       -----------------------------------------------------
+       Bancos primeiro, arquivos compartilhados depois, script principal por último.
+       ===================================================== -->
 <script src="banco-pericias.js"></script>
 <script src="banco-idiomas.js"></script>
 <script src="banco-talentos.js"></script>

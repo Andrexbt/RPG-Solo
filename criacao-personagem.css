@@ -1,3 +1,8 @@
+/* =====================================================
+   Arquivo: criacao-personagem.css
+   -----------------------------------------------------
+   Estilos da tela de criação de personagem e da ficha lateral.
+   ===================================================== */
 body {
   background-color: #241c17;
   color: #c9a24d;
@@ -16,6 +21,9 @@ main {
   padding: 20px;
 }
 
+/* =====================================================
+   Cards de classe
+   ===================================================== */
 .grade-classes {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -71,6 +79,9 @@ main {
   transform: scale(1.05);
 }
 
+/* =====================================================
+   Modal de escolha de classe
+   ===================================================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -173,6 +184,9 @@ main {
   display: none;
 }
 
+/* =====================================================
+   Layout principal da criação
+   ===================================================== */
 .criador-personagem {
   max-width: 1300px;
   margin: 0 auto;
@@ -182,6 +196,9 @@ main {
   gap: 24px;
 }
 
+/* =====================================================
+   Ficha lateral
+   ===================================================== */
 .ficha {
   background-color: #efe3c6;
   color: #1f1712;
@@ -288,6 +305,9 @@ main {
   color: #1f1712;
 }
 
+/* =====================================================
+   Atributos, perícias e salvaguardas
+   ===================================================== */
 .grade-atributos-ficha {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -546,6 +566,9 @@ main {
   background-color: #5a442c;
 }
 
+/* =====================================================
+   Navegação entre etapas
+   ===================================================== */
 .navegacao-passos {
   max-width: 1300px;
   margin: 10px auto 40px auto;
@@ -600,6 +623,11 @@ display: none;
   margin-bottom: 20px;
 }
 
+/* =====================================================
+   Cards de escolhas gerais
+   -----------------------------------------------------
+   Antecedentes, espécies e opções geradas dinamicamente.
+   ===================================================== */
 .grade-opcoes {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -647,6 +675,9 @@ display: none;
   box-shadow: 0 0 0 2px rgba(201, 162, 77, 0.25);
 }
 
+/* =====================================================
+   Rolagem de atributos
+   ===================================================== */
 .caixa-rolagem-dados {
   margin-top: 20px;
   padding: 18px;
@@ -747,6 +778,9 @@ display: none;
   margin-top: 8px;
 }
 
+/* =====================================================
+   Tela de revisão
+   ===================================================== */
 .bloco-revisao {
   background-color: #2a211b;
   border: 1px solid #6f5638;
@@ -916,6 +950,9 @@ display: none;
   cursor: not-allowed;
 }
 
+/* =====================================================
+   Modal e popover de detalhes da ficha
+   ===================================================== */
 .modal-detalhe-ficha {
   position: fixed;
   inset: 0;
@@ -1050,6 +1087,11 @@ display: none;
   line-height: 1.35;
 }
 
+/* =====================================================
+   Marcadores especiais
+   -----------------------------------------------------
+   Exibe a estrela de especialização do Ladino.
+   ===================================================== */
 .linha-pericia.especializada::after {
   content: " ★";
   font-weight: bold;
