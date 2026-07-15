@@ -1,4 +1,17 @@
+// =====================================================
+// Detalhes interativos da ficha
+// -----------------------------------------------------
+// Este arquivo controla os botões clicáveis de detalhes,
+// os popovers rápidos e a modal completa de explicação.
+// Ele é usado tanto na criação quanto na visualização de
+// personagens salvos.
+// =====================================================
+
 (function() {
+  // =====================================================
+  // 1. Busca dos dados que podem aparecer em detalhes
+  // =====================================================
+
   function obterDetalheHabilidade(idHabilidade) {
     if (window.bancoHabilidades === undefined) {
       return undefined;
@@ -84,6 +97,10 @@
     return "Detalhe da ficha";
   }
 
+  // =====================================================
+  // 2. Preenchimento da área de mecânica da modal
+  // =====================================================
+
   function adicionarParagrafoMecanica(container, rotulo, valor) {
     if (valor === undefined || valor === "") {
       return;
@@ -135,6 +152,10 @@
     }
   }
 
+  // =====================================================
+  // 3. Modal completa de detalhes
+  // =====================================================
+
   function abrirModalDetalhe(tipo, id, contexto) {
     const detalhe = obterDetalheFicha(tipo, id);
 
@@ -180,6 +201,10 @@
     modalDetalheFicha.classList.add("escondida");
   }
 
+  // =====================================================
+  // 4. Botões inline que abrem popovers
+  // =====================================================
+
   function criarReferenciaDetalhe(tipo, id, texto, contexto) {
     const detalhe = obterDetalheFicha(tipo, id);
 
@@ -197,84 +222,93 @@
 
     botao.addEventListener("click", function(evento) {
       evento.stopPropagation();
+
       abrirPopoverDetalhe(
-    tipo,
-    id,
-    botao,
-    contexto || {}
-  );
-});
+        tipo,
+        id,
+        botao,
+        contexto || {}
+      );
+    });
 
     return botao;
   }
 
+  // =====================================================
+  // 5. Inicialização dos eventos da modal e do popover
+  // =====================================================
+
   function inicializarModalDetalhe() {
-  const modalDetalheFicha = document.getElementById("modalDetalheFicha");
-  const botaoFecharModalDetalheFicha =
-    document.getElementById("botaoFecharModalDetalheFicha");
+    const modalDetalheFicha = document.getElementById("modalDetalheFicha");
+    const botaoFecharModalDetalheFicha =
+      document.getElementById("botaoFecharModalDetalheFicha");
 
-  if (
-    modalDetalheFicha !== null &&
-    modalDetalheFicha.dataset.inicializado !== "true"
-  ) {
-    modalDetalheFicha.dataset.inicializado = "true";
+    if (
+      modalDetalheFicha !== null &&
+      modalDetalheFicha.dataset.inicializado !== "true"
+    ) {
+      modalDetalheFicha.dataset.inicializado = "true";
 
-    modalDetalheFicha.addEventListener("click", function(evento) {
-      if (evento.target === modalDetalheFicha) {
+      modalDetalheFicha.addEventListener("click", function(evento) {
+        if (evento.target === modalDetalheFicha) {
+          fecharModalDetalhe();
+        }
+      });
+    }
+
+    if (
+      botaoFecharModalDetalheFicha !== null &&
+      botaoFecharModalDetalheFicha.dataset.inicializado !== "true"
+    ) {
+      botaoFecharModalDetalheFicha.dataset.inicializado = "true";
+
+      botaoFecharModalDetalheFicha.addEventListener("click", function() {
         fecharModalDetalhe();
-      }
-    });
-  }
+      });
+    }
 
-  if (
-    botaoFecharModalDetalheFicha !== null &&
-    botaoFecharModalDetalheFicha.dataset.inicializado !== "true"
-  ) {
-    botaoFecharModalDetalheFicha.dataset.inicializado = "true";
+    if (document.body.dataset.popoverDetalheInicializado !== "true") {
+      document.body.dataset.popoverDetalheInicializado = "true";
 
-    botaoFecharModalDetalheFicha.addEventListener("click", function() {
-      fecharModalDetalhe();
-    });
-  }
+      document.addEventListener("click", function(evento) {
+        const popoverAtual = document.getElementById("popoverDetalheFicha");
 
-  if (document.body.dataset.popoverDetalheInicializado !== "true") {
-    document.body.dataset.popoverDetalheInicializado = "true";
+        if (popoverAtual === null) {
+          return;
+        }
 
-    document.addEventListener("click", function(evento) {
-      const popoverAtual = document.getElementById("popoverDetalheFicha");
+        if (popoverAtual.contains(evento.target)) {
+          return;
+        }
 
-      if (popoverAtual === null) {
-        return;
-      }
+        if (
+          evento.target.closest !== undefined &&
+          evento.target.closest(".botao-detalhe-inline") !== null
+        ) {
+          return;
+        }
 
-      if (popoverAtual.contains(evento.target)) {
-        return;
-      }
-
-      if (
-        evento.target.closest !== undefined &&
-        evento.target.closest(".botao-detalhe-inline") !== null
-      ) {
-        return;
-      }
-
-      fecharPopoverDetalhe();
-    });
-
-    document.addEventListener("keydown", function(evento) {
-      if (evento.key === "Escape") {
         fecharPopoverDetalhe();
-        fecharModalDetalhe();
-      }
-    });
+      });
+
+      document.addEventListener("keydown", function(evento) {
+        if (evento.key === "Escape") {
+          fecharPopoverDetalhe();
+          fecharModalDetalhe();
+        }
+      });
+    }
   }
-}
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", inicializarModalDetalhe);
   } else {
     inicializarModalDetalhe();
   }
+
+  // =====================================================
+  // 6. Funções expostas para os outros scripts
+  // =====================================================
 
   window.obterDetalheFicha = obterDetalheFicha;
   window.abrirModalDetalhe = abrirModalDetalhe;
@@ -283,6 +317,14 @@
   window.fecharPopoverDetalhe = fecharPopoverDetalhe;
   window.criarReferenciaDetalhe = criarReferenciaDetalhe;
 })();
+
+// =====================================================
+// 7. Popover rápido de detalhes
+// -----------------------------------------------------
+// Estas funções ficam globais porque também são chamadas
+// por funções expostas no window durante a criação dos
+// botões inline de detalhes.
+// =====================================================
 
 function fecharPopoverDetalhe() {
   const popoverAtual = document.getElementById("popoverDetalheFicha");
