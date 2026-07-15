@@ -1,8 +1,15 @@
+<!-- =====================================================
+     PÁGINA MEUS PERSONAGENS
+     -----------------------------------------------------
+     Lista os personagens salvos no navegador e oferece
+     acesso para ver uma ficha ou criar um novo personagem.
+     A lista é preenchida por meus-personagens.js.
+     ===================================================== -->
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
+  <!-- Configurações básicas da página -->
   <meta charset="UTF-8">
   <title>Meus Personagens</title>
   <link rel="stylesheet" href="meus-personagens.css">
@@ -10,12 +17,15 @@
 
 <body>
 
+  <!-- Título da página -->
   <header>
     <h1>Meus Personagens</h1>
   </header>
 
+  <!-- Conteúdo principal da lista de personagens -->
   <main class="pagina-personagens">
 
+    <!-- Cabeçalho da área de personagens salvos -->
     <section class="cabecalho-personagens">
       <h2>Personagens salvos</h2>
 
@@ -24,12 +34,14 @@
       </a>
     </section>
 
+    <!-- Lista preenchida dinamicamente pelo JavaScript -->
     <section id="listaPersonagens" class="lista-personagens">
       <!-- O JavaScript vai preencher esta área -->
     </section>
 
   </main>
 
+  <!-- Bancos e scripts usados para montar os cards -->
   <script src="banco-equipamentos.js"></script>
   <script src="meus-personagens.js"></script>
 
