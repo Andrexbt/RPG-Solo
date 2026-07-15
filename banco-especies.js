@@ -1,5 +1,16 @@
+// =====================================================
+// Banco de espécies
+// -----------------------------------------------------
+// Guarda as espécies disponíveis na criação de personagem.
+// Cada espécie define tamanho, velocidade e idiomas fixos
+// concedidos automaticamente.
+// =====================================================
+
 window.bancoEspecies = {
   especies: {
+    // =====================================================
+    // Espécies jogáveis
+    // =====================================================
     humano: {
       id: "humano",
       nome: "Humano",
