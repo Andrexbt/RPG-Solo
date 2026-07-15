@@ -1,10 +1,24 @@
+// =====================================================
+// Banco de perícias
+// -----------------------------------------------------
+// Guarda todas as perícias usadas pela ficha. Cada perícia
+// possui um id interno, um nome exibido ao jogador e o
+// atributo usado no cálculo do bônus.
+// =====================================================
+
 window.bancoPericias = {
+  // =====================================================
+  // Força
+  // =====================================================
   atletismo: {
     id: "atletismo",
     nome: "Atletismo",
     atributo: "forca"
   },
 
+  // =====================================================
+  // Destreza
+  // =====================================================
   acrobacia: {
     id: "acrobacia",
     nome: "Acrobacia",
@@ -23,6 +37,9 @@ window.bancoPericias = {
     atributo: "destreza"
   },
 
+  // =====================================================
+  // Inteligência
+  // =====================================================
   arcanismo: {
     id: "arcanismo",
     nome: "Arcanismo",
@@ -53,6 +70,9 @@ window.bancoPericias = {
     atributo: "inteligencia"
   },
 
+  // =====================================================
+  // Sabedoria
+  // =====================================================
   adestrarAnimais: {
     id: "adestrarAnimais",
     nome: "Adestrar Animais",
@@ -83,6 +103,9 @@ window.bancoPericias = {
     atributo: "sabedoria"
   },
 
+  // =====================================================
+  // Carisma
+  // =====================================================
   enganacao: {
     id: "enganacao",
     nome: "Enganação",
