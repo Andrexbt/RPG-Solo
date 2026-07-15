@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Seleção de Classe</title>
-    <link rel="stylesheet" href="selecao-classe.css">
+    <title>Criação de Personagem</title>
+    <link rel="stylesheet" href="criacao-personagem.css">
 </head>
 
 <body>
@@ -18,13 +18,13 @@
 
     <section class="coluna-ficha">
 
-    <header class="ficha-cabecalho">
+      <header class="ficha-cabecalho">
       <h2>Ficha de Personagem</h2>
-    </header>
+      </header>
     
-  <aside class="ficha">
+      <aside class="ficha">
 
-    <section class="ficha-bloco">
+        <section class="ficha-bloco">
       <h3>Informações Básicas</h3>
 
       <div class="ficha-item">
@@ -52,9 +52,9 @@
         <span class="ficha-valor" id="fichaIdiomas"></span>
       </div>
 
-    </section>
+        </section>
 
-    <div class="ficha-detalhes">
+        <div class="ficha-detalhes">
 
         <div class="coluna-vida">
 
@@ -158,9 +158,21 @@
 
         </div>
 
-    </div>
+        </div>
 
-    <section class="ficha-bloco">
+        <div class="area-proficiencia">
+
+        <div class="caixa-bonus-proficiencia">
+          <span>Bônus de Proficiência</span>
+        </div>
+
+        <div class="valor-bonus-proficiencia">
+          <span>+2</span>
+        </div>
+
+        </div>
+
+        <section class="ficha-bloco">
         <h3>Atributos e Perícias</h3>
 
         <div class="grade-atributos-ficha">
@@ -179,8 +191,8 @@
             </div>
 
             <ul>
-              <li class="item-salvaguarda">Salvaguarda</li>
-              <li>Atletismo</li>
+              <li class="linha-salvaguarda" data-salvaguarda="forca">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="atletismo">Atletismo</p>
             </ul>
 
           </div>
@@ -198,10 +210,10 @@
             </div>
 
             <ul>
-              <li class="item-salvaguarda">Salvaguarda</li>
-              <li>Acrobacia</li>
-              <li>Furtividade</li>
-              <li>Prestidigitação</li>
+              <li class="linha-salvaguarda" data-salvaguarda="destreza">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="acrobacia">Acrobacia</p>
+              <p class="linha-pericia" data-pericia="furtividade">Furtividade</p>
+              <p class="linha-pericia" data-pericia="prestidigitacao">Prestidigitação</p>
             </ul>
 
           </div>
@@ -219,7 +231,7 @@
         </div>
 
           <ul>
-            <li class="item-salvaguarda">Salvaguarda</li>
+            <li class="linha-salvaguarda" data-salvaguarda="constituicao">Salvaguarda</li>
           </ul>
           </div>
 
@@ -236,12 +248,12 @@
         </div>
 
           <ul>
-            <li class="item-salvaguarda">Salvaguarda</li>
-              <li>Arcanismo</li>
-              <li>História</li>
-              <li>Investigação</li>
-              <li>Natureza</li>
-              <li>Religião</li>
+            <li class="linha-salvaguarda" data-salvaguarda="inteligencia">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="arcanismo">Arcanismo</p>
+              <p class="linha-pericia" data-pericia="historia">História</p>
+              <p class="linha-pericia" data-pericia="investigacao">Investigação</p>
+              <p class="linha-pericia" data-pericia="natureza">Natureza</p>
+              <p class="linha-pericia" data-pericia="religiao">Religião</p>
           </ul>
           </div>
 
@@ -258,12 +270,12 @@
         </div>
 
           <ul>
-            <li class="item-salvaguarda">Salvaguarda</li>
-            <li>Adestrar Animais</li>
-              <li>Intuição</li>
-              <li>Medicina</li>
-              <li>Percepção</li>
-              <li>Sobrevivência</li>
+            <li class="linha-salvaguarda" data-salvaguarda="sabedoria">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="adestramento">Adestramento</p>
+              <p class="linha-pericia" data-pericia="intuicao">Intuição</p>
+              <p class="linha-pericia" data-pericia="medicina">Medicina</p>
+              <p class="linha-pericia" data-pericia="percepcao">Percepção</p>
+              <p class="linha-pericia" data-pericia="sobrevivencia">Sobrevivência</p>
           </ul>
           </div>
 
@@ -280,65 +292,86 @@
         </div>
 
           <ul>
-            <li class="item-salvaguarda">Salvaguarda</li>
-              <li>Atuação</li>
-              <li>Enganação</li>
-              <li>Intimidação</li>
-              <li>Persuasão</li>
+            <li class="linha-salvaguarda" data-salvaguarda="carisma">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="atuacao">Atuação</p>
+              <p class="linha-pericia" data-pericia="enganacao">Enganação</p>
+              <p class="linha-pericia" data-pericia="intimidacao">Intimidação</p>
+              <p class="linha-pericia" data-pericia="persuasao">Persuasão</p>
           </ul>
           </div>
 
         </div>
 
-    </section>
+        </section>
 
-    <section class="ficha-bloco">
-        <h3>Equipamentos</h3>
+        <section class="ficha-bloco">
+        <h3>Equipamento</h3>
 
-  <div class="ficha-item">
-    <span class="ficha-rotulo">Armadura:</span>
-    <span class="ficha-valor" id="fichaArmadura"></span>
-  </div>
+          <section class="equipamentos-lista">
+          <h2>Armas e Armadura</h2>
 
-  <div class="ficha-item">
-    <span class="ficha-rotulo">Arma:</span>
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Armadura:</span>
+              <span class="ficha-valor" id="fichaArmadura"></span>
+            </div>
+
+            <div class="ficha-item">
+    <span class="ficha-rotulo">Armas:</span>
     <span class="ficha-valor" id="fichaArmaPrincipal"></span>
-  </div>
+            </div>
 
-  <div class="ficha-item">
-    <span class="ficha-rotulo">Item secundário:</span>
-    <span class="ficha-valor" id="fichaItemSecundario"></span>
-  </div>
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Arma Secundária:</span>
+              <span class="ficha-valor" id="fichaItemSecundario"></span>
+            </div>
 
-  <div class="ficha-item">
-    <span class="ficha-rotulo">Proficiências:</span>
-    <span class="ficha-valor" id="fichaProficiencias"></span>
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Proficiências:</span>
+              <span class="ficha-valor" id="fichaProficiencias"></span>
+            </div>
 
+          </section>
 
-      </div>
-    </section>
+          <section class="equipamentos-ataques">
+          <h2>Ataques</h2>
 
-    <section class="ficha-bloco">
+             <div class="ficha-armas-ataques">
+               <div id="fichaArmasAtaques"></div>
+             </div>
+
+          </section>
+
+        </section>
+
+        <section class="ficha-bloco">
         <h3>Habilidades</h3>
 
         <ul class="lista-recursos" id="fichaHabilidades">
             <li></li>
         </ul>
-    </section>
+        </section>
 
-    <section class="ficha-bloco">
+        <section class="ficha-bloco">
+        <h3>Talentos</h3>
+
+        <ul id="fichaTalentos">
+          <li></li>
+        </ul>
+        </section>
+
+        <section class="ficha-bloco">
           <h3>Magias</h3>
       
         <ul class="lista-recursos" id="fichaMagias">
             <li></li>
         </ul>
+        </section>
+
+      </aside>
+
     </section>
 
-  </aside>
-
-    </section>
-
-  <section class="area-passo">
+    <section class="area-passo">
 
      <section class="conteudo-passo" id="passo-classe">
       <h2>Passo 1: Escolha sua Classe</h2>
@@ -605,6 +638,10 @@
      <section class="conteudo-passo escondida" id="passo-habilidades">
      <h2>Passo 5: Habilidades</h2>
 
+      <div id="areaPericiasClasse">
+      <!-- O JavaScript vai preencher esta área -->
+      </div>
+
       <div id="areaHabilidadesClasse">
       <!-- O JavaScript vai preencher esta área -->
       </div>
@@ -636,15 +673,15 @@
      <section class="conteudo-passo escondida" id="passo-detalhes">
      <h2>Passo 7: Detalhes</h2>
 
-     <section class="bloco-detalhes">
-    <h3>Nome</h3>
+       <section class="bloco-detalhes">
+       <h3>Nome</h3>
 
-    <label for="nomePersonagem">Nome do personagem</label>
-  <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
+         <label for="nomePersonagem">Nome do personagem</label>
+         <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
 
-  </section>
+       </section>
 
-  <section class="bloco-detalhes">
+       <section class="bloco-detalhes">
     <h3>Idiomas</h3>
 
     <label for="idioma1">Idioma 1</label>
@@ -652,49 +689,60 @@
 
   <label for="idioma2">Idioma 2</label>
   <select id="idioma2"></select>
-  </section>
+       </section>
 
-  <section class="bloco-detalhes">
-    <h3>Equipamentos, Armas e Proficiências</h3>
+       <section class="bloco-detalhes">
+          <h3>Equipamentos, Armas e Proficiências</h3>
 
-     <div class="sub-bloco-detalhes">
-    <h4>Proficiências</h4>
-    <p id="proficienciasClasse">
-      As proficiências serão preenchidas conforme a classe escolhida.
-    </p>
-  </div>
+          <div class="sub-bloco-detalhes">
+           <h4>Proficiências</h4>
+           <p id="proficienciasClasse">
+           As proficiências serão preenchidas conforme a classe escolhida.
+           </p>
+          </div>
 
-  <div class="sub-bloco-detalhes">
-    <h4>Equipamento inicial</h4>
+          <div class="sub-bloco-detalhes">
+            <h4>Equipamento inicial</h4>
 
-    <label for="armaduraInicial">Armadura</label>
-    <select id="armaduraInicial">
+            <label for="armaduraInicial">Armadura</label>
+            <select id="armaduraInicial">
       <option value="">Escolha</option>
       <option value="semArmadura">Sem armadura</option>
       <option value="couro">Armadura de couro</option>
       <option value="cotaDeMalha">Cota de malha</option>
-    </select>
+            </select>
 
-    <label for="armaPrincipal">Arma principal</label>
-    <select id="armaPrincipal">
+            <label for="armaPrincipal">Arma principal</label>
+            <select id="armaPrincipal">
       <option value="">Escolha</option>
       <option value="espadaLonga">Espada longa</option>
       <option value="machadoDeBatalha">Machado de batalha</option>
       <option value="lanca">Lança</option>
       <option value="arcoLongo">Arco longo</option>
-    </select>
+            </select>
 
-    <label for="itemSecundario">Item secundário</label>
-    <select id="itemSecundario">
+            <label for="itemSecundario">Item secundário</label>
+            <select id="itemSecundario">
       <option value="">Escolha</option>
       <option value="escudo">Escudo</option>
       <option value="armaSecundaria">Arma secundária</option>
       <option value="nada">Nada</option>
-    </select>
-  </div>
-  </section>
+            </select>
 
-  <section class="bloco-detalhes">
+            <div class="campo-formulario escondida" id="grupoArmaSecundaria">
+              <label for="armaSecundaria">Escolha a arma secundária</label>
+              <select id="armaSecundaria">
+              <option value="">Escolha uma arma</option>
+              </select>
+            </div>
+ 
+            <p class="aviso-equipamentos" id="avisoEquipamentos"></p>   
+
+          </div>
+
+       </section>
+
+       <section class="bloco-detalhes">
     <h3>Classe de Armadura</h3>
    <p class="texto-explicativo">
     A Classe de Armadura será calculada automaticamente com base na armadura,
@@ -705,27 +753,27 @@
     <span>Classe de Armadura:</span>
     <strong id="resultadoClasseArmadura">-</strong>
   </div>
-</section>
+       </section>
 
-  <section class="bloco-detalhes">
+       <section class="bloco-detalhes">
     <h3>Dado de Vida e Pontos de Vida</h3>
-  </section>
+       </section>
 
-  <section class="bloco-detalhes">
+       <section class="bloco-detalhes">
     <h3>Iniciativa</h3>
-  </section>
+       </section>
 
-  <section class="bloco-detalhes">
+       <section class="bloco-detalhes">
     <h3>Velocidade</h3>
-  </section>
+       </section>
 
-  <section class="bloco-detalhes">
+       <section class="bloco-detalhes">
     <h3>Tamanho</h3>
-  </section>
+       </section>
 
-  <section class="bloco-detalhes">
+       <section class="bloco-detalhes">
     <h3>Percepção Passiva</h3>
-  </section>
+       </section>
 
   <div class="acoes-passo">
     <p class="mensagem-passo" id="mensagemDetalhes"></p>
@@ -759,7 +807,7 @@
 
      </section>
 
-  </section>
+    </section>
 
   </main>
 
@@ -837,13 +885,41 @@
 
   
  </div>
+ </div>
+
+ <div id="modalDetalheFicha" class="modal-detalhe-ficha escondida">
+  <div class="modal-detalhe-conteudo">
+    <button
+      type="button"
+      id="botaoFecharModalDetalheFicha"
+      class="botao-fechar-detalhe"
+    >
+      Fechar
+    </button>
+
+    <h2 id="modalDetalheTitulo"></h2>
+
+    <p id="modalDetalheDescricao"></p>
+
+    <div id="modalDetalheMecanica" class="modal-detalhe-mecanica"></div>
+  </div>
+
 
 </body>
 
-<script src="banco-equipamentos.js"></script>
+<script src="banco-pericias.js"></script>
+<script src="banco-idiomas.js"></script>
+<script src="banco-talentos.js"></script>
+<script src="banco-antecedentes.js"></script>
+<script src="banco-classes.js"></script>
 <script src="banco-habilidades.js"></script>
 <script src="banco-magias.js"></script>
+<script src="banco-equipamentos.js"></script>
+<script src="banco-maestrias.js"></script>
+<script src="banco-propriedades-armas.js"></script>
 <script src="banco-especies.js"></script>
-<script src="selecao-classe.js"></script>
+<script src="detalhes-ficha.js"></script>
+<script src="ficha-personagem.js"></script>
+<script src="criacao-personagem.js"></script>
 
 </html>

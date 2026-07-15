@@ -1,4 +1,4 @@
-const cardsClasse = document.querySelectorAll(".card-classe");
+﻿const cardsClasse = document.querySelectorAll(".card-classe");
 const modalClasse = document.getElementById("modalClasse");
 const botaoVoltarModal = document.getElementById("botaoVoltarModal");
 const modalTituloClasse = document.getElementById("modalTituloClasse");
@@ -213,6 +213,161 @@ const personagem = {
     },
   },
 };
+
+function atualizarPericiasPersonagem() {
+  const todasAsPericias = [
+    ...personagem.periciasAntecedente,
+    ...personagem.periciasClasse
+  ];
+
+  personagem.pericias = [...new Set(todasAsPericias)];
+}
+
+function obterDadosIdioma(idIdioma) {
+  if (window.bancoIdiomas === undefined) {
+    return undefined;
+  }
+
+  return window.bancoIdiomas[idIdioma];
+}
+
+function obterNomeIdioma(idIdioma) {
+  const idioma = obterDadosIdioma(idIdioma);
+
+  if (idioma === undefined) {
+    return idIdioma;
+  }
+
+  return idioma.nome;
+}
+
+function atualizarIdiomasPersonagem() {
+  const todosOsIdiomas = [
+    ...personagem.idiomasBase,
+    ...personagem.idiomasEspecie,
+    ...personagem.idiomasAntecedente,
+    ...personagem.idiomasEscolhidos
+  ];
+
+  personagem.idiomas = [...new Set(todosOsIdiomas)];
+}
+
+function obterIdiomasBloqueadosParaEscolha() {
+  return [
+    ...personagem.idiomasBase,
+    ...personagem.idiomasEspecie,
+    ...personagem.idiomasAntecedente
+  ];
+}
+
+function atualizarIdiomasEscolhidos() {
+  idiomasEscolhidos = [
+    seletorIdioma1.value,
+    seletorIdioma2.value
+  ];
+
+  personagem.idiomasEscolhidos = idiomasEscolhidos.filter(function(idIdioma) {
+    return idIdioma !== "";
+  });
+
+  atualizarIdiomasPersonagem();
+  atualizarSelectsIdiomas();
+  atualizarFichaIdiomas();
+}
+
+function atualizarRecursosHabilidadesPersonagem() {
+  personagem.habilidades.recursos = {};
+
+  const classeId = personagem.classeId;
+
+  if (classeId === "") {
+    return;
+  }
+
+  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
+
+  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
+    return;
+  }
+
+  const dadosNivel1 = dadosDaClasse.nivel1;
+
+  const habilidadesAutomaticas =
+    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+
+  habilidadesAutomaticas.forEach(function(idHabilidade) {
+    const habilidade = obterDadosHabilidade(idHabilidade);
+
+    if (habilidade === undefined || habilidade.recurso === undefined) {
+      return;
+    }
+
+    const recurso = habilidade.recurso;
+
+    let formula = recurso.formula;
+
+    if (formula !== undefined && formula !== "") {
+      formula = formula.replace("nivelClasse", "1");
+    }
+
+    personagem.habilidades.recursos[recurso.id] = {
+      id: recurso.id,
+      nome: recurso.nome,
+      usosAtuais: recurso.usosMaximos,
+      usosMaximos: recurso.usosMaximos,
+      recuperaEm: recurso.recuperaEm,
+      efeito: recurso.efeito,
+      formula: formula
+    };
+  });
+}
+
+function limparEspecializacoesInvalidas() {
+  const especializacoes =
+    obterEspecializacoesPericiasPersonagem(personagem);
+
+  personagem.habilidades.escolhas.especializacoesPericias =
+    especializacoes.filter(function(idPericia) {
+      return personagem.pericias.includes(idPericia);
+    });
+}
+
+function criarItemHabilidadeAutomaticaFicha(idHabilidade) {
+  const habilidade = obterDadosHabilidade(idHabilidade);
+
+  if (habilidade === undefined) {
+    return undefined;
+  }
+
+  const item = document.createElement("li");
+
+  const botao = window.criarReferenciaDetalhe(
+    "habilidade",
+    idHabilidade,
+    habilidade.nome,
+    {
+      recursos: personagem.habilidades.recursos
+    }
+  );
+
+  item.appendChild(botao);
+
+  const recurso = personagem.habilidades.recursos[idHabilidade];
+
+  if (recurso !== undefined) {
+    item.appendChild(
+      document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
+    );
+  }
+
+  return item;
+}
+
+function criarItemHabilidadeComEscolha(nomeGrupo, nomeEscolha) {
+  const item = document.createElement("li");
+  item.textContent = nomeGrupo + ": " + nomeEscolha;
+  return item;
+}
 
 preencherSelectArmaSecundaria();
 atualizarVisibilidadeArmaSecundaria();
@@ -855,6 +1010,14 @@ function habilidadesEstaoEscolhidas(){
   });
 }
 
+function atualizarAvisosEquipamentos() {
+  if (avisoEquipamentos === null) {
+    return;
+  }
+
+  avisoEquipamentos.textContent = "";
+}
+
 function podeAvancarDoPassoAtual() {
 
   
@@ -1481,7 +1644,7 @@ function calcularClasseArmadura() {
 }
 
 function atualizarClasseArmadura() {
-  const classeArmadura = calcularClasseArmadura();
+  const classeArmadura = calcularClasseArmadura(personagem);
 
   fichaClasseArmadura.textContent = classeArmadura;
 
@@ -1579,7 +1742,7 @@ function atualizarVelocidadeETamanho() {
 }
 
 function atualizarPercepcaoPassiva() {
-  const valorPercepcao = calcularValorPericia("percepcao");
+  const valorPercepcao = calcularValorPericia(personagem,"percepcao");
 
   if (valorPercepcao === "") {
     fichaPercepcaoPassiva.textContent = "";
@@ -2074,7 +2237,49 @@ function montarRevisaoMagias() {
   areaRevisao.appendChild(bloco);
 }
 
+function obterDadosTalento(idTalento) {
+  if (window.bancoTalentos === undefined) {
+    return undefined;
+  }
+
+  return window.bancoTalentos[idTalento];
+}
+
+function atualizarFichaTalentos() {
+  fichaTalentos.innerHTML = "";
+
+  if (personagem.talentos.length === 0) {
+    const item = document.createElement("li");
+    item.textContent = "-";
+    fichaTalentos.appendChild(item);
+    return;
+  }
+
+  personagem.talentos.forEach(function(idTalento) {
+    const talento = obterDadosTalento(idTalento);
+    const item = document.createElement("li");
+
+    if (talento === undefined) {
+      item.textContent = idTalento;
+    } else {
+      const referencia = window.criarReferenciaDetalhe(
+        "talento",
+        idTalento,
+        talento.nome
+      );
+
+      item.appendChild(referencia);
+    }
+
+    fichaTalentos.appendChild(item);
+  });
+}
+
 function salvarPersonagemLocal() {
+
+  atualizarPericiasPersonagem();
+  atualizarIdiomasPersonagem();
+
   const personagensSalvos =
     JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
 
@@ -2660,7 +2865,7 @@ function criarLinhaAtaque(resumo) {
    if (resumo.propriedades.length > 0) {
     linhaAtaque.appendChild(document.createElement("br"));
     linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
-
+   }
     if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
       linhaAtaque.appendChild(document.createElement("br"));
 
@@ -2870,27 +3075,32 @@ function obterNomeTalento(idTalento) {
   return talento.nome;
 }
 
-function atualizarFichaTalentos() {
-  if (fichaTalentos === null) {
-    return;
+function obterDadosTalento(idTalento) {
+  if (window.bancoTalentos === undefined) {
+    return undefined;
   }
 
-  fichaTalentos.innerHTML = "";
+  return window.bancoTalentos[idTalento];
+}
 
-  if (personagem.talentos.length === 0) {
-    const item = document.createElement("li");
-    item.textContent = "";
-    fichaTalentos.appendChild(item);
-    return;
+function criarItemTalentoFicha(idTalento) {
+  const item = document.createElement("li");
+  const talento = obterDadosTalento(idTalento);
+
+  if (talento === undefined) {
+    item.textContent = idTalento;
+    return item;
   }
 
-  personagem.talentos.forEach(function(idTalento) {
-    const item = criarItemTalentoFicha(idTalento);
-    
-    if (item !== undefined) {
-    fichaTalentos.appendChild(item);
-    }
-  });
+  const referencia = window.criarReferenciaDetalhe(
+    "talento",
+    idTalento,
+    talento.nome
+  );
+
+  item.appendChild(referencia);
+
+  return item;
 }
 
 atualizarFichaTalentos();
@@ -2933,14 +3143,18 @@ function obterIdiomasBloqueadosParaEscolha() {
 }
 
 function preencherSelectIdioma(select, valorAtual, valoresEscolhidosEmOutrosSelects) {
-  select.innerHTML = "";
-
-  const opcaoInicial = document.createElement("option");
-  opcaoInicial.value = "";
-  opcaoInicial.textContent = "Escolha um idioma";
-  select.appendChild(opcaoInicial);
+  if (select === null) {
+    return;
+  }
 
   const idiomasBloqueados = obterIdiomasBloqueadosParaEscolha();
+
+  select.innerHTML = "";
+
+  const opcaoVazia = document.createElement("option");
+  opcaoVazia.value = "";
+  opcaoVazia.textContent = "Escolha um idioma";
+  select.appendChild(opcaoVazia);
 
   Object.keys(window.bancoIdiomas).forEach(function(idIdioma) {
     const idioma = window.bancoIdiomas[idIdioma];
@@ -2949,22 +3163,9 @@ function preencherSelectIdioma(select, valorAtual, valoresEscolhidosEmOutrosSele
       return;
     }
 
-    const idiomaJaVemDeOutraFonte =
-      idiomasBloqueados.includes(idIdioma);
-
-    const idiomaJaFoiEscolhidoEmOutroSelect =
-      valoresEscolhidosEmOutrosSelects.includes(idIdioma);
-
     if (
-      idiomaJaVemDeOutraFonte &&
-      idIdioma !== valorAtual
-    ) {
-      return;
-    }
-
-    if (
-      idiomaJaFoiEscolhidoEmOutroSelect &&
-      idIdioma !== valorAtual
+      idiomasBloqueados.includes(idIdioma) ||
+      valoresEscolhidosEmOutrosSelects.includes(idIdioma)
     ) {
       return;
     }
@@ -3343,4 +3544,4 @@ function limparEspecializacoesInvalidas() {
     especializacoes.filter(function(idPericia) {
       return personagem.pericias.includes(idPericia);
     });
-}}
+}
