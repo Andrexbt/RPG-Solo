@@ -1,5 +1,16 @@
-window.bancoAntecedentes = {
+// =====================================================
+// Banco de antecedentes
+// -----------------------------------------------------
+// Guarda os antecedentes disponíveis na criação de
+// personagem. Cada antecedente pode conceder perícias,
+// ferramentas, idiomas, talento de origem, equipamento,
+// moedas e sugestões de atributos.
+// =====================================================
 
+window.bancoAntecedentes = {
+  // =====================================================
+  // Acólito
+  // =====================================================
   acolito: {
     id: "acolito",
     nome: "Acólito",
@@ -23,6 +34,9 @@ window.bancoAntecedentes = {
     atributosSugeridos: ["inteligencia", "sabedoria", "carisma"]
   },
 
+  // =====================================================
+  // Soldado
+  // =====================================================
   soldado: {
     id: "soldado",
     nome: "Soldado",
@@ -46,6 +60,9 @@ window.bancoAntecedentes = {
     atributosSugeridos: ["forca", "constituicao", "carisma"]
   },
 
+  // =====================================================
+  // Sábio
+  // =====================================================
   sabio: {
     id: "sabio",
     nome: "Sábio",
@@ -69,6 +86,9 @@ window.bancoAntecedentes = {
     atributosSugeridos: ["inteligencia", "sabedoria", "constituicao"]
   },
 
+  // =====================================================
+  // Criminoso
+  // =====================================================
   criminoso: {
     id: "criminoso",
     nome: "Criminoso",
