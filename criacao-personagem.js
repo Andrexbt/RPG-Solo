@@ -1,4 +1,12 @@
-﻿const cardsClasse = document.querySelectorAll(".card-classe");
+﻿// =====================================================
+// 1. ELEMENTOS DO HTML
+// -----------------------------------------------------
+// Referências aos elementos da página usados pelo JavaScript.
+// Estes consts ligam o código aos botões, campos, cards,
+// áreas da ficha lateral, mensagens e seções da criação.
+// =====================================================
+
+const cardsClasse = document.querySelectorAll(".card-classe");
 const modalClasse = document.getElementById("modalClasse");
 const botaoVoltarModal = document.getElementById("botaoVoltarModal");
 const modalTituloClasse = document.getElementById("modalTituloClasse");
@@ -6,6 +14,15 @@ const modalImagemClasse = document.getElementById("modalImagemClasse");
 const modalDescricaoClasse = document.getElementById("modalDescricaoClasse");
 const modalEstiloJogoClasse = document.getElementById("modalEstiloJogoClasse");
 const modalHabilidadesClasse = document.getElementById("modalHabilidadesClasse");
+
+// =====================================================
+// 2. DADOS FIXOS DA TELA DE CRIAÇÃO
+// -----------------------------------------------------
+// Dados usados apenas para exibir informações na interface,
+// como nome, imagem e descrição das classes no modal.
+// As regras completas das classes ficam em banco-classes.js.
+// =====================================================
+
 const dadosClasses = {
   guerreiro: {
     nome: "Guerreiro",
@@ -46,6 +63,14 @@ const dadosClasses = {
 const botoesPasso = document.querySelectorAll(".passo");
 const conteudosPasso = document.querySelectorAll(".conteudo-passo");
 const botaoProximoPasso = document.querySelectorAll(".botao-proximo");
+
+// =====================================================
+// 3. CONTROLE DAS ETAPAS DA CRIAÇÃO
+// -----------------------------------------------------
+// Define a ordem dos passos do criador e controla em qual
+// etapa o jogador está. Também guarda até qual etapa já foi
+// liberada durante a criação do personagem.
+// =====================================================
 
 const ordemPassos =[
   "classe",
@@ -171,6 +196,15 @@ const botaoFecharModalDetalheFicha = document.getElementById("botaoFecharModalDe
 const modalDetalheTitulo = document.getElementById("modalDetalheTitulo");
 const modalDetalheDescricao = document.getElementById("modalDetalheDescricao");
 const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
+
+// =====================================================
+// 4. ESTADO DO PERSONAGEM EM CRIAÇÃO
+// -----------------------------------------------------
+// Objeto principal que guarda tudo o que o jogador escolheu
+// durante a criação: classe, atributos, antecedente, espécie,
+// idiomas, perícias, talentos, habilidades, magias e detalhes.
+// No final, este objeto é salvo no localStorage.
+// =====================================================
 
 const personagem = {
   
