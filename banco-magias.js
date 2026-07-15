@@ -1,4 +1,15 @@
+// =====================================================
+// Banco de magias
+// -----------------------------------------------------
+// Guarda a progressão mágica das classes. A seleção completa
+// de magias ainda será implementada; por enquanto, este banco
+// informa se uma classe possui escolhas mágicas no nível atual.
+// =====================================================
+
 window.bancoMagias = {
+  // =====================================================
+  // Progressão mágica por classe
+  // =====================================================
   progressaoMagias: {
     mago: {
       nivel1: {
