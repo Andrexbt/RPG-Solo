@@ -1,4 +1,20 @@
+// =====================================================
+// Lista de personagens salvos
+// -----------------------------------------------------
+// Este arquivo controla a tela meus-personagens.html.
+// Ele lê os personagens salvos no localStorage, monta os
+// cards de resumo e permite abrir ou excluir uma ficha.
+// =====================================================
+
+// =====================================================
+// 1. Elementos do HTML
+// =====================================================
+
 const listaPersonagens = document.getElementById("listaPersonagens");
+
+// =====================================================
+// 2. Leitura e gravação no localStorage
+// =====================================================
 
 function carregarPersonagensSalvos() {
   return JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
@@ -10,6 +26,10 @@ function salvarListaPersonagens(personagens) {
     JSON.stringify(personagens)
   );
 }
+
+// =====================================================
+// 3. Funções auxiliares de texto e cálculo
+// =====================================================
 
 function textoOuTraco(valor) {
   if (valor === undefined || valor === null || valor === "") {
@@ -67,6 +87,10 @@ function obterPontosDeVidaMaximos(personagem) {
 
   return textoOuTraco(personagem.detalhes.pontosDeVida.maximo);
 }
+
+// =====================================================
+// 4. Montagem dos cards de personagens
+// =====================================================
 
 function montarTelaPersonagens() {
   const personagens = carregarPersonagensSalvos();
@@ -153,6 +177,10 @@ function montarTelaPersonagens() {
   });
 }
 
+// =====================================================
+// 5. Exclusão de personagens
+// =====================================================
+
 function excluirPersonagem(idPersonagem) {
   const personagens = carregarPersonagensSalvos();
 
@@ -175,5 +203,9 @@ function confirmarExclusaoPersonagem(idPersonagem, nomePersonagem) {
 
   excluirPersonagem(idPersonagem);
 }
+
+// =====================================================
+// 6. Inicialização
+// =====================================================
 
 montarTelaPersonagens();
