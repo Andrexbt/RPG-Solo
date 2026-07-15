@@ -406,6 +406,14 @@ function criarItemHabilidadeComEscolha(nomeGrupo, nomeEscolha) {
 preencherSelectArmaSecundaria();
 atualizarVisibilidadeArmaSecundaria();
 
+// =====================================================
+// 5. SELEÇÃO DE CLASSE
+// -----------------------------------------------------
+// Controla a escolha da classe no modal, salva a classe no
+// objeto personagem, atualiza a ficha lateral e recalcula
+// perícias, habilidades, equipamentos, ataques, CA e PV.
+// =====================================================
+
 function selecionarClasse(){
   const dados = dadosClasses[classeAtualNaModal];
 
@@ -471,6 +479,14 @@ function atualizarMarcadoresSalvaguardas() {
 
 botaoSelecionarClasse.addEventListener("click", selecionarClasse);
 
+// =====================================================
+// 6. MODAL DE INFORMAÇÕES DA CLASSE
+// -----------------------------------------------------
+// Abre e fecha a janela com detalhes da classe escolhida.
+// Esta parte é visual: mostra imagem, descrição, estilo de
+// jogo e texto explicativo antes de confirmar a classe.
+// =====================================================
+
 function abrirModal(classeEscolhida) {
   classeAtualNaModal = classeEscolhida;
 
@@ -502,6 +518,14 @@ cardsClasse.forEach(function(card) {
 botaoVoltarModal.addEventListener("click", function() {
   fecharModal();
 });
+
+// =====================================================
+// 7. NAVEGAÇÃO ENTRE ETAPAS
+// -----------------------------------------------------
+// Mostra a etapa atual, esconde as outras, controla botões
+// de avanço e impede que o jogador pule etapas ainda não
+// liberadas da criação de personagem.
+// =====================================================
 
 function irParaPasso(nomePasso) {
   passoAtual = nomePasso;
@@ -576,6 +600,14 @@ botaoProximoPasso.forEach(function(botao) {
   });
 });
 
+// =====================================================
+// 8. ANTECEDENTES, PERÍCIAS E TALENTOS
+// -----------------------------------------------------
+// Controla a escolha do antecedente. O antecedente define
+// perícias automáticas, talento de origem e informações que
+// aparecem na ficha lateral e depois na ficha salva.
+// =====================================================
+
 function selecionarAntecedente(cardClicado) {
   const antecedenteId = cardClicado.dataset.antecedente;
   const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
@@ -624,6 +656,13 @@ cardsEspecie.forEach(function(card) {
   });
 });
 
+// =====================================================
+// 9. ESPÉCIE E IDIOMAS AUTOMÁTICOS
+// -----------------------------------------------------
+// Controla a escolha da espécie, atualiza tamanho,
+// velocidade e idiomas fixos concedidos pela espécie.
+// =====================================================
+
 function selecionarEspecie(cardClicado) {
   cardsEspecie.forEach(function(card) {
     card.classList.remove("selecionado");
@@ -654,6 +693,15 @@ function selecionarEspecie(cardClicado) {
   atualizarSelectsIdiomas();
   atualizarValoresDerivados();
 }
+
+// =====================================================
+// 10. ROLAGEM E DISTRIBUIÇÃO DE ATRIBUTOS
+// -----------------------------------------------------
+// Controla a rolagem 4d6 descartando o menor dado, guarda
+// os seis resultados e permite distribuir esses valores
+// entre Força, Destreza, Constituição, Inteligência,
+// Sabedoria e Carisma.
+// =====================================================
 
 gerarAtributos.addEventListener("click", dadosRolando);
 
@@ -748,6 +796,14 @@ function atualizarResultadosAtributos() {
     preencherSeletoresAtributos();
   }
 }
+
+// =====================================================
+// 11. HABILIDADES DE CLASSE NA FICHA LATERAL
+// -----------------------------------------------------
+// Atualiza a lista de habilidades exibida na ficha lateral,
+// incluindo habilidades automáticas, recursos como Segundo
+// Fôlego e escolhas feitas pelo jogador.
+// =====================================================
 
 function atualizarFichaHabilidades() {
   fichaHabilidades.innerHTML = "";
@@ -1155,6 +1211,14 @@ function podeAvancarDoPassoAtual() {
   return true;
 }
 
+// =====================================================
+// 12. TELA DE HABILIDADES DA CLASSE
+// -----------------------------------------------------
+// Monta a etapa de habilidades: mostra habilidades
+// automáticas e cria os cards de escolhas do nível 1,
+// como estilo de luta, maestrias e especializações.
+// =====================================================
+
 function montarTelaHabilidades() {
   areaHabilidadesClasse.innerHTML = "";
 
@@ -1475,6 +1539,14 @@ function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
   atualizarPercepcaoPassiva();
 }
 
+// =====================================================
+// 13. MAGIAS
+// -----------------------------------------------------
+// Monta a etapa de magias. Por enquanto, apenas informa
+// se a classe possui escolhas mágicas cadastradas no nível
+// atual. A seleção completa de magias virá depois.
+// =====================================================
+
 function montarTelaMagias() {
   areaMagias.innerHTML = "";
 
@@ -1523,6 +1595,14 @@ nomePersonagem.addEventListener("input", function() {
   }
 });
 
+// =====================================================
+// 14. IDIOMAS ESCOLHIDOS NO PASSO DE DETALHES
+// -----------------------------------------------------
+// Atualiza os idiomas finais do personagem combinando
+// idioma base, idiomas da espécie, idiomas de antecedente
+// e os idiomas escolhidos manualmente pelo jogador.
+// =====================================================
+
 function atualizarFichaIdiomas() {
   atualizarIdiomasPersonagem();
 
@@ -1549,6 +1629,14 @@ seletorIdioma2.addEventListener("change", function() {
 
 atualizarSelectsIdiomas();
 atualizarFichaIdiomas();
+
+// =====================================================
+// 15. EQUIPAMENTOS, ARMAS E PROFICIÊNCIAS
+// -----------------------------------------------------
+// Controla armadura, arma principal, item secundário,
+// arma secundária e proficiências exibidas na ficha.
+// Também recalcula CA, ataques e avisos de equipamento.
+// =====================================================
 
 function atualizarEquipamentos() {
   personagem.detalhes.equipamentos = {
