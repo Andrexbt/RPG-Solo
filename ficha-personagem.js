@@ -1,4 +1,17 @@
+// =====================================================
+// Funções compartilhadas da ficha de personagem
+// -----------------------------------------------------
+// Este arquivo centraliza cálculos e utilidades usados na
+// criação, visualização e exportação da ficha. Ele instala
+// funções globais para que criacao-personagem.js e
+// ver-personagem.js possam usar a mesma lógica.
+// =====================================================
+
 (function() {
+  // =====================================================
+  // 1. Cálculos básicos de atributo e proficiência
+  // =====================================================
+
   function calcularModificador(valor) {
     return Math.floor((Number(valor) - 10) / 2);
   }
@@ -14,6 +27,10 @@
   function calcularBonusProficiencia() {
     return 2;
   }
+
+  // =====================================================
+  // 2. Perícias, proficiências e especializações
+  // =====================================================
 
   function obterDadosPericia(idPericia) {
     if (window.bancoPericias === undefined) {
@@ -109,6 +126,10 @@
 
     return 10 + valorPercepcao;
   }
+
+  // =====================================================
+  // 3. Dados de equipamentos, armas, armaduras e maestrias
+  // =====================================================
 
   function obterDadosArma(idArma) {
     if (
@@ -256,6 +277,10 @@
 
     return personagemAtual.habilidades.escolhas.estilosDeLuta === idEstilo;
   }
+
+  // =====================================================
+  // 4. Cálculos de ataque, dano e regras de armas
+  // =====================================================
 
   function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
     const arma = obterDadosArma(idArma);
@@ -541,6 +566,10 @@
     return linhaAtaque;
   }
 
+  // =====================================================
+  // 5. Classe de Armadura
+  // =====================================================
+
   function calcularClasseArmadura(personagemAtual) {
     const equipamentos = personagemAtual.detalhes.equipamentos;
 
@@ -590,6 +619,10 @@
 
     return classeArmadura;
   }
+
+  // =====================================================
+  // 6. Habilidades, recursos e escolhas de classe
+  // =====================================================
 
   function obterDadosHabilidade(idHabilidade) {
     if (window.bancoHabilidades === undefined) {
@@ -717,6 +750,10 @@
     return opcaoEscolhida.nome;
   }
 
+  // =====================================================
+  // 7. Textos auxiliares para PDF
+  // =====================================================
+
   function obterTextoHabilidadesParaPdf(personagemAtual) {
     const linhas = [];
 
@@ -842,6 +879,10 @@
     }
   }
 
+  // =====================================================
+  // 8. Preenchimento visual de habilidades na ficha
+  // =====================================================
+
   function preencherHabilidades(personagemAtual) {
     const fichaHabilidadesElemento = document.getElementById("fichaHabilidades");
 
@@ -938,6 +979,10 @@
       fichaHabilidadesElemento.appendChild(item);
     }
   }
+
+  // =====================================================
+  // 9. Exportação global das funções compartilhadas
+  // =====================================================
 
   function instalarGlobaisFichaPersonagem() {
     window.calcularModificador = calcularModificador;
