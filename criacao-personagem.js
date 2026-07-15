@@ -2462,9 +2462,12 @@ function atualizarMarcadoresPericias() {
       linha.classList.add("proficiente");
     } 
 
-    if (personagemTemEspecializacaoEmPericia(idPericia)) {
-      linha.classList.add("especializada");
-    }
+    if (
+  personagemTemEspecializacaoEmPericia(personagem, idPericia) ||
+  personagemTemEspecializacaoEmPericia(idPericia)
+) {
+  linha.classList.add("especializada");
+}
   });
 }
 
