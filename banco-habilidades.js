@@ -1,8 +1,26 @@
+// =====================================================
+// Banco de habilidades
+// -----------------------------------------------------
+// Guarda habilidades de classe, grupos de escolhas e
+// progressão inicial das classes. Este arquivo não aplica
+// regras sozinho: ele fornece os dados usados pelas telas de
+// criação, ficha e visualização do personagem.
+// =====================================================
+
 window.bancoHabilidades = {
+  // Reservado para traços de espécie ou características gerais.
   traits: {},
 
+  // Reservado para talentos que possam ser integrados a este banco.
   feats: {},
 
+  // =====================================================
+  // Habilidades de classe
+  // -----------------------------------------------------
+  // Cada entrada descreve uma habilidade automática de uma
+  // classe. Quando a habilidade possui recurso limitado,
+  // o campo recurso informa usos, recuperação e fórmula.
+  // =====================================================
   classFeatures: {
     segundoFolego: {
       id: "segundoFolego",
@@ -12,7 +30,6 @@ window.bancoHabilidades = {
       nivel: 1,
       descricaoCurta: "Você pode recuperar pontos de vida usando uma reserva limitada de usos.",
       descricaoLonga: "Você possui uma reserva limitada de vigor que pode usar para se recuperar. No nível 1, você tem 2 usos de Segundo Fôlego. Ao usar esta habilidade, recupera 1d10 + seu nível de Guerreiro pontos de vida. Você recupera os usos gastos ao terminar um descanso longo.",
-
 
       recurso: {
         id: "segundoFolego",
@@ -61,12 +78,17 @@ window.bancoHabilidades = {
       nivel: 1,
       descricaoCurta: "Você conhece códigos, sinais e expressões usados por criminosos e informantes.",
       descricaoLonga: "A Gíria de Ladrão permite reconhecer e transmitir mensagens ocultas em conversas, símbolos e sinais discretos. No sistema, ela será tratada inicialmente como uma habilidade narrativa."
-    },
-
+    }
   },
 
+  // =====================================================
+  // Grupos de escolha
+  // -----------------------------------------------------
+  // Descrevem escolhas que o jogador precisa fazer no nível 1.
+  // Alguns grupos possuem opções fixas; outros buscam opções
+  // dinamicamente, como armas proficientes ou perícias já conhecidas.
+  // =====================================================
   gruposDeEscolha: {
-
     estilosDeLuta: {
       id: "estilosDeLuta",
       nome: "Estilos de Luta",
@@ -108,12 +130,17 @@ window.bancoHabilidades = {
       nome: "Especialização em Perícias",
       quantidadeEscolhas: 2,
       origemDasOpcoes: "periciasProficientes"
-    },
-
+    }
   },
 
+  // =====================================================
+  // Progressão das classes
+  // -----------------------------------------------------
+  // Define quais habilidades automáticas e quais escolhas cada
+  // classe recebe em determinado nível. Por enquanto, o sistema
+  // usa apenas o nível 1.
+  // =====================================================
   progressaoClasses: {
-
     guerreiro: {
       nivel1: {
         classFeaturesAutomaticas: [
@@ -133,8 +160,8 @@ window.bancoHabilidades = {
         ]
       }
     },
-  
-   ladino: {
+
+    ladino: {
       nivel1: {
         classFeaturesAutomaticas: [
           "ataqueFurtivo",
@@ -144,20 +171,16 @@ window.bancoHabilidades = {
         ],
 
         escolhas: [
-
           {
             grupo: "especializacoesPericias",
             quantidade: 2
           },
-          
-         {
+          {
             grupo: "maestriasArmas",
             quantidade: 2
-         }
+          }
         ]
       }
     }
-
   }
-  
 };
