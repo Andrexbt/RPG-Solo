@@ -6,6 +6,15 @@
 // áreas da ficha lateral, mensagens e seções da criação.
 // =====================================================
 
+// =====================================================
+// Arquivo: criacao-personagem.js
+// -----------------------------------------------------
+// Controla o fluxo de criação: seleção, validação, ficha lateral, revisão e salvamento.
+// =====================================================
+
+// Atenção: neste arquivo a ordem das funções e dos eventos importa.
+// Por isso, a organização abaixo usa comentários sem mover blocos de código.
+
 const cardsClasse = document.querySelectorAll(".card-classe");
 const modalClasse = document.getElementById("modalClasse");
 const botaoVoltarModal = document.getElementById("botaoVoltarModal");
@@ -70,6 +79,12 @@ const botaoProximoPasso = document.querySelectorAll(".botao-proximo");
 // Define a ordem dos passos do criador e controla em qual
 // etapa o jogador está. Também guarda até qual etapa já foi
 // liberada durante a criação do personagem.
+// =====================================================
+
+// =====================================================
+// 1. Controle de etapas
+// -----------------------------------------------------
+// Define a ordem dos passos e controla quais etapas já foram liberadas.
 // =====================================================
 
 const ordemPassos =[
@@ -206,6 +221,12 @@ const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
 // No final, este objeto é salvo no localStorage.
 // =====================================================
 
+// =====================================================
+// 2. Estado central do personagem
+// -----------------------------------------------------
+// Objeto principal atualizado durante toda a criação.
+// =====================================================
+
 const personagem = {
   
   classeId:"",
@@ -256,6 +277,12 @@ function atualizarPericiasPersonagem() {
 
   personagem.pericias = [...new Set(todasAsPericias)];
 }
+
+// =====================================================
+// 13. Idiomas
+// -----------------------------------------------------
+// Controla idiomas fixos e escolhas livres feitas nos detalhes.
+// =====================================================
 
 function obterDadosIdioma(idIdioma) {
   if (window.bancoIdiomas === undefined) {
@@ -308,6 +335,12 @@ function atualizarIdiomasEscolhidos() {
   atualizarSelectsIdiomas();
   atualizarFichaIdiomas();
 }
+
+// =====================================================
+// 11. Recursos de habilidades
+// -----------------------------------------------------
+// Cria usos de habilidades como Segundo Fôlego quando aplicável.
+// =====================================================
 
 function atualizarRecursosHabilidadesPersonagem() {
   personagem.habilidades.recursos = {};
@@ -414,6 +447,12 @@ atualizarVisibilidadeArmaSecundaria();
 // perícias, habilidades, equipamentos, ataques, CA e PV.
 // =====================================================
 
+// =====================================================
+// 4. Seleção de classe
+// -----------------------------------------------------
+// Atualiza classe, proficiências, recursos, habilidades e ficha lateral.
+// =====================================================
+
 function selecionarClasse(){
   const dados = dadosClasses[classeAtualNaModal];
 
@@ -438,7 +477,13 @@ function selecionarClasse(){
   atualizarFichaArmasAtaques();
   atualizarPontosDeVida();
 
-  cardsClasse.forEach(function(card){
+  // =====================================================
+// 18. Eventos e inicialização da tela
+// -----------------------------------------------------
+// Liga os botões, cards, selects e inicia o primeiro estado visual.
+// =====================================================
+
+cardsClasse.forEach(function(card){
     card.classList.remove("selecionado");
 
     if (card.dataset.classe === classeAtualNaModal){
@@ -527,6 +572,12 @@ botaoVoltarModal.addEventListener("click", function() {
 // liberadas da criação de personagem.
 // =====================================================
 
+// =====================================================
+// 3. Navegação entre passos
+// -----------------------------------------------------
+// Mostra, esconde e valida as etapas do criador.
+// =====================================================
+
 function irParaPasso(nomePasso) {
   passoAtual = nomePasso;
 
@@ -608,6 +659,12 @@ botaoProximoPasso.forEach(function(botao) {
 // aparecem na ficha lateral e depois na ficha salva.
 // =====================================================
 
+// =====================================================
+// 6. Antecedente, talentos e perícias automáticas
+// -----------------------------------------------------
+// Aplica dados vindos do banco de antecedentes.
+// =====================================================
+
 function selecionarAntecedente(cardClicado) {
   const antecedenteId = cardClicado.dataset.antecedente;
   const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
@@ -661,6 +718,12 @@ cardsEspecie.forEach(function(card) {
 // -----------------------------------------------------
 // Controla a escolha da espécie, atualiza tamanho,
 // velocidade e idiomas fixos concedidos pela espécie.
+// =====================================================
+
+// =====================================================
+// 7. Espécie e idiomas fixos
+// -----------------------------------------------------
+// Aplica espécie, tamanho, velocidade e idiomas automáticos.
 // =====================================================
 
 function selecionarEspecie(cardClicado) {
@@ -1547,6 +1610,12 @@ function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
 // atual. A seleção completa de magias virá depois.
 // =====================================================
 
+// =====================================================
+// 12. Magias
+// -----------------------------------------------------
+// Prepara a área de magias quando a classe tiver escolhas mágicas.
+// =====================================================
+
 function montarTelaMagias() {
   areaMagias.innerHTML = "";
 
@@ -1774,6 +1843,12 @@ function atualizarClasseArmadura() {
     resultadoClasseArmadura.textContent = classeArmadura;
   }
 }
+
+// =====================================================
+// 15. Pontos de vida, dados de vida e valores derivados
+// -----------------------------------------------------
+// Calcula PV, iniciativa, velocidade, tamanho e percepção passiva.
+// =====================================================
 
 function atualizarPontosDeVida() {
   const classeId = personagem.classeId;
@@ -2397,6 +2472,12 @@ function atualizarFichaTalentos() {
   });
 }
 
+// =====================================================
+// 17. Salvamento local
+// -----------------------------------------------------
+// Salva o personagem no localStorage e gera o identificador da ficha.
+// =====================================================
+
 function salvarPersonagemLocal() {
 
   atualizarPericiasPersonagem();
@@ -2455,6 +2536,12 @@ botaoFinalizarPersonagem.addEventListener("click", function() {
   acoesPersonagemSalvo.appendChild(linkMeusPersonagens);
 
 });
+
+// =====================================================
+// 9. Escolhas de perícias de classe
+// -----------------------------------------------------
+// Monta opções, impede duplicações com o antecedente e atualiza a ficha.
+// =====================================================
 
 function montarTelaPericiasClasse() {
   areaPericiasClasse.innerHTML = "";
