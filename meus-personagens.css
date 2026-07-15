@@ -1,8 +1,17 @@
+/* =====================================================
+   ESTILO DA PÁGINA MEUS PERSONAGENS
+   -----------------------------------------------------
+   Organiza a listagem de personagens salvos, os cards de
+   personagem, os valores resumidos e os botões de ação.
+   ===================================================== */
+
+/* Estrutura geral da página */
 .pagina-personagens {
   width: min(1000px, 92%);
   margin: 30px auto;
 }
 
+/* Cabeçalho da lista de personagens */
 .cabecalho-personagens {
   background-color: #2a211b;
   border: 1px solid #6f5638;
@@ -16,6 +25,7 @@
   color: #f0d28a;
 }
 
+/* Botão principal da página */
 .botao-link {
   display: inline-block;
   margin-top: 10px;
@@ -27,12 +37,14 @@
   font-weight: bold;
 }
 
+/* Grade de personagens salvos */
 .lista-personagens {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
 }
 
+/* Card individual de personagem */
 .card-personagem {
   background-color: #2a211b;
   border: 1px solid #6f5638;
@@ -50,6 +62,7 @@
   margin: 6px 0;
 }
 
+/* Resumo textual do personagem */
 .resumo-personagem {
   color: #d8c7a8;
   margin: 4px 0 12px 0;
@@ -61,6 +74,7 @@
   margin: 6px 0;
 }
 
+/* Valores destacados no card */
 .card-personagem-valores {
   display: flex;
   gap: 10px;
@@ -89,6 +103,7 @@
   font-size: 20px;
 }
 
+/* Ações do card: ver ficha e excluir */
 .card-personagem-acoes {
   display: flex;
   gap: 10px;
