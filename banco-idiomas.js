@@ -1,4 +1,16 @@
+// =====================================================
+// Banco de idiomas
+// -----------------------------------------------------
+// Guarda os idiomas disponíveis no sistema. O campo tipo
+// separa idiomas comuns de idiomas raros, permitindo que
+// a tela de criação mostre apenas os idiomas permitidos em
+// escolhas normais.
+// =====================================================
+
 window.bancoIdiomas = {
+  // =====================================================
+  // Idiomas padrão
+  // =====================================================
   comum: {
     id: "comum",
     nome: "Comum",
@@ -47,6 +59,9 @@ window.bancoIdiomas = {
     tipo: "padrao"
   },
 
+  // =====================================================
+  // Idiomas raros
+  // =====================================================
   abissal: {
     id: "abissal",
     nome: "Abissal",
