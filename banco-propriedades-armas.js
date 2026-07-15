@@ -1,10 +1,20 @@
+// =====================================================
+// Banco de propriedades de armas
+// -----------------------------------------------------
+// Guarda propriedades especiais das armas. Essas propriedades
+// são usadas para explicar a arma na ficha e também para
+// regras automáticas, como Acuidade, Leve e Duas mãos.
+// =====================================================
+
 window.bancoPropriedadesArmas = {
+  // =====================================================
+  // Propriedades disponíveis
+  // =====================================================
   acuidade: {
     id: "acuidade",
     nome: "Acuidade",
     descricaoCurta: "Permite usar Destreza em vez de Força para ataques e dano com esta arma.",
     descricaoLonga: "Uma arma com Acuidade permite escolher entre Força ou Destreza para calcular ataque e dano. O sistema usa automaticamente o melhor modificador disponível para o personagem."
-
   },
 
   arremesso: {
