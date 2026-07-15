@@ -1,35 +1,14 @@
-.pagina-ver-personagem {
-  width: min(1000px, 92%);
-  margin: 30px auto;
-}
+/* =====================================================
+   Tela de visualização de personagem salvo
+   -----------------------------------------------------
+   Este arquivo complementa criacao-personagem.css para a
+   página ver-personagem.html. Ele ajusta o layout da ficha
+   salva, os botões de ação e pequenos destaques visuais.
+   ===================================================== */
 
-.area-ficha-personagem {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.botao-link-card {
-  display: inline-block;
-  margin-top: 12px;
-  margin-right: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background-color: #8a6a44;
-  color: #fff2d0;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.botao-link-card:hover {
-  background-color: #a98252;
-}
-
-@media (max-width: 800px) {
-  .area-ficha-personagem {
-    grid-template-columns: 1fr;
-  }
-}
+/* =====================================================
+   1. Layout geral da página
+   ===================================================== */
 
 .pagina-ver-personagem {
   width: min(1100px, 92%);
@@ -47,6 +26,36 @@
   max-width: 100%;
 }
 
+.area-ficha-personagem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* =====================================================
+   2. Botões e ações
+   ===================================================== */
+
+.botao-link-card {
+  display: inline-block;
+  margin-top: 12px;
+  margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #8a6a44;
+  color: #fff2d0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.botao-link-card:hover {
+  background-color: #a98252;
+}
+
+/* =====================================================
+   3. Habilidades, escolhas e valores exibidos
+   ===================================================== */
+
 .item-habilidade-escolha {
   font-weight: normal;
 }
@@ -60,6 +69,10 @@
   font-family: Georgia, serif;
 }
 
+/* =====================================================
+   4. Marcadores especiais da ficha
+   ===================================================== */
+
 .linha-pericia.especializada::after {
   content: " ★";
   font-weight: bold;
@@ -71,4 +84,14 @@
   font-size: 0.9rem;
   font-style: italic;
   opacity: 0.9;
+}
+
+/* =====================================================
+   5. Responsividade
+   ===================================================== */
+
+@media (max-width: 800px) {
+  .area-ficha-personagem {
+    grid-template-columns: 1fr;
+  }
 }
