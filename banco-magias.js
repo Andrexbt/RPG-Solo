@@ -8,6 +8,13 @@
 
 window.bancoMagias = {
   // =====================================================
+  // Magias cadastradas
+  // -----------------------------------------------------
+  // A lista real de magias será preenchida no próximo passo.
+  // =====================================================
+  magias: {},
+
+  // =====================================================
   // Progressão mágica por classe
   // =====================================================
   progressaoMagias: {
@@ -22,7 +29,13 @@ window.bancoMagias = {
     clerigo: {
       nivel1: {
         temMagias: true,
-        mensagem: "Esta classe possui escolhas de magia no nível atual.",
+        atributoConjuracao: "sabedoria",
+        truquesConhecidos: 3,
+        magiasPreparadas: 4,
+        espacosMagia: {
+          nivel1: 2
+        },
+        mensagem: "O Clérigo prepara e conjura magias usando Sabedoria.",
         escolhas: []
       }
     }
