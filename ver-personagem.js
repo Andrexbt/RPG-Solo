@@ -76,7 +76,47 @@ const camposFichaPdf = {
   historiaPersonalidade: "Text97",
   idiomas: "Text98",
   equipamento: "Text99",
-  alinhamento: "Text100"
+  alinhamento: "Text100",
+
+  magiaAtributoConjuracao: "Text111",
+  magiaModificadorConjuracao: "Text93",
+  magiaCdSalvamento: "Text94",
+  magiaBonusAtaque: "Text95",
+
+  magiaEspacosNivel1Total: "Text112",
+
+  linhasMagias: [
+    { nivel: "Text105.0", nome: "Text106.0", tempo: "Text107.0", alcance: "Text109.0", notas: "Text108" },
+    { nivel: "Text105.1", nome: "Text106.1", tempo: "Text107.1", alcance: "Text109.1", notas: "Text208" },
+    { nivel: "Text105.2", nome: "Text106.2", tempo: "Text107.2", alcance: "Text109.2", notas: "Text209" },
+    { nivel: "Text105.3", nome: "Text106.3", tempo: "Text107.3", alcance: "Text109.3", notas: "Text210" },
+    { nivel: "Text105.4", nome: "Text106.4", tempo: "Text107.4", alcance: "Text109.4", notas: "Text211" },
+    { nivel: "Text105.5", nome: "Text106.5", tempo: "Text107.5", alcance: "Text109.5", notas: "Text212" },
+    { nivel: "Text105.6", nome: "Text106.6", tempo: "Text107.6", alcance: "Text109.6", notas: "Text213" },
+    { nivel: "Text105.7", nome: "Text106.7", tempo: "Text107.7", alcance: "Text109.7", notas: "Text214" },
+    { nivel: "Text105.8", nome: "Text106.8", tempo: "Text107.8", alcance: "Text109.8", notas: "Text215" },
+    { nivel: "Text105.9", nome: "Text106.9", tempo: "Text107.9", alcance: "Text109.9", notas: "Text216" },
+    { nivel: "Text105.10", nome: "Text106.10", tempo: "Text107.10", alcance: "Text109.10", notas: "Text217" },
+    { nivel: "Text105.11", nome: "Text106.11", tempo: "Text107.11", alcance: "Text109.11", notas: "Text218" },
+    { nivel: "Text105.12", nome: "Text106.12", tempo: "Text107.12", alcance: "Text109.12", notas: "Text219" },
+    { nivel: "Text105.13", nome: "Text106.13", tempo: "Text107.13", alcance: "Text109.13", notas: "Text220" },
+    { nivel: "Text105.14", nome: "Text106.14", tempo: "Text107.14", alcance: "Text109.14", notas: "Text221" },
+    { nivel: "Text105.15", nome: "Text106.15", tempo: "Text107.15", alcance: "Text109.15", notas: "Text222" },
+    { nivel: "Text105.16", nome: "Text106.16", tempo: "Text107.16", alcance: "Text109.16", notas: "Text223" },
+    { nivel: "Text105.17", nome: "Text106.17", tempo: "Text107.17", alcance: "Text109.17", notas: "Text224" },
+    { nivel: "Text105.18", nome: "Text106.18", tempo: "Text107.18", alcance: "Text109.18", notas: "Text225" },
+    { nivel: "Text105.19", nome: "Text106.19", tempo: "Text107.19", alcance: "Text109.19", notas: "Text227" },
+    { nivel: "Text105.20", nome: "Text106.20", tempo: "Text107.20", alcance: "Text109.20", notas: "Text228" },
+    { nivel: "Text105.21", nome: "Text106.21", tempo: "Text107.21", alcance: "Text109.21", notas: "Text229" },
+    { nivel: "Text105.22", nome: "Text106.22", tempo: "Text107.22", alcance: "Text109.22", notas: "Text230" },
+    { nivel: "Text105.23", nome: "Text106.23", tempo: "Text107.23", alcance: "Text109.23", notas: "Text244" },
+    { nivel: "Text105.24", nome: "Text106.24", tempo: "Text107.24", alcance: "Text109.24", notas: "Text231" },
+    { nivel: "Text105.25", nome: "Text106.25", tempo: "Text107.25", alcance: "Text109.25", notas: "Text232" },
+    { nivel: "Text105.26", nome: "Text106.26", tempo: "Text107.26", alcance: "Text109.26", notas: "Text233" },
+    { nivel: "Text105.27", nome: "Text106.27", tempo: "Text107.27", alcance: "Text109.27", notas: "Text234" },
+    { nivel: "Text105.28", nome: "Text106.28", tempo: "Text107.28", alcance: "Text109.28", notas: "Text235" },
+    { nivel: "Text105.29", nome: "Text106.29", tempo: "Text107.29", alcance: "Text109.29", notas: "Text236" }
+  ],
 };
 
 window.camposFichaPdf = camposFichaPdf;
@@ -359,8 +399,88 @@ function obterArmasDoPersonagem(personagem) {
 }
 
 // =====================================================
-// 7. Magias e talentos
+// 6. Magias na ficha salva
+// -----------------------------------------------------
+// Mostra na tela Ver Personagem as magias escolhidas
+// durante a criação do personagem.
 // =====================================================
+
+function obterDadosMagia(idMagia) {
+  if (
+    window.bancoMagias === undefined ||
+    window.bancoMagias.magias === undefined
+  ) {
+    return undefined;
+  }
+
+  return window.bancoMagias.magias[idMagia];
+}
+
+function obterNomeMagia(idMagia) {
+  const magia = obterDadosMagia(idMagia);
+
+  if (magia === undefined) {
+    return idMagia;
+  }
+
+  return magia.nome;
+}
+
+function obterNomeAtributoConjuracao(idAtributo) {
+  const nomes = {
+    forca: "Força",
+    destreza: "Destreza",
+    constituicao: "Constituição",
+    inteligencia: "Inteligência",
+    sabedoria: "Sabedoria",
+    carisma: "Carisma"
+  };
+
+  return nomes[idAtributo] || idAtributo;
+}
+
+function criarItemTextoMagia(texto) {
+  const item = document.createElement("li");
+  item.textContent = texto;
+  return item;
+}
+
+function criarItemMagiaFicha(idMagia) {
+  const magia = obterDadosMagia(idMagia);
+
+  if (magia === undefined) {
+    return criarItemTextoMagia(idMagia);
+  }
+
+  const item = document.createElement("li");
+
+  const nome = document.createElement("strong");
+  nome.textContent = magia.nome;
+
+  const nivelTexto = magia.nivel === 0 ? "Truque" : magia.nivel + "º círculo";
+
+  const detalhes = document.createElement("span");
+  detalhes.textContent =
+    " — " +
+    nivelTexto +
+    ", " +
+    magia.escola +
+    ", " +
+    magia.tempoConjuracao +
+    ", alcance: " +
+    magia.alcance +
+    ".";
+
+  const descricao = document.createElement("p");
+  descricao.classList.add("texto-explicativo");
+  descricao.textContent = magia.descricaoCurta;
+
+  item.appendChild(nome);
+  item.appendChild(detalhes);
+  item.appendChild(descricao);
+
+  return item;
+}
 
 function preencherMagias(personagem) {
   const lista = document.getElementById("fichaMagias");
@@ -371,16 +491,284 @@ function preencherMagias(personagem) {
 
   lista.innerHTML = "";
 
-  const dadosMagiaClasse = window.bancoMagias.progressaoMagias[personagem.classeId];
-
-  if (dadosMagiaClasse === undefined || dadosMagiaClasse.nivel1 === undefined) {
+  if (
+    personagem.magias === undefined ||
+    personagem.magias.atributoConjuracao === undefined
+  ) {
+    lista.appendChild(criarItemTextoMagia("Este personagem não possui magias."));
     return;
   }
 
-  const item = document.createElement("li");
-  item.textContent = "Magias a definir";
-  lista.appendChild(item);
+  const magias = personagem.magias;
+  const truques = magias.truquesConhecidos || [];
+  const preparadas = magias.magiasPreparadas || [];
+
+  const bonusAtaque = magias.bonusAtaqueMagico;
+  const bonusAtaqueTexto =
+    bonusAtaque === "" || bonusAtaque === undefined
+      ? "-"
+      : formatarModificador(bonusAtaque);
+
+  lista.appendChild(
+    criarItemTextoMagia(
+      "Atributo de conjuração: " +
+      obterNomeAtributoConjuracao(magias.atributoConjuracao)
+    )
+  );
+
+  lista.appendChild(
+    criarItemTextoMagia(
+      "CD das magias: " + (magias.cdSalvamento || "-")
+    )
+  );
+
+  lista.appendChild(
+    criarItemTextoMagia(
+      "Ataque mágico: " + bonusAtaqueTexto
+    )
+  );
+
+  if (
+    magias.espacosMagia !== undefined &&
+    magias.espacosMagia.nivel1 !== undefined
+  ) {
+    lista.appendChild(
+      criarItemTextoMagia(
+        "Espaços de magia de 1º círculo: " +
+        magias.espacosMagia.nivel1.usados +
+        " / " +
+        magias.espacosMagia.nivel1.maximos +
+        " usados"
+      )
+    );
+  }
+
+  if (truques.length > 0) {
+    const tituloTruques = criarItemTextoMagia("Truques:");
+    tituloTruques.classList.add("titulo-lista-magias");
+    lista.appendChild(tituloTruques);
+
+    truques.forEach(function(idMagia) {
+      lista.appendChild(criarItemMagiaFicha(idMagia));
+    });
+  }
+
+  if (preparadas.length > 0) {
+    const tituloPreparadas = criarItemTextoMagia("Magias preparadas:");
+    tituloPreparadas.classList.add("titulo-lista-magias");
+    lista.appendChild(tituloPreparadas);
+
+    preparadas.forEach(function(idMagia) {
+      lista.appendChild(criarItemMagiaFicha(idMagia));
+    });
+  }
 }
+
+function obterTextoMagiasParaPdf(personagem) {
+  if (
+    personagem.magias === undefined ||
+    personagem.magias.atributoConjuracao === undefined
+  ) {
+    return "";
+  }
+
+  const magias = personagem.magias;
+  const linhas = [];
+
+  const nomesAtributos = {
+    forca: "Força",
+    destreza: "Destreza",
+    constituicao: "Constituição",
+    inteligencia: "Inteligência",
+    sabedoria: "Sabedoria",
+    carisma: "Carisma"
+  };
+
+  const nomeAtributo =
+    nomesAtributos[magias.atributoConjuracao] || magias.atributoConjuracao;
+
+  const bonusAtaque = magias.bonusAtaqueMagico;
+  const bonusAtaqueTexto =
+    bonusAtaque === "" || bonusAtaque === undefined
+      ? "-"
+      : formatarModificador(bonusAtaque);
+
+  linhas.push("Conjuração");
+  linhas.push("Atributo: " + nomeAtributo);
+  linhas.push("CD das magias: " + (magias.cdSalvamento || "-"));
+  linhas.push("Ataque mágico: " + bonusAtaqueTexto);
+
+  if (
+    magias.espacosMagia !== undefined &&
+    magias.espacosMagia.nivel1 !== undefined
+  ) {
+    linhas.push(
+      "Espaços de 1º círculo: " +
+      magias.espacosMagia.nivel1.maximos
+    );
+  }
+
+  const truques = magias.truquesConhecidos || [];
+  const preparadas = magias.magiasPreparadas || [];
+
+  if (truques.length > 0) {
+    linhas.push(
+      "Truques: " +
+      truques.map(obterNomeMagia).join(", ")
+    );
+  }
+
+  if (preparadas.length > 0) {
+    linhas.push(
+      "Magias preparadas: " +
+      preparadas.map(obterNomeMagia).join(", ")
+    );
+  }
+
+  return linhas.join("\n");
+}
+
+function definirTextoCampoPdf(formulario, nomeCampo, texto) {
+  if (nomeCampo === undefined || nomeCampo === "") {
+    return;
+  }
+
+  try {
+    const campo = formulario.getTextField(nomeCampo);
+    campo.setText(String(texto));
+  } catch (erro) {
+    console.warn("Campo de texto não encontrado no PDF:", nomeCampo);
+  }
+}
+
+function obterTextoNotasMagiaPdf(magia, personagem) {
+  const partes = [];
+
+  if (Array.isArray(magia.componentes)) {
+    partes.push("Componentes: " + magia.componentes.join(", "));
+  }
+
+  if (magia.duracao !== undefined && magia.duracao !== "") {
+    partes.push("Duração: " + magia.duracao);
+  }
+
+  if (magia.exigeAtaqueMagico === true) {
+    partes.push("Ataque mágico");
+  }
+
+  if (magia.exigeSalvaguarda === true) {
+    partes.push(
+      "Salv. " +
+      obterNomeAtributoConjuracao(magia.salvaguarda) +
+      " CD " +
+      personagem.magias.cdSalvamento
+    );
+  }
+
+  return partes.join(" | ");
+}
+
+function obterListaMagiasParaPdf(personagem) {
+  if (
+    personagem.magias === undefined ||
+    personagem.magias.atributoConjuracao === undefined
+  ) {
+    return [];
+  }
+
+  const truques = personagem.magias.truquesConhecidos || [];
+  const preparadas = personagem.magias.magiasPreparadas || [];
+
+  return [...truques, ...preparadas];
+}
+
+function preencherMagiasNoPdf(formulario, personagem) {
+  if (
+    personagem.magias === undefined ||
+    personagem.magias.atributoConjuracao === undefined
+  ) {
+    return;
+  }
+
+  const magias = personagem.magias;
+
+  definirTextoCampoPdf(
+    formulario,
+    camposFichaPdf.magiaAtributoConjuracao,
+    obterNomeAtributoConjuracao(magias.atributoConjuracao)
+  );
+
+  const valorAtributo = personagem.atributos[magias.atributoConjuracao];
+
+  if (valorAtributo !== undefined && valorAtributo !== "") {
+    definirTextoCampoPdf(
+      formulario,
+      camposFichaPdf.magiaModificadorConjuracao,
+      formatarModificador(calcularModificador(valorAtributo))
+    );
+  }
+
+  definirTextoCampoPdf(
+    formulario,
+    camposFichaPdf.magiaCdSalvamento,
+    magias.cdSalvamento || "-"
+  );
+
+  definirTextoCampoPdf(
+    formulario,
+    camposFichaPdf.magiaBonusAtaque,
+    magias.bonusAtaqueMagico === "" || magias.bonusAtaqueMagico === undefined
+      ? "-"
+      : formatarModificador(magias.bonusAtaqueMagico)
+  );
+
+  if (
+    magias.espacosMagia !== undefined &&
+    magias.espacosMagia.nivel1 !== undefined
+  ) {
+    definirTextoCampoPdf(
+      formulario,
+      camposFichaPdf.magiaEspacosNivel1Total,
+      magias.espacosMagia.nivel1.maximos
+    );
+  }
+
+  const idsMagias = obterListaMagiasParaPdf(personagem);
+
+  idsMagias.forEach(function(idMagia, indice) {
+    const linha = camposFichaPdf.linhasMagias[indice];
+
+    if (linha === undefined) {
+      return;
+    }
+
+    const magia = obterDadosMagia(idMagia);
+
+    if (magia === undefined) {
+      return;
+    }
+
+    definirTextoCampoPdf(
+      formulario,
+      linha.nivel,
+      magia.nivel === 0 ? "0" : magia.nivel
+    );
+
+    definirTextoCampoPdf(formulario, linha.nome, magia.nome);
+    definirTextoCampoPdf(formulario, linha.tempo, magia.tempoConjuracao);
+    definirTextoCampoPdf(formulario, linha.alcance, magia.alcance);
+
+    definirTextoCampoPdf(
+      formulario,
+      linha.notas,
+      obterTextoNotasMagiaPdf(magia, personagem)
+    );
+  });
+}
+
+// =====================================================
+// 7. Talentos
+// =====================================================
 
 function obterDadosTalento(idTalento) {
   if (window.bancoTalentos === undefined) {
@@ -704,6 +1092,8 @@ async function baixarPdfFichaEditavel(personagem) {
     camposFichaPdf.caracteristicasClasse2,
     obterTextoEspecializacoesParaPdf(personagem)
   );
+
+  preencherMagiasNoPdf(formulario, personagem);
 
   preencherCampoTexto(formulario, camposFichaPdf.aparencia, personagem.detalhes.aparencia || "");
   preencherCampoTexto(
