@@ -78,6 +78,16 @@ window.bancoHabilidades = {
       nivel: 1,
       descricaoCurta: "Você conhece códigos, sinais e expressões usados por criminosos e informantes.",
       descricaoLonga: "A Gíria de Ladrão permite reconhecer e transmitir mensagens ocultas em conversas, símbolos e sinais discretos. No sistema, ela será tratada inicialmente como uma habilidade narrativa."
+    },
+
+    conjuracaoClerigo: {
+      id: "conjuracaoClerigo",
+      nome: "Conjuração",
+      categoria: "classFeature",
+      classe: "clerigo",
+      nivel: 1,
+      descricaoCurta: "Você canaliza magia divina usando Sabedoria como atributo de conjuração.",
+      descricaoLonga: "A Conjuração do Clérigo representa sua capacidade de canalizar magia divina por meio da fé, devoção ou vínculo com uma força sagrada. No nível 1, o Clérigo começa a preparar e conjurar magias usando Sabedoria. A escolha detalhada das magias será desenvolvida no próximo módulo do sistema."
     }
   },
 
@@ -180,6 +190,16 @@ window.bancoHabilidades = {
             quantidade: 2
           }
         ]
+      }
+    },
+
+    clerigo: {
+      nivel1: {
+        classFeaturesAutomaticas: [
+          "conjuracaoClerigo"
+        ],
+
+        escolhas: []
       }
     }
   }
