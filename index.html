@@ -1,39 +1,179 @@
-<!-- =====================================================
-     PÁGINA INICIAL DO PROJETO
-     -----------------------------------------------------
-     Tela de entrada do site. Apresenta o projeto e oferece
-     links para criar personagem ou abrir personagens salvos.
-     ===================================================== -->
 <!DOCTYPE html>
+
 <html lang="pt-BR">
-  <head>
-    <!-- Configurações básicas da página -->
-    <meta charset="UTF-8">
-    <title>Projeto RPG Solo</title>
-    <link rel="stylesheet" href="home.css">
-  </head>
 
-  <body>
-    <!-- Cabeçalho principal do projeto -->
-    <header>
-      <h1>Projeto RPG Solo</h1>
-      <p>
-        Uma experiência de RPG solo, criada com as regras de D&D 5e e inspirada nos antigos livros-jogos.
-      </p>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <title>Projeto RPG Solo</title>
+  <link rel="stylesheet" href="home.css">
+</head>
 
-    <!-- Ações principais da página inicial -->
-    <main>
-      <section>
-        <h2>Comece sua aventura!</h2>
+<body>
 
-        <p>
-          Crie seu personagem e prepare-se para iniciar sua jornada.
+  <header class="cabecalho-site">
+    <a class="marca" href="index.html">
+      <span class="marca-simbolo">✦</span>
+      <span>Projeto RPG Solo</span>
+    </a>
+
+    <nav class="menu-principal">
+      <a href="#criador-personagens">Criador</a>
+      <a href="#fichas-salvas">Fichas</a>
+      <a href="#campanhas">Campanhas</a>
+      <a href="#jogo-assincrono">Jogo assíncrono</a>
+    </nav>
+  </header>
+
+  <main class="home-page">
+
+    <section class="hero">
+
+      <div class="hero-conteudo">
+
+        <p class="etiqueta">Plataforma narrativa em desenvolvimento</p>
+
+        <h1>Um espaço para criar, guardar e viver histórias.</h1>
+
+        <p class="hero-texto">
+          Comece criando personagens e fichas. Em breve, organize campanhas,
+          cenas e jogos assíncronos em um mesmo lugar.
         </p>
 
-        <a href="criacao-personagem.html">Criar Personagem</a>
-        <a href="meus-personagens.html">Meus Personagens</a>
-      </section>
-    </main>
-  </body>
+        <div class="hero-acoes">
+          <a class="botao botao-principal" href="#criador-personagens">
+            Explorar o projeto
+          </a>
+
+          <a class="botao botao-secundario" href="criacao-personagem.html">
+            Criar agora
+          </a>
+        </div>
+
+      </div>
+
+      <aside class="painel-destaque">
+
+        <p class="painel-etiqueta">Agora disponível</p>
+
+        <h2>Criador de personagens</h2>
+
+        <p>
+          Crie personagens de nível 1 com atributos, perícias, habilidades,
+          equipamentos, magias e PDF editável.
+        </p>
+
+        <div class="painel-lista">
+          <span>Guerreiro</span>
+          <span>Ladino</span>
+          <span>Clérigo</span>
+        </div>
+
+      </aside>
+
+    </section>
+
+    <section class="jornada-home" id="modulos">
+
+  <section class="secao-jornada secao-criador" id="criador-personagens">
+    <div class="decoracao-fundo decoracao-um"></div>
+    <div class="decoracao-fundo decoracao-dois"></div>
+    <div class="ornamento-rpg ornamento-dado">20</div>
+
+    <div class="conteudo-jornada">
+      <p class="etiqueta-secao">01 · Disponível agora</p>
+
+      <h2>Criador de personagens</h2>
+
+      <p>
+        Um fluxo guiado para criar personagens de nível 1, escolhendo classe,
+        atributos, origem, espécie, perícias, habilidades, equipamentos e magias.
+      </p>
+
+      <a class="botao botao-menor" href="criacao-personagem.html">
+        Criar personagem
+      </a>
+    </div>
+
+    <div class="resumo-jornada">
+      <span>Fluxo atual</span>
+      <strong>Classe → Atributos → Habilidades → Magias → Revisão</strong>
+    </div>
+  </section>
+
+  <section class="secao-jornada secao-fichas" id="fichas-salvas">
+    <div class="decoracao-fundo decoracao-um"></div>
+    <div class="decoracao-fundo decoracao-dois"></div>
+    <div class="ornamento-rpg ornamento-ficha"></div>
+
+    <div class="conteudo-jornada">
+      <p class="etiqueta-secao">02 · Disponível agora</p>
+
+      <h2>Fichas salvas</h2>
+
+      <p>
+        Consulte personagens já criados, veja ataques, perícias, recursos,
+        magias preparadas e exporte tudo para uma ficha em PDF editável.
+      </p>
+
+      <a class="botao botao-menor" href="meus-personagens.html">
+        Ver personagens
+      </a>
+    </div>
+
+    <div class="resumo-jornada">
+      <span>Ficha completa</span>
+      <strong>PV, CA, ataques, magias, recursos e PDF</strong>
+    </div>
+  </section>
+
+  <section class="secao-jornada secao-campanhas" id="campanhas">
+    <div class="decoracao-fundo decoracao-um"></div>
+    <div class="decoracao-fundo decoracao-dois"></div>
+    <div class="ornamento-rpg ornamento-compasso"></div>
+
+    <div class="conteudo-jornada">
+      <p class="etiqueta-secao">03 · Em planejamento</p>
+
+      <h2>Campanhas</h2>
+
+      <p>
+        Um futuro espaço para organizar aventuras, cenas, personagens,
+        anotações, registros de jogo e continuidade narrativa.
+      </p>
+    </div>
+
+    <div class="resumo-jornada">
+      <span>Próxima camada</span>
+      <strong>Histórias, cenas, notas e personagens conectados</strong>
+    </div>
+  </section>
+
+  <section class="secao-jornada secao-assincrono" id="jogo-assincrono">
+    <div class="decoracao-fundo decoracao-um"></div>
+    <div class="decoracao-fundo decoracao-dois"></div>
+    <div class="ornamento-rpg ornamento-fala"></div>
+
+    <div class="conteudo-jornada">
+      <p class="etiqueta-secao">04 · Ideia futura</p>
+
+      <h2>Jogo assíncrono</h2>
+
+      <p>
+        Uma proposta para jogar histórias em formato de fórum, com cenas,
+        respostas narrativas, ações de personagens e continuidade entre sessões.
+      </p>
+    </div>
+
+    <div class="resumo-jornada">
+      <span>Ritmo flexível</span>
+      <strong>Jogue quando puder, sem perder a história</strong>
+    </div>
+  </section>
+
+    </section>
+
+  </main>
+
+</body>
+
 </html>
