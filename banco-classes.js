@@ -89,5 +89,38 @@ window.bancoClasses = {
     maestriasArmas: {
       quantidade: 2
     }
+  },
+
+  // =====================================================
+  // Clérigo
+  // =====================================================
+  clerigo: {
+    id: "clerigo",
+    nome: "Clérigo",
+    dadoVida: 8,
+    habilidadePrimaria: ["Sabedoria"],
+    salvaguardas: ["sabedoria", "carisma"],
+
+    // Perícias que o Clérigo pode escolher no nível 1.
+    pericias: {
+      quantidade: 2,
+      opcoes: [
+        "historia",
+        "intuicao",
+        "medicina",
+        "persuasao",
+        "religiao"
+      ]
+    },
+
+    // O Clérigo usa magia divina e tem treinamento defensivo básico.
+    proficiencias: {
+      armas: ["Armas simples"],
+      armaduras: [
+        "Armaduras leves",
+        "Armaduras médias",
+        "Escudos"
+      ]
+    }
   }
 };
