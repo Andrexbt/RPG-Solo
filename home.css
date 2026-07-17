@@ -193,9 +193,9 @@
 
 .secao-jornada {
   position: relative;
-  min-height: auto;
+  min-height: 50vh;
   padding:
-    clamp(42px, 5vw, 70px)
+    clamp(32px, 3.5vw, 48px)
     max(28px, calc((100vw - var(--largura-conteudo)) / 2));
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
