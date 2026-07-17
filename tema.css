@@ -267,3 +267,247 @@ body {
     overflow-x: auto;
   }
 }
+
+/* =====================================================
+   Ajuste global de escala visual
+   -----------------------------------------------------
+   Reduz títulos, espaçamentos, botões e normaliza fontes.
+   ===================================================== */
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+button,
+input,
+select,
+textarea,
+label,
+span {
+  font-family: var(--fonte-principal);
+}
+
+.botao {
+  min-height: 44px;
+  padding: 0 20px;
+  font-size: 0.95rem;
+}
+
+.menu-principal a {
+  padding: 8px 12px;
+  font-size: 0.86rem;
+}
+
+.marca {
+  font-size: 0.98rem;
+}
+
+.marca-simbolo {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+/* =====================================================
+   Fundo global contínuo
+   -----------------------------------------------------
+   Cria um fundo único para o site inteiro, evitando cortes
+   duros entre seções.
+   ===================================================== */
+
+body {
+  background:
+    radial-gradient(circle at 82% 6%, rgba(215, 163, 95, 0.24), transparent 26%),
+    radial-gradient(circle at 12% 34%, rgba(154, 170, 117, 0.22), transparent 30%),
+    radial-gradient(circle at 86% 66%, rgba(111, 61, 75, 0.24), transparent 34%),
+    radial-gradient(circle at 22% 92%, rgba(217, 118, 95, 0.16), transparent 30%),
+    linear-gradient(
+      180deg,
+      #100f14 0%,
+      #171c15 30%,
+      #231816 56%,
+      #1d1420 78%,
+      #100f14 100%
+    );
+  background-attachment: fixed;
+  background-size: 100% 1600px;
+}
+
+/* =====================================================
+   Fundo geral definitivo do site
+   -----------------------------------------------------
+   Fundo contínuo em preto, vinho, musgo e âmbar.
+   ===================================================== */
+
+body {
+  background:
+    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
+    radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
+    radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
+    radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
+    linear-gradient(
+      160deg,
+      #08070a 0%,
+      #100f14 24%,
+      #161b13 44%,
+      #24131d 68%,
+      #120d12 86%,
+      #070609 100%
+    );
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/* =====================================================
+   Transições entre páginas
+   ===================================================== */
+
+body {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: entradaPagina 260ms ease-out forwards;
+}
+
+body.saindo-pagina {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+@keyframes entradaPagina {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   Fundo geral definitivo
+   -----------------------------------------------------
+   Camada fixa de fundo para o site inteiro.
+   Evita que cada página precise ter seu próprio fundo.
+   ===================================================== */
+
+html {
+  min-height: 100%;
+  background: #08070a;
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
+    radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
+    radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
+    radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
+    linear-gradient(
+      160deg,
+      #08070a 0%,
+      #100f14 24%,
+      #161b13 44%,
+      #24131d 68%,
+      #120d12 86%,
+      #070609 100%
+    );
+  background-size: cover;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+/* Remove fundos próprios das grandes seções.
+   Os cards e painéis internos continuam com fundo próprio. */
+
+.hero,
+.hero-criacao,
+.hero-personagens,
+.hero-ver-personagem,
+.jornada-home,
+.secao-jornada,
+.secao-criador,
+.secao-fichas,
+.secao-campanhas,
+.secao-assincrono,
+.criador-personagem,
+.navegacao-passos,
+.secao-lista-personagens,
+.layout-ficha-salva {
+  background: transparent !important;
+}
+
+/* =====================================================
+   Transição visual entre páginas
+   -----------------------------------------------------
+   Cortina escura/vinho para suavizar a troca entre telas.
+   ===================================================== */
+
+body {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
+    linear-gradient(20%, rgba(111, 61, 75, 0.42), transparent 34%),
+    linear-gradient(
+      135deg,
+      #08070a,
+      #24131d 52%,
+      #100f14
+    );
+  animation: entradaCortinaPagina 420ms ease forwards;
+}
+
+body.saindo-pagina::after {
+  animation: saidaCortinaPagina 340ms ease forwards;
+}
+
+@keyframes entradaCortinaPagina {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes saidaCortinaPagina {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
