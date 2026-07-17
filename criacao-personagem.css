@@ -38,7 +38,7 @@ body {
   height: 4px;
   margin-bottom: 14px;
   border-radius: 999px;
-  background: rgba(255, 248, 235, 0.28);
+  background: rgba(215, 163, 95, 0.58);
 }
 
 .etiqueta-pagina {
@@ -48,7 +48,7 @@ body {
   border: 1px solid rgba(215, 163, 95, 0.42);
   border-radius: var(--raio-botao);
   color: var(--cor-ambar);
-  background: rgba(215, 163, 95, 0.10);
+  background: rgba(215, 163, 95, 0.14);
   font-size: 0.68rem;
   font-weight: 850;
   text-transform: uppercase;
@@ -67,7 +67,7 @@ body {
 .conteudo-hero-criacao p:not(.etiqueta-pagina) {
   max-width: 560px;
   margin: 14px 0 0;
-  color: rgba(246, 234, 215, 0.72);
+  color: rgba(246, 234, 215, 0.74);
   font-size: 0.96rem;
   line-height: 1.55;
 }
@@ -83,7 +83,7 @@ body {
   height: 220px;
   right: 8%;
   top: 14%;
-  border: 1px solid rgba(255, 248, 235, 0.14);
+  border: 1px solid rgba(215, 163, 95, 0.20);
   border-radius: 999px;
   animation: flutuarDecoracao 9s ease-in-out infinite;
 }
@@ -93,7 +93,7 @@ body {
   height: 90px;
   left: 8%;
   bottom: 16%;
-  border: 1px solid rgba(255, 248, 235, 0.14);
+  border: 1px solid rgba(215, 163, 95, 0.20);
   border-radius: 999px;
   animation: flutuarDecoracao 7s ease-in-out infinite reverse;
 }
@@ -113,7 +113,7 @@ body {
   pointer-events: none;
   opacity: 0.10;
   color: rgba(255, 248, 235, 0.72);
-  border-color: rgba(255, 248, 235, 0.42);
+  border-color: rgba(215, 163, 95, 0.42);
   animation: flutuarOrnamento 8s ease-in-out infinite;
 }
 
@@ -125,14 +125,7 @@ body {
   display: grid;
   place-items: center;
   border: 2px solid currentColor;
-  clip-path: polygon(
-    50% 0%,
-    90% 22%,
-    90% 78%,
-    50% 100%,
-    10% 78%,
-    10% 22%
-  );
+  clip-path: polygon(50% 0%, 90% 22%, 90% 78%, 50% 100%, 10% 78%, 10% 22%);
   font-size: 2rem;
   font-weight: 900;
 }
@@ -148,72 +141,7 @@ body {
 }
 
 /* =====================================================
-   Navegação dos passos
-   ===================================================== */
-
-.navegacao-passos {
-  max-width: none;
-  margin: 0;
-  padding:
-    10px
-    max(28px, calc((100vw - var(--largura-criador)) / 2))
-    0;
-  display: flex;
-  gap: 8px;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
-
-.passo {
-  position: relative;
-  padding: 7px 10px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: var(--raio-botao);
-  color: var(--cor-texto-suave);
-  background: rgba(16, 15, 20, 0.55);
-  font-size: 0.78rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition:
-    transform 180ms ease,
-    background 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
-}
-
-.passo:hover {
-  transform: translateY(-3px);
-  border-color: rgba(215, 163, 95, 0.42);
-  color: var(--cor-texto);
-  background: rgba(255, 248, 235, 0.08);
-}
-
-.passo.atual {
-  border-color: rgba(215, 163, 95, 0.75);
-  color: #1b1210;
-  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
-  font-weight: 900;
-}
-
-.passo.bloqueado {
-  opacity: 0.42;
-  cursor: pointer;
-}
-
-.passo.bloqueado:hover {
-  transform: none;
-}
-
-.mensagem-navegacao {
-  min-height: 20px;
-  margin-top: 8px;
-  color: var(--cor-ambar);
-  text-align: center;
-  font-weight: 800;
-}
-
-/* =====================================================
-   Layout principal
+   Layout principal e navegação
    ===================================================== */
 
 .criador-personagem {
@@ -226,7 +154,7 @@ body {
     max(28px, calc((100vw - var(--largura-criador)) / 2))
     64px;
   display: grid;
-  grid-template-columns: 330px minmax(0, 1fr);
+  grid-template-columns: 390px minmax(0, 1fr);
   gap: 24px;
 }
 
@@ -235,6 +163,26 @@ body {
   top: 20px;
   align-self: start;
   z-index: 2;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.coluna-ficha::-webkit-scrollbar,
+.modal-textos::-webkit-scrollbar {
+  width: 7px;
+}
+
+.coluna-ficha::-webkit-scrollbar-track,
+.modal-textos::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 248, 235, 0.05);
+}
+
+.coluna-ficha::-webkit-scrollbar-thumb,
+.modal-textos::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(215, 163, 95, 0.34);
 }
 
 .area-passo {
@@ -283,14 +231,75 @@ body {
   margin-top: 24px;
 }
 
+.mensagem-passo,
+.mensagem-navegacao {
+  color: var(--cor-ambar);
+  font-weight: 800;
+}
+
 .mensagem-passo {
   margin: 0;
-  color: var(--cor-ambar);
   font-size: 0.88rem;
 }
 
+.navegacao-passos {
+  max-width: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.passo {
+  position: relative;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: var(--raio-botao);
+  color: var(--cor-texto-suave);
+  background: #15100f;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.passo:hover {
+  transform: translateY(-3px);
+  border-color: rgba(215, 163, 95, 0.42);
+  color: var(--cor-texto);
+  background: #221716;
+}
+
+.passo.atual {
+  border-color: rgba(215, 163, 95, 0.75);
+  color: #1b1210;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+  font-weight: 900;
+}
+
+.passo.bloqueado {
+  opacity: 0.42;
+  cursor: pointer;
+}
+
+.passo.bloqueado:hover {
+  transform: none;
+}
+
+.mensagem-navegacao {
+  min-height: 20px;
+  margin: 8px 0 0;
+  text-align: center;
+}
+
 /* =====================================================
-   Cards de classe e opções
+   Cards, botões e painéis de escolha
    ===================================================== */
 
 .grade-classes {
@@ -299,23 +308,32 @@ body {
   gap: 16px;
 }
 
+.grade-opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
 .card-classe,
 .card-opcao,
 .caixa-rolagem-dados,
 .bloco-distribuicao-atributos,
-.bloco-detalhes,
 .bloco-revisao,
-.ficha {
-  background: rgba(8, 7, 10, 0.48);
-  backdrop-filter: blur(2px);
+.painel-detalhes-principais,
+.painel-detalhes-narrativos,
+#passo-habilidades .bloco-habilidades,
+#passo-magias .bloco-magias,
+#areaRevisao .bloco-revisao {
+  border: 1px solid rgba(215, 163, 95, 0.22);
+  background:
+    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.12), transparent 30%),
+    linear-gradient(155deg, #181310 0%, #211619 100%);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
+  backdrop-filter: none;
 }
 
-.card-classe {
-  position: relative;
-  min-height: auto;
-  padding: 12px;
-  border: 1px solid rgba(255, 248, 235, 0.18);
-  border-radius: 22px;
+.card-classe,
+.card-opcao {
   color: var(--cor-texto);
   text-align: left;
   cursor: pointer;
@@ -327,7 +345,20 @@ body {
     box-shadow 220ms ease;
 }
 
-.card-classe::before {
+.card-classe {
+  position: relative;
+  min-height: auto;
+  padding: 12px;
+  border-radius: 22px;
+}
+
+.card-opcao {
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.card-classe::before,
+.card-opcao::before {
   content: "";
   position: absolute;
   width: 120px;
@@ -341,14 +372,18 @@ body {
     opacity 220ms ease;
 }
 
-.card-classe:hover {
-  transform: translateY(-8px);
+.card-classe:hover,
+.card-opcao:hover {
+  transform: translateY(-6px);
   border-color: rgba(215, 163, 95, 0.48);
-  background: rgba(18, 13, 18, 0.64);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.24);
+  background:
+    radial-gradient(circle at 92% 10%, rgba(217, 118, 95, 0.16), transparent 30%),
+    linear-gradient(155deg, #211713 0%, #2a171d 100%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
 }
 
-.card-classe:hover::before {
+.card-classe:hover::before,
+.card-opcao:hover::before {
   transform: scale(1.22);
   opacity: 0.9;
 }
@@ -356,8 +391,17 @@ body {
 .card-classe.selecionado,
 .card-opcao.selecionado {
   border-color: rgba(215, 163, 95, 0.86);
-  background: rgba(215, 163, 95, 0.16);
-  box-shadow: 0 0 0 2px rgba(215, 163, 95, 0.20);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(215, 163, 95, 0.18), transparent 30%),
+    rgba(215, 163, 95, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(215, 163, 95, 0.18),
+    0 18px 52px rgba(0, 0, 0, 0.24);
+}
+
+.card-opcao.ja-proficiente {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .imagem-classe {
@@ -368,7 +412,7 @@ body {
   border-radius: 16px;
   background:
     radial-gradient(circle at 50% 20%, rgba(215, 163, 95, 0.12), transparent 35%),
-    rgba(16, 15, 20, 0.72);
+    #15100f;
   overflow: hidden;
 }
 
@@ -386,21 +430,34 @@ body {
   transform: scale(1.02);
 }
 
-.card-classe h3 {
+.card-classe h3,
+.card-opcao h4 {
   position: relative;
   margin: 0 0 8px;
   color: var(--cor-texto);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.card-classe h3 {
   font-size: 1.18rem;
-  line-height: 1.05;
-  letter-spacing: -0.05em;
+}
+
+.card-opcao h4 {
+  font-size: 1.08rem;
+}
+
+.card-classe p,
+.card-opcao p,
+.card-opcao ul {
+  position: relative;
+  color: rgba(246, 234, 215, 0.72);
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 .card-classe p {
-  position: relative;
   margin: 0;
-  color: rgba(246, 234, 215, 0.68);
-  font-size: 0.88rem;
-  line-height: 1.45;
   display: -webkit-box;
   line-clamp: 4;
   -webkit-line-clamp: 4;
@@ -408,65 +465,17 @@ body {
   overflow: hidden;
 }
 
-.grade-opcoes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 14px;
-}
-
-.card-opcao {
-  padding: 18px;
-  border: 1px solid rgba(255, 248, 235, 0.18);
-  border-radius: 20px;
-  color: var(--cor-texto);
-  cursor: pointer;
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    background 220ms ease,
-    box-shadow 220ms ease;
-}
-
-.card-opcao:hover {
-  transform: translateY(-6px);
-  border-color: rgba(215, 163, 95, 0.48);
-  background: rgba(18, 13, 18, 0.64);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
-}
-
-.card-opcao.ja-proficiente {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.card-opcao h4 {
-  margin: 0 0 10px;
-  color: var(--cor-texto);
-  font-size: 1.12rem;
-  letter-spacing: -0.04em;
-}
-
-.card-opcao p,
-.card-opcao ul {
-  color: var(--cor-texto-suave);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
 .card-opcao ul {
   margin: 0;
   padding-left: 18px;
 }
 
-/* =====================================================
-   Botões do criador
-   ===================================================== */
-
 .botao-proximo,
 .botao-rolar,
 .botao-finalizar,
 .botao-voltar,
-.botao-selecionar {
+.botao-selecionar,
+.botao-link {
   position: relative;
   isolation: isolate;
   min-height: 40px;
@@ -478,6 +487,7 @@ body {
   font-weight: 900;
   font-size: 0.88rem;
   cursor: pointer;
+  text-decoration: none;
   overflow: hidden;
   transition:
     transform 220ms ease,
@@ -485,11 +495,18 @@ body {
     box-shadow 220ms ease;
 }
 
+.botao-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .botao-proximo:hover,
 .botao-rolar:hover,
 .botao-finalizar:hover,
 .botao-voltar:hover,
-.botao-selecionar:hover {
+.botao-selecionar:hover,
+.botao-link:hover {
   transform: translateY(-3px);
   border-radius: 16px;
   box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
@@ -501,460 +518,777 @@ body {
 }
 
 /* =====================================================
-   Formulários, dados e detalhes finais
-   ===================================================== */
-
-.caixa-rolagem-dados,
-.bloco-distribuicao-atributos,
-.bloco-detalhes,
-.bloco-revisao {
-  padding: 18px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 22px;
-  color: var(--cor-texto);
-}
-
-.dados-atributo {
-  display: grid;
-  grid-template-columns: 64px 64px;
-  gap: 12px;
-  justify-content: center;
-  margin: 16px 0;
-}
-
-.dado {
-  width: 64px;
-  height: 64px;
-  border: 2px solid rgba(215, 163, 95, 0.72);
-  border-radius: 18px;
-  background: rgba(16, 15, 20, 0.54);
-  color: var(--cor-texto);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: 900;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-}
-
-.dado.rolando {
-  transform: rotate(4deg) scale(1.08);
-}
-
-.dado.descartado {
-  opacity: 0.45;
-  border-color: rgba(246, 234, 215, 0.20);
-}
-
-.resultado-rolagem {
-  margin: 0;
-  color: var(--cor-texto);
-  text-align: center;
-  font-size: 1.25rem;
-}
-
-.resultados-atributos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.resultados-atributos span {
-  min-width: 44px;
-  padding: 8px 10px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 14px;
-  background: rgba(16, 15, 20, 0.52);
-  color: var(--cor-texto);
-  text-align: center;
-  font-weight: 900;
-}
-
-.linha-atributo,
-.bloco-detalhes label {
-  display: grid;
-  gap: 6px;
-  margin-top: 12px;
-  color: var(--cor-texto-suave);
-  font-weight: 800;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  border: 1px solid rgba(255, 248, 235, 0.18);
-  border-radius: 14px;
-  padding: 10px 12px;
-  color: var(--cor-texto);
-  background: rgba(16, 15, 20, 0.52);
-}
-
-.sub-bloco-detalhes {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 248, 235, 0.14);
-}
-
-.sub-bloco-detalhes h4,
-.bloco-revisao h3 {
-  margin: 0 0 10px;
-  color: var(--cor-ambar);
-}
-
-.bloco-revisao p {
-  margin: 6px 0;
-  color: var(--cor-texto-suave);
-}
-
-/* =====================================================
    Ficha lateral
    ===================================================== */
 
 .ficha-cabecalho {
-  padding: 0 0 10px;
-  text-align: left;
+  margin-bottom: 10px;
 }
 
 .ficha-cabecalho h2 {
   margin: 0;
   color: var(--cor-texto);
-  font-size: 1.05rem;
-  letter-spacing: -0.04em;
+  font-size: 1.08rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
 }
 
 .ficha {
-  border: 1px solid rgba(255, 248, 235, 0.16);
+  padding: 14px;
+  border: 1px solid rgba(215, 163, 95, 0.26);
   border-radius: 22px;
-  padding: 12px;
-  color: var(--cor-texto);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.22);
+  background:
+    radial-gradient(circle at 90% 8%, rgba(111, 61, 75, 0.18), transparent 34%),
+    linear-gradient(160deg, #17120f 0%, #1d1517 52%, #12100d 100%);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
 }
 
 .ficha-bloco {
-  padding: 10px;
-  margin-bottom: 8px;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 14px;
-  background: rgba(255, 248, 235, 0.07);
-  color: var(--cor-texto-suave);
-  font-weight: 700;
+  margin: 0;
+  padding: 11px;
+  border: 1px solid rgba(215, 163, 95, 0.22);
+  border-radius: 15px;
+  background: #211a17;
+}
+
+.ficha-bloco + .ficha-bloco,
+.ficha-detalhes + .ficha-bloco,
+.area-proficiencia + .ficha-bloco {
+  margin-top: 8px;
 }
 
 .ficha-bloco h3 {
   margin: 0 0 8px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.14);
-  color: var(--cor-texto);
-  font-size: 0.78rem;
-  letter-spacing: -0.02em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  color: #f4dfba;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .ficha-item {
-  display: block;
-  margin-top: 2px;
-  text-align: left;
-  line-height: 1.3;
-  word-break: normal;
-  overflow-wrap: break-word;
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr);
+  gap: 6px;
+  align-items: baseline;
+  padding: 3px 0;
 }
 
 .ficha-rotulo,
 .campo-mini span,
 .campo-derivado span,
 .rotulo-modificador {
-  color: var(--cor-texto-fraco);
+  color: #cdbb9e;
+  font-size: 0.72rem;
+  font-weight: 850;
 }
 
 .ficha-valor,
-.caixa-valor-pequena,
-.valor-atributo,
-.modificador,
-.ataque-valor {
-  color: var(--cor-texto);
+.linha-salvaguarda,
+.linha-pericia,
+.lista-recursos li,
+#fichaTalentos li,
+#fichaMagias li,
+.linha-ataque {
+  color: #ddcfb8;
+  font-size: 0.76rem;
+  line-height: 1.4;
 }
 
 .ficha-detalhes {
   display: grid;
-  grid-template-columns: 2.1fr 1fr;
-  gap: 10px;
-  margin: 12px 0 10px;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.coluna-vida {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.lista-valores-derivados {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.linha-campos-ficha {
+.linha-campos-ficha,
+.lista-valores-derivados,
+.grade-atributos-ficha {
   display: grid;
   gap: 8px;
-  align-items: end;
-  margin-top: 10px;
 }
 
-.tres-colunas {
+.linha-campos-ficha.tres-colunas {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.duas-colunas {
+.linha-campos-ficha.duas-colunas,
+.lista-valores-derivados,
+.grade-atributos-ficha {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.campo-mini {
-  min-width: 0;
+.campo-mini,
+.campo-derivado,
+.atributo-card,
+.equipamentos-lista,
+.equipamentos-ataques {
+  border: 1px solid rgba(215, 163, 95, 0.20);
+  border-radius: 12px;
+  background: #171311;
+}
+
+.campo-mini,
+.campo-derivado {
+  padding: 8px;
 }
 
 .campo-mini span,
 .campo-derivado span {
   display: block;
-  margin-bottom: 6px;
-  text-align: center;
-  font-size: 0.66rem;
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.caixa-valor-pequena {
-  min-height: 28px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 8px;
-  background: rgba(16, 15, 20, 0.32);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.86rem;
-  font-weight: 800;
-}
-
-.area-proficiencia {
-  display: grid;
-  grid-template-columns: 2.1fr 1fr;
-  gap: 10px;
-  margin: 10px 0 20px;
-  text-align: center;
-}
-
-.caixa-bonus-proficiencia,
-.valor-bonus-proficiencia {
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 10px;
-  padding: 8px 10px;
-  background: rgba(255, 248, 235, 0.07);
-}
-
-.caixa-bonus-proficiencia span,
-.valor-bonus-proficiencia span {
-  color: var(--cor-texto-suave);
-  font-size: 0.76rem;
-  font-weight: 900;
-}
-
-.valor-bonus-proficiencia span {
-  color: var(--cor-texto);
-  font-size: 1rem;
-}
-
-.grade-atributos-ficha {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.atributo-card {
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 12px;
-  padding: 8px;
-  background: rgba(255, 248, 235, 0.07);
-  text-align: center;
-}
-
-.atributo-card h4 {
-  margin: 0;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.14);
-  color: var(--cor-texto);
-  text-align: center;
-  font-size: 0.72rem;
+  margin-bottom: 5px;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.linha-valores-atributo {
-  display: grid;
-  grid-template-columns: 1fr 48px;
-  gap: 6px;
-  align-items: end;
-  margin: 8px 0 10px;
-}
-
-.valor-atributo {
-  height: 58px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 8px;
-  background: rgba(16, 15, 20, 0.32);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.grupo-modificador {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 48px;
-}
-
-.rotulo-modificador {
-  margin-bottom: 3px;
-  text-align: center;
-  font-size: 0.7rem;
-  line-height: 1;
-}
-
+.caixa-valor-pequena,
+.valor-atributo,
 .modificador {
-  width: 42px;
-  height: 26px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 8px;
-  background: rgba(16, 15, 20, 0.32);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  font-weight: 900;
-}
-
-.atributo-card ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-}
-
-.atributo-card li,
-.linha-pericia,
-.linha-salvaguarda {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  width: 100%;
-  margin: 0;
-  padding: 2px 0;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
-  font-size: 0.78rem;
-  line-height: 1.1;
-}
-
-.atributo-card p {
-  margin: 0;
-  font-size: 0.78rem;
-}
-
-.linha-pericia::before,
-.linha-salvaguarda::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border: 1px solid rgba(215, 163, 95, 0.64);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.linha-pericia.proficiente::before,
-.linha-salvaguarda.proficiente::before {
-  background: var(--cor-ambar);
-}
-
-.linha-pericia.especializada::after {
-  content: " ★";
+  min-height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(215, 163, 95, 0.38);
+  border-radius: 10px;
+  background: #2a2117;
   color: var(--cor-ambar);
   font-weight: 900;
 }
 
-.lista-recursos,
-#fichaTalentos,
-#fichaMagias,
-#fichaHabilidades {
-  list-style: none;
+.atributo-card {
+  padding: 9px;
+}
+
+.atributo-card h4 {
+  margin: 0 0 7px;
+  color: #f4dfba;
+  font-size: 0.84rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.linha-valores-atributo {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 7px;
+}
+
+.grupo-modificador {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 5px;
+  align-items: end;
+}
+
+.atributo-card ul {
   margin: 0;
   padding: 0;
+  list-style: none;
+}
+
+.linha-salvaguarda,
+.linha-pericia {
+  margin: 0;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+}
+
+.linha-salvaguarda.proficiente,
+.linha-pericia.proficiente {
+  color: #f1bd6a;
+  font-weight: 850;
+}
+
+.linha-pericia.especializada::after {
+  content: " ★";
+  color: var(--cor-coral);
+  font-weight: 950;
+}
+
+.area-proficiencia {
+  margin-top: 8px;
+}
+
+.caixa-bonus-proficiencia {
+  padding: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.26);
+  border-radius: 14px;
+  background: #2a2117;
+  color: var(--cor-texto);
+  text-align: center;
   font-size: 0.78rem;
-  line-height: 1.25;
-}
-
-.lista-recursos li,
-#fichaHabilidades li,
-#fichaMagias li,
-#fichaTalentos li {
-  margin-bottom: 6px;
-}
-
-.item-habilidade-escolha,
-.habilidade-valor {
-  font-weight: 400;
-}
-
-.habilidade-rotulo,
-.nome-habilidade-ficha,
-.ataque-rotulo {
-  font-weight: 900;
+  font-weight: 850;
 }
 
 .equipamentos-lista,
 .equipamentos-ataques {
-  margin-bottom: 5px;
+  margin: 0;
   padding: 8px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 10px;
-  background: rgba(255, 248, 235, 0.07);
-  text-align: center;
+  text-align: left;
+}
+
+.equipamentos-lista + .equipamentos-ataques {
+  margin-top: 8px;
 }
 
 .equipamentos-lista h2,
 .equipamentos-ataques h2,
 .ficha-armas-ataques h4 {
-  margin: 0 0 6px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.14);
-  color: var(--cor-texto);
-  text-align: center;
-  font-size: 0.76rem;
+  margin: 0 0 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  color: #cdbb9e;
+  font-size: 0.72rem;
+  font-weight: 900;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-#fichaArmasAtaques {
-  text-align: left;
+.lista-recursos,
+#fichaTalentos,
+#fichaMagias {
+  margin: 0;
+  padding-left: 16px;
 }
 
-.linha-ataque {
-  margin: 0 0 4px;
-  line-height: 1.3;
+.lista-recursos li,
+#fichaTalentos li,
+#fichaMagias li {
+  margin: 4px 0;
 }
 
 .linha-ataque-furtivo {
-  display: inline-block;
+  display: block;
   margin-top: 4px;
-  font-size: 0.9rem;
-  font-style: italic;
-  opacity: 0.9;
+  color: var(--cor-coral);
+  font-size: 0.72rem;
 }
 
-.aviso-equipamentos {
+/* =====================================================
+   Etapa: atributos
+   ===================================================== */
+
+#passo-atributos {
+  display: grid;
+  grid-template-columns: 190px 250px minmax(220px, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+#passo-atributos h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+#passo-atributos > .texto-explicativo {
+  grid-column: 3;
+  grid-row: 2 / span 3;
+  min-height: 100%;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid rgba(215, 163, 95, 0.18);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(154, 170, 117, 0.12), transparent 30%),
+    linear-gradient(155deg, #181310 0%, #211619 100%);
+  color: rgba(246, 234, 215, 0.72);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+#passo-atributos .botao-rolar {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 12px;
+  font-size: 0.86rem;
+}
+
+#passo-atributos .caixa-rolagem-dados {
+  grid-column: 1;
+  grid-row: 3;
+  margin: 0;
+  padding: 12px;
+  border-radius: 22px;
+}
+
+#passo-atributos .dados-atributo {
+  display: grid;
+  grid-template-columns: repeat(2, 44px);
+  gap: 8px;
+  justify-content: center;
+  margin: 0;
+}
+
+#passo-atributos .dado {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(215, 163, 95, 0.58);
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255, 248, 235, 0.12), transparent 32%),
+    #15100f;
+  color: var(--cor-texto);
+  font-size: 1.05rem;
+  font-weight: 900;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+#passo-atributos .dado.descartado {
+  opacity: 0.38;
+  border-color: rgba(246, 234, 215, 0.16);
+  color: var(--cor-texto-fraco);
+}
+
+#passo-atributos .dado.rolando {
+  transform: rotate(4deg) scale(1.06);
+  border-color: rgba(217, 118, 95, 0.76);
+}
+
+#passo-atributos .resultado-rolagem {
+  margin: 10px 0 0;
+  color: var(--cor-ambar);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+#passo-atributos .resultados-atributos {
+  grid-column: 1;
+  grid-row: 4;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 0;
+}
+
+#passo-atributos .resultados-atributos span {
+  min-width: 0;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 10px;
+  background: #171311;
+  color: var(--cor-texto);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+#passo-atributos .bloco-distribuicao-atributos {
+  grid-column: 2;
+  grid-row: 2 / span 3;
+  display: block;
+  margin: 0;
+  padding: 12px;
+  border-radius: 22px;
+}
+
+#passo-atributos .bloco-distribuicao-atributos h3 {
+  margin: 0 0 10px;
+  color: var(--cor-texto);
+  font-size: 0.95rem;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+#passo-atributos .linha-atributo {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+#passo-atributos .linha-atributo label {
+  color: var(--cor-texto-suave);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+#passo-atributos .linha-atributo select,
+#passo-detalhes input,
+#passo-detalhes select,
+#passo-detalhes textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 12px;
+  background: #15100f;
+  color: var(--cor-texto);
+  font-weight: 750;
+}
+
+#passo-atributos .linha-atributo select {
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+}
+
+#passo-atributos .linha-atributo select:focus,
+#passo-detalhes input:focus,
+#passo-detalhes select:focus,
+#passo-detalhes textarea:focus {
+  outline: none;
+  border-color: rgba(215, 163, 95, 0.72);
+  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
+}
+
+#passo-atributos #mensagemAtributos,
+#passo-atributos .acoes-passo {
+  grid-column: 1 / -1;
+}
+
+/* =====================================================
+   Etapas: habilidades e magias
+   ===================================================== */
+
+#passo-habilidades .bloco-habilidades,
+#passo-magias .bloco-magias {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 22px;
+}
+
+#passo-habilidades .bloco-habilidades:first-of-type,
+#passo-magias .bloco-magias:first-of-type {
+  margin-top: 0;
+}
+
+#passo-habilidades .bloco-habilidades > h3,
+#passo-habilidades .bloco-habilidades > h4,
+#passo-magias .bloco-magias > h3 {
+  margin: 0 0 12px;
+  color: var(--cor-texto);
+  font-size: 1.15rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+#passo-habilidades .texto-explicativo,
+#passo-magias .texto-explicativo {
+  margin: 8px 0 14px;
+  color: rgba(246, 234, 215, 0.66);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+#passo-habilidades .grade-opcoes,
+#passo-magias .grade-opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+#passo-habilidades .card-opcao,
+#passo-magias .card-opcao {
+  min-height: auto;
+  padding: 15px;
+  border-radius: 18px;
+}
+
+#passo-habilidades .card-opcao h4,
+#passo-magias .card-opcao h4 {
+  font-size: 1.02rem;
+}
+
+#passo-habilidades .card-opcao p,
+#passo-magias .card-opcao p {
+  margin: 7px 0 0;
+  font-size: 0.84rem;
+  line-height: 1.42;
+}
+
+#passo-habilidades .card-opcao .texto-explicativo,
+#passo-magias .card-opcao .texto-explicativo {
+  margin-top: 8px;
+  color: rgba(215, 163, 95, 0.82);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+#passo-habilidades .detalhes-arma-opcao {
+  position: relative;
   margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 248, 235, 0.10);
+}
+
+#passo-habilidades .detalhes-arma-opcao p {
+  margin: 5px 0;
+  color: rgba(246, 234, 215, 0.68);
+  font-size: 0.8rem;
+}
+
+#passo-magias .bloco-magias:first-of-type {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+#passo-magias .bloco-magias:first-of-type h3 {
+  grid-column: 1 / -1;
+}
+
+#passo-magias .bloco-magias:first-of-type p {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: 16px;
+  background: #171311;
+  color: rgba(246, 234, 215, 0.72);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+#passo-magias .bloco-magias:first-of-type strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--cor-texto-fraco);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* =====================================================
+   Etapa: detalhes finais
+   ===================================================== */
+
+#passo-detalhes {
+  display: block;
+}
+
+#passo-detalhes > h2 {
+  margin-bottom: 16px;
+}
+
+.layout-detalhes-personagem {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.painel-detalhes-principais,
+.painel-detalhes-narrativos {
+  padding: 18px;
+  border-radius: 22px;
+}
+
+.painel-detalhes-principais {
+  grid-column: 1;
+}
+
+.painel-detalhes-narrativos {
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+}
+
+.painel-detalhes-principais h3 {
+  margin: 18px 0 10px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 248, 235, 0.12);
+  color: var(--cor-texto);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.painel-detalhes-principais h3:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.painel-detalhes-principais h3::before,
+#areaRevisao .bloco-revisao h3::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: rgba(215, 163, 95, 0.75);
+  vertical-align: middle;
+}
+
+#passo-detalhes label {
+  display: block;
+  margin: 10px 0 6px;
+  color: var(--cor-texto-suave);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+#passo-detalhes input,
+#passo-detalhes select {
+  min-height: 38px;
+  padding: 0 11px;
+  font-size: 0.86rem;
+}
+
+#passo-detalhes textarea {
+  min-height: 190px;
+  padding: 12px;
+  resize: vertical;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.campo-formulario,
+.grade-equipamentos-detalhes {
+  margin-top: 10px;
+}
+
+#passo-detalhes .aviso-equipamentos {
+  margin: 10px 0 0;
   color: var(--cor-ambar);
   font-size: 0.82rem;
-  line-height: 1.35;
+  font-weight: 750;
+}
+
+.campo-narrativo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-narrativo label {
+  margin-top: 0;
+}
+
+.campo-narrativo textarea {
+  flex: 1;
+}
+
+.detalhes-calculados-ocultos {
+  display: none;
+}
+
+#passo-detalhes .acoes-passo,
+#passo-detalhes #mensagemDetalhes {
+  margin-top: 14px;
+}
+
+/* =====================================================
+   Etapa: revisão
+   ===================================================== */
+
+#passo-revisao {
+  display: block;
+}
+
+#passo-revisao > h2 {
+  margin-bottom: 10px;
+}
+
+#passo-revisao > p {
+  max-width: 680px;
+  margin: 0 0 18px;
+  color: rgba(246, 234, 215, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+#areaRevisao {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+#areaRevisao .bloco-revisao {
+  margin: 0;
+  padding: 16px;
+  border-radius: 20px;
+}
+
+#areaRevisao .bloco-revisao:first-child {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+}
+
+#areaRevisao .bloco-revisao:first-child h3 {
+  grid-column: 1 / -1;
+}
+
+#areaRevisao .bloco-revisao h3 {
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.12);
+  color: var(--cor-texto);
+  font-size: 1.08rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+#areaRevisao .bloco-revisao p,
+#areaRevisao .bloco-revisao li {
+  color: rgba(246, 234, 215, 0.72);
+  font-size: 0.86rem;
+  line-height: 1.48;
+}
+
+#areaRevisao .bloco-revisao p {
+  margin: 7px 0;
+}
+
+#areaRevisao .bloco-revisao strong {
+  color: var(--cor-texto-fraco);
+  font-weight: 900;
+}
+
+#areaRevisao .bloco-revisao ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+#areaRevisao .bloco-revisao ul ul {
+  margin-top: 4px;
+  padding-left: 16px;
+  opacity: 0.92;
+}
+
+#areaRevisao .linha-arma-revisao {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: 14px;
+  background: #171311;
+}
+
+#areaRevisao .linha-arma-revisao p {
+  margin: 0;
+}
+
+#passo-revisao .acoes-passo {
+  margin-top: 18px;
+  justify-content: flex-end;
+}
+
+#passo-revisao .botao-finalizar {
+  min-width: 180px;
+}
+
+.acoes-personagem-salvo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  justify-content: flex-end;
 }
 
 /* =====================================================
@@ -971,40 +1305,29 @@ textarea {
   padding: 24px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 78% 18%, rgba(215, 163, 95, 0.18), transparent 28%),
-    rgba(6, 5, 8, 0.82);
-  backdrop-filter: blur(6px);
-}
-
-.modal-overlay.escondida {
-  display: none !important;
+    radial-gradient(circle at 78% 18%, rgba(111, 61, 75, 0.24), transparent 30%),
+    rgba(5, 4, 5, 0.88);
+  backdrop-filter: none;
 }
 
 .modal {
   position: relative;
-  width: min(900px, calc(100vw - 36px));
-  max-height: calc(100dvh - 48px);
+  width: min(980px, calc(100vw - 40px));
+  max-height: calc(100dvh - 36px);
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(255, 248, 235, 0.18);
-  border-radius: 34px;
+  border: 1px solid rgba(215, 163, 95, 0.28);
+  border-radius: 30px;
   background:
-    radial-gradient(circle at 90% 8%, rgba(215, 163, 95, 0.12), transparent 26%),
-    linear-gradient(135deg, rgba(32, 23, 18, 0.98), rgba(16, 15, 20, 0.98));
-  box-shadow: 0 34px 120px rgba(0, 0, 0, 0.58);
+    radial-gradient(circle at 92% 8%, rgba(217, 118, 95, 0.14), transparent 28%),
+    linear-gradient(150deg, #17120f 0%, #231619 58%, #120f0d 100%);
+  box-shadow: 0 34px 120px rgba(0, 0, 0, 0.62);
   overflow: hidden;
   animation: entradaModal 220ms ease-out;
 }
 
 .modal::before {
-  content: "";
-  position: absolute;
-  left: 28px;
-  top: 28px;
-  width: 54px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(255, 248, 235, 0.28);
+  display: none;
 }
 
 .modal::after {
@@ -1014,7 +1337,7 @@ textarea {
   height: 190px;
   right: -70px;
   bottom: -70px;
-  border: 1px solid rgba(255, 248, 235, 0.12);
+  border: 1px solid rgba(215, 163, 95, 0.14);
   border-radius: 50%;
   pointer-events: none;
   animation: flutuarDecoracao 9s ease-in-out infinite;
@@ -1026,15 +1349,15 @@ textarea {
   flex-shrink: 0;
   display: flex;
   justify-content: flex-start;
-  padding: 42px 28px 6px;
+  padding: 24px 30px 6px;
 }
 
 .modal-cabecalho h2 {
   margin: 0;
-  color: var(--cor-texto);
-  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+  color: #f6ead7;
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
   line-height: 0.95;
-  letter-spacing: -0.075em;
+  letter-spacing: -0.065em;
 }
 
 .modal-corpo {
@@ -1043,45 +1366,48 @@ textarea {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
   gap: 24px;
-  padding: 22px 28px 16px;
+  padding: 10px 30px 18px;
   align-items: stretch;
-  overflow-y: auto;
-}
-
-.modal-corpo::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modal-corpo::-webkit-scrollbar-track {
-  background: rgba(255, 248, 235, 0.06);
-}
-
-.modal-corpo::-webkit-scrollbar-thumb {
-  background: rgba(215, 163, 95, 0.42);
-  border-radius: 999px;
+  overflow: hidden;
 }
 
 .modal-imagem-container {
-  width: 100%;
+  height: min(430px, calc(100dvh - 220px));
+  min-height: 300px;
+  display: flex;
+  align-items: stretch;
 }
 
 .modal-imagem {
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 0;
+  max-height: none;
   object-fit: contain;
-  object-position: center bottom;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 26px;
-  background: rgba(16, 15, 20, 0.72);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  object-position: center center;
+  border: 1px solid rgba(215, 163, 95, 0.22);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(215, 163, 95, 0.16), transparent 34%),
+    linear-gradient(160deg, #211713 0%, #120f0d 100%);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
+}
+
+.modal-textos {
+  max-height: min(430px, calc(100dvh - 220px));
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 10px;
+  overflow-y: auto;
 }
 
 .modal-secao {
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.12);
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(215, 163, 95, 0.16);
 }
 
 .modal-secao:first-child {
@@ -1093,19 +1419,19 @@ textarea {
 }
 
 .modal-secao h3 {
-  margin: 0 0 10px;
-  color: var(--cor-ambar);
-  font-size: 0.74rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+  color: #f1bd6a;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .modal-secao p {
   margin: 0;
-  color: rgba(246, 234, 215, 0.78);
+  color: #ddcfb8;
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.58;
 }
 
 .modal-acoes {
@@ -1115,22 +1441,28 @@ textarea {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 16px 28px 24px;
-  border-top: 1px solid rgba(255, 248, 235, 0.12);
-  background: rgba(16, 15, 20, 0.28);
+  padding: 0 30px 24px;
+  border-top: none;
+  background: transparent;
 }
 
-.botao-voltar {
-  color: var(--cor-texto);
-  background: rgba(255, 248, 235, 0.07);
+.modal-acoes .botao-voltar {
+  border-color: rgba(215, 163, 95, 0.24);
+  color: #f6ead7;
+  background: #211a17;
 }
 
-.botao-voltar:hover {
+.modal-acoes .botao-voltar:hover {
   color: #1b1210;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+}
+
+.modal-acoes .botao-selecionar {
+  border-color: rgba(215, 163, 95, 0.44);
 }
 
 /* =====================================================
-   Modal e popover de detalhes
+   Modal/popover de detalhes da ficha
    ===================================================== */
 
 .modal-detalhe-ficha {
@@ -1143,10 +1475,6 @@ textarea {
   background: rgba(0, 0, 0, 0.65);
 }
 
-.modal-detalhe-ficha.escondida {
-  display: none;
-}
-
 .modal-detalhe-conteudo {
   width: min(520px, 90vw);
   max-height: 80vh;
@@ -1154,7 +1482,7 @@ textarea {
   padding: 24px;
   border: 1px solid rgba(215, 163, 95, 0.72);
   border-radius: 18px;
-  background: rgba(16, 15, 20, 0.98);
+  background: #15100f;
   color: var(--cor-texto);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
 }
@@ -1220,7 +1548,7 @@ textarea {
   padding: 12px;
   border: 1px solid rgba(215, 163, 95, 0.72);
   border-radius: 10px;
-  background: rgba(16, 15, 20, 0.98);
+  background: #15100f;
   color: var(--cor-texto);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
@@ -1265,6 +1593,8 @@ textarea {
   .coluna-ficha {
     position: static;
     order: 2;
+    max-height: none;
+    overflow-y: visible;
   }
 
   .area-passo {
@@ -1272,10 +1602,33 @@ textarea {
   }
 
   .navegacao-passos {
-    padding: 24px 18px 0;
     overflow-x: auto;
     flex-wrap: nowrap;
-    justify-content: flex-start;
+  }
+
+  #passo-atributos,
+  .layout-detalhes-personagem,
+  #areaRevisao,
+  #areaRevisao .bloco-revisao:first-child {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-atributos > .texto-explicativo,
+  #passo-atributos .botao-rolar,
+  #passo-atributos .caixa-rolagem-dados,
+  #passo-atributos .resultados-atributos,
+  #passo-atributos .bloco-distribuicao-atributos,
+  #passo-atributos #mensagemAtributos,
+  #passo-atributos .acoes-passo,
+  .painel-detalhes-principais,
+  .painel-detalhes-narrativos,
+  #areaRevisao .bloco-revisao:first-child {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .painel-detalhes-narrativos {
+    grid-template-rows: auto;
   }
 }
 
@@ -1285,12 +1638,21 @@ textarea {
   }
 
   .modal-cabecalho {
-    padding: 48px 22px 8px;
+    padding: 32px 22px 8px;
   }
 
   .modal-corpo {
     grid-template-columns: 1fr;
     padding: 22px;
+    overflow-y: auto;
+  }
+
+  .modal-imagem-container,
+  .modal-textos {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
   }
 
   .modal-imagem {
@@ -1310,1243 +1672,15 @@ textarea {
 
 @media (max-width: 620px) {
   .grade-classes,
-  .grade-opcoes {
-    grid-template-columns: 1fr;
-  }
-
-  .imagem-classe {
-    height: 280px;
-  }
-
+  .grade-opcoes,
   .ficha-detalhes,
   .grade-atributos-ficha,
   .area-proficiencia {
     grid-template-columns: 1fr;
   }
-}
 
-/* =====================================================
-   Refinamento visual: habilidades e magias
-   -----------------------------------------------------
-   Melhora os blocos e cards das etapas de habilidades
-   e magias sem alterar a lógica do criador.
-   ===================================================== */
-
-#passo-habilidades .bloco-habilidades,
-#passo-magias .bloco-magias {
-  margin-top: 22px;
-  padding: 18px;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.16), transparent 28%),
-    rgba(8, 7, 10, 0.34);
-}
-
-#passo-habilidades .bloco-habilidades:first-of-type,
-#passo-magias .bloco-magias:first-of-type {
-  margin-top: 0;
-}
-
-#passo-habilidades .bloco-habilidades > h3,
-#passo-habilidades .bloco-habilidades > h4,
-#passo-magias .bloco-magias > h3 {
-  margin: 0 0 12px;
-  color: var(--cor-texto);
-  font-size: 1.15rem;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-}
-
-#passo-habilidades .texto-explicativo,
-#passo-magias .texto-explicativo {
-  margin: 8px 0 14px;
-  color: rgba(246, 234, 215, 0.66);
-  font-size: 0.86rem;
-  line-height: 1.45;
-}
-
-/* Grades internas mais compactas */
-
-#passo-habilidades .grade-opcoes,
-#passo-magias .grade-opcoes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 12px;
-}
-
-/* Cards específicos dessas duas telas */
-
-#passo-habilidades .card-opcao,
-#passo-magias .card-opcao {
-  position: relative;
-  min-height: auto;
-  padding: 15px;
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(255, 248, 235, 0.075), rgba(255, 248, 235, 0.035));
-  overflow: hidden;
-}
-
-#passo-habilidades .card-opcao::before,
-#passo-magias .card-opcao::before {
-  content: "";
-  position: absolute;
-  width: 94px;
-  height: 94px;
-  right: -44px;
-  top: -44px;
-  border-radius: 999px;
-  background: rgba(215, 163, 95, 0.10);
-  transition:
-    transform 220ms ease,
-    opacity 220ms ease;
-}
-
-#passo-habilidades .card-opcao:hover::before,
-#passo-magias .card-opcao:hover::before {
-  transform: scale(1.35);
-  opacity: 0.85;
-}
-
-#passo-habilidades .card-opcao h4,
-#passo-magias .card-opcao h4 {
-  position: relative;
-  margin: 0 0 8px;
-  color: var(--cor-texto);
-  font-size: 1.02rem;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-}
-
-#passo-habilidades .card-opcao p,
-#passo-magias .card-opcao p {
-  position: relative;
-  margin: 7px 0 0;
-  color: rgba(246, 234, 215, 0.70);
-  font-size: 0.84rem;
-  line-height: 1.42;
-}
-
-#passo-habilidades .card-opcao .texto-explicativo,
-#passo-magias .card-opcao .texto-explicativo {
-  margin-top: 8px;
-  color: rgba(215, 163, 95, 0.82);
-  font-size: 0.76rem;
-  font-weight: 800;
-}
-
-/* Estado selecionado */
-
-#passo-habilidades .card-opcao.selecionado,
-#passo-magias .card-opcao.selecionado {
-  border-color: rgba(215, 163, 95, 0.78);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(215, 163, 95, 0.18), transparent 30%),
-    rgba(215, 163, 95, 0.12);
-  box-shadow:
-    0 0 0 2px rgba(215, 163, 95, 0.14),
-    0 18px 52px rgba(0, 0, 0, 0.24);
-}
-
-/* Detalhes de arma dentro dos cards de habilidade */
-
-#passo-habilidades .detalhes-arma-opcao {
-  position: relative;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 248, 235, 0.10);
-}
-
-#passo-habilidades .detalhes-arma-opcao p {
-  margin: 5px 0;
-  color: rgba(246, 234, 215, 0.68);
-  font-size: 0.8rem;
-}
-
-/* Resumo de conjuração */
-
-#passo-magias .bloco-magias:first-of-type {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-}
-
-#passo-magias .bloco-magias:first-of-type h3 {
-  grid-column: 1 / -1;
-}
-
-#passo-magias .bloco-magias:first-of-type p {
-  margin: 0;
-  padding: 12px;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: 16px;
-  background: rgba(255, 248, 235, 0.055);
-  color: rgba(246, 234, 215, 0.72);
-  font-size: 0.84rem;
-  line-height: 1.4;
-}
-
-#passo-magias .bloco-magias:first-of-type strong {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--cor-texto-fraco);
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* =====================================================
-   Refinamento visual: etapa de atributos
-   -----------------------------------------------------
-   Melhora a tela de rolagem e distribuição de atributos
-   sem alterar a lógica do criador.
-   ===================================================== */
-
-#passo-atributos .botao-rolar {
-  margin: 6px 0 18px;
-}
-
-#passo-atributos .caixa-rolagem-dados,
-#passo-atributos .bloco-distribuicao-atributos {
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.16), transparent 28%),
-    rgba(8, 7, 10, 0.34);
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.18);
-}
-
-#passo-atributos .caixa-rolagem-dados {
-  padding: 22px;
-  margin-top: 0;
-}
-
-#passo-atributos .dados-atributo {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(56px, 72px));
-  gap: 12px;
-  justify-content: start;
-  margin: 0;
-}
-
-#passo-atributos .dado {
-  width: 100%;
-  aspect-ratio: 1;
-  height: auto;
-  border: 1px solid rgba(215, 163, 95, 0.58);
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at 35% 22%, rgba(255, 248, 235, 0.12), transparent 32%),
-    rgba(16, 15, 20, 0.62);
-  color: var(--cor-texto);
-  font-size: 1.45rem;
-  font-weight: 900;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
-}
-
-#passo-atributos .dado.descartado {
-  opacity: 0.38;
-  border-color: rgba(246, 234, 215, 0.16);
-  color: var(--cor-texto-fraco);
-}
-
-#passo-atributos .dado.rolando {
-  transform: rotate(4deg) scale(1.06);
-  border-color: rgba(217, 118, 95, 0.76);
-}
-
-#passo-atributos .resultado-rolagem {
-  margin: 16px 0 0;
-  color: var(--cor-ambar);
-  font-size: 0.95rem;
-  font-weight: 850;
-}
-
-/* Resultados já rolados */
-
-#passo-atributos .resultados-atributos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 16px 0 22px;
-}
-
-#passo-atributos .resultados-atributos span {
-  min-width: 48px;
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 14px;
-  background: rgba(255, 248, 235, 0.07);
-  color: var(--cor-texto);
-  font-size: 1.05rem;
-  font-weight: 900;
-}
-
-/* Distribuição dos atributos */
-
-#passo-atributos .bloco-distribuicao-atributos {
-  padding: 22px;
-  margin-top: 18px;
-}
-
-#passo-atributos .bloco-distribuicao-atributos h3 {
-  margin: 0 0 16px;
-  color: var(--cor-texto);
-  font-size: 1.25rem;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-}
-
-#passo-atributos .linha-atributo {
-  display: grid;
-  grid-template-columns: minmax(130px, 180px) minmax(120px, 1fr);
-  align-items: center;
-  gap: 14px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
-}
-
-#passo-atributos .linha-atributo:last-child {
-  border-bottom: none;
-}
-
-#passo-atributos .linha-atributo label {
-  color: var(--cor-texto-suave);
-  font-size: 0.92rem;
-  font-weight: 850;
-}
-
-#passo-atributos .linha-atributo select {
-  min-height: 42px;
-  width: 100%;
-  padding: 0 12px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 14px;
-  background: rgba(16, 15, 20, 0.62);
-  color: var(--cor-texto);
-  font-weight: 800;
-}
-
-#passo-atributos .linha-atributo select:focus {
-  outline: none;
-  border-color: rgba(215, 163, 95, 0.72);
-  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
-}
-
-@media (max-width: 720px) {
-  #passo-atributos .dados-atributo {
-    grid-template-columns: repeat(2, minmax(56px, 72px));
-  }
-
-  #passo-atributos .linha-atributo {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-}
-
-/* =====================================================
-   Refinamento visual: atributos compactos v2
-   -----------------------------------------------------
-   Organiza a rolagem dos dados em duas colunas:
-   dados à esquerda, explicação à direita.
-   Também compacta os seletores de atributos.
-   ===================================================== */
-
-#passo-atributos {
-  display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  gap: 18px 24px;
-  align-items: start;
-}
-
-#passo-atributos h2 {
-  grid-column: 1 / -1;
-  margin-bottom: 4px;
-}
-
-/* A explicação vai para a coluna direita */
-
-#passo-atributos > .texto-explicativo {
-  grid-column: 2;
-  grid-row: 2 / span 2;
-  min-height: 100%;
-  margin: 0;
-  padding: 18px;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(154, 170, 117, 0.12), transparent 30%),
-    rgba(8, 7, 10, 0.30);
-  color: rgba(246, 234, 215, 0.70);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-/* Botão e caixa de dados ficam na coluna esquerda */
-
-#passo-atributos .botao-rolar {
-  grid-column: 1;
-  grid-row: 2;
-  width: 100%;
-  margin: 0;
-}
-
-#passo-atributos .caixa-rolagem-dados {
-  grid-column: 1;
-  grid-row: 3;
-  padding: 16px;
-  margin: 0;
-}
-
-/* Dados em duas colunas */
-
-#passo-atributos .dados-atributo {
-  grid-template-columns: repeat(2, minmax(54px, 1fr));
-  gap: 10px;
-  justify-content: stretch;
-}
-
-#passo-atributos .dado {
-  border-radius: 16px;
-  font-size: 1.3rem;
-}
-
-/* Resultado da rolagem logo abaixo dos dados */
-
-#passo-atributos .resultado-rolagem {
-  margin-top: 12px;
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-/* Resultados rolados ficam compactos embaixo da caixa */
-
-#passo-atributos .resultados-atributos {
-  grid-column: 1;
-  margin: -8px 0 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-#passo-atributos .resultados-atributos span {
-  min-width: 0;
-  min-height: 34px;
-  border-radius: 12px;
-  font-size: 0.92rem;
-}
-
-/* Distribuição ocupa a largura inteira embaixo */
-
-#passo-atributos .bloco-distribuicao-atributos {
-  grid-column: 1 / -1;
-  margin-top: 6px;
-  padding: 18px;
-}
-
-#passo-atributos .bloco-distribuicao-atributos h3 {
-  margin-bottom: 14px;
-  font-size: 1.1rem;
-}
-
-/* Seletores em duas colunas */
-
-#passo-atributos .bloco-distribuicao-atributos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px 16px;
-}
-
-#passo-atributos .bloco-distribuicao-atributos h3 {
-  grid-column: 1 / -1;
-}
-
-#passo-atributos .linha-atributo {
-  display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
-  gap: 8px;
-  padding: 0;
-  border-bottom: none;
-}
-
-#passo-atributos .linha-atributo label {
-  font-size: 0.82rem;
-}
-
-#passo-atributos .linha-atributo select {
-  min-height: 36px;
-  padding: 0 10px;
-  border-radius: 12px;
-  font-size: 0.86rem;
-}
-
-/* Mensagem e ações continuam embaixo */
-
-#passo-atributos #mensagemAtributos,
-#passo-atributos .acoes-passo {
-  grid-column: 1 / -1;
-}
-
-#passo-atributos .acoes-passo {
-  margin-top: 4px;
-}
-
-/* Responsivo */
-
-@media (max-width: 820px) {
-  #passo-atributos {
-    grid-template-columns: 1fr;
-  }
-
-  #passo-atributos > .texto-explicativo,
-  #passo-atributos .botao-rolar,
-  #passo-atributos .caixa-rolagem-dados,
-  #passo-atributos .resultados-atributos,
-  #passo-atributos .bloco-distribuicao-atributos,
-  #passo-atributos #mensagemAtributos,
-  #passo-atributos .acoes-passo {
-    grid-column: 1;
-    grid-row: auto;
-  }
-
-  #passo-atributos .bloco-distribuicao-atributos {
-    grid-template-columns: 1fr;
-  }
-
-  #passo-atributos .linha-atributo {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =====================================================
-   Atributos compactos v3
-   -----------------------------------------------------
-   Dados à esquerda, seletores no meio e explicação à direita.
-   ===================================================== */
-
-#passo-atributos {
-  grid-template-columns: 190px 250px minmax(220px, 1fr);
-  gap: 14px;
-}
-
-#passo-atributos h2 {
-  grid-column: 1 / -1;
-}
-
-/* Coluna esquerda: botão, dados e resultados */
-
-#passo-atributos .botao-rolar {
-  grid-column: 1;
-  grid-row: 2;
-  min-height: 36px;
-  padding: 0 12px;
-  font-size: 0.86rem;
-}
-
-#passo-atributos .caixa-rolagem-dados {
-  grid-column: 1;
-  grid-row: 3;
-  padding: 12px;
-}
-
-#passo-atributos .dados-atributo {
-  grid-template-columns: repeat(2, 44px);
-  gap: 8px;
-  justify-content: center;
-}
-
-#passo-atributos .dado {
-  width: 44px;
-  height: 44px;
-  aspect-ratio: auto;
-  border-radius: 13px;
-  font-size: 1.05rem;
-}
-
-#passo-atributos .resultado-rolagem {
-  margin-top: 10px;
-  font-size: 0.78rem;
-}
-
-#passo-atributos .resultados-atributos {
-  grid-column: 1;
-  grid-row: 4;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin: 0;
-}
-
-#passo-atributos .resultados-atributos span {
-  min-height: 28px;
-  border-radius: 10px;
-  font-size: 0.82rem;
-}
-
-/* Coluna do meio: seletores */
-
-#passo-atributos .bloco-distribuicao-atributos {
-  grid-column: 2;
-  grid-row: 2 / span 3;
-  display: block;
-  margin: 0;
-  padding: 12px;
-}
-
-#passo-atributos .bloco-distribuicao-atributos h3 {
-  margin: 0 0 10px;
-  font-size: 0.95rem;
-}
-
-#passo-atributos .linha-atributo {
-  display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-#passo-atributos .linha-atributo label {
-  font-size: 0.78rem;
-}
-
-#passo-atributos .linha-atributo select {
-  min-height: 30px;
-  padding: 0 8px;
-  border-radius: 10px;
-  font-size: 0.78rem;
-}
-
-/* Coluna direita: explicação */
-
-#passo-atributos > .texto-explicativo {
-  grid-column: 3;
-  grid-row: 2 / span 3;
-  padding: 14px;
-  font-size: 0.84rem;
-  line-height: 1.5;
-}
-
-/* Rodapé do passo */
-
-#passo-atributos #mensagemAtributos,
-#passo-atributos .acoes-passo {
-  grid-column: 1 / -1;
-}
-
-/* Responsivo */
-
-@media (max-width: 900px) {
-  #passo-atributos {
-    grid-template-columns: 1fr;
-  }
-
-  #passo-atributos .botao-rolar,
-  #passo-atributos .caixa-rolagem-dados,
-  #passo-atributos .resultados-atributos,
-  #passo-atributos .bloco-distribuicao-atributos,
-  #passo-atributos > .texto-explicativo,
-  #passo-atributos #mensagemAtributos,
-  #passo-atributos .acoes-passo {
-    grid-column: 1;
-    grid-row: auto;
-  }
-}
-
-/* =====================================================
-   Ajuste de posição: navegação dos passos
-   -----------------------------------------------------
-   Mantém a navegação dentro da área principal do passo,
-   próxima ao botão de próximo passo.
-   ===================================================== */
-
-.area-passo .navegacao-passos {
-  margin-top: 16px;
-  padding: 0;
-  justify-content: flex-start;
-}
-
-.area-passo .mensagem-navegacao {
-  margin: 8px 0 0;
-}
-
-/* =====================================================
-   Refinamento visual: etapa de detalhes
-   -----------------------------------------------------
-   Organiza nome, idiomas, equipamentos e valores derivados
-   em blocos mais compactos e legíveis.
-   ===================================================== */
-
-#passo-detalhes {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  align-items: start;
-}
-
-#passo-detalhes h2 {
-  grid-column: 1 / -1;
-  margin-bottom: 4px;
-}
-
-#passo-detalhes .bloco-detalhes {
-  margin: 0;
-  padding: 16px;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.14), transparent 28%),
-    rgba(8, 7, 10, 0.34);
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
-}
-
-#passo-detalhes .bloco-detalhes h3 {
-  margin: 0 0 12px;
-  color: var(--cor-texto);
-  font-size: 1.05rem;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-}
-
-#passo-detalhes .bloco-detalhes h4 {
-  margin: 0 0 8px;
-  color: var(--cor-texto-suave);
-  font-size: 0.9rem;
-}
-
-/* Campos de formulário */
-
-#passo-detalhes label {
-  display: block;
-  margin: 10px 0 6px;
-  color: var(--cor-texto-suave);
-  font-size: 0.8rem;
-  font-weight: 850;
-}
-
-#passo-detalhes input,
-#passo-detalhes select {
-  width: 100%;
-  min-height: 38px;
-  padding: 0 11px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 12px;
-  background: rgba(16, 15, 20, 0.62);
-  color: var(--cor-texto);
-  font-size: 0.86rem;
-  font-weight: 750;
-}
-
-#passo-detalhes input:focus,
-#passo-detalhes select:focus {
-  outline: none;
-  border-color: rgba(215, 163, 95, 0.72);
-  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
-}
-
-/* Equipamentos ocupa a largura toda */
-
-#passo-detalhes .bloco-detalhes:nth-of-type(3) {
-  grid-column: 1 / -1;
-}
-
-/* Dentro do bloco de equipamentos */
-
-#passo-detalhes .sub-bloco-detalhes {
-  padding: 14px;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: 16px;
-  background: rgba(255, 248, 235, 0.045);
-}
-
-#passo-detalhes .sub-bloco-detalhes + .sub-bloco-detalhes {
-  margin-top: 12px;
-}
-
-#passo-detalhes .sub-bloco-detalhes p {
-  margin: 0;
-  color: rgba(246, 234, 215, 0.70);
-  font-size: 0.84rem;
-  line-height: 1.45;
-}
-
-/* Equipamentos em grade compacta */
-
-#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px 12px;
-}
-
-#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) h4,
-#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) .aviso-equipamentos,
-#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) .campo-formulario {
-  grid-column: 1 / -1;
-}
-
-#passo-detalhes .aviso-equipamentos {
-  margin-top: 8px;
-  color: var(--cor-ambar);
-  font-size: 0.82rem;
-  font-weight: 750;
-}
-
-/* Classe de Armadura */
-
-#passo-detalhes .resultado-detalhe {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 12px;
-  padding: 12px;
-  border: 1px solid rgba(215, 163, 95, 0.28);
-  border-radius: 16px;
-  background: rgba(215, 163, 95, 0.08);
-}
-
-#passo-detalhes .resultado-detalhe span {
-  color: var(--cor-texto-suave);
-  font-size: 0.82rem;
-  font-weight: 800;
-}
-
-#passo-detalhes .resultado-detalhe strong {
-  color: var(--cor-ambar);
-  font-size: 1.25rem;
-  font-weight: 950;
-}
-
-/* Blocos pequenos ainda vazios */
-
-#passo-detalhes .bloco-detalhes:nth-of-type(n + 5) {
-  min-height: 86px;
-}
-
-/* Rodapé */
-
-#passo-detalhes .acoes-passo,
-#passo-detalhes #mensagemDetalhes {
-  grid-column: 1 / -1;
-}
-
-#passo-detalhes .acoes-passo {
-  margin-top: 4px;
-}
-
-/* Responsivo */
-
-@media (max-width: 900px) {
-  #passo-detalhes {
-    grid-template-columns: 1fr;
-  }
-
-  #passo-detalhes .bloco-detalhes,
-  #passo-detalhes .bloco-detalhes:nth-of-type(3),
-  #passo-detalhes .acoes-passo,
-  #passo-detalhes #mensagemDetalhes {
-    grid-column: 1;
-  }
-
-  #passo-detalhes .sub-bloco-detalhes:nth-of-type(2) {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =====================================================
-   Detalhes finais: layout narrativo compacto
-   -----------------------------------------------------
-   Coluna esquerda com dados mecânicos.
-   Coluna direita com história e personalidade.
-   ===================================================== */
-
-#passo-detalhes {
-  display: block;
-}
-
-#passo-detalhes > h2 {
-  margin-bottom: 16px;
-}
-
-.layout-detalhes-personagem {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.92fr) minmax(360px, 1.08fr);
-  gap: 16px;
-  align-items: stretch;
-}
-
-.painel-detalhes-principais,
-.painel-detalhes-narrativos {
-  padding: 18px;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.14), transparent 28%),
-    rgba(8, 7, 10, 0.34);
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
-}
-
-.painel-detalhes-principais h3 {
-  margin: 0 0 14px;
-  color: var(--cor-texto);
-  font-size: 1.15rem;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-}
-
-.grupo-detalhes {
-  padding: 14px;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: 18px;
-  background: rgba(255, 248, 235, 0.04);
-}
-
-.grupo-detalhes + .grupo-detalhes {
-  margin-top: 12px;
-}
-
-.grupo-detalhes h4,
-.grupo-detalhes h5 {
-  margin: 0 0 10px;
-  color: var(--cor-texto-suave);
-  font-size: 0.9rem;
-  line-height: 1.15;
-}
-
-.grupo-detalhes p {
-  margin: 0;
-  color: rgba(246, 234, 215, 0.70);
-  font-size: 0.84rem;
-  line-height: 1.45;
-}
-
-#passo-detalhes label {
-  display: block;
-  margin: 10px 0 6px;
-  color: var(--cor-texto-suave);
-  font-size: 0.78rem;
-  font-weight: 850;
-}
-
-#passo-detalhes input,
-#passo-detalhes select,
-#passo-detalhes textarea {
-  width: 100%;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 12px;
-  background: rgba(16, 15, 20, 0.62);
-  color: var(--cor-texto);
-  font-size: 0.86rem;
-  font-weight: 750;
-}
-
-#passo-detalhes input,
-#passo-detalhes select {
-  min-height: 38px;
-  padding: 0 11px;
-}
-
-#passo-detalhes textarea {
-  min-height: 190px;
-  padding: 12px;
-  resize: vertical;
-  line-height: 1.5;
-}
-
-#passo-detalhes input:focus,
-#passo-detalhes select:focus,
-#passo-detalhes textarea:focus {
-  outline: none;
-  border-color: rgba(215, 163, 95, 0.72);
-  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
-}
-
-.grade-equipamentos-detalhes {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-#passo-detalhes .aviso-equipamentos {
-  margin: 10px 0 0;
-  color: var(--cor-ambar);
-  font-size: 0.82rem;
-  font-weight: 750;
-}
-
-.painel-detalhes-narrativos {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 14px;
-}
-
-.campo-narrativo {
-  display: flex;
-  flex-direction: column;
-}
-
-.campo-narrativo label {
-  margin-top: 0;
-}
-
-.campo-narrativo textarea {
-  flex: 1;
-}
-
-.detalhes-calculados-ocultos {
-  display: none;
-}
-
-#passo-detalhes .acoes-passo,
-#passo-detalhes #mensagemDetalhes {
-  margin-top: 14px;
-}
-
-@media (max-width: 900px) {
-  .layout-detalhes-personagem {
-    grid-template-columns: 1fr;
-  }
-
-  .painel-detalhes-narrativos {
-    grid-template-rows: auto;
-  }
-}
-
-/* =====================================================
-   Detalhes finais: separadores internos
-   -----------------------------------------------------
-   Separa Nome, Idiomas e Equipamento sem criar cards
-   dentro do card principal.
-   ===================================================== */
-
-.painel-detalhes-principais h3 {
-  margin: 18px 0 10px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 248, 235, 0.12);
-}
-
-.painel-detalhes-principais h3:first-child {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: none;
-}
-
-.painel-detalhes-principais h3::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
-  border-radius: 999px;
-  background: rgba(215, 163, 95, 0.75);
-  vertical-align: middle;
-}
-
-.painel-detalhes-principais .campo-formulario {
-  margin-top: 10px;
-}
-
-.painel-detalhes-principais label {
-  margin-top: 10px;
-}
-
-.layout-detalhes-personagem {
-  grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
-}
-
-.painel-detalhes-principais {
-  grid-column: 1;
-}
-
-.painel-detalhes-narrativos {
-  grid-column: 2;
-}
-
-/* =====================================================
-   Refinamento visual: etapa de revisão
-   -----------------------------------------------------
-   Organiza o resumo final do personagem em cards compactos
-   e deixa o encerramento da criação mais claro.
-   ===================================================== */
-
-#passo-revisao {
-  display: block;
-}
-
-#passo-revisao > h2 {
-  margin-bottom: 10px;
-}
-
-#passo-revisao > p {
-  max-width: 680px;
-  margin: 0 0 18px;
-  color: rgba(246, 234, 215, 0.72);
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-/* Grade dos blocos de revisão */
-
-#areaRevisao {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-/* Cards da revisão */
-
-#areaRevisao .bloco-revisao {
-  margin: 0;
-  padding: 16px;
-  border: 1px solid rgba(255, 248, 235, 0.13);
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.14), transparent 28%),
-    rgba(8, 7, 10, 0.34);
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
-}
-
-/* Primeiro bloco: informações básicas */
-
-#areaRevisao .bloco-revisao:first-child {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 18px;
-}
-
-#areaRevisao .bloco-revisao:first-child h3 {
-  grid-column: 1 / -1;
-}
-
-/* Títulos internos */
-
-#areaRevisao .bloco-revisao h3 {
-  margin: 0 0 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.12);
-  color: var(--cor-texto);
-  font-size: 1.08rem;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-}
-
-#areaRevisao .bloco-revisao h3::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
-  border-radius: 999px;
-  background: rgba(215, 163, 95, 0.75);
-  vertical-align: middle;
-}
-
-/* Textos */
-
-#areaRevisao .bloco-revisao p,
-#areaRevisao .bloco-revisao li {
-  color: rgba(246, 234, 215, 0.72);
-  font-size: 0.86rem;
-  line-height: 1.48;
-}
-
-#areaRevisao .bloco-revisao p {
-  margin: 7px 0;
-}
-
-#areaRevisao .bloco-revisao strong {
-  color: var(--cor-texto-fraco);
-  font-weight: 900;
-}
-
-/* Listas */
-
-#areaRevisao .bloco-revisao ul {
-  margin: 8px 0 0;
-  padding-left: 18px;
-}
-
-#areaRevisao .bloco-revisao ul ul {
-  margin-top: 4px;
-  padding-left: 16px;
-  opacity: 0.92;
-}
-
-/* Linhas de armas na revisão */
-
-#areaRevisao .linha-arma-revisao {
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: 14px;
-  background: rgba(255, 248, 235, 0.045);
-}
-
-#areaRevisao .linha-arma-revisao p {
-  margin: 0;
-}
-
-/* Botão de finalizar */
-
-#passo-revisao .acoes-passo {
-  margin-top: 18px;
-  justify-content: flex-end;
-}
-
-#passo-revisao .botao-finalizar {
-  min-width: 180px;
-}
-
-/* Área que aparece depois de salvar */
-
-.acoes-personagem-salvo {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-  justify-content: flex-end;
-}
-
-.botao-link {
-  min-height: 40px;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: var(--raio-botao);
-  color: var(--cor-texto);
-  background: rgba(255, 248, 235, 0.07);
-  font-size: 0.88rem;
-  font-weight: 850;
-  text-decoration: none;
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    background 220ms ease;
-}
-
-.botao-link:hover {
-  transform: translateY(-3px);
-  border-color: rgba(215, 163, 95, 0.48);
-  background: rgba(255, 248, 235, 0.10);
-}
-
-/* Responsivo */
-
-@media (max-width: 900px) {
-  #areaRevisao,
-  #areaRevisao .bloco-revisao:first-child {
-    grid-template-columns: 1fr;
-  }
-
-  #areaRevisao .bloco-revisao:first-child {
-    grid-column: 1;
+  .imagem-classe {
+    height: 280px;
   }
 
   #passo-revisao .acoes-passo,
@@ -2561,451 +1695,37 @@ textarea {
 }
 
 /* =====================================================
-   Refinamento visual: ficha lateral v2
-   -----------------------------------------------------
-   Mantém a estrutura original da ficha, mas ajusta cores,
-   fonte e rolagem independente.
+   Animações
    ===================================================== */
 
-/* Rolagem independente da ficha */
-
-.coluna-ficha {
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-.coluna-ficha::-webkit-scrollbar {
-  width: 7px;
-}
-
-.coluna-ficha::-webkit-scrollbar-track {
-  background: rgba(255, 248, 235, 0.04);
-  border-radius: 999px;
-}
-
-.coluna-ficha::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(215, 163, 95, 0.32);
-}
-
-/* Painel principal */
-
-.ficha {
-  border-color: rgba(255, 248, 235, 0.16);
-  background:
-    radial-gradient(circle at 88% 8%, rgba(111, 61, 75, 0.12), transparent 30%),
-    rgba(18, 15, 16, 0.82);
-  backdrop-filter: none;
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
-}
-
-/* Cabeçalho */
-
-.ficha-cabecalho h2 {
-  color: var(--cor-texto);
-  font-size: 1.08rem;
-  letter-spacing: -0.035em;
-}
-
-/* Blocos internos sem mudar posição */
-
-.ficha-bloco {
-  border-color: rgba(255, 248, 235, 0.13);
-  background: rgba(255, 248, 235, 0.045);
-}
-
-.ficha-bloco h3 {
-  color: var(--cor-texto);
-  font-size: 0.82rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.ficha-rotulo {
-  color: rgba(215, 202, 179, 0.78);
-  font-size: 0.76rem;
-  font-weight: 850;
-}
-
-.ficha-valor {
-  color: rgba(246, 234, 215, 0.82);
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-
-/* Campos pequenos */
-
-.campo-mini span,
-.campo-derivado span,
-.rotulo-modificador {
-  color: rgba(215, 202, 179, 0.72);
-  font-size: 0.68rem;
-  font-weight: 850;
-}
-
-.caixa-valor-pequena,
-.valor-atributo,
-.modificador {
-  border-color: rgba(215, 163, 95, 0.26);
-  background: rgba(215, 163, 95, 0.08);
-  color: var(--cor-ambar);
-  font-weight: 900;
-}
-
-/* Atributos, perícias e salvaguardas */
-
-.atributo-card {
-  border-color: rgba(255, 248, 235, 0.12);
-  background: rgba(12, 11, 13, 0.48);
-}
-
-.atributo-card h4 {
-  color: var(--cor-texto);
-  font-size: 0.86rem;
-  font-weight: 900;
-}
-
-.linha-salvaguarda,
-.linha-pericia {
-  color: rgba(246, 234, 215, 0.62);
-  font-size: 0.72rem;
-}
-
-.linha-salvaguarda.proficiente,
-.linha-pericia.proficiente {
-  color: var(--cor-ambar);
-  font-weight: 850;
-}
-
-.linha-pericia.especializada::after {
-  content: " ★";
-  color: var(--cor-coral);
-  font-weight: 950;
-}
-
-/* Equipamentos, ataques, habilidades e magias */
-
-.equipamentos-lista,
-.equipamentos-ataques {
-  border-color: rgba(255, 248, 235, 0.12);
-  background: rgba(12, 11, 13, 0.42);
-}
-
-.equipamentos-lista h2,
-.equipamentos-ataques h2,
-.ficha-armas-ataques h4 {
-  color: rgba(215, 202, 179, 0.78);
-  font-size: 0.72rem;
-  font-weight: 900;
-}
-
-.lista-recursos li,
-#fichaTalentos li,
-#fichaMagias li,
-.linha-ataque {
-  color: rgba(246, 234, 215, 0.76);
-  font-size: 0.76rem;
-  line-height: 1.4;
-}
-
-.linha-ataque-furtivo {
-  color: var(--cor-coral);
-}
-
-/* =====================================================
-   Criador: painéis mais sólidos
-   -----------------------------------------------------
-   Reduz transparência geral dos cards e áreas principais.
-   ===================================================== */
-
-.card-classe,
-.card-opcao,
-.caixa-rolagem-dados,
-.bloco-distribuicao-atributos,
-.bloco-revisao,
-.painel-detalhes-principais,
-.painel-detalhes-narrativos,
-#passo-habilidades .bloco-habilidades,
-#passo-magias .bloco-magias,
-#areaRevisao .bloco-revisao {
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.12), transparent 30%),
-    linear-gradient(155deg, #181310 0%, #211619 100%);
-  border-color: rgba(215, 163, 95, 0.22);
-  backdrop-filter: none;
-}
-
-.card-classe:hover,
-.card-opcao:hover {
-  background:
-    radial-gradient(circle at 92% 10%, rgba(217, 118, 95, 0.16), transparent 30%),
-    linear-gradient(155deg, #211713 0%, #2a171d 100%);
-}
-
-/* =====================================================
-   Refinamento visual: modal de classe v2
-   -----------------------------------------------------
-   Deixa o modal menos transparente, mais sólido e mais
-   coerente com a direção visual quente do criador.
-   ===================================================== */
-
-.modal-overlay {
-  background:
-    radial-gradient(circle at 78% 18%, rgba(111, 61, 75, 0.24), transparent 30%),
-    rgba(5, 4, 5, 0.88);
-  backdrop-filter: none;
-}
-
-.modal {
-  width: min(940px, calc(100vw - 36px));
-  border-color: rgba(215, 163, 95, 0.28);
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at 92% 8%, rgba(217, 118, 95, 0.14), transparent 28%),
-    linear-gradient(150deg, #17120f 0%, #231619 58%, #120f0d 100%);
-  box-shadow: 0 34px 120px rgba(0, 0, 0, 0.62);
-}
-
-.modal::before {
-  background: rgba(215, 163, 95, 0.54);
-}
-
-.modal::after {
-  border-color: rgba(215, 163, 95, 0.14);
-}
-
-.modal-cabecalho {
-  padding: 40px 30px 8px;
-}
-
-.modal-cabecalho h2 {
-  color: #f6ead7;
-  font-size: clamp(2rem, 3.2vw, 3.15rem);
-  letter-spacing: -0.065em;
-}
-
-.modal-corpo {
-  grid-template-columns: minmax(230px, 310px) minmax(0, 1fr);
-  gap: 24px;
-  padding: 22px 30px 18px;
-}
-
-.modal-imagem-container {
-  display: flex;
-  align-items: stretch;
-}
-
-.modal-imagem {
-  min-height: 340px;
-  border-color: rgba(215, 163, 95, 0.22);
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(215, 163, 95, 0.16), transparent 34%),
-    linear-gradient(160deg, #211713 0%, #120f0d 100%);
-  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
-}
-
-.modal-textos {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.modal-secao {
-  padding: 16px 0;
-  border-bottom-color: rgba(215, 163, 95, 0.16);
-}
-
-.modal-secao:first-child {
-  padding-top: 0;
-}
-
-.modal-secao h3 {
-  margin-bottom: 8px;
-  color: #f1bd6a;
-  font-size: 0.72rem;
-  font-weight: 950;
-  letter-spacing: 0.09em;
-}
-
-.modal-secao p {
-  color: #ddcfb8;
-  font-size: 0.9rem;
-  line-height: 1.58;
-}
-
-.modal-acoes {
-  padding: 16px 30px 26px;
-  border-top-color: rgba(215, 163, 95, 0.16);
-  background: #15110f;
-}
-
-.modal-acoes .botao-voltar {
-  border-color: rgba(215, 163, 95, 0.24);
-  color: #f6ead7;
-  background: #211a17;
-}
-
-.modal-acoes .botao-voltar:hover {
-  color: #1b1210;
-  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
-}
-
-.modal-acoes .botao-selecionar {
-  border-color: rgba(215, 163, 95, 0.44);
-}
-
-/* Responsivo do modal */
-
-@media (max-width: 760px) {
-  .modal-corpo {
-    grid-template-columns: 1fr;
+@keyframes flutuarDecoracao {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
 
-  .modal-imagem {
-    min-height: 260px;
-  }
-
-  .modal-textos {
-    justify-content: flex-start;
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(4deg);
   }
 }
 
-/* =====================================================
-   Ajuste do modal: menos espremido
-   -----------------------------------------------------
-   Aumenta o espaço útil do modal e remove a sensação de
-   faixas separadas para título e botões.
-   ===================================================== */
+@keyframes flutuarOrnamento {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
 
-.modal {
-  width: min(1120px, calc(100vw - 40px));
-  max-height: calc(100dvh - 28px);
-  border-radius: 30px;
+  50% {
+    transform: translateY(-10px) rotate(4deg);
+  }
 }
 
-/* Remove a barrinha decorativa que estava competindo com o título */
-.modal::before {
-  display: none;
-}
+@keyframes entradaModal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
 
-/* Título menos apertado no topo */
-.modal-cabecalho {
-  padding: 28px 34px 8px;
-}
-
-.modal-cabecalho h2 {
-  font-size: clamp(2.2rem, 4vw, 4rem);
-  line-height: 0.95;
-}
-
-/* Corpo ganha mais espaço e fica menos comprimido */
-.modal-corpo {
-  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
-  gap: 28px;
-  padding: 10px 34px 22px;
-  overflow-y: auto;
-}
-
-/* Imagem um pouco maior, mas sem forçar o modal a quebrar */
-.modal-imagem {
-  min-height: 380px;
-  max-height: 480px;
-  object-fit: cover;
-}
-
-/* Textos começam mais em cima, em vez de ficarem centralizados */
-.modal-textos {
-  justify-content: flex-start;
-  padding-top: 6px;
-}
-
-.modal-secao {
-  padding: 14px 0;
-}
-
-/* Botões deixam de parecer uma faixa separada */
-.modal-acoes {
-  padding: 0 34px 28px;
-  border-top: none;
-  background: transparent;
-}
-
-/* =====================================================
-   Modal de classe: imagem fixa e texto rolável
-   -----------------------------------------------------
-   Reduz o tamanho geral da modal e move o scroll apenas
-   para a coluna de texto.
-   ===================================================== */
-
-.modal {
-  width: min(980px, calc(100vw - 40px));
-  max-height: calc(100dvh - 36px);
-}
-
-.modal-cabecalho {
-  flex-shrink: 0;
-  padding: 24px 30px 6px;
-}
-
-.modal-cabecalho h2 {
-  font-size: clamp(2rem, 3.4vw, 3.4rem);
-}
-
-.modal-corpo {
-  min-height: 0;
-  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
-  gap: 24px;
-  padding: 10px 30px 18px;
-  align-items: stretch;
-  overflow: hidden;
-}
-
-/* Coluna da imagem: não rola */
-
-.modal-imagem-container {
-  height: min(430px, calc(100dvh - 220px));
-  min-height: 300px;
-  display: flex;
-  align-items: stretch;
-}
-
-.modal-imagem {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  max-height: none;
-  object-fit: cover;
-  object-position: center center;
-}
-
-/* Coluna de texto: esta sim rola */
-
-.modal-textos {
-  max-height: min(430px, calc(100dvh - 220px));
-  min-height: 300px;
-  padding-right: 10px;
-  justify-content: flex-start;
-  overflow-y: auto;
-}
-
-.modal-textos::-webkit-scrollbar {
-  width: 7px;
-}
-
-.modal-textos::-webkit-scrollbar-track {
-  background: rgba(255, 248, 235, 0.06);
-  border-radius: 999px;
-}
-
-.modal-textos::-webkit-scrollbar-thumb {
-  background: rgba(215, 163, 95, 0.34);
-  border-radius: 999px;
-}
-
-.modal-acoes {
-  flex-shrink: 0;
-  padding: 0 30px 24px;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
