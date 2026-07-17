@@ -2,6 +2,7 @@
    Meus Personagens
    -----------------------------------------------------
    Página de arquivo/biblioteca dos personagens salvos.
+   O fundo global vem de tema.css.
    ===================================================== */
 
 .pagina-personagens {
@@ -16,22 +17,13 @@
 
 .hero-personagens {
   position: relative;
-  min-height: 58vh;
+  min-height: 42vh;
   padding:
-    72px
-    max(28px, calc((100vw - 1180px) / 2))
-    88px;
+    clamp(44px, 5vw, 68px)
+    max(28px, calc((100vw - var(--largura-conteudo)) / 2));
   display: grid;
   align-items: center;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 82% 22%, rgba(215, 163, 95, 0.18), transparent 28%),
-    linear-gradient(
-      180deg,
-      #100f14 0%,
-      #201712 38%,
-      #171c15 100%
-    );
 }
 
 .conteudo-hero-personagens {
@@ -43,9 +35,9 @@
 .conteudo-hero-personagens::before {
   content: "";
   display: block;
-  width: 54px;
-  height: 6px;
-  margin-bottom: 28px;
+  width: 42px;
+  height: 4px;
+  margin-bottom: 16px;
   border-radius: 999px;
   background: rgba(255, 248, 235, 0.28);
 }
@@ -53,13 +45,13 @@
 .etiqueta-pagina,
 .etiqueta-secao {
   width: fit-content;
-  margin: 0 0 22px;
-  padding: 8px 14px;
+  margin: 0 0 14px;
+  padding: 6px 11px;
+  border: 1px solid rgba(215, 163, 95, 0.42);
   border-radius: var(--raio-botao);
   color: var(--cor-ambar);
   background: rgba(215, 163, 95, 0.10);
-  border: 1px solid rgba(215, 163, 95, 0.42);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 850;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -67,17 +59,17 @@
 
 .conteudo-hero-personagens h1 {
   margin: 0;
-  font-size: clamp(2.8rem, 6vw, 6rem);
-  line-height: 0.94;
-  letter-spacing: -0.075em;
+  font-size: clamp(2.25rem, 4.8vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
 }
 
 .conteudo-hero-personagens p:not(.etiqueta-pagina) {
   max-width: 620px;
-  margin: 26px 0 34px;
+  margin: 20px 0 28px;
   color: rgba(246, 234, 215, 0.76);
-  font-size: 1.08rem;
-  line-height: 1.78;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 /* =====================================================
@@ -87,7 +79,7 @@
 .decoracao-fundo {
   position: absolute;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.28;
 }
 
 .decoracao-um {
@@ -115,15 +107,15 @@
   content: "";
   position: absolute;
   inset: 18%;
-  border-radius: inherit;
   border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: inherit;
 }
 
 .ornamento-rpg {
   position: absolute;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: 0.14;
   color: rgba(255, 248, 235, 0.72);
   border-color: rgba(255, 248, 235, 0.42);
   animation: flutuarOrnamento 8s ease-in-out infinite;
@@ -166,29 +158,21 @@
 }
 
 /* =====================================================
-   Área da lista
+   Lista de personagens
    ===================================================== */
 
 .secao-lista-personagens {
   position: relative;
   padding:
-    72px
-    max(28px, calc((100vw - 1180px) / 2))
+    clamp(48px, 5.5vw, 76px)
+    max(28px, calc((100vw - var(--largura-conteudo)) / 2))
     96px;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(154, 170, 117, 0.15), transparent 30%),
-    linear-gradient(
-      180deg,
-      #171c15 0%,
-      #283321 80%,
-      #100f14 100%
-    );
 }
 
 .secao-lista-personagens::before {
   content: "";
   position: absolute;
-  left: max(28px, calc((100vw - 1180px) / 2));
+  left: max(28px, calc((100vw - var(--largura-conteudo)) / 2));
   top: 64px;
   width: 1px;
   height: calc(100% - 128px);
@@ -209,14 +193,10 @@
 
 .cabecalho-personagens h2 {
   margin: 0;
-  font-size: clamp(2.2rem, 4.8vw, 4.4rem);
-  line-height: 0.95;
-  letter-spacing: -0.07em;
+  font-size: clamp(1.9rem, 3.8vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.06em;
 }
-
-/* =====================================================
-   Lista e cards
-   ===================================================== */
 
 .lista-personagens {
   position: relative;
@@ -228,11 +208,11 @@
 
 .card-personagem {
   position: relative;
-  min-height: 280px;
-  padding: 26px;
+  min-height: 260px;
+  padding: 20px;
   border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 28px;
-  background: rgba(16, 15, 20, 0.46);
+  border-radius: 22px;
+  background: rgba(8, 7, 10, 0.48);
   overflow: hidden;
   transition:
     transform 220ms ease,
@@ -249,7 +229,7 @@
   right: -70px;
   top: -70px;
   border-radius: 50%;
-  background: rgba(215, 163, 95, 0.12);
+  background: rgba(111, 61, 75, 0.20);
   transition:
     transform 220ms ease,
     opacity 220ms ease;
@@ -258,7 +238,7 @@
 .card-personagem:hover {
   transform: translateY(-6px);
   border-color: rgba(215, 163, 95, 0.45);
-  background: rgba(16, 15, 20, 0.58);
+  background: rgba(18, 13, 18, 0.64);
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.25);
 }
 
@@ -271,7 +251,7 @@
   position: relative;
   margin: 0;
   color: var(--cor-texto);
-  font-size: 1.65rem;
+  font-size: 1.35rem;
   line-height: 1.05;
   letter-spacing: -0.05em;
 }
@@ -280,7 +260,7 @@
   position: relative;
   margin: 10px 0 22px;
   color: var(--cor-ambar);
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-weight: 850;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -288,8 +268,9 @@
 
 .card-personagem p {
   position: relative;
-  color: var(--cor-texto-suave);
   margin: 7px 0;
+  color: var(--cor-texto-suave);
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
@@ -306,11 +287,11 @@
 
 .valor-card-personagem {
   flex: 1;
+  padding: 14px;
   border: 1px solid rgba(255, 248, 235, 0.16);
   border-radius: 18px;
-  padding: 14px;
-  text-align: center;
   background: rgba(255, 248, 235, 0.07);
+  text-align: center;
 }
 
 .valor-card-personagem span {
@@ -332,12 +313,11 @@
 .card-personagem-acoes {
   position: relative;
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
   margin-top: 22px;
 }
 
-/* Mantém os nomes de classes criados pelo JS atual */
 .botao-link-card,
 .botao-excluir {
   position: relative;
@@ -410,9 +390,9 @@
   margin: 0;
   padding: 34px;
   border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 28px;
+  border-radius: 22px;
   color: var(--cor-texto-suave);
-  background: rgba(16, 15, 20, 0.46);
+  background: rgba(8, 7, 10, 0.48);
   font-size: 1.05rem;
   line-height: 1.7;
 }
@@ -449,95 +429,4 @@
   .botao-excluir {
     width: 100%;
   }
-}
-
-/* =====================================================
-   Compactação das páginas internas
-   ===================================================== */
-
-.hero-personagens,
-.hero-ver-personagem,
-.hero-criacao {
-  min-height: 42vh;
-  padding-block: clamp(44px, 5vw, 68px);
-}
-
-.conteudo-hero-personagens h1,
-.conteudo-hero-ver h1,
-.conteudo-hero-criacao h1 {
-  font-size: clamp(2.25rem, 4.8vw, 4.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.065em;
-}
-
-.conteudo-hero-personagens p:not(.etiqueta-pagina),
-.conteudo-hero-ver p:not(.etiqueta-pagina),
-.conteudo-hero-criacao p:not(.etiqueta-pagina) {
-  margin-top: 20px;
-  margin-bottom: 28px;
-  font-size: 1rem;
-  line-height: 1.65;
-}
-
-.secao-lista-personagens,
-.layout-ficha-salva,
-.criador-personagem {
-  padding-block: clamp(48px, 5.5vw, 76px);
-}
-
-.cabecalho-personagens h2,
-.conteudo-passo h2,
-.conteudo-passo h3 {
-  font-size: clamp(1.9rem, 3.8vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.06em;
-}
-
-.conteudo-passo {
-  padding: clamp(22px, 3vw, 34px);
-  border-radius: 28px;
-}
-
-.card-personagem,
-.card-classe,
-.card-opcao,
-.bloco-revisao,
-.bloco-detalhes,
-.caixa-rolagem-dados,
-.bloco-distribuicao-atributos {
-  border-radius: 22px;
-}
-
-.card-personagem,
-.card-opcao {
-  padding: 20px;
-}
-
-.card-classe {
-  min-height: auto;
-  padding: 16px;
-}
-
-.imagem-classe {
-  height: 210px;
-  border-radius: 18px;
-}
-
-.imagem-classe img {
-  border-radius: 18px;
-}
-
-.card-classe h3,
-.card-personagem h3,
-.card-opcao h4 {
-  font-size: 1.35rem;
-}
-
-.card-classe p,
-.card-personagem p,
-.card-opcao p,
-.card-opcao ul,
-.texto-explicativo {
-  font-size: 0.95rem;
-  line-height: 1.58;
 }
