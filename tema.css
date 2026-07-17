@@ -1,18 +1,21 @@
 /* =====================================================
    Tema visual global
    -----------------------------------------------------
-   Identidade visual compartilhada do projeto.
+   Cores, fundo, cabeçalho, botões, animações e ajustes
+   compartilhados por todas as páginas do projeto.
    ===================================================== */
 
 :root {
-  --cor-fundo: #100f14;
-  --cor-fundo-2: #19151a;
+  --cor-fundo: #08070a;
+  --cor-fundo-2: #100f14;
 
   --cor-texto: #f6ead7;
   --cor-texto-suave: #c8b9a3;
   --cor-texto-fraco: #8f806e;
 
   --cor-linha: rgba(246, 234, 215, 0.16);
+  --cor-painel: rgba(8, 7, 10, 0.48);
+  --cor-painel-forte: rgba(8, 7, 10, 0.66);
 
   --cor-ambar: #d7a35f;
   --cor-coral: #d9765f;
@@ -21,8 +24,11 @@
 
   --sombra-painel: 0 28px 90px rgba(0, 0, 0, 0.42);
 
-  --raio-card: 30px;
+  --raio-card: 24px;
   --raio-botao: 999px;
+
+  --largura-conteudo: 1180px;
+  --largura-criador: 1320px;
 
   --fonte-principal: Arial, Helvetica, sans-serif;
 }
@@ -32,7 +38,32 @@
 }
 
 html {
+  min-height: 100%;
   scroll-behavior: smooth;
+  background: #08070a;
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
+    radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
+    radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
+    radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
+    linear-gradient(
+      160deg,
+      #08070a 0%,
+      #100f14 24%,
+      #161b13 44%,
+      #24131d 68%,
+      #120d12 86%,
+      #070609 100%
+    );
+  background-size: cover;
 }
 
 body,
@@ -44,10 +75,24 @@ select {
 }
 
 body {
-  margin: 0;
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
+  margin: 0;
   color: var(--cor-texto);
-  background: linear-gradient(135deg, var(--cor-fundo), var(--cor-fundo-2));
+  background: transparent;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
 }
 
 /* =====================================================
@@ -61,10 +106,11 @@ body {
   width: 100%;
   padding:
     18px
-    max(28px, calc((100vw - 1180px) / 2));
+    max(28px, calc((100vw - var(--largura-conteudo)) / 2));
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 18px;
 }
 
 .marca {
@@ -73,6 +119,7 @@ body {
   gap: 10px;
   color: var(--cor-texto);
   text-decoration: none;
+  font-size: 0.98rem;
   font-weight: 900;
   letter-spacing: -0.03em;
 }
@@ -80,9 +127,9 @@ body {
 .marca-simbolo {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
   color: #1a1212;
   background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
 }
@@ -98,11 +145,11 @@ body {
 }
 
 .menu-principal a {
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: var(--raio-botao);
   color: var(--cor-texto-suave);
   text-decoration: none;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 700;
   transition:
     color 180ms ease,
@@ -124,11 +171,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
-  padding: 0 24px;
-  border-radius: var(--raio-botao);
+  min-height: 44px;
+  padding: 0 20px;
   border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-botao);
+  color: var(--cor-texto);
+  background: rgba(255, 248, 235, 0.07);
   text-decoration: none;
+  font-size: 0.95rem;
   font-weight: 850;
   overflow: hidden;
   cursor: pointer;
@@ -192,19 +242,69 @@ body {
   box-shadow: 0 18px 50px rgba(217, 118, 95, 0.20);
 }
 
+.botao-principal:hover,
+.botao-secundario:hover,
+.botao-menor:hover {
+  color: #1b1210;
+}
+
 .botao-secundario,
 .botao-menor {
   color: var(--cor-texto);
   background: rgba(255, 248, 235, 0.07);
 }
 
-.botao-secundario:hover,
-.botao-menor:hover {
-  color: #1b1210;
-}
-
 .botao-menor {
   width: fit-content;
+}
+
+/* =====================================================
+   Fundos transparentes das grandes seções
+   -----------------------------------------------------
+   O fundo principal vem de html::before; as seções ficam
+   transparentes para evitar cortes secos entre páginas.
+   ===================================================== */
+
+.hero,
+.hero-criacao,
+.hero-personagens,
+.hero-ver-personagem,
+.jornada-home,
+.secao-jornada,
+.secao-criador,
+.secao-fichas,
+.secao-campanhas,
+.secao-assincrono,
+.criador-personagem,
+.navegacao-passos,
+.secao-lista-personagens,
+.layout-ficha-salva {
+  background: transparent !important;
+}
+
+/* =====================================================
+   Transição visual entre páginas
+   ===================================================== */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
+    linear-gradient(
+      135deg,
+      #08070a,
+      #24131d 52%,
+      #100f14
+    );
+  animation: entradaCortinaPagina 420ms ease forwards;
+}
+
+body.saindo-pagina::after {
+  animation: saidaCortinaPagina 340ms ease forwards;
 }
 
 /* =====================================================
@@ -253,241 +353,6 @@ body {
   }
 }
 
-@media (max-width: 720px) {
-  .cabecalho-site {
-    position: static;
-    padding: 16px 18px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .menu-principal {
-    width: 100%;
-    overflow-x: auto;
-  }
-}
-
-/* =====================================================
-   Ajuste global de escala visual
-   -----------------------------------------------------
-   Reduz títulos, espaçamentos, botões e normaliza fontes.
-   ===================================================== */
-
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-a,
-button,
-input,
-select,
-textarea,
-label,
-span {
-  font-family: var(--fonte-principal);
-}
-
-.botao {
-  min-height: 44px;
-  padding: 0 20px;
-  font-size: 0.95rem;
-}
-
-.menu-principal a {
-  padding: 8px 12px;
-  font-size: 0.86rem;
-}
-
-.marca {
-  font-size: 0.98rem;
-}
-
-.marca-simbolo {
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-}
-
-/* =====================================================
-   Fundo global contínuo
-   -----------------------------------------------------
-   Cria um fundo único para o site inteiro, evitando cortes
-   duros entre seções.
-   ===================================================== */
-
-body {
-  background:
-    radial-gradient(circle at 82% 6%, rgba(215, 163, 95, 0.24), transparent 26%),
-    radial-gradient(circle at 12% 34%, rgba(154, 170, 117, 0.22), transparent 30%),
-    radial-gradient(circle at 86% 66%, rgba(111, 61, 75, 0.24), transparent 34%),
-    radial-gradient(circle at 22% 92%, rgba(217, 118, 95, 0.16), transparent 30%),
-    linear-gradient(
-      180deg,
-      #100f14 0%,
-      #171c15 30%,
-      #231816 56%,
-      #1d1420 78%,
-      #100f14 100%
-    );
-  background-attachment: fixed;
-  background-size: 100% 1600px;
-}
-
-/* =====================================================
-   Fundo geral definitivo do site
-   -----------------------------------------------------
-   Fundo contínuo em preto, vinho, musgo e âmbar.
-   ===================================================== */
-
-body {
-  background:
-    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
-    radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
-    radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
-    radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
-    linear-gradient(
-      160deg,
-      #08070a 0%,
-      #100f14 24%,
-      #161b13 44%,
-      #24131d 68%,
-      #120d12 86%,
-      #070609 100%
-    );
-  background-attachment: fixed;
-  background-size: cover;
-}
-
-/* =====================================================
-   Transições entre páginas
-   ===================================================== */
-
-body {
-  opacity: 0;
-  transform: translateY(8px);
-  animation: entradaPagina 260ms ease-out forwards;
-}
-
-body.saindo-pagina {
-  opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease;
-}
-
-@keyframes entradaPagina {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* =====================================================
-   Fundo geral definitivo
-   -----------------------------------------------------
-   Camada fixa de fundo para o site inteiro.
-   Evita que cada página precise ter seu próprio fundo.
-   ===================================================== */
-
-html {
-  min-height: 100%;
-  background: #08070a;
-}
-
-html::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
-    radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
-    radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
-    radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
-    linear-gradient(
-      160deg,
-      #08070a 0%,
-      #100f14 24%,
-      #161b13 44%,
-      #24131d 68%,
-      #120d12 86%,
-      #070609 100%
-    );
-  background-size: cover;
-}
-
-body {
-  position: relative;
-  z-index: 1;
-  background: transparent !important;
-}
-
-/* Remove fundos próprios das grandes seções.
-   Os cards e painéis internos continuam com fundo próprio. */
-
-.hero,
-.hero-criacao,
-.hero-personagens,
-.hero-ver-personagem,
-.jornada-home,
-.secao-jornada,
-.secao-criador,
-.secao-fichas,
-.secao-campanhas,
-.secao-assincrono,
-.criador-personagem,
-.navegacao-passos,
-.secao-lista-personagens,
-.layout-ficha-salva {
-  background: transparent !important;
-}
-
-/* =====================================================
-   Transição visual entre páginas
-   -----------------------------------------------------
-   Cortina escura/vinho para suavizar a troca entre telas.
-   ===================================================== */
-
-body {
-  opacity: 1 !important;
-  transform: none !important;
-  animation: none !important;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
-    linear-gradient(20%, rgba(111, 61, 75, 0.42), transparent 34%),
-    linear-gradient(
-      135deg,
-      #08070a,
-      #24131d 52%,
-      #100f14
-    );
-  animation: entradaCortinaPagina 420ms ease forwards;
-}
-
-body.saindo-pagina::after {
-  animation: saidaCortinaPagina 340ms ease forwards;
-}
-
 @keyframes entradaCortinaPagina {
   from {
     opacity: 1;
@@ -509,5 +374,47 @@ body.saindo-pagina::after {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes entradaModal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =====================================================
+   Responsivo global
+   ===================================================== */
+
+@media (max-width: 720px) {
+  .cabecalho-site {
+    position: static;
+    padding: 16px 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .menu-principal {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
