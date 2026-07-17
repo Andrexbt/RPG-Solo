@@ -5,43 +5,71 @@
      acesso para ver uma ficha ou criar um novo personagem.
      A lista é preenchida por meus-personagens.js.
      ===================================================== -->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-  <!-- Configurações básicas da página -->
   <meta charset="UTF-8">
   <title>Meus Personagens</title>
+
+  <link rel="stylesheet" href="tema.css">
   <link rel="stylesheet" href="meus-personagens.css">
 </head>
 
 <body>
 
-  <!-- Título da página -->
-  <header>
-    <h1>Meus Personagens</h1>
+  <header class="cabecalho-site">
+    <a class="marca" href="index.html">
+      <span class="marca-simbolo">✦</span>
+      <span>Projeto RPG Solo</span>
+    </a>
+
+    <nav class="menu-principal">
+      <a href="index.html">Início</a>
+      <a href="criacao-personagem.html">Criar personagem</a>
+      <a href="meus-personagens.html">Meus personagens</a>
+    </nav>
   </header>
 
-  <!-- Conteúdo principal da lista de personagens -->
   <main class="pagina-personagens">
 
-    <!-- Cabeçalho da área de personagens salvos -->
-    <section class="cabecalho-personagens">
-      <h2>Personagens salvos</h2>
+    <section class="hero-personagens">
+      <div class="decoracao-fundo decoracao-um"></div>
+      <div class="decoracao-fundo decoracao-dois"></div>
+      <div class="ornamento-rpg ornamento-ficha"></div>
 
-      <a class="botao-link" href="criacao-personagem.html">
-        Criar novo personagem
-      </a>
+      <div class="conteudo-hero-personagens">
+        <p class="etiqueta-pagina">Arquivo de personagens</p>
+
+        <h1>Meus personagens</h1>
+
+        <p>
+          Consulte as fichas criadas, acompanhe os principais dados de cada
+          personagem e acesse a ficha completa quando quiser continuar.
+        </p>
+
+        <a class="botao botao-principal" href="criacao-personagem.html">
+          Criar novo personagem
+        </a>
+      </div>
     </section>
 
-    <!-- Lista preenchida dinamicamente pelo JavaScript -->
-    <section id="listaPersonagens" class="lista-personagens">
-      <!-- O JavaScript vai preencher esta área -->
+    <section class="secao-lista-personagens">
+      <div class="cabecalho-personagens">
+        <div>
+          <p class="etiqueta-secao">Biblioteca</p>
+          <h2>Personagens salvos</h2>
+        </div>
+      </div>
+
+      <section id="listaPersonagens" class="lista-personagens">
+        <!-- O JavaScript vai preencher esta área -->
+      </section>
     </section>
 
   </main>
 
-  <!-- Bancos e scripts usados para montar os cards -->
   <script src="banco-equipamentos.js"></script>
   <script src="meus-personagens.js"></script>
 

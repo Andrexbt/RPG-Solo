@@ -3,7 +3,160 @@
    -----------------------------------------------------
    Estilos da tela de criação de personagem e da ficha lateral.
    ===================================================== */
+/* =====================================================
+   Identidade visual externa do criador
+   -----------------------------------------------------
+   Aplica a nova linguagem visual sem alterar a lógica
+   nem os componentes internos do fluxo de criação.
+   ===================================================== */
+
 body {
+  background: linear-gradient(135deg, var(--cor-fundo), var(--cor-fundo-2));
+}
+
+.hero-criacao {
+  position: relative;
+  min-height: 50vh;
+  padding:
+    72px
+    max(28px, calc((100vw - 1180px) / 2))
+    84px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(215, 163, 95, 0.18), transparent 28%),
+    linear-gradient(
+      180deg,
+      #100f14 0%,
+      #201712 48%,
+      #171c15 100%
+    );
+}
+
+.conteudo-hero-criacao {
+  position: relative;
+  z-index: 2;
+  max-width: 780px;
+}
+
+.conteudo-hero-criacao::before {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 6px;
+  margin-bottom: 28px;
+  border-radius: 999px;
+  background: rgba(255, 248, 235, 0.28);
+}
+
+.etiqueta-pagina {
+  width: fit-content;
+  margin: 0 0 22px;
+  padding: 8px 14px;
+  border-radius: var(--raio-botao);
+  color: var(--cor-ambar);
+  background: rgba(215, 163, 95, 0.10);
+  border: 1px solid rgba(215, 163, 95, 0.42);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.conteudo-hero-criacao h1 {
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  line-height: 0.94;
+  letter-spacing: -0.075em;
+}
+
+.conteudo-hero-criacao p:not(.etiqueta-pagina) {
+  max-width: 640px;
+  margin: 26px 0 0;
+  color: rgba(246, 234, 215, 0.76);
+  font-size: 1.08rem;
+  line-height: 1.78;
+}
+
+/* Decorações do hero */
+
+.decoracao-fundo {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.decoracao-um {
+  width: 220px;
+  height: 220px;
+  right: 8%;
+  top: 14%;
+  border: 1px solid rgba(255, 248, 235, 0.14);
+  border-radius: 999px;
+  animation: flutuarDecoracao 9s ease-in-out infinite;
+}
+
+.decoracao-dois {
+  width: 90px;
+  height: 90px;
+  left: 8%;
+  bottom: 16%;
+  border: 1px solid rgba(255, 248, 235, 0.14);
+  border-radius: 999px;
+  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
+}
+
+.decoracao-um::before,
+.decoracao-dois::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+}
+
+.ornamento-rpg {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.18;
+  color: rgba(255, 248, 235, 0.72);
+  border-color: rgba(255, 248, 235, 0.42);
+  animation: flutuarOrnamento 8s ease-in-out infinite;
+}
+
+.ornamento-dado {
+  right: 12%;
+  bottom: 12%;
+  width: 118px;
+  height: 118px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  clip-path: polygon(
+    50% 0%,
+    90% 22%,
+    90% 78%,
+    50% 100%,
+    10% 78%,
+    10% 22%
+  );
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.ornamento-dado::before,
+.ornamento-dado::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid currentColor;
+  clip-path: inherit;
+  opacity: 0.75;
+}
+
+   body {
   background-color: #241c17;
   color: #c9a24d;
   font-family: Georgia, serif;
@@ -1103,4 +1256,425 @@ display: none;
   font-size: 0.9rem;
   font-style: italic;
   opacity: 0.9;
+}
+
+/* =====================================================
+   Ajuste visual do miolo do criador
+   -----------------------------------------------------
+   Adapta navegação, área dos passos e cards principais
+   à identidade visual nova.
+   ===================================================== */
+
+/* Área geral do criador */
+
+.criador-personagem {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding:
+    72px
+    max(28px, calc((100vw - 1320px) / 2))
+    96px;
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 28px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(154, 170, 117, 0.15), transparent 30%),
+    linear-gradient(
+      180deg,
+      #171c15 0%,
+      #283321 82%,
+      #100f14 100%
+    );
+}
+
+.criador-personagem::before {
+  content: "";
+  position: absolute;
+  left: max(28px, calc((100vw - 1320px) / 2));
+  top: 64px;
+  width: 1px;
+  height: calc(100% - 128px);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 248, 235, 0.22),
+    transparent
+  );
+  opacity: 0.65;
+}
+
+/* Coluna da ficha lateral */
+
+.coluna-ficha {
+  position: relative;
+  z-index: 2;
+}
+
+.ficha-cabecalho {
+  padding: 0 0 16px;
+  text-align: left;
+}
+
+.ficha-cabecalho h2 {
+  margin: 0;
+  color: var(--cor-texto);
+  font-size: 1.25rem;
+  letter-spacing: -0.04em;
+}
+
+.ficha {
+  background: rgba(16, 15, 20, 0.58);
+  color: var(--cor-texto);
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.22);
+  font-family: var(--fonte-principal);
+}
+
+.ficha-bloco {
+  background: rgba(255, 248, 235, 0.07);
+  color: var(--cor-texto-suave);
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.ficha-bloco h3 {
+  color: var(--cor-texto);
+  border-bottom: 1px solid rgba(255, 248, 235, 0.14);
+  font-size: 0.92rem;
+  letter-spacing: -0.02em;
+}
+
+.ficha-rotulo,
+.campo-mini span,
+.campo-derivado span,
+.rotulo-modificador {
+  color: var(--cor-texto-fraco);
+}
+
+.ficha-valor,
+.caixa-valor-pequena,
+.valor-atributo,
+.modificador {
+  color: var(--cor-texto-fraco);
+}
+
+.ficha-valor,
+.caixa-valor-pequena,
+.valor-atributo,
+.modificador,
+.ataque-valor {
+  color: var(--cor-texto);
+}
+
+/* Área dos passos */
+
+.area-passo {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+
+.conteudo-passo {
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 34px;
+  padding: clamp(26px, 4vw, 44px);
+  background: rgba(16, 15, 20, 0.48);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+.conteudo-passo h2,
+.conteudo-passo h3 {
+  margin-top: 0;
+  color: var(--cor-texto);
+  font-size: clamp(2rem, 4vw, 3.7rem);
+  line-height: 0.95;
+  letter-spacing: -0.07em;
+}
+
+.texto-explicativo {
+  max-width: 680px;
+  color: rgba(246, 234, 215, 0.74);
+  line-height: 1.72;
+}
+
+/* Navegação entre passos */
+
+.navegacao-passos {
+  max-width: none;
+  margin: 0;
+  padding:
+    28px
+    max(28px, calc((100vw - 1320px) / 2))
+    0;
+  justify-content: flex-start;
+  background: #171c15;
+}
+
+.passo {
+  position: relative;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: var(--raio-botao);
+  background: rgba(16, 15, 20, 0.55);
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-principal);
+  font-weight: 800;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.passo:hover {
+  transform: translateY(-3px);
+  border-color: rgba(215, 163, 95, 0.42);
+  color: var(--cor-texto);
+  background: rgba(255, 248, 235, 0.08);
+}
+
+.passo.atual {
+  color: #1b1210;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+  border-color: rgba(215, 163, 95, 0.75);
+  font-weight: 900;
+}
+
+.passo.bloqueado {
+  opacity: 0.42;
+}
+
+/* Cards de classe */
+
+.grade-classes {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+}
+
+.card-classe {
+  position: relative;
+  min-height: 430px;
+  padding: 18px;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 28px;
+  background: rgba(255, 248, 235, 0.07);
+  color: var(--cor-texto);
+  text-align: left;
+  overflow: hidden;
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.card-classe::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right: -70px;
+  top: -70px;
+  border-radius: 50%;
+  background: rgba(215, 163, 95, 0.12);
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+.card-classe:hover {
+  transform: translateY(-8px);
+  border-color: rgba(215, 163, 95, 0.48);
+  background: rgba(255, 248, 235, 0.10);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.24);
+}
+
+.card-classe:hover::before {
+  transform: scale(1.22);
+  opacity: 0.9;
+}
+
+.card-classe.selecionado {
+  border-color: rgba(215, 163, 95, 0.86);
+  background: rgba(215, 163, 95, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(215, 163, 95, 0.20),
+    0 28px 90px rgba(0, 0, 0, 0.25);
+}
+
+.imagem-classe {
+  position: relative;
+  height: 250px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 22px;
+  background: rgba(16, 15, 20, 0.44);
+  overflow: hidden;
+}
+
+.imagem-classe img {
+  border-radius: 22px;
+}
+
+.card-classe h3 {
+  position: relative;
+  margin: 0 0 10px;
+  color: var(--cor-texto);
+  font-size: 1.55rem;
+  letter-spacing: -0.05em;
+}
+
+.card-classe p {
+  position: relative;
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.58;
+}
+
+/* Cards gerais: antecedente, espécie e escolhas geradas pelo JS */
+
+.grade-opcoes {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.card-opcao {
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 26px;
+  padding: 24px;
+  background: rgba(255, 248, 235, 0.07);
+  color: var(--cor-texto);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.card-opcao:hover {
+  transform: translateY(-6px);
+  border-color: rgba(215, 163, 95, 0.48);
+  background: rgba(255, 248, 235, 0.10);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+.card-opcao.selecionado {
+  border-color: rgba(215, 163, 95, 0.86);
+  background: rgba(215, 163, 95, 0.16);
+  box-shadow: 0 0 0 2px rgba(215, 163, 95, 0.20);
+}
+
+.card-opcao h4 {
+  color: var(--cor-texto);
+  letter-spacing: -0.04em;
+}
+
+.card-opcao p,
+.card-opcao ul {
+  color: var(--cor-texto-suave);
+}
+
+/* Botões do criador */
+
+.botao-proximo,
+.botao-rolar,
+.botao-finalizar,
+.botao-voltar,
+.botao-selecionar {
+  position: relative;
+  isolation: isolate;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-botao);
+  color: #1b1210;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+  font-family: var(--fonte-principal);
+  font-weight: 900;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 220ms ease,
+    border-radius 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.botao-proximo:hover,
+.botao-rolar:hover,
+.botao-finalizar:hover,
+.botao-voltar:hover,
+.botao-selecionar:hover {
+  transform: translateY(-3px);
+  border-radius: 16px;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
+}
+
+.mensagem-passo,
+.mensagem-navegacao {
+  color: var(--cor-ambar);
+}
+
+/* Dados e formulários */
+
+.caixa-rolagem-dados,
+.bloco-distribuicao-atributos,
+.bloco-detalhes,
+.bloco-revisao {
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 26px;
+  background: rgba(255, 248, 235, 0.07);
+  color: var(--cor-texto);
+}
+
+.dado {
+  border-color: rgba(215, 163, 95, 0.72);
+  background: rgba(16, 15, 20, 0.54);
+  color: var(--cor-texto);
+  border-radius: 18px;
+}
+
+.resultado-rolagem {
+  color: var(--cor-texto);
+}
+
+input,
+select,
+textarea {
+  border: 1px solid rgba(255, 248, 235, 0.18);
+  border-radius: 14px;
+  background: rgba(16, 15, 20, 0.52);
+  color: var(--cor-texto);
+}
+
+/* Responsivo */
+
+@media (max-width: 980px) {
+  .criador-personagem {
+    grid-template-columns: 1fr;
+    padding: 56px 18px 72px;
+  }
+
+  .criador-personagem::before {
+    left: 18px;
+  }
+
+  .coluna-ficha {
+    order: 2;
+  }
+
+  .area-passo {
+    order: 1;
+  }
+
+  .navegacao-passos {
+    padding: 24px 18px 0;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
 }

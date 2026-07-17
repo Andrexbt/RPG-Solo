@@ -1,59 +1,253 @@
 /* =====================================================
-   Tela de visualização de personagem salvo
+   Ver Personagem
    -----------------------------------------------------
-   Este arquivo complementa criacao-personagem.css para a
-   página ver-personagem.html. Ele ajusta o layout da ficha
-   salva, os botões de ação e pequenos destaques visuais.
-   ===================================================== */
-
-/* =====================================================
-   1. Layout geral da página
+   Página de visualização da ficha salva.
+   Complementa criacao-personagem.css.
    ===================================================== */
 
 .pagina-ver-personagem {
-  width: min(1100px, 92%);
-  margin: 30px auto;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
+/* =====================================================
+   Hero da ficha salva
+   ===================================================== */
+
+.hero-ver-personagem {
+  position: relative;
+  min-height: 52vh;
+  padding:
+    72px
+    max(28px, calc((100vw - 1180px) / 2))
+    84px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(215, 163, 95, 0.18), transparent 28%),
+    linear-gradient(
+      180deg,
+      #100f14 0%,
+      #201712 48%,
+      #171c15 100%
+    );
+}
+
+.conteudo-hero-ver {
+  position: relative;
+  z-index: 2;
+  max-width: 780px;
+}
+
+.conteudo-hero-ver::before {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 6px;
+  margin-bottom: 28px;
+  border-radius: 999px;
+  background: rgba(255, 248, 235, 0.28);
+}
+
+.etiqueta-pagina {
+  width: fit-content;
+  margin: 0 0 22px;
+  padding: 8px 14px;
+  border-radius: var(--raio-botao);
+  color: var(--cor-ambar);
+  background: rgba(215, 163, 95, 0.10);
+  border: 1px solid rgba(215, 163, 95, 0.42);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.conteudo-hero-ver h1 {
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  line-height: 0.94;
+  letter-spacing: -0.075em;
+}
+
+.conteudo-hero-ver p:not(.etiqueta-pagina) {
+  max-width: 640px;
+  margin: 26px 0 34px;
+  color: rgba(246, 234, 215, 0.76);
+  font-size: 1.08rem;
+  line-height: 1.78;
+}
+
+.acoes-ficha-salva {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* =====================================================
+   Decorações do hero
+   ===================================================== */
+
+.decoracao-fundo {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.decoracao-um {
+  width: 220px;
+  height: 220px;
+  right: 8%;
+  top: 14%;
+  border: 1px solid rgba(255, 248, 235, 0.14);
+  border-radius: 999px;
+  animation: flutuarDecoracao 9s ease-in-out infinite;
+}
+
+.decoracao-dois {
+  width: 90px;
+  height: 90px;
+  left: 8%;
+  bottom: 16%;
+  border: 1px solid rgba(255, 248, 235, 0.14);
+  border-radius: 999px;
+  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
+}
+
+.decoracao-um::before,
+.decoracao-dois::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+}
+
+.ornamento-rpg {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.18;
+  color: rgba(255, 248, 235, 0.72);
+  border-color: rgba(255, 248, 235, 0.42);
+  animation: flutuarOrnamento 8s ease-in-out infinite;
+}
+
+.ornamento-ficha {
+  right: 13%;
+  bottom: 13%;
+  width: 120px;
+  height: 150px;
+  border: 2px solid currentColor;
+  border-radius: 18px;
+  transform: rotate(8deg);
+}
+
+.ornamento-ficha::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 34px;
+  height: 2px;
+  background: currentColor;
+  box-shadow:
+    0 26px 0 currentColor,
+    0 52px 0 currentColor;
+  opacity: 0.75;
+}
+
+.ornamento-ficha::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 34px;
+  height: 34px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 0 18px 0 12px;
+}
+
+/* =====================================================
+   Área da ficha
+   ===================================================== */
+
 .layout-ficha-salva {
+  position: relative;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  padding:
+    72px
+    max(28px, calc((100vw - 1180px) / 2))
+    96px;
+  margin: 0;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(154, 170, 117, 0.15), transparent 30%),
+    linear-gradient(
+      180deg,
+      #171c15 0%,
+      #283321 82%,
+      #100f14 100%
+    );
+}
+
+.layout-ficha-salva::before {
+  content: "";
+  position: absolute;
+  left: max(28px, calc((100vw - 1180px) / 2));
+  top: 64px;
+  width: 1px;
+  height: calc(100% - 128px);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 248, 235, 0.22),
+    transparent
+  );
+  opacity: 0.65;
 }
 
 .ficha-personagem-salva {
-  width: 420px;
-  max-width: 100%;
-}
-
-.area-ficha-personagem {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  position: relative;
+  z-index: 2;
+  width: min(100%, 860px);
 }
 
 /* =====================================================
-   2. Botões e ações
+   Ajustes visuais sobre a ficha antiga
    ===================================================== */
 
-.botao-link-card {
-  display: inline-block;
-  margin-top: 12px;
-  margin-right: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background-color: #8a6a44;
-  color: #fff2d0;
-  text-decoration: none;
-  font-weight: bold;
+.ficha-personagem-salva .ficha-bloco {
+  border-color: rgba(255, 248, 235, 0.16);
+  background: rgba(16, 15, 20, 0.46);
+  border-radius: 24px;
 }
 
-.botao-link-card:hover {
-  background-color: #a98252;
+.ficha-personagem-salva h3,
+.ficha-personagem-salva h2,
+.ficha-personagem-salva h4 {
+  color: var(--cor-texto);
+}
+
+.ficha-personagem-salva .ficha-rotulo,
+.ficha-personagem-salva .campo-mini span,
+.ficha-personagem-salva .campo-derivado span,
+.ficha-personagem-salva .rotulo-modificador {
+  color: var(--cor-texto-fraco);
+}
+
+.ficha-personagem-salva .ficha-valor,
+.ficha-personagem-salva .caixa-valor-pequena,
+.ficha-personagem-salva .valor-atributo,
+.ficha-personagem-salva .modificador {
+  color: var(--cor-texto);
 }
 
 /* =====================================================
-   3. Habilidades, escolhas e valores exibidos
+   Marcadores especiais da ficha
    ===================================================== */
 
 .item-habilidade-escolha {
@@ -66,12 +260,7 @@
 
 .habilidade-valor {
   font-weight: normal;
-  font-family: Georgia, serif;
 }
-
-/* =====================================================
-   4. Marcadores especiais da ficha
-   ===================================================== */
 
 .linha-pericia.especializada::after {
   content: " ★";
@@ -87,11 +276,36 @@
 }
 
 /* =====================================================
-   5. Responsividade
+   Responsividade
    ===================================================== */
 
 @media (max-width: 800px) {
+  .hero-ver-personagem {
+    min-height: auto;
+    padding: 48px 18px 72px;
+  }
+
+  .layout-ficha-salva {
+    padding: 56px 18px 72px;
+  }
+
+  .layout-ficha-salva::before {
+    left: 18px;
+  }
+
+  .acoes-ficha-salva {
+    flex-direction: column;
+  }
+
+  .acoes-ficha-salva .botao {
+    width: 100%;
+  }
+
   .area-ficha-personagem {
     grid-template-columns: 1fr;
+  }
+
+  .ornamento-rpg {
+    opacity: 0.10;
   }
 }

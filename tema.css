@@ -1,0 +1,269 @@
+/* =====================================================
+   Tema visual global
+   -----------------------------------------------------
+   Identidade visual compartilhada do projeto.
+   ===================================================== */
+
+:root {
+  --cor-fundo: #100f14;
+  --cor-fundo-2: #19151a;
+
+  --cor-texto: #f6ead7;
+  --cor-texto-suave: #c8b9a3;
+  --cor-texto-fraco: #8f806e;
+
+  --cor-linha: rgba(246, 234, 215, 0.16);
+
+  --cor-ambar: #d7a35f;
+  --cor-coral: #d9765f;
+  --cor-musgo: #9aaa75;
+  --cor-vinho: #6f3d4b;
+
+  --sombra-painel: 0 28px 90px rgba(0, 0, 0, 0.42);
+
+  --raio-card: 30px;
+  --raio-botao: 999px;
+
+  --fonte-principal: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--fonte-principal);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--cor-texto);
+  background: linear-gradient(135deg, var(--cor-fundo), var(--cor-fundo-2));
+}
+
+/* =====================================================
+   Cabeçalho global
+   ===================================================== */
+
+.cabecalho-site {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  padding:
+    18px
+    max(28px, calc((100vw - 1180px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cor-texto);
+  text-decoration: none;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.marca-simbolo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  color: #1a1212;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+}
+
+.menu-principal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-botao);
+  background: rgba(16, 15, 20, 0.55);
+}
+
+.menu-principal a {
+  padding: 10px 14px;
+  border-radius: var(--raio-botao);
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  transition:
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.menu-principal a:hover {
+  color: var(--cor-texto);
+  background: rgba(255, 248, 235, 0.09);
+}
+
+/* =====================================================
+   Botões globais
+   ===================================================== */
+
+.botao {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: var(--raio-botao);
+  border: 1px solid var(--cor-linha);
+  text-decoration: none;
+  font-weight: 850;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 220ms ease,
+    border-radius 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    color 220ms ease;
+}
+
+.botao::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -2;
+  background: linear-gradient(
+    120deg,
+    var(--cor-ambar),
+    var(--cor-coral),
+    var(--cor-musgo),
+    var(--cor-ambar)
+  );
+  background-size: 220% 220%;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.botao::after {
+  content: "→";
+  position: absolute;
+  right: 18px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.botao:hover {
+  transform: translateY(-4px) scale(1.015);
+  border-radius: 18px;
+  border-color: rgba(246, 234, 215, 0.35);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
+}
+
+.botao:hover::before {
+  opacity: 1;
+  animation: brilhoBotao 1.8s linear infinite;
+}
+
+.botao:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.botao-principal {
+  padding-right: 34px;
+  color: #1b1210;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+  box-shadow: 0 18px 50px rgba(217, 118, 95, 0.20);
+}
+
+.botao-secundario,
+.botao-menor {
+  color: var(--cor-texto);
+  background: rgba(255, 248, 235, 0.07);
+}
+
+.botao-secundario:hover,
+.botao-menor:hover {
+  color: #1b1210;
+}
+
+.botao-menor {
+  width: fit-content;
+}
+
+/* =====================================================
+   Animações globais
+   ===================================================== */
+
+@keyframes brilhoBotao {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 220% 50%;
+  }
+}
+
+@keyframes flutuarDecoracao {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+
+  35% {
+    transform: translateY(-22px) translateX(14px) rotate(10deg);
+  }
+
+  70% {
+    transform: translateY(10px) translateX(-10px) rotate(-6deg);
+  }
+
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+}
+
+@keyframes flutuarOrnamento {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  45% {
+    transform: translateY(-22px) rotate(5deg) scale(1.04);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .cabecalho-site {
+    position: static;
+    padding: 16px 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .menu-principal {
+    width: 100%;
+    overflow-x: auto;
+  }
+}

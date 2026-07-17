@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Ver Personagem</title>
+    <link rel="stylesheet" href="tema.css">
     <link rel="stylesheet" href="criacao-personagem.css">
     <link rel="stylesheet" href="ver-personagem.css">
   </head>
@@ -11,23 +12,49 @@
     <!-- =====================================================
          Cabeçalho da página
          ===================================================== -->
-    <header>
-      <h1>Ficha do Personagem</h1>
-    </header>
+    <header class="cabecalho-site">
+  <a class="marca" href="index.html">
+    <span class="marca-simbolo">✦</span>
+    <span>Projeto RPG Solo</span>
+  </a>
+
+  <nav class="menu-principal">
+    <a href="index.html">Início</a>
+    <a href="criacao-personagem.html">Criar personagem</a>
+    <a href="meus-personagens.html">Meus personagens</a>
+  </nav>
+</header>
 
     <main class="pagina-ver-personagem">
       <!-- =====================================================
            Ações da ficha salva
            ===================================================== -->
-      <section class="cabecalho-personagens">
-        <a class="botao-link" href="meus-personagens.html">
-          Voltar para meus personagens
-        </a>
+      <section class="hero-ver-personagem">
+  <div class="decoracao-fundo decoracao-um"></div>
+  <div class="decoracao-fundo decoracao-dois"></div>
+  <div class="ornamento-rpg ornamento-ficha"></div>
 
-        <button class="botao-link" id="botaoBaixarPdfEditavel">
-          Baixar PDF Editável
-        </button>
-      </section>
+  <div class="conteudo-hero-ver">
+    <p class="etiqueta-pagina">Ficha salva</p>
+
+    <h1>Ficha do personagem</h1>
+
+    <p>
+      Consulte os dados completos do personagem, revise atributos,
+      habilidades, ataques, equipamentos e magias preparadas.
+    </p>
+
+    <div class="acoes-ficha-salva">
+      <a class="botao botao-secundario" href="meus-personagens.html">
+        Voltar para meus personagens
+      </a>
+
+      <button class="botao botao-principal" id="botaoBaixarPdfEditavel">
+        Baixar PDF editável
+      </button>
+    </div>
+  </div>
+</section>
 
       <!-- =====================================================
            Ficha do personagem carregado do localStorage
