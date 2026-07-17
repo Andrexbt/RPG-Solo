@@ -140,6 +140,8 @@ const fichaClasseNivel = document.getElementById("fichaClasseNivel");
 const areaHabilidadesClasse = document.getElementById("areaHabilidadesClasse");
 const nomePersonagem = document.getElementById("nomePersonagem");
 const fichaNome = document.getElementById("fichaNome");
+const historiaPersonagem = document.getElementById("historiaPersonagem");
+const personalidadePersonagem = document.getElementById("personalidadePersonagem");
 
 const seletorIdioma1 = document.getElementById("idioma1");
 const seletorIdioma2 = document.getElementById("idioma2");
@@ -268,6 +270,8 @@ const personagem = {
 
   detalhes:{
     nome:"",
+    historia:"",
+    personalidade:"",
     equipamentos:{
       armadura: "...",
       armaPrincipal: "...",
@@ -2148,6 +2152,18 @@ nomePersonagem.addEventListener("input", function() {
   }
 });
 
+if (historiaPersonagem !== null) {
+  historiaPersonagem.addEventListener("input", function() {
+    personagem.detalhes.historia = historiaPersonagem.value;
+  });
+}
+
+if (personalidadePersonagem !== null) {
+  personalidadePersonagem.addEventListener("input", function() {
+    personagem.detalhes.personalidade = personalidadePersonagem.value;
+  });
+}
+
 // =====================================================
 // 14. IDIOMAS ESCOLHIDOS NO PASSO DE DETALHES
 // -----------------------------------------------------
@@ -2520,11 +2536,38 @@ function montarTelaRevisao() {
 
   areaRevisao.appendChild(blocoBasico);
 
+  montarRevisaoNarrativa();
   montarRevisaoAtributos();
   montarRevisaoEquipamentos();
   montarRevisaoHabilidades();
   montarRevisaoTalentos();
   montarRevisaoMagias();
+}
+
+function montarRevisaoNarrativa() {
+  const historia = personagem.detalhes.historia || "";
+  const personalidade = personagem.detalhes.personalidade || "";
+
+  if (historia.trim() === "" && personalidade.trim() === "") {
+    return;
+  }
+
+  const bloco = document.createElement("section");
+  bloco.classList.add("bloco-revisao");
+
+  const titulo = document.createElement("h3");
+  titulo.textContent = "História e Personalidade";
+  bloco.appendChild(titulo);
+
+  if (historia.trim() !== "") {
+    bloco.appendChild(criarParagrafoRevisao("História", historia));
+  }
+
+  if (personalidade.trim() !== "") {
+    bloco.appendChild(criarParagrafoRevisao("Personalidade", personalidade));
+  }
+
+  areaRevisao.appendChild(bloco);
 }
 
 function montarRevisaoAtributos() {
