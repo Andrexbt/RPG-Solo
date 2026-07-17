@@ -1324,3 +1324,994 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================================================
+   Refinamento visual: habilidades e magias
+   -----------------------------------------------------
+   Melhora os blocos e cards das etapas de habilidades
+   e magias sem alterar a lógica do criador.
+   ===================================================== */
+
+#passo-habilidades .bloco-habilidades,
+#passo-magias .bloco-magias {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.16), transparent 28%),
+    rgba(8, 7, 10, 0.34);
+}
+
+#passo-habilidades .bloco-habilidades:first-of-type,
+#passo-magias .bloco-magias:first-of-type {
+  margin-top: 0;
+}
+
+#passo-habilidades .bloco-habilidades > h3,
+#passo-habilidades .bloco-habilidades > h4,
+#passo-magias .bloco-magias > h3 {
+  margin: 0 0 12px;
+  color: var(--cor-texto);
+  font-size: 1.15rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+#passo-habilidades .texto-explicativo,
+#passo-magias .texto-explicativo {
+  margin: 8px 0 14px;
+  color: rgba(246, 234, 215, 0.66);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+/* Grades internas mais compactas */
+
+#passo-habilidades .grade-opcoes,
+#passo-magias .grade-opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+/* Cards específicos dessas duas telas */
+
+#passo-habilidades .card-opcao,
+#passo-magias .card-opcao {
+  position: relative;
+  min-height: auto;
+  padding: 15px;
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 248, 235, 0.075), rgba(255, 248, 235, 0.035));
+  overflow: hidden;
+}
+
+#passo-habilidades .card-opcao::before,
+#passo-magias .card-opcao::before {
+  content: "";
+  position: absolute;
+  width: 94px;
+  height: 94px;
+  right: -44px;
+  top: -44px;
+  border-radius: 999px;
+  background: rgba(215, 163, 95, 0.10);
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+#passo-habilidades .card-opcao:hover::before,
+#passo-magias .card-opcao:hover::before {
+  transform: scale(1.35);
+  opacity: 0.85;
+}
+
+#passo-habilidades .card-opcao h4,
+#passo-magias .card-opcao h4 {
+  position: relative;
+  margin: 0 0 8px;
+  color: var(--cor-texto);
+  font-size: 1.02rem;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+#passo-habilidades .card-opcao p,
+#passo-magias .card-opcao p {
+  position: relative;
+  margin: 7px 0 0;
+  color: rgba(246, 234, 215, 0.70);
+  font-size: 0.84rem;
+  line-height: 1.42;
+}
+
+#passo-habilidades .card-opcao .texto-explicativo,
+#passo-magias .card-opcao .texto-explicativo {
+  margin-top: 8px;
+  color: rgba(215, 163, 95, 0.82);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+/* Estado selecionado */
+
+#passo-habilidades .card-opcao.selecionado,
+#passo-magias .card-opcao.selecionado {
+  border-color: rgba(215, 163, 95, 0.78);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(215, 163, 95, 0.18), transparent 30%),
+    rgba(215, 163, 95, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(215, 163, 95, 0.14),
+    0 18px 52px rgba(0, 0, 0, 0.24);
+}
+
+/* Detalhes de arma dentro dos cards de habilidade */
+
+#passo-habilidades .detalhes-arma-opcao {
+  position: relative;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 248, 235, 0.10);
+}
+
+#passo-habilidades .detalhes-arma-opcao p {
+  margin: 5px 0;
+  color: rgba(246, 234, 215, 0.68);
+  font-size: 0.8rem;
+}
+
+/* Resumo de conjuração */
+
+#passo-magias .bloco-magias:first-of-type {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+#passo-magias .bloco-magias:first-of-type h3 {
+  grid-column: 1 / -1;
+}
+
+#passo-magias .bloco-magias:first-of-type p {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: 16px;
+  background: rgba(255, 248, 235, 0.055);
+  color: rgba(246, 234, 215, 0.72);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+#passo-magias .bloco-magias:first-of-type strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--cor-texto-fraco);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* =====================================================
+   Refinamento visual: etapa de atributos
+   -----------------------------------------------------
+   Melhora a tela de rolagem e distribuição de atributos
+   sem alterar a lógica do criador.
+   ===================================================== */
+
+#passo-atributos .botao-rolar {
+  margin: 6px 0 18px;
+}
+
+#passo-atributos .caixa-rolagem-dados,
+#passo-atributos .bloco-distribuicao-atributos {
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.16), transparent 28%),
+    rgba(8, 7, 10, 0.34);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.18);
+}
+
+#passo-atributos .caixa-rolagem-dados {
+  padding: 22px;
+  margin-top: 0;
+}
+
+#passo-atributos .dados-atributo {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(56px, 72px));
+  gap: 12px;
+  justify-content: start;
+  margin: 0;
+}
+
+#passo-atributos .dado {
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  border: 1px solid rgba(215, 163, 95, 0.58);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255, 248, 235, 0.12), transparent 32%),
+    rgba(16, 15, 20, 0.62);
+  color: var(--cor-texto);
+  font-size: 1.45rem;
+  font-weight: 900;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+#passo-atributos .dado.descartado {
+  opacity: 0.38;
+  border-color: rgba(246, 234, 215, 0.16);
+  color: var(--cor-texto-fraco);
+}
+
+#passo-atributos .dado.rolando {
+  transform: rotate(4deg) scale(1.06);
+  border-color: rgba(217, 118, 95, 0.76);
+}
+
+#passo-atributos .resultado-rolagem {
+  margin: 16px 0 0;
+  color: var(--cor-ambar);
+  font-size: 0.95rem;
+  font-weight: 850;
+}
+
+/* Resultados já rolados */
+
+#passo-atributos .resultados-atributos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0 22px;
+}
+
+#passo-atributos .resultados-atributos span {
+  min-width: 48px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 14px;
+  background: rgba(255, 248, 235, 0.07);
+  color: var(--cor-texto);
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+/* Distribuição dos atributos */
+
+#passo-atributos .bloco-distribuicao-atributos {
+  padding: 22px;
+  margin-top: 18px;
+}
+
+#passo-atributos .bloco-distribuicao-atributos h3 {
+  margin: 0 0 16px;
+  color: var(--cor-texto);
+  font-size: 1.25rem;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+#passo-atributos .linha-atributo {
+  display: grid;
+  grid-template-columns: minmax(130px, 180px) minmax(120px, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+}
+
+#passo-atributos .linha-atributo:last-child {
+  border-bottom: none;
+}
+
+#passo-atributos .linha-atributo label {
+  color: var(--cor-texto-suave);
+  font-size: 0.92rem;
+  font-weight: 850;
+}
+
+#passo-atributos .linha-atributo select {
+  min-height: 42px;
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 14px;
+  background: rgba(16, 15, 20, 0.62);
+  color: var(--cor-texto);
+  font-weight: 800;
+}
+
+#passo-atributos .linha-atributo select:focus {
+  outline: none;
+  border-color: rgba(215, 163, 95, 0.72);
+  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
+}
+
+@media (max-width: 720px) {
+  #passo-atributos .dados-atributo {
+    grid-template-columns: repeat(2, minmax(56px, 72px));
+  }
+
+  #passo-atributos .linha-atributo {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* =====================================================
+   Refinamento visual: atributos compactos v2
+   -----------------------------------------------------
+   Organiza a rolagem dos dados em duas colunas:
+   dados à esquerda, explicação à direita.
+   Também compacta os seletores de atributos.
+   ===================================================== */
+
+#passo-atributos {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 18px 24px;
+  align-items: start;
+}
+
+#passo-atributos h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+/* A explicação vai para a coluna direita */
+
+#passo-atributos > .texto-explicativo {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  min-height: 100%;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(154, 170, 117, 0.12), transparent 30%),
+    rgba(8, 7, 10, 0.30);
+  color: rgba(246, 234, 215, 0.70);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* Botão e caixa de dados ficam na coluna esquerda */
+
+#passo-atributos .botao-rolar {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  margin: 0;
+}
+
+#passo-atributos .caixa-rolagem-dados {
+  grid-column: 1;
+  grid-row: 3;
+  padding: 16px;
+  margin: 0;
+}
+
+/* Dados em duas colunas */
+
+#passo-atributos .dados-atributo {
+  grid-template-columns: repeat(2, minmax(54px, 1fr));
+  gap: 10px;
+  justify-content: stretch;
+}
+
+#passo-atributos .dado {
+  border-radius: 16px;
+  font-size: 1.3rem;
+}
+
+/* Resultado da rolagem logo abaixo dos dados */
+
+#passo-atributos .resultado-rolagem {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Resultados rolados ficam compactos embaixo da caixa */
+
+#passo-atributos .resultados-atributos {
+  grid-column: 1;
+  margin: -8px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+#passo-atributos .resultados-atributos span {
+  min-width: 0;
+  min-height: 34px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+}
+
+/* Distribuição ocupa a largura inteira embaixo */
+
+#passo-atributos .bloco-distribuicao-atributos {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 18px;
+}
+
+#passo-atributos .bloco-distribuicao-atributos h3 {
+  margin-bottom: 14px;
+  font-size: 1.1rem;
+}
+
+/* Seletores em duas colunas */
+
+#passo-atributos .bloco-distribuicao-atributos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+}
+
+#passo-atributos .bloco-distribuicao-atributos h3 {
+  grid-column: 1 / -1;
+}
+
+#passo-atributos .linha-atributo {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 8px;
+  padding: 0;
+  border-bottom: none;
+}
+
+#passo-atributos .linha-atributo label {
+  font-size: 0.82rem;
+}
+
+#passo-atributos .linha-atributo select {
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-size: 0.86rem;
+}
+
+/* Mensagem e ações continuam embaixo */
+
+#passo-atributos #mensagemAtributos,
+#passo-atributos .acoes-passo {
+  grid-column: 1 / -1;
+}
+
+#passo-atributos .acoes-passo {
+  margin-top: 4px;
+}
+
+/* Responsivo */
+
+@media (max-width: 820px) {
+  #passo-atributos {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-atributos > .texto-explicativo,
+  #passo-atributos .botao-rolar,
+  #passo-atributos .caixa-rolagem-dados,
+  #passo-atributos .resultados-atributos,
+  #passo-atributos .bloco-distribuicao-atributos,
+  #passo-atributos #mensagemAtributos,
+  #passo-atributos .acoes-passo {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  #passo-atributos .bloco-distribuicao-atributos {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-atributos .linha-atributo {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
+   Atributos compactos v3
+   -----------------------------------------------------
+   Dados à esquerda, seletores no meio e explicação à direita.
+   ===================================================== */
+
+#passo-atributos {
+  grid-template-columns: 190px 250px minmax(220px, 1fr);
+  gap: 14px;
+}
+
+#passo-atributos h2 {
+  grid-column: 1 / -1;
+}
+
+/* Coluna esquerda: botão, dados e resultados */
+
+#passo-atributos .botao-rolar {
+  grid-column: 1;
+  grid-row: 2;
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 0.86rem;
+}
+
+#passo-atributos .caixa-rolagem-dados {
+  grid-column: 1;
+  grid-row: 3;
+  padding: 12px;
+}
+
+#passo-atributos .dados-atributo {
+  grid-template-columns: repeat(2, 44px);
+  gap: 8px;
+  justify-content: center;
+}
+
+#passo-atributos .dado {
+  width: 44px;
+  height: 44px;
+  aspect-ratio: auto;
+  border-radius: 13px;
+  font-size: 1.05rem;
+}
+
+#passo-atributos .resultado-rolagem {
+  margin-top: 10px;
+  font-size: 0.78rem;
+}
+
+#passo-atributos .resultados-atributos {
+  grid-column: 1;
+  grid-row: 4;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 0;
+}
+
+#passo-atributos .resultados-atributos span {
+  min-height: 28px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+}
+
+/* Coluna do meio: seletores */
+
+#passo-atributos .bloco-distribuicao-atributos {
+  grid-column: 2;
+  grid-row: 2 / span 3;
+  display: block;
+  margin: 0;
+  padding: 12px;
+}
+
+#passo-atributos .bloco-distribuicao-atributos h3 {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+#passo-atributos .linha-atributo {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+#passo-atributos .linha-atributo label {
+  font-size: 0.78rem;
+}
+
+#passo-atributos .linha-atributo select {
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+}
+
+/* Coluna direita: explicação */
+
+#passo-atributos > .texto-explicativo {
+  grid-column: 3;
+  grid-row: 2 / span 3;
+  padding: 14px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+/* Rodapé do passo */
+
+#passo-atributos #mensagemAtributos,
+#passo-atributos .acoes-passo {
+  grid-column: 1 / -1;
+}
+
+/* Responsivo */
+
+@media (max-width: 900px) {
+  #passo-atributos {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-atributos .botao-rolar,
+  #passo-atributos .caixa-rolagem-dados,
+  #passo-atributos .resultados-atributos,
+  #passo-atributos .bloco-distribuicao-atributos,
+  #passo-atributos > .texto-explicativo,
+  #passo-atributos #mensagemAtributos,
+  #passo-atributos .acoes-passo {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* =====================================================
+   Ajuste de posição: navegação dos passos
+   -----------------------------------------------------
+   Mantém a navegação dentro da área principal do passo,
+   próxima ao botão de próximo passo.
+   ===================================================== */
+
+.area-passo .navegacao-passos {
+  margin-top: 16px;
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.area-passo .mensagem-navegacao {
+  margin: 8px 0 0;
+}
+
+/* =====================================================
+   Refinamento visual: etapa de detalhes
+   -----------------------------------------------------
+   Organiza nome, idiomas, equipamentos e valores derivados
+   em blocos mais compactos e legíveis.
+   ===================================================== */
+
+#passo-detalhes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+#passo-detalhes h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+#passo-detalhes .bloco-detalhes {
+  margin: 0;
+  padding: 16px;
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.14), transparent 28%),
+    rgba(8, 7, 10, 0.34);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
+}
+
+#passo-detalhes .bloco-detalhes h3 {
+  margin: 0 0 12px;
+  color: var(--cor-texto);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+#passo-detalhes .bloco-detalhes h4 {
+  margin: 0 0 8px;
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+
+/* Campos de formulário */
+
+#passo-detalhes label {
+  display: block;
+  margin: 10px 0 6px;
+  color: var(--cor-texto-suave);
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+#passo-detalhes input,
+#passo-detalhes select {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 12px;
+  background: rgba(16, 15, 20, 0.62);
+  color: var(--cor-texto);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+#passo-detalhes input:focus,
+#passo-detalhes select:focus {
+  outline: none;
+  border-color: rgba(215, 163, 95, 0.72);
+  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
+}
+
+/* Equipamentos ocupa a largura toda */
+
+#passo-detalhes .bloco-detalhes:nth-of-type(3) {
+  grid-column: 1 / -1;
+}
+
+/* Dentro do bloco de equipamentos */
+
+#passo-detalhes .sub-bloco-detalhes {
+  padding: 14px;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: 16px;
+  background: rgba(255, 248, 235, 0.045);
+}
+
+#passo-detalhes .sub-bloco-detalhes + .sub-bloco-detalhes {
+  margin-top: 12px;
+}
+
+#passo-detalhes .sub-bloco-detalhes p {
+  margin: 0;
+  color: rgba(246, 234, 215, 0.70);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+/* Equipamentos em grade compacta */
+
+#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) h4,
+#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) .aviso-equipamentos,
+#passo-detalhes .sub-bloco-detalhes:nth-of-type(2) .campo-formulario {
+  grid-column: 1 / -1;
+}
+
+#passo-detalhes .aviso-equipamentos {
+  margin-top: 8px;
+  color: var(--cor-ambar);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+/* Classe de Armadura */
+
+#passo-detalhes .resultado-detalhe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(215, 163, 95, 0.28);
+  border-radius: 16px;
+  background: rgba(215, 163, 95, 0.08);
+}
+
+#passo-detalhes .resultado-detalhe span {
+  color: var(--cor-texto-suave);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+#passo-detalhes .resultado-detalhe strong {
+  color: var(--cor-ambar);
+  font-size: 1.25rem;
+  font-weight: 950;
+}
+
+/* Blocos pequenos ainda vazios */
+
+#passo-detalhes .bloco-detalhes:nth-of-type(n + 5) {
+  min-height: 86px;
+}
+
+/* Rodapé */
+
+#passo-detalhes .acoes-passo,
+#passo-detalhes #mensagemDetalhes {
+  grid-column: 1 / -1;
+}
+
+#passo-detalhes .acoes-passo {
+  margin-top: 4px;
+}
+
+/* Responsivo */
+
+@media (max-width: 900px) {
+  #passo-detalhes {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-detalhes .bloco-detalhes,
+  #passo-detalhes .bloco-detalhes:nth-of-type(3),
+  #passo-detalhes .acoes-passo,
+  #passo-detalhes #mensagemDetalhes {
+    grid-column: 1;
+  }
+
+  #passo-detalhes .sub-bloco-detalhes:nth-of-type(2) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
+   Detalhes finais: layout narrativo compacto
+   -----------------------------------------------------
+   Coluna esquerda com dados mecânicos.
+   Coluna direita com história e personalidade.
+   ===================================================== */
+
+#passo-detalhes {
+  display: block;
+}
+
+#passo-detalhes > h2 {
+  margin-bottom: 16px;
+}
+
+.layout-detalhes-personagem {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(360px, 1.08fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.painel-detalhes-principais,
+.painel-detalhes-narrativos {
+  padding: 18px;
+  border: 1px solid rgba(255, 248, 235, 0.13);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.14), transparent 28%),
+    rgba(8, 7, 10, 0.34);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
+}
+
+.painel-detalhes-principais h3 {
+  margin: 0 0 14px;
+  color: var(--cor-texto);
+  font-size: 1.15rem;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.grupo-detalhes {
+  padding: 14px;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: 18px;
+  background: rgba(255, 248, 235, 0.04);
+}
+
+.grupo-detalhes + .grupo-detalhes {
+  margin-top: 12px;
+}
+
+.grupo-detalhes h4,
+.grupo-detalhes h5 {
+  margin: 0 0 10px;
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+  line-height: 1.15;
+}
+
+.grupo-detalhes p {
+  margin: 0;
+  color: rgba(246, 234, 215, 0.70);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+#passo-detalhes label {
+  display: block;
+  margin: 10px 0 6px;
+  color: var(--cor-texto-suave);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+#passo-detalhes input,
+#passo-detalhes select,
+#passo-detalhes textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 248, 235, 0.16);
+  border-radius: 12px;
+  background: rgba(16, 15, 20, 0.62);
+  color: var(--cor-texto);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+#passo-detalhes input,
+#passo-detalhes select {
+  min-height: 38px;
+  padding: 0 11px;
+}
+
+#passo-detalhes textarea {
+  min-height: 190px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+#passo-detalhes input:focus,
+#passo-detalhes select:focus,
+#passo-detalhes textarea:focus {
+  outline: none;
+  border-color: rgba(215, 163, 95, 0.72);
+  box-shadow: 0 0 0 3px rgba(215, 163, 95, 0.12);
+}
+
+.grade-equipamentos-detalhes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#passo-detalhes .aviso-equipamentos {
+  margin: 10px 0 0;
+  color: var(--cor-ambar);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.painel-detalhes-narrativos {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+}
+
+.campo-narrativo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-narrativo label {
+  margin-top: 0;
+}
+
+.campo-narrativo textarea {
+  flex: 1;
+}
+
+.detalhes-calculados-ocultos {
+  display: none;
+}
+
+#passo-detalhes .acoes-passo,
+#passo-detalhes #mensagemDetalhes {
+  margin-top: 14px;
+}
+
+@media (max-width: 900px) {
+  .layout-detalhes-personagem {
+    grid-template-columns: 1fr;
+  }
+
+  .painel-detalhes-narrativos {
+    grid-template-rows: auto;
+  }
+}

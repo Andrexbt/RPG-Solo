@@ -30,9 +30,9 @@
     <a href="criacao-personagem.html">Criar personagem</a>
     <script src="transicoes-paginas.js"></script>
   </nav>
-</header>
+  </header>
 
-<section class="hero-criacao">
+  <section class="hero-criacao">
   <div class="decoracao-fundo decoracao-um"></div>
   <div class="decoracao-fundo decoracao-dois"></div>
   <div class="ornamento-rpg ornamento-dado">20</div>
@@ -47,14 +47,14 @@
       e magias em um fluxo guiado.
     </p>
   </div>
-</section>
+  </section>
 
     <!-- =====================================================
        Layout principal
        -----------------------------------------------------
        Divide a tela entre ficha lateral e passos de criação.
        ===================================================== -->
-<main class="criador-personagem">
+    <main class="criador-personagem">
 
       <!-- =====================================================
        Ficha lateral
@@ -743,110 +743,91 @@
        -----------------------------------------------------
        Nome, idiomas, equipamentos e valores derivados.
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-detalhes">
-     <h2>Passo 7: Detalhes</h2>
-
-       <section class="bloco-detalhes">
-       <h3>Nome</h3>
-
-         <label for="nomePersonagem">Nome do personagem</label>
-         <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
-
-       </section>
-
-       <section class="bloco-detalhes">
-    <h3>Idiomas</h3>
-
-    <label for="idioma1">Idioma 1</label>
-  <select id="idioma1"></select>
-
-  <label for="idioma2">Idioma 2</label>
-  <select id="idioma2"></select>
-       </section>
-
-       <section class="bloco-detalhes">
-          <h3>Equipamentos, Armas e Proficiências</h3>
-
-          <div class="sub-bloco-detalhes">
-           <h4>Proficiências</h4>
-           <p id="proficienciasClasse">
-           As proficiências serão preenchidas conforme a classe escolhida.
-           </p>
-          </div>
-
-          <div class="sub-bloco-detalhes">
-            <h4>Equipamento inicial</h4>
-
-            <label for="armaduraInicial">Armadura</label>
-            <select id="armaduraInicial">
-      <option value="">Escolha</option>
-      <option value="semArmadura">Sem armadura</option>
-      <option value="couro">Armadura de couro</option>
-      <option value="cotaDeMalha">Cota de malha</option>
-            </select>
-
-            <label for="armaPrincipal">Arma principal</label>
-            <select id="armaPrincipal">
-      <option value="">Escolha</option>
-      <option value="espadaLonga">Espada longa</option>
-      <option value="machadoDeBatalha">Machado de batalha</option>
-      <option value="lanca">Lança</option>
-      <option value="arcoLongo">Arco longo</option>
-            </select>
-
-            <label for="itemSecundario">Item secundário</label>
-            <select id="itemSecundario">
-      <option value="">Escolha</option>
-      <option value="escudo">Escudo</option>
-      <option value="armaSecundaria">Arma secundária</option>
-      <option value="nada">Nada</option>
-            </select>
-
-            <div class="campo-formulario escondida" id="grupoArmaSecundaria">
-              <label for="armaSecundaria">Escolha a arma secundária</label>
-              <select id="armaSecundaria">
-              <option value="">Escolha uma arma</option>
-              </select>
-            </div>
+       <section class="conteudo-passo escondida" id="passo-detalhes">
+         <h2>Passo 7: Detalhes</h2>
  
-            <p class="aviso-equipamentos" id="avisoEquipamentos"></p>   
+      <div class="layout-detalhes-personagem">
 
+        <section class="painel-detalhes-principais">
+
+          <h3>Nome do Personagem</h3>
+          <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
+          
+          <h3>Idiomas Conhecidos</h3>
+          <label for="idioma1">Idioma 1</label>
+          <select id="idioma1"></select>
+
+          <label for="idioma2">Idioma 2</label>
+          <select id="idioma2"></select>
+          
+          <h3>Equipamento</h3>
+          <div class="campo-formulario">
+          <label for="armaduraInicial">Armadura</label>
+          <select id="armaduraInicial">
+            <option value="">Escolha</option>
+            <option value="semArmadura">Sem armadura</option>
+            <option value="couro">Armadura de couro</option>
+            <option value="cotaDeMalha">Cota de malha</option>
+          </select>
           </div>
 
-       </section>
+          <div class="campo-formulario">
+          <label for="armaPrincipal">Arma principal</label>
+          <select id="armaPrincipal">
+            <option value="">Escolha</option>
+            <option value="espadaLonga">Espada longa</option>
+            <option value="machadoDeBatalha">Machado de batalha</option>
+            <option value="lanca">Lança</option>
+            <option value="arcoLongo">Arco longo</option>
+          </select>
+          </div>
 
-       <section class="bloco-detalhes">
-    <h3>Classe de Armadura</h3>
-   <p class="texto-explicativo">
-    A Classe de Armadura será calculada automaticamente com base na armadura,
-    escudo e modificador de Destreza.
-  </p>
+          <div class="campo-formulario">
+          <label for="itemSecundario">Item secundário</label>
+          <select id="itemSecundario">
+            <option value="">Escolha</option>
+            <option value="escudo">Escudo</option>
+            <option value="armaSecundaria">Arma secundária</option>
+            <option value="nada">Nada</option>
+          </select>
+          </div>
 
-  <div class="resultado-detalhe">
-    <span>Classe de Armadura:</span>
-    <strong id="resultadoClasseArmadura">-</strong>
-  </div>
-       </section>
+          <div class="campo-formulario escondida" id="grupoArmaSecundaria">
+          <label for="armaSecundaria">Escolha a arma secundária</label>
+          <select id="armaSecundaria">
+            <option value="">Escolha uma arma</option>
+          </select>
+          </div>
 
-       <section class="bloco-detalhes">
-    <h3>Dado de Vida e Pontos de Vida</h3>
-       </section>
+        </section>
 
-       <section class="bloco-detalhes">
-    <h3>Iniciativa</h3>
-       </section>
+        <p class="aviso-equipamentos" id="avisoEquipamentos"></p>
 
-       <section class="bloco-detalhes">
-    <h3>Velocidade</h3>
-       </section>
+        <section class="painel-detalhes-narrativos">
 
-       <section class="bloco-detalhes">
-    <h3>Tamanho</h3>
-       </section>
+          <div class="campo-narrativo">
+      <label for="historiaPersonagem">História do personagem</label>
+      <textarea
+        id="historiaPersonagem"
+        rows="9"
+        placeholder="Conte de onde seu personagem veio, o que viveu e por que decidiu se aventurar."></textarea>
+          </div>
 
-       <section class="bloco-detalhes">
-    <h3>Percepção Passiva</h3>
-       </section>
+          <div class="campo-narrativo">
+      <label for="personalidadePersonagem">Personalidade</label>
+      <textarea
+        id="personalidadePersonagem"
+        rows="9"
+        placeholder="Descreva como seu personagem age, fala, pensa e se relaciona com o mundo."></textarea>
+          </div>
+
+        </section>
+        
+      </div>
+
+<div class="detalhes-calculados-ocultos" aria-hidden="true">
+  <span id="resultadoClasseArmadura">-</span>
+</div>
 
   <div class="acoes-passo">
     <p class="mensagem-passo" id="mensagemDetalhes"></p>
@@ -883,14 +864,11 @@
 
      </section>
 
-    </section>
-
-  </main>
-
-    <!-- =====================================================
+     <!-- =====================================================
        Navegação entre passos
        ===================================================== -->
-<nav class="navegacao-passos">
+<section>
+       <nav class="navegacao-passos">
   <button class="passo atual" data-passo="classe">1. Classe</button>
   <button class="passo" data-passo="atributos">2. Atributos</button>
   <button class="passo" data-passo="antecedente">3. Antecedentes</button>
@@ -902,6 +880,12 @@
   </nav>
 
   <p class="mensagem-navegacao" id="mensagemNavegacao"></p>
+
+    </section>
+
+  </main>
+
+    
 
    <!-- =====================================================
        Modal de classe

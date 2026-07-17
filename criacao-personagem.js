@@ -97,8 +97,16 @@ const ordemPassos =[
   "detalhes",
   "revisao",
 ];
+
+// Modo temporário para testar livremente a interface.
+// Troque para false antes da versão final.
+const MODO_TESTE_PASSOS_LIVRES = true;
+
 let passoAtual = "classe";
-let maiorPassoLiberado = 0;
+let maiorPassoLiberado = MODO_TESTE_PASSOS_LIVRES
+? ordemPassos.length - 1
+: 0;
+
 let temporizadorMensagemNavegacao = null;
 const mensagemNavegacao = document.getElementById("mensagemNavegacao");
 

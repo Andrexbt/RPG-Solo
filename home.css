@@ -182,18 +182,18 @@
 
 .jornada-home {
   display: grid;
-  gap: clamp(28px, 5vw, 56px);
+  gap: 0px;
   width: 100%;
   margin: 0;
   padding:
-    24px
+    0px
     0
-    72px;
+    0px;
 }
 
 .secao-jornada {
   position: relative;
-  min-height: 50vh;
+  min-height: auto;
   padding:
     clamp(32px, 3.5vw, 48px)
     max(28px, calc((100vw - var(--largura-conteudo)) / 2));
