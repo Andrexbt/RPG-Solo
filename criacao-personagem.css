@@ -715,20 +715,30 @@ body {
 }
 
 .ficha {
-  padding: 14px;
-  border: 1px solid rgba(215, 163, 95, 0.26);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 90% 8%, rgba(111, 61, 75, 0.18), transparent 34%),
-    linear-gradient(160deg, #17120f 0%, #1d1517 52%, #12100d 100%);
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
+  position: relative;
+
+  padding: 90px 55px;
+
+  
+
+  border-image-source: url("Imagens/Assets/scroll-2.png");
+  border-image-slice: 1200px;
+  border-image-width: 1200px;
+  border-image-repeat: stretch;
+
+  
+
+  color: #3b281b;
+
+  
 }
 
 .ficha-bloco {
+  position: relative;
   margin: 0;
-  padding: 11px;
-  border: 1px solid rgba(215, 163, 95, 0.22);
-  border-radius: 15px;
+  padding: 16px;
+  border: 2px solid rgba(93, 57, 31, 0.52);
+  border-radius: 12px;
   background: #211a17;
 }
 
@@ -873,11 +883,32 @@ body {
   list-style: none;
 }
 
-.linha-salvaguarda,
 .linha-pericia {
+  display: flex;
+  align-items: center;
   margin: 0;
   padding: 3px 0;
   border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+}
+
+.linha-salvaguarda {
+  
+  margin-bottom: 4px;
+  padding: 5px 8px 5px 12px;
+  justify-self: center;
+
+  background: rgba(215, 163, 95, 0.08);
+
+  border: 1px solid rgba(215, 163, 95, 0.22);
+  border-radius: 8px;
+
+  color: #f4dfba;
+  font-weight: 850;
+  letter-spacing: 0.01em;
+}
+
+.linha-salvaguarda::before {
+  margin-left: 6px;
 }
 
 .linha-salvaguarda.proficiente,
