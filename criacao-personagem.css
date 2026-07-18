@@ -717,20 +717,21 @@ body {
 .ficha {
   position: relative;
 
-  padding: 90px 55px;
+  padding: 90px 48px;
 
   
 
   border-image-source: url("Imagens/Assets/scroll-2.png");
-  border-image-slice: 1200px;
-  border-image-width: 1200px;
+  border-image-slice: 1800;
+  border-image-width: 400px;
   border-image-repeat: stretch;
 
   
 
   color: #3b281b;
 
-  
+  box-shadow:
+    0 18px 52px rgba(0, 0, 0, 0.32);
 }
 
 .ficha-bloco {
