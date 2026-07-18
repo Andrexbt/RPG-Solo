@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap");
+
 /* =====================================================
    Tema visual global
    -----------------------------------------------------
@@ -66,7 +68,17 @@
 --titulo-grande:
   clamp(2rem, 1.25rem + 2.8vw, 4rem);
 
-  --fonte-principal: Arial, Helvetica, sans-serif;
+  --fonte-titulos:
+  "Cormorant Garamond",
+  Georgia,
+  "Times New Roman",
+  serif;
+
+--fonte-interface:
+  "Source Sans 3",
+  Arial,
+  Helvetica,
+  sans-serif;
 }
 
 * {
@@ -141,7 +153,14 @@ button,
 input,
 textarea,
 select {
-  font-family: var(--fonte-principal);
+  font-family: var(--fonte-interface);
+}
+
+h1,
+h2,
+.titulo-pagina,
+.titulo-secao {
+  font-family: var(--fonte-titulos);
 }
 
 body {
