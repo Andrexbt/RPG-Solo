@@ -101,53 +101,46 @@
 
 /* Celular */
 @media (max-width: 620px) {
+  /* Carrossel horizontal dos cards de classe */
   .grade-classes {
-    display: grid;
-    
-    grid-auto-flow: column;
-    grid-auto-columns: 150px;
-    grid-template-columns: none;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 16px;
 
-    justify-content: start;
-    gap: 18px;
-
-    width: calc(100vw - 32px);
-
-    padding:
-    6px
-    16px
-    18px;
-
-    margin-inline:
-    calc(var(--margem-pagina) * -1);
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 6px 4px 18px;
 
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: hidden;
 
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 16px;
-
-    overscroll-behavior-inline: contain;
+    scroll-padding-inline: 4px;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
 
     scrollbar-width: none;
   }
 
   .grade-classes::-webkit-scrollbar {
-  display: none;
+    display: none;
   }
 
-  .card-classe {
+  .grade-classes .card-classe {
+    flex: 0 0 150px;
     width: 150px;
-    max-width: none;
-    
+    max-width: 150px;
+    min-width: 150px;
+
     scroll-snap-align: start;
     scroll-snap-stop: always;
-
-    flex-shrink: 0;
   }
 
-  .imagem-classe {
+  .grade-classes .imagem-classe {
     width: 82%;
     max-width: 118px;
   }
