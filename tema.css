@@ -163,6 +163,28 @@ h2,
   font-family: var(--fonte-titulos);
 }
 
+/* Títulos temáticos específicos do projeto */
+.conteudo-hero-criacao h1,
+.conteudo-passo > h2,
+.conteudo-passo > h3,
+.ficha-cabecalho h2,
+.ficha-bloco > h3,
+.card-classe h3 {
+  font-family: var(--fonte-titulos);
+}
+
+.marca,
+.menu-principal,
+.passo,
+.ficha,
+.card-opcao,
+button,
+input,
+select,
+textarea {
+  font-family: var(--fonte-interface);
+}
+
 body {
   position: relative;
   z-index: 1;
