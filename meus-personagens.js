@@ -6,59 +6,55 @@
 // cards de resumo e permite abrir ou excluir uma ficha.
 // =====================================================
 
-// =====================================================
-// 1. Elementos do HTML
-// =====================================================
-
+const CHAVE_PERSONAGENS = "personagensRpgSolo";
 const listaPersonagens = document.getElementById("listaPersonagens");
 
-// =====================================================
-// 2. Leitura e gravação no localStorage
-// =====================================================
-
 function carregarPersonagensSalvos() {
-  return JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
+  try {
+    const dadosSalvos = localStorage.getItem(CHAVE_PERSONAGENS);
+    const personagens = dadosSalvos === null ? [] : JSON.parse(dadosSalvos);
+
+    return Array.isArray(personagens) ? personagens : [];
+  } catch (erro) {
+    console.error("Não foi possível ler os personagens salvos.", erro);
+    return [];
+  }
 }
 
 function salvarListaPersonagens(personagens) {
-  localStorage.setItem(
-    "personagensRpgSolo",
-    JSON.stringify(personagens)
-  );
+  localStorage.setItem(CHAVE_PERSONAGENS, JSON.stringify(personagens));
 }
-
-// =====================================================
-// 3. Funções auxiliares de texto e cálculo
-// =====================================================
 
 function textoOuTraco(valor) {
   if (valor === undefined || valor === null || valor === "") {
     return "-";
   }
 
-  return valor;
+  return String(valor);
 }
 
 function calcularModificador(valor) {
-  return Math.floor((valor - 10) / 2);
+  return Math.floor((Number(valor) - 10) / 2);
 }
 
 function calcularClasseArmadura(personagem) {
-  const equipamentos = personagem.detalhes.equipamentos;
+  const equipamentos = personagem?.detalhes?.equipamentos;
+  const atributos = personagem?.atributos;
+  const banco = window.bancoEquipamentos;
 
-  if (equipamentos === undefined || window.bancoEquipamentos === undefined) {
+  if (equipamentos === undefined || atributos === undefined || banco === undefined) {
     return "-";
   }
 
-  const armadura = window.bancoEquipamentos.armaduras[equipamentos.armadura];
-  const itemSecundario = window.bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
+  const armadura = banco.armaduras?.[equipamentos.armadura];
+  const itemSecundario = banco.itensSecundarios?.[equipamentos.itemSecundario];
 
   if (armadura === undefined) {
     return "-";
   }
 
   let classeArmadura = armadura.caBase;
-  const destreza = personagem.atributos.destreza;
+  const destreza = atributos.destreza;
 
   if (armadura.usaDestreza === true && destreza !== undefined && destreza !== "") {
     const modificadorDestreza = calcularModificador(destreza);
@@ -70,7 +66,7 @@ function calcularClasseArmadura(personagem) {
     }
   }
 
-  if (itemSecundario !== undefined && itemSecundario.bonusCA !== undefined) {
+  if (itemSecundario?.bonusCA !== undefined) {
     classeArmadura += itemSecundario.bonusCA;
   }
 
@@ -78,30 +74,44 @@ function calcularClasseArmadura(personagem) {
 }
 
 function obterPontosDeVidaMaximos(personagem) {
-  if (
-    personagem.detalhes === undefined ||
-    personagem.detalhes.pontosDeVida === undefined
-  ) {
-    return "-";
-  }
-
-  return textoOuTraco(personagem.detalhes.pontosDeVida.maximo);
+  return textoOuTraco(personagem?.detalhes?.pontosDeVida?.maximo);
 }
 
-// =====================================================
-// 4. Montagem dos cards de personagens
-// =====================================================
+function criarParagrafoComRotulo(rotulo, valor) {
+  const paragrafo = document.createElement("p");
+  const destaque = document.createElement("strong");
+
+  destaque.textContent = rotulo + ": ";
+  paragrafo.append(destaque, document.createTextNode(textoOuTraco(valor)));
+
+  return paragrafo;
+}
+
+function criarValorResumo(rotulo, valor) {
+  const caixa = document.createElement("div");
+  const rotuloElemento = document.createElement("span");
+  const valorElemento = document.createElement("strong");
+
+  caixa.classList.add("valor-card-personagem");
+  rotuloElemento.textContent = rotulo;
+  valorElemento.textContent = textoOuTraco(valor);
+  caixa.append(rotuloElemento, valorElemento);
+
+  return caixa;
+}
 
 function montarTelaPersonagens() {
-  const personagens = carregarPersonagensSalvos();
+  if (listaPersonagens === null) {
+    return;
+  }
 
-  listaPersonagens.innerHTML = "";
+  const personagens = carregarPersonagensSalvos();
+  listaPersonagens.replaceChildren();
 
   if (personagens.length === 0) {
     const aviso = document.createElement("p");
     aviso.classList.add("texto-explicativo");
     aviso.textContent = "Nenhum personagem salvo ainda.";
-
     listaPersonagens.appendChild(aviso);
     return;
   }
@@ -114,77 +124,52 @@ function montarTelaPersonagens() {
     cabecalho.classList.add("card-personagem-cabecalho");
 
     const nome = document.createElement("h3");
-    nome.textContent = textoOuTraco(personagem.detalhes.nome);
+    nome.textContent = textoOuTraco(personagem?.detalhes?.nome);
 
     const classe = document.createElement("p");
     classe.classList.add("resumo-personagem");
-    classe.textContent = textoOuTraco(personagem.classe) + " 1";
+    classe.textContent = textoOuTraco(personagem?.classe) + " 1";
 
-    cabecalho.appendChild(nome);
-    cabecalho.appendChild(classe);
+    cabecalho.append(nome, classe);
 
     const informacoes = document.createElement("div");
     informacoes.classList.add("card-personagem-info");
-
-    const especie = document.createElement("p");
-    especie.innerHTML = "<strong>Espécie:</strong> " + textoOuTraco(personagem.especie);
-
-    const antecedente = document.createElement("p");
-    antecedente.innerHTML = "<strong>Antecedente:</strong> " + textoOuTraco(personagem.antecedente);
-
-    informacoes.appendChild(especie);
-    informacoes.appendChild(antecedente);
+    informacoes.append(
+      criarParagrafoComRotulo("Espécie", personagem?.especie),
+      criarParagrafoComRotulo("Antecedente", personagem?.antecedente)
+    );
 
     const valores = document.createElement("div");
     valores.classList.add("card-personagem-valores");
-
-    const ca = document.createElement("div");
-    ca.classList.add("valor-card-personagem");
-    ca.innerHTML = "<span>CA</span><strong>" + calcularClasseArmadura(personagem) + "</strong>";
-
-    const pv = document.createElement("div");
-    pv.classList.add("valor-card-personagem");
-    pv.innerHTML = "<span>PV</span><strong>" + obterPontosDeVidaMaximos(personagem) + "</strong>";
-
-    valores.appendChild(ca);
-    valores.appendChild(pv);
+    valores.append(
+      criarValorResumo("CA", calcularClasseArmadura(personagem)),
+      criarValorResumo("PV", obterPontosDeVidaMaximos(personagem))
+    );
 
     const acoes = document.createElement("div");
     acoes.classList.add("card-personagem-acoes");
 
     const linkVerFicha = document.createElement("a");
     linkVerFicha.classList.add("botao-link-card");
-    linkVerFicha.href = "ver-personagem.html?id=" + personagem.id;
+    linkVerFicha.href = "ver-personagem.html?id=" + encodeURIComponent(personagem.id);
     linkVerFicha.textContent = "Ver ficha";
 
     const botaoExcluir = document.createElement("button");
+    botaoExcluir.type = "button";
     botaoExcluir.classList.add("botao-excluir");
     botaoExcluir.textContent = "Excluir";
-
     botaoExcluir.addEventListener("click", function() {
-      confirmarExclusaoPersonagem(personagem.id, personagem.detalhes.nome);
+      confirmarExclusaoPersonagem(personagem.id, personagem?.detalhes?.nome);
     });
 
-    acoes.appendChild(linkVerFicha);
-    acoes.appendChild(botaoExcluir);
-
-    card.appendChild(cabecalho);
-    card.appendChild(informacoes);
-    card.appendChild(valores);
-    card.appendChild(acoes);
-
+    acoes.append(linkVerFicha, botaoExcluir);
+    card.append(cabecalho, informacoes, valores, acoes);
     listaPersonagens.appendChild(card);
   });
 }
 
-// =====================================================
-// 5. Exclusão de personagens
-// =====================================================
-
 function excluirPersonagem(idPersonagem) {
-  const personagens = carregarPersonagensSalvos();
-
-  const personagensAtualizados = personagens.filter(function(personagem) {
+  const personagensAtualizados = carregarPersonagensSalvos().filter(function(personagem) {
     return personagem.id !== idPersonagem;
   });
 
@@ -193,19 +178,13 @@ function excluirPersonagem(idPersonagem) {
 }
 
 function confirmarExclusaoPersonagem(idPersonagem, nomePersonagem) {
-  const confirmou = confirm(
+  const confirmou = window.confirm(
     "Tem certeza que deseja excluir " + textoOuTraco(nomePersonagem) + "?"
   );
 
-  if (confirmou === false) {
-    return;
+  if (confirmou === true) {
+    excluirPersonagem(idPersonagem);
   }
-
-  excluirPersonagem(idPersonagem);
 }
-
-// =====================================================
-// 6. Inicialização
-// =====================================================
 
 montarTelaPersonagens();
