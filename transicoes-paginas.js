@@ -5,15 +5,6 @@
 // internos do próprio site.
 // =====================================================
 
-// Carrega a folha responsiva específica do criador por último,
-// garantindo que ela tenha prioridade sobre regras antigas.
-if (window.location.pathname.endsWith("criacao-personagem.html")) {
-  const folhaResponsiva = document.createElement("link");
-  folhaResponsiva.rel = "stylesheet";
-  folhaResponsiva.href = "criacao-personagem-responsivo.css";
-  document.head.appendChild(folhaResponsiva);
-}
-
 document.addEventListener("DOMContentLoaded", function() {
   const links = document.querySelectorAll("a[href]");
 
@@ -21,14 +12,18 @@ document.addEventListener("DOMContentLoaded", function() {
     link.addEventListener("click", function(evento) {
       const href = link.getAttribute("href");
 
-      if (href === null) {
+      if (href === null || href === "") {
         return;
       }
 
       const ehAncoraDaMesmaPagina = href.startsWith("#");
       const abreNovaAba = link.target === "_blank";
       const ehDownload = link.hasAttribute("download");
-      const ehLinkExterno = href.startsWith("http") || href.startsWith("mailto:");
+      const ehLinkExterno =
+        href.startsWith("http://") ||
+        href.startsWith("https://") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:");
       const cliqueComAtalho =
         evento.ctrlKey === true ||
         evento.metaKey === true ||
@@ -46,10 +41,9 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       evento.preventDefault();
-
       document.body.classList.add("saindo-pagina");
 
-      setTimeout(function() {
+      window.setTimeout(function() {
         window.location.href = href;
       }, 340);
     });
