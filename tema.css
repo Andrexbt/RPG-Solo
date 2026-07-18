@@ -199,7 +199,8 @@ a,
 input,
 select,
 textarea {
-  font: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 img {

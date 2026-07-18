@@ -353,8 +353,11 @@ body {
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    repeat(4, minmax(0, 1fr));
 
+  
+  align-items: stretch;
+  
   gap: clamp(14px, 1.5vw, 20px);
 }
 
@@ -599,14 +602,16 @@ body {
 }
 
 .card-classe h3 {
-  color: #49301f;
+  color: #2f1d14;
 
   font-family: var(--fonte-titulos);
   font-size: clamp(1.35rem, 1.2rem + 0.35vw, 1.65rem);
   font-weight: 700;
   line-height: 1;
-
   letter-spacing: -0.02em;
+
+  text-shadow:
+    0 1px 0 rgba(255, 239, 203, 0.35);
 }
 
 .card-opcao h4 {
@@ -623,11 +628,11 @@ body {
 }
 
 .card-classe p {
-  color: #674a34;
+  color: #4a3324;
 
   font-family: var(--fonte-interface);
   font-size: 0.92rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.45;
   
   margin: 0;
@@ -1867,10 +1872,11 @@ label,
   .ficha-detalhes,
   .grade-atributos-ficha,
   .area-proficiencia {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(200px, 280px);
+    justify-content: center;
   }
 
-  @media (max-width: 620px) {
+@media (max-width: 620px) {
   .linha-campos-ficha.tres-colunas,
   .linha-campos-ficha.duas-colunas {
     grid-template-columns: 1fr;
