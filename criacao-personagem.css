@@ -355,7 +355,7 @@ body {
 
   color: #4b3424;
 
-  background-color: #d5b587;
+  
   background-image: url("imagens/Assets/old\ paper\ 03.png");
   background-size: 100% 100%;
   background-position: center;
@@ -431,8 +431,8 @@ body {
 
   border: none;
 
-  background-color: #d5b587;
-  background-image: url("imagens/Assets/scroll.png");
+  
+  background-image: url("imagens/Assets/old\ paper\ 03.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -463,8 +463,8 @@ body {
 .card-classe.selecionado {
   border: none;
 
-  background-color: #d5b587;
-  background-image: url("imagens/Assets/scroll.png");
+  
+  background-image: url("imagens/Assets/old\ paper\ 03.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -485,11 +485,9 @@ body {
   position: relative;
   height: 230px;
   margin-bottom: 12px;
-  border: 1px solid rgba(255, 248, 235, 0.16);
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(215, 163, 95, 0.12), transparent 35%),
-    #15100f;
+  border: url("imagens/Assets/frame\ 01.png");
+  
+  
   overflow: hidden;
 }
 
@@ -498,19 +496,10 @@ body {
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  border-radius: 16px;
+  
   display: block;
   transition: transform 0.4s ease;
 }
-
-.card-classe .imagem-classe {
-  border: 1px solid rgba(73, 48, 31, 0.55);
-  border-radius: 14px;
-  background: #211713;
-  box-shadow:
-    0 5px 12px rgba(54, 34, 20, 0.22);
-}
-
 .card-classe:hover .imagem-classe img {
   transform: scale(1.02);
 }
