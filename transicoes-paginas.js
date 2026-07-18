@@ -5,6 +5,15 @@
 // internos do próprio site.
 // =====================================================
 
+// Carrega a folha responsiva específica do criador por último,
+// garantindo que ela tenha prioridade sobre regras antigas.
+if (window.location.pathname.endsWith("criacao-personagem.html")) {
+  const folhaResponsiva = document.createElement("link");
+  folhaResponsiva.rel = "stylesheet";
+  folhaResponsiva.href = "criacao-personagem-responsivo.css";
+  document.head.appendChild(folhaResponsiva);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   const links = document.querySelectorAll("a[href]");
 
