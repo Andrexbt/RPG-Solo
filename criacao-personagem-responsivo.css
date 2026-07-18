@@ -6,6 +6,48 @@
    ===================================================== */
 
 /* =====================================================
+   Marcadores visuais da ficha
+   -----------------------------------------------------
+   Mantém os marcadores independentes de a linha ser <p>
+   ou <li>, evitando que mudanças de estrutura escondam
+   as bolinhas de proficiência.
+   ===================================================== */
+
+.linha-salvaguarda,
+.linha-pericia {
+  position: relative;
+  padding-left: 16px;
+}
+
+.linha-salvaguarda::before,
+.linha-pericia::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(205, 187, 158, 0.72);
+  border-radius: 50%;
+  background: transparent;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+
+.linha-salvaguarda.proficiente::before,
+.linha-pericia.proficiente::before {
+  border-color: var(--cor-ambar);
+  background: var(--cor-ambar);
+  box-shadow: 0 0 0 2px rgba(215, 163, 95, 0.16);
+}
+
+.linha-pericia.especializada::before {
+  border-color: var(--cor-coral);
+  background: var(--cor-coral);
+  box-shadow: 0 0 0 2px rgba(217, 118, 95, 0.18);
+}
+
+/* =====================================================
    Desktop compacto
    ===================================================== */
 
