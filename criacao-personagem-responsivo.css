@@ -2,20 +2,26 @@
    Responsividade consolidada — criação de personagem
    -----------------------------------------------------
    Este arquivo é carregado depois de criacao-personagem.css
-   e centraliza as regras responsivas efetivas da página.
+   e concentra todos os ajustes responsivos da página.
    ===================================================== */
 
-/* Desktop compacto */
+/* =====================================================
+   Desktop compacto
+   ===================================================== */
+
 @media (max-width: 1180px) {
   .linha-campos-ficha.tres-colunas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Tablet e janela dividida */
+/* =====================================================
+   Tablet e janela dividida
+   ===================================================== */
+
 @media (max-width: 980px) {
   .criador-personagem {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding: var(--espaco-md) 0 var(--espaco-xl);
   }
 
@@ -25,6 +31,7 @@
 
   .area-passo {
     order: 1;
+    min-width: 0;
   }
 
   .coluna-ficha {
@@ -32,13 +39,14 @@
     order: 2;
     max-height: none;
     overflow: visible;
+    padding-right: 0;
   }
 
   #passo-atributos,
   .layout-detalhes-personagem,
   #areaRevisao,
   #areaRevisao .bloco-revisao:first-child {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   #passo-atributos > .texto-explicativo,
@@ -60,20 +68,31 @@
   }
 }
 
-/* Modal em telas estreitas */
+/* =====================================================
+   Modal em telas estreitas
+   ===================================================== */
+
 @media (max-width: 760px) {
+  .modal-overlay {
+    padding: 12px;
+    overflow-y: auto;
+  }
+
   .modal {
-    border-radius: 26px;
+    width: min(100%, 620px);
+    max-height: none;
+    border-radius: 24px;
+    overflow: visible;
   }
 
   .modal-cabecalho {
-    padding: 32px 22px 8px;
+    padding: 26px 20px 8px;
   }
 
   .modal-corpo {
-    grid-template-columns: 1fr;
-    padding: 22px;
-    overflow-y: auto;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px 20px;
+    overflow: visible;
   }
 
   .modal-imagem-container,
@@ -85,12 +104,12 @@
   }
 
   .modal-imagem {
-    min-height: 260px;
+    min-height: 240px;
     max-height: 320px;
   }
 
   .modal-acoes {
-    padding: 18px 22px 24px;
+    padding: 10px 20px 22px;
     flex-direction: column-reverse;
   }
 
@@ -99,48 +118,59 @@
   }
 }
 
-/* Celular */
+/* =====================================================
+   Celular
+   ===================================================== */
+
 @media (max-width: 620px) {
-  /* Carrossel horizontal dos cards de classe */
-  .grade-classes {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+  .conteudo-passo h2,
+  .conteudo-passo h3 {
+    overflow-wrap: normal;
+  }
+
+  /*
+     Carrossel horizontal das classes.
+     Os !important neutralizam regras antigas ainda existentes
+     no CSS principal até a remoção definitiva desses blocos.
+  */
+  #passo-classe .grade-classes {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    justify-content: flex-start !important;
     align-items: stretch;
-    gap: 16px;
 
     width: 100%;
     max-width: 100%;
-    margin: 0;
-    padding: 6px 4px 18px;
+    min-width: 0;
 
-    overflow-x: auto;
+    gap: 14px;
+    margin: 0;
+    padding: 8px 4px 18px;
+
+    overflow-x: auto !important;
     overflow-y: hidden;
 
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     scroll-padding-inline: 4px;
-    overscroll-behavior-x: contain;
-    touch-action: pan-x;
+    overscroll-behavior-inline: contain;
     -webkit-overflow-scrolling: touch;
-
     scrollbar-width: none;
   }
 
-  .grade-classes::-webkit-scrollbar {
+  #passo-classe .grade-classes::-webkit-scrollbar {
     display: none;
   }
 
-  .grade-classes .card-classe {
-    flex: 0 0 150px;
-    width: 150px;
-    max-width: 150px;
-    min-width: 150px;
-
+  #passo-classe .grade-classes > .card-classe {
+    flex: 0 0 150px !important;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    justify-self: auto !important;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 
-  .grade-classes .imagem-classe {
+  #passo-classe .imagem-classe {
     width: 82%;
     max-width: 118px;
   }
@@ -151,7 +181,16 @@
   .area-proficiencia,
   .linha-campos-ficha.tres-colunas,
   .linha-campos-ficha.duas-colunas {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .navegacao-passos {
+    gap: 6px;
+  }
+
+  .passo {
+    white-space: normal;
+    text-align: center;
   }
 
   #passo-revisao .acoes-passo,
