@@ -1,0 +1,145 @@
+/* =====================================================
+   Responsividade consolidada — criação de personagem
+   -----------------------------------------------------
+   Este arquivo é carregado depois de criacao-personagem.css
+   e centraliza as regras responsivas efetivas da página.
+   ===================================================== */
+
+/* Desktop compacto */
+@media (max-width: 1180px) {
+  .linha-campos-ficha.tres-colunas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tablet e janela dividida */
+@media (max-width: 980px) {
+  .criador-personagem {
+    grid-template-columns: 1fr;
+    padding: var(--espaco-md) 0 var(--espaco-xl);
+  }
+
+  .hero-criacao {
+    padding: var(--espaco-lg) 0 var(--espaco-md);
+  }
+
+  .area-passo {
+    order: 1;
+  }
+
+  .coluna-ficha {
+    position: static;
+    order: 2;
+    max-height: none;
+    overflow: visible;
+  }
+
+  #passo-atributos,
+  .layout-detalhes-personagem,
+  #areaRevisao,
+  #areaRevisao .bloco-revisao:first-child {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-atributos > .texto-explicativo,
+  #passo-atributos .botao-rolar,
+  #passo-atributos .caixa-rolagem-dados,
+  #passo-atributos .resultados-atributos,
+  #passo-atributos .bloco-distribuicao-atributos,
+  #passo-atributos #mensagemAtributos,
+  #passo-atributos .acoes-passo,
+  .painel-detalhes-principais,
+  .painel-detalhes-narrativos,
+  #areaRevisao .bloco-revisao:first-child {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .painel-detalhes-narrativos {
+    grid-template-rows: auto;
+  }
+}
+
+/* Modal em telas estreitas */
+@media (max-width: 760px) {
+  .modal {
+    border-radius: 26px;
+  }
+
+  .modal-cabecalho {
+    padding: 32px 22px 8px;
+  }
+
+  .modal-corpo {
+    grid-template-columns: 1fr;
+    padding: 22px;
+    overflow-y: auto;
+  }
+
+  .modal-imagem-container,
+  .modal-textos {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .modal-imagem {
+    min-height: 260px;
+    max-height: 320px;
+  }
+
+  .modal-acoes {
+    padding: 18px 22px 24px;
+    flex-direction: column-reverse;
+  }
+
+  .modal-acoes button {
+    width: 100%;
+  }
+}
+
+/* Celular */
+@media (max-width: 620px) {
+  .grade-classes {
+    grid-template-columns: minmax(0, 250px);
+    justify-content: center;
+    gap: 22px;
+  }
+
+  .card-classe {
+    width: 100%;
+    max-width: 250px;
+    justify-self: center;
+  }
+
+  .imagem-classe {
+    width: 78%;
+    max-width: 150px;
+  }
+
+  .grade-opcoes,
+  .ficha-detalhes,
+  .grade-atributos-ficha,
+  .area-proficiencia,
+  .linha-campos-ficha.tres-colunas,
+  .linha-campos-ficha.duas-colunas {
+    grid-template-columns: 1fr;
+  }
+
+  #passo-revisao .acoes-passo,
+  .acoes-personagem-salvo {
+    justify-content: stretch;
+  }
+
+  #passo-revisao .botao-finalizar,
+  .botao-link,
+  .acoes-passo button,
+  .acoes-passo a {
+    width: 100%;
+  }
+
+  .acoes-passo {
+    align-items: stretch;
+  }
+}
