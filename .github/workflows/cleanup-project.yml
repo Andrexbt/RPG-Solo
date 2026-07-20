@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "scripts/cleanup_project.py"
+      - "scripts/move_ficha_css.py"
       - ".github/workflows/cleanup-project.yml"
   workflow_dispatch:
 
@@ -17,6 +18,9 @@ jobs:
     steps:
       - name: Baixar repositório
         uses: actions/checkout@v4
+
+      - name: Mover estilos da ficha
+        run: python scripts/move_ficha_css.py
 
       - name: Executar limpeza estrutural
         run: python scripts/cleanup_project.py
@@ -34,5 +38,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Padroniza estrutura e indentação do projeto"
+          git commit -m "Move estilos da ficha para o componente"
           git push
