@@ -18,8 +18,11 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Executar limpeza
+      - name: Executar limpeza estrutural
         run: python scripts/cleanup_project.py
+
+      - name: Padronizar indentação
+        run: npx --yes prettier@3.3.3 --write "**/*.{html,css,js}"
 
       - name: Salvar alterações
         run: |
@@ -31,5 +34,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Limpa estrutura e organiza componente da ficha"
+          git commit -m "Padroniza estrutura e indentação do projeto"
           git push
