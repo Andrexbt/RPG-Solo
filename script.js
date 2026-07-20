@@ -7,7 +7,7 @@ const somD20 = new Audio("D20.mp3");
 
 botãoEnviar.addEventListener("click", function() {
     const acao = ação.value;
-    
+
     resposta.textContent = "Você: " + acao + " | Mestre: Você tenta realizar essa ação. Role um d20 para descobrir o resultado.";
 
     ação.value = "";

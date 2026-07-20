@@ -293,7 +293,7 @@ body {
 
   gap: 8px;
   flex-wrap: wrap;
-  
+
 }
 
 .passo {
@@ -355,9 +355,9 @@ body {
   grid-template-columns:
     repeat(4, minmax(0, 1fr));
 
-  
+
   align-items: stretch;
-  
+
   gap: clamp(14px, 1.5vw, 20px);
 }
 
@@ -410,7 +410,7 @@ body {
 
   color: #4b3424;
 
-  
+
   background-image: url("Imagens/Assets/old-paper-03.png");
   background-size: 100% 100%;
   background-position: center;
@@ -489,7 +489,7 @@ body {
 
   border: none;
 
-  
+
   background-image: url("Imagens/Assets/old-paper-03.png");
   background-size: 100% 100%;
   background-position: center;
@@ -521,7 +521,7 @@ body {
 .card-classe.selecionado {
   border: none;
 
-  
+
   background-image: url("Imagens/Assets/old-paper-03.png");
   background-size: 100% 100%;
   background-position: center;
@@ -634,7 +634,7 @@ body {
   font-size: 0.92rem;
   font-weight: 500;
   line-height: 1.45;
-  
+
   margin: 0;
   display: -webkit-box;
   line-clamp: 4;
@@ -643,7 +643,6 @@ body {
   overflow: hidden;
   flex-grow: 1;
 }
-
 
 
 .card-opcao ul {
@@ -719,14 +718,12 @@ body {
 
   padding: 90px 48px;
 
-  
 
   border-image-source: url("Imagens/Assets/scroll-2.png");
   border-image-slice: 1800;
   border-image-width: 400px;
   border-image-repeat: stretch;
 
-  
 
   color: #3b281b;
 
@@ -893,7 +890,7 @@ body {
 }
 
 .linha-salvaguarda {
-  
+
   margin-bottom: 4px;
   padding: 5px 8px 5px 12px;
   justify-self: center;

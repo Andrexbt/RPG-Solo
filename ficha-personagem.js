@@ -1092,113 +1092,139 @@
   });
 
   // =====================================================
-// Componente visual da ficha
-// -----------------------------------------------------
-// Carrega o fragmento ficha-personagem.html antes dos
-// scripts específicos de cada página.
-// =====================================================
+  // 10. Componente visual e interface da ficha
+  // -----------------------------------------------------
+  // Carrega o fragmento HTML, configura o botão retrátil e
+  // só então inicia o script específico da página atual.
+  // =====================================================
 
-async function carregarHtmlFichaPersonagem() {
-  const areasFicha = document.querySelectorAll(
-    "[data-ficha-personagem]"
-  );
+  function configurarFichaRetratil(ficha) {
+    const botao = ficha.querySelector(".botao-retrair-ficha");
+    const corpo = ficha.querySelector(".ficha-corpo");
 
-  if (areasFicha.length === 0) {
-    return [];
-  }
-
-  const caminhoFicha = new URL(
-    "ficha-personagem.html",
-    document.baseURI
-  );
-
-  const resposta = await fetch(caminhoFicha);
-
-  if (resposta.ok === false) {
-    throw new Error(
-      "Não foi possível carregar ficha-personagem.html. " +
-      "Status: " +
-      resposta.status
-    );
-  }
-
-  const htmlFicha = await resposta.text();
-  const fichasInseridas = [];
-
-  areasFicha.forEach(function(areaFicha) {
-    areaFicha.innerHTML = htmlFicha;
-
-    const fichaInserida = areaFicha.querySelector(
-      "[data-ficha-componente]"
-    );
-
-    if (fichaInserida !== null) {
-      fichasInseridas.push(fichaInserida);
+    if (botao === null || corpo === null) {
+      return;
     }
-  });
 
-  document.dispatchEvent(
-    new CustomEvent("fichaPersonagemCarregada", {
-      detail: {
-        fichas: fichasInseridas
-      }
-    })
-  );
+    botao.addEventListener("click", function() {
+      const ficouRetraida = ficha.classList.toggle("ficha-retraida");
 
-  return fichasInseridas;
-}
-
-function carregarScriptDepoisDaFicha(caminhoScript) {
-  return new Promise(function(resolve, reject) {
-    const script = document.createElement("script");
-
-    script.src = caminhoScript;
-    script.addEventListener("load", resolve);
-    script.addEventListener("error", function() {
-      reject(
-        new Error(
-          "Não foi possível carregar o script: " +
-          caminhoScript
-        )
+      botao.setAttribute("aria-expanded", String(ficouRetraida === false));
+      botao.setAttribute(
+        "aria-label",
+        ficouRetraida
+          ? "Expandir ficha do personagem"
+          : "Recolher ficha do personagem"
       );
     });
+  }
 
-    document.head.appendChild(script);
-  });
-}
+  async function carregarHtmlFichaPersonagem() {
+    const areasFicha = document.querySelectorAll("[data-ficha-personagem]");
 
-async function iniciarComponenteFichaPersonagem() {
-  try {
-    await carregarHtmlFichaPersonagem();
+    if (areasFicha.length === 0) {
+      return [];
+    }
 
-    const nomePagina =
-      window.location.pathname.split("/").pop() ||
-      "index.html";
+    const caminhoFicha = new URL("ficha-personagem.html", document.baseURI);
+    const resposta = await fetch(caminhoFicha);
 
-    if (nomePagina === "criacao-personagem.html") {
-      await carregarScriptDepoisDaFicha(
-        "criacao-personagem.js"
+    if (resposta.ok === false) {
+      throw new Error(
+        "Não foi possível carregar ficha-personagem.html. Status: " +
+        resposta.status
       );
     }
 
-    if (nomePagina === "ver-personagem.html") {
-      await carregarScriptDepoisDaFicha(
-        "ver-personagem.js"
-      );
-    }
-  } catch (erro) {
-    console.error(
-      "Erro ao iniciar a ficha de personagem:",
-      erro
+    const htmlFicha = await resposta.text();
+    const fichasInseridas = [];
+
+    areasFicha.forEach(function(areaFicha) {
+      areaFicha.innerHTML = htmlFicha;
+
+      const fichaInserida = areaFicha.querySelector("[data-ficha-componente]");
+
+      if (fichaInserida !== null) {
+        configurarFichaRetratil(fichaInserida);
+        fichasInseridas.push(fichaInserida);
+      }
+    });
+
+    document.dispatchEvent(
+      new CustomEvent("fichaPersonagemCarregada", {
+        detail: { fichas: fichasInseridas }
+      })
     );
-  }
-}
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function() {
-    window.fichaPersonagemPronta =
-      iniciarComponenteFichaPersonagem();
+    return fichasInseridas;
   }
-)
+
+  function carregarScriptDepoisDaFicha(caminhoScript) {
+    return new Promise(function(resolve, reject) {
+      const caminhoAbsoluto = new URL(caminhoScript, document.baseURI).href;
+      const scriptExistente = Array.from(document.scripts).find(function(script) {
+        return script.src === caminhoAbsoluto;
+      });
+
+      if (scriptExistente !== undefined) {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = caminhoScript;
+      script.addEventListener("load", resolve, { once: true });
+      script.addEventListener(
+        "error",
+        function() {
+          reject(new Error("Não foi possível carregar o script: " + caminhoScript));
+        },
+        { once: true }
+      );
+
+      document.head.appendChild(script);
+    });
+  }
+
+  function obterScriptDaPaginaAtual() {
+    const nomePagina = window.location.pathname.split("/").pop() || "index.html";
+    const scriptsPorPagina = {
+      "criacao-personagem.html": "criacao-personagem.js",
+      "ver-personagem.html": "ver-personagem.js"
+    };
+
+    return scriptsPorPagina[nomePagina] || null;
+  }
+
+  async function iniciarComponenteFichaPersonagem() {
+    const fichas = await carregarHtmlFichaPersonagem();
+    const scriptDaPagina = obterScriptDaPaginaAtual();
+
+    if (fichas.length > 0 && scriptDaPagina !== null) {
+      await carregarScriptDepoisDaFicha(scriptDaPagina);
+    }
+
+    return fichas;
+  }
+
+  function iniciarQuandoDocumentoEstiverPronto() {
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+          window.fichaPersonagemPronta = iniciarComponenteFichaPersonagem();
+        },
+        { once: true }
+      );
+      return;
+    }
+
+    window.fichaPersonagemPronta = iniciarComponenteFichaPersonagem();
+  }
+
+  window.FichaPersonagem.configurarFichaRetratil = configurarFichaRetratil;
+  window.FichaPersonagem.carregarHtml = carregarHtmlFichaPersonagem;
+  window.FichaPersonagem.iniciarComponente = iniciarComponenteFichaPersonagem;
+
+  iniciarQuandoDocumentoEstiverPronto();
 })();

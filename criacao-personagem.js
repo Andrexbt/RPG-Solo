@@ -1,4 +1,4 @@
-﻿// =====================================================
+// =====================================================
 // 1. ELEMENTOS DO HTML
 // -----------------------------------------------------
 // Referências aos elementos da página usados pelo JavaScript.
@@ -238,7 +238,7 @@ const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
 // =====================================================
 
 const personagem = {
-  
+
   classeId:"",
   classe: "",
   atributos: {},
@@ -555,7 +555,7 @@ function abrirModal(classeEscolhida) {
     modalDescricaoClasse.textContent = dados.funcionamento;
     modalEstiloJogoClasse.textContent = dados.estilo;
     modalHabilidadesClasse.textContent = dados.habilidades;
-    
+
 
   modalClasse.classList.remove("escondida");
 }
@@ -598,7 +598,7 @@ function irParaPasso(nomePasso) {
   });
 
   const conteudoAtual = document.getElementById("passo-" + nomePasso);
-  
+
   if (conteudoAtual !== null) {
     conteudoAtual.classList.remove("escondida");
   }
@@ -637,7 +637,7 @@ botoesPasso.forEach(function(botao) {
       mostrarMensagemNavegacao("Complete os passos anteriores antes de acessar esta etapa.");
       return;
     }
-    
+
       mostrarMensagemNavegacao("");
       irParaPasso(passoEscolhido);
   });
@@ -1188,7 +1188,7 @@ function atualizarAvisosEquipamentos() {
 }
 
 function podeAvancarDoPassoAtual() {
-  
+
   if (passoAtual === "classe") {
     const mensagem = document.getElementById("mensagemClasse");
 
@@ -1578,8 +1578,6 @@ card.addEventListener("keydown", function(evento) {
     });
   });
 }
-    
-
 
 
 function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
@@ -2190,7 +2188,7 @@ function atualizarFichaIdiomas() {
 seletorIdioma1.addEventListener("change", function() {
   atualizarIdiomasEscolhidos();
 });
-  
+
 
 seletorIdioma2.addEventListener("change", function() {
   atualizarIdiomasEscolhidos();
@@ -3026,7 +3024,7 @@ function salvarPersonagemLocal() {
   );
 
   return personagemParaSalvar;
-  
+
 }
 
 botaoFinalizarPersonagem.addEventListener("click", function() {
@@ -3196,7 +3194,7 @@ function atualizarMarcadoresPericias() {
 
     if (personagem.pericias.includes(idPericia)) {
       linha.classList.add("proficiente");
-    } 
+    }
 
     if (
   personagemTemEspecializacaoEmPericia(personagem, idPericia) ||

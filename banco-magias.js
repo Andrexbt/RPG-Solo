@@ -196,7 +196,7 @@ window.bancoMagias = {
   // =====================================================
 
   progressaoMagias: {
-    
+
     mago: {
       nivel1: {
         temMagias: true,
