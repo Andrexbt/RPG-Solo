@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
+# Mantido no repositório para novas rodadas de limpeza segura.
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_EXTENSIONS = {".html", ".css", ".js"}
 
