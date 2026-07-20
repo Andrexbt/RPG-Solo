@@ -1,8 +1,8 @@
 /* =====================================================
    Componente de ficha de personagem
    -----------------------------------------------------
-   Estilos exclusivos da estrutura reutilizável carregada
-   por ficha-personagem.js.
+   Aparência completa da ficha reutilizável e controles
+   de abrir e recolher.
    ===================================================== */
 
 .ficha-componente {
@@ -18,12 +18,273 @@
   margin-bottom: 10px;
 }
 
-.ficha-cabecalho-componente h2 {
+.ficha-cabecalho-componente h2,
+.ficha-cabecalho h2 {
   margin: 0;
   color: var(--cor-texto);
   font-size: 1.08rem;
   line-height: 1.1;
   letter-spacing: -0.035em;
+}
+
+.ficha-cabecalho {
+  margin-bottom: 10px;
+}
+
+.ficha {
+  position: relative;
+  padding: 90px 48px;
+  border-image-source: url("Imagens/Assets/scroll-2.png");
+  border-image-slice: 1800;
+  border-image-width: 400px;
+  border-image-repeat: stretch;
+  color: #3b281b;
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.32);
+}
+
+.ficha-bloco {
+  position: relative;
+  margin: 0;
+  padding: 16px;
+  border: 2px solid rgba(93, 57, 31, 0.52);
+  border-radius: 12px;
+  background: #211a17;
+}
+
+.ficha-bloco + .ficha-bloco,
+.ficha-detalhes + .ficha-bloco,
+.area-proficiencia + .ficha-bloco {
+  margin-top: 8px;
+}
+
+.ficha-bloco h3 {
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.1);
+  color: #f4dfba;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ficha-item {
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr);
+  gap: 6px;
+  align-items: baseline;
+  padding: 3px 0;
+}
+
+.ficha-rotulo,
+.campo-mini span,
+.campo-derivado span,
+.rotulo-modificador {
+  color: #cdbb9e;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.ficha-valor,
+.linha-salvaguarda,
+.linha-pericia,
+.lista-recursos li,
+#fichaTalentos li,
+#fichaMagias li,
+.linha-ataque {
+  color: #ddcfb8;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.ficha-detalhes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.linha-campos-ficha,
+.lista-valores-derivados,
+.grade-atributos-ficha {
+  display: grid;
+  gap: 8px;
+}
+
+.linha-campos-ficha.tres-colunas {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.linha-campos-ficha.duas-colunas,
+.lista-valores-derivados,
+.grade-atributos-ficha {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.campo-mini,
+.campo-derivado,
+.atributo-card,
+.equipamentos-lista,
+.equipamentos-ataques {
+  border: 1px solid rgba(215, 163, 95, 0.2);
+  border-radius: 12px;
+  background: #171311;
+}
+
+.campo-mini,
+.campo-derivado {
+  padding: 8px;
+}
+
+.campo-mini span,
+.campo-derivado span {
+  display: block;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.caixa-valor-pequena,
+.valor-atributo,
+.modificador {
+  min-height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(215, 163, 95, 0.38);
+  border-radius: 10px;
+  background: #2a2117;
+  color: var(--cor-ambar);
+  font-weight: 900;
+}
+
+.atributo-card {
+  padding: 9px;
+}
+
+.atributo-card h4 {
+  margin: 0 0 7px;
+  color: #f4dfba;
+  font-size: 0.84rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.linha-valores-atributo {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 7px;
+}
+
+.grupo-modificador {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 5px;
+  align-items: end;
+}
+
+.atributo-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linha-pericia {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+}
+
+.linha-salvaguarda {
+  margin-bottom: 4px;
+  padding: 5px 8px 5px 12px;
+  justify-self: center;
+  background: rgba(215, 163, 95, 0.08);
+  border: 1px solid rgba(215, 163, 95, 0.22);
+  border-radius: 8px;
+  color: #f4dfba;
+  font-weight: 850;
+  letter-spacing: 0.01em;
+}
+
+.linha-salvaguarda::before {
+  margin-left: 6px;
+}
+
+.linha-salvaguarda.proficiente,
+.linha-pericia.proficiente {
+  color: #f1bd6a;
+  font-weight: 850;
+}
+
+.linha-pericia.especializada::after {
+  content: " ★";
+  color: var(--cor-coral);
+  font-weight: 950;
+}
+
+.area-proficiencia {
+  margin-top: 8px;
+}
+
+.caixa-bonus-proficiencia {
+  padding: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.26);
+  border-radius: 14px;
+  background: #2a2117;
+  color: var(--cor-texto);
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.equipamentos-lista,
+.equipamentos-ataques {
+  margin: 0;
+  padding: 8px;
+  text-align: left;
+}
+
+.equipamentos-lista + .equipamentos-ataques {
+  margin-top: 8px;
+}
+
+.equipamentos-lista h2,
+.equipamentos-ataques h2,
+.ficha-armas-ataques h4 {
+  margin: 0 0 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.1);
+  color: #cdbb9e;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lista-recursos,
+#fichaTalentos,
+#fichaMagias {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.lista-recursos li,
+#fichaTalentos li,
+#fichaMagias li {
+  margin: 4px 0;
+}
+
+.linha-ataque-furtivo {
+  display: block;
+  margin-top: 4px;
+  color: var(--cor-coral);
+  font-size: 0.72rem;
 }
 
 .botao-retrair-ficha {
@@ -79,6 +340,17 @@
 
 .ficha-componente.ficha-retraida .botao-retrair-ficha {
   transform: rotate(180deg);
+}
+
+@media (max-width: 720px) {
+  .ficha {
+    padding: 72px 30px;
+  }
+
+  .grade-atributos-ficha,
+  .lista-valores-derivados {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
