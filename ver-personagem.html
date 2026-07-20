@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Personagem</title>
     <link rel="stylesheet" href="tema.css">
-    <link rel="stylesheet" href="criacao-personagem.css">
     <link rel="stylesheet" href="ficha-personagem.css">
     <link rel="stylesheet" href="ver-personagem.css">
-    
-    
   </head>
 
   <body>
@@ -17,48 +14,48 @@
          Cabeçalho da página
          ===================================================== -->
     <header class="cabecalho-site">
-  <a class="marca" href="index.html">
-    <span class="marca-simbolo">✦</span>
-    <span>Projeto RPG Solo</span>
-  </a>
+      <a class="marca" href="index.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Projeto RPG Solo</span>
+      </a>
 
-  <nav class="menu-principal">
-    <a href="index.html">Início</a>
-    <a href="criacao-personagem.html">Criar personagem</a>
-    <a href="meus-personagens.html">Meus personagens</a>
-  </nav>
-</header>
+      <nav class="menu-principal">
+        <a href="index.html">Início</a>
+        <a href="criacao-personagem.html">Criar personagem</a>
+        <a href="meus-personagens.html">Meus personagens</a>
+      </nav>
+    </header>
 
     <main class="pagina-ver-personagem">
       <!-- =====================================================
            Ações da ficha salva
            ===================================================== -->
       <section class="hero-ver-personagem">
-  <div class="decoracao-fundo decoracao-um"></div>
-  <div class="decoracao-fundo decoracao-dois"></div>
-  <div class="ornamento-rpg ornamento-ficha"></div>
+        <div class="decoracao-fundo decoracao-um"></div>
+        <div class="decoracao-fundo decoracao-dois"></div>
+        <div class="ornamento-rpg ornamento-ficha"></div>
 
-  <div class="conteudo-hero-ver">
-    <p class="etiqueta-pagina">Ficha salva</p>
+        <div class="conteudo-hero-ver">
+          <p class="etiqueta-pagina">Ficha salva</p>
 
-    <h1>Ficha do personagem</h1>
+          <h1>Ficha do personagem</h1>
 
-    <p>
-      Consulte os dados completos do personagem, revise atributos,
-      habilidades, ataques, equipamentos e magias preparadas.
-    </p>
+          <p>
+            Consulte os dados completos do personagem, revise atributos,
+            habilidades, ataques, equipamentos e magias preparadas.
+          </p>
 
-    <div class="acoes-ficha-salva">
-      <a class="botao botao-secundario" href="meus-personagens.html">
-        Voltar para meus personagens
-      </a>
+          <div class="acoes-ficha-salva">
+            <a class="botao botao-secundario" href="meus-personagens.html">
+              Voltar para meus personagens
+            </a>
 
-      <button class="botao botao-principal" id="botaoBaixarPdfEditavel">
-        Baixar PDF editável
-      </button>
-    </div>
-  </div>
-</section>
+            <button class="botao botao-principal" id="botaoBaixarPdfEditavel">
+              Baixar PDF editável
+            </button>
+          </div>
+        </div>
+      </section>
 
       <!-- =====================================================
            Ficha do personagem carregado do localStorage
@@ -67,10 +64,10 @@
            pelas funções compartilhadas de ficha-personagem.js.
            ===================================================== -->
       <section class="layout-ficha-salva">
-  <aside
-    class="ficha-personagem-salva"
-    data-ficha-personagem
-  ></aside>
+        <aside
+          class="ficha-personagem-salva"
+          data-ficha-personagem
+        ></aside>
       </section>
     </main>
 
@@ -96,8 +93,8 @@
     <!-- =====================================================
          Scripts
          -----------------------------------------------------
-         A ordem importa: bancos primeiro, módulos compartilhados
-         depois e, por último, ver-personagem.js.
+         A ordem importa: bancos primeiro e módulos compartilhados
+         depois. ficha-personagem.js carrega ver-personagem.js.
          ===================================================== -->
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
