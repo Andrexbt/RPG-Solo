@@ -1,0 +1,364 @@
+<section class="ficha-componente" data-ficha-componente>
+  <header class="ficha-cabecalho-componente">
+    <h2>Ficha do personagem</h2>
+
+    <button
+      type="button"
+      class="botao-retrair-ficha"
+      aria-expanded="true"
+      aria-controls="corpoFichaPersonagem"
+      aria-label="Recolher ficha do personagem"
+    >
+      <span aria-hidden="true">‹</span>
+    </button>
+  </header>
+
+  <div
+    id="corpoFichaPersonagem"
+    class="ficha-corpo"
+  >
+  <div class="ficha">
+    <section class="ficha-bloco">
+      <h3>Informações Básicas</h3>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Nome:</span>
+        <span class="ficha-valor" id="fichaNome"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Classe e Nível:</span>
+        <span class="ficha-valor" id="fichaClasseNivel"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Antecedente:</span>
+        <span class="ficha-valor" id="fichaAntecedente"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Espécie:</span>
+        <span class="ficha-valor" id="fichaEspecie"></span>
+      </div>
+
+      <div class="ficha-item">
+        <span class="ficha-rotulo">Idiomas:</span>
+        <span class="ficha-valor" id="fichaIdiomas"></span>
+      </div>
+
+        </section>
+
+        <div class="ficha-detalhes">
+
+        <div class="coluna-vida">
+
+          <section class="ficha-bloco ficha-pontos-vida">
+            <h3>Pontos de Vida</h3>
+
+              <div class="linha-campos-ficha tres-colunas">
+
+                <div class="campo-mini">
+                  <span>Atuais</span>
+                  <div class="caixa-valor-pequena" id="pvAtuais"></div>
+                </div>
+         
+                <div class="campo-mini">
+                  <span>Temporários</span>
+                  <div class="caixa-valor-pequena" id="pvTemporarios"></div>
+                </div>
+
+
+                <div class="campo-mini">
+                  <span>Máximo</span>
+                  <div class="caixa-valor-pequena" id="pvMaximo"></div>
+                </div>
+
+              </div>
+
+          </section>
+        
+          <section class="ficha-bloco ficha-dados-vida">
+            <h3>Dados de Vida</h3>
+
+             <div class="linha-campos-ficha duas-colunas">
+
+              <div class="campo-mini">
+                <span>Utilizados</span>
+                <div class="caixa-valor-pequena" id="dadosVidaUsados"></div>
+              </div>
+
+              <div class="campo-mini">
+                <span>Máximos</span>
+                <div class="caixa-valor-pequena" id="dadosVidaMaximos"></div>
+              </div>
+
+             </div>
+          </section>
+
+          <section class="ficha-bloco ficha-death-saves">
+            <h3>Death Saves</h3>
+
+            <div class="linha-campos-ficha duas-colunas">
+
+              <div class="campo-mini">
+                <span>Sucessos</span>
+                <div class="caixa-valor-pequena" id="deathSavesSucessos"></div>
+              </div>
+
+              <div class="campo-mini">
+                <span>Falhas</span>
+                <div class="caixa-valor-pequena" id="deathSavesFalhas"></div>
+              </div>
+
+            </div>
+          </section>
+
+        </div>
+
+        <div class="coluna-valores-derivados">
+
+          <section class="ficha-bloco ficha-valores-derivados">
+
+            <div class="lista-valores-derivados">
+
+              <div class="campo-derivado">
+                <span>Classe de Armadura</span>
+                <div class="caixa-valor-pequena" id="fichaClasseArmadura"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Iniciativa</span>
+                <div class="caixa-valor-pequena" id="fichaIniciativa"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Velocidade</span>
+                <div class="caixa-valor-pequena" id="fichaVelocidade"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Tamanho</span>
+                <div class="caixa-valor-pequena" id="fichaTamanho"></div>
+              </div>
+
+              <div class="campo-derivado">
+                <span>Percepção Passiva</span>
+                <div class="caixa-valor-pequena" id="fichaPercepcaoPassiva"></div>
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        </div>
+
+        <div class="area-proficiencia">
+
+        <div class="caixa-bonus-proficiencia">
+          <span>Bônus de Proficiência</span>
+        </div>
+
+        <div class="valor-bonus-proficiencia">
+          <span>+2</span>
+        </div>
+
+        </div>
+
+        <section class="ficha-bloco">
+        <h3>Atributos e Perícias</h3>
+
+        <div class="grade-atributos-ficha">
+
+          <div class="atributo-card">
+            <h4>Força</h4>
+          
+            <div class="linha-valores-atributo">
+              <div class="valor-atributo" id="valfor"></div>
+
+              <div class="grupo-modificador">
+                <span class = "rotulo-modificador">Mod</span>
+                <div class="modificador" id="modfor"></div>
+              </div>
+
+            </div>
+
+            <ul>
+              <li class="linha-salvaguarda" data-salvaguarda="forca">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="atletismo">Atletismo</p>
+            </ul>
+
+          </div>
+
+          <div class="atributo-card">
+            <h4>Destreza</h4>
+          
+            <div class="linha-valores-atributo">
+              <div class="valor-atributo" id="valdes"></div>
+
+              <div class="grupo-modificador">
+                <span class = "rotulo-modificador">Mod</span>
+                <div class="modificador" id="moddes"></div>
+              </div>
+            </div>
+
+            <ul>
+              <li class="linha-salvaguarda" data-salvaguarda="destreza">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="acrobacia">Acrobacia</p>
+              <p class="linha-pericia" data-pericia="furtividade">Furtividade</p>
+              <p class="linha-pericia" data-pericia="prestidigitacao">Prestidigitação</p>
+            </ul>
+
+          </div>
+
+          <div class="atributo-card">
+          <h4>Constituição</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valcon"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modcon"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="constituicao">Salvaguarda</li>
+          </ul>
+          </div>
+
+          <div class="atributo-card">
+          <h4>Inteligência</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valint"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modint"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="inteligencia">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="arcanismo">Arcanismo</p>
+              <p class="linha-pericia" data-pericia="historia">História</p>
+              <p class="linha-pericia" data-pericia="investigacao">Investigação</p>
+              <p class="linha-pericia" data-pericia="natureza">Natureza</p>
+              <p class="linha-pericia" data-pericia="religiao">Religião</p>
+          </ul>
+          </div>
+
+          <div class="atributo-card">
+          <h4>Sabedoria</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valsab"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modsab"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="sabedoria">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="adestramento">Adestramento</p>
+              <p class="linha-pericia" data-pericia="intuicao">Intuição</p>
+              <p class="linha-pericia" data-pericia="medicina">Medicina</p>
+              <p class="linha-pericia" data-pericia="percepcao">Percepção</p>
+              <p class="linha-pericia" data-pericia="sobrevivencia">Sobrevivência</p>
+          </ul>
+          </div>
+
+          <div class="atributo-card">
+          <h4>Carisma</h4>
+          
+          <div class="linha-valores-atributo">
+           <div class="valor-atributo" id="valcar"></div>
+
+           <div class="grupo-modificador">
+            <span class = "rotulo-modificador">Mod</span>
+          <div class="modificador" id="modcar"></div>
+          </div>
+        </div>
+
+          <ul>
+            <li class="linha-salvaguarda" data-salvaguarda="carisma">Salvaguarda</li>
+              <p class="linha-pericia" data-pericia="atuacao">Atuação</p>
+              <p class="linha-pericia" data-pericia="enganacao">Enganação</p>
+              <p class="linha-pericia" data-pericia="intimidacao">Intimidação</p>
+              <p class="linha-pericia" data-pericia="persuasao">Persuasão</p>
+          </ul>
+          </div>
+
+        </div>
+
+        </section>
+
+        <section class="ficha-bloco">
+        <h3>Equipamento</h3>
+
+          <section class="equipamentos-lista">
+          <h2>Armas e Armadura</h2>
+
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Armadura:</span>
+              <span class="ficha-valor" id="fichaArmadura"></span>
+            </div>
+
+            <div class="ficha-item">
+    <span class="ficha-rotulo">Armas:</span>
+    <span class="ficha-valor" id="fichaArmaPrincipal"></span>
+            </div>
+
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Arma Secundária:</span>
+              <span class="ficha-valor" id="fichaItemSecundario"></span>
+            </div>
+
+            <div class="ficha-item">
+              <span class="ficha-rotulo">Proficiências:</span>
+              <span class="ficha-valor" id="fichaProficiencias"></span>
+            </div>
+
+          </section>
+
+          <section class="equipamentos-ataques">
+          <h2>Ataques</h2>
+
+             <div class="ficha-armas-ataques">
+               <div id="fichaArmasAtaques"></div>
+             </div>
+
+          </section>
+
+        </section>
+
+        <section class="ficha-bloco">
+        <h3>Habilidades</h3>
+
+        <ul class="lista-recursos" id="fichaHabilidades">
+            <li></li>
+        </ul>
+        </section>
+
+        <section class="ficha-bloco">
+        <h3>Talentos</h3>
+
+        <ul id="fichaTalentos">
+          <li></li>
+        </ul>
+        </section>
+
+        <section class="ficha-bloco">
+          <h3>Magias</h3>
+      
+        <ul class="lista-recursos" id="fichaMagias">
+            <li></li>
+        </ul>
+        </section>
+  </div>
+</section>

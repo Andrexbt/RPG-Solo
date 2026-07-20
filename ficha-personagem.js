@@ -1090,4 +1090,115 @@
       console.warn("Não foi possível reaplicar a ficha compartilhada:", erro);
     }
   });
+
+  // =====================================================
+// Componente visual da ficha
+// -----------------------------------------------------
+// Carrega o fragmento ficha-personagem.html antes dos
+// scripts específicos de cada página.
+// =====================================================
+
+async function carregarHtmlFichaPersonagem() {
+  const areasFicha = document.querySelectorAll(
+    "[data-ficha-personagem]"
+  );
+
+  if (areasFicha.length === 0) {
+    return [];
+  }
+
+  const caminhoFicha = new URL(
+    "ficha-personagem.html",
+    document.baseURI
+  );
+
+  const resposta = await fetch(caminhoFicha);
+
+  if (resposta.ok === false) {
+    throw new Error(
+      "Não foi possível carregar ficha-personagem.html. " +
+      "Status: " +
+      resposta.status
+    );
+  }
+
+  const htmlFicha = await resposta.text();
+  const fichasInseridas = [];
+
+  areasFicha.forEach(function(areaFicha) {
+    areaFicha.innerHTML = htmlFicha;
+
+    const fichaInserida = areaFicha.querySelector(
+      "[data-ficha-componente]"
+    );
+
+    if (fichaInserida !== null) {
+      fichasInseridas.push(fichaInserida);
+    }
+  });
+
+  document.dispatchEvent(
+    new CustomEvent("fichaPersonagemCarregada", {
+      detail: {
+        fichas: fichasInseridas
+      }
+    })
+  );
+
+  return fichasInseridas;
+}
+
+function carregarScriptDepoisDaFicha(caminhoScript) {
+  return new Promise(function(resolve, reject) {
+    const script = document.createElement("script");
+
+    script.src = caminhoScript;
+    script.addEventListener("load", resolve);
+    script.addEventListener("error", function() {
+      reject(
+        new Error(
+          "Não foi possível carregar o script: " +
+          caminhoScript
+        )
+      );
+    });
+
+    document.head.appendChild(script);
+  });
+}
+
+async function iniciarComponenteFichaPersonagem() {
+  try {
+    await carregarHtmlFichaPersonagem();
+
+    const nomePagina =
+      window.location.pathname.split("/").pop() ||
+      "index.html";
+
+    if (nomePagina === "criacao-personagem.html") {
+      await carregarScriptDepoisDaFicha(
+        "criacao-personagem.js"
+      );
+    }
+
+    if (nomePagina === "ver-personagem.html") {
+      await carregarScriptDepoisDaFicha(
+        "ver-personagem.js"
+      );
+    }
+  } catch (erro) {
+    console.error(
+      "Erro ao iniciar a ficha de personagem:",
+      erro
+    );
+  }
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+    window.fichaPersonagemPronta =
+      iniciarComponenteFichaPersonagem();
+  }
+)
 })();
