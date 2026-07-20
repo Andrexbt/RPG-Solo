@@ -440,6 +440,29 @@ img {
 }
 
 /* =====================================================
+   Rodapé e atribuição do SRD
+   ===================================================== */
+
+.rodape-site {
+  width: min(var(--largura-conteudo), calc(100% - 32px));
+  margin: var(--espaco-lg) auto 0;
+  padding: var(--espaco-md) 0 var(--espaco-lg);
+  border-top: 1px solid var(--cor-linha);
+  color: rgba(246, 234, 215, 0.68);
+  line-height: 1.55;
+}
+
+.rodape-site a {
+  color: var(--cor-ambar);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.rodape-site a:hover {
+  color: var(--cor-texto);
+}
+
+/* =====================================================
    Transição visual entre páginas
    ===================================================== */
 

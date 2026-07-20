@@ -281,173 +281,6 @@ const personagem = {
   },
 };
 
-function atualizarPericiasPersonagem() {
-  const todasAsPericias = [
-    ...personagem.periciasAntecedente,
-    ...personagem.periciasClasse
-  ];
-
-  personagem.pericias = [...new Set(todasAsPericias)];
-}
-
-// =====================================================
-// 13. Idiomas
-// -----------------------------------------------------
-// Controla idiomas fixos e escolhas livres feitas nos detalhes.
-// =====================================================
-
-function obterDadosIdioma(idIdioma) {
-  if (window.bancoIdiomas === undefined) {
-    return undefined;
-  }
-
-  return window.bancoIdiomas[idIdioma];
-}
-
-function obterNomeIdioma(idIdioma) {
-  const idioma = obterDadosIdioma(idIdioma);
-
-  if (idioma === undefined) {
-    return idIdioma;
-  }
-
-  return idioma.nome;
-}
-
-function atualizarIdiomasPersonagem() {
-  const todosOsIdiomas = [
-    ...personagem.idiomasBase,
-    ...personagem.idiomasEspecie,
-    ...personagem.idiomasAntecedente,
-    ...personagem.idiomasEscolhidos
-  ];
-
-  personagem.idiomas = [...new Set(todosOsIdiomas)];
-}
-
-function obterIdiomasBloqueadosParaEscolha() {
-  return [
-    ...personagem.idiomasBase,
-    ...personagem.idiomasEspecie,
-    ...personagem.idiomasAntecedente
-  ];
-}
-
-function atualizarIdiomasEscolhidos() {
-  idiomasEscolhidos = [
-    seletorIdioma1.value,
-    seletorIdioma2.value
-  ];
-
-  personagem.idiomasEscolhidos = idiomasEscolhidos.filter(function(idIdioma) {
-    return idIdioma !== "";
-  });
-
-  atualizarIdiomasPersonagem();
-  atualizarSelectsIdiomas();
-  atualizarFichaIdiomas();
-}
-
-// =====================================================
-// 11. Recursos de habilidades
-// -----------------------------------------------------
-// Cria usos de habilidades como Segundo Fôlego quando aplicável.
-// =====================================================
-
-function atualizarRecursosHabilidadesPersonagem() {
-  personagem.habilidades.recursos = {};
-
-  const classeId = personagem.classeId;
-
-  if (classeId === "") {
-    return;
-  }
-
-  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[classeId];
-
-  if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
-    return;
-  }
-
-  const dadosNivel1 = dadosDaClasse.nivel1;
-
-  const habilidadesAutomaticas =
-    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
-
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
-    const habilidade = obterDadosHabilidade(idHabilidade);
-
-    if (habilidade === undefined || habilidade.recurso === undefined) {
-      return;
-    }
-
-    const recurso = habilidade.recurso;
-
-    let formula = recurso.formula;
-
-    if (formula !== undefined && formula !== "") {
-      formula = formula.replace("nivelClasse", "1");
-    }
-
-    personagem.habilidades.recursos[recurso.id] = {
-      id: recurso.id,
-      nome: recurso.nome,
-      usosAtuais: recurso.usosMaximos,
-      usosMaximos: recurso.usosMaximos,
-      recuperaEm: recurso.recuperaEm,
-      efeito: recurso.efeito,
-      formula: formula
-    };
-  });
-}
-
-function limparEspecializacoesInvalidas() {
-  const especializacoes =
-    obterEspecializacoesPericiasPersonagem(personagem);
-
-  personagem.habilidades.escolhas.especializacoesPericias =
-    especializacoes.filter(function(idPericia) {
-      return personagem.pericias.includes(idPericia);
-    });
-}
-
-function criarItemHabilidadeAutomaticaFicha(idHabilidade) {
-  const habilidade = obterDadosHabilidade(idHabilidade);
-
-  if (habilidade === undefined) {
-    return undefined;
-  }
-
-  const item = document.createElement("li");
-
-  const botao = window.criarReferenciaDetalhe(
-    "habilidade",
-    idHabilidade,
-    habilidade.nome,
-    {
-      recursos: personagem.habilidades.recursos
-    }
-  );
-
-  item.appendChild(botao);
-
-  const recurso = personagem.habilidades.recursos[idHabilidade];
-
-  if (recurso !== undefined) {
-    item.appendChild(
-      document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
-    );
-  }
-
-  return item;
-}
-
-function criarItemHabilidadeComEscolha(nomeGrupo, nomeEscolha) {
-  const item = document.createElement("li");
-  item.textContent = nomeGrupo + ": " + nomeEscolha;
-  return item;
-}
-
 preencherSelectArmaSecundaria();
 atualizarVisibilidadeArmaSecundaria();
 
@@ -1177,14 +1010,6 @@ function habilidadesEstaoEscolhidas(){
       valorEscolhido.length === escolha.quantidade
     );
   });
-}
-
-function atualizarAvisosEquipamentos() {
-  if (avisoEquipamentos === null) {
-    return;
-  }
-
-  avisoEquipamentos.textContent = "";
 }
 
 function podeAvancarDoPassoAtual() {
@@ -2523,14 +2348,20 @@ function montarTelaRevisao() {
   const blocoBasico = document.createElement("section");
   blocoBasico.classList.add("bloco-revisao");
 
-  blocoBasico.innerHTML = `
-    <h3>Informações Básicas</h3>
-    <p><strong>Nome:</strong> ${personagem.detalhes.nome}</p>
-    <p><strong>Classe:</strong> ${personagem.classe} 1</p>
-    <p><strong>Antecedente:</strong> ${personagem.antecedente}</p>
-    <p><strong>Espécie:</strong> ${personagem.especie}</p>
-    <p><strong>Idiomas:</strong> ${personagem.idiomas.map(obterNomeIdioma).join(", ")}</p>
-  `;
+  const tituloBasico = document.createElement("h3");
+  tituloBasico.textContent = "Informações Básicas";
+
+  blocoBasico.append(
+    tituloBasico,
+    criarParagrafoRevisao("Nome", personagem.detalhes.nome),
+    criarParagrafoRevisao("Classe", personagem.classe + " 1"),
+    criarParagrafoRevisao("Antecedente", personagem.antecedente),
+    criarParagrafoRevisao("Espécie", personagem.especie),
+    criarParagrafoRevisao(
+      "Idiomas",
+      personagem.idiomas.map(obterNomeIdioma).join(", ")
+    )
+  );
 
   areaRevisao.appendChild(blocoBasico);
 
@@ -2938,33 +2769,50 @@ function montarRevisaoMagias() {
   const bloco = document.createElement("section");
   bloco.classList.add("bloco-revisao");
 
+  const titulo = document.createElement("h3");
+  titulo.textContent = "Magias";
+  bloco.appendChild(titulo);
+
   const dadosMagiaClasse = window.bancoMagias.progressaoMagias[personagem.classeId];
 
   if (dadosMagiaClasse === undefined || dadosMagiaClasse.nivel1 === undefined) {
-    bloco.innerHTML = `
-      <h3>Magias</h3>
-      <p>Este personagem não possui escolhas de magia cadastradas para o nível atual.</p>
-    `;
+    const aviso = document.createElement("p");
+    aviso.textContent =
+      "Este personagem não possui escolhas de magia cadastradas para o nível atual.";
+    bloco.appendChild(aviso);
 
     areaRevisao.appendChild(bloco);
     return;
   }
 
-  bloco.innerHTML = `
-    <h3>Magias</h3>
-    <p>${dadosMagiaClasse.nivel1.mensagem}</p>
-    <p>A seleção detalhada de magias ainda será implementada.</p>
-  `;
+  const truques = personagem.magias.truquesConhecidos || [];
+  const preparadas = personagem.magias.magiasPreparadas || [];
+  const espacosNivel1 = personagem.magias.espacosMagia?.nivel1?.maximos ?? 0;
+
+  bloco.append(
+    criarParagrafoRevisao(
+      "Atributo de conjuração",
+      obterNomeAtributoConjuracao(personagem.magias.atributoConjuracao)
+    ),
+    criarParagrafoRevisao("CD das magias", personagem.magias.cdSalvamento || "-"),
+    criarParagrafoRevisao(
+      "Ataque mágico",
+      personagem.magias.bonusAtaqueMagico === ""
+        ? "-"
+        : formatarModificador(personagem.magias.bonusAtaqueMagico)
+    ),
+    criarParagrafoRevisao(
+      "Truques",
+      truques.length === 0 ? "Nenhum" : truques.map(obterNomeMagia).join(", ")
+    ),
+    criarParagrafoRevisao(
+      "Magias preparadas",
+      preparadas.length === 0 ? "Nenhuma" : preparadas.map(obterNomeMagia).join(", ")
+    ),
+    criarParagrafoRevisao("Espaços de 1º círculo", espacosNivel1)
+  );
 
   areaRevisao.appendChild(bloco);
-}
-
-function obterDadosTalento(idTalento) {
-  if (window.bancoTalentos === undefined) {
-    return undefined;
-  }
-
-  return window.bancoTalentos[idTalento];
 }
 
 function atualizarFichaTalentos() {
@@ -3008,8 +2856,18 @@ function salvarPersonagemLocal() {
   atualizarPericiasPersonagem();
   atualizarIdiomasPersonagem();
 
-  const personagensSalvos =
-    JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
+  let personagensSalvos = [];
+
+  try {
+    const dadosSalvos = localStorage.getItem("personagensRpgSolo");
+    const dadosConvertidos = dadosSalvos === null ? [] : JSON.parse(dadosSalvos);
+
+    if (Array.isArray(dadosConvertidos)) {
+      personagensSalvos = dadosConvertidos;
+    }
+  } catch (erro) {
+    console.error("Não foi possível ler os personagens salvos.", erro);
+  }
 
   const personagemParaSalvar = structuredClone(personagem);
 
@@ -3798,10 +3656,6 @@ function atualizarPericiasPersonagem() {
   personagem.pericias = [...new Set(todasAsPericias)];
 }
 
-function obterDadosTalento(idTalento) {
-  return window.bancoTalentos[idTalento];
-}
-
 function obterNomeTalento(idTalento) {
   const talento = obterDadosTalento(idTalento);
 
@@ -3818,26 +3672,6 @@ function obterDadosTalento(idTalento) {
   }
 
   return window.bancoTalentos[idTalento];
-}
-
-function criarItemTalentoFicha(idTalento) {
-  const item = document.createElement("li");
-  const talento = obterDadosTalento(idTalento);
-
-  if (talento === undefined) {
-    item.textContent = idTalento;
-    return item;
-  }
-
-  const referencia = window.criarReferenciaDetalhe(
-    "talento",
-    idTalento,
-    talento.nome
-  );
-
-  item.appendChild(referencia);
-
-  return item;
 }
 
 atualizarFichaTalentos();
@@ -4070,7 +3904,7 @@ function obterDadosHabilidade(idHabilidade) {
 }
 
 function obterNomeHabilidade(idHabilidade) {
-  const habilidade = window.bancoHabilidades.progressaoClasses[classeId];
+  const habilidade = obterDadosHabilidade(idHabilidade);
 
   if (habilidade === undefined) {
     return idHabilidade;
