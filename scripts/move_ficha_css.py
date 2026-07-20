@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+# Migração pontual: separa os estilos reutilizáveis da ficha do CSS da criação.
 ROOT = Path(__file__).resolve().parents[1]
 CSS_CRIACAO = ROOT / "criacao-personagem.css"
 CSS_FICHA = ROOT / "ficha-personagem.css"
