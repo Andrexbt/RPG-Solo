@@ -172,7 +172,7 @@ body {
   display: grid;
 
   grid-template-columns:
-    clamp(320px, 27vw, 390px)
+    clamp(460px, 32vw, 470px)
     minmax(0, 1fr);
 
   gap: clamp(18px, 2vw, 28px);

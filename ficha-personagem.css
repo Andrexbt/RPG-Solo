@@ -33,7 +33,7 @@
 
 .ficha {
   position: relative;
-  padding: 90px 48px;
+  padding: 90px 24px;
   border-image-source: url("Imagens/Assets/scroll-2.png");
   border-image-slice: 1800;
   border-image-width: 400px;
@@ -51,9 +51,79 @@
   background: #211a17;
 }
 
+.lista-valores-derivados {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.campo-derivado {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.campo-derivado .caixa-valor-pequena {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ficha-detalhes,
+.area-proficiencia {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 3fr)
+    minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.area-proficiencia {
+  margin-top: 0;
+  align-items: stretch;
+}
+
+
+
+.caixa-bonus-proficiencia,
+.valor-bonus-proficiencia {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.valor-bonus-proficiencia {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.38);
+  border-radius: 14px;
+  background: #2a2117;
+  color: var(--cor-ambar);
+  font-weight: 900;
+}
+
+.coluna-vida,
+.coluna-valores-derivados {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 16px;
+}
+
+.ficha-resumo {
+  text-align: center;
+}
+
+.ficha-resumo h3 {
+  font-family: var(--fonte-titulos);
+}
+
 .ficha-bloco + .ficha-bloco,
 .ficha-detalhes + .ficha-bloco,
-.area-proficiencia + .ficha-bloco {
+.ficha-bloco {
   margin-top: 8px;
 }
 
@@ -98,16 +168,7 @@
   line-height: 1.4;
 }
 
-.ficha-detalhes {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.linha-campos-ficha,
-.lista-valores-derivados,
-.grade-atributos-ficha {
+.linha-campos-ficha {
   display: grid;
   gap: 8px;
 }
@@ -116,10 +177,18 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.linha-campos-ficha.duas-colunas,
-.lista-valores-derivados,
-.grade-atributos-ficha {
+.linha-campos-ficha.duas-colunas {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grade-atributos-ficha {
+  display: block;
+  columns: 2;
+  column-gap: 8px;
+}
+
+.grade-atributos-ficha > :nth-child(4) {
+  break-before: column;
 }
 
 .campo-mini,
@@ -158,8 +227,46 @@
   font-weight: 900;
 }
 
+.valor-atributo {
+  position: relative;
+  z-index: 2;
+
+  width: 58px;
+  height: 58px;
+  min-height: 0;
+
+  border-radius: 50%;
+  box-sizing: border-box;
+  font-size: 1.3rem;
+}
+
+.modificador {
+  width: 58px;
+  height: 36px;
+  min-height: 0;
+
+  padding-left: 12px;
+  border-radius: 0 18px 18px 0;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+}
+
+.rotulo-modificador {
+  position: absolute;
+  bottom: calc(100% + 3px);
+  left: 12px;
+
+  width: 46px;
+  text-align: center;
+  line-height: 1;
+}
+
 .atributo-card {
   padding: 9px;
+  width: 100%;
+  margin-bottom: 8px;
+  break-inside: avoid;
+  box-sizing: border-box;
 }
 
 .atributo-card h4 {
@@ -172,18 +279,21 @@
 }
 
 .linha-valores-atributo {
-  display: grid;
-  grid-template-columns: 62px minmax(0, 1fr);
-  gap: 10px;
-  align-items: end;
-  margin-bottom: 7px;
+  position: relative;
+  width: 104px;
+  height: 58px;
+  margin: 0 auto 7px;
 }
 
 .grupo-modificador {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  gap: 5px;
-  align-items: end;
+  position: absolute;
+  z-index: 1;
+
+  left: 46px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: block;
 }
 
 .atributo-card ul {
@@ -226,10 +336,6 @@
   content: " ★";
   color: var(--cor-coral);
   font-weight: 950;
-}
-
-.area-proficiencia {
-  margin-top: 8px;
 }
 
 .caixa-bonus-proficiencia {
