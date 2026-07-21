@@ -31,7 +31,7 @@
     <span>Projeto RPG Solo</span>
   </a>
 
-  <nav class="menu-principal">
+  <nav class="menu-principal" aria-label="Navegação principal">
     <a href="index.html">Início</a>
     <a href="meus-personagens.html">Meus personagens</a>
     <a href="criacao-personagem.html">Criar personagem</a>
@@ -73,7 +73,7 @@
       <h2>Ficha de Personagem</h2>
       </header>
 
-      <aside class="coluna-ficha" data-ficha-personagem>
+      <aside data-ficha-personagem>
       </aside>
 
     </section>
@@ -148,7 +148,7 @@
         <div class="acoes-passo">
           <p class="mensagem-passo" id="mensagemClasse"></p>
 
-          <button class="botao-proximo">
+          <button type="button" class="botao-proximo">
            Próximo Passo
           </button>
         </div>
@@ -158,13 +158,13 @@
        Passo: atributos
        ===================================================== -->
 <section class="conteudo-passo escondida" id="passo-atributos">
-     <h2>Passo 3: Determine seus Atributos</h2>
+     <h2>Passo 2: Determine seus Atributos</h2>
 
      <p class="texto-explicativo">
      Aqui o jogador distribuirá os valores de Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma.
      </p>
 
-     <button class="botao-rolar" id="gerar-atributos">Rolar Dados</button>
+     <button type="button" class="botao-rolar" id="gerar-atributos">Rolar Dados</button>
 
      <div class="caixa-rolagem-dados">
 
@@ -186,8 +186,6 @@
        <span>—</span>
        <span>—</span>
        </div>
-      </div>
-
       <div class="bloco-distribuicao-atributos">
     <h3>Distribua os valores rolados</h3>
 
@@ -225,7 +223,7 @@
   <p class="mensagem-passo" id="mensagemAtributos"></p>
 
   <div class="acoes-passo">
-         <button class="botao-proximo">
+         <button type="button" class="botao-proximo">
           Próximo Passo
          </button>
         </div>
@@ -304,7 +302,7 @@
     </div>
     <div class="acoes-passo">
       <p class="mensagem-passo" id="mensagemAntecedente"></p>
-         <button class="botao-proximo">
+         <button type="button" class="botao-proximo">
           Próximo Passo
          </button>
         </div>
@@ -353,7 +351,7 @@
 
     <div class="acoes-passo">
       <p class="mensagem-passo" id="mensagemEspecie"></p>
-         <button class="botao-proximo">
+         <button type="button" class="botao-proximo">
           Próximo Passo
          </button>
         </div>
@@ -375,7 +373,7 @@
 
      <div class="acoes-passo">
       <p class="mensagem-passo" id="mensagemHabilidades"></p>
-         <button class="botao-proximo">
+         <button type="button" class="botao-proximo">
           Próximo Passo
          </button>
         </div>
@@ -394,7 +392,7 @@
 
      <div class="acoes-passo">
       <p class="mensagem-passo" id="mensagemMagias"></p>
-         <button class="botao-proximo">
+         <button type="button" class="botao-proximo">
           Próximo Passo
          </button>
         </div>
@@ -494,7 +492,7 @@
   <div class="acoes-passo">
     <p class="mensagem-passo" id="mensagemDetalhes"></p>
 
-    <button class="botao-proximo">
+    <button type="button" class="botao-proximo">
       Ir para o próximo passo
     </button>
   </div>
@@ -517,7 +515,7 @@
         <div class="acoes-passo">
           <p class="mensagem-passo" id="mensagemRevisao"></p>
 
-          <button class="botao-finalizar" id="botaoFinalizarPersonagem">
+          <button type="button" class="botao-finalizar" id="botaoFinalizarPersonagem">
             Finalizar Personagem
           </button>
         </div>
@@ -530,22 +528,36 @@
        Navegação entre passos
        ===================================================== -->
 <section>
-       <nav class="navegacao-passos">
-  <button class="passo atual" data-passo="classe">1. Classe</button>
-  <button class="passo" data-passo="atributos">2. Atributos</button>
-  <button class="passo" data-passo="antecedente">3. Antecedentes</button>
-  <button class="passo" data-passo="especie">4. Espécie</button>
-  <button class="passo" data-passo="habilidades">5. Habilidades</button>
-  <button class="passo" data-passo="magias">6. Magias</button>
-  <button class="passo" data-passo="detalhes">7. Detalhes</button>
-  <button class="passo" data-passo="revisao">8. Revisão</button>
+       <nav class="navegacao-passos" aria-label="Etapas da criação de personagem">
+  <button type="button" class="passo atual" data-passo="classe">1. Classe</button>
+  <button type="button" class="passo" data-passo="atributos">2. Atributos</button>
+  <button type="button" class="passo" data-passo="antecedente">3. Antecedentes</button>
+  <button type="button" class="passo" data-passo="especie">4. Espécie</button>
+  <button type="button" class="passo" data-passo="habilidades">5. Habilidades</button>
+  <button type="button" class="passo" data-passo="magias">6. Magias</button>
+  <button type="button" class="passo" data-passo="detalhes">7. Detalhes</button>
+  <button type="button" class="passo" data-passo="revisao">8. Revisão</button>
   </nav>
 
   <p class="mensagem-navegacao" id="mensagemNavegacao"></p>
 
     </section>
 
+  </section>
+
   </main>
+
+  <footer class="rodape-site">
+    <small lang="en">
+      This work includes material from the System Reference Document 5.2.1
+      (“SRD 5.2.1”) by Wizards of the Coast LLC, available at
+      <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1
+      is licensed under the
+      <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
+        Creative Commons Attribution 4.0 International License
+      </a>.
+    </small>
+  </footer>
 
 
    <!-- =====================================================
@@ -564,15 +576,15 @@
 
     <div class="modal-imagem-container">
       <img
-      class = "modal-imagem"
-      id = "modalImagemClasse"
-      src ="imagens/classes/guerreiro.png"
+      class="modal-imagem"
+      id="modalImagemClasse"
+      src="imagens/classes/guerreiro.png"
       alt="Guerreiro">
     </div>
 
     <div class="modal-textos">
       <section class="modal-secao">
-        <h3>(pensar em subtítulos)</h3>
+        <h3>Como a classe funciona</h3>
 
         <p id="modalDescricaoClasse">
           Aqui entrará um texto mais completo explicando como a classe funciona,
@@ -582,16 +594,16 @@
         </section>
 
         <section class="modal-secao">
-        <h3>Estilo de jogo recomendado (pensar)</h3>
+        <h3>Estilo de jogo recomendado</h3>
 
         <p id="modalEstiloJogoClasse">
           Recomendado para jogadores que gostam de combate direto, presença na linha
-          de frente, resistência e uso estratégico de armas e armaduras (melhorar).
+          de frente, resistência e uso estratégico de armas e armaduras.
         </p>
       </section>
 
       <section class="modal-secao">
-        <h3>Bônus e habilidades específicas (pensar)</h3>
+        <h3>Bônus e habilidades específicas</h3>
 
         <p id="modalHabilidadesClasse">
           (Aqui entrarão os bônus, proficiências e habilidades da classe conforme
@@ -602,8 +614,8 @@
 </div>
 
 <div class="modal-acoes">
-      <button class="botao-voltar" id="botaoVoltarModal">Voltar</button>
-      <button class="botao-selecionar" id="botaoSelecionarClasse">
+      <button type="button" class="botao-voltar" id="botaoVoltarModal">Voltar</button>
+      <button type="button" class="botao-selecionar" id="botaoSelecionarClasse">
         Selecionar Classe
       </button>
     </div>
@@ -627,12 +639,13 @@
       Fechar
     </button>
 
-    <h2 id="modalDetalheTitulo"></h2>
+    <h2 id="modalDetalheTitulo">Detalhes</h2>
 
     <p id="modalDetalheDescricao"></p>
 
     <div id="modalDetalheMecanica" class="modal-detalhe-mecanica"></div>
   </div>
+</div>
 
    <!-- =====================================================
        Scripts

@@ -1,0 +1,10 @@
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Dependências e registros locais
+node_modules/
+npm-debug.log*
+
+# Configurações pessoais do editor
+.vscode/

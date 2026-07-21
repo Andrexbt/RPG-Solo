@@ -177,7 +177,15 @@ const idPersonagem = pegarIdDaUrl();
 const personagemEncontrado = buscarPersonagemPorId(idPersonagem);
 
 function carregarPersonagensSalvos() {
-  return JSON.parse(localStorage.getItem("personagensRpgSolo")) || [];
+  try {
+    const dadosSalvos = localStorage.getItem("personagensRpgSolo");
+    const personagens = dadosSalvos === null ? [] : JSON.parse(dadosSalvos);
+
+    return Array.isArray(personagens) ? personagens : [];
+  } catch (erro) {
+    console.error("Não foi possível ler os personagens salvos.", erro);
+    return [];
+  }
 }
 
 function pegarIdDaUrl() {
