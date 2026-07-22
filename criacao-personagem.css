@@ -14,6 +14,11 @@ body {
    ===================================================== */
 
 .hero-criacao {
+  --opacidade-decoracao: 0.10;
+  --opacidade-ornamento: 0.10;
+  --cor-borda-decoracao: rgba(215, 163, 95, 0.20);
+  --cor-borda-ornamento: rgba(215, 163, 95, 0.42);
+
   position: relative;
 
   width: min(
@@ -51,20 +56,6 @@ body {
   background: rgba(215, 163, 95, 0.58);
 }
 
-.etiqueta-pagina {
-  width: fit-content;
-  margin: 0 0 12px;
-  padding: 6px 11px;
-  border: 1px solid rgba(215, 163, 95, 0.42);
-  border-radius: var(--raio-botao);
-  color: var(--cor-ambar);
-  background: rgba(215, 163, 95, 0.14);
-  font-size: 0.68rem;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .conteudo-hero-criacao h1 {
   max-width: 620px;
   margin: 0;
@@ -80,74 +71,6 @@ body {
   color: rgba(246, 234, 215, 0.74);
   font-size: 0.96rem;
   line-height: 1.55;
-}
-
-.decoracao-fundo {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.10;
-}
-
-.decoracao-um {
-  width: 220px;
-  height: 220px;
-  right: 8%;
-  top: 14%;
-  border: 1px solid rgba(215, 163, 95, 0.20);
-  border-radius: 999px;
-  animation: flutuarDecoracao 9s ease-in-out infinite;
-}
-
-.decoracao-dois {
-  width: 90px;
-  height: 90px;
-  left: 8%;
-  bottom: 16%;
-  border: 1px solid rgba(215, 163, 95, 0.20);
-  border-radius: 999px;
-  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
-}
-
-.decoracao-um::before,
-.decoracao-dois::before {
-  content: "";
-  position: absolute;
-  inset: 18%;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: inherit;
-}
-
-.ornamento-rpg {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.10;
-  color: rgba(255, 248, 235, 0.72);
-  border-color: rgba(215, 163, 95, 0.42);
-  animation: flutuarOrnamento 8s ease-in-out infinite;
-}
-
-.ornamento-dado {
-  right: 12%;
-  bottom: 12%;
-  width: 118px;
-  height: 118px;
-  display: grid;
-  place-items: center;
-  border: 2px solid currentColor;
-  clip-path: polygon(50% 0%, 90% 22%, 90% 78%, 50% 100%, 10% 78%, 10% 22%);
-  font-size: 2rem;
-  font-weight: 900;
-}
-
-.ornamento-dado::before,
-.ornamento-dado::after {
-  content: "";
-  position: absolute;
-  inset: 18px;
-  border: 1px solid currentColor;
-  clip-path: inherit;
-  opacity: 0.75;
 }
 
 /* =====================================================
@@ -171,33 +94,21 @@ body {
 
   display: grid;
 
-  grid-template-columns:
-    clamp(380px, 30vw, 420px)
-    minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
 
   gap: clamp(18px, 2vw, 28px);
 }
 
-.criador-personagem:has(.ficha-componente.ficha-retraida) {
-  grid-template-columns:
-    44px
-    minmax(0, 1fr);
-
+.criador-personagem.ficha-lateral-retraida {
+  grid-template-columns: 44px minmax(0, 1fr);
   gap: 10px;
 }
 
-.criador-personagem:has(.ficha-componente.ficha-retraida)
-.ficha-cabecalho-componente {
+.criador-personagem.ficha-lateral-retraida .ficha-cabecalho-componente {
   margin-bottom: 0;
 }
 
-.criador-personagem:has(.ficha-componente.ficha-retraida)
-.ficha-cabecalho-componente h2 {
-  display: none;
-}
-
-.criador-personagem:has(.ficha-componente.ficha-retraida)
-.coluna-ficha {
+.criador-personagem.ficha-lateral-retraida .coluna-ficha {
   padding-right: 0;
   overflow: visible;
 }
@@ -207,6 +118,8 @@ body {
   top: 20px;
   align-self: start;
   z-index: 2;
+  width: fit-content;
+  max-width: 100%;
   max-height: calc(100vh - 40px);
   overflow-y: auto;
   padding-right: 6px;
@@ -308,16 +221,11 @@ body {
 .navegacao-passos {
   width: 100%;
   max-width: 100%;
-
   margin: var(--espaco-md) 0 0;
   padding: 0;
-
   display: flex;
   flex-wrap: wrap;
-
   gap: 8px;
-  flex-wrap: wrap;
-
 }
 
 .passo {
@@ -375,21 +283,14 @@ body {
 
 .grade-classes {
   display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
-
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
-
   gap: clamp(14px, 1.5vw, 20px);
 }
 
 .grade-opcoes {
   display: grid;
-  grid-template-columns:
-  repeat(auto-fit, minmax(min(200px, 100%), 1fr));
-
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: clamp(12px, 1.4vw, 18px);
 }
 
@@ -427,29 +328,18 @@ body {
 .card-classe {
   position: relative;
   min-height: auto;
+  display: flex;
+  flex-direction: column;
   padding: 24px 14px 14px;
-
   border: none;
   border-radius: 18px;
-
   color: #4b3424;
-
-
   background-image: url("Imagens/Assets/old-paper-03.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-
-  box-shadow:
-    0 14px 30px rgba(0, 0, 0, 0.32);
-
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
   overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.card-classe {
   clip-path: polygon(
     1% 3%,
     4% 1%,
@@ -810,7 +700,7 @@ body {
   margin: 10px 0 0;
   color: var(--cor-ambar);
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 800;
   text-align: center;
 }
 
@@ -865,7 +755,7 @@ body {
 #passo-atributos .linha-atributo label {
   color: var(--cor-texto-suave);
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 800;
 }
 
 #passo-atributos .linha-atributo select,
@@ -1081,7 +971,7 @@ body {
   margin: 10px 0 6px;
   color: var(--cor-texto-suave);
   font-size: 0.78rem;
-  font-weight: 850;
+  font-weight: 800;
 }
 
 #passo-detalhes input,
@@ -1397,7 +1287,7 @@ label,
   margin: 0 0 8px;
   color: #f1bd6a;
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 900;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
@@ -1542,37 +1432,216 @@ label,
 }
 
 /* =====================================================
-   Animações
+   Responsividade do criador
+   -----------------------------------------------------
+   980px: ficha vira painel flutuante e o criador usa toda
+   a largura. 760px: modal passa a uma coluna. 620px:
+   listas largas viram carrossel ou coluna única.
    ===================================================== */
 
-@keyframes flutuarDecoracao {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-
-  50% {
-    transform: translate3d(0, -12px, 0) rotate(4deg);
+@media (max-width: 1180px) {
+  .grade-classes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@keyframes flutuarOrnamento {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+@media (max-width: 980px) {
+  body.ficha-movel-aberta {
+    overflow: hidden;
   }
 
-  50% {
-    transform: translateY(-10px) rotate(4deg);
+  .criador-personagem,
+  .criador-personagem.ficha-lateral-retraida {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--espaco-md) 0 var(--espaco-xl);
+  }
+
+  .hero-criacao {
+    padding: var(--espaco-lg) 0 var(--espaco-md);
+  }
+
+  .area-passo {
+    min-width: 0;
+  }
+
+  .coluna-ficha,
+  .criador-personagem.ficha-lateral-retraida .coluna-ficha {
+    position: fixed;
+    top: 16px;
+    bottom: 16px;
+    left: 16px;
+    z-index: 700;
+    width: min(360px, calc(100vw - 32px));
+    max-width: none;
+    max-height: none;
+    padding: 12px;
+    border: 1px solid var(--cor-linha);
+    border-radius: 18px;
+    background: rgba(8, 7, 10, 0.96);
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.52),
+      0 0 0 100vmax rgba(0, 0, 0, 0.42);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .criador-personagem.ficha-lateral-retraida .coluna-ficha {
+    top: 88px;
+    bottom: auto;
+    width: 44px;
+    height: 44px;
+    padding: 4px;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .criador-personagem.ficha-lateral-retraida .ficha-cabecalho-componente {
+    margin: 0;
+  }
+
+  #passo-atributos,
+  .layout-detalhes-personagem,
+  #areaRevisao,
+  #areaRevisao .bloco-revisao:first-child {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #passo-atributos > .texto-explicativo,
+  #passo-atributos .botao-rolar,
+  #passo-atributos .caixa-rolagem-dados,
+  #passo-atributos .resultados-atributos,
+  #passo-atributos .bloco-distribuicao-atributos,
+  #passo-atributos #mensagemAtributos,
+  #passo-atributos .acoes-passo,
+  .painel-detalhes-principais,
+  .painel-detalhes-narrativos,
+  #areaRevisao .bloco-revisao:first-child {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .painel-detalhes-narrativos {
+    grid-template-rows: auto;
   }
 }
 
-@keyframes entradaModal {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
+@media (max-width: 760px) {
+  .modal-overlay {
+    padding: 12px;
+    overflow-y: auto;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  .modal {
+    width: min(100%, 620px);
+    max-height: none;
+    border-radius: 24px;
+    overflow: visible;
+  }
+
+  .modal-cabecalho {
+    padding: 26px 20px 8px;
+  }
+
+  .modal-corpo {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px 20px;
+    overflow: visible;
+  }
+
+  .modal-imagem-container,
+  .modal-textos {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .modal-imagem {
+    min-height: 240px;
+    max-height: 320px;
+  }
+
+  .modal-acoes {
+    padding: 10px 20px 22px;
+    flex-direction: column-reverse;
+  }
+
+  .modal-acoes button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 620px) {
+  .conteudo-passo h2,
+  .conteudo-passo h3 {
+    overflow-wrap: normal;
+  }
+
+  #passo-classe .grade-classes {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 14px;
+    margin: 0;
+    padding: 8px 4px 18px;
+    overflow: auto hidden;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 4px;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  #passo-classe .grade-classes::-webkit-scrollbar {
+    display: none;
+  }
+
+  #passo-classe .grade-classes > .card-classe {
+    flex: 0 0 150px;
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+    justify-self: auto;
+    scroll-snap-align: start;
+  }
+
+  #passo-classe .imagem-classe {
+    width: 82%;
+    max-width: 118px;
+  }
+
+  .grade-opcoes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .navegacao-passos {
+    gap: 6px;
+  }
+
+  .passo {
+    white-space: normal;
+    text-align: center;
+  }
+
+  #passo-revisao .acoes-passo,
+  .acoes-personagem-salvo {
+    justify-content: stretch;
+  }
+
+  #passo-revisao .botao-finalizar,
+  .botao-link,
+  .acoes-passo button,
+  .acoes-passo a {
+    width: 100%;
+  }
+
+  .acoes-passo {
+    align-items: stretch;
   }
 }

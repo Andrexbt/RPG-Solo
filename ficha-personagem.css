@@ -1,19 +1,25 @@
 /* =====================================================
-   Componente de ficha de personagem
+   Ficha de personagem
    -----------------------------------------------------
-   Aparência completa da ficha reutilizável e controles
-   de abrir e recolher.
+   Componente reutilizado no criador e na ficha salva.
+   A largura nasce dos cartões de atributo: altere apenas
+   --largura-cartao-atributo para redimensionar a cadeia.
    ===================================================== */
 
 .ficha-componente {
-  width: 100%;
-  min-width: 0;
+  --largura-cartao-atributo: 130px;
+  --espaco-interno-ficha: 8px;
+  --largura-grade-atributos:
+    calc((var(--largura-cartao-atributo) * 2) + var(--espaco-interno-ficha));
+
+  width: fit-content;
+  max-width: 100%;
 }
 
 .ficha-cabecalho-componente {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   margin-bottom: 10px;
 }
@@ -31,8 +37,26 @@
   margin-bottom: 10px;
 }
 
+.ficha-corpo {
+  width: fit-content;
+  max-width: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 280ms ease,
+    opacity 180ms ease;
+}
+
+.ficha-corpo > .ficha {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .ficha {
   position: relative;
+  width: fit-content;
+  max-width: 100%;
   padding: 90px 24px;
   border-image-source: url("Imagens/Assets/scroll-2.png");
   border-image-slice: 1800;
@@ -42,96 +66,33 @@
   box-shadow: 0 18px 52px rgba(0, 0, 0, 0.32);
 }
 
+/* =====================================================
+   Estrutura e tipografia interna
+   ===================================================== */
+
 .ficha-bloco {
   position: relative;
-  margin: 0;
+  width: calc(var(--largura-grade-atributos) + 32px);
+  max-width: 100%;
+  margin: 8px 0 0;
   padding: 16px;
   border: 2px solid rgba(93, 57, 31, 0.52);
   border-radius: 12px;
-  background: #211a17;
+  background: var(--cor-ficha-fundo);
 }
 
-.lista-valores-derivados {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
-}
-
-.campo-derivado {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-}
-
-.campo-derivado .caixa-valor-pequena {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.ficha-detalhes,
-.area-proficiencia {
-  display: grid;
-  grid-template-columns:
-    minmax(0, 3fr)
-    minmax(0, 1fr);
-  gap: 8px;
-  width: 100%;
-}
-
-.area-proficiencia {
+.ficha-bloco:first-child {
   margin-top: 0;
-  align-items: stretch;
-}
-
-.caixa-bonus-proficiencia,
-.valor-bonus-proficiencia {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.valor-bonus-proficiencia {
-  display: grid;
-  place-items: center;
-  padding: 10px;
-  border: 1px solid rgba(215, 163, 95, 0.38);
-  border-radius: 14px;
-  background: #2a2117;
-  color: var(--cor-ambar);
-  font-weight: 900;
-}
-
-.coluna-vida,
-.coluna-valores-derivados {
-  width: 100%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  gap: 16px;
-}
-
-.ficha-resumo {
-  text-align: center;
-}
-
-.ficha-resumo h3 {
-  font-family: var(--fonte-titulos);
-}
-
-.ficha-bloco + .ficha-bloco,
-.ficha-detalhes + .ficha-bloco,
-.ficha-bloco {
-  margin-top: 8px;
 }
 
 .ficha-bloco h3 {
   margin: 0 0 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.1);
-  color: #f4dfba;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  color: var(--cor-ficha-titulo);
+  font-family: var(--fonte-titulos);
   font-size: 0.82rem;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.1;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -149,9 +110,9 @@
 .campo-mini span,
 .campo-derivado span,
 .rotulo-modificador {
-  color: #cdbb9e;
-  font-size: 0.72rem;
-  font-weight: 850;
+  color: var(--cor-ficha-rotulo);
+  font-size: var(--texto-micro);
+  font-weight: 800;
 }
 
 .ficha-valor,
@@ -161,14 +122,42 @@
 #fichaTalentos li,
 #fichaMagias li,
 .linha-ataque {
-  color: #ddcfb8;
+  color: var(--cor-ficha-texto);
   font-size: 0.76rem;
   line-height: 1.4;
 }
 
+.ficha-valor {
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   Resumo: vida, defesa e proficiência
+   ===================================================== */
+
+.ficha-resumo {
+  text-align: center;
+}
+
+.ficha-detalhes {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--espaco-interno-ficha);
+}
+
+.coluna-vida,
+.coluna-valores-derivados {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .linha-campos-ficha {
   display: grid;
-  gap: 8px;
+  gap: var(--espaco-interno-ficha);
 }
 
 .linha-campos-ficha.tres-colunas {
@@ -184,9 +173,9 @@
 .atributo-card,
 .equipamentos-lista,
 .equipamentos-ataques {
-  border: 1px solid rgba(215, 163, 95, 0.2);
+  border: 1px solid var(--cor-ficha-borda);
   border-radius: 12px;
-  background: #171311;
+  background: var(--cor-ficha-superficie);
 }
 
 .campo-mini,
@@ -202,102 +191,143 @@
   letter-spacing: 0.05em;
 }
 
-.caixa-valor-pequena,
-.valor-atributo,
-.modificador {
+.lista-valores-derivados {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--espaco-interno-ficha);
+}
+
+.campo-derivado {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.caixa-valor {
   min-height: 28px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(215, 163, 95, 0.38);
+  padding: 0;
+  border: 1px solid var(--cor-ficha-borda-forte);
   border-radius: 10px;
-  background: #2a2117;
+  background: var(--cor-ficha-campo);
   color: var(--cor-ambar);
   font-weight: 900;
 }
 
-.valor-atributo {
-  position: relative;
-  z-index: 2;
-
-  width: 58px;
-  height: 58px;
-  min-height: 0;
-
-  border-radius: 50%;
-  box-sizing: border-box;
-  font-size: 1.3rem;
-
-  padding: 0;
+.caixa-valor-pequena {
+  width: 100%;
 }
 
-.modificador {
-  width: 58px;
-  height: 36px;
-  min-height: 0;
-
-  padding-left: 12px;
-  border-radius: 0 18px 18px 0;
-  box-sizing: border-box;
-  font-size: 0.9rem;
-
-  padding: 0;
+.area-proficiencia {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: var(--espaco-interno-ficha);
+  align-items: stretch;
 }
 
-.rotulo-modificador {
-  position: absolute;
-  bottom: calc(100% + 3px);
-  left: 12px;
-
-  width: 46px;
+.caixa-bonus-proficiencia {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgba(215, 163, 95, 0.26);
+  border-radius: 12px;
+  background: var(--cor-ficha-campo);
+  color: var(--cor-texto);
   text-align: center;
-  line-height: 1;
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
-.atributo-card {
-  padding: 8px 9px;
-  width: 130px;
-  margin-bottom: 8px;
-  break-inside: avoid;
-  box-sizing: border-box;
+.valor-bonus-proficiencia {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border: 1px solid var(--cor-ficha-borda-forte);
+  border-radius: 12px;
+  background: var(--cor-ficha-campo);
+  color: var(--cor-ambar);
+  font-weight: 900;
+}
+
+/* =====================================================
+   Atributos, salvaguardas e perícias
+   ===================================================== */
+
+.ficha-atributos > h3 {
+  text-align: center;
 }
 
 .grade-atributos-ficha {
-  width: max-content;
-  column-width: 130px;
-  column-count: 2;
-  column-gap: 8px;
+  width: var(--largura-grade-atributos);
+  columns: var(--largura-cartao-atributo) 2;
+  column-gap: var(--espaco-interno-ficha);
 }
 
 .grade-atributos-ficha > :nth-child(4) {
   break-before: column;
 }
 
+.atributo-card {
+  width: var(--largura-cartao-atributo);
+  margin-bottom: var(--espaco-interno-ficha);
+  padding: 7px 8px;
+  break-inside: avoid;
+}
+
 .atributo-card h4 {
-  margin: 0 0 4px;
-  color: #f4dfba;
-  font-size: 0.84rem;
+  margin: 0 0 3px;
+  color: var(--cor-ficha-titulo);
+  font-size: 0.82rem;
   font-weight: 900;
   line-height: 1.1;
-  letter-spacing: 0.02em;
   text-align: center;
+  letter-spacing: 0.02em;
 }
 
 .linha-valores-atributo {
   position: relative;
   width: 104px;
   height: 58px;
-  margin: 0 auto 7px;
+  margin: 0 auto 5px;
+}
+
+.valor-atributo {
+  position: relative;
+  z-index: 2;
+  width: 58px;
+  height: 58px;
+  min-height: 0;
+  border-radius: 50%;
+  font-size: 1.3rem;
 }
 
 .grupo-modificador {
   position: absolute;
   z-index: 1;
-
-  left: 46px;
   top: 50%;
+  left: 46px;
   transform: translateY(-50%);
+}
 
-  display: block;
+.modificador {
+  width: 58px;
+  height: 36px;
+  min-height: 0;
+  padding-left: 12px;
+  border-radius: 0 18px 18px 0;
+  font-size: 0.9rem;
+}
+
+.rotulo-modificador {
+  position: absolute;
+  bottom: calc(100% + 3px);
+  left: 12px;
+  width: 46px;
+  text-align: center;
+  line-height: 1;
 }
 
 .atributo-card ul {
@@ -306,56 +336,77 @@
   list-style: none;
 }
 
+.linha-salvaguarda,
 .linha-pericia {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 3px 0;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+  position: relative;
+  padding-left: 16px;
 }
 
-.linha-pericia:last-child {
-  border-bottom: none;
+.linha-salvaguarda::before,
+.linha-pericia::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(205, 187, 158, 0.72);
+  border-radius: 50%;
+  background: transparent;
+  transform: translateY(-50%);
 }
 
 .linha-salvaguarda {
   margin-bottom: 4px;
-  padding: 5px 8px 5px 12px;
-  justify-self: center;
-  background: rgba(215, 163, 95, 0.08);
+  padding: 4px 6px 4px 16px;
   border: 1px solid rgba(215, 163, 95, 0.22);
   border-radius: 8px;
-  color: #f4dfba;
-  font-weight: 850;
+  background: rgba(215, 163, 95, 0.08);
+  color: var(--cor-ficha-titulo);
+  font-weight: 800;
   letter-spacing: 0.01em;
 }
 
-.linha-salvaguarda::before {
-  margin-left: 6px;
+.linha-pericia {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding-block: 3px;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+}
+
+.linha-pericia:last-child {
+  border-bottom: 0;
 }
 
 .linha-salvaguarda.proficiente,
 .linha-pericia.proficiente {
   color: #f1bd6a;
-  font-weight: 850;
+  font-weight: 800;
+}
+
+.linha-salvaguarda.proficiente::before,
+.linha-pericia.proficiente::before {
+  border-color: var(--cor-ambar);
+  background: var(--cor-ambar);
+  box-shadow: 0 0 0 2px rgba(215, 163, 95, 0.16);
+}
+
+.linha-pericia.especializada::before {
+  border-color: var(--cor-coral);
+  background: var(--cor-coral);
+  box-shadow: 0 0 0 2px rgba(217, 118, 95, 0.18);
 }
 
 .linha-pericia.especializada::after {
   content: " ★";
   color: var(--cor-coral);
-  font-weight: 950;
+  font-weight: 900;
 }
 
-.caixa-bonus-proficiencia {
-  padding: 10px;
-  border: 1px solid rgba(215, 163, 95, 0.26);
-  border-radius: 14px;
-  background: #2a2117;
-  color: var(--cor-texto);
-  text-align: center;
-  font-size: 0.78rem;
-  font-weight: 850;
-}
+/* =====================================================
+   Equipamentos, ataques e listas
+   ===================================================== */
 
 .equipamentos-lista,
 .equipamentos-ataques {
@@ -373,9 +424,9 @@
 .ficha-armas-ataques h4 {
   margin: 0 0 7px;
   padding-bottom: 5px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.1);
-  color: #cdbb9e;
-  font-size: 0.72rem;
+  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  color: var(--cor-ficha-rotulo);
+  font-size: var(--texto-micro);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -398,8 +449,12 @@
   display: block;
   margin-top: 4px;
   color: var(--cor-coral);
-  font-size: 0.72rem;
+  font-size: var(--texto-micro);
 }
+
+/* =====================================================
+   Controle de abrir e recolher
+   ===================================================== */
 
 .botao-retrair-ficha {
   flex: 0 0 auto;
@@ -410,8 +465,8 @@
   padding: 0;
   border: 1px solid rgba(215, 163, 95, 0.45);
   border-radius: 50%;
-  color: #f4dfba;
-  background: #211a17;
+  color: var(--cor-ficha-titulo);
+  background: var(--cor-ficha-fundo);
   font: inherit;
   font-size: 1.4rem;
   line-height: 1;
@@ -432,22 +487,6 @@
   outline-offset: 3px;
 }
 
-.ficha-corpo {
-  display: grid;
-  grid-template-rows: 1fr;
-  opacity: 1;
-  width: fit-content;
-  max-width: 100%;
-  transition:
-    grid-template-rows 280ms ease,
-    opacity 180ms ease;
-}
-
-.ficha-corpo > .ficha {
-  min-height: 0;
-  overflow: hidden;
-}
-
 .ficha-componente.ficha-retraida .ficha-corpo {
   grid-template-rows: 0fr;
   opacity: 0;
@@ -458,14 +497,30 @@
   transform: rotate(180deg);
 }
 
-@media (max-width: 720px) {
-  .ficha {
-    padding: 72px 30px;
+/* =====================================================
+   Adaptação da ficha a telas estreitas
+   ===================================================== */
+
+@media (max-width: 620px) {
+  .ficha-componente {
+    --largura-cartao-atributo: 112px;
   }
 
-  .grade-atributos-ficha,
-  .lista-valores-derivados {
-    grid-template-columns: 1fr;
+  .ficha {
+    padding: 64px 12px;
+  }
+
+  .ficha-bloco {
+    width: calc(var(--largura-grade-atributos) + 24px);
+    padding: 12px;
+  }
+
+  .ficha-detalhes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .atributo-card {
+    padding-inline: 6px;
   }
 }
 

@@ -1098,6 +1098,33 @@
   // só então inicia o script específico da página atual.
   // =====================================================
 
+  const consultaFichaMovel = window.matchMedia("(max-width: 980px)");
+
+  function atualizarEstadoFicha(ficha, retraida) {
+    const botao = ficha.querySelector(".botao-retrair-ficha");
+    const criador = ficha.closest(".criador-personagem");
+
+    ficha.classList.toggle("ficha-retraida", retraida);
+
+    if (botao !== null) {
+      botao.setAttribute("aria-expanded", String(retraida === false));
+      botao.setAttribute(
+        "aria-label",
+        retraida
+          ? "Expandir ficha do personagem"
+          : "Recolher ficha do personagem"
+      );
+    }
+
+    if (criador !== null) {
+      criador.classList.toggle("ficha-lateral-retraida", retraida);
+      document.body.classList.toggle(
+        "ficha-movel-aberta",
+        consultaFichaMovel.matches && retraida === false
+      );
+    }
+  }
+
   function configurarFichaRetratil(ficha) {
     const botao = ficha.querySelector(".botao-retrair-ficha");
     const corpo = ficha.querySelector(".ficha-corpo");
@@ -1106,17 +1133,30 @@
       return;
     }
 
-    botao.addEventListener("click", function() {
-      const ficouRetraida = ficha.classList.toggle("ficha-retraida");
+    const estaNoCriador = ficha.closest(".criador-personagem") !== null;
 
-      botao.setAttribute("aria-expanded", String(ficouRetraida === false));
-      botao.setAttribute(
-        "aria-label",
-        ficouRetraida
-          ? "Expandir ficha do personagem"
-          : "Recolher ficha do personagem"
+    atualizarEstadoFicha(
+      ficha,
+      estaNoCriador && consultaFichaMovel.matches
+    );
+
+    botao.addEventListener("click", function() {
+      atualizarEstadoFicha(
+        ficha,
+        ficha.classList.contains("ficha-retraida") === false
       );
     });
+
+    if (estaNoCriador) {
+      consultaFichaMovel.addEventListener("change", function(evento) {
+        if (evento.matches) {
+          atualizarEstadoFicha(ficha, true);
+          return;
+        }
+
+        document.body.classList.remove("ficha-movel-aberta");
+      });
+    }
   }
 
   async function carregarHtmlFichaPersonagem() {

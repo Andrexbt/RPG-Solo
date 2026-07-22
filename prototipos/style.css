@@ -1,30 +1,46 @@
 body {
-    background-color: #1e1e1e;
-    color: white;
-    font-family: Arial, sans-serif;
+  color: var(--cor-texto);
+  background: transparent;
+  font-family: var(--fonte-interface);
+}
+
+section {
+  padding: 16px;
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-card);
+  background: var(--cor-painel);
 }
 
 button {
-    background-color: #5120c4;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 10px;
+  color: #1b1210;
+  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+  cursor: pointer;
 }
 
 #botãoD20 {
-    width: 80px;
-    height: 80px;
-    font-size: 30px;
-    margin-top: 10px;
+  width: 80px;
+  height: 80px;
+  margin-top: 10px;
+  font-size: 30px;
 }
 
 #botãoD20.rolando {
-    animation: girarDado 1s linear infinite;
+  animation: girarDado 1s linear infinite;
 }
-    @keyframes girarDado {
-        0% {
+
+input {
+  width: 100%;
+  margin: 8px 0 10px;
+  padding: 10px;
+  border: 1px solid var(--cor-linha);
+  border-radius: 6px;
+}
+
+@keyframes girarDado {
+  0% {
     transform: rotate(0deg) scale(1);
   }
 
@@ -42,22 +58,5 @@ button {
 
   100% {
     transform: rotate(360deg) scale(1);
-
-    }
-}
-
-section{
-    background-color: #2c2c2c;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    border: none;
-    box-sizing: border-box;
+  }
 }

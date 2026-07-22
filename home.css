@@ -72,21 +72,6 @@
   background: rgba(255, 248, 235, 0.28);
 }
 
-.etiqueta,
-.etiqueta-secao {
-  width: fit-content;
-  margin: 0 0 14px;
-  padding: 6px 11px;
-  border: 1px solid rgba(215, 163, 95, 0.42);
-  border-radius: var(--raio-botao);
-  color: var(--cor-ambar);
-  background: rgba(215, 163, 95, 0.10);
-  font-size: 0.68rem;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .hero h1 {
   max-width: 760px;
   margin: 0;
@@ -139,7 +124,7 @@
   color: var(--cor-musgo);
   background: rgba(154, 170, 117, 0.12);
   font-size: 0.72rem;
-  font-weight: 850;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -181,14 +166,14 @@
    ===================================================== */
 
 .jornada-home {
+  --opacidade-decoracao: 0.32;
+  --opacidade-ornamento: 0.16;
+
   display: grid;
-  gap: 0px;
+  gap: 0;
   width: 100%;
   margin: 0;
-  padding:
-    0px
-    0
-    0px;
+  padding: 0;
 }
 
 .secao-jornada {
@@ -278,7 +263,7 @@
 .resumo-jornada span {
   color: var(--cor-texto-fraco);
   font-size: 0.75rem;
-  font-weight: 850;
+  font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -296,112 +281,9 @@
   margin-top: 22px;
 }
 
-/* =====================================================
-   Decorações / ornamentos
-   ===================================================== */
-
-.decoracao-fundo {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.32;
-}
-
-.decoracao-um {
-  width: 220px;
-  height: 220px;
-  right: 8%;
-  top: 14%;
-  border: 1px solid rgba(255, 248, 235, 0.14);
-  border-radius: 999px;
-  animation: flutuarDecoracao 9s ease-in-out infinite;
-}
-
-.decoracao-dois {
-  width: 90px;
-  height: 90px;
-  left: 8%;
-  bottom: 16%;
-  border: 1px solid rgba(255, 248, 235, 0.14);
-  border-radius: 999px;
-  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
-}
-
-.decoracao-um::before,
-.decoracao-dois::before {
-  content: "";
-  position: absolute;
-  inset: 18%;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: inherit;
-}
-
-.ornamento-rpg {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.16;
-  color: rgba(255, 248, 235, 0.72);
-  border-color: rgba(255, 248, 235, 0.42);
-  animation: flutuarOrnamento 8s ease-in-out infinite;
-}
-
-.ornamento-dado {
-  right: 12%;
-  bottom: 12%;
-  width: 118px;
-  height: 118px;
-  display: grid;
-  place-items: center;
-  border: 2px solid currentColor;
-  clip-path: polygon(50% 0%, 90% 22%, 90% 78%, 50% 100%, 10% 78%, 10% 22%);
-  font-size: 2rem;
-  font-weight: 900;
-}
-
-.ornamento-dado::before,
-.ornamento-dado::after {
-  content: "";
-  position: absolute;
-  inset: 18px;
-  border: 1px solid currentColor;
-  clip-path: inherit;
-  opacity: 0.75;
-}
-
-.ornamento-ficha {
-  right: 13%;
+.secao-jornada .ornamento-ficha {
   top: 18%;
-  width: 120px;
-  height: 150px;
-  border: 2px solid currentColor;
-  border-radius: 18px;
-  transform: rotate(8deg);
-}
-
-.ornamento-ficha::before {
-  content: "";
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 34px;
-  height: 2px;
-  background: currentColor;
-  box-shadow:
-    0 26px 0 currentColor,
-    0 52px 0 currentColor;
-  opacity: 0.75;
-}
-
-.ornamento-ficha::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: -1px;
-  width: 34px;
-  height: 34px;
-  border-left: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  border-radius: 0 18px 0 12px;
+  bottom: auto;
 }
 
 .ornamento-compasso {

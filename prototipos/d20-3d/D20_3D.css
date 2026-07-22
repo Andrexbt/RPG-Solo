@@ -1,12 +1,12 @@
 body {
-  background-color: #1e1e1e;
-  color: #055081;
-  font-family: Arial, sans-serif;
+  color: var(--cor-texto);
+  background: transparent;
+  font-family: var(--fonte-interface);
   text-align: center;
 }
 
 #cena3d {
-  width: 400px;
+  width: min(400px, calc(100vw - 32px));
   height: 400px;
   margin: 20px auto;
 }

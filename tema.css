@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800;900&display=swap");
 
 /* =====================================================
    Tema visual global
@@ -24,6 +24,15 @@
   --cor-musgo: #9aaa75;
   --cor-vinho: #6f3d4b;
 
+  --cor-ficha-fundo: #211a17;
+  --cor-ficha-superficie: #171311;
+  --cor-ficha-campo: #2a2117;
+  --cor-ficha-texto: #ddcfb8;
+  --cor-ficha-titulo: #f4dfba;
+  --cor-ficha-rotulo: #cdbb9e;
+  --cor-ficha-borda: rgba(215, 163, 95, 0.20);
+  --cor-ficha-borda-forte: rgba(215, 163, 95, 0.38);
+
   --sombra-painel: 0 28px 90px rgba(0, 0, 0, 0.42);
 
   --raio-card: 24px;
@@ -32,53 +41,25 @@
   --largura-conteudo: 1180px;
   --largura-criador: 1320px;
 
-  /* =====================================================
-   Sistema responsivo global
-   ===================================================== */
+  /* Escala fluida compartilhada. Os pontos de quebra ficam nos
+     componentes, pois dependem do espaço de que cada layout precisa. */
+  --largura-pagina: 1440px;
+  --margem-pagina: clamp(16px, 3vw, 40px);
 
---largura-pagina: 1440px;
+  --espaco-xs: clamp(6px, 0.6vw, 10px);
+  --espaco-sm: clamp(10px, 1vw, 16px);
+  --espaco-md: clamp(16px, 1.5vw, 24px);
+  --espaco-lg: clamp(24px, 2.5vw, 40px);
+  --espaco-xl: clamp(36px, 4vw, 64px);
 
---margem-pagina:
-  clamp(16px, 3vw, 40px);
+  --texto-micro: 0.72rem;
+  --texto-pequeno: clamp(0.76rem, 0.72rem + 0.15vw, 0.86rem);
+  --texto-normal: clamp(0.88rem, 0.82rem + 0.18vw, 1rem);
+  --titulo-medio: clamp(1.6rem, 1.1rem + 1.8vw, 2.8rem);
+  --titulo-grande: clamp(2rem, 1.25rem + 2.8vw, 4rem);
 
---espaco-xs:
-  clamp(6px, 0.6vw, 10px);
-
---espaco-sm:
-  clamp(10px, 1vw, 16px);
-
---espaco-md:
-  clamp(16px, 1.5vw, 24px);
-
---espaco-lg:
-  clamp(24px, 2.5vw, 40px);
-
---espaco-xl:
-  clamp(36px, 4vw, 64px);
-
---texto-pequeno:
-  clamp(0.76rem, 0.72rem + 0.15vw, 0.86rem);
-
---texto-normal:
-  clamp(0.88rem, 0.82rem + 0.18vw, 1rem);
-
---titulo-medio:
-  clamp(1.6rem, 1.1rem + 1.8vw, 2.8rem);
-
---titulo-grande:
-  clamp(2rem, 1.25rem + 2.8vw, 4rem);
-
-  --fonte-titulos:
-  "Cormorant Garamond",
-  Georgia,
-  "Times New Roman",
-  serif;
-
---fonte-interface:
-  "Source Sans 3",
-  Arial,
-  Helvetica,
-  sans-serif;
+  --fonte-titulos: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --fonte-interface: "Source Sans 3", Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -86,16 +67,22 @@
 }
 
 html {
+  width: 100%;
   min-height: 100%;
   scroll-behavior: smooth;
   background: #08070a;
-  width: 100%;
   overflow-x: hidden;
 }
 
 body {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  min-height: 100vh;
+  margin: 0;
   overflow-x: hidden;
+  color: var(--cor-texto);
+  background: transparent;
 }
 
 main,
@@ -185,15 +172,6 @@ textarea {
   font-family: var(--fonte-interface);
 }
 
-body {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  margin: 0;
-  color: var(--cor-texto);
-  background: transparent;
-}
-
 button,
 a,
 input,
@@ -201,12 +179,6 @@ select,
 textarea {
   font-size: inherit;
   line-height: inherit;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
 }
 
 .container-pagina {
@@ -319,6 +291,134 @@ img {
 }
 
 /* =====================================================
+   Elementos temáticos compartilhados
+   -----------------------------------------------------
+   Etiquetas e ornamentos têm uma única aparência-base.
+   Cada página pode mudar apenas opacidade e cor por meio
+   das propriedades personalizadas abaixo.
+   ===================================================== */
+
+.etiqueta,
+.etiqueta-pagina,
+.etiqueta-secao {
+  width: fit-content;
+  margin: 0 0 14px;
+  padding: 6px 11px;
+  border: 1px solid rgba(215, 163, 95, 0.42);
+  border-radius: var(--raio-botao);
+  color: var(--cor-ambar);
+  background: rgba(215, 163, 95, 0.10);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.decoracao-fundo {
+  position: absolute;
+  pointer-events: none;
+  opacity: var(--opacidade-decoracao, 0.28);
+}
+
+.decoracao-um {
+  top: 14%;
+  right: 8%;
+  width: 220px;
+  height: 220px;
+  border: 1px solid var(--cor-borda-decoracao, rgba(255, 248, 235, 0.14));
+  border-radius: 50%;
+  animation: flutuarDecoracao 9s ease-in-out infinite;
+}
+
+.decoracao-dois {
+  bottom: 16%;
+  left: 8%;
+  width: 90px;
+  height: 90px;
+  border: 1px solid var(--cor-borda-decoracao, rgba(255, 248, 235, 0.14));
+  border-radius: 50%;
+  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
+}
+
+.decoracao-um::before,
+.decoracao-dois::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border: 1px solid rgba(255, 248, 235, 0.10);
+  border-radius: inherit;
+}
+
+.ornamento-rpg {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--opacidade-ornamento, 0.14);
+  color: rgba(255, 248, 235, 0.72);
+  border-color: var(--cor-borda-ornamento, rgba(255, 248, 235, 0.42));
+  animation: flutuarOrnamento 8s ease-in-out infinite;
+}
+
+.ornamento-dado {
+  right: 12%;
+  bottom: 12%;
+  width: 118px;
+  height: 118px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  clip-path: polygon(50% 0%, 90% 22%, 90% 78%, 50% 100%, 10% 78%, 10% 22%);
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.ornamento-dado::before,
+.ornamento-dado::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid currentColor;
+  clip-path: inherit;
+  opacity: 0.75;
+}
+
+.ornamento-ficha {
+  right: 13%;
+  bottom: 13%;
+  width: 120px;
+  height: 150px;
+  border: 2px solid currentColor;
+  border-radius: 18px;
+  transform: rotate(8deg);
+}
+
+.ornamento-ficha::before {
+  content: "";
+  position: absolute;
+  top: 34px;
+  right: 18px;
+  left: 18px;
+  height: 2px;
+  background: currentColor;
+  box-shadow:
+    0 26px 0 currentColor,
+    0 52px 0 currentColor;
+  opacity: 0.75;
+}
+
+.ornamento-ficha::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 34px;
+  height: 34px;
+  border-bottom: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+  border-radius: 0 18px 0 12px;
+}
+
+/* =====================================================
    Botões globais
    ===================================================== */
 
@@ -336,7 +436,7 @@ img {
   background: rgba(255, 248, 235, 0.07);
   text-decoration: none;
   font-size: 0.95rem;
-  font-weight: 850;
+  font-weight: 800;
   overflow: hidden;
   cursor: pointer;
   transition:

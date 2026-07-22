@@ -16,6 +16,9 @@
    ===================================================== */
 
 .hero-personagens {
+  --opacidade-decoracao: 0.28;
+  --opacidade-ornamento: 0.14;
+
   position: relative;
   min-height: 42vh;
   padding:
@@ -42,21 +45,6 @@
   background: rgba(255, 248, 235, 0.28);
 }
 
-.etiqueta-pagina,
-.etiqueta-secao {
-  width: fit-content;
-  margin: 0 0 14px;
-  padding: 6px 11px;
-  border: 1px solid rgba(215, 163, 95, 0.42);
-  border-radius: var(--raio-botao);
-  color: var(--cor-ambar);
-  background: rgba(215, 163, 95, 0.10);
-  font-size: 0.68rem;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .conteudo-hero-personagens h1 {
   margin: 0;
   font-size: clamp(2.25rem, 4.8vw, 4.6rem);
@@ -70,91 +58,6 @@
   color: rgba(246, 234, 215, 0.76);
   font-size: 1rem;
   line-height: 1.65;
-}
-
-/* =====================================================
-   Decorações
-   ===================================================== */
-
-.decoracao-fundo {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.28;
-}
-
-.decoracao-um {
-  width: 220px;
-  height: 220px;
-  right: 8%;
-  top: 14%;
-  border: 1px solid rgba(255, 248, 235, 0.14);
-  border-radius: 999px;
-  animation: flutuarDecoracao 9s ease-in-out infinite;
-}
-
-.decoracao-dois {
-  width: 90px;
-  height: 90px;
-  left: 8%;
-  bottom: 16%;
-  border: 1px solid rgba(255, 248, 235, 0.14);
-  border-radius: 999px;
-  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
-}
-
-.decoracao-um::before,
-.decoracao-dois::before {
-  content: "";
-  position: absolute;
-  inset: 18%;
-  border: 1px solid rgba(255, 248, 235, 0.10);
-  border-radius: inherit;
-}
-
-.ornamento-rpg {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.14;
-  color: rgba(255, 248, 235, 0.72);
-  border-color: rgba(255, 248, 235, 0.42);
-  animation: flutuarOrnamento 8s ease-in-out infinite;
-}
-
-.ornamento-ficha {
-  right: 13%;
-  bottom: 13%;
-  width: 120px;
-  height: 150px;
-  border: 2px solid currentColor;
-  border-radius: 18px;
-  transform: rotate(8deg);
-}
-
-.ornamento-ficha::before {
-  content: "";
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 34px;
-  height: 2px;
-  background: currentColor;
-  box-shadow:
-    0 26px 0 currentColor,
-    0 52px 0 currentColor;
-  opacity: 0.75;
-}
-
-.ornamento-ficha::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: -1px;
-  width: 34px;
-  height: 34px;
-  border-left: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  border-radius: 0 18px 0 12px;
 }
 
 /* =====================================================
@@ -261,7 +164,7 @@
   margin: 10px 0 22px;
   color: var(--cor-ambar);
   font-size: 0.82rem;
-  font-weight: 850;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -299,7 +202,7 @@
   margin-bottom: 6px;
   color: var(--cor-texto-fraco);
   font-size: 0.72rem;
-  font-weight: 850;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -332,7 +235,7 @@
   color: var(--cor-texto);
   background: rgba(255, 248, 235, 0.07);
   font-size: 0.92rem;
-  font-weight: 850;
+  font-weight: 800;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
