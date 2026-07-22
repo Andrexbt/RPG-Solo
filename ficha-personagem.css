@@ -61,6 +61,8 @@
   font-family: "Almendra", serif;
 
   --avanco-moldura: 38px;
+  --ajuste-base-moldura: 5px;
+  --largura-canto-moldura: 110px;
 
   /* Cores de tinta sobre o pergaminho */
    --cor-ficha-titulo: #4b2d1b;
@@ -140,8 +142,22 @@
 }
 
 .moldura-faixa-base {
-  bottom: -20px;
+  bottom: -22px;
+  height: 36px;
   transform: rotate(180deg);
+  transform: scaleX(1.1);
+
+  left:
+    calc(
+      var(--largura-canto-moldura) -
+      var(--avanco-moldura)
+    );
+
+  right:
+    calc(
+      var(--largura-canto-moldura) -
+      var(--avanco-moldura)
+    );
 }
 
 .moldura-topo-esquerda,
@@ -186,7 +202,7 @@
 .moldura-lateral-esquerda,
 .moldura-lateral-direita {
   top: 104px;
-  bottom: 108px;
+  bottom:  calc(108px + var(--ajuste-base-moldura));
   width: 20px;
   background-size: 100% auto;
   background-repeat: repeat-y;
@@ -208,7 +224,7 @@
 
 .moldura-base-esquerda,
 .moldura-base-direita {
-  bottom: -45px;
+  bottom: calc(-45px + var(--ajuste-base-moldura));
   height: 174px;
 }
 
@@ -225,7 +241,7 @@
 }
 
 .moldura-base-centro {
-  bottom: -48px;
+  bottom: calc(-48px + var(--ajuste-base-moldura));
   left: 50%;
   width: 150px;
   height: 108px;
@@ -247,7 +263,12 @@
   max-width: 100%;
   margin: 8px 0 0;
   padding: 16px;
-  border: 2px solid rgba(93, 57, 31, 0.52);
+  border: 6px solid transparent;
+  border-image-source:
+    url("Imagens/Assets/borda-carvao.png");
+  border-image-slice: 80;
+  border-image-width: 8px;
+  border-image-repeat: stretch;
   border-radius: 12px;
   background: var(--cor-ficha-fundo);
 }
@@ -258,8 +279,12 @@
 
 .ficha-bloco h3 {
   margin: 0 0 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  padding-bottom: 12px;
+  border-bottom: 0;
+  background:
+  url("Imagens/Assets/linha-carvao.png")
+    left bottom / 100% 4px
+    no-repeat;
   color: var(--cor-ficha-titulo);
   font-family: var(--fonte-titulos);
   font-size: 0.82rem;
@@ -341,9 +366,7 @@
 
 .campo-mini,
 .campo-derivado,
-.atributo-card,
-.equipamentos-lista,
-.equipamentos-ataques {
+.atributo-card {
   border: 1px solid var(--cor-ficha-borda);
   border-radius: 12px;
   background: var(--cor-ficha-superficie);
@@ -473,6 +496,7 @@
   min-height: 0;
   border-radius: 50%;
   font-size: 1.3rem;
+  
 }
 
 .grupo-modificador {
@@ -542,13 +566,18 @@
 .linha-salvaguarda {
   margin-bottom: 4px;
   padding: 4px 6px 4px 16px;
-  border: 1px solid rgba(215, 163, 95, 0.22);
-  border-radius: 8px;
+  border: 2px solid transparent;
+  border-image-source:
+    url("Imagens/Assets/borda-carvao-arredondada.png");
+  
   background: rgba(215, 163, 95, 0.08);
   color: var(--cor-ficha-titulo);
   font-weight: 800;
   letter-spacing: 0.01em;
   text-align: center;
+  border-image-slice: 180;
+  border-image-width: 10;
+  border-image-repeat: stretch;
 }
 
 .linha-pericia {
@@ -818,4 +847,69 @@
 .modificador {
   border-radius: 0 18px 18px 0;
   clip-path: inset(0 0 0 6px);
+}
+
+.ficha-bloco h3,
+.equipamentos-lista h2,
+.equipamentos-ataques h2,
+.ficha-armas-ataques h4 {
+  border-bottom: 0;
+  padding-bottom: 10px;
+
+  background-image:
+    url("Imagens/Assets/linha-carvao-suave.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 4px;
+}
+
+.linha-pericia {
+  border-bottom: 0;
+  padding-bottom: 5px;
+
+  background-image:
+    url("Imagens/Assets/linha-carvao-suave.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 2px;
+}
+
+.linha-pericia:last-child {
+  background-image: none;
+}
+
+.linha-pericia:nth-child(2n) {
+  background-position: right bottom;
+  background-size: 96% 2px;
+}
+
+.linha-pericia:nth-child(3n) {
+  background-position: center bottom;
+  background-size: 92% 2px;
+}
+
+.campo-mini,
+.campo-derivado,
+.atributo-card,
+.caixa-bonus-proficiencia,
+.valor-bonus-proficiencia {
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  border-image-source:
+    url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 16;
+  border-image-repeat: stretch;
+}
+
+.caixa-valor:not(.valor-atributo):not(.modificador) {
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  border-image-source:
+    url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 12;
+  border-image-repeat: stretch;
 }
