@@ -1,4 +1,4 @@
-// =====================================================
+﻿// =====================================================
 // 1. ELEMENTOS DO HTML
 // -----------------------------------------------------
 // Referências aos elementos da página usados pelo JavaScript.
@@ -36,7 +36,7 @@ const dadosClasses = {
   guerreiro: {
     nome: "Guerreiro",
     dadoVida: 10,
-    imagem: "Imagens/Classes/guerreiro.png",
+    imagem: "Imagens/Classes/guerreiro-modal.webp",
     funcionamento: "O Guerreiro é uma classe voltada ao domínio do combate físico. Ele se destaca pelo uso de armas, armaduras e treinamento marcial, podendo atuar como linha de frente, defensor ou atacante principal.",
     estilo: "Recomendado para jogadores que gostam de combate direto, resistência, presença constante em batalha e domínio de armas e armaduras.",
     habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Guerreiro conforme as regras usadas pelo jogo."
@@ -45,7 +45,7 @@ const dadosClasses = {
   mago: {
     nome: "Mago",
     dadoVida: 6,
-    imagem: "Imagens/Classes/mago.png",
+    imagem: "Imagens/Classes/mago-modal.webp",
     funcionamento: "O Mago é uma classe voltada ao domínio da magia. Ele se destaca pelo estudo e manipulação de feitiços, podendo atuar como suporte, controlador de campo ou atacante mágico.",
     estilo: "Recomendado para jogadores que gostam de magia, estratégias complexas, controle do ambiente e uso de poderes sobrenaturais.",
     habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Mago conforme as regras usadas pelo jogo."
@@ -54,7 +54,7 @@ const dadosClasses = {
   ladino: {
     nome: "Ladino",
     dadoVida: 8,
-    imagem: "Imagens/Classes/ladino.png",
+    imagem: "Imagens/Classes/ladino-modal.webpg",
     funcionamento: "O Ladino é uma classe voltada ao roubo, intrusão e combate desarmado. Ele se destaca pela agilidade, precisão e habilidades de furtividade, podendo atuar como explorador, assasino ou ladrão.",
     estilo: "Recomendado para jogadores que gostam de ação rápida, furtividade, estratégias de engano e uso de armas leves.",
     habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Ladino conforme as regras usadas pelo jogo."
@@ -63,7 +63,7 @@ const dadosClasses = {
   clerigo: {
     nome: "Clérigo",
     dadoVida: 8,
-    imagem: "Imagens/Classes/clerigo.png",
+    imagem: "Imagens/Classes/clerigo-modal.webp",
     funcionamento: "O Clérigo é uma classe voltada ao domínio da fé e da cura. Ele se destaca pela capacidade de canalizar os poderes de sua divindade, podendo atuar como curandeiro, defensor ou atacante divino.",
     estilo: "Recomendado para jogadores que gostam de apoio, cura, proteção e uso de poderes divinos.",
     habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Clérigo conforme as regras usadas pelo jogo."
