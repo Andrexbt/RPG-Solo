@@ -172,10 +172,34 @@ body {
   display: grid;
 
   grid-template-columns:
-    clamp(460px, 32vw, 470px)
+    clamp(380px, 30vw, 420px)
     minmax(0, 1fr);
 
   gap: clamp(18px, 2vw, 28px);
+}
+
+.criador-personagem:has(.ficha-componente.ficha-retraida) {
+  grid-template-columns:
+    44px
+    minmax(0, 1fr);
+
+  gap: 10px;
+}
+
+.criador-personagem:has(.ficha-componente.ficha-retraida)
+.ficha-cabecalho-componente {
+  margin-bottom: 0;
+}
+
+.criador-personagem:has(.ficha-componente.ficha-retraida)
+.ficha-cabecalho-componente h2 {
+  display: none;
+}
+
+.criador-personagem:has(.ficha-componente.ficha-retraida)
+.coluna-ficha {
+  padding-right: 0;
+  overflow: visible;
 }
 
 .coluna-ficha {
