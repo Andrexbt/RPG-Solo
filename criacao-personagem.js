@@ -54,7 +54,7 @@ const dadosClasses = {
   ladino: {
     nome: "Ladino",
     dadoVida: 8,
-    imagem: "Imagens/Classes/ladino-modal.webpg",
+    imagem: "Imagens/Classes/ladino-modal.webp",
     funcionamento: "O Ladino é uma classe voltada ao roubo, intrusão e combate desarmado. Ele se destaca pela agilidade, precisão e habilidades de furtividade, podendo atuar como explorador, assasino ou ladrão.",
     estilo: "Recomendado para jogadores que gostam de ação rápida, furtividade, estratégias de engano e uso de armas leves.",
     habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Ladino conforme as regras usadas pelo jogo."
