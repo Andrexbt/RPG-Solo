@@ -6,6 +6,9 @@
    --largura-cartao-atributo para redimensionar a cadeia.
    ===================================================== */
 
+@import url("https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap");
+
 .ficha-componente {
   --largura-cartao-atributo: 130px;
   --espaco-interno-ficha: 8px;
@@ -54,7 +57,17 @@
 }
 
 .ficha {
+  --fonte-titulos: "IM Fell English", serif;
+  font-family: "Almendra", serif;
+
   --avanco-moldura: 38px;
+
+  /* Cores de tinta sobre o pergaminho */
+   --cor-ficha-titulo: #4b2d1b;
+   --cor-ficha-rotulo: #68472f;
+   --cor-ficha-texto: #3d2a1f;
+   --cor-texto: #3d2a1f;
+   --cor-ambar: #704322;
 
   position: relative;
   isolation: isolate;
@@ -252,14 +265,14 @@
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.1;
-  text-transform: uppercase;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .ficha-item {
   display: grid;
-  grid-template-columns: 94px minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px;
   align-items: baseline;
   padding: 3px 0;
 }
@@ -300,7 +313,7 @@
 .ficha-detalhes {
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: var(--espaco-interno-ficha);
 }
 
@@ -345,7 +358,6 @@
 .campo-derivado span {
   display: block;
   margin-bottom: 5px;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
@@ -384,6 +396,7 @@
   grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
   gap: var(--espaco-interno-ficha);
   align-items: stretch;
+  margin-block: auto;
 }
 
 .caixa-bonus-proficiencia {
@@ -500,12 +513,24 @@
   padding-left: 16px;
 }
 
-.linha-salvaguarda::before,
 .linha-pericia::before {
   content: "";
   position: absolute;
   top: 50%;
   left: 0;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(205, 187, 158, 0.72);
+  border-radius: 50%;
+  background: transparent;
+  transform: translateY(-50%);
+}
+
+.linha-salvaguarda::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10px;
   width: 7px;
   height: 7px;
   border: 1px solid rgba(205, 187, 158, 0.72);
@@ -523,6 +548,7 @@
   color: var(--cor-ficha-titulo);
   font-weight: 800;
   letter-spacing: 0.01em;
+  text-align: center;
 }
 
 .linha-pericia {
@@ -713,4 +739,83 @@
   .botao-retrair-ficha {
     transition: none;
   }
+}
+
+/* =====================================================
+   Estética de pergaminho escrito à mão
+   ===================================================== */
+
+/* Remove os fundos sólidos dos blocos internos */
+.ficha-bloco,
+.campo-mini,
+.campo-derivado,
+.atributo-card,
+.equipamentos-lista,
+.equipamentos-ataques,
+.caixa-valor,
+.caixa-bonus-proficiencia,
+.valor-bonus-proficiencia,
+.linha-salvaguarda {
+  background: transparent;
+}
+
+/* Troca as bordas regulares por linhas cor de tinta */
+.ficha-bloco,
+.campo-mini,
+.campo-derivado,
+.atributo-card,
+.equipamentos-lista,
+.equipamentos-ataques,
+.caixa-valor,
+.caixa-bonus-proficiencia,
+.valor-bonus-proficiencia {
+  border-color: rgba(70, 42, 24, 0.72);
+  border-width: 1px;
+  border-radius: 10px 7px 12px 8px / 7px 12px 8px 10px;
+}
+
+/* Deixa as divisórias coerentes com o pergaminho */
+.ficha-bloco h3,
+.equipamentos-lista h2,
+.equipamentos-ataques h2,
+.ficha-armas-ataques h4,
+.linha-pericia {
+  border-color: rgba(70, 42, 24, 0.45);
+}
+
+/* Corrige linhas e círculos das salvaguardas e perícias */
+.linha-salvaguarda::before,
+.linha-pericia::before {
+  border-color: rgba(70, 42, 24, 0.72);
+}
+
+.linha-salvaguarda {
+  border-color: rgba(70, 42, 24, 0.42);
+}
+
+.linha-pericia {
+  border-bottom-color: rgba(70, 42, 24, 0.38);
+}
+
+/* Mantém os itens proficientes escuros e legíveis */
+.linha-salvaguarda.proficiente,
+.linha-pericia.proficiente {
+  color: #4b2d1b;
+}
+
+.linha-salvaguarda.proficiente::before,
+.linha-pericia.proficiente::before {
+  border-color: #704322;
+  background: #704322;
+  box-shadow: 0 0 0 2px rgba(112, 67, 34, 0.18);
+}
+
+/* Restaura o desenho original do atributo e do modificador */
+.valor-atributo {
+  border-radius: 50%;
+}
+
+.modificador {
+  border-radius: 0 18px 18px 0;
+  clip-path: inset(0 0 0 6px);
 }
