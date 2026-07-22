@@ -66,7 +66,7 @@
   border-radius: 5px;
   background:
     linear-gradient(rgba(255, 250, 226, 0.05), rgba(102, 59, 27, 0.04)),
-    url("Imagens/Assets/moldura-ficha/papel.webp") center / 100% 100% no-repeat;
+    url("Imagens/Assets/moldura-ficha/papel.webp") center top / 100% auto repeat-y;
   color: #3b281b;
   box-shadow: 0 18px 52px rgba(0, 0, 0, 0.32);
 }
@@ -93,6 +93,24 @@
 .moldura-parte {
   display: block;
   background-repeat: no-repeat;
+}
+
+/* As faixas ficam atrás dos ornamentos */
+.moldura-faixa-topo,
+.moldura-faixa-base,
+.moldura-lateral-esquerda,
+.moldura-lateral-direita {
+  z-index: 1;
+}
+
+/* Os ornamentos ficam na frente das faixas */
+.moldura-topo-esquerda,
+.moldura-topo-centro,
+.moldura-topo-direita,
+.moldura-base-esquerda,
+.moldura-base-centro,
+.moldura-base-direita {
+  z-index: 2;
 }
 
 .moldura-faixa-topo,
@@ -156,19 +174,20 @@
 .moldura-lateral-direita {
   top: 104px;
   bottom: 108px;
-  width: 34px;
-  background-size: 100% 100%;
+  width: 20px;
+  background-size: 100% auto;
+  background-repeat: repeat-y;
 }
 
 .moldura-lateral-esquerda {
-  left: -14px;
+  left: -4px;
   background-image: url("Imagens/Assets/moldura-ficha/lateral-esquerda.webp");
   background-position: left top;
   filter: drop-shadow(3px 2px 3px rgba(31, 17, 9, 0.48));
 }
 
 .moldura-lateral-direita {
-  right: -14px;
+  right: -4px;
   background-image: url("Imagens/Assets/moldura-ficha/lateral-direita.webp");
   background-position: right top;
   filter: drop-shadow(-3px 2px 3px rgba(31, 17, 9, 0.48));
