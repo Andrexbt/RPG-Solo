@@ -50,20 +50,158 @@
 
 .ficha-corpo > .ficha {
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .ficha {
+  --avanco-moldura: 38px;
+
   position: relative;
+  isolation: isolate;
   width: fit-content;
   max-width: 100%;
-  padding: 90px 24px;
-  border-image-source: url("Imagens/Assets/scroll-01.png");
-  border-image-slice: 1800;
-  border-image-width: 400px;
-  border-image-repeat: stretch;
+  margin: 48px 40px;
+  padding: 110px 24px;
+  border: 1px solid rgba(92, 55, 30, 0.34);
+  border-radius: 5px;
+  background:
+    linear-gradient(rgba(255, 250, 226, 0.05), rgba(102, 59, 27, 0.04)),
+    url("Imagens/Assets/moldura-ficha/papel.webp") center / 100% 100% no-repeat;
   color: #3b281b;
   box-shadow: 0 18px 52px rgba(0, 0, 0, 0.32);
+}
+
+/* =====================================================
+   Moldura modular
+   -----------------------------------------------------
+   As faixas se adaptam ao tamanho da ficha. Ornamentos,
+   pontas e sombras ficam em peças fixas sobre o papel.
+   ===================================================== */
+
+.ficha-moldura,
+.moldura-parte {
+  position: absolute;
+  pointer-events: none;
+}
+
+.ficha-moldura {
+  inset: 0;
+  z-index: 3;
+  overflow: visible;
+}
+
+.moldura-parte {
+  display: block;
+  background-repeat: no-repeat;
+}
+
+.moldura-faixa-topo,
+.moldura-faixa-base {
+  left: calc(var(--avanco-moldura) * -0.3);
+  right: calc(var(--avanco-moldura) * -0.3);
+  height: 43px;
+  background-image: url("Imagens/Assets/moldura-ficha/faixa-horizontal.webp");
+  background-size: 100% 100%;
+}
+
+.moldura-faixa-topo {
+  top: -20px;
+}
+
+.moldura-faixa-base {
+  bottom: -20px;
+  transform: rotate(180deg);
+}
+
+.moldura-topo-esquerda,
+.moldura-topo-direita,
+.moldura-base-esquerda,
+.moldura-base-direita {
+  width: 110px;
+  background-size: 100% auto;
+  filter: drop-shadow(0 6px 5px rgba(31, 17, 9, 0.58));
+}
+
+.moldura-topo-esquerda,
+.moldura-topo-direita {
+  top: -39px;
+  height: 176px;
+}
+
+.moldura-topo-esquerda {
+  left: calc(var(--avanco-moldura) * -1);
+  background-image: url("Imagens/Assets/moldura-ficha/topo-esquerda.webp");
+  background-position: left top;
+}
+
+.moldura-topo-direita {
+  right: calc(var(--avanco-moldura) * -1);
+  background-image: url("Imagens/Assets/moldura-ficha/topo-direita.webp");
+  background-position: right top;
+}
+
+.moldura-topo-centro {
+  top: -43px;
+  left: 50%;
+  width: 140px;
+  height: 120px;
+  background-image: url("Imagens/Assets/moldura-ficha/topo-centro.webp");
+  background-position: center top;
+  background-size: contain;
+  filter: drop-shadow(0 7px 5px rgba(31, 17, 9, 0.62));
+  transform: translateX(-50%);
+}
+
+.moldura-lateral-esquerda,
+.moldura-lateral-direita {
+  top: 104px;
+  bottom: 108px;
+  width: 34px;
+  background-size: 100% 100%;
+}
+
+.moldura-lateral-esquerda {
+  left: -14px;
+  background-image: url("Imagens/Assets/moldura-ficha/lateral-esquerda.webp");
+  background-position: left top;
+  filter: drop-shadow(3px 2px 3px rgba(31, 17, 9, 0.48));
+}
+
+.moldura-lateral-direita {
+  right: -14px;
+  background-image: url("Imagens/Assets/moldura-ficha/lateral-direita.webp");
+  background-position: right top;
+  filter: drop-shadow(-3px 2px 3px rgba(31, 17, 9, 0.48));
+}
+
+.moldura-base-esquerda,
+.moldura-base-direita {
+  bottom: -45px;
+  height: 174px;
+}
+
+.moldura-base-esquerda {
+  left: calc(var(--avanco-moldura) * -1);
+  background-image: url("Imagens/Assets/moldura-ficha/base-esquerda.webp");
+  background-position: left bottom;
+}
+
+.moldura-base-direita {
+  right: calc(var(--avanco-moldura) * -1);
+  background-image: url("Imagens/Assets/moldura-ficha/base-direita.webp");
+  background-position: right bottom;
+}
+
+.moldura-base-centro {
+  bottom: -48px;
+  left: 50%;
+  width: 150px;
+  height: 108px;
+  background-image: url("Imagens/Assets/moldura-ficha/base-centro.webp");
+  background-position: center bottom;
+  background-size: contain;
+  filter: drop-shadow(0 7px 5px rgba(31, 17, 9, 0.62));
+  transform: translateX(-50%);
 }
 
 /* =====================================================
@@ -72,6 +210,7 @@
 
 .ficha-bloco {
   position: relative;
+  z-index: 1;
   width: calc(var(--largura-grade-atributos) + 32px);
   max-width: 100%;
   margin: 8px 0 0;
@@ -490,6 +629,7 @@
 .ficha-componente.ficha-retraida .ficha-corpo {
   grid-template-rows: 0fr;
   opacity: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -507,7 +647,32 @@
   }
 
   .ficha {
-    padding: 64px 12px;
+    --avanco-moldura: 28px;
+
+    margin: 40px 28px;
+    padding: 96px 12px;
+  }
+
+  .moldura-topo-esquerda,
+  .moldura-topo-direita,
+  .moldura-base-esquerda,
+  .moldura-base-direita {
+    width: 92px;
+  }
+
+  .moldura-topo-esquerda,
+  .moldura-topo-direita {
+    height: 150px;
+  }
+
+  .moldura-base-esquerda,
+  .moldura-base-direita {
+    height: 148px;
+  }
+
+  .moldura-topo-centro,
+  .moldura-base-centro {
+    width: 118px;
   }
 
   .ficha-bloco {
