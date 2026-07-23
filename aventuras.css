@@ -104,9 +104,9 @@ select {
   padding-block: 32px;
   display: grid;
   grid-template-columns:
-    minmax(240px, 300px)
+    minmax(240px, 280px)
     minmax(0, 1fr)
-    minmax(220px, 280px);
+    minmax(240px, 280px);
   gap: 24px;
   align-items: start;
 }
@@ -139,4 +139,26 @@ select {
 
 .coluna-explicativa .botao-recolher-painel {
   align-self: flex-start;
+}
+
+.layout-aventura.ficha-recolhida {
+  grid-template-columns:
+    max-content
+    minmax(0, 1fr)
+    minmax(220px, 280px);
+}
+
+.layout-aventura.ficha-recolhida .painel-ficha {
+  display: none;
+}
+
+.layout-aventura.painelExplicativo-recolhido {
+  grid-template-columns:
+    max-content
+    minmax(0, 1fr)
+    max-content
+}
+
+.layout-aventura.painelExplicativo-recolhido .painelExplicativo {
+  display: none;
 }

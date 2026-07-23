@@ -11,10 +11,32 @@ const cenaInicial = {
     "Escapar da cidade."
 };
 
-console.log(cenaInicial);
+const painelFicha = document.querySelector("#painelFicha");
+const painelExplicativo = document.querySelector("#painelExplicativo");
 
-console.log(cenaInicial.titulo);
+const botaoRecolherFicha = document.querySelector("#botaoRecolherFicha");
+const botaoRecolherPainelExplicativo = document.querySelector("#botaoRecolherPainelExplicativo");
 
-console.log(cenaInicial.contexto);
+const layoutAventura = document.querySelector(".layout-aventura");
 
-console.log(cenaInicial.objetivo);
+function alternarFicha() {
+
+  layoutAventura.classList.toggle("ficha-recolhida");
+
+}
+
+function alternarPainelExplicativo() {
+
+  layoutAventura.classList.toggle("painelExplicativo-recolhido");
+
+}
+
+botaoRecolherFicha.addEventListener(
+  "click",
+  alternarFicha
+);
+
+botaoRecolherPainelExplicativo.addEventListener(
+  "click",
+  alternarPainelExplicativo
+);
