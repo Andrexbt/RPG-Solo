@@ -433,7 +433,7 @@
 }
 
 .caixa-valor:not(.valor-atributo):not(.modificador) {
-  border-color: 1px solid transparent;
+  border: 1px solid transparent;
   border-image-source: url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
   border-image-width: 18;
