@@ -6,6 +6,9 @@
    --largura-cartao-atributo para redimensionar a cadeia.
    ===================================================== */
 
+@import url("https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap");
+
 .ficha-componente {
   --largura-cartao-atributo: 130px;
   --espaco-interno-ficha: 8px;
@@ -54,7 +57,19 @@
 }
 
 .ficha {
+  --fonte-titulos: "IM Fell English", serif;
+  font-family: "Almendra", serif;
+
   --avanco-moldura: 38px;
+  --ajuste-base-moldura: 5px;
+  --largura-canto-moldura: 110px;
+
+  /* Cores de tinta sobre o pergaminho */
+   --cor-ficha-titulo: #4b2d1b;
+   --cor-ficha-rotulo: #68472f;
+   --cor-ficha-texto: #3d2a1f;
+   --cor-texto: #3d2a1f;
+   --cor-ambar: #704322;
 
   position: relative;
   isolation: isolate;
@@ -127,8 +142,21 @@
 }
 
 .moldura-faixa-base {
-  bottom: -20px;
-  transform: rotate(180deg);
+  bottom: -22px;
+  height: 36px;
+  transform: rotate(180deg) scaleX(1.1);
+
+  left:
+    calc(
+      var(--largura-canto-moldura) -
+      var(--avanco-moldura)
+    );
+
+  right:
+    calc(
+      var(--largura-canto-moldura) -
+      var(--avanco-moldura)
+    );
 }
 
 .moldura-topo-esquerda,
@@ -173,7 +201,7 @@
 .moldura-lateral-esquerda,
 .moldura-lateral-direita {
   top: 104px;
-  bottom: 108px;
+  bottom:  calc(108px + var(--ajuste-base-moldura));
   width: 20px;
   background-size: 100% auto;
   background-repeat: repeat-y;
@@ -195,7 +223,7 @@
 
 .moldura-base-esquerda,
 .moldura-base-direita {
-  bottom: -45px;
+  bottom: calc(-45px + var(--ajuste-base-moldura));
   height: 174px;
 }
 
@@ -212,7 +240,7 @@
 }
 
 .moldura-base-centro {
-  bottom: -48px;
+  bottom: calc(-48px + var(--ajuste-base-moldura));
   left: 50%;
   width: 150px;
   height: 108px;
@@ -234,9 +262,14 @@
   max-width: 100%;
   margin: 8px 0 0;
   padding: 16px;
-  border: 2px solid rgba(93, 57, 31, 0.52);
-  border-radius: 12px;
-  background: var(--cor-ficha-fundo);
+  border: 1px solid transparent;
+  border-image-source:
+    url("Imagens/Assets/borda-carvao.png");
+  border-image-slice: 80;
+  border-image-width: 8px;
+  border-image-repeat: stretch;
+  border-radius: 10px 7px 12px 8px / 7px 12px 8px 10px;
+  background: transparent;
 }
 
 .ficha-bloco:first-child {
@@ -245,21 +278,22 @@
 
 .ficha-bloco h3 {
   margin: 0 0 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  padding-bottom: 10px;
+  border-bottom: 0;
+  background: url("Imagens/Assets/linha-carvao-suave.png") left bottom / 100% 4px no-repeat;
   color: var(--cor-ficha-titulo);
   font-family: var(--fonte-titulos);
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.1;
-  text-transform: uppercase;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .ficha-item {
   display: grid;
-  grid-template-columns: 94px minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px;
   align-items: baseline;
   padding: 3px 0;
 }
@@ -300,7 +334,7 @@
 .ficha-detalhes {
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: var(--espaco-interno-ficha);
 }
 
@@ -328,12 +362,14 @@
 
 .campo-mini,
 .campo-derivado,
-.atributo-card,
-.equipamentos-lista,
-.equipamentos-ataques {
-  border: 1px solid var(--cor-ficha-borda);
-  border-radius: 12px;
-  background: var(--cor-ficha-superficie);
+.atributo-card {
+  border: 1px solid transparent;
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 16;
+  border-image-repeat: stretch;
+  border-radius: 10px;
+  background: transparent;
 }
 
 .campo-mini,
@@ -345,7 +381,6 @@
 .campo-derivado span {
   display: block;
   margin-bottom: 5px;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
@@ -367,11 +402,20 @@
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--cor-ficha-borda-forte);
-  border-radius: 10px;
-  background: var(--cor-ficha-campo);
+  border: 1px solid rgba(70, 42, 24, 0.72);
+  border-radius: 10px 7px 12px 8px / 7px 12px 8px 10px;
+  background: transparent;
   color: var(--cor-ambar);
   font-weight: 900;
+}
+
+.caixa-valor:not(.valor-atributo):not(.modificador) {
+  border-color: transparent;
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 12;
+  border-image-repeat: stretch;
+  border-radius: 10px;
 }
 
 .caixa-valor-pequena {
@@ -384,14 +428,19 @@
   grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
   gap: var(--espaco-interno-ficha);
   align-items: stretch;
+  margin-block: auto;
 }
 
 .caixa-bonus-proficiencia {
   width: 100%;
   padding: 8px;
-  border: 1px solid rgba(215, 163, 95, 0.26);
-  border-radius: 12px;
-  background: var(--cor-ficha-campo);
+  border: 1px solid transparent;
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 16;
+  border-image-repeat: stretch;
+  border-radius: 10px;
+  background: transparent;
   color: var(--cor-texto);
   text-align: center;
   font-size: 0.76rem;
@@ -403,9 +452,13 @@
   display: grid;
   place-items: center;
   padding: 8px;
-  border: 1px solid var(--cor-ficha-borda-forte);
-  border-radius: 12px;
-  background: var(--cor-ficha-campo);
+  border: 1px solid transparent;
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 16;
+  border-image-repeat: stretch;
+  border-radius: 10px;
+  background: transparent;
   color: var(--cor-ambar);
   font-weight: 900;
 }
@@ -476,6 +529,7 @@
   min-height: 0;
   padding-left: 12px;
   border-radius: 0 18px 18px 0;
+  clip-path: inset(0 0 0 6px);
   font-size: 0.9rem;
 }
 
@@ -500,7 +554,6 @@
   padding-left: 16px;
 }
 
-.linha-salvaguarda::before,
 .linha-pericia::before {
   content: "";
   position: absolute;
@@ -508,7 +561,20 @@
   left: 0;
   width: 7px;
   height: 7px;
-  border: 1px solid rgba(205, 187, 158, 0.72);
+  border: 1px solid rgba(70, 42, 24, 0.72);
+  border-radius: 50%;
+  background: transparent;
+  transform: translateY(-50%);
+}
+
+.linha-salvaguarda::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(70, 42, 24, 0.72);
   border-radius: 50%;
   background: transparent;
   transform: translateY(-50%);
@@ -517,37 +583,52 @@
 .linha-salvaguarda {
   margin-bottom: 4px;
   padding: 4px 6px 4px 16px;
-  border: 1px solid rgba(215, 163, 95, 0.22);
-  border-radius: 8px;
-  background: rgba(215, 163, 95, 0.08);
+  border: 2px solid transparent;
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-slice: 180;
+  border-image-width: 10;
+  border-image-repeat: stretch;
+  background: transparent;
   color: var(--cor-ficha-titulo);
   font-weight: 800;
   letter-spacing: 0.01em;
+  text-align: center;
 }
 
 .linha-pericia {
   display: flex;
   align-items: center;
   margin: 0;
-  padding-block: 3px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+  padding-block: 3px 5px;
+  border-bottom: 0;
+  background: url("Imagens/Assets/linha-carvao-suave.png") left bottom / 100% 2px no-repeat;
 }
 
 .linha-pericia:last-child {
-  border-bottom: 0;
+  background-image: none;
+}
+
+.linha-pericia:nth-child(2n) {
+  background-position: right bottom;
+  background-size: 96% 2px;
+}
+
+.linha-pericia:nth-child(3n) {
+  background-position: center bottom;
+  background-size: 92% 2px;
 }
 
 .linha-salvaguarda.proficiente,
 .linha-pericia.proficiente {
-  color: #f1bd6a;
+  color: #4b2d1b;
   font-weight: 800;
 }
 
 .linha-salvaguarda.proficiente::before,
 .linha-pericia.proficiente::before {
-  border-color: var(--cor-ambar);
-  background: var(--cor-ambar);
-  box-shadow: 0 0 0 2px rgba(215, 163, 95, 0.16);
+  border-color: #704322;
+  background: #704322;
+  box-shadow: 0 0 0 2px rgba(112, 67, 34, 0.18);
 }
 
 .linha-pericia.especializada::before {
@@ -570,6 +651,10 @@
 .equipamentos-ataques {
   margin: 0;
   padding: 8px;
+  border: 0;
+  border-image: none;
+  border-radius: 0;
+  background: transparent;
   text-align: left;
 }
 
@@ -581,8 +666,9 @@
 .equipamentos-ataques h2,
 .ficha-armas-ataques h4 {
   margin: 0 0 7px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid rgba(255, 248, 235, 0.10);
+  padding-bottom: 10px;
+  border-bottom: 0;
+  background: url("Imagens/Assets/linha-carvao-suave.png") left bottom / 100% 4px no-repeat;
   color: var(--cor-ficha-rotulo);
   font-size: var(--texto-micro);
   font-weight: 900;

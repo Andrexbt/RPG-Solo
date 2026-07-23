@@ -2819,9 +2819,6 @@ function atualizarFichaTalentos() {
   fichaTalentos.innerHTML = "";
 
   if (personagem.talentos.length === 0) {
-    const item = document.createElement("li");
-    item.textContent = "-";
-    fichaTalentos.appendChild(item);
     return;
   }
 
