@@ -262,14 +262,22 @@
   max-width: 100%;
   margin: 8px 0 0;
   padding: 16px;
+  border: 0
+}
+
+.ficha-bloco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
   border: 1px solid transparent;
-  border-image-source:
-    url("Imagens/Assets/borda-carvao.png");
+  border-image-source: url("Imagens/Assets/borda-carvao.webp");
   border-image-slice: 80;
   border-image-width: 8px;
   border-image-repeat: stretch;
-  border-radius: 10px 7px 12px 8px / 7px 12px 8px 10px;
-  background: transparent;
+
+  opacity: 0.70;
 }
 
 .ficha-bloco:first-child {
@@ -280,7 +288,7 @@
   margin: 0 0 8px;
   padding-bottom: 10px;
   border-bottom: 0;
-  background: url("Imagens/Assets/linha-carvao-suave.png") left bottom / 100% 4px no-repeat;
+  background: url("Imagens/Assets/linha-carvao-suave.webp") left bottom / 100% 4px no-repeat;
   color: var(--cor-ficha-titulo);
   font-family: var(--fonte-titulos);
   font-size: 0.82rem;
@@ -363,13 +371,28 @@
 .campo-mini,
 .campo-derivado,
 .atributo-card {
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  position: relative;
+}
+
+.campo-mini::before,
+.campo-derivado::before,
+.atributo-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
   border: 1px solid transparent;
-  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-source:
+    url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
   border-image-width: 16;
   border-image-repeat: stretch;
-  border-radius: 10px;
-  background: transparent;
+
+  opacity: 0.70;
 }
 
 .campo-mini,
@@ -410,10 +433,10 @@
 }
 
 .caixa-valor:not(.valor-atributo):not(.modificador) {
-  border-color: transparent;
-  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-color: 1px solid transparent;
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
-  border-image-width: 12;
+  border-image-width: 18;
   border-image-repeat: stretch;
   border-radius: 10px;
 }
@@ -435,7 +458,7 @@
   width: 100%;
   padding: 8px;
   border: 1px solid transparent;
-  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
   border-image-width: 16;
   border-image-repeat: stretch;
@@ -453,7 +476,7 @@
   place-items: center;
   padding: 8px;
   border: 1px solid transparent;
-  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
   border-image-width: 16;
   border-image-repeat: stretch;
@@ -502,7 +525,7 @@
   position: relative;
   width: 104px;
   height: 58px;
-  margin: 0 auto 5px;
+  margin: 0px 5px 5px 11px;
 }
 
 .valor-atributo {
@@ -513,6 +536,13 @@
   min-height: 0;
   border-radius: 50%;
   font-size: 1.3rem;
+  border: 0.5;
+  border-image: none;
+  background:
+    transparent
+    url("Imagens/Assets/circulo-carvao.webp")
+    center / 100% 100%
+    no-repeat
 }
 
 .grupo-modificador {
@@ -524,13 +554,20 @@
 }
 
 .modificador {
-  width: 58px;
-  height: 36px;
+  width: 45px;
+  height: 30px;
   min-height: 0;
   padding-left: 12px;
   border-radius: 0 18px 18px 0;
-  clip-path: inset(0 0 0 6px);
+  clip-path: inset(0 0 0 7px);
   font-size: 0.9rem;
+  border: 0.5;
+  border-image: none;
+  background:
+    transparent
+    url("Imagens/Assets/capsula-carvao.webp")
+    center / 100% 100%
+    no-repeat;
 }
 
 .rotulo-modificador {
@@ -563,8 +600,8 @@
   height: 7px;
   border: 1px solid rgba(70, 42, 24, 0.72);
   border-radius: 50%;
-  background: transparent;
   transform: translateY(-50%);
+  background: transparent
 }
 
 .linha-salvaguarda::before {
@@ -576,15 +613,15 @@
   height: 7px;
   border: 1px solid rgba(70, 42, 24, 0.72);
   border-radius: 50%;
-  background: transparent;
   transform: translateY(-50%);
+  background: transparent
 }
 
 .linha-salvaguarda {
   margin-bottom: 4px;
   padding: 4px 6px 4px 16px;
   border: 2px solid transparent;
-  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.png");
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
   border-image-width: 10;
   border-image-repeat: stretch;
@@ -601,7 +638,7 @@
   margin: 0;
   padding-block: 3px 5px;
   border-bottom: 0;
-  background: url("Imagens/Assets/linha-carvao-suave.png") left bottom / 100% 2px no-repeat;
+  background: url("Imagens/Assets/linha-carvao-suave.webp") left bottom / 100% 2px no-repeat;
 }
 
 .linha-pericia:last-child {
@@ -668,7 +705,7 @@
   margin: 0 0 7px;
   padding-bottom: 10px;
   border-bottom: 0;
-  background: url("Imagens/Assets/linha-carvao-suave.png") left bottom / 100% 4px no-repeat;
+  background: url("Imagens/Assets/linha-carvao-suave.webp") left bottom / 100% 4px no-repeat;
   color: var(--cor-ficha-rotulo);
   font-size: var(--texto-micro);
   font-weight: 900;
