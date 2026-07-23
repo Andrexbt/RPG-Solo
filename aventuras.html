@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
+  <title>A Fuga | RPG Solo</title>
+
+  <link rel="stylesheet" href="aventuras.css">
+</head>
+
+<body>
+
+  <div class="layout-aventura">
+
+    <div class="coluna-lateral coluna-ficha">
+
+      <button
+      id="botaoRecolherFicha"
+      class="botao-recolher-painel"
+      type="button"
+      aria-controls="painelFicha"
+      aria-expanded="true"
+      aria-label="Recolher ficha do personagem">Ficha
+      </button>
+
+      <aside
+      id="painelFicha"
+      class="painel-lateral painel-ficha">
+      <h2>Ficha do personagem</h2>
+
+      <div id="conteudoFicha">
+        <p>A ficha será carregada aqui.</p>
+      </div>
+
+      </aside>
+
+    </div>
+
+    <main class="pagina-aventura">
+
+      <header class="cabecalho-aventura">
+      <p class="rotulo-aventura">RPG Solo</p>
+      <h1>A Fuga</h1>
+      </header>
+
+      <section
+      class="cena-aventura"
+      aria-labelledby="tituloCena">
+
+        <div class="conteudo-cena">
+
+          <p id="contextoCena">
+          Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
+          </p>
+
+          <p id="objetivoCena" class="objetivo-cena">
+          Objetivo: Escapar da cidade.
+          </p>
+
+        </div>
+
+        <div class="area-escolhas">
+        <h3>O que você fará?</h3>
+
+        <div
+          id="listaEscolhas"
+          class="lista-escolhas"
+        >
+          <!-- As escolhas serão inseridas pelo JavaScript. -->
+        </div>
+        </div>
+
+      </section>
+
+      <section
+      id="areaResultado"
+      class="area-resultado"
+      aria-live="polite"
+      hidden
+    >
+      <h2>Resultado</h2>
+
+      <p id="resultadoTeste"></p>
+      <p id="consequenciaCena"></p>
+      </section>
+
+    </main>
+
+    <div class="coluna-lateral coluna-explicativa">
+
+      <button
+      id="botaoRecolherExplicacoes"
+      class="botao-recolher-painel"
+      type="button"
+      aria-controls="painelExplicativo"
+      aria-expanded="true"
+      aria-label="Recolher painel de informações">Informações
+      </button>
+
+      <aside
+      id="painelExplicativo"
+      class="painel-lateral painel-explicativo">
+
+      <h2>Informações</h2>
+
+      <div id="conteudoExplicativo">
+        <p> As regras e explicações da situação aparecerão aqui. </p>
+      </div>
+
+      </aside>
+      
+    </div>
+
+  </div>
+
+  <script src="aventuras.js" defer></script>
+</body>
+</html>
