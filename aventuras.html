@@ -48,8 +48,8 @@
       </header>
 
       <section
-      class="cena-aventura"
-      aria-labelledby="tituloCena">
+        class="cena-aventura"
+        aria-labelledby="tituloCena">
 
         <div class="conteudo-cena">
 
@@ -57,36 +57,113 @@
           Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
           </p>
 
-          <p id="objetivoCena" class="objetivo-cena">
-          Objetivo: Escapar da cidade.
-          </p>
-
         </div>
 
         <div class="area-escolhas">
-        <h3>O que você fará?</h3>
+
+          <h3>ÁREA PARA ESCOLHAS A DEFINIR</h3>
+
+          <div
+          id="listaEscolhas"
+          class="lista-escolhas">
+
+          <!-- As escolhas serão inseridas pelo JavaScript. -->
+
+          </div>
+
+        </div>
 
         <div
-          id="listaEscolhas"
-          class="lista-escolhas"
-        >
-          <!-- As escolhas serão inseridas pelo JavaScript. -->
-        </div>
+          id="areaResultado"
+          class="area-resultado"
+          aria-live="polite"
+          hidden>
+
+          <p id="resultadoTeste"></p>
+
+          <p id="consequenciaCena"></p>
+
         </div>
 
       </section>
 
       <section
-      id="areaResultado"
-      class="area-resultado"
-      aria-live="polite"
-      hidden
-    >
-      <h2>Resultado</h2>
+        class="janela-acao"
+        aria-labelledby="tituloAcao">
 
-      <p id="resultadoTeste"></p>
-      <p id="consequenciaCena"></p>
+        <h2 id="tituloAcao">
+          O que você fará?
+        </h2>
+
+        <form
+            id="formularioAcao"
+            class="formulario-acao">
+        
+            <textarea
+            id="campoAcao"
+            name="acao"
+            rows="1"
+            aria-label="Descreva a ação do personagem"
+            placeholder=""
+            required>
+            </textarea>
+
+            <button
+            id="botaoEnviarAcao"
+            type="submit">
+            Enviar ação
+            </button>
+        
+        </form>
+
       </section>
+
+      <div class="ferramentas-aventura">
+
+        <section
+          class="janela-dados"
+          aria-labelledby="tituloDados">
+
+          <h2 id="tituloDados">
+            Dados
+          </h2>
+
+          <div class="conteudo-dados">
+
+            <button
+              id="botaoRolarDado"
+              type="button">
+              Rolar d20
+            </button>
+
+            <output
+              id="resultadoDado"
+              aria-live="polite">
+              -
+            </output>
+
+          </div>
+
+        </section>
+
+        <section
+          class="janela-anotacoes"
+          aria-labelledby="tituloAnotacoes">
+
+          <h2 id="tituloAnotacoes">
+            Anotações
+          </h2>
+
+          <textarea
+            id="campoAnotacoes"
+            rows="5"
+            aria-labelledby="tituloAnotacoes"
+            placeholder="Escreva suas anotações aqui...">
+          </textarea>
+
+        </section>
+
+      </div>
 
     </main>
 
@@ -117,6 +194,7 @@
 
   </div>
 
+  <script src="dados.js" defer></script>
   <script src="aventuras.js" defer></script>
 </body>
 </html>

@@ -21,6 +21,46 @@ select {
   width: 100%;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(360px, 1fr)
+    auto
+    auto;
+  gap: 16px;
+}
+
+.ferramentas-aventura {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.janela-dados,
+.janela-anotacoes {
+  min-width: 0;
+  padding: 24px;
+  border-radius: 12px;
+  background: #efe1bd;
+}
+
+.janela-dados h2,
+.janela-anotacoes h2 {
+  margin: 0 0 16px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+#campoAnotacoes {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #69482f;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.24);
+  color: inherit;
+  resize: vertical;
 }
 
 .cabecalho-aventura {
@@ -41,7 +81,7 @@ select {
 }
 
 .cena-aventura,
-.area-resultado {
+.janela-acao {
   padding: 32px;
   border-radius: 12px;
   background: #efe1bd;
@@ -95,7 +135,9 @@ select {
 }
 
 .area-resultado {
-  margin-top: 20px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(105, 72, 47, 0.3);
 }
 
 .layout-aventura {
@@ -159,6 +201,45 @@ select {
     max-content
 }
 
-.layout-aventura.painelExplicativo-recolhido .painelExplicativo {
+.layout-aventura.painelExplicativo-recolhido .painel-explicativo {
   display: none;
+}
+
+.formulario-acao {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+  gap: 10px 12px;
+  align-items: end;
+}
+
+.janela-acao h2 {
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.formulario-acao textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #69482f;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.24);
+  color: inherit;
+  resize: vertical;
+}
+
+#botaoEnviarAcao {
+  min-height: 48px;
+  padding: 10px 18px;
+  border: 1px solid #69482f;
+  border-radius: 8px;
+  background: #69482f;
+  color: #f4ead2;
+  cursor: pointer;
+}
+
+#botaoEnviarAcao:hover {
+  background: #4f3423;
 }
