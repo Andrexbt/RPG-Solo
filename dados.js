@@ -1,5 +1,14 @@
 "use strict";
 
+const botaoRolarDado = document.querySelector("#botaoRolarDado");
+
+const resultadoDado = document.querySelector("#resultadoDado");
+
+const campoModificadorDados =document.querySelector("#modificadorDados");
+
+const listaGruposDados = document.querySelector("#listaGruposDados");
+
+const botaoAdicionarGrupoDado = document.querySelector("#botaoAdicionarGrupoDado");
 
 function rolarDado(numeroDeFaces) {
 
@@ -45,8 +54,7 @@ function somarResultados(resultados) {
 
 function realizarRolagem(
   quantidade,
-  numeroDeFaces,
-  modificador = 0) {
+  numeroDeFaces) {
 
   const resultados =
     rolarGrupoDeDados(
@@ -54,11 +62,8 @@ function realizarRolagem(
       numeroDeFaces
     );
 
-  const subtotal =
-    somarResultados(resultados);
-
   const total =
-    subtotal + modificador;
+    somarResultados(resultados);
 
   return {
 
@@ -71,6 +76,52 @@ function realizarRolagem(
     resultados:
       resultados,
 
+    total:
+      total
+  };
+}
+
+function rolarGruposDeDados(configuracao) {
+
+  const resultadosDosGrupos = [];
+
+  for (
+    const grupoDeDados
+    of configuracao.gruposDeDados) {
+
+    const resultadoDoGrupo =
+      realizarRolagem(
+        grupoDeDados.quantidade,
+        grupoDeDados.numeroDeFaces
+      );
+
+    resultadosDosGrupos.push(
+      resultadoDoGrupo
+    );
+  }
+  return resultadosDosGrupos;
+}
+
+function realizarRolagemComposta(configuracao){
+  const gruposRolados = rolarGruposDeDados(configuracao);
+
+  let subtotal = 0;
+
+  for (const grupoRolado of gruposRolados) {
+  subtotal += grupoRolado.total;
+  }
+
+  const modificador =
+    configuracao.modificador;
+
+  const total =
+    subtotal + modificador;
+
+  return {
+
+    gruposRolados:
+      gruposRolados,
+
     subtotal:
       subtotal,
 
@@ -82,34 +133,80 @@ function realizarRolagem(
   };
 }
 
-const rolagemCompostaExemplo = {
+function executarRolagemConfigurada() {
 
-  gruposDeDados: [
-    {
-      quantidade:
-        2,
+  const elementosDosGrupos = listaGruposDados.querySelectorAll(".grupo-dado");
 
-      numeroDeFaces:
-        6
-    },
+  const gruposDeDados = [];
 
-    {
-      quantidade:
-        1,
+  for (const elementoDoGrupo of elementosDosGrupos) {
 
-      numeroDeFaces:
-        4
-    }
-  ],
+    const campoQuantidade = elementoDoGrupo.querySelector(".quantidade-dados");
 
-  modificador:
-    3
-};
+    const campoNumeroDeFaces = elementoDoGrupo.querySelector(".numero-de-faces");
+
+    const grupoDeDados = {
+      quantidade: Number(campoQuantidade.value),
+      numeroDeFaces: Number(campoNumeroDeFaces.value)
+    };
+    gruposDeDados.push(grupoDeDados);
+  }
+
+  const modificador = Number(campoModificadorDados.value);
+
+  const configuracao = {
+    gruposDeDados: gruposDeDados,
+    modificador: modificador
+  };
+
+  const resultado = realizarRolagemComposta(configuracao);
+
+  resultadoDado.textContent = resultado.total;
+
+  console.log(
+    "Rolagem solicitada pela interface:",
+    resultado
+  );
+}
+
+function adicionarGrupoDado() {
+
+  const grupoOriginal =
+    listaGruposDados.querySelector(
+      ".grupo-dado"
+    );
 
 
+  const novoGrupo =
+    grupoOriginal.cloneNode(true);
 
 
-console.log(
-  "Rolagem composta:",
-  rolagemCompostaExemplo
-);
+  const novaQuantidade =
+    novoGrupo.querySelector(
+      ".quantidade-dados"
+    );
+
+
+  const novoNumeroDeFaces =
+    novoGrupo.querySelector(
+      ".numero-de-faces"
+    );
+
+
+  novaQuantidade.value =
+    1;
+
+
+  novoNumeroDeFaces.value =
+    20;
+
+
+  listaGruposDados.append(
+    novoGrupo
+  );
+
+}
+
+botaoRolarDado.addEventListener("click", executarRolagemConfigurada);
+
+botaoAdicionarGrupoDado.addEventListener("click",adicionarGrupoDado);
