@@ -133,6 +133,36 @@ function realizarRolagemComposta(configuracao){
   };
 }
 
+function formatarResultadoRolagem(rolagem) {
+  let textoDosDados =
+    "";
+
+  for (const grupo of rolagem.gruposRolados) {
+
+    const descricaoDoGrupo =
+      `${grupo.quantidade}d${grupo.numeroDeFaces} [${grupo.resultados.join(", ")}]`;
+
+    if (textoDosDados !== "") {
+
+      textoDosDados +=
+        " + ";
+
+    }
+
+    textoDosDados +=
+      descricaoDoGrupo;
+
+  }
+
+  const textoDoModificador =
+    rolagem.modificador >= 0
+      ? ` + ${rolagem.modificador}`
+      : ` - ${Math.abs(rolagem.modificador)}`;
+
+  return `${textoDosDados}${textoDoModificador} = ${rolagem.total}`;
+
+}
+
 function executarRolagemConfigurada() {
 
   const elementosDosGrupos = listaGruposDados.querySelectorAll(".grupo-dado");
@@ -163,10 +193,37 @@ function executarRolagemConfigurada() {
 
   resultadoDado.textContent = resultado.total;
 
+  const eventoRolagem = new CustomEvent("rolagemConcluida",
+    {detail: resultado}
+  );
+
+  document.dispatchEvent(eventoRolagem);
+
   console.log(
     "Rolagem solicitada pela interface:",
     resultado
   );
+
+  const resultadoFormatado =
+  formatarResultadoRolagem(resultado);
+
+  console.log(resultadoFormatado);
+}
+
+function removerGrupoDado(evento) {
+
+  const botaoRemover =
+    evento.currentTarget;
+
+
+  const grupoDado =
+    botaoRemover.closest(
+      ".grupo-dado"
+    );
+
+
+  grupoDado.remove();
+
 }
 
 function adicionarGrupoDado() {
@@ -200,11 +257,21 @@ function adicionarGrupoDado() {
   novoNumeroDeFaces.value =
     20;
 
+  const botaoRemover = document.createElement("button");
 
-  listaGruposDados.append(
-    novoGrupo
-  );
+  botaoRemover.classList.add("botao-remover-grupo-dado");
 
+  botaoRemover.type = "button";
+
+  botaoRemover.classList.add("botao-remover-grupo-dado");
+
+  botaoRemover.textContent = "Remover";
+
+  botaoRemover.addEventListener("click",removerGrupoDado);
+
+  novoGrupo.append(botaoRemover);
+
+  listaGruposDados.append(novoGrupo);
 }
 
 botaoRolarDado.addEventListener("click", executarRolagemConfigurada);

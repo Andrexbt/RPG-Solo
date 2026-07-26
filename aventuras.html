@@ -44,24 +44,33 @@
 
       <header class="cabecalho-aventura">
       <p class="rotulo-aventura">RPG Solo</p>
-      <h1>A Fuga</h1>
+      <h1 id="tituloAventura">A Fuga</h1>
       </header>
 
       <section
         class="cena-aventura"
-        aria-labelledby="tituloCena">
+        aria-labelledby="Cena da aventura">
 
         <div class="conteudo-cena">
 
-          <p id="contextoCena">
+          <div
+          id="contextoCena"
+          class="contexto-cena">
           Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
+          </div>
+
+          <p
+          id="solicitacaoTeste"
+          class="solicitacao-teste"
+          aria-live="polite"
+          hidden>
           </p>
 
         </div>
 
         <div class="area-escolhas">
 
-          <h3>ÁREA PARA ESCOLHAS A DEFINIR</h3>
+          <h3 id="tituloEscolhas">O que você fará?</h3>
 
           <div
           id="listaEscolhas"
@@ -148,8 +157,7 @@
                       </span>
                     
 
-                      <input
-                      id="quantidadeDados"
+                      <input                 
                       class="quantidade-dados"
                       name="quantidade"
                       type="number"
@@ -170,7 +178,6 @@
                   
 
                     <select
-                      id="numeroDeFaces"
                       class="numero-de-faces"
                       name="numeroDeFaces">
 
@@ -278,6 +285,7 @@
   </div>
 
   <script src="dados.js" defer></script>
+  <script src="banco-aventuras.js" defer></script>
   <script src="aventuras.js" defer></script>
 </body>
 </html>
