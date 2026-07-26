@@ -78,13 +78,14 @@ const bancoAventuras = {
                             "As caixas não aguentam seu peso, e não parece haver nenhum outro modo de alcançar o telhado. Hora de pensar em outro plano."
                           ],
                       
-                          voltarParaEscolhas: true
+                          voltarParaEscolhas: true,
+                          removerEscolha:true
                           }
                       
                     }
                   },
 
-                  movimentoFurtivo: {
+                  movimentoNoTelhado: {
 
                 instrucao: "Faça um teste de Furtividade para avançar sem ser visto.",
                 teste: {nome:"Furtividade",dificuldade: 13},
@@ -100,23 +101,6 @@ const bancoAventuras = {
                     }
                 }
                   },
-
-                  saltoFinal: {
-
-                instrucao: "Faça um teste de Acrobacia para alcançar a torre.",
-                teste: {nome:"Acrobacia",dificuldade: 15},
-
-                resultados: {
-                  sucesso: {
-                      texto: "Você alcança a torre.",
-                      proximaCena: "torre"
-                    },
-
-                    fracasso: {
-                      texto: "Você fica pendurado na borda.",proximaEtapa: "penduradoNaTorre"
-                    }
-                }
-                  } 
 
               }
 
@@ -141,6 +125,8 @@ const bancoAventuras = {
           },
 
         ],
+
+      },
 
       esperaNoTelhado: {
 
@@ -245,6 +231,4 @@ const bancoAventuras = {
 
   }
 
-  },
-  
 }

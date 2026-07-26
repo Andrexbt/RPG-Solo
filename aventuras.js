@@ -6,6 +6,7 @@ let cenaAtual = aventuraAtual.cenas[idCenaInicial];
 let testePendente = null;
 let caminhoAtual = null;
 let etapaAtual = null;
+let escolhasAtuais = [];
 
 const tituloAventura =document.querySelector("#tituloAventura");
 const contextoCena =document.querySelector("#contextoCena");
@@ -37,6 +38,8 @@ function alternarPainelExplicativo() {
 }
 
 function exibirEscolhas(escolhas) {
+
+  escolhasAtuais = escolhas;
 
   const possuiEscolhas = escolhas.length > 0;
 
@@ -196,37 +199,124 @@ function iniciarEtapa(
 
 }
 
-function resolverTeste(
-  resultadoRolagem
+function resolverTeste(resultadoRolagem) {
+
+  const testeResolvido = testePendente;
+
+  const testeFoiBemSucedido = resultadoRolagem.total >= testeResolvido.dificuldade;
+
+  const tipoResultado =
+    testeFoiBemSucedido
+      ? "sucesso"
+      : "fracasso";
+
+  const consequencia = etapaAtual.resultados[tipoResultado];
+
+  testePendente = null;
+
+  solicitacaoTeste.textContent = "";
+
+  solicitacaoTeste.hidden = true;
+
+  exibirContexto(consequencia.texto);
+
+  console.log("Consequência:",consequencia);
+
+  if (consequencia.escolhas) {
+
+    exibirEscolhas(
+      consequencia.escolhas
+    );
+    return;
+  }
+
+  if (
+    consequencia.voltarParaEscolhas) {
+
+      if (
+  consequencia.removerEscolha &&
+  caminhoAtual
 ) {
 
-  const testeResolvido =
-    testePendente;
+  cenaAtual.escolhas =
+    cenaAtual.escolhas.filter(
+      function (escolha) {
+
+        return escolha.id !==
+          caminhoAtual.id;
+
+      }
+    );
+
+}
+
+    caminhoAtual =
+      null;
 
 
-  testePendente =
-    null;
+    etapaAtual =
+      null;
+
+    exibirEscolhas(cenaAtual.escolhas);
+
+    return;
+    }
+
+    if (consequencia.proximaEtapa) {
+
+    exibirEscolhas(
+      [
+
+        {
+
+          id:
+            "continuarEtapa",
+
+          texto:
+            "Continuar.",
+
+          proximaEtapa:
+            consequencia.proximaEtapa
+
+        }
+
+      ]
+    );
+
+    return;
+
+  }
 
 
-  const testeFoiBemSucedido =
-    resultadoRolagem.total >=
-    testeResolvido.dificuldade;
+  if (consequencia.proximaCena) {
+
+    exibirEscolhas(
+      [
+
+        {
+
+          id:
+            "continuarCena",
+
+          texto:
+            "Continuar.",
+
+          proximaCena:
+            consequencia.proximaCena
+
+        }
+
+      ]
+    );
+
+    return;
+
+  }
 
 
-  const idProximaCena =
-    testeFoiBemSucedido
-      ? testeResolvido.cenaSucesso
-      : testeResolvido.cenaFracasso;
-
-
-  console.log(
-    "Teste bem-sucedido:",
-    testeFoiBemSucedido
-  );
-
-
-  mudarCena(
-    idProximaCena
+  console.warn(
+    "A consequência não possui um destino:",
+    consequencia
   );
 
 }
@@ -253,13 +343,24 @@ function selecionarEscolha(evento) {
   const idEscolha = botaoEscolha.dataset.idEscolha;
 
   const escolhaSelecionada =
-    cenaAtual.escolhas.find(
+    escolhasAtuais.find(
       function (escolha) {
 
         return escolha.id === idEscolha;
 
       }
     );
+
+    if (!escolhaSelecionada) {
+
+  console.warn(
+    "Escolha não encontrada:",
+    idEscolha
+  );
+
+  return;
+
+ }
 
 
   console.log(
@@ -269,39 +370,38 @@ function selecionarEscolha(evento) {
 
   if (escolhaSelecionada.etapaInicial) {
 
-  iniciarCaminho(
-    escolhaSelecionada
-  );
+  iniciarCaminho(escolhaSelecionada);
 
   return;
 
-}
+  }
+
+  if (escolhaSelecionada.proximaEtapa) {
+
+  iniciarEtapa(escolhaSelecionada.proximaEtapa);
+
+  return;
+
+  }
 
   if (!escolhaSelecionada.proximaCena) {
 
-  console.log(
-    "Esta escolha ainda não possui uma próxima cena."
-  );
+  console.log( "Esta escolha ainda não possui uma próxima cena.");
 
   return;
 
-}
+  }
 
 
-mudarCena(
+  mudarCena(
   escolhaSelecionada.proximaCena
-);
+  );
 
 }
 
-function mudarCena(
-  idProximaCena
-) {
+function mudarCena(idProximaCena) {
 
-  const proximaCena =
-    aventuraAtual.cenas[
-      idProximaCena
-    ];
+  const proximaCena = aventuraAtual.cenas[idProximaCena];
 
 
   if (!proximaCena) {
@@ -318,6 +418,17 @@ function mudarCena(
 
   cenaAtual =
     proximaCena;
+
+    caminhoAtual =
+  null;
+
+
+etapaAtual =
+  null;
+
+
+testePendente =
+  null;
 
 
   exibirCena(
