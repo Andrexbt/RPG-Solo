@@ -27,36 +27,45 @@ window.bancoNpcs = {
           },
 
           ataques: [
-      {
-        id: "espadaCurta",
-        nome: "Espada curta",
-        bonusAtaque: 3,
+            {id: "espadaCurta",
+            nome: "Espada curta",
+            categoria: "corpoACorpo",
 
-        dano: {
-          gruposDeDados: [
-            {quantidade: 1, numeroDeFaces: 6}
-          ],
+            selecao: {
+              tipo: "criatura",
+              alcance: {normal: 1},
+              area: null
+            },
 
-          modificador: 1,
-          tipo: "perfurante"
-        }
-      },
+            bonusAtaque: 3,
 
-      {
-        id: "arcoCurto",
-        nome: "Arco curto",
-        bonusAtaque: 3,
+            dano: {
+            gruposDeDados: [{quantidade: 1, numeroDeFaces: 6}],
 
-        dano: {
-          gruposDeDados: [
-            {quantidade:1, numeroDeFaces:6}
+            modificador: 1,
+            tipo: "perfurante"
+            }
+            },
 
-          ],
+            {id: "arcoCurto",
+            nome: "Arco curto",
+            categoria: "distancia",
 
-          modificador:1,
-          tipo: "perfurante"
-        }
-      }
+            selecao: {
+              tipo: "criatura",
+              alcance: {normal: 16, longo: 64},
+              area: null
+            },
+
+            bonusAtaque: 3,
+
+            dano: {
+            gruposDeDados: [{quantidade:1, numeroDeFaces:6}],
+
+            modificador:1,
+            tipo: "perfurante"
+            }
+            }
           ]
       },
 
@@ -76,7 +85,7 @@ window.bancoNpcs = {
 
           bonusProficiencia: 2,
           pericias: ["atletismo", "percepcao"],
-        salvaguardas: [],
+          salvaguardas: [],
 
           combate: {
           classeArmadura: 14,
@@ -84,36 +93,45 @@ window.bancoNpcs = {
           },
 
           ataques: [
-      {
-        id: "espadaCurta",
-        nome: "Espada curta",
-        bonusAtaque: 3,
+            {id: "espadaCurta",
+            nome: "Espada curta",
+            categoria: "corpoACorpo",
 
-        dano: {
-          gruposDeDados: [
-            {quantidade: 1, numeroDeFaces: 6}
-          ],
+            selecao: {
+              tipo: "criatura",
+              alcance: {normal: 1},
+              area: null
+            },
 
-          modificador: 1,
-          tipo: "perfurante"
-        }
-      },
+            bonusAtaque: 3,
 
-      {
-        id: "arcoCurto",
-        nome: "Arco curto",
-        bonusAtaque: 3,
+            dano: {
+            gruposDeDados: [{quantidade: 1, numeroDeFaces: 6}],
 
-        dano: {
-          gruposDeDados: [
-            {quantidade:1, numeroDeFaces:6}
+            modificador: 1,
+            tipo: "perfurante"
+            }
+            },
 
-          ],
+            {id: "arcoCurto",
+            nome: "Arco curto",
+            categoria: "distancia",
 
-          modificador:1,
-          tipo: "perfurante"
-        }
-      }
+            selecao: {
+              tipo: "criatura",
+              alcance: {normal: 16, longo: 64},
+              area: null
+            },
+
+            bonusAtaque: 3,
+
+            dano: {
+            gruposDeDados: [{quantidade:1, numeroDeFaces:6}],
+
+            modificador:1,
+            tipo: "perfurante"
+            }
+            }
           ]
       },
 
@@ -141,9 +159,20 @@ window.bancoNpcs = {
             },
 
               ataques: [
-              {
-              id: "lanca",
+              {id: "lanca",
       nome: "Lança",
+
+      categoria: "corpoACorpo",
+
+selecao: {
+  tipo: "criatura",
+
+  alcance: {
+    normal: 1
+  },
+
+  area: null
+},
       bonusAtaque: 4,
 
       dano: {
@@ -159,6 +188,19 @@ window.bancoNpcs = {
     {
       id: "bestaLeve",
       nome: "Besta leve",
+
+      categoria: "distancia",
+
+selecao: {
+  tipo: "criatura",
+
+  alcance: {
+    normal: 16,
+    longo: 64
+  },
+
+  area: null
+},
       bonusAtaque: 3,
 
       dano: {

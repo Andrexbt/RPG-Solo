@@ -129,17 +129,129 @@
 
         </section>
 
-        <div class="ferramentas-aventura">
+      </div>
+      
+      <section
+        id="visualizacaoCombate"
+        class="visualizacao-combate"
+        aria-label="Campo de combate"
+        hidden>
+
+        <div
+        id="painelTurnoCombate"
+        class="painel-turno-combate"
+        hidden>
+
+        <p>
+        Rodada
+        <span id="numeroRodadaCombate">
+        1
+        </span>
+        </p>
+
+        <p>
+        Turno:
+        <span id="participanteAtivoCombate">
+        —
+        </span>
+        </p>
+
+        <p>
+        Movimento:
+        <span id="movimentoRestanteCombate">
+        —
+        </span>
+        </p>
+
+        <div
+        id="acoesCombate"
+        class="acoes-combate">
+        </div>
+
+        <button
+        id="botaoEncerrarTurno"
+        type="button">
+        Encerrar turno
+        </button>
+
+</div>
+
+        <div class="campo-combate">
+          
+          <div
+          id="tabuleiroCombate"
+          class="tabuleiro-combate"
+          aria-label="Tabuleiro de combate">
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <div class="coluna-lateral coluna-explicativa">
+
+      <button
+      id="botaoRecolherPainelExplicativo"
+      class="botao-recolher-painel"
+      type="button"
+      aria-controls="painelExplicativo"
+      aria-expanded="true"
+      aria-label="Recolher painel de informações">Informações
+      </button>
+
+      <aside
+      id="painelExplicativo"
+      class="painel-lateral painel-explicativo">
+
+      <h2>Informações</h2>
+
+      <div id="conteudoExplicativo">
+        <p> As regras e explicações da situação aparecerão aqui. </p>
+      </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+  <div class="ferramentas-aventura">
 
         <section
-          class="janela-dados"
+          class="janela-dados janela-flutuante"
           aria-labelledby="tituloDados">
 
-          <h2 id="tituloDados">
-            Dados
-          </h2>
+          <header class="cabecalho-janela-flutuante"
+            data-alca-arraste>
 
-          <div class="conteudo-dados">
+            <h2 id="tituloDados">
+            Dados
+            </h2>
+
+            <button
+            class="botao-minimizar-janela"
+            type="button"
+            aria-controls="conteudoDados"
+            aria-expanded="true"
+            aria-label="Minimizar janela de dados"
+            data-minimizar-janela>
+            −
+            </button>
+
+          </header>
+
+          <div
+            id="conteudoDados"
+            class="conteudo-dados">
+
+            <p
+            id="solicitacaoCombate"
+            class="solicitacao-combate"
+            aria-live="polite"
+            hidden>
+            </p>
 
             <form
               id="formularioDados"
@@ -239,88 +351,47 @@
         </section>
 
         <section
-          class="janela-anotacoes"
+          class="janela-anotacoes janela-flutuante"
           aria-labelledby="tituloAnotacoes">
 
-          <h2 id="tituloAnotacoes">
-            Anotações
-          </h2>
+          <header
+    class="cabecalho-janela-flutuante"
+    data-alca-arraste>
 
-          <textarea
-            id="campoAnotacoes"
-            rows="5"
-            aria-labelledby="tituloAnotacoes"
-            placeholder="Escreva suas anotações aqui...">
-          </textarea>
+    <h2 id="tituloAnotacoes">
+      Anotações
+    </h2>
 
-        </section>
-
-        </div>
-
-      </div>
-      
-      <section
-        id="visualizacaoCombate"
-        class="visualizacao-combate"
-        aria-label="Campo de combate"
-        hidden>
-
-        <div class="campo-combate">
-          
-          <div
-          id="tabuleiroCombate"
-          class="tabuleiro-combate"
-          aria-label="Tabuleiro de combate">
-
-            <button
-            class="token-combate token-jogador"
-            type="button"
-            aria-label="Personagem do jogador">
-            P
-            </button>
-
-            <button
-            class="token-combate token-inimigo"
-            type="button"
-            aria-label="Inimigo">
-            I
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-
-    <div class="coluna-lateral coluna-explicativa">
-
-      <button
-      id="botaoRecolherPainelExplicativo"
-      class="botao-recolher-painel"
+    <button
+      class="botao-minimizar-janela"
       type="button"
-      aria-controls="painelExplicativo"
+      aria-controls="conteudoAnotacoes"
       aria-expanded="true"
-      aria-label="Recolher painel de informações">Informações
-      </button>
+      aria-label="Minimizar janela de anotações"
+      data-minimizar-janela>
+      −
+    </button>
 
-      <aside
-      id="painelExplicativo"
-      class="painel-lateral painel-explicativo">
+  </header>
 
-      <h2>Informações</h2>
+  <div
+    id="conteudoAnotacoes"
+    class="conteudo-anotacoes">
 
-      <div id="conteudoExplicativo">
-        <p> As regras e explicações da situação aparecerão aqui. </p>
-      </div>
-
-      </aside>
-
-    </div>
+    <textarea
+      id="campoAnotacoes"
+      rows="5"
+      aria-labelledby="tituloAnotacoes"
+      placeholder="Escreva suas anotações aqui...">
+    </textarea>
 
   </div>
 
+        </section>
+
+  </div>
+
+  <script src="janelas-flutuantes.js" defer></script>
   <script src="dados.js" defer></script>
   <script src="banco-pericias.js" defer></script>
   <script src="banco-npcs.js" defer></script>

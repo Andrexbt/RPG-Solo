@@ -7,6 +7,7 @@ function criarEstadoInicialJogo() {
 
     personagem: {
       id: null,
+      dados: null,
       condicoes: []
     },
 

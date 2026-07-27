@@ -22,6 +22,8 @@ select {
   margin: 0;
   padding: 0;
   min-width: 0;
+  display: grid;
+  gap: 16px;
 }
 
 .visualizacao-aventura {
@@ -29,7 +31,6 @@ select {
   grid-template-rows:
     auto
     minmax(360px, 1fr)
-    auto
     auto;
   gap: 16px;
 }
@@ -83,6 +84,21 @@ select {
     0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
+.celula-combate {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.celula-combate:hover {
+  background:
+    rgba(232, 201, 111, 0.18);
+}
+
 .token-combate {
   width: 70%;
   aspect-ratio: 1;
@@ -92,17 +108,30 @@ select {
   color: #f4ead2;
   font-weight: 700;
   cursor: pointer;
+  z-index: 2;
+  touch-action: none;
+  user-select: none;
+}
+
+.token-combate.token-selecionado {
+  outline: 3px solid #e8c96f;
+  outline-offset: 3px;
+  transform: scale(1.08);
+  box-shadow:
+    0 0 18px rgba(232, 201, 111, 0.8);
+}
+
+.token-combate.token-arrastando {
+  z-index: 10;
+  opacity: 0.75;
+  cursor: grabbing;
 }
 
 .token-jogador {
-  grid-column: 2;
-  grid-row: 7;
   background: #315c85;
 }
 
 .token-inimigo {
-  grid-column: 8;
-  grid-row: 2;
   background: #853b31;
 }
 
@@ -348,4 +377,142 @@ select {
 
 #botaoEnviarAcao:hover {
   background: #4f3423;
+}
+
+.janela-flutuante {
+  position: fixed;
+  z-index: 20;
+  width: min(360px, calc(100vw - 32px));
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.janela-dados.janela-flutuante {
+  right: 24px;
+  bottom: 24px;
+}
+
+.cabecalho-janela-flutuante {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.janela-flutuante
+.cabecalho-janela-flutuante h2 {
+  margin: 0;
+}
+
+.botao-minimizar-janela {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid #69482f;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.janela-flutuante
+.conteudo-dados,
+.janela-flutuante
+.conteudo-anotacoes {
+  margin-top: 16px;
+}
+
+.janela-flutuante.janela-minimizada
+.conteudo-dados,
+.janela-flutuante.janela-minimizada
+.conteudo-anotacoes {
+  display: none;
+}
+
+.cabecalho-janela-flutuante {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.janela-arrastando
+.cabecalho-janela-flutuante {
+  cursor: grabbing;
+}
+
+.janela-anotacoes.janela-flutuante {
+  left: 24px;
+  bottom: 24px;
+}
+
+.solicitacao-combate {
+  margin: 0 0 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.visualizacao-combate {
+  position: relative;
+}
+
+.painel-turno-combate {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  z-index: 5;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transform: translateX(-50%);
+  border: 1px solid #69482f;
+  border-radius: 10px;
+  background: #efe1bd;
+  color: #382719;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.painel-turno-combate p {
+  margin: 0;
+}
+
+.token-combate.token-turno-ativo {
+  box-shadow:
+    0 0 20px rgba(255, 239, 146, 0.95);
+}
+
+.token-combate.token-alvo-selecionado {
+  outline: 3px solid #c8493f;
+  outline-offset: 4px;
+  box-shadow:
+    0 0 20px rgba(200, 73, 63, 0.9);
+}
+
+.acoes-combate {
+  display: flex;
+  gap: 8px;
+}
+
+.botao-ataque-combate {
+  padding: 8px 12px;
+  border: 1px solid #69482f;
+  border-radius: 6px;
+  background: #69482f;
+  color: #f4ead2;
+  cursor: pointer;
+}
+
+.botao-ataque-combate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.token-combate.token-derrotado {
+  opacity: 0.35;
+  filter: grayscale(1);
+  pointer-events: none;
 }
