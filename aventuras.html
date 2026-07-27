@@ -42,12 +42,14 @@
 
     <main class="pagina-aventura">
 
-      <header class="cabecalho-aventura">
+      <div id="visualizacaoAventura" class="visualizacao-aventura">
+
+        <header class="cabecalho-aventura">
       <p class="rotulo-aventura">RPG Solo</p>
       <h1 id="tituloAventura">A Fuga</h1>
-      </header>
+        </header>
 
-      <section
+        <section
         class="cena-aventura"
         aria-labelledby="Cena da aventura">
 
@@ -94,9 +96,9 @@
 
         </div>
 
-      </section>
+        </section>
 
-      <section
+        <section
         class="janela-acao"
         aria-labelledby="tituloAcao">
 
@@ -125,9 +127,9 @@
         
         </form>
 
-      </section>
+        </section>
 
-      <div class="ferramentas-aventura">
+        <div class="ferramentas-aventura">
 
         <section
           class="janela-dados"
@@ -253,7 +255,42 @@
 
         </section>
 
+        </div>
+
       </div>
+      
+      <section
+        id="visualizacaoCombate"
+        class="visualizacao-combate"
+        aria-label="Campo de combate"
+        hidden>
+
+        <div class="campo-combate">
+          
+          <div
+          id="tabuleiroCombate"
+          class="tabuleiro-combate"
+          aria-label="Tabuleiro de combate">
+
+            <button
+            class="token-combate token-jogador"
+            type="button"
+            aria-label="Personagem do jogador">
+            P
+            </button>
+
+            <button
+            class="token-combate token-inimigo"
+            type="button"
+            aria-label="Inimigo">
+            I
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
 
     </main>
 
@@ -285,7 +322,12 @@
   </div>
 
   <script src="dados.js" defer></script>
+  <script src="banco-pericias.js" defer></script>
+  <script src="banco-npcs.js" defer></script>
   <script src="banco-aventuras.js" defer></script>
+  <script src="estado-jogo.js" defer></script>
+  <script src="testes.js" defer></script>
+  <script src="combate.js" defer></script>
   <script src="aventuras.js" defer></script>
 </body>
 </html>

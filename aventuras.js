@@ -1,7 +1,10 @@
 "use strict";
 
 const aventuraAtual = bancoAventuras.aFuga;
+const estadoAtualJogo = window.estadoJogo;
 const idCenaInicial = aventuraAtual.cenaInicial;
+estadoAtualJogo.aventuraId = aventuraAtual.id;
+estadoAtualJogo.progresso.cenaId = idCenaInicial;
 let cenaAtual = aventuraAtual.cenas[idCenaInicial];
 let testePendente = null;
 let caminhoAtual = null;
@@ -20,10 +23,15 @@ const botaoRecolherFicha = document.querySelector("#botaoRecolherFicha");
 const botaoRecolherPainelExplicativo = document.querySelector("#botaoRecolherPainelExplicativo");
 
 const layoutAventura = document.querySelector(".layout-aventura");
+const visualizacaoAventura = document.querySelector("#visualizacaoAventura");
+
+const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
 
 const solicitacaoTeste = document.querySelector("#solicitacaoTeste");
 
 const areaEscolhas = document.querySelector(".area-escolhas");
+
+carregarNpcsDaAventura( aventuraAtual.id);
 
 function alternarFicha() {
 
@@ -34,6 +42,52 @@ function alternarFicha() {
 function alternarPainelExplicativo() {
 
   layoutAventura.classList.toggle("painelExplicativo-recolhido");
+
+}
+
+function exibirTelaCombate() {
+
+  visualizacaoAventura.hidden =
+    true;
+
+  visualizacaoCombate.hidden =
+    false;
+
+  layoutAventura.classList.add(
+    "modo-combate"
+  );
+
+}
+
+function exibirTelaAventura() {
+
+  visualizacaoCombate.hidden =
+    true;
+
+  visualizacaoAventura.hidden =
+    false;
+
+  layoutAventura.classList.remove(
+    "modo-combate"
+  );
+
+}
+
+function iniciarCombateDaAventura(
+  configuracao
+) {
+
+  const combate =
+    SistemaCombate.iniciarCombate(
+      configuracao
+    );
+
+  exibirTelaCombate();
+
+  console.log(
+    "Combate iniciado:",
+    combate
+  );
 
 }
 
@@ -125,7 +179,15 @@ function exibirCena(aventura,cena) {
 
   solicitacaoTeste.hidden = true;
 
-  exibirEscolhas(cena.escolhas);
+  const escolhasDisponiveis =
+  obterEscolhasDisponiveis(
+    estadoAtualJogo.progresso.cenaId,
+    cena.escolhas
+  );
+
+exibirEscolhas(
+  escolhasDisponiveis
+);
 }
 
 function ocultarEscolhas() {
@@ -135,28 +197,33 @@ function ocultarEscolhas() {
 
 }
 
-function iniciarCaminho(
-  escolha
-) {
+function iniciarCaminho(escolha) {
 
-  caminhoAtual =
-    escolha;
+  caminhoAtual = escolha;
 
+  estadoAtualJogo.progresso.caminhoId = escolha.id;
 
-  iniciarEtapa(
-    escolha.etapaInicial
-  );
+  iniciarEtapa(escolha.etapaInicial);
 
 }
 
-function iniciarEtapa(
-  idEtapa
-) {
+function obterAvisoTipoRolagem(teste) {
 
-  const etapa =
-    caminhoAtual.etapas[
-      idEtapa
-    ];
+  if (teste.tipoRolagem === "vantagem") {
+    return " Role 2d20 e use o maior resultado.";
+  }
+
+  if (teste.tipoRolagem === "desvantagem") {
+    return " Role 2d20 e use o menor resultado.";
+  }
+
+  return "";
+
+}
+
+function iniciarEtapa(idEtapa) {
+
+  const etapa = caminhoAtual.etapas[idEtapa];
 
 
   if (!etapa) {
@@ -171,21 +238,27 @@ function iniciarEtapa(
   }
 
 
-  etapaAtual =
-    etapa;
+  etapaAtual = etapa;
+
+  estadoAtualJogo.progresso.etapaId = idEtapa;
 
     exibirContexto( etapa.descricao);
 
 
-  testePendente =
-    etapa.teste;
+  testePendente = etapa.teste;
+
+  estadoAtualJogo.testePendente = etapa.teste;
 
 
   ocultarEscolhas();
 
 
-  solicitacaoTeste.textContent =
-    etapa.instrucao;
+  const avisoTipoRolagem =
+  obterAvisoTipoRolagem(etapa.teste);
+
+solicitacaoTeste.textContent =
+  etapa.instrucao +
+  avisoTipoRolagem;
 
 
   solicitacaoTeste.hidden =
@@ -203,7 +276,14 @@ function resolverTeste(resultadoRolagem) {
 
   const testeResolvido = testePendente;
 
-  const testeFoiBemSucedido = resultadoRolagem.total >= testeResolvido.dificuldade;
+  const resultadoTeste =
+  SistemaTestes.resolverTesteContraCd(
+    resultadoRolagem,
+    testeResolvido.dificuldade,
+    testeResolvido.tipoRolagem || "normal"
+  );
+
+  const testeFoiBemSucedido = resultadoTeste.sucesso;
 
   const tipoResultado =
     testeFoiBemSucedido
@@ -213,6 +293,8 @@ function resolverTeste(resultadoRolagem) {
   const consequencia = etapaAtual.resultados[tipoResultado];
 
   testePendente = null;
+
+  estadoAtualJogo.testePendente = null;
 
   solicitacaoTeste.textContent = "";
 
@@ -238,18 +320,17 @@ function resolverTeste(resultadoRolagem) {
   caminhoAtual
 ) {
 
-  cenaAtual.escolhas =
-    cenaAtual.escolhas.filter(
-      function (escolha) {
-
-        return escolha.id !==
-          caminhoAtual.id;
-
-      }
-    );
+  registrarEscolhaRemovida(
+  estadoAtualJogo.progresso.cenaId,
+  caminhoAtual.id
+);
 
 }
-
+const escolhasDisponiveis =
+  obterEscolhasDisponiveis(
+    estadoAtualJogo.progresso.cenaId,
+    cenaAtual.escolhas
+  );
     caminhoAtual =
       null;
 
@@ -257,7 +338,12 @@ function resolverTeste(resultadoRolagem) {
     etapaAtual =
       null;
 
-    exibirEscolhas(cenaAtual.escolhas);
+      estadoAtualJogo.progresso.caminhoId = null;
+      estadoAtualJogo.progresso.etapaId = null;
+
+    exibirEscolhas(
+  escolhasDisponiveis
+);
 
     return;
     }
@@ -416,11 +502,14 @@ function mudarCena(idProximaCena) {
   }
 
 
-  cenaAtual =
-    proximaCena;
+  cenaAtual = proximaCena;
 
-    caminhoAtual =
-  null;
+  estadoAtualJogo.progresso.cenaId = idProximaCena;
+  estadoAtualJogo.progresso.caminhoId = null;
+  estadoAtualJogo.progresso.etapaId = null;
+  estadoAtualJogo.testePendente = null;
+
+   caminhoAtual = null;
 
 
 etapaAtual =
@@ -453,3 +542,11 @@ listaEscolhas.addEventListener("click",selecionarEscolha);
 exibirCena(aventuraAtual,cenaAtual);
 
 document.addEventListener("rolagemConcluida",receberResultadoRolagem);
+
+
+
+
+console.log(
+  "Estado inicial:",
+  estadoAtualJogo
+);

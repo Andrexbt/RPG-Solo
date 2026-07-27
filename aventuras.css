@@ -21,6 +21,10 @@ select {
   width: 100%;
   margin: 0;
   padding: 0;
+  min-width: 0;
+}
+
+.visualizacao-aventura {
   display: grid;
   grid-template-rows:
     auto
@@ -28,6 +32,78 @@ select {
     auto
     auto;
   gap: 16px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.visualizacao-combate {
+  width: 100%;
+  min-height: calc(100vh - 64px);
+}
+
+.campo-combate {
+  min-height: inherit;
+  padding: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #69482f;
+  border-radius: 12px;
+  background: #30291f;
+  color: #f4ead2;
+  overflow: hidden;
+}
+
+.tabuleiro-combate {
+  width: min(100%, 1000px);
+  aspect-ratio: 10 / 8;
+  display: grid;
+  grid-template-columns:
+    repeat(10, minmax(0, 1fr));
+  grid-template-rows:
+    repeat(8, minmax(0, 1fr));
+  background-color: #65553c;
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(244, 234, 210, 0.25) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(244, 234, 210, 0.25) 1px,
+      transparent 1px
+    );
+  background-size:
+    10% 100%,
+    100% 12.5%;
+  border: 2px solid #2c2118;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.token-combate {
+  width: 70%;
+  aspect-ratio: 1;
+  place-self: center;
+  border: 2px solid #f4ead2;
+  border-radius: 50%;
+  color: #f4ead2;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.token-jogador {
+  grid-column: 2;
+  grid-row: 7;
+  background: #315c85;
+}
+
+.token-inimigo {
+  grid-column: 8;
+  grid-row: 2;
+  background: #853b31;
 }
 
 .ferramentas-aventura {
@@ -172,6 +248,36 @@ select {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.layout-aventura.modo-combate {
+  position: relative;
+  display: block;
+}
+
+.layout-aventura.modo-combate
+.pagina-aventura {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.layout-aventura.modo-combate
+.coluna-lateral {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: 280px;
+}
+
+.layout-aventura.modo-combate
+.coluna-ficha {
+  left: 0;
+}
+
+.layout-aventura.modo-combate
+.coluna-explicativa {
+  right: 0;
 }
 
 .coluna-ficha .botao-recolher-painel {
