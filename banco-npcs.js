@@ -9,6 +9,16 @@ window.bancoNpcs = {
       nome: "Ned",
       tipo: "aliado",
 
+      avatar: {
+
+        imagem:
+          "Imagens/Avatares/npcs/ned.webp",
+
+        frame:
+          "Imagens/Avatares/frame/frame-08.webp"
+
+      },
+
       atributos: {
         forca: 10,
         destreza: 12,
@@ -107,6 +117,16 @@ window.bancoNpcs = {
       id: "guardaConde",
       nome: "Guarda",
       tipo: "inimigo",
+
+      avatar: {
+
+        imagem:
+          "Imagens/Avatares/npcs/guardaConde.webp",
+
+        frame:
+          "Imagens/Avatares/frame/frame-07.webp"
+
+      },
 
       atributos: {
         forca: 13,
@@ -207,6 +227,16 @@ window.bancoNpcs = {
       id: "lagartoBronze",
       nome: "Lagarto de Bronze",
       tipo: "inimigo",
+
+      avatar: {
+
+        imagem:
+          "Imagens/Avatares/npcs/lagartoBronze.webp",
+
+        frame:
+          "Imagens/Avatares/frame/frame-01.webp"
+
+      },
 
       atributos: {
         forca: 14,

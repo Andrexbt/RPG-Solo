@@ -23,6 +23,183 @@ const modalImagemClasse = document.getElementById("modalImagemClasse");
 const modalDescricaoClasse = document.getElementById("modalDescricaoClasse");
 const modalEstiloJogoClasse = document.getElementById("modalEstiloJogoClasse");
 const modalHabilidadesClasse = document.getElementById("modalHabilidadesClasse");
+const botaoEscolherAvatar =
+  document.getElementById(
+    "botaoEscolherAvatar"
+  );
+
+const modalAvatar =
+  document.getElementById(
+    "modalAvatar"
+  );
+
+const botaoFecharModalAvatar =
+  document.getElementById(
+    "botaoFecharModalAvatar"
+  );
+
+const botaoCancelarAvatar =
+  document.getElementById(
+    "botaoCancelarAvatar"
+  );
+
+const botaoConfirmarAvatar =
+  document.getElementById(
+    "botaoConfirmarAvatar"
+  );
+
+const galeriaAvatares =
+  document.getElementById(
+    "galeriaAvatares"
+  );
+
+const galeriaFramesAvatar =
+  document.getElementById(
+    "galeriaFramesAvatar"
+  );
+
+const filtrosAvatar =
+  document.querySelectorAll(
+    "[data-genero-avatar]"
+  );
+
+  const prefixosAvatarPorEspecie = {
+
+  humano:
+    "Human",
+
+  anao:
+    "Dwarf",
+
+  elfo:
+    "Elf",
+
+  halfling:
+    "Halfling",
+
+  aasimar:
+    "Aasimar",
+
+  draconato:
+    "Dragonborn",
+
+  gnomo:
+    "Gnome",
+
+  golias:
+    "Goliath",
+
+  orc:
+    "Orc",
+
+  tiefling:
+    "Tiefling"
+
+};
+
+let avatarTemporario = {
+
+  imagem:
+    "",
+
+  frame:
+    ""
+
+};
+
+let generoAvatarAtivo = "All";
+
+const arquetiposAvatar = [
+
+  "Alchemist",
+  "Artificer",
+  "Assassin",
+  "Barbarian",
+  "Bard",
+  "Berserker",
+  "Blacksmith",
+  "Cleric",
+  "Druid",
+  "Enchanter",
+  "Gladiator",
+  "Illusionist",
+  "Knight",
+  "Monk",
+  "Necromancer",
+  "Ninja",
+  "Paladin",
+  "Pirate",
+  "Ranger",
+  "Samurai",
+  "Sorcerer",
+  "Summoner",
+  "Thief",
+  "Warrior",
+  "Wizard"
+
+];
+
+function criarListaAvataresDisponiveis() {
+
+  const especieId =
+    personagem.especieId;
+
+  const prefixoEspecie =
+    prefixosAvatarPorEspecie[
+      especieId
+    ];
+
+  if (prefixoEspecie === undefined) {
+    return [];
+  }
+
+  const generos = [
+    "Female",
+    "Male"
+  ];
+
+  const avataresDisponiveis = [];
+
+  for (const genero of generos) {
+
+    for (
+      const arquetipo of
+      arquetiposAvatar
+    ) {
+
+      const nomeArquivo =
+        prefixoEspecie +
+        "_" +
+        genero +
+        "_" +
+        arquetipo +
+        ".webp";
+
+      avataresDisponiveis.push({
+
+        genero:
+          genero,
+
+        arquetipo:
+          arquetipo,
+
+        caminho:
+          "Imagens/Avatares/" +
+          especieId +
+          "/" +
+          genero +
+          "/" +
+          nomeArquivo
+
+      });
+
+    }
+
+  }
+
+  return avataresDisponiveis;
+
+}
 
 // =====================================================
 // 2. DADOS FIXOS DA TELA DE CRIAÇÃO
@@ -192,7 +369,6 @@ const proficienciasPorClasse = {
 };
 
 const pvAtuais = document.getElementById("pvAtuais");
-const pvTemporarios = document.getElementById("pvTemporarios");
 const pvMaximo = document.getElementById("pvMaximo");
 const dadosVidaUsados = document.getElementById("dadosVidaUsados");
 const dadosVidaMaximos = document.getElementById("dadosVidaMaximos");
@@ -221,6 +397,15 @@ const botaoFecharModalDetalheFicha = document.getElementById("botaoFecharModalDe
 const modalDetalheTitulo = document.getElementById("modalDetalheTitulo");
 const modalDetalheDescricao = document.getElementById("modalDetalheDescricao");
 const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
+const fichaImagemAvatar =
+  document.getElementById(
+    "fichaImagemAvatar"
+  );
+
+const fichaFrameAvatar =
+  document.getElementById(
+    "fichaFrameAvatar"
+  );
 
 // =====================================================
 // 4. ESTADO DO PERSONAGEM EM CRIAÇÃO
@@ -243,11 +428,25 @@ const personagem = {
   classe: "",
   atributos: {},
 
+  combate: {
+    classeArmadura: null,
+    pontosDeVida: {atuais:null, temporarios:0, maximo: null,
+      dadoVida: "",
+      dadosVidaUsados: 0
+    },
+
+    ataques:
+      []
+
+  },
+
   antecedenteId: "",
   antecedente: "",
 
   especieId: "",
   especie:"",
+
+  avatar: {imagem: "", frame: ""},
 
   idiomasBase: ["comum"],
   idiomasEspecie: [],
@@ -1114,6 +1313,19 @@ function podeAvancarDoPassoAtual() {
   if (passoAtual === "detalhes") {
   const mensagem = document.getElementById("mensagemDetalhes");
 
+  if (avatarEstaEscolhido() === false) {
+
+  if (mensagem !== null) {
+
+    mensagem.textContent =
+      "Escolha e confirme um avatar antes de continuar.";
+
+  }
+
+  return false;
+
+ }
+
   if (detalhesEstaoCompletos() === false) {
     if (mensagem !== null) {
       mensagem.textContent =
@@ -1965,6 +2177,468 @@ function magiasEstaoEscolhidas() {
   );
 }
 
+function atualizarBotaoConfirmarAvatar() {
+
+  const imagemFoiEscolhida =
+    avatarTemporario.imagem !== "";
+
+  const frameFoiEscolhido =
+    avatarTemporario.frame !== "";
+
+  botaoConfirmarAvatar.disabled =
+    imagemFoiEscolhida === false ||
+    frameFoiEscolhido === false;
+
+}
+
+function atualizarAvatarNaFicha(
+  dadosAvatar
+) {
+
+  if (dadosAvatar.imagem === "") {
+
+    fichaImagemAvatar.removeAttribute(
+      "src"
+    );
+
+    fichaImagemAvatar.classList.add(
+      "escondida"
+    );
+
+  } else {
+
+    fichaImagemAvatar.src =
+      dadosAvatar.imagem;
+
+    fichaImagemAvatar.classList.remove(
+      "escondida"
+    );
+
+  }
+
+  if (dadosAvatar.frame === "") {
+
+    fichaFrameAvatar.removeAttribute(
+      "src"
+    );
+
+    fichaFrameAvatar.classList.add(
+      "escondida"
+    );
+
+  } else {
+
+    fichaFrameAvatar.src =
+      dadosAvatar.frame;
+
+    fichaFrameAvatar.classList.remove(
+      "escondida"
+    );
+
+  }
+
+}
+
+function selecionarImagemAvatar(
+  botaoClicado
+) {
+
+  const opcoesAvatar =
+    galeriaAvatares.querySelectorAll(
+      ".opcao-avatar"
+    );
+
+  for (
+    const opcaoAvatar of
+    opcoesAvatar
+  ) {
+
+    opcaoAvatar.classList.remove(
+      "selecionado"
+    );
+
+  }
+
+  botaoClicado.classList.add(
+    "selecionado"
+  );
+
+  avatarTemporario.imagem =
+    botaoClicado.dataset
+      .caminhoAvatar;
+
+  atualizarBotaoConfirmarAvatar();
+
+  atualizarAvatarNaFicha(
+  avatarTemporario
+ );
+
+}
+
+function renderizarAvatares(
+  avataresDisponiveis
+) {
+
+  galeriaAvatares.replaceChildren();
+
+  for (
+    const avatar of
+    avataresDisponiveis
+  ) {
+
+    const botaoAvatar =
+      document.createElement(
+        "button"
+      );
+
+    botaoAvatar.type =
+      "button";
+
+    botaoAvatar.classList.add(
+      "opcao-avatar"
+    );
+
+    botaoAvatar.dataset.caminhoAvatar =
+      avatar.caminho;
+
+      if (
+  avatar.caminho ===
+  avatarTemporario.imagem
+) {
+
+  botaoAvatar.classList.add(
+    "selecionado"
+  );
+
+}
+
+    botaoAvatar.dataset.generoAvatar =
+      avatar.genero;
+
+    const imagemAvatar =
+      document.createElement(
+        "img"
+      );
+
+    imagemAvatar.src =
+      avatar.caminho;
+
+    imagemAvatar.alt =
+      "Avatar " +
+      avatar.arquetipo;
+
+    imagemAvatar.loading =
+      "lazy";
+
+    imagemAvatar.decoding =
+      "async";
+
+    botaoAvatar.appendChild(
+      imagemAvatar
+    );
+
+    botaoAvatar.addEventListener(
+  "click",
+  function() {
+
+    selecionarImagemAvatar(
+      botaoAvatar
+    );
+
+  }
+);
+
+    galeriaAvatares.appendChild(
+      botaoAvatar
+    );
+
+  }
+
+}
+
+function renderizarFramesAvatar() {
+
+  galeriaFramesAvatar.replaceChildren();
+
+  const quantidadeFrames =
+    12;
+
+  for (
+    let numeroFrame = 1;
+    numeroFrame <= quantidadeFrames;
+    numeroFrame += 1
+  ) {
+
+    const numeroFormatado =
+      String(
+        numeroFrame
+      ).padStart(
+        2,
+        "0"
+      );
+
+    const caminhoFrame =
+      "Imagens/Avatares/frame/" +
+      "frame-" +
+      numeroFormatado +
+      ".webp";
+
+    const botaoFrame =
+      document.createElement(
+        "button"
+      );
+
+    botaoFrame.type =
+      "button";
+
+    botaoFrame.classList.add(
+      "opcao-frame-avatar"
+    );
+
+    botaoFrame.dataset.caminhoFrame =
+      caminhoFrame;
+
+      if (
+  caminhoFrame ===
+  avatarTemporario.frame
+) {
+
+  botaoFrame.classList.add(
+    "selecionado"
+  );
+
+}
+
+    const imagemFrame =
+      document.createElement(
+        "img"
+      );
+
+    imagemFrame.src =
+      caminhoFrame;
+
+    imagemFrame.alt =
+      "Frame " +
+      numeroFrame;
+
+    imagemFrame.loading =
+      "lazy";
+
+    botaoFrame.appendChild(
+      imagemFrame
+    );
+
+    botaoFrame.addEventListener(
+  "click",
+  function() {
+
+    selecionarFrameAvatar(
+      botaoFrame
+    );
+
+  }
+);
+
+    galeriaFramesAvatar.appendChild(
+      botaoFrame
+    );
+
+  }
+
+}
+
+function selecionarFrameAvatar(
+  botaoClicado
+) {
+
+  const opcoesFrame =
+    galeriaFramesAvatar
+      .querySelectorAll(
+        ".opcao-frame-avatar"
+      );
+
+  for (
+    const opcaoFrame of
+    opcoesFrame
+  ) {
+
+    opcaoFrame.classList.remove(
+      "selecionado"
+    );
+
+  }
+
+  botaoClicado.classList.add(
+    "selecionado"
+  );
+
+  avatarTemporario.frame =
+    botaoClicado.dataset
+      .caminhoFrame;
+
+  atualizarBotaoConfirmarAvatar();
+
+  atualizarAvatarNaFicha(
+  avatarTemporario
+ );
+
+}
+
+function filtrarAvataresPorGenero(
+  generoEscolhido
+) {
+
+  generoAvatarAtivo =
+    generoEscolhido;
+
+  for (
+    const filtroAvatar of
+    filtrosAvatar
+  ) {
+
+    const filtroEstaAtivo =
+      filtroAvatar.dataset
+        .generoAvatar ===
+      generoEscolhido;
+
+    filtroAvatar.classList.toggle(
+      "ativo",
+      filtroEstaAtivo
+    );
+
+  }
+
+  const opcoesAvatar =
+    galeriaAvatares.querySelectorAll(
+      ".opcao-avatar"
+    );
+
+  for (
+    const opcaoAvatar of
+    opcoesAvatar
+  ) {
+
+    const mostrarAvatar =
+      generoEscolhido === "All" ||
+      opcaoAvatar.dataset
+        .generoAvatar ===
+      generoEscolhido;
+
+    opcaoAvatar.classList.toggle(
+      "escondida",
+      mostrarAvatar === false
+    );
+
+  }
+
+}
+
+for (
+  const filtroAvatar of
+  filtrosAvatar
+) {
+
+  filtroAvatar.addEventListener(
+    "click",
+    function() {
+
+      const generoEscolhido =
+        filtroAvatar.dataset
+          .generoAvatar;
+
+      filtrarAvataresPorGenero(
+        generoEscolhido
+      );
+
+    }
+  );
+
+}
+
+function abrirModalAvatar() {
+
+  avatarTemporario = {
+
+  imagem:
+    personagem.avatar.imagem,
+
+  frame:
+    personagem.avatar.frame
+
+  };
+
+  const avataresDisponiveis =
+    criarListaAvataresDisponiveis();
+
+  renderizarAvatares(
+    avataresDisponiveis
+  );
+
+  renderizarFramesAvatar();
+  atualizarBotaoConfirmarAvatar();
+  filtrarAvataresPorGenero(
+  generoAvatarAtivo
+ );
+
+  modalAvatar.classList.remove(
+    "escondida"
+  );
+
+}
+
+function fecharModalAvatar() {
+
+  atualizarAvatarNaFicha(
+  personagem.avatar
+ );
+
+  modalAvatar.classList.add(
+    "escondida"
+  );
+
+}
+
+function confirmarAvatar() {
+
+  if (
+    avatarTemporario.imagem === "" ||
+    avatarTemporario.frame === ""
+  ) {
+
+    return;
+
+  }
+
+  personagem.avatar.imagem =
+    avatarTemporario.imagem;
+
+  personagem.avatar.frame =
+    avatarTemporario.frame;
+
+  fecharModalAvatar();
+
+}
+
+botaoEscolherAvatar.addEventListener(
+  "click",
+  abrirModalAvatar
+);
+
+botaoConfirmarAvatar.addEventListener(
+  "click",
+  confirmarAvatar
+);
+
+botaoFecharModalAvatar.addEventListener(
+  "click",
+  fecharModalAvatar
+);
+
+botaoCancelarAvatar.addEventListener(
+  "click",
+  fecharModalAvatar
+);
+
 nomePersonagem.addEventListener("input", function() {
   personagem.detalhes.nome = nomePersonagem.value;
 
@@ -2158,7 +2832,11 @@ function calcularClasseArmadura() {
 }
 
 function atualizarClasseArmadura() {
-  const classeArmadura = calcularClasseArmadura(personagem);
+  const classeArmadura = calcularClasseArmadura();
+
+  personagem.combate.classeArmadura = classeArmadura === ""
+      ? null
+      : classeArmadura;
 
   fichaClasseArmadura.textContent = classeArmadura;
 
@@ -2178,7 +2856,6 @@ function atualizarPontosDeVida() {
 
   if (classeId === "") {
     pvAtuais.textContent = "";
-    pvTemporarios.textContent = "";
     pvMaximo.textContent = "";
     dadosVidaUsados.textContent = "";
     dadosVidaMaximos.textContent = "";
@@ -2199,7 +2876,6 @@ function atualizarPontosDeVida() {
 
   if (constituicao === undefined || constituicao === "") {
     pvAtuais.textContent = "";
-    pvTemporarios.textContent = "0";
     pvMaximo.textContent = "";
     return;
   }
@@ -2211,7 +2887,7 @@ function atualizarPontosDeVida() {
   pvAtuais.textContent = pontosDeVidaMaximos;
   pvTemporarios.textContent = "0";
 
-  personagem.detalhes.pontosDeVida = {
+   personagem.combate.pontosDeVida = {
     atuais: pontosDeVidaMaximos,
     temporarios: 0,
     maximo: pontosDeVidaMaximos,
@@ -2270,6 +2946,21 @@ function atualizarPercepcaoPassiva() {
   }
 
   fichaPercepcaoPassiva.textContent = 10 + valorPercepcao;
+}
+
+function avatarEstaEscolhido() {
+
+  const imagemFoiEscolhida =
+    personagem.avatar.imagem !== "";
+
+  const frameFoiEscolhido =
+    personagem.avatar.frame !== "";
+
+  return (
+    imagemFoiEscolhida &&
+    frameFoiEscolhido
+  );
+
 }
 
 function detalhesEstaoCompletos() {
@@ -2342,6 +3033,62 @@ function mostrarMensagemNavegacao(texto) {
   }
 }
 
+function criarAvatarRevisao() {
+
+  const avatarRevisao =
+    document.createElement(
+      "div"
+    );
+
+  avatarRevisao.classList.add(
+    "avatar-revisao"
+  );
+
+  const imagemAvatar =
+    document.createElement(
+      "img"
+    );
+
+  imagemAvatar.classList.add(
+    "imagem-avatar-revisao"
+  );
+
+  imagemAvatar.src =
+    personagem.avatar.imagem;
+
+  imagemAvatar.alt =
+    "Avatar de " +
+    personagem.detalhes.nome;
+
+  const frameAvatar =
+    document.createElement(
+      "img"
+    );
+
+  frameAvatar.classList.add(
+    "frame-avatar-revisao"
+  );
+
+  frameAvatar.src =
+    personagem.avatar.frame;
+
+  frameAvatar.alt =
+    "";
+
+  frameAvatar.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  avatarRevisao.append(
+    imagemAvatar,
+    frameAvatar
+  );
+
+  return avatarRevisao;
+
+}
+
 function montarTelaRevisao() {
   areaRevisao.innerHTML = "";
 
@@ -2350,9 +3097,12 @@ function montarTelaRevisao() {
 
   const tituloBasico = document.createElement("h3");
   tituloBasico.textContent = "Informações Básicas";
+  const avatarBasico =
+  criarAvatarRevisao();
 
   blocoBasico.append(
     tituloBasico,
+    avatarBasico,
     criarParagrafoRevisao("Nome", personagem.detalhes.nome),
     criarParagrafoRevisao("Classe", personagem.classe + " 1"),
     criarParagrafoRevisao("Antecedente", personagem.antecedente),

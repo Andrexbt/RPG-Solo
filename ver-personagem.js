@@ -19,6 +19,15 @@ const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
 const fichaTalentos = document.getElementById("fichaTalentos");
+const fichaImagemAvatar =
+  document.getElementById(
+    "fichaImagemAvatar"
+  );
+
+const fichaFrameAvatar =
+  document.getElementById(
+    "fichaFrameAvatar"
+  );
 
 // =====================================================
 // 2. Mapeamento dos campos da ficha PDF
@@ -219,12 +228,58 @@ function preencherFichaPersonagem(personagem) {
   atualizarMarcadoresSalvaguardas(personagem);
 }
 
+function preencherAvatarPersonagem(
+  personagem
+) {
+
+  const avatar =
+    personagem.avatar;
+
+  if (
+    avatar === undefined ||
+    avatar.imagem === undefined ||
+    avatar.frame === undefined
+  ) {
+
+    fichaImagemAvatar.classList.add(
+      "escondida"
+    );
+
+    fichaFrameAvatar.classList.add(
+      "escondida"
+    );
+
+    return;
+
+  }
+
+  fichaImagemAvatar.src =
+    avatar.imagem;
+
+  fichaFrameAvatar.src =
+    avatar.frame;
+
+  fichaImagemAvatar.alt =
+    "Avatar de " +
+    personagem.detalhes.nome;
+
+  fichaImagemAvatar.classList.remove(
+    "escondida"
+  );
+
+  fichaFrameAvatar.classList.remove(
+    "escondida"
+  );
+
+}
+
 function preencherInformacoesBasicas(personagem) {
   document.getElementById("fichaNome").textContent = personagem.detalhes.nome;
   document.getElementById("fichaClasseNivel").textContent = personagem.classe + " 1";
   document.getElementById("fichaAntecedente").textContent = personagem.antecedente;
   document.getElementById("fichaEspecie").textContent = personagem.especie;
   document.getElementById("fichaIdiomas").textContent = (personagem.idiomas || []).join(", ");
+  preencherAvatarPersonagem(personagem);
 }
 
 function preencherAtributos(personagem) {
@@ -255,8 +310,22 @@ function preencherUmAtributo(nomeAtributo, idValor, idModificador, personagem) {
 // 5. Combate, espécie e valores derivados
 // =====================================================
 
+function obterPontosDeVidaPersonagem(
+  personagem
+) {
+
+  return (
+    personagem?.combate
+      ?.pontosDeVida ??
+    personagem?.detalhes
+      ?.pontosDeVida ??
+    {}
+  );
+
+}
+
 function preencherCombate(personagem) {
-  const pontosDeVida = personagem.detalhes.pontosDeVida || {};
+   const pontosDeVida = obterPontosDeVidaPersonagem(personagem);
 
   document.getElementById("fichaClasseArmadura").textContent =
     calcularClasseArmadura(personagem);
@@ -1051,7 +1120,7 @@ async function baixarPdfFichaEditavel(personagem) {
   const bytesPdf = await resposta.arrayBuffer();
   const pdfDoc = await PDFLib.PDFDocument.load(bytesPdf);
   const formulario = pdfDoc.getForm();
-  const pontosDeVida = personagem.detalhes.pontosDeVida || {};
+  const pontosDeVida = obterPontosDeVidaPersonagem(personagem);
 
   preencherCampoTexto(formulario, camposFichaPdf.nome, personagem.detalhes.nome);
   preencherCampoTexto(formulario, camposFichaPdf.classe, personagem.classe);

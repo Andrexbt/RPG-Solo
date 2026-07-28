@@ -42,9 +42,11 @@ window.SistemaCombate = (function() {
       ),
 
     representacao:
-      structuredClone(
-        configuracao.representacao ?? null
-      )
+  structuredClone(
+    configuracao.representacao ??
+    entidade.avatar ??
+    null
+  )
   };
 
   }
@@ -91,8 +93,8 @@ window.SistemaCombate = (function() {
       participantes,
 
       tabuleiro: {
-        colunas: 10,
-        linhas: 8
+        colunas: 40,
+        linhas: 30
       }
     };
 

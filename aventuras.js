@@ -116,6 +116,27 @@ let tokenArrastado = null;
 let inicioArraste = null;
 let escolhasAtuais = [];
 
+const cameraCombate = {
+
+  deslocamentoX:
+    0,
+
+  deslocamentoY:
+    0,
+
+  zoom:
+    1,
+
+  zoomMinimo:
+    0.5,
+
+  zoomMaximo:
+    1.6
+
+};
+
+let arrasteCamera = null;
+
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
 const painelTurnoCombate = document.querySelector("#painelTurnoCombate");
 const numeroRodadaCombate = document.querySelector("#numeroRodadaCombate");
@@ -146,6 +167,245 @@ const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 const areaEscolhas = document.querySelector(".area-escolhas");
 
 carregarNpcsDaAventura( aventuraAtual.id);
+
+function obterZoomMinimoVisivel() {
+
+  if (
+    visualizacaoCombate.clientWidth === 0 ||
+    visualizacaoCombate.clientHeight === 0 ||
+    tabuleiroCombate.offsetWidth === 0 ||
+    tabuleiroCombate.offsetHeight === 0
+  ) {
+
+    return cameraCombate.zoomMinimo;
+
+  }
+
+  const zoomMinimoHorizontal =
+    visualizacaoCombate.clientWidth /
+    tabuleiroCombate.offsetWidth;
+
+  const zoomMinimoVertical =
+    visualizacaoCombate.clientHeight /
+    tabuleiroCombate.offsetHeight;
+
+  return Math.min(
+    cameraCombate.zoomMaximo,
+    Math.max(
+      cameraCombate.zoomMinimo,
+      zoomMinimoHorizontal,
+      zoomMinimoVertical
+    )
+  );
+
+}
+
+function limitarCameraCombate() {
+
+  const larguraTabuleiro =
+    tabuleiroCombate.offsetWidth *
+    cameraCombate.zoom;
+
+  const alturaTabuleiro =
+    tabuleiroCombate.offsetHeight *
+    cameraCombate.zoom;
+
+  const limiteHorizontal =
+    Math.max(
+      0,
+      (
+        larguraTabuleiro -
+        visualizacaoCombate.clientWidth
+      ) / 2
+    );
+
+  const limiteVertical =
+    Math.max(
+      0,
+      (
+        alturaTabuleiro -
+        visualizacaoCombate.clientHeight
+      ) / 2
+    );
+
+  cameraCombate.deslocamentoX =
+    Math.min(
+      limiteHorizontal,
+      Math.max(
+        -limiteHorizontal,
+        cameraCombate.deslocamentoX
+      )
+    );
+
+  cameraCombate.deslocamentoY =
+    Math.min(
+      limiteVertical,
+      Math.max(
+        -limiteVertical,
+        cameraCombate.deslocamentoY
+      )
+    );
+
+}
+
+function atualizarCameraCombate() {
+
+  tabuleiroCombate.style.setProperty(
+    "--camera-x",
+    `${cameraCombate.deslocamentoX}px`
+  );
+
+  tabuleiroCombate.style.setProperty(
+    "--camera-y",
+    `${cameraCombate.deslocamentoY}px`
+  );
+
+  tabuleiroCombate.style.setProperty(
+    "--camera-zoom",
+    cameraCombate.zoom
+  );
+
+}
+
+function controlarZoomCombate(
+  evento
+) {
+
+  evento.preventDefault();
+
+  const variacaoZoom =
+    evento.deltaY < 0
+      ? 0.1
+      : -0.1;
+
+  const novoZoom =
+    cameraCombate.zoom +
+    variacaoZoom;
+
+  cameraCombate.zoom =
+    Math.min(
+      cameraCombate.zoomMaximo,
+      Math.max(
+        obterZoomMinimoVisivel(),
+        Number(
+          novoZoom.toFixed(
+            2
+          )
+        )
+      )
+    );
+
+  limitarCameraCombate();
+  atualizarCameraCombate();
+
+}
+
+function iniciarArrasteCamera(
+  evento
+) {
+
+  const iniciouEmToken =
+    evento.target.closest(
+      ".token-combate"
+    );
+
+  if (
+    iniciouEmToken ||
+    evento.button !== 2
+  ) {
+    return;
+  }
+
+  arrasteCamera = {
+
+    ponteiroId:
+      evento.pointerId,
+
+    inicioX:
+      evento.clientX,
+
+    inicioY:
+      evento.clientY,
+
+    deslocamentoInicialX:
+      cameraCombate.deslocamentoX,
+
+    deslocamentoInicialY:
+      cameraCombate.deslocamentoY
+
+  };
+
+  visualizacaoCombate.setPointerCapture(
+    evento.pointerId
+  );
+
+  visualizacaoCombate.classList.add(
+    "camera-arrastando"
+  );
+
+  evento.preventDefault();
+
+}
+
+function continuarArrasteCamera(
+  evento
+) {
+
+  if (
+    !arrasteCamera ||
+    evento.pointerId !==
+      arrasteCamera.ponteiroId
+  ) {
+    return;
+  }
+
+  cameraCombate.deslocamentoX =
+    arrasteCamera.deslocamentoInicialX +
+    evento.clientX -
+    arrasteCamera.inicioX;
+
+  cameraCombate.deslocamentoY =
+    arrasteCamera.deslocamentoInicialY +
+    evento.clientY -
+    arrasteCamera.inicioY;
+
+  limitarCameraCombate();
+  atualizarCameraCombate();
+
+}
+
+function finalizarArrasteCamera(
+  evento
+) {
+
+  if (
+    !arrasteCamera ||
+    evento.pointerId !==
+      arrasteCamera.ponteiroId
+  ) {
+    return;
+  }
+
+  if (
+    visualizacaoCombate.hasPointerCapture(
+      evento.pointerId
+    )
+  ) {
+
+    visualizacaoCombate.releasePointerCapture(
+      evento.pointerId
+    );
+
+  }
+
+  visualizacaoCombate.classList.remove(
+    "camera-arrastando"
+  );
+
+  arrasteCamera =
+    null;
+
+}
 
 function alternarFicha() {
 
@@ -213,10 +473,69 @@ function criarTokenCombate(
   token.style.gridRow =
     participante.posicao.linha;
 
+  const representacao =
+  participante.representacao;
+
+if (
+  representacao?.imagem
+) {
+
+  token.classList.add(
+    "token-com-imagem"
+  );
+
+  const imagemAvatar =
+    document.createElement(
+      "img"
+    );
+
+  imagemAvatar.classList.add(
+    "imagem-token-combate"
+  );
+
+  imagemAvatar.src =
+    representacao.imagem;
+
+  imagemAvatar.alt =
+    "";
+
+  token.append(
+    imagemAvatar
+  );
+
+  if (
+    representacao.frame
+  ) {
+
+    const imagemFrame =
+      document.createElement(
+        "img"
+      );
+
+    imagemFrame.classList.add(
+      "frame-token-combate"
+    );
+
+    imagemFrame.src =
+      representacao.frame;
+
+    imagemFrame.alt =
+      "";
+
+    token.append(
+      imagemFrame
+    );
+
+  }
+
+} else {
+
   token.textContent =
     participante.tipo === "jogador"
       ? "P"
       : "I";
+
+}
 
   token.setAttribute(
     "aria-label",
@@ -653,6 +972,72 @@ solicitacaoCombate.textContent =
 
 }
 
+function criarParticipanteJogadorCombate(
+  configuracao
+) {
+
+  const personagem =
+    estadoAtualJogo
+      .personagem
+      .dados;
+
+  if (
+    !personagem
+  ) {
+
+    console.warn(
+      "Nenhum personagem foi selecionado para o combate."
+    );
+
+    return null;
+
+  }
+
+  const entidadeJogador =
+    structuredClone(
+      personagem
+    );
+
+  entidadeJogador.nome =
+    personagem
+      .detalhes
+      ?.nome ??
+    "Jogador";
+
+  entidadeJogador.ataques =
+    structuredClone(
+      personagem
+        .combate
+        ?.ataques ??
+      []
+    );
+
+  const configuracaoParticipante = {
+
+    id:
+      personagem.id ??
+      "jogador",
+
+    tipo:
+      "jogador",
+
+    posicao:
+      configuracao.posicao,
+
+    movimentoMaximo:
+      configuracao.movimentoMaximo ??
+      6
+
+  };
+
+  return SistemaCombate
+    .criarParticipanteCombate(
+      entidadeJogador,
+      configuracaoParticipante
+    );
+
+}
+
 function criarParticipantesNpcsCombate(
   configuracoes
 ) {
@@ -746,7 +1131,40 @@ function criarParticipantesNpcsCombate(
 
 function iniciarCombateDaAventura(configuracao) {
 
-  const combate =SistemaCombate.iniciarCombate(configuracao);
+  const configuracaoCombate =
+    structuredClone(
+      configuracao
+    );
+
+  const participanteJogador =
+    configuracaoCombate
+      .participantes.find(
+        participante =>
+          participante.tipo ===
+          "jogador"
+      );
+
+  if (
+    participanteJogador
+  ) {
+
+    participanteJogador.representacao =
+      structuredClone(
+        estadoAtualJogo
+          .personagem
+          .dados
+          ?.avatar ??
+        null
+      );
+
+  }
+
+  const combate =
+    SistemaCombate.iniciarCombate(
+      configuracaoCombate
+    );
+
+
 
   const jogador =
   combate.participantes.find(
@@ -1951,9 +2369,83 @@ function notificarFimCombate(
 
 }
 
-function verificarCombateDaCena(cena) {
+function processarResultadoCombate(
+  evento
+) {
 
-  if (!cena.combate) {
+  const idResultado =
+    evento.detail
+      ?.resultado;
+
+  const resultado =
+    cenaAtual
+      .combate
+      ?.resultados
+      ?.[idResultado];
+
+  if (
+    !resultado
+  ) {
+
+    console.warn(
+      "Consequência de combate não encontrada:",
+      idResultado
+    );
+
+    return;
+
+  }
+
+  setTimeout(
+    function() {
+
+      exibirTelaAventura();
+
+      exibirContexto(
+        resultado.contexto
+      );
+
+      ocultarEscolhas();
+
+      solicitacaoTeste.textContent =
+        "";
+
+      solicitacaoTeste.hidden =
+        true;
+
+    },
+    1200
+  );
+
+}
+
+function verificarCombateDaCena(
+  cena
+) {
+
+  if (
+    !cena.combate
+  ) {
+    return;
+  }
+
+  if (
+    estadoAtualJogo
+      .combateAtual
+      ?.status ===
+      "ativo"
+  ) {
+    return;
+  }
+
+  const participanteJogador =
+    criarParticipanteJogadorCombate(
+      cena.combate.jogador
+    );
+
+  if (
+    !participanteJogador
+  ) {
     return;
   }
 
@@ -1962,9 +2454,26 @@ function verificarCombateDaCena(cena) {
       cena.combate.inimigos
     );
 
-  console.log(
-    "Inimigos preparados:",
-    participantesInimigos
+  const participantes = [
+
+    participanteJogador,
+    ...participantesInimigos
+
+  ];
+
+  const configuracaoCombate = {
+
+    id:
+      `${aventuraAtual.id}-` +
+      `${estadoAtualJogo.progresso.cenaId}`,
+
+    participantes:
+      participantes
+
+  };
+
+  iniciarCombateDaAventura(
+    configuracaoCombate
   );
 
 }
@@ -2041,12 +2550,50 @@ document.addEventListener(
 
 document.addEventListener(
   "combateEncerrado",
-  function(evento) {
+  processarResultadoCombate
+);
 
-    console.log(
-      "Resultado entregue à aventura:",
-      evento.detail
-    );
+visualizacaoCombate.addEventListener(
+  "wheel",
+  controlarZoomCombate,
+  {
+    passive:
+      false
+  }
+);
+
+visualizacaoCombate.addEventListener(
+  "pointerdown",
+  iniciarArrasteCamera
+);
+
+visualizacaoCombate.addEventListener(
+  "pointermove",
+  continuarArrasteCamera
+);
+
+visualizacaoCombate.addEventListener(
+  "pointerup",
+  finalizarArrasteCamera
+);
+
+visualizacaoCombate.addEventListener(
+  "pointercancel",
+  finalizarArrasteCamera
+);
+
+window.addEventListener(
+  "resize",
+  function() {
+
+    cameraCombate.zoom =
+      Math.max(
+        obterZoomMinimoVisivel(),
+        cameraCombate.zoom
+      );
+
+    limitarCameraCombate();
+    atualizarCameraCombate();
 
   }
 );

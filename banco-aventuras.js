@@ -244,16 +244,47 @@ const bancoAventuras = {
 
         combate: {
 
+          jogador: {
+          posicao: {coluna: 16, linha: 15}
+          },
+
           inimigos: [
 
             {
               npcId: "guardaConde",
-              quantidade: 1,
-              posicoes: [{coluna: 8, linha: 4}]
+              quantidade: 2,
+              posicoes: [{coluna: 24, linha: 13}, {coluna: 23, linha: 17}]
             }
 
-          ]
+          ],
 
+          resultados: {
+
+            vitoria: {
+
+              contexto: [
+
+                "O último guarda cai, deixando livre o caminho até a ponte.",
+
+                "Por alguns instantes, você tem uma oportunidade para continuar sua fuga."
+
+               ]
+
+            },
+
+            derrota: {
+
+              contexto: [
+
+                "Seus ferimentos finalmente cobram seu preço. Sem forças, você cai diante dos guardas.",
+
+                "Sua fuga termina antes que você consiga alcançar a ponte."
+
+              ]
+
+            }
+
+          }
         }
 
       }

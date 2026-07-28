@@ -159,6 +159,53 @@
   letter-spacing: -0.05em;
 }
 
+.card-personagem.com-avatar
+.card-personagem-cabecalho {
+  padding-right: 96px;
+}
+
+.avatar-card-personagem {
+  position: absolute;
+  z-index: 2;
+
+  top: 16px;
+  right: 16px;
+
+  width: 86px;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+}
+
+.imagem-avatar-card,
+.frame-avatar-card {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+}
+
+.imagem-avatar-card {
+  inset: 12%;
+
+  width: 76%;
+  height: 76%;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.frame-avatar-card {
+  inset: 0;
+
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+}
+
 .resumo-personagem {
   position: relative;
   margin: 10px 0 22px;

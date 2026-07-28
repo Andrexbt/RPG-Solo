@@ -38,6 +38,22 @@ function calcularModificador(valor) {
 }
 
 function calcularClasseArmadura(personagem) {
+
+  const classeArmaduraSalva = personagem?.combate ?.classeArmadura;
+
+    if (
+      classeArmaduraSalva !==
+        undefined &&
+      classeArmaduraSalva !==
+        null &&
+      classeArmaduraSalva !==
+        ""
+    ) {
+
+      return classeArmaduraSalva;
+
+    }
+
   const equipamentos = personagem?.detalhes?.equipamentos;
   const atributos = personagem?.atributos;
   const banco = window.bancoEquipamentos;
@@ -74,7 +90,11 @@ function calcularClasseArmadura(personagem) {
 }
 
 function obterPontosDeVidaMaximos(personagem) {
-  return textoOuTraco(personagem?.detalhes?.pontosDeVida?.maximo);
+
+  const pontosDeVida = personagem?.combate ?.pontosDeVida ?? personagem?.detalhes ?.pontosDeVida;
+
+  return textoOuTraco(pontosDeVida?.maximo);
+
 }
 
 function criarParagrafoComRotulo(rotulo, valor) {
@@ -100,6 +120,82 @@ function criarValorResumo(rotulo, valor) {
   return caixa;
 }
 
+function criarAvatarCardPersonagem(
+  personagem
+) {
+
+  const avatar =
+    personagem?.avatar;
+
+  if (
+    avatar === undefined ||
+    avatar.imagem === undefined ||
+    avatar.frame === undefined
+  ) {
+
+    return null;
+
+  }
+
+  const avatarCard =
+    document.createElement(
+      "div"
+    );
+
+  avatarCard.classList.add(
+    "avatar-card-personagem"
+  );
+
+  const imagemAvatar =
+    document.createElement(
+      "img"
+    );
+
+  imagemAvatar.classList.add(
+    "imagem-avatar-card"
+  );
+
+  imagemAvatar.src =
+    avatar.imagem;
+
+  imagemAvatar.alt =
+    "Avatar de " +
+    textoOuTraco(
+      personagem?.detalhes?.nome
+    );
+
+  imagemAvatar.loading =
+    "lazy";
+
+  const frameAvatar =
+    document.createElement(
+      "img"
+    );
+
+  frameAvatar.classList.add(
+    "frame-avatar-card"
+  );
+
+  frameAvatar.src =
+    avatar.frame;
+
+  frameAvatar.alt =
+    "";
+
+  frameAvatar.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  avatarCard.append(
+    imagemAvatar,
+    frameAvatar
+  );
+
+  return avatarCard;
+
+}
+
 function montarTelaPersonagens() {
   if (listaPersonagens === null) {
     return;
@@ -119,6 +215,23 @@ function montarTelaPersonagens() {
   personagens.forEach(function(personagem) {
     const card = document.createElement("article");
     card.classList.add("card-personagem");
+
+    const avatarCard =
+  criarAvatarCardPersonagem(
+    personagem
+  );
+
+if (avatarCard !== null) {
+
+  card.classList.add(
+    "com-avatar"
+  );
+
+  card.appendChild(
+    avatarCard
+  );
+
+}
 
     const cabecalho = document.createElement("div");
     cabecalho.classList.add("card-personagem-cabecalho");

@@ -407,6 +407,20 @@
           <h3>Nome do Personagem</h3>
           <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
 
+          <section class="selecao-avatar-personagem">
+
+  <h3>Avatar</h3>
+
+  <button
+    type="button"
+    class="botao-escolher-avatar"
+    id="botaoEscolherAvatar"
+  >
+    Escolher avatar
+  </button>
+
+</section>
+
           <h3>Idiomas Conhecidos</h3>
           <label for="idioma1">Idioma 1</label>
           <select id="idioma1"></select>
@@ -639,6 +653,123 @@
 
     <div id="modalDetalheMecanica" class="modal-detalhe-mecanica"></div>
   </div>
+</div>
+
+<!-- =====================================================
+     Modal de seleção de avatar
+     -----------------------------------------------------
+     Permite escolher o retrato e o frame do personagem.
+     ===================================================== -->
+
+<div
+  class="modal-overlay escondida"
+  id="modalAvatar"
+>
+
+  <div
+    class="modal modal-avatar"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tituloModalAvatar"
+  >
+
+    <div class="modal-cabecalho">
+
+      <h2 id="tituloModalAvatar">
+        Escolha seu avatar
+      </h2>
+
+      <button
+        type="button"
+        class="botao-fechar-modal-avatar"
+        id="botaoFecharModalAvatar"
+        aria-label="Fechar seleção de avatar"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-corpo-avatar">
+
+      <section class="selecao-retrato-avatar">
+
+        <h3>Retrato</h3>
+
+        <div
+          class="filtros-avatar"
+          aria-label="Filtrar avatares"
+        >
+
+          <button
+            type="button"
+            class="filtro-avatar ativo"
+            data-genero-avatar="All"
+          >
+            Todos
+          </button>
+
+          <button
+            type="button"
+            class="filtro-avatar"
+            data-genero-avatar="Female"
+          >
+            Femininos
+          </button>
+
+          <button
+            type="button"
+            class="filtro-avatar"
+            data-genero-avatar="Male"
+          >
+            Masculinos
+          </button>
+
+        </div>
+
+        <div
+          class="galeria-avatares"
+          id="galeriaAvatares"
+        ></div>
+
+      </section>
+
+      <section class="selecao-frame-avatar">
+
+        <h3>Frame</h3>
+
+        <div
+          class="galeria-frames-avatar"
+          id="galeriaFramesAvatar"
+        ></div>
+
+      </section>
+
+    </div>
+
+    <div class="modal-acoes">
+
+      <button
+        type="button"
+        class="botao-voltar"
+        id="botaoCancelarAvatar"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="botao-selecionar"
+        id="botaoConfirmarAvatar"
+        disabled
+      >
+        Confirmar avatar
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
    <!-- =====================================================

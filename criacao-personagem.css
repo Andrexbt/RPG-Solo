@@ -1082,8 +1082,51 @@ label,
 #areaRevisao .bloco-revisao:first-child {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 120px
+    repeat(2, minmax(0, 1fr));
   gap: 8px 18px;
+}
+
+.avatar-revisao {
+  position: relative;
+
+  grid-row:
+    2
+    / span 3;
+
+  align-self: start;
+
+  width: 110px;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+}
+
+.imagem-avatar-revisao,
+.frame-avatar-revisao {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+}
+
+.imagem-avatar-revisao {
+  inset: 12%;
+
+  width: 76%;
+  height: 76%;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.frame-avatar-revisao {
+  inset: 0;
+
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
 }
 
 #areaRevisao .bloco-revisao:first-child h3 {
@@ -1327,6 +1370,320 @@ label,
 }
 
 /* =====================================================
+   Modal de seleção de avatar
+   ===================================================== */
+
+#modalAvatar {
+  align-items: stretch;
+  justify-content: flex-end;
+
+  padding: 16px;
+
+  background:
+    rgba(5, 4, 5, 0.08);
+}
+
+#modalAvatar .modal-avatar {
+  width:
+    min(
+      680px,
+      calc(100vw - 470px)
+    );
+
+  height:
+    calc(100dvh - 32px);
+
+  max-height:
+    calc(100dvh - 32px);
+
+  box-shadow:
+    -18px 0 70px
+    rgba(0, 0, 0, 0.42);
+}
+
+.modal-avatar {
+  width: min(
+    920px,
+    calc(100vw - 40px)
+  );
+}
+
+.botao-fechar-modal-avatar {
+  margin-left: auto;
+  border: none;
+  color: #f6ead7;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+}
+
+.botao-fechar-modal-avatar:hover {
+  color: var(--cor-ambar);
+}
+
+.modal-corpo-avatar {
+  position: relative;
+  z-index: 2;
+
+  flex: 1;
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    220px;
+
+  gap: 22px;
+
+  padding:
+    18px
+    30px;
+
+  overflow: hidden;
+}
+
+.selecao-retrato-avatar,
+.selecao-frame-avatar {
+  min-width: 0;
+}
+
+.modal-corpo-avatar h3 {
+  margin:
+    0
+    0
+    12px;
+
+  color: #f1bd6a;
+
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.filtros-avatar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-bottom: 14px;
+}
+
+.filtro-avatar {
+  min-height: 34px;
+
+  padding:
+    6px
+    14px;
+
+  border:
+    1px solid
+    rgba(215, 163, 95, 0.28);
+
+  border-radius: 999px;
+
+  color: #ddcfb8;
+  cursor: pointer;
+
+  background:
+    rgba(255, 248, 235, 0.04);
+}
+
+.filtro-avatar:hover,
+.filtro-avatar.ativo {
+  border-color:
+    rgba(215, 163, 95, 0.72);
+
+  color: #1b1210;
+
+  background:
+    var(--cor-ambar);
+}
+
+.galeria-avatares {
+  max-height:
+    min(
+      430px,
+      calc(100dvh - 260px)
+    );
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(86px, 1fr)
+    );
+
+  gap: 10px;
+
+  padding-right: 8px;
+
+  overflow-y: auto;
+}
+
+.opcao-avatar {
+  aspect-ratio: 1;
+
+  padding: 3px;
+
+  border:
+    1px solid
+    rgba(215, 163, 95, 0.22);
+
+  border-radius: 14px;
+
+  overflow: hidden;
+  cursor: pointer;
+
+  background:
+    rgba(255, 248, 235, 0.04);
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease;
+}
+
+.opcao-avatar:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(215, 163, 95, 0.82);
+}
+
+.opcao-avatar img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 10px;
+
+  object-fit: cover;
+}
+
+.galeria-frames-avatar {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+#botaoConfirmarAvatar:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.opcao-frame-avatar {
+  aspect-ratio: 1;
+
+  padding: 4px;
+
+  border:
+    1px solid
+    rgba(215, 163, 95, 0.22);
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  background:
+    rgba(255, 248, 235, 0.04);
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease;
+}
+
+.opcao-frame-avatar:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(215, 163, 95, 0.82);
+}
+
+.opcao-frame-avatar img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.opcao-avatar.selecionado,
+.opcao-frame-avatar.selecionado {
+  border-color: var(--cor-ambar);
+
+  box-shadow:
+    0 0 0 2px
+    rgba(215, 163, 95, 0.28);
+
+  background:
+    rgba(215, 163, 95, 0.14);
+}
+
+@media (max-width: 1100px) {
+
+  #modalAvatar {
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px;
+
+    background:
+      rgba(5, 4, 5, 0.82);
+  }
+
+  #modalAvatar .modal-avatar {
+    width:
+      min(
+        680px,
+        calc(100vw - 24px)
+      );
+
+    height: auto;
+
+    max-height:
+      calc(100dvh - 24px);
+  }
+
+}
+
+@media (max-width: 760px) {
+
+  .modal-corpo-avatar {
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    padding:
+      16px
+      20px;
+
+    overflow: visible;
+  }
+
+  .galeria-avatares {
+    max-height: 360px;
+
+    grid-template-columns:
+      repeat(
+        auto-fill,
+        minmax(74px, 1fr)
+      );
+  }
+
+  .galeria-frames-avatar {
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+/* =====================================================
    Modal/popover de detalhes da ficha
    ===================================================== */
 
@@ -1531,6 +1888,11 @@ label,
   .modal-overlay {
     padding: 12px;
     overflow-y: auto;
+  }
+
+  .avatar-revisao {
+    grid-row: auto;
+    justify-self: center;
   }
 
   .modal {
