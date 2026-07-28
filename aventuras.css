@@ -2,12 +2,20 @@
   box-sizing: border-box;
 }
 
+:root {
+  --cor-aventura-papel: #efe1bd;
+  --cor-aventura-tinta: #3f2d20;
+  --cor-aventura-borda: rgba(105, 72, 47, 0.62);
+  --cor-aventura-borda-suave: rgba(105, 72, 47, 0.3);
+  --sombra-aventura:
+    0 18px 50px rgba(0, 0, 0, 0.32);
+}
+
 body {
   min-height: 100vh;
   margin: 0;
-  background: #171411;
-  color: #3f2d20;
-  font-family: Georgia, serif;
+  color: var(--cor-aventura-tinta);
+  font-family: var(--fonte-interface);
 }
 
 button,
@@ -40,6 +48,7 @@ select {
 }
 
 .visualizacao-combate {
+  position: relative;
   width: 100%;
   min-height: calc(100vh - 64px);
 }
@@ -49,10 +58,16 @@ select {
   padding: 32px;
   display: grid;
   place-items: center;
-  border: 1px solid #69482f;
-  border-radius: 12px;
-  background: #30291f;
-  color: #f4ead2;
+  border: 1px solid var(--cor-ficha-borda-forte);
+  border-radius: var(--raio-card);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(42, 33, 23, 0.96),
+      rgba(23, 19, 17, 0.98)
+    );
+  color: var(--cor-texto);
+  box-shadow: var(--sombra-painel);
   overflow: hidden;
 }
 
@@ -146,8 +161,10 @@ select {
 .janela-anotacoes {
   min-width: 0;
   padding: 24px;
-  border-radius: 12px;
-  background: #efe1bd;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 16px;
+  background: var(--cor-aventura-papel);
+  box-shadow: var(--sombra-aventura);
 }
 
 .janela-dados h2,
@@ -168,9 +185,72 @@ select {
   resize: vertical;
 }
 
+.formulario-dados,
+.lista-grupos-dados {
+  display: grid;
+  gap: 12px;
+}
+
+.grupo-dado {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.campo-configuracao-dado label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.campo-configuracao-dado input,
+.campo-configuracao-dado select {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.24);
+  color: inherit;
+}
+
+#botaoAdicionarGrupoDado,
+#botaoRolarDado,
+.botao-remover-grupo-dado,
+#botaoEncerrarTurno {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#botaoAdicionarGrupoDado,
+.botao-remover-grupo-dado {
+  background: transparent;
+  color: inherit;
+}
+
+#botaoRolarDado,
+#botaoEncerrarTurno {
+  background: #69482f;
+  color: #f4ead2;
+}
+
+#resultadoDado {
+  min-height: 32px;
+  margin-top: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
 .cabecalho-aventura {
   margin-bottom: 24px;
-  color: #f4ead2;
+  color: var(--cor-texto);
   text-align: center;
 }
 
@@ -183,13 +263,17 @@ select {
 
 .cabecalho-aventura h1 {
   margin: 6px 0 0;
+  color: var(--cor-texto);
+  font-size: clamp(2rem, 1.5rem + 2vw, 3.5rem);
 }
 
 .cena-aventura,
 .janela-acao {
   padding: 32px;
-  border-radius: 12px;
-  background: #efe1bd;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 16px;
+  background: var(--cor-aventura-papel);
+  box-shadow: var(--sombra-aventura);
 }
 
 .cabecalho-cena {
@@ -208,6 +292,7 @@ select {
 }
 
 .conteudo-cena {
+  font-family: Georgia, "Times New Roman", serif;
   line-height: 1.6;
 }
 
@@ -227,10 +312,11 @@ select {
 .botao-escolha {
   width: 100%;
   padding: 14px 18px;
-  border: 1px solid #69482f;
+  border: 1px solid var(--cor-aventura-borda);
   border-radius: 8px;
   background: transparent;
   color: inherit;
+  font-family: Georgia, "Times New Roman", serif;
   text-align: left;
   cursor: pointer;
 }
@@ -242,7 +328,7 @@ select {
 .area-resultado {
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(105, 72, 47, 0.3);
+  border-top: 1px solid var(--cor-aventura-borda-suave);
 }
 
 .layout-aventura {
@@ -261,9 +347,10 @@ select {
 .painel-lateral {
   min-height: 600px;
   padding: 20px;
-  border: 1px solid #69482f;
-  border-radius: 10px;
-  background: #efe1bd;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 16px;
+  background: var(--cor-aventura-papel);
+  box-shadow: var(--sombra-aventura);
 }
 
 .painel-lateral h2 {
@@ -318,6 +405,22 @@ select {
   align-self: flex-start;
 }
 
+.botao-recolher-painel {
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--cor-ficha-borda-forte);
+  border-radius: var(--raio-botao);
+  background: var(--cor-painel-forte);
+  color: var(--cor-texto);
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+}
+
+.botao-recolher-painel:hover {
+  border-color: var(--cor-ambar);
+  color: var(--cor-ambar);
+}
+
 .layout-aventura.ficha-recolhida {
   grid-template-columns:
     max-content
@@ -358,7 +461,7 @@ select {
   width: 100%;
   min-height: 48px;
   padding: 12px;
-  border: 1px solid #69482f;
+  border: 1px solid var(--cor-aventura-borda);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.24);
   color: inherit;
@@ -397,6 +500,9 @@ select {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
 
 .janela-flutuante
@@ -411,7 +517,7 @@ select {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  border: 1px solid #69482f;
+  border: 1px solid var(--cor-aventura-borda);
   border-radius: 6px;
   background: transparent;
   color: inherit;
@@ -432,10 +538,10 @@ select {
   display: none;
 }
 
-.cabecalho-janela-flutuante {
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
+.janela-flutuante.janela-minimizada {
+  width: auto;
+  min-width: 180px;
+  padding: 14px 16px;
 }
 
 .janela-arrastando
@@ -454,10 +560,6 @@ select {
   text-align: center;
 }
 
-.visualizacao-combate {
-  position: relative;
-}
-
 .painel-turno-combate {
   position: absolute;
   top: 16px;
@@ -468,10 +570,10 @@ select {
   align-items: center;
   gap: 16px;
   transform: translateX(-50%);
-  border: 1px solid #69482f;
-  border-radius: 10px;
-  background: #efe1bd;
-  color: #382719;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 12px;
+  background: var(--cor-aventura-papel);
+  color: var(--cor-aventura-tinta);
   box-shadow:
     0 8px 20px rgba(0, 0, 0, 0.35);
 }
@@ -515,4 +617,92 @@ select {
   opacity: 0.35;
   filter: grayscale(1);
   pointer-events: none;
+}
+
+@media (max-width: 1100px) {
+
+  .layout-aventura {
+    grid-template-columns:
+      minmax(200px, 240px)
+      minmax(0, 1fr)
+      minmax(200px, 240px);
+    gap: 16px;
+  }
+
+}
+
+@media (max-width: 820px) {
+
+  .layout-aventura,
+  .layout-aventura.ficha-recolhida,
+  .layout-aventura.painelExplicativo-recolhido {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .coluna-ficha,
+  .coluna-explicativa {
+    order: 2;
+  }
+
+  .pagina-aventura {
+    order: 1;
+  }
+
+  .painel-lateral {
+    min-height: auto;
+  }
+
+  .coluna-ficha .botao-recolher-painel,
+  .coluna-explicativa .botao-recolher-painel {
+    align-self: stretch;
+  }
+
+  .painel-turno-combate {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    transform: none;
+  }
+
+}
+
+@media (max-width: 560px) {
+
+  .layout-aventura {
+    width: min(100% - 20px, 1600px);
+    padding-block: 16px;
+  }
+
+  .cena-aventura,
+  .janela-acao,
+  .janela-dados,
+  .janela-anotacoes {
+    padding: 20px;
+  }
+
+  .formulario-acao {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #botaoEnviarAcao {
+    width: 100%;
+  }
+
+  .campo-combate {
+    padding: 12px;
+  }
+
+  .janela-flutuante {
+    width: calc(100vw - 20px);
+  }
+
+  .janela-dados.janela-flutuante,
+  .janela-anotacoes.janela-flutuante {
+    right: 10px;
+    left: auto;
+    bottom: 10px;
+  }
+
 }

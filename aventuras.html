@@ -9,6 +9,7 @@
 
   <title>A Fuga | RPG Solo</title>
 
+  <link rel="stylesheet" href="tema.css">
   <link rel="stylesheet" href="aventuras.css">
 </head>
 
@@ -19,22 +20,24 @@
     <div class="coluna-lateral coluna-ficha">
 
       <button
-      id="botaoRecolherFicha"
-      class="botao-recolher-painel"
-      type="button"
-      aria-controls="painelFicha"
-      aria-expanded="true"
-      aria-label="Recolher ficha do personagem">Ficha
+        id="botaoRecolherFicha"
+        class="botao-recolher-painel"
+        type="button"
+        aria-controls="painelFicha"
+        aria-expanded="true"
+        aria-label="Recolher ficha do personagem">
+        Ficha
       </button>
 
       <aside
-      id="painelFicha"
-      class="painel-lateral painel-ficha">
-      <h2>Ficha do personagem</h2>
+        id="painelFicha"
+        class="painel-lateral painel-ficha">
 
-      <div id="conteudoFicha">
-        <p>A ficha será carregada aqui.</p>
-      </div>
+        <h2>Ficha do personagem</h2>
+
+        <div id="conteudoFicha">
+          <p>A ficha será carregada aqui.</p>
+        </div>
 
       </aside>
 
@@ -45,92 +48,95 @@
       <div id="visualizacaoAventura" class="visualizacao-aventura">
 
         <header class="cabecalho-aventura">
-      <p class="rotulo-aventura">RPG Solo</p>
-      <h1 id="tituloAventura">A Fuga</h1>
+
+          <p class="rotulo-aventura">RPG Solo</p>
+
+          <h1 id="tituloAventura">A Fuga</h1>
+
         </header>
 
         <section
-        class="cena-aventura"
-        aria-labelledby="Cena da aventura">
+          class="cena-aventura"
+          aria-label="Cena da aventura">
 
-        <div class="conteudo-cena">
+          <div class="conteudo-cena">
 
-          <div
-          id="contextoCena"
-          class="contexto-cena">
-          Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
-          </div>
+            <div
+              id="contextoCena"
+              class="contexto-cena">
+              Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
+            </div>
 
-          <p
-          id="solicitacaoTeste"
-          class="solicitacao-teste"
-          aria-live="polite"
-          hidden>
-          </p>
-
-        </div>
-
-        <div class="area-escolhas">
-
-          <h3 id="tituloEscolhas">O que você fará?</h3>
-
-          <div
-          id="listaEscolhas"
-          class="lista-escolhas">
-
-          <!-- As escolhas serão inseridas pelo JavaScript. -->
+            <p
+              id="solicitacaoTeste"
+              class="solicitacao-teste"
+              aria-live="polite"
+              hidden>
+            </p>
 
           </div>
 
-        </div>
+          <div class="area-escolhas">
 
-        <div
-          id="areaResultado"
-          class="area-resultado"
-          aria-live="polite"
-          hidden>
+            <h3 id="tituloEscolhas">O que você fará?</h3>
 
-          <p id="resultadoTeste"></p>
+            <div
+              id="listaEscolhas"
+              class="lista-escolhas">
 
-          <p id="consequenciaCena"></p>
+              <!-- As escolhas serão inseridas pelo JavaScript. -->
 
-        </div>
+            </div>
+
+          </div>
+
+          <div
+            id="areaResultado"
+            class="area-resultado"
+            aria-live="polite"
+            hidden>
+
+            <p id="resultadoTeste"></p>
+
+            <p id="consequenciaCena"></p>
+
+          </div>
 
         </section>
 
         <section
-        class="janela-acao"
-        aria-labelledby="tituloAcao">
+          class="janela-acao"
+          aria-labelledby="tituloAcao">
 
-        <h2 id="tituloAcao">
-          O que você fará?
-        </h2>
+          <h2 id="tituloAcao">
+            O que você fará?
+          </h2>
 
-        <form
+          <form
             id="formularioAcao"
             class="formulario-acao">
-        
+
             <textarea
-            id="campoAcao"
-            name="acao"
-            rows="1"
-            aria-label="Descreva a ação do personagem"
-            placeholder=""
-            required>
+              id="campoAcao"
+              name="acao"
+              rows="1"
+              aria-label="Descreva a ação do personagem"
+              placeholder=""
+              required>
             </textarea>
 
             <button
-            id="botaoEnviarAcao"
-            type="submit">
-            Enviar ação
+              id="botaoEnviarAcao"
+              type="submit">
+              Enviar ação
             </button>
-        
-        </form>
+
+          </form>
 
         </section>
 
       </div>
-      
+
       <section
         id="visualizacaoCombate"
         class="visualizacao-combate"
@@ -138,50 +144,50 @@
         hidden>
 
         <div
-        id="painelTurnoCombate"
-        class="painel-turno-combate"
-        hidden>
+          id="painelTurnoCombate"
+          class="painel-turno-combate"
+          hidden>
 
-        <p>
-        Rodada
-        <span id="numeroRodadaCombate">
-        1
-        </span>
-        </p>
+          <p>
+            Rodada
+            <span id="numeroRodadaCombate">
+              1
+            </span>
+          </p>
 
-        <p>
-        Turno:
-        <span id="participanteAtivoCombate">
-        —
-        </span>
-        </p>
+          <p>
+            Turno:
+            <span id="participanteAtivoCombate">
+              —
+            </span>
+          </p>
 
-        <p>
-        Movimento:
-        <span id="movimentoRestanteCombate">
-        —
-        </span>
-        </p>
+          <p>
+            Movimento:
+            <span id="movimentoRestanteCombate">
+              —
+            </span>
+          </p>
 
-        <div
-        id="acoesCombate"
-        class="acoes-combate">
+          <div
+            id="acoesCombate"
+            class="acoes-combate">
+          </div>
+
+          <button
+            id="botaoEncerrarTurno"
+            type="button">
+            Encerrar turno
+          </button>
+
         </div>
 
-        <button
-        id="botaoEncerrarTurno"
-        type="button">
-        Encerrar turno
-        </button>
-
-</div>
-
         <div class="campo-combate">
-          
+
           <div
-          id="tabuleiroCombate"
-          class="tabuleiro-combate"
-          aria-label="Tabuleiro de combate">
+            id="tabuleiroCombate"
+            class="tabuleiro-combate"
+            aria-label="Tabuleiro de combate">
           </div>
 
         </div>
@@ -193,23 +199,24 @@
     <div class="coluna-lateral coluna-explicativa">
 
       <button
-      id="botaoRecolherPainelExplicativo"
-      class="botao-recolher-painel"
-      type="button"
-      aria-controls="painelExplicativo"
-      aria-expanded="true"
-      aria-label="Recolher painel de informações">Informações
+        id="botaoRecolherPainelExplicativo"
+        class="botao-recolher-painel"
+        type="button"
+        aria-controls="painelExplicativo"
+        aria-expanded="true"
+        aria-label="Recolher painel de informações">
+        Informações
       </button>
 
       <aside
-      id="painelExplicativo"
-      class="painel-lateral painel-explicativo">
+        id="painelExplicativo"
+        class="painel-lateral painel-explicativo">
 
-      <h2>Informações</h2>
+        <h2>Informações</h2>
 
-      <div id="conteudoExplicativo">
-        <p> As regras e explicações da situação aparecerão aqui. </p>
-      </div>
+        <div id="conteudoExplicativo">
+          <p>As regras e explicações da situação aparecerão aqui.</p>
+        </div>
 
       </aside>
 
@@ -219,175 +226,176 @@
 
   <div class="ferramentas-aventura">
 
-        <section
-          class="janela-dados janela-flutuante"
-          aria-labelledby="tituloDados">
+    <section
+      class="janela-dados janela-flutuante janela-minimizada"
+      aria-labelledby="tituloDados">
 
-          <header class="cabecalho-janela-flutuante"
-            data-alca-arraste>
+      <header
+        class="cabecalho-janela-flutuante"
+        data-alca-arraste>
 
-            <h2 id="tituloDados">
-            Dados
-            </h2>
+        <h2 id="tituloDados">
+          Dados
+        </h2>
 
-            <button
-            class="botao-minimizar-janela"
-            type="button"
-            aria-controls="conteudoDados"
-            aria-expanded="true"
-            aria-label="Minimizar janela de dados"
-            data-minimizar-janela>
-            −
-            </button>
+        <button
+          class="botao-minimizar-janela"
+          type="button"
+          aria-controls="conteudoDados"
+          aria-expanded="false"
+          aria-label="Minimizar janela de dados"
+          data-minimizar-janela>
+          +
+        </button>
 
-          </header>
+      </header>
+
+      <div
+        id="conteudoDados"
+        class="conteudo-dados">
+
+        <p
+          id="solicitacaoCombate"
+          class="solicitacao-combate"
+          aria-live="polite"
+          hidden>
+        </p>
+
+        <form
+          id="formularioDados"
+          class="formulario-dados">
 
           <div
-            id="conteudoDados"
-            class="conteudo-dados">
+            id="listaGruposDados"
+            class="lista-grupos-dados">
 
-            <p
-            id="solicitacaoCombate"
-            class="solicitacao-combate"
-            aria-live="polite"
-            hidden>
-            </p>
+            <div class="grupo-dado">
 
-            <form
-              id="formularioDados"
-              class="formulario-dados">
+              <div class="campo-configuracao-dado">
 
-              <div
-              id="listaGruposDados"
-              class="lista-grupos-dados">
+                <label>
 
-                <div class="grupo-dado">
+                  <span>
+                    Quantidade
+                  </span>
 
-                  <div class="campo-configuracao-dado">
+                  <input
+                    class="quantidade-dados"
+                    name="quantidade"
+                    type="number"
+                    min="1"
+                    max="20"
+                    value="1">
 
-                    <label>
-                      <span>
-                        Quantidade
-                      </span>
-                    
-
-                      <input                 
-                      class="quantidade-dados"
-                      name="quantidade"
-                      type="number"
-                      min="1"
-                      max="20"
-                      value="1">
-
-                    </label>
-
-                  </div>
-
-                  <div class="campo-configuracao-dado">
-
-                  <label>
-                    <span>
-                      Dado
-                    </span>
-                  
-
-                    <select
-                      class="numero-de-faces"
-                      name="numeroDeFaces">
-
-                      <option value="4">d4</option>
-                      <option value="6">d6</option>
-                      <option value="8">d8</option>
-                      <option value="10">d10</option>
-                      <option value="12">d12</option>
-                      <option value="20" selected>d20</option>
-                      <option value="100">d100</option>
-
-                    </select>
-
-                  </label>
-
-                  </div>
-
-                </div>
+                </label>
 
               </div>
 
               <div class="campo-configuracao-dado">
 
-                <label for="modificadorDados">
-                Modificador
-                </label>
+                <label>
 
-                <input
-                id="modificadorDados"
-                name="modificador"
-                type="number"
-                value="0">
+                  <span>
+                    Dado
+                  </span>
+
+                  <select
+                    class="numero-de-faces"
+                    name="numeroDeFaces">
+
+                    <option value="4">d4</option>
+                    <option value="6">d6</option>
+                    <option value="8">d8</option>
+                    <option value="10">d10</option>
+                    <option value="12">d12</option>
+                    <option value="20" selected>d20</option>
+                    <option value="100">d100</option>
+
+                  </select>
+
+                </label>
 
               </div>
 
-              <button
-              id="botaoAdicionarGrupoDado"
-              type="button">
-              Adicionar Dado
-              </button>
-
-              <button
-              id="botaoRolarDado"
-              type="button">
-              Rolar
-              </button>
-
-            </form>
-
-            <output
-              id="resultadoDado"
-              aria-live="polite">
-            </output>
+            </div>
 
           </div>
 
-        </section>
+          <div class="campo-configuracao-dado">
 
-        <section
-          class="janela-anotacoes janela-flutuante"
-          aria-labelledby="tituloAnotacoes">
+            <label for="modificadorDados">
+              Modificador
+            </label>
 
-          <header
-    class="cabecalho-janela-flutuante"
-    data-alca-arraste>
+            <input
+              id="modificadorDados"
+              name="modificador"
+              type="number"
+              value="0">
 
-    <h2 id="tituloAnotacoes">
-      Anotações
-    </h2>
+          </div>
 
-    <button
-      class="botao-minimizar-janela"
-      type="button"
-      aria-controls="conteudoAnotacoes"
-      aria-expanded="true"
-      aria-label="Minimizar janela de anotações"
-      data-minimizar-janela>
-      −
-    </button>
+          <button
+            id="botaoAdicionarGrupoDado"
+            type="button">
+            Adicionar dado
+          </button>
 
-  </header>
+          <button
+            id="botaoRolarDado"
+            type="button">
+            Rolar
+          </button>
 
-  <div
-    id="conteudoAnotacoes"
-    class="conteudo-anotacoes">
+        </form>
 
-    <textarea
-      id="campoAnotacoes"
-      rows="5"
-      aria-labelledby="tituloAnotacoes"
-      placeholder="Escreva suas anotações aqui...">
-    </textarea>
+        <output
+          id="resultadoDado"
+          aria-live="polite">
+        </output>
 
-  </div>
+      </div>
 
-        </section>
+    </section>
+
+    <section
+      class="janela-anotacoes janela-flutuante janela-minimizada"
+      aria-labelledby="tituloAnotacoes">
+
+      <header
+        class="cabecalho-janela-flutuante"
+        data-alca-arraste>
+
+        <h2 id="tituloAnotacoes">
+          Anotações
+        </h2>
+
+        <button
+          class="botao-minimizar-janela"
+          type="button"
+          aria-controls="conteudoAnotacoes"
+          aria-expanded="false"
+          aria-label="Minimizar janela de anotações"
+          data-minimizar-janela>
+          +
+        </button>
+
+      </header>
+
+      <div
+        id="conteudoAnotacoes"
+        class="conteudo-anotacoes">
+
+        <textarea
+          id="campoAnotacoes"
+          rows="5"
+          aria-labelledby="tituloAnotacoes"
+          placeholder="Escreva suas anotações aqui...">
+        </textarea>
+
+      </div>
+
+    </section>
 
   </div>
 

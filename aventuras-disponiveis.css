@@ -1,0 +1,377 @@
+/* =====================================================
+   Página de aventuras disponíveis
+   ===================================================== */
+
+.pagina-aventuras-disponiveis {
+  width: min(
+    calc(100% - (var(--margem-pagina) * 2)),
+    var(--largura-conteudo)
+  );
+
+  margin-inline: auto;
+  padding-block:
+    32px
+    56px;
+
+  display: grid;
+  gap: 32px;
+}
+
+.cabecalho-pagina-aventuras {
+  max-width: 720px;
+}
+
+.cabecalho-pagina-aventuras h1 {
+  margin:
+    12px
+    0
+    0;
+
+  font-size:
+    clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
+}
+
+.cabecalho-pagina-aventuras > p:not(.etiqueta) {
+  margin:
+    16px
+    0
+    0;
+
+  color:
+    var(--cor-texto-suave);
+  line-height: 1.6;
+}
+
+.secao-aventuras {
+  display: grid;
+  gap: 20px;
+}
+
+.titulo-lista-aventuras {
+  margin: 0;
+}
+
+.lista-aventuras {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(280px, 360px)
+    );
+
+  gap: 20px;
+}
+
+/* =====================================================
+   Cards de aventuras
+   ===================================================== */
+
+.card-aventura {
+  position: relative;
+  min-height: 250px;
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  border:
+    1px
+    solid
+    var(--cor-linha);
+  border-radius:
+    var(--raio-card);
+
+  background:
+    linear-gradient(
+      155deg,
+      rgba(8, 7, 10, 0.66),
+      rgba(28, 20, 22, 0.78)
+    );
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.26);
+
+  overflow: hidden;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.card-aventura::before {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -120px;
+  top: -130px;
+
+  border:
+    1px
+    solid
+    rgba(215, 163, 95, 0.16);
+  border-radius: 50%;
+
+  background:
+    rgba(111, 61, 75, 0.1);
+
+  pointer-events: none;
+}
+
+.card-aventura:hover {
+  transform:
+    translateY(-4px);
+
+  border-color:
+    var(--cor-ficha-borda-forte);
+
+  box-shadow:
+    0 26px 70px rgba(0, 0, 0, 0.34);
+}
+
+.card-aventura-etiqueta {
+  position: relative;
+  width: fit-content;
+  margin: 0;
+  padding:
+    6px
+    10px;
+
+  border:
+    1px
+    solid
+    rgba(154, 170, 117, 0.3);
+  border-radius:
+    var(--raio-botao);
+
+  color:
+    var(--cor-musgo);
+  background:
+    rgba(154, 170, 117, 0.1);
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card-aventura h3 {
+  position: relative;
+  margin:
+    18px
+    0
+    0;
+
+  color:
+    var(--cor-texto);
+
+  font-family:
+    var(--fonte-titulos);
+  font-size:
+    clamp(1.65rem, 2vw, 2rem);
+  line-height: 1;
+}
+
+.card-aventura-descricao {
+  position: relative;
+  margin:
+    14px
+    0
+    0;
+
+  color:
+    var(--cor-texto-suave);
+
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.card-aventura .botao {
+  position: relative;
+  min-height: 38px;
+  margin-top: auto;
+  padding:
+    8px
+    16px;
+
+  font-size: 0.86rem;
+}
+
+.botao-selecionar-aventura:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.card-aventura:has(
+  .botao-selecionar-aventura:disabled
+) {
+  transform: none;
+  opacity: 0.7;
+}
+
+/* =====================================================
+   Seleção de personagem
+   ===================================================== */
+
+.secao-selecao-personagem {
+  padding-top: 28px;
+  display: grid;
+  gap: 24px;
+
+  border-top:
+    1px
+    solid
+    var(--cor-linha);
+
+  scroll-margin-top: 100px;
+}
+
+.secao-selecao-personagem[hidden] {
+  display: none;
+}
+
+.cabecalho-selecao-personagem {
+  max-width: 680px;
+}
+
+.cabecalho-selecao-personagem h2 {
+  margin:
+    12px
+    0
+    0;
+
+  font-size:
+    clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1;
+}
+
+.cabecalho-selecao-personagem > p:not(.etiqueta) {
+  margin:
+    14px
+    0
+    0;
+
+  color:
+    var(--cor-texto-suave);
+  line-height: 1.6;
+}
+
+.lista-personagens-aventura {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(260px, 340px)
+    );
+
+  gap: 18px;
+}
+
+/* =====================================================
+   Cards de personagens
+   ===================================================== */
+
+.card-personagem-aventura {
+  min-height: 210px;
+  padding: 22px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  border:
+    1px
+    solid
+    var(--cor-linha);
+  border-radius:
+    var(--raio-card);
+
+  background:
+    rgba(8, 7, 10, 0.58);
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.22);
+}
+
+.card-personagem-aventura h3 {
+  margin: 0;
+
+  color:
+    var(--cor-texto);
+
+  font-family:
+    var(--fonte-titulos);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.classe-personagem-aventura {
+  margin:
+    14px
+    0
+    0;
+
+  color:
+    var(--cor-ambar);
+
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.especie-personagem-aventura {
+  margin:
+    8px
+    0
+    0;
+
+  color:
+    var(--cor-texto-suave);
+
+  font-size: 0.86rem;
+}
+
+.card-personagem-aventura .botao {
+  min-height: 38px;
+  margin-top: auto;
+  padding:
+    8px
+    16px;
+
+  font-size: 0.84rem;
+}
+
+.aviso-sem-personagens {
+  margin: 0;
+
+  color:
+    var(--cor-texto-suave);
+}
+
+/* =====================================================
+   Responsividade
+   ===================================================== */
+
+@media (max-width: 620px) {
+
+  .pagina-aventuras-disponiveis {
+    padding-block:
+      24px
+      48px;
+
+    gap: 24px;
+  }
+
+  .lista-aventuras {
+    grid-template-columns:
+      minmax(0, 1fr);
+  }
+
+  .card-aventura {
+    min-height: 230px;
+    padding: 20px;
+  }
+
+}

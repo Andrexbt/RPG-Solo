@@ -3,218 +3,306 @@
 window.bancoNpcs = {
 
   aFuga: {
-      ned: {
-          id: "ned",
-          nome:"Ned",
-          tipo:"aliado",
 
-          atributos: {
-          forca: 10,
-          destreza: 12,
-          constituicao: 10,
-          inteligencia: 10,
-          sabedoria: 11,
-          carisma: 14
-          },
+    ned: {
+      id: "ned",
+      nome: "Ned",
+      tipo: "aliado",
 
-          bonusProficiencia: 2,
-          pericias: ["persuasao"],
-          salvaguardas: [],
+      atributos: {
+        forca: 10,
+        destreza: 12,
+        constituicao: 10,
+        inteligencia: 10,
+        sabedoria: 11,
+        carisma: 14
+      },
 
-          combate: {
-          classeArmadura: 12,
-          pontosDeVida: { atuais: 9, maximo: 9}
-          },
+      bonusProficiencia: 2,
+      pericias: [
+        "persuasao"
+      ],
+      salvaguardas: [],
 
-          ataques: [
-            {id: "espadaCurta",
-            nome: "Espada curta",
-            categoria: "corpoACorpo",
+      combate: {
+        classeArmadura: 12,
 
-            selecao: {
-              tipo: "criatura",
-              alcance: {normal: 1},
-              area: null
+        pontosDeVida: {
+          atuais: 9,
+          maximo: 9
+        }
+      },
+
+      ataques: [
+
+        {
+          id: "espadaCurta",
+          nome: "Espada curta",
+          categoria: "corpoACorpo",
+
+          selecao: {
+            tipo: "criatura",
+
+            alcance: {
+              normal: 1
             },
 
-            bonusAtaque: 3,
+            area: null
+          },
 
-            dano: {
-            gruposDeDados: [{quantidade: 1, numeroDeFaces: 6}],
+          bonusAtaque: 3,
+
+          dano: {
+            gruposDeDados: [
+
+              {
+                quantidade: 1,
+                numeroDeFaces: 6
+              }
+
+            ],
 
             modificador: 1,
             tipo: "perfurante"
-            }
+          }
+        },
+
+        {
+          id: "arcoCurto",
+          nome: "Arco curto",
+          categoria: "distancia",
+
+          selecao: {
+            tipo: "criatura",
+
+            alcance: {
+              normal: 16,
+              longo: 64
             },
 
-            {id: "arcoCurto",
-            nome: "Arco curto",
-            categoria: "distancia",
-
-            selecao: {
-              tipo: "criatura",
-              alcance: {normal: 16, longo: 64},
-              area: null
-            },
-
-            bonusAtaque: 3,
-
-            dano: {
-            gruposDeDados: [{quantidade:1, numeroDeFaces:6}],
-
-            modificador:1,
-            tipo: "perfurante"
-            }
-            }
-          ]
-      },
-
-      guardaConde: {
-          id: "guardaConde",
-          nome: "Guarda",
-          tipo: "inimigo",
-      
-          atributos: {
-          forca: 13,
-          destreza: 12,
-          constituicao: 12,
-          inteligencia: 10,
-          sabedoria: 11,
-          carisma: 10
+            area: null
           },
 
-          bonusProficiencia: 2,
-          pericias: ["atletismo", "percepcao"],
-          salvaguardas: [],
+          bonusAtaque: 3,
 
-          combate: {
-          classeArmadura: 14,
-          pontosDeVida: {atuais:11, maximo: 11}
-          },
+          dano: {
+            gruposDeDados: [
 
-          ataques: [
-            {id: "espadaCurta",
-            nome: "Espada curta",
-            categoria: "corpoACorpo",
+              {
+                quantidade: 1,
+                numeroDeFaces: 6
+              }
 
-            selecao: {
-              tipo: "criatura",
-              alcance: {normal: 1},
-              area: null
-            },
-
-            bonusAtaque: 3,
-
-            dano: {
-            gruposDeDados: [{quantidade: 1, numeroDeFaces: 6}],
+            ],
 
             modificador: 1,
             tipo: "perfurante"
-            }
-            },
+          }
+        }
 
-            {id: "arcoCurto",
-            nome: "Arco curto",
-            categoria: "distancia",
-
-            selecao: {
-              tipo: "criatura",
-              alcance: {normal: 16, longo: 64},
-              area: null
-            },
-
-            bonusAtaque: 3,
-
-            dano: {
-            gruposDeDados: [{quantidade:1, numeroDeFaces:6}],
-
-            modificador:1,
-            tipo: "perfurante"
-            }
-            }
-          ]
-      },
-
-      lagartoBronze: {
-          id: "lagartoBronze",
-          nome: "Lagarto de Bronze",
-          tipo: "inimigo",
-
-          atributos: {
-              forca: 14,
-              destreza: 13,
-              constituicao: 14,
-              inteligencia: 10,
-              sabedoria: 12,
-              carisma: 10
-            },
-
-          bonusProficiencia: 2,
-          pericias: ["intimidacao", "percepcao"],
-          salvaguardas: [],
-
-          combate: {
-              classeArmadura: 14,
-              pontosDeVida: { atuais: 13, maximo: 13 }
-            },
-
-              ataques: [
-              {id: "lanca",
-      nome: "Lança",
-
-      categoria: "corpoACorpo",
-
-selecao: {
-  tipo: "criatura",
-
-  alcance: {
-    normal: 1
-  },
-
-  area: null
-},
-      bonusAtaque: 4,
-
-      dano: {
-        gruposDeDados: [
-          { quantidade: 1, numeroDeFaces: 6 }
-        ],
-
-        modificador: 2,
-        tipo: "perfurante"
-      }
+      ]
     },
 
-    {
-      id: "bestaLeve",
-      nome: "Besta leve",
+    guardaConde: {
+      id: "guardaConde",
+      nome: "Guarda",
+      tipo: "inimigo",
 
-      categoria: "distancia",
+      atributos: {
+        forca: 13,
+        destreza: 12,
+        constituicao: 12,
+        inteligencia: 10,
+        sabedoria: 11,
+        carisma: 10
+      },
 
-selecao: {
-  tipo: "criatura",
+      bonusProficiencia: 2,
+      pericias: [
+        "atletismo",
+        "percepcao"
+      ],
+      salvaguardas: [],
 
-  alcance: {
-    normal: 16,
-    longo: 64
-  },
+      combate: {
+        classeArmadura: 14,
 
-  area: null
-},
-      bonusAtaque: 3,
+        pontosDeVida: {
+          atuais: 11,
+          maximo: 11
+        }
+      },
 
-      dano: {
-        gruposDeDados: [
-          { quantidade: 1, numeroDeFaces: 8 }
-        ],
+      ataques: [
 
-        modificador: 1,
-        tipo: "perfurante"
-      }
+        {
+          id: "espadaCurta",
+          nome: "Espada curta",
+          categoria: "corpoACorpo",
+
+          selecao: {
+            tipo: "criatura",
+
+            alcance: {
+              normal: 1
+            },
+
+            area: null
+          },
+
+          bonusAtaque: 3,
+
+          dano: {
+            gruposDeDados: [
+
+              {
+                quantidade: 1,
+                numeroDeFaces: 6
+              }
+
+            ],
+
+            modificador: 1,
+            tipo: "perfurante"
+          }
+        },
+
+        {
+          id: "arcoCurto",
+          nome: "Arco curto",
+          categoria: "distancia",
+
+          selecao: {
+            tipo: "criatura",
+
+            alcance: {
+              normal: 16,
+              longo: 64
+            },
+
+            area: null
+          },
+
+          bonusAtaque: 3,
+
+          dano: {
+            gruposDeDados: [
+
+              {
+                quantidade: 1,
+                numeroDeFaces: 6
+              }
+
+            ],
+
+            modificador: 1,
+            tipo: "perfurante"
+          }
+        }
+
+      ]
+    },
+
+    lagartoBronze: {
+      id: "lagartoBronze",
+      nome: "Lagarto de Bronze",
+      tipo: "inimigo",
+
+      atributos: {
+        forca: 14,
+        destreza: 13,
+        constituicao: 14,
+        inteligencia: 10,
+        sabedoria: 12,
+        carisma: 10
+      },
+
+      bonusProficiencia: 2,
+      pericias: [
+        "intimidacao",
+        "percepcao"
+      ],
+      salvaguardas: [],
+
+      combate: {
+        classeArmadura: 14,
+
+        pontosDeVida: {
+          atuais: 13,
+          maximo: 13
+        }
+      },
+
+      ataques: [
+
+        {
+          id: "lanca",
+          nome: "Lança",
+          categoria: "corpoACorpo",
+
+          selecao: {
+            tipo: "criatura",
+
+            alcance: {
+              normal: 1
+            },
+
+            area: null
+          },
+
+          bonusAtaque: 4,
+
+          dano: {
+            gruposDeDados: [
+
+              {
+                quantidade: 1,
+                numeroDeFaces: 6
+              }
+
+            ],
+
+            modificador: 2,
+            tipo: "perfurante"
+          }
+        },
+
+        {
+          id: "bestaLeve",
+          nome: "Besta leve",
+          categoria: "distancia",
+
+          selecao: {
+            tipo: "criatura",
+
+            alcance: {
+              normal: 16,
+              longo: 64
+            },
+
+            area: null
+          },
+
+          bonusAtaque: 3,
+
+          dano: {
+            gruposDeDados: [
+
+              {
+                quantidade: 1,
+                numeroDeFaces: 8
+              }
+
+            ],
+
+            modificador: 1,
+            tipo: "perfurante"
+          }
+        }
+
+      ]
     }
-  ]
-      }
 
-    }
+  }
 
 };

@@ -6,6 +6,11 @@ const bancoAventuras = {
 
     id: "aFuga",
     titulo: "A Fuga",
+
+    descricao: "Fuja de uma cidade em conflito enquanto diferentes forças tentam impedir sua passagem.",
+
+    disponivel: true,
+
     cenaInicial: "inicio",
 
     cenas: {
@@ -225,6 +230,32 @@ const bancoAventuras = {
           proximaCena: "becos"
           },
         ]
+      },
+
+            batalha: {
+
+        titulo: "Confronto na ponte",
+
+        contexto: [
+          "Você abandona qualquer tentativa de passar despercebido e caminha em direção aos guardas.",
+
+          "Ao perceberem sua aproximação, eles sacam suas armas e bloqueiam o caminho até a ponte."
+        ],
+
+        combate: {
+
+          inimigos: [
+
+            {
+              npcId: "guardaConde",
+              quantidade: 1,
+              posicoes: [{coluna: 8, linha: 4}]
+            }
+
+          ]
+
+        }
+
       }
 
     }

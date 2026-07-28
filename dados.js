@@ -4,7 +4,7 @@ const botaoRolarDado = document.querySelector("#botaoRolarDado");
 
 const resultadoDado = document.querySelector("#resultadoDado");
 
-const campoModificadorDados =document.querySelector("#modificadorDados");
+const campoModificadorDados = document.querySelector("#modificadorDados");
 
 const listaGruposDados = document.querySelector("#listaGruposDados");
 
@@ -22,7 +22,8 @@ function rolarDado(numeroDeFaces) {
 
 function rolarGrupoDeDados(
   quantidade,
-  numeroDeFaces) {
+  numeroDeFaces
+) {
 
   const resultados = [];
 
@@ -35,9 +36,9 @@ function rolarGrupoDeDados(
       rolarDado(numeroDeFaces);
 
     resultados.push(resultado);
-    }
+  }
 
-    return resultados;
+  return resultados;
 }
 
 function somarResultados(resultados) {
@@ -54,7 +55,8 @@ function somarResultados(resultados) {
 
 function realizarRolagem(
   quantidade,
-  numeroDeFaces) {
+  numeroDeFaces
+) {
 
   const resultados =
     rolarGrupoDeDados(
@@ -102,13 +104,17 @@ function rolarGruposDeDados(configuracao) {
   return resultadosDosGrupos;
 }
 
-function realizarRolagemComposta(configuracao){
-  const gruposRolados = rolarGruposDeDados(configuracao);
+function realizarRolagemComposta(configuracao) {
+
+  const gruposRolados =
+    rolarGruposDeDados(configuracao);
 
   let subtotal = 0;
 
   for (const grupoRolado of gruposRolados) {
-  subtotal += grupoRolado.total;
+
+    subtotal += grupoRolado.total;
+
   }
 
   const modificador =
@@ -134,6 +140,7 @@ function realizarRolagemComposta(configuracao){
 }
 
 function formatarResultadoRolagem(rolagem) {
+
   let textoDosDados =
     "";
 
@@ -165,36 +172,52 @@ function formatarResultadoRolagem(rolagem) {
 
 function executarRolagemConfigurada() {
 
-  const elementosDosGrupos = listaGruposDados.querySelectorAll(".grupo-dado");
+  const elementosDosGrupos =
+    listaGruposDados.querySelectorAll(
+      ".grupo-dado"
+    );
 
   const gruposDeDados = [];
 
   for (const elementoDoGrupo of elementosDosGrupos) {
 
-    const campoQuantidade = elementoDoGrupo.querySelector(".quantidade-dados");
+    const campoQuantidade =
+      elementoDoGrupo.querySelector(
+        ".quantidade-dados"
+      );
 
-    const campoNumeroDeFaces = elementoDoGrupo.querySelector(".numero-de-faces");
+    const campoNumeroDeFaces =
+      elementoDoGrupo.querySelector(
+        ".numero-de-faces"
+      );
 
     const grupoDeDados = {
       quantidade: Number(campoQuantidade.value),
       numeroDeFaces: Number(campoNumeroDeFaces.value)
     };
+
     gruposDeDados.push(grupoDeDados);
+
   }
 
-  const modificador = Number(campoModificadorDados.value);
+  const modificador =
+    Number(campoModificadorDados.value);
 
   const configuracao = {
     gruposDeDados: gruposDeDados,
     modificador: modificador
   };
 
-  const resultado = realizarRolagemComposta(configuracao);
+  const resultado =
+    realizarRolagemComposta(configuracao);
 
   resultadoDado.textContent = resultado.total;
 
-  const eventoRolagem = new CustomEvent("rolagemConcluida",
-    {detail: resultado}
+  const eventoRolagem = new CustomEvent(
+    "rolagemConcluida",
+    {
+      detail: resultado
+    }
   );
 
   document.dispatchEvent(eventoRolagem);
@@ -205,7 +228,7 @@ function executarRolagemConfigurada() {
   );
 
   const resultadoFormatado =
-  formatarResultadoRolagem(resultado);
+    formatarResultadoRolagem(resultado);
 
   console.log(resultadoFormatado);
 }
@@ -257,9 +280,10 @@ function adicionarGrupoDado() {
   novoNumeroDeFaces.value =
     20;
 
-  const botaoRemover = document.createElement("button");
-
-  botaoRemover.classList.add("botao-remover-grupo-dado");
+  const botaoRemover =
+    document.createElement(
+      "button"
+    );
 
   botaoRemover.type = "button";
 
@@ -267,13 +291,22 @@ function adicionarGrupoDado() {
 
   botaoRemover.textContent = "Remover";
 
-  botaoRemover.addEventListener("click",removerGrupoDado);
+  botaoRemover.addEventListener(
+    "click",
+    removerGrupoDado
+  );
 
   novoGrupo.append(botaoRemover);
 
   listaGruposDados.append(novoGrupo);
 }
 
-botaoRolarDado.addEventListener("click", executarRolagemConfigurada);
+botaoRolarDado.addEventListener(
+  "click",
+  executarRolagemConfigurada
+);
 
-botaoAdicionarGrupoDado.addEventListener("click",adicionarGrupoDado);
+botaoAdicionarGrupoDado.addEventListener(
+  "click",
+  adicionarGrupoDado
+);

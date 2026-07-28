@@ -19,160 +19,221 @@
       <span>Projeto RPG Solo</span>
     </a>
 
-    <nav class="menu-principal" aria-label="Navegação principal">
-      <a href="#criador-personagens">Criador</a>
-      <a href="#fichas-salvas">Fichas</a>
-      <a href="#campanhas">Campanhas</a>
-      <a href="#jogo-assincrono">Jogo assíncrono</a>
+    <nav
+      class="menu-principal"
+      aria-label="Navegação principal">
+
+      <a href="#inicio">
+        Início
+      </a>
+
+      <a href="criacao-personagem.html">
+        Criar personagem
+      </a>
+
+      <a href="meus-personagens.html">
+        Meus personagens
+      </a>
+
+      <a href="aventuras-disponiveis.html">
+        Aventuras
+      </a>
+
     </nav>
   </header>
 
-  <main class="home-page">
+  <main
+    id="inicio"
+    class="home-page">
 
-    <section class="hero">
+    <section
+      class="apresentacao-home"
+      aria-label="Destaques do RPG Solo">
 
-      <div class="hero-conteudo">
+      <section
+        id="destaques"
+        class="vitrine-home"
+        aria-labelledby="tituloDestaque">
 
-        <p class="etiqueta">Plataforma narrativa em desenvolvimento</p>
+        <div class="vitrine-conteudo">
 
-        <h1>Um espaço para criar, guardar e viver histórias.</h1>
+          <p
+            id="etiquetaDestaque"
+            class="vitrine-etiqueta">
+            Aventura em destaque
+          </p>
 
-        <p class="hero-texto">
-          Comece criando personagens e fichas. Em breve, organize campanhas,
-          cenas e jogos assíncronos em um mesmo lugar.
-        </p>
+          <h2 id="tituloDestaque">
+            A Fuga
+          </h2>
 
-        <div class="hero-acoes">
-          <a class="botao botao-principal" href="#criador-personagens">
-            Explorar o projeto
+          <p id="textoDestaque">
+            Encontre uma maneira de escapar da cidade enquanto
+            diferentes forças disputam o controle das ruas.
+          </p>
+
+          <a
+            id="linkDestaque"
+            class="botao botao-principal"
+            href="aventuras-disponiveis.html">
+            Ver aventura
           </a>
 
-          <a class="botao botao-secundario" href="criacao-personagem.html">
-            Criar agora
-          </a>
         </div>
 
-      </div>
+        <div
+          class="vitrine-controles"
+          aria-label="Controles dos destaques">
 
-      <aside class="painel-destaque">
+          <button
+            id="botaoDestaqueAnterior"
+            type="button"
+            aria-label="Mostrar destaque anterior">
+            ←
+          </button>
 
-        <p class="painel-etiqueta">Agora disponível</p>
+          <div
+            id="indicadoresDestaque"
+            class="indicadores-destaque"
+            aria-label="Posição do destaque">
 
-        <h2>Criador de personagens</h2>
+            <button
+              class="indicador-destaque indicador-ativo"
+              type="button"
+              aria-label="Mostrar primeiro destaque"
+              aria-current="true">
+            </button>
+
+            <button
+              class="indicador-destaque"
+              type="button"
+              aria-label="Mostrar segundo destaque">
+            </button>
+
+            <button
+              class="indicador-destaque"
+              type="button"
+              aria-label="Mostrar terceiro destaque">
+            </button>
+
+          </div>
+
+          <button
+            id="botaoProximoDestaque"
+            type="button"
+            aria-label="Mostrar próximo destaque">
+            →
+          </button>
+
+        </div>
+
+      </section>
+
+      <aside
+        class="destaque-lateral"
+        aria-labelledby="tituloDestaqueLateral">
+
+        <p class="destaque-lateral-etiqueta">
+          Seus personagens
+        </p>
+
+        <h2 id="tituloDestaqueLateral">
+          Continue sua jornada
+        </h2>
 
         <p>
-          Crie personagens de nível 1 com atributos, perícias, habilidades,
-          equipamentos, magias e PDF editável.
+          Consulte seus personagens salvos e escolha quem
+          participará da próxima aventura.
         </p>
 
-        <div class="painel-lista">
-          <span>Guerreiro</span>
-          <span>Mago</span>
-          <span>Ladino</span>
-          <span>Clérigo</span>
-        </div>
+        <a
+          class="botao botao-secundario"
+          href="meus-personagens.html">
+          Ver personagens
+        </a>
 
       </aside>
 
     </section>
 
-    <section class="jornada-home" id="modulos">
+    <section
+      id="recursos"
+      class="recursos-home"
+      aria-labelledby="tituloRecursos">
 
-  <section class="secao-jornada secao-criador" id="criador-personagens">
-    <div class="decoracao-fundo decoracao-um"></div>
-    <div class="decoracao-fundo decoracao-dois"></div>
-    <div class="ornamento-rpg ornamento-dado">20</div>
+      <header class="cabecalho-recursos">
 
-    <div class="conteudo-jornada">
-      <p class="etiqueta-secao">01 · Disponível agora</p>
+        <h2 id="tituloRecursos">
+          O que você deseja fazer?
+        </h2>
 
-      <h2>Criador de personagens</h2>
+      </header>
 
-      <p>
-        Um fluxo guiado para criar personagens de nível 1, escolhendo classe,
-        atributos, origem, espécie, perícias, habilidades, equipamentos e magias.
-      </p>
+      <div class="grade-recursos">
 
-      <a class="botao botao-menor" href="criacao-personagem.html">
-        Criar personagem
-      </a>
-    </div>
+        <article class="card-recurso">
 
-    <div class="resumo-jornada">
-      <span>Fluxo atual</span>
-      <strong>Classe → Atributos → Habilidades → Magias → Revisão</strong>
-    </div>
-  </section>
 
-  <section class="secao-jornada secao-fichas" id="fichas-salvas">
-    <div class="decoracao-fundo decoracao-um"></div>
-    <div class="decoracao-fundo decoracao-dois"></div>
-    <div class="ornamento-rpg ornamento-ficha"></div>
+          <h3>
+            Criar personagem
+          </h3>
 
-    <div class="conteudo-jornada">
-      <p class="etiqueta-secao">02 · Disponível agora</p>
+          <p>
+            Monte um novo personagem escolhendo atributos,
+            espécie, classe, habilidades e equipamentos.
+          </p>
 
-      <h2>Fichas salvas</h2>
+          <a
+            class="botao botao-secundario"
+            href="criacao-personagem.html">
+            Criar personagem
+          </a>
 
-      <p>
-        Consulte personagens já criados, veja ataques, perícias, recursos,
-        magias preparadas e exporte tudo para uma ficha em PDF editável.
-      </p>
+        </article>
 
-      <a class="botao botao-menor" href="meus-personagens.html">
-        Ver personagens
-      </a>
-    </div>
+        <article class="card-recurso">
 
-    <div class="resumo-jornada">
-      <span>Ficha completa</span>
-      <strong>PV, CA, ataques, magias, recursos e PDF</strong>
-    </div>
-  </section>
+          
 
-  <section class="secao-jornada secao-campanhas" id="campanhas">
-    <div class="decoracao-fundo decoracao-um"></div>
-    <div class="decoracao-fundo decoracao-dois"></div>
-    <div class="ornamento-rpg ornamento-compasso"></div>
+          <h3>
+            Meus personagens
+          </h3>
 
-    <div class="conteudo-jornada">
-      <p class="etiqueta-secao">03 · Em planejamento</p>
+          <p>
+            Consulte seus personagens salvos, veja suas fichas
+            e escolha quem participará de uma aventura.
+          </p>
 
-      <h2>Campanhas</h2>
+          <a
+            class="botao botao-secundario"
+            href="meus-personagens.html">
+            Ver personagens
+          </a>
 
-      <p>
-        Um futuro espaço para organizar aventuras, cenas, personagens,
-        anotações, registros de jogo e continuidade narrativa.
-      </p>
-    </div>
+        </article>
 
-    <div class="resumo-jornada">
-      <span>Próxima camada</span>
-      <strong>Histórias, cenas, notas e personagens conectados</strong>
-    </div>
-  </section>
+        <article class="card-recurso">
 
-  <section class="secao-jornada secao-assincrono" id="jogo-assincrono">
-    <div class="decoracao-fundo decoracao-um"></div>
-    <div class="decoracao-fundo decoracao-dois"></div>
-    <div class="ornamento-rpg ornamento-fala"></div>
+          
 
-    <div class="conteudo-jornada">
-      <p class="etiqueta-secao">04 · Ideia futura</p>
+          <h3>
+            Aventuras
+          </h3>
 
-      <h2>Jogo assíncrono</h2>
+          <p>
+            Conheça as histórias disponíveis e selecione um
+            personagem para começar a jogar.
+          </p>
 
-      <p>
-        Uma proposta para jogar histórias em formato de fórum, com cenas,
-        respostas narrativas, ações de personagens e continuidade entre sessões.
-      </p>
-    </div>
+          <a
+            class="botao botao-secundario"
+            href="aventuras-disponiveis.html">
+            Ver aventuras
+          </a>
 
-    <div class="resumo-jornada">
-      <span>Ritmo flexível</span>
-      <strong>Jogue quando puder, sem perder a história</strong>
-    </div>
-  </section>
+        </article>
+
+      </div>
 
     </section>
 

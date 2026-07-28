@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>
+    Aventuras disponíveis | RPG Solo
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="tema.css">
+
+  <link
+    rel="stylesheet"
+    href="aventuras-disponiveis.css">
+
+  <script
+    src="transicoes-paginas.js"
+    defer>
+  </script>
+
+  <script
+    src="banco-aventuras.js"
+    defer>
+  </script>
+
+  <script
+    src="aventuras-disponiveis.js"
+    defer>
+  </script>
+
+</head>
+
+<body>
+
+  <header class="cabecalho-site">
+
+    <a
+      class="marca"
+      href="index.html">
+
+      <span class="marca-simbolo">
+        ✦
+      </span>
+
+      <span>
+        Projeto RPG Solo
+      </span>
+
+    </a>
+
+    <nav
+      class="menu-principal"
+      aria-label="Navegação principal">
+
+      <a href="index.html">
+        Início
+      </a>
+
+      <a href="criacao-personagem.html">
+        Criar personagem
+      </a>
+
+      <a href="meus-personagens.html">
+        Meus personagens
+      </a>
+
+      <a
+        href="aventuras-disponiveis.html"
+        aria-current="page">
+        Aventuras
+      </a>
+
+    </nav>
+
+  </header>
+
+  <main class="pagina-aventuras-disponiveis">
+
+    <header class="cabecalho-pagina-aventuras">
+
+      <p class="etiqueta">
+        Histórias disponíveis
+      </p>
+
+      <h1>
+        Escolha sua aventura
+      </h1>
+
+      <p>
+        Conheça as histórias disponíveis e escolha qual
+        personagem participará da próxima jornada.
+      </p>
+
+    </header>
+
+    <section
+      class="secao-aventuras"
+      aria-labelledby="tituloListaAventuras">
+
+      <h2
+        id="tituloListaAventuras"
+        class="titulo-lista-aventuras">
+        Aventuras
+      </h2>
+
+      <div
+        id="listaAventuras"
+        class="lista-aventuras">
+
+        <!-- Os cards serão criados pelo JavaScript. -->
+
+      </div>
+
+    </section>
+
+    <section
+      id="secaoSelecaoPersonagem"
+      class="secao-selecao-personagem"
+      aria-labelledby="tituloSelecaoPersonagem"
+      hidden>
+
+      <header class="cabecalho-selecao-personagem">
+
+        <p
+          id="aventuraSelecionada"
+          class="etiqueta">
+        </p>
+
+        <h2 id="tituloSelecaoPersonagem">
+          Escolha seu personagem
+        </h2>
+
+        <p>
+          Selecione qual dos seus personagens participará
+          desta aventura.
+        </p>
+
+      </header>
+
+      <div
+        id="listaPersonagensAventura"
+        class="lista-personagens-aventura">
+
+        <!-- Os personagens serão inseridos pelo JavaScript. -->
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="rodape-site">
+
+    <small>
+      RPG Solo — projeto em desenvolvimento.
+    </small>
+
+  </footer>
+
+</body>
+
+</html>

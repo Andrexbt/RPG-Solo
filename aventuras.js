@@ -1,8 +1,111 @@
 "use strict";
 
-const aventuraAtual = bancoAventuras.aFuga;
-const estadoAtualJogo = window.estadoJogo;
-const idCenaInicial = aventuraAtual.cenaInicial;
+function buscarPersonagemSalvo(
+  idPersonagem
+) {
+
+  if (!idPersonagem) {
+    return null;
+  }
+
+  try {
+
+    const dadosSalvos =
+      localStorage.getItem(
+        "personagensRpgSolo"
+      );
+
+    if (!dadosSalvos) {
+      return null;
+    }
+
+    const personagens =
+      JSON.parse(
+        dadosSalvos
+      );
+
+    if (!Array.isArray(personagens)) {
+      return null;
+    }
+
+    const personagem =
+      personagens.find(
+        function(
+          personagemSalvo
+        ) {
+
+          return (
+            personagemSalvo.id ===
+            idPersonagem
+          );
+
+        }
+      );
+
+    return personagem ?? null;
+
+  } catch (erro) {
+
+    console.error(
+      "Não foi possível carregar o personagem.",
+      erro
+    );
+
+    return null;
+
+  }
+
+}
+
+const parametrosAventura =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const idAventuraSelecionada =
+  parametrosAventura.get(
+    "aventura"
+  ) ?? "aFuga";
+
+const idPersonagemSelecionado =
+  parametrosAventura.get(
+    "personagem"
+  );
+
+const aventuraAtual =
+  bancoAventuras[
+    idAventuraSelecionada
+  ];
+
+if (!aventuraAtual) {
+
+  throw new Error(
+    `Aventura não encontrada: ${idAventuraSelecionada}`
+  );
+
+}
+
+const personagemSelecionado =
+  buscarPersonagemSalvo(
+    idPersonagemSelecionado
+  );
+
+const estadoAtualJogo =
+  window.estadoJogo;
+
+estadoAtualJogo.personagem.id =
+  personagemSelecionado?.id ?? null;
+
+estadoAtualJogo.personagem.dados =
+  personagemSelecionado
+    ? structuredClone(
+        personagemSelecionado
+      )
+    : null;
+
+const idCenaInicial =
+  aventuraAtual.cenaInicial;
+  
 estadoAtualJogo.aventuraId = aventuraAtual.id;
 estadoAtualJogo.progresso.cenaId = idCenaInicial;
 let cenaAtual = aventuraAtual.cenas[idCenaInicial];
@@ -14,15 +117,15 @@ let inicioArraste = null;
 let escolhasAtuais = [];
 
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
-const painelTurnoCombate =document.querySelector("#painelTurnoCombate");
+const painelTurnoCombate = document.querySelector("#painelTurnoCombate");
 const numeroRodadaCombate = document.querySelector("#numeroRodadaCombate");
 const participanteAtivoCombate = document.querySelector("#participanteAtivoCombate");
 const movimentoRestanteCombate = document.querySelector("#movimentoRestanteCombate");
 const botaoEncerrarTurno = document.querySelector("#botaoEncerrarTurno");
 const acoesCombate = document.querySelector("#acoesCombate");
 
-const tituloAventura =document.querySelector("#tituloAventura");
-const contextoCena =document.querySelector("#contextoCena");
+const tituloAventura = document.querySelector("#tituloAventura");
+const contextoCena = document.querySelector("#contextoCena");
 const listaEscolhas = document.querySelector("#listaEscolhas");
 const tituloEscolhas = document.querySelector("#tituloEscolhas");
 
@@ -578,15 +681,62 @@ function criarParticipantesNpcsCombate(
 
     }
 
-    const participante =
-      SistemaCombate.criarParticipanteCombate(
-        npc,
-        configuracao
+    const quantidade =
+      configuracao.quantidade ?? 1;
+
+    for (
+      let indice = 0;
+      indice < quantidade;
+      indice += 1
+    ) {
+
+      const posicao =
+        configuracao.posicoes?.[
+          indice
+        ];
+
+      if (!posicao) {
+
+        console.warn(
+          "Posição não encontrada para:",
+          configuracao.npcId,
+          indice
+        );
+
+        continue;
+
+      }
+
+      const configuracaoParticipante = {
+
+        id:
+          `${configuracao.npcId}-${indice + 1}`,
+
+        tipo:
+          npc.tipo,
+
+        posicao:
+          posicao,
+
+        movimentoMaximo:
+          configuracao.movimentoMaximo ?? 6,
+
+        representacao:
+          configuracao.representacao ?? null
+
+      };
+
+      const participante =
+        SistemaCombate.criarParticipanteCombate(
+          npc,
+          configuracaoParticipante
+        );
+
+      participantes.push(
+        participante
       );
 
-    participantes.push(
-      participante
-    );
+    }
 
   }
 
@@ -982,11 +1132,13 @@ function exibirContexto(contexto) {
 
 }
 
-function exibirCena(aventura,cena) {
+function exibirCena(aventura, cena) {
 
   tituloAventura.textContent = aventura.titulo;
 
   exibirContexto(cena.contexto);
+
+  verificarCombateDaCena(cena);
 
   solicitacaoTeste.textContent ="";
 
@@ -1115,7 +1267,10 @@ function resolverTeste(resultadoRolagem) {
 
   exibirContexto(consequencia.texto);
 
-  console.log("Consequência:",consequencia);
+  console.log(
+    "Consequência:",
+    consequencia
+  );
 
   if (consequencia.escolhas) {
 
@@ -1796,6 +1951,24 @@ function notificarFimCombate(
 
 }
 
+function verificarCombateDaCena(cena) {
+
+  if (!cena.combate) {
+    return;
+  }
+
+  const participantesInimigos =
+    criarParticipantesNpcsCombate(
+      cena.combate.inimigos
+    );
+
+  console.log(
+    "Inimigos preparados:",
+    participantesInimigos
+  );
+
+}
+
 botaoRecolherFicha.addEventListener(
   "click",
   alternarFicha
@@ -1806,11 +1979,20 @@ botaoRecolherPainelExplicativo.addEventListener(
   alternarPainelExplicativo
 );
 
-listaEscolhas.addEventListener("click",selecionarEscolha);
+listaEscolhas.addEventListener(
+  "click",
+  selecionarEscolha
+);
 
-tabuleiroCombate.addEventListener("click",selecionarTokenJogador);
+tabuleiroCombate.addEventListener(
+  "click",
+  selecionarTokenJogador
+);
 
-tabuleiroCombate.addEventListener("click",moverTokenSelecionado);
+tabuleiroCombate.addEventListener(
+  "click",
+  moverTokenSelecionado
+);
 
 tabuleiroCombate.addEventListener(
   "pointerdown",
@@ -1832,13 +2014,30 @@ tabuleiroCombate.addEventListener(
   finalizarArrasteToken
 );
 
-tabuleiroCombate.addEventListener("click",selecionarAlvoCombate);
-acoesCombate.addEventListener("click",selecionarAtaqueCombate);
-botaoEncerrarTurno.addEventListener("click",encerrarTurnoAtual);
+tabuleiroCombate.addEventListener(
+  "click",
+  selecionarAlvoCombate
+);
 
-exibirCena(aventuraAtual,cenaAtual);
+acoesCombate.addEventListener(
+  "click",
+  selecionarAtaqueCombate
+);
 
-document.addEventListener("rolagemConcluida",receberResultadoRolagem);
+botaoEncerrarTurno.addEventListener(
+  "click",
+  encerrarTurnoAtual
+);
+
+exibirCena(
+  aventuraAtual,
+  cenaAtual
+);
+
+document.addEventListener(
+  "rolagemConcluida",
+  receberResultadoRolagem
+);
 
 document.addEventListener(
   "combateEncerrado",
