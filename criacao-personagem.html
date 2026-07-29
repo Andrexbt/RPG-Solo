@@ -656,6 +656,127 @@
 </div>
 
 <!-- =====================================================
+     Modal de antecedente
+     -----------------------------------------------------
+     Exibe os detalhes e reúne as escolhas do antecedente.
+     ===================================================== -->
+
+<div
+  class="modal-overlay escondida"
+  id="modalAntecedente"
+>
+
+  <div
+    class="modal modal-antecedente"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tituloModalAntecedente"
+  >
+
+    <div class="modal-cabecalho">
+
+      <h2 id="tituloModalAntecedente">
+        Antecedente
+      </h2>
+
+      <button
+        type="button"
+        class="botao-fechar-modal-avatar"
+        id="botaoFecharModalAntecedente"
+        aria-label="Fechar detalhes do antecedente"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-corpo-antecedente">
+
+      <section
+        id="etapaDetalhesAntecedente"
+        class="etapa-modal-antecedente"
+      >
+
+        <p
+          id="descricaoModalAntecedente"
+          class="descricao-modal-antecedente"
+        >
+        </p>
+
+        <div
+          id="resumoModalAntecedente"
+          class="resumo-modal-antecedente"
+        >
+          <!-- Preenchido pelo JavaScript. -->
+        </div>
+
+      </section>
+
+      <section
+        id="etapaAtributosAntecedente"
+        class="etapa-modal-antecedente"
+        hidden
+      >
+
+        <h3>
+          Distribua os bônus de atributos
+        </h3>
+
+        <p class="texto-explicativo">
+          Escolha uma das distribuições permitidas e aplique
+          os bônus entre os atributos deste antecedente.
+        </p>
+
+        <div
+          id="opcoesDistribuicaoAntecedente"
+          class="opcoes-distribuicao-antecedente"
+        >
+          <!-- Formas de distribuição criadas pelo JavaScript. -->
+        </div>
+
+        <div
+          id="seletoresBonusAntecedente"
+          class="seletores-bonus-antecedente"
+        >
+          <!-- Seletores criados pelo JavaScript. -->
+        </div>
+
+        <p
+          id="mensagemBonusAntecedente"
+          class="mensagem-passo"
+          aria-live="polite"
+        >
+        </p>
+
+      </section>
+
+    </div>
+
+    <div class="modal-acoes">
+
+      <button
+        type="button"
+        class="botao-voltar"
+        id="botaoCancelarAntecedente"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="botao-selecionar"
+        id="botaoAvancarAntecedente"
+      >
+        Escolher este antecedente
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =====================================================
      Modal de seleção de avatar
      -----------------------------------------------------
      Permite escolher o retrato e o frame do personagem.

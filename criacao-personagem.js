@@ -288,6 +288,77 @@ let temporizadorMensagemNavegacao = null;
 const mensagemNavegacao = document.getElementById("mensagemNavegacao");
 
 const cardsAntecedente = document.querySelectorAll("[data-antecedente]");
+
+const modalAntecedente =
+  document.getElementById(
+    "modalAntecedente"
+  );
+
+const tituloModalAntecedente =
+  document.getElementById(
+    "tituloModalAntecedente"
+  );
+
+const descricaoModalAntecedente =
+  document.getElementById(
+    "descricaoModalAntecedente"
+  );
+
+const resumoModalAntecedente =
+  document.getElementById(
+    "resumoModalAntecedente"
+  );
+
+const etapaDetalhesAntecedente =
+  document.getElementById(
+    "etapaDetalhesAntecedente"
+  );
+
+const etapaAtributosAntecedente =
+  document.getElementById(
+    "etapaAtributosAntecedente"
+  );
+
+const botaoFecharModalAntecedente =
+  document.getElementById(
+    "botaoFecharModalAntecedente"
+  );
+
+const botaoCancelarAntecedente =
+  document.getElementById(
+    "botaoCancelarAntecedente"
+  );
+
+const botaoAvancarAntecedente =
+  document.getElementById(
+    "botaoAvancarAntecedente"
+  );
+
+const opcoesDistribuicaoAntecedente =
+  document.getElementById(
+    "opcoesDistribuicaoAntecedente"
+  );
+
+const seletoresBonusAntecedente =
+  document.getElementById(
+    "seletoresBonusAntecedente"
+  );
+
+const mensagemBonusAntecedente =
+  document.getElementById(
+    "mensagemBonusAntecedente"
+  );
+
+let cardAntecedenteTemporario = null;
+
+let etapaAtualModalAntecedente =
+  "detalhes";
+
+let indiceDistribuicaoTemporaria =
+  null;
+
+let bonusAtributosTemporarios = {};
+
 const fichaAntecedente = document.getElementById("fichaAntecedente");
 const fichaHabilidades = document.getElementById("fichaHabilidades");
 const cardsEspecie = document.querySelectorAll("[data-especie]")
@@ -426,7 +497,10 @@ const personagem = {
 
   classeId:"",
   classe: "",
-  atributos: {},
+  
+  atributosBase:{},
+  bonusAtributosAntecedente:{},
+  atributos:{},
 
   combate: {
     classeArmadura: null,
@@ -458,7 +532,11 @@ const personagem = {
   periciasAntecedente: [],
   pericias: [],
 
+  ferramentasAntecedente:[],
+  ferramentas:[],
+
   talentos: [],
+  configuracoesTalentos:{},
 
   habilidades:{
      escolhas:{},
@@ -709,6 +787,270 @@ botaoProximoPasso.forEach(function(botao) {
 // Aplica dados vindos do banco de antecedentes.
 // =====================================================
 
+function criarLinhaResumoAntecedente(
+  rotulo,
+  valor
+) {
+
+  const paragrafo =
+    document.createElement(
+      "p"
+    );
+
+  const destaque =
+    document.createElement(
+      "strong"
+    );
+
+  destaque.textContent =
+    `${rotulo}: `;
+
+  paragrafo.append(
+    destaque,
+    document.createTextNode(
+      valor
+    )
+  );
+
+  return paragrafo;
+
+}
+
+function abrirModalAntecedente(
+  card
+) {
+
+  const antecedenteId =
+    card.dataset.antecedente;
+
+  const dadosAntecedente =
+    window.bancoAntecedentes[
+      antecedenteId
+    ];
+
+  if (
+    !dadosAntecedente
+  ) {
+    return;
+  }
+
+  cardAntecedenteTemporario =
+    card;
+
+    etapaAtualModalAntecedente =
+  "detalhes";
+
+indiceDistribuicaoTemporaria =
+  null;
+
+bonusAtributosTemporarios =
+  {};
+
+  etapaDetalhesAntecedente.hidden =
+    false;
+
+  etapaAtributosAntecedente.hidden =
+    true;
+
+  botaoAvancarAntecedente.textContent =
+    "Escolher este antecedente";
+
+  mensagemBonusAntecedente.textContent =
+    "";
+
+  opcoesDistribuicaoAntecedente
+    .replaceChildren();
+
+  seletoresBonusAntecedente
+    .replaceChildren();
+
+  tituloModalAntecedente.textContent =
+    dadosAntecedente.nome;
+
+  descricaoModalAntecedente.textContent =
+    dadosAntecedente.descricao ??
+    dadosAntecedente.descricaoCurta ??
+    "";
+
+  const atributos =
+    dadosAntecedente
+      .atributos
+      ?.opcoes ??
+    dadosAntecedente
+      .atributosSugeridos ??
+    [];
+
+  const pericias =
+    dadosAntecedente
+      .proficiencias
+      ?.pericias ??
+    dadosAntecedente.pericias ??
+    [];
+
+  const ferramentas =
+    dadosAntecedente
+      .proficiencias
+      ?.ferramentas ??
+    dadosAntecedente.ferramentas ??
+    [];
+
+  const talentoOrigem =
+    dadosAntecedente
+      .talentoOrigem;
+
+  const idTalento =
+    typeof talentoOrigem ===
+      "string"
+      ? talentoOrigem
+      : talentoOrigem?.id;
+
+  const nomeTalento =
+    window.bancoTalentos[
+      idTalento
+    ]?.nome ??
+    idTalento ??
+    "Nenhum";
+
+  resumoModalAntecedente
+    .replaceChildren(
+      criarLinhaResumoAntecedente(
+        "Atributos",
+        atributos.join(
+          ", "
+        )
+      ),
+
+      criarLinhaResumoAntecedente(
+        "Perícias",
+        pericias.join(
+          ", "
+        )
+      ),
+
+      criarLinhaResumoAntecedente(
+        "Ferramentas",
+        ferramentas.length > 0
+          ? ferramentas.join(
+              ", "
+            )
+          : "Nenhuma"
+      ),
+
+      criarLinhaResumoAntecedente(
+        "Talento",
+        nomeTalento
+      )
+    );
+
+  modalAntecedente.classList.remove(
+    "escondida"
+  );
+
+}
+
+function fecharModalAntecedente() {
+
+  modalAntecedente.classList.add(
+    "escondida"
+  );
+
+  cardAntecedenteTemporario =
+    null;
+
+}
+
+function exibirEtapaAtributosAntecedente() {
+
+  if (
+    !cardAntecedenteTemporario
+  ) {
+    return;
+  }
+
+  const antecedenteId =
+    cardAntecedenteTemporario
+      .dataset
+      .antecedente;
+
+  const dadosAntecedente =
+    window.bancoAntecedentes[
+      antecedenteId
+    ];
+
+  const distribuicoes =
+    dadosAntecedente
+      .atributos
+      ?.distribuicoesPermitidas ??
+    [];
+
+  etapaAtualModalAntecedente =
+    "atributos";
+
+  etapaDetalhesAntecedente.hidden =
+    true;
+
+  etapaAtributosAntecedente.hidden =
+    false;
+
+  botaoAvancarAntecedente.textContent =
+    "Confirmar antecedente";
+
+  opcoesDistribuicaoAntecedente
+    .replaceChildren();
+
+  seletoresBonusAntecedente
+    .replaceChildren();
+
+  for (
+    let indice = 0;
+    indice <
+      distribuicoes.length;
+    indice += 1
+  ) {
+
+    const distribuicao =
+      distribuicoes[
+        indice
+      ];
+
+    const botaoDistribuicao =
+      document.createElement(
+        "button"
+      );
+
+    botaoDistribuicao.type =
+      "button";
+
+    botaoDistribuicao.classList.add(
+      "opcao-distribuicao-antecedente"
+    );
+
+    botaoDistribuicao.dataset.indice =
+      indice;
+
+    const textoValores =
+      distribuicao
+        .valores
+        .map(
+          valor =>
+            `+${valor}`
+        )
+        .join(
+          " e "
+        );
+
+    botaoDistribuicao.textContent =
+      textoValores;
+
+    opcoesDistribuicaoAntecedente
+      .appendChild(
+        botaoDistribuicao
+      );
+
+  }
+
+}
+
 function selecionarAntecedente(cardClicado) {
   const antecedenteId = cardClicado.dataset.antecedente;
   const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
@@ -727,13 +1069,79 @@ function selecionarAntecedente(cardClicado) {
   personagem.antecedenteId = antecedenteId;
   personagem.antecedente = dadosAntecedente.nome;
 
-  personagem.periciasAntecedente = [...dadosAntecedente.pericias];
+  const periciasAntecedente =
+  dadosAntecedente
+    .proficiencias
+    ?.pericias ??
+  dadosAntecedente.pericias ??
+  [];
+
+personagem.periciasAntecedente =
+  [
+    ...periciasAntecedente
+  ];
+
+  const ferramentasAntecedente =
+  dadosAntecedente
+    .proficiencias
+    ?.ferramentas ??
+  dadosAntecedente.ferramentas ??
+  [];
+
+personagem.ferramentasAntecedente =
+  [
+    ...ferramentasAntecedente
+  ];
+
+personagem.ferramentas =
+  [
+    ...ferramentasAntecedente
+  ];
 
   personagem.talentos = [];
 
-  if (dadosAntecedente.talentoOrigem !== undefined) {
-    personagem.talentos.push(dadosAntecedente.talentoOrigem);
+  personagem.talentos =
+  [];
+
+personagem.configuracoesTalentos =
+  {};
+
+const talentoOrigem =
+  dadosAntecedente
+    .talentoOrigem;
+
+if (
+  talentoOrigem !==
+    undefined
+) {
+
+  const idTalentoOrigem =
+    typeof talentoOrigem ===
+      "string"
+      ? talentoOrigem
+      : talentoOrigem.id;
+
+  personagem.talentos.push(
+    idTalentoOrigem
+  );
+
+  if (
+    typeof talentoOrigem ===
+      "object" &&
+    talentoOrigem.configuracao
+  ) {
+
+    personagem
+      .configuracoesTalentos[
+        idTalentoOrigem
+      ] =
+      structuredClone(
+        talentoOrigem.configuracao
+      );
+
   }
+
+}
 
   atualizarPericiasPersonagem();
   limparEspecializacoesInvalidas();
@@ -747,9 +1155,39 @@ function selecionarAntecedente(cardClicado) {
 
 cardsAntecedente.forEach(function(card) {
   card.addEventListener("click", function() {
-    selecionarAntecedente(card);
-  });
+    abrirModalAntecedente(card);
+  }
+);
 });
+
+botaoAvancarAntecedente
+  .addEventListener(
+    "click",
+    function() {
+
+      if (
+        etapaAtualModalAntecedente ===
+          "detalhes"
+      ) {
+
+        exibirEtapaAtributosAntecedente();
+
+      }
+
+    }
+  );
+
+botaoFecharModalAntecedente
+  .addEventListener(
+    "click",
+    fecharModalAntecedente
+  );
+
+botaoCancelarAntecedente
+  .addEventListener(
+    "click",
+    fecharModalAntecedente
+  );
 
 cardsEspecie.forEach(function(card) {
   card.addEventListener("click", function() {
@@ -1057,11 +1495,101 @@ const camposFichaAtributos = {
   }
 };
 
+function recalcularAtributosFinais() {
+
+  const nomesAtributos =
+    Object.keys(
+      camposFichaAtributos
+    );
+
+  for (
+    const nomeAtributo of
+    nomesAtributos
+  ) {
+
+    const valorBase =
+      personagem
+        .atributosBase[
+          nomeAtributo
+        ];
+
+    const campoFicha =
+      camposFichaAtributos[
+        nomeAtributo
+      ];
+
+    if (
+      valorBase ===
+        undefined ||
+      valorBase ===
+        ""
+    ) {
+
+      personagem.atributos[
+        nomeAtributo
+      ] =
+        "";
+
+      campoFicha.valor.textContent =
+        "—";
+
+      campoFicha.modificador.textContent =
+        "mod —";
+
+      continue;
+
+    }
+
+    const bonusAntecedente =
+      personagem
+        .bonusAtributosAntecedente[
+          nomeAtributo
+        ] ??
+      0;
+
+    const valorFinal =
+      Math.min(
+        20,
+        Number(
+          valorBase
+        ) +
+        Number(
+          bonusAntecedente
+        )
+      );
+
+    personagem.atributos[
+      nomeAtributo
+    ] =
+      valorFinal;
+
+    campoFicha.valor.textContent =
+      valorFinal;
+
+    campoFicha.modificador.textContent =
+      formatarModificador(
+        calcularModificador(
+          valorFinal
+        )
+      );
+
+  }
+
+  atualizarClasseArmadura();
+  atualizarPontosDeVida();
+  atualizarValoresDerivados();
+  atualizarFichaArmasAtaques();
+  atualizarNumerosMagiasPersonagem();
+  atualizarFichaMagias();
+
+}
+
 function selecionarAtributo(seletor) {
   const nomeAtributo = seletor.dataset.atributo;
   const campoFicha = camposFichaAtributos[nomeAtributo];
 
   if (seletor.value === "") {
+    personagem.atributosBase[nomeAtributo] = "";
     personagem.atributos[nomeAtributo] = "";
 
     campoFicha.valor.textContent = "—";
@@ -1078,14 +1606,19 @@ function selecionarAtributo(seletor) {
     return;
   }
 
-   const indiceValorEscolhido = Number(seletor.value);
+  const indiceValorEscolhido = Number(seletor.value);
   const valorEscolhido = atributosRolados[indiceValorEscolhido];
 
-  personagem.atributos[nomeAtributo] = valorEscolhido;
+  personagem.atributosBase[nomeAtributo] = valorEscolhido;
+  const bonusAntecedente = personagem.bonusAtributosAntecedente[nomeAtributo] ?? 0;
 
-  const modificador = calcularModificador(valorEscolhido);
+  const valorFinal = valorEscolhido + bonusAntecedente;
 
-  campoFicha.valor.textContent = valorEscolhido;
+  personagem.atributos[nomeAtributo] = valorFinal;
+
+  const modificador = calcularModificador(valorFinal);
+
+  campoFicha.valor.textContent = valorFinal;
   campoFicha.modificador.textContent = formatarModificador(modificador);
 
   atualizarOpcoesDisponiveis();
@@ -2786,7 +3319,7 @@ armaSecundaria.addEventListener("change", function() {
   atualizarEquipamentos();
 });
 
-function calcularClasseArmadura() {
+function calcularClasseArmaduraCriacao() {
   const equipamentos = personagem.detalhes.equipamentos;
 
   if (equipamentos === undefined) {
@@ -2832,7 +3365,7 @@ function calcularClasseArmadura() {
 }
 
 function atualizarClasseArmadura() {
-  const classeArmadura = calcularClasseArmadura();
+  const classeArmadura = calcularClasseArmaduraCriacao();
 
   personagem.combate.classeArmadura = classeArmadura === ""
       ? null
@@ -2885,7 +3418,6 @@ function atualizarPontosDeVida() {
 
   pvMaximo.textContent = pontosDeVidaMaximos;
   pvAtuais.textContent = pontosDeVidaMaximos;
-  pvTemporarios.textContent = "0";
 
    personagem.combate.pontosDeVida = {
     atuais: pontosDeVidaMaximos,

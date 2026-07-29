@@ -8,15 +8,29 @@
 // =====================================================
 
 window.bancoAntecedentes = {
-  // =====================================================
-  // Acólito
-  // =====================================================
+
   acolito: {
     id: "acolito",
     nome: "Acólito",
     descricaoCurta: "Você viveu ligado a um templo, ordem religiosa ou tradição espiritual.",
-    pericias: ["intuicao", "religiao"],
-    ferramentas: [],
+    descricao: "a definir",
+
+    atributos: {
+      opcoes: ["inteligencia", "sabedoria", "carisma"],
+
+      distribuicoesPermitidas: [
+        {valores: [2,1], atributosDiferentes: true},
+        {valores: [1,1,1], atributosDiferentes: true}
+      ]
+
+    },
+
+    talentoOrigem: {id: "iniciadoMagia", configuracao: {listaMagias:"clerigo"}},
+
+    proficiencias: {
+      pericias: ["intuicao","religiao"],
+      ferramentas: ["suprimentosCaligrafo"]
+    },
 
     idiomas: {
       quantidade: 0,
@@ -24,19 +38,58 @@ window.bancoAntecedentes = {
       opcoes: []
     },
 
-    talentoOrigem: "iniciadoMagia",
-    equipamento: ["simboloSagrado", "livroDeOracoes"],
+    equipamento: {
+      opcoes: [
+        
+        {id:"equipamento",
+          nome: "Equipamento inicial",
+          itens: [
+          {
+          id:"suprimentosCaligrafo",
+          quantidade: 1
+          },
 
-    moedas: {
-      ouro: 15
-    },
+          {
+          id: "livroOracoes",
+          quantidade: 1
+          },
 
-    atributosSugeridos: ["inteligencia", "sabedoria", "carisma"]
+          {
+          id: "simboloSagrado",
+          quantidade: 1
+          },
+
+          {
+          id: "pergaminho",
+          quantidade:10
+          },
+
+          {
+          id: "veste",
+          quantidade:1
+          }
+
+          ],
+
+          moedas: {
+          ouro: 8
+          }
+        },
+
+        {id:"ouro",
+          nome:"50 peças de ouro",
+          itens: [],
+
+          moedas: {
+          ouro: 50
+          }
+        }
+      ]
+
+    }
+
   },
 
-  // =====================================================
-  // Soldado
-  // =====================================================
   soldado: {
     id: "soldado",
     nome: "Soldado",
@@ -60,9 +113,6 @@ window.bancoAntecedentes = {
     atributosSugeridos: ["forca", "constituicao", "carisma"]
   },
 
-  // =====================================================
-  // Sábio
-  // =====================================================
   sabio: {
     id: "sabio",
     nome: "Sábio",
@@ -86,9 +136,6 @@ window.bancoAntecedentes = {
     atributosSugeridos: ["inteligencia", "sabedoria", "constituicao"]
   },
 
-  // =====================================================
-  // Criminoso
-  // =====================================================
   criminoso: {
     id: "criminoso",
     nome: "Criminoso",
@@ -110,5 +157,6 @@ window.bancoAntecedentes = {
     },
 
     atributosSugeridos: ["destreza", "carisma", "inteligencia"]
-  }
-};
+  },
+
+}
