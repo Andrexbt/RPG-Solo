@@ -111,6 +111,28 @@ window.bancoEquipamentos = {
       tipoDano: "perfurante",
       maestria: "nick",
       propriedades: ["leve", "arremesso", "acuidade"]
+    },
+
+    bordao: {
+      nome: "Bordão",
+      tipo: "simples",
+      categoria: "corpo-a-corpo",
+      atributoAtaque: "forca",
+      dano: "1d6",
+      tipoDano: "contundente",
+      maestria: "topple",
+      propriedades: ["versatil"]
+    },
+
+    arcoCurto: {
+      nome: "Arco curto",
+      tipo: "simples",
+      categoria: "distancia",
+      atributoAtaque: "destreza",
+      dano: "1d6",
+      tipoDano: "perfurante",
+      maestria: "vex",
+      propriedades: ["duasMaos", "municao"]
     }
   },
 
@@ -135,5 +157,86 @@ window.bancoEquipamentos = {
       nome: "Nada",
       bonusCA: 0
     }
+  },
+
+  // =====================================================
+  // Itens gerais
+  // -----------------------------------------------------
+  // Guarda equipamentos de aventura, ferramentas e
+  // objetos concedidos durante a criação do personagem.
+  // =====================================================
+  itensGerais: {
+
+    suprimentosCaligrafo: {
+      nome:
+        "Suprimentos de calígrafo"
+    },
+
+    livroOracoes: {
+      nome:
+        "Livro de orações"
+    },
+
+    simboloSagrado: {
+      nome:
+        "Símbolo sagrado"
+    },
+
+    pergaminho: {
+      nome:
+        "Pergaminho"
+    },
+
+    veste: {
+      nome:
+        "Veste"
+    },
+
+    ferramentasLadrao: {
+      nome:
+        "Ferramentas de ladrão"
+    },
+
+    peDeCabra: {
+      nome:
+        "Pé de cabra"
+    },
+
+    bolsa: {
+      nome:
+        "Bolsa"
+    },
+
+    roupasViajante: {
+      nome:
+        "Roupas de viajante"
+    },
+
+    livroHistoria: {
+      nome:
+        "Livro de história"
+    },
+
+    flecha: {
+      nome:
+        "Flecha"
+    },
+
+    conjuntoJogos: {
+      nome:
+        "Conjunto de jogos"
+    },
+
+    kitCurandeiro: {
+      nome:
+        "Kit de curandeiro"
+    },
+
+    aljava: {
+      nome:
+        "Aljava"
+    }
+
   }
+
 };

@@ -1094,70 +1094,9 @@
   // =====================================================
   // 10. Componente visual e interface da ficha
   // -----------------------------------------------------
-  // Carrega o fragmento HTML, configura o botão retrátil e
-  // só então inicia o script específico da página atual.
+  // Carrega o fragmento HTML e só então inicia o script
+  // específico da página atual.
   // =====================================================
-
-  const consultaFichaMovel = window.matchMedia("(max-width: 980px)");
-
-  function atualizarEstadoFicha(ficha, retraida) {
-    const botao = ficha.querySelector(".botao-retrair-ficha");
-    const criador = ficha.closest(".criador-personagem");
-
-    ficha.classList.toggle("ficha-retraida", retraida);
-
-    if (botao !== null) {
-      botao.setAttribute("aria-expanded", String(retraida === false));
-      botao.setAttribute(
-        "aria-label",
-        retraida
-          ? "Expandir ficha do personagem"
-          : "Recolher ficha do personagem"
-      );
-    }
-
-    if (criador !== null) {
-      criador.classList.toggle("ficha-lateral-retraida", retraida);
-      document.body.classList.toggle(
-        "ficha-movel-aberta",
-        consultaFichaMovel.matches && retraida === false
-      );
-    }
-  }
-
-  function configurarFichaRetratil(ficha) {
-    const botao = ficha.querySelector(".botao-retrair-ficha");
-    const corpo = ficha.querySelector(".ficha-corpo");
-
-    if (botao === null || corpo === null) {
-      return;
-    }
-
-    const estaNoCriador = ficha.closest(".criador-personagem") !== null;
-
-    atualizarEstadoFicha(
-      ficha,
-      estaNoCriador && consultaFichaMovel.matches
-    );
-
-    botao.addEventListener("click", function() {
-      atualizarEstadoFicha(
-        ficha,
-        ficha.classList.contains("ficha-retraida") === false
-      );
-    });
-
-    if (estaNoCriador) {
-      consultaFichaMovel.addEventListener("change", function(evento) {
-        if (evento.matches) {
-          atualizarEstadoFicha(ficha, true);
-          return;
-        }
-
-        document.body.classList.remove("ficha-movel-aberta");
-      });
-    }
-  }
 
   async function carregarHtmlFichaPersonagem() {
     const areasFicha = document.querySelectorAll("[data-ficha-personagem]");
@@ -1185,7 +1124,6 @@
       const fichaInserida = areaFicha.querySelector("[data-ficha-componente]");
 
       if (fichaInserida !== null) {
-        configurarFichaRetratil(fichaInserida);
         fichasInseridas.push(fichaInserida);
       }
     });
@@ -1262,7 +1200,6 @@
     window.fichaPersonagemPronta = iniciarComponenteFichaPersonagem();
   }
 
-  window.FichaPersonagem.configurarFichaRetratil = configurarFichaRetratil;
   window.FichaPersonagem.carregarHtml = carregarHtmlFichaPersonagem;
   window.FichaPersonagem.iniciarComponente = iniciarComponenteFichaPersonagem;
 

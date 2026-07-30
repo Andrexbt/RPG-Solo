@@ -795,52 +795,6 @@
 }
 
 /* =====================================================
-   Controle de abrir e recolher
-   ===================================================== */
-
-.botao-retrair-ficha {
-  flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid rgba(215, 163, 95, 0.45);
-  border-radius: 50%;
-  color: var(--cor-ficha-titulo);
-  background: var(--cor-ficha-fundo);
-  font: inherit;
-  font-size: 1.4rem;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    transform 220ms ease,
-    border-color 180ms ease,
-    background 180ms ease;
-}
-
-.botao-retrair-ficha:hover {
-  border-color: rgba(215, 163, 95, 0.72);
-  background: #30231d;
-}
-
-.botao-retrair-ficha:focus-visible {
-  outline: 2px solid var(--cor-ambar);
-  outline-offset: 3px;
-}
-
-.ficha-componente.ficha-retraida .ficha-corpo {
-  grid-template-rows: 0fr;
-  opacity: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.ficha-componente.ficha-retraida .botao-retrair-ficha {
-  transform: rotate(180deg);
-}
-
-/* =====================================================
    Adaptação da ficha a telas estreitas
    ===================================================== */
 
@@ -893,8 +847,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ficha-corpo,
-  .botao-retrair-ficha {
+  .ficha-corpo {
     transition: none;
   }
 }

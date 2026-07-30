@@ -23,10 +23,8 @@ const modalImagemClasse = document.getElementById("modalImagemClasse");
 const modalDescricaoClasse = document.getElementById("modalDescricaoClasse");
 const modalEstiloJogoClasse = document.getElementById("modalEstiloJogoClasse");
 const modalHabilidadesClasse = document.getElementById("modalHabilidadesClasse");
-const botaoEscolherAvatar =
-  document.getElementById(
-    "botaoEscolherAvatar"
-  );
+
+const botaoEscolherAvatar = document.getElementById("botaoEscolherAvatar");
 
 const modalAvatar =
   document.getElementById(
@@ -334,6 +332,21 @@ const botaoAvancarAntecedente =
     "botaoAvancarAntecedente"
   );
 
+const escolhaEquipamentoAntecedente =
+  document.getElementById(
+    "escolhaEquipamentoAntecedente"
+  );
+
+const opcoesEquipamentoAntecedente =
+  document.getElementById(
+    "opcoesEquipamentoAntecedente"
+  );
+
+const mensagemEquipamentoAntecedente =
+  document.getElementById(
+    "mensagemEquipamentoAntecedente"
+  );
+
 const opcoesDistribuicaoAntecedente =
   document.getElementById(
     "opcoesDistribuicaoAntecedente"
@@ -344,20 +357,187 @@ const seletoresBonusAntecedente =
     "seletoresBonusAntecedente"
   );
 
-const mensagemBonusAntecedente =
-  document.getElementById(
-    "mensagemBonusAntecedente"
-  );
+const mensagemBonusAntecedente = document.getElementById("mensagemBonusAntecedente");
 
 let cardAntecedenteTemporario = null;
 
-let etapaAtualModalAntecedente =
-  "detalhes";
+let etapaAtualModalAntecedente = "detalhes";
+
+let equipamentoAntecedenteTemporario = null;
+
+let antecedentePreviewAnterior =
+  "";
+
+let bonusAntecedenteAnterior =
+  {};
+
+let antecedenteModalConfirmado =
+  false;
 
 let indiceDistribuicaoTemporaria =
   null;
 
 let bonusAtributosTemporarios = {};
+
+// =====================================================
+// Pré-visualização guiada da ficha
+// -----------------------------------------------------
+// Mantém a ficha visível, leva o jogador até o bloco que
+// está sendo alterado e aplica um destaque temporário.
+// =====================================================
+
+const camposFichaPorPasso = {
+  classe:
+    "fichaClasseNivel",
+
+  atributos:
+    "valfor",
+
+  antecedente:
+    "fichaAntecedente",
+
+  especie:
+    "fichaEspecie",
+
+  habilidades:
+    "fichaHabilidades",
+
+  magias:
+    "fichaMagias",
+
+  detalhes:
+    "fichaNome",
+
+  equipamentos:
+    "fichaArmadura",
+
+  revisao:
+    "fichaNome"
+};
+
+let temporizadorDestaqueFicha =
+  null;
+
+function destacarAreaFicha(
+  nomePasso
+) {
+
+  const campoId =
+    camposFichaPorPasso[
+      nomePasso
+    ];
+
+  if (
+    !campoId
+  ) {
+    return;
+  }
+
+  const campo =
+    document.getElementById(
+      campoId
+    );
+
+  const colunaFicha =
+    document.querySelector(
+      ".coluna-ficha"
+    );
+
+  if (
+    !campo ||
+    !colunaFicha
+  ) {
+    return;
+  }
+
+  const blocoFicha =
+    campo.closest(
+      ".ficha-bloco"
+    ) ??
+    campo;
+
+  const retanguloColuna =
+    colunaFicha
+      .getBoundingClientRect();
+
+  const retanguloBloco =
+    blocoFicha
+      .getBoundingClientRect();
+
+  const destino =
+    colunaFicha.scrollTop +
+    retanguloBloco.top -
+    retanguloColuna.top -
+    (
+      colunaFicha.clientHeight -
+      retanguloBloco.height
+    ) /
+    2;
+
+  colunaFicha.scrollTo({
+    top:
+      Math.max(
+        0,
+        destino
+      ),
+
+    behavior:
+      "smooth"
+  });
+
+  document
+    .querySelectorAll(
+      ".ficha-bloco-destacado"
+    )
+    .forEach(
+      function(bloco) {
+
+        bloco.classList.remove(
+          "ficha-bloco-destacado"
+        );
+
+      }
+    );
+
+  window.clearTimeout(
+    temporizadorDestaqueFicha
+  );
+
+  void blocoFicha.offsetWidth;
+
+  blocoFicha.classList.add(
+    "ficha-bloco-destacado"
+  );
+
+  temporizadorDestaqueFicha =
+    window.setTimeout(
+      function() {
+
+        blocoFicha.classList.remove(
+          "ficha-bloco-destacado"
+        );
+
+      },
+      1300
+    );
+
+}
+
+function agendarDestaqueFicha(
+  nomePasso
+) {
+
+  window.requestAnimationFrame(
+    function() {
+
+      destacarAreaFicha(
+        nomePasso
+      );
+
+    }
+  );
+
+}
 
 const fichaAntecedente = document.getElementById("fichaAntecedente");
 const fichaHabilidades = document.getElementById("fichaHabilidades");
@@ -379,6 +559,16 @@ const fichaArmadura = document.getElementById("fichaArmadura");
 const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
+const fichaItensAntecedente =
+  document.getElementById(
+    "fichaItensAntecedente"
+  );
+
+const fichaMoedasAntecedente =
+  document.getElementById(
+    "fichaMoedasAntecedente"
+  );
+
 let classeAtualNaModal = "";
 
 const areaPericiasClasse = document.getElementById("areaPericiasClasse");
@@ -516,6 +706,8 @@ const personagem = {
 
   antecedenteId: "",
   antecedente: "",
+  equipamentoAntecedenteId: "",
+  equipamentoAntecedente: null,
 
   especieId: "",
   especie:"",
@@ -734,6 +926,10 @@ function irParaPasso(nomePasso) {
   montarTelaRevisao();
 }
 
+  agendarDestaqueFicha(
+    nomePasso
+  );
+
 }
 
 atualizarEstadoNavegacao();
@@ -772,6 +968,100 @@ botaoProximoPasso.forEach(function(botao) {
     }
   });
 });
+
+const areaPassosCriacao =
+  document.querySelector(
+    ".area-passo"
+  );
+
+if (
+  areaPassosCriacao
+) {
+
+  areaPassosCriacao.addEventListener(
+    "change",
+    function() {
+
+      agendarDestaqueFicha(
+        passoAtual
+      );
+
+    }
+  );
+
+  areaPassosCriacao.addEventListener(
+    "click",
+    function(evento) {
+
+      const elementoInterativo =
+        evento.target.closest(
+          "button, [data-classe], [data-antecedente], [data-especie]"
+        );
+
+      if (
+        !elementoInterativo
+      ) {
+        return;
+      }
+
+      agendarDestaqueFicha(
+        passoAtual
+      );
+
+    }
+  );
+
+}
+
+document.addEventListener(
+  "change",
+  function(evento) {
+
+    if (
+      evento.target.closest(
+        "#modalAvatar"
+      )
+    ) {
+
+      agendarDestaqueFicha(
+        "detalhes"
+      );
+
+    }
+
+  }
+);
+
+document.addEventListener(
+  "click",
+  function(evento) {
+
+    if (
+      evento.target.closest(
+        "#modalAvatar"
+      )
+    ) {
+
+      agendarDestaqueFicha(
+        "detalhes"
+      );
+
+    }
+
+    if (
+      evento.target.closest(
+        "#modalClasse"
+      )
+    ) {
+
+      agendarDestaqueFicha(
+        "classe"
+      );
+
+    }
+
+  }
+);
 
 // =====================================================
 // 8. ANTECEDENTES, PERÍCIAS E TALENTOS
@@ -816,6 +1106,167 @@ function criarLinhaResumoAntecedente(
 
 }
 
+function obterNomeEquipamento(
+  equipamentoId
+) {
+
+  const banco =
+    window.bancoEquipamentos;
+
+  const dadosEquipamento =
+    banco
+      .itensGerais[
+        equipamentoId
+      ] ??
+    banco
+      .armas[
+        equipamentoId
+      ] ??
+    banco
+      .armaduras[
+        equipamentoId
+      ] ??
+    banco
+      .itensSecundarios[
+        equipamentoId
+      ];
+
+  return (
+    dadosEquipamento?.nome ??
+    equipamentoId
+  );
+
+}
+
+function atualizarFichaEquipamentoAntecedente() {
+
+  const equipamento =
+    personagem
+      .equipamentoAntecedente;
+
+  if (
+    !fichaItensAntecedente ||
+    !fichaMoedasAntecedente
+  ) {
+    return;
+  }
+
+  if (
+    !equipamento
+  ) {
+
+    fichaItensAntecedente
+      .textContent =
+      "";
+
+    fichaMoedasAntecedente
+      .textContent =
+      "";
+
+    return;
+
+  }
+
+  const itens =
+    equipamento.itens ??
+    [];
+
+  fichaItensAntecedente
+    .textContent =
+    itens.length > 0
+      ? itens
+          .map(
+            function(item) {
+
+              const nomeItem =
+                obterNomeEquipamento(
+                  item.id
+                );
+
+              const quantidade =
+                item.quantidade ??
+                1;
+
+              return quantidade > 1
+                ? `${quantidade}× ${nomeItem}`
+                : nomeItem;
+
+            }
+          )
+          .join(
+            ", "
+          )
+      : "Nenhum";
+
+  const quantidadeOuro =
+    equipamento
+      .moedas
+      ?.ouro ??
+    0;
+
+  fichaMoedasAntecedente
+    .textContent =
+    `${quantidadeOuro} peças de ouro`;
+
+}
+
+function criarTextoOpcaoEquipamento(
+  opcao
+) {
+
+  const partes =
+    [];
+
+  const itens =
+    opcao.itens ??
+    [];
+
+  for (
+    const item of itens
+  ) {
+
+    const nomeItem =
+      obterNomeEquipamento(
+        item.id
+      );
+
+    const quantidade =
+      item.quantidade ??
+      1;
+
+    partes.push(
+      quantidade > 1
+        ? `${quantidade}× ${nomeItem}`
+        : nomeItem
+    );
+
+  }
+
+  const quantidadeOuro =
+    opcao.moedas
+      ?.ouro ??
+    0;
+
+  if (
+    quantidadeOuro > 0
+  ) {
+
+    if (
+      itens.length === 0
+    ) {
+
+      return opcao.nome;}
+
+    partes.push(
+      `${quantidadeOuro} peças de ouro`
+    );
+
+  }
+
+  return `${opcao.nome}: ${partes.join(", ")}`;
+
+}
+
 function abrirModalAntecedente(
   card
 ) {
@@ -836,6 +1287,21 @@ function abrirModalAntecedente(
 
   cardAntecedenteTemporario =
     card;
+
+  antecedentePreviewAnterior =
+    fichaAntecedente.textContent;
+
+  bonusAntecedenteAnterior =
+    structuredClone(
+      personagem
+        .bonusAtributosAntecedente
+    );
+
+  antecedenteModalConfirmado =
+    false;
+
+  equipamentoAntecedenteTemporario =
+    null;
 
     etapaAtualModalAntecedente =
   "detalhes";
@@ -858,6 +1324,13 @@ bonusAtributosTemporarios =
   mensagemBonusAntecedente.textContent =
     "";
 
+      mensagemEquipamentoAntecedente
+    .textContent =
+    "";
+
+  opcoesEquipamentoAntecedente
+    .replaceChildren();
+
   opcoesDistribuicaoAntecedente
     .replaceChildren();
 
@@ -866,6 +1339,13 @@ bonusAtributosTemporarios =
 
   tituloModalAntecedente.textContent =
     dadosAntecedente.nome;
+
+  fichaAntecedente.textContent =
+    dadosAntecedente.nome;
+
+  agendarDestaqueFicha(
+    "antecedente"
+  );
 
   descricaoModalAntecedente.textContent =
     dadosAntecedente.descricao ??
@@ -911,37 +1391,127 @@ bonusAtributosTemporarios =
     idTalento ??
     "Nenhum";
 
+      const opcoesEquipamento =
+    dadosAntecedente
+      .equipamento
+      ?.opcoes ??
+    [];
+
+        escolhaEquipamentoAntecedente.hidden =
+    opcoesEquipamento.length ===
+      0;
+
+  for (
+    const opcao of
+      opcoesEquipamento
+  ) {
+
+    const botaoOpcao =
+      document.createElement(
+        "button"
+      );
+
+    botaoOpcao.type =
+      "button";
+
+    botaoOpcao.classList.add(
+      "opcao-equipamento-antecedente"
+    );
+
+    botaoOpcao.dataset.opcaoId =
+      opcao.id;
+
+    botaoOpcao.textContent =
+      criarTextoOpcaoEquipamento(
+        opcao
+      );
+
+    botaoOpcao.addEventListener(
+      "click",
+      function() {
+
+        opcoesEquipamentoAntecedente
+          .querySelectorAll(
+            ".opcao-equipamento-antecedente"
+          )
+          .forEach(
+            function(botao) {
+
+              botao.classList.remove(
+                "selecionado"
+              );
+
+            }
+          );
+
+        botaoOpcao.classList.add(
+          "selecionado"
+        );
+
+        equipamentoAntecedenteTemporario =
+          opcao.id;
+
+        mensagemEquipamentoAntecedente
+          .textContent =
+          "";
+
+        agendarDestaqueFicha(
+          "equipamentos"
+        );
+
+      }
+    );
+
+    opcoesEquipamentoAntecedente
+      .appendChild(
+        botaoOpcao
+      );
+
+  }
+
   resumoModalAntecedente
     .replaceChildren(
       criarLinhaResumoAntecedente(
         "Atributos",
-        atributos.join(
-          ", "
-        )
+        atributos
+          .map(
+            obterNomeAtributo
+          )
+          .join(
+            ", "
+          )
       ),
 
       criarLinhaResumoAntecedente(
         "Perícias",
-        pericias.join(
-          ", "
-        )
+        pericias
+          .map(
+            obterNomePericia
+          )
+          .join(
+            ", "
+          )
       ),
 
       criarLinhaResumoAntecedente(
         "Ferramentas",
         ferramentas.length > 0
-          ? ferramentas.join(
-              ", "
-            )
+          ? ferramentas
+              .map(
+                obterNomeEquipamento
+              )
+              .join(
+                ", "
+              )
           : "Nenhuma"
       ),
 
       criarLinhaResumoAntecedente(
         "Talento",
         nomeTalento
-      )
-    );
+      ),
 
+    );
   modalAntecedente.classList.remove(
     "escondida"
   );
@@ -954,8 +1524,295 @@ function fecharModalAntecedente() {
     "escondida"
   );
 
+  if (
+    !antecedenteModalConfirmado
+  ) {
+
+    fichaAntecedente.textContent =
+      antecedentePreviewAnterior;
+
+    personagem
+      .bonusAtributosAntecedente =
+      structuredClone(
+        bonusAntecedenteAnterior
+      );
+
+    recalcularAtributosFinais();
+
+  }
+
   cardAntecedenteTemporario =
     null;
+
+  antecedenteModalConfirmado =
+    false;
+
+}
+
+function obterNomeAtributo(
+  atributoId
+) {
+
+  const nomesAtributos = {
+    forca:
+      "Força",
+
+    destreza:
+      "Destreza",
+
+    constituicao:
+      "Constituição",
+
+    inteligencia:
+      "Inteligência",
+
+    sabedoria:
+      "Sabedoria",
+
+    carisma:
+      "Carisma"
+  };
+
+  return (
+    nomesAtributos[
+      atributoId
+    ] ??
+    atributoId
+  );
+
+}
+
+function atualizarOpcoesBonusAntecedente() {
+
+  const seletores =
+    seletoresBonusAntecedente
+      .querySelectorAll(
+        "select"
+      );
+
+  const atributosSelecionados =
+    Array.from(
+      seletores
+    )
+      .map(
+        seletor =>
+          seletor.value
+      )
+      .filter(
+        valor =>
+          valor !==
+            ""
+      );
+
+  seletores.forEach(
+    function(seletor) {
+
+      const valorAtual =
+        seletor.value;
+
+      seletor
+        .querySelectorAll(
+          "option"
+        )
+        .forEach(
+          function(opcao) {
+
+            if (
+              opcao.value ===
+                "" ||
+              opcao.value ===
+                valorAtual
+            ) {
+
+              opcao.disabled =
+                false;
+
+              return;
+
+            }
+
+            opcao.disabled =
+              atributosSelecionados
+                .includes(
+                  opcao.value
+                );
+
+          }
+        );
+
+    }
+  );
+
+}
+
+function atualizarPreviewBonusAntecedente() {
+
+  const seletores =
+    seletoresBonusAntecedente
+      .querySelectorAll(
+        "select"
+      );
+
+  bonusAtributosTemporarios =
+    {};
+
+  seletores.forEach(
+    function(seletor) {
+
+      const atributoId =
+        seletor.value;
+
+      if (
+        atributoId ===
+          ""
+      ) {
+        return;
+      }
+
+      const bonus =
+        Number(
+          seletor.dataset.bonus
+        );
+
+      bonusAtributosTemporarios[
+        atributoId
+      ] =
+        (
+          bonusAtributosTemporarios[
+            atributoId
+          ] ??
+          0
+        ) +
+        bonus;
+
+    }
+  );
+
+  personagem
+    .bonusAtributosAntecedente =
+    {
+      ...bonusAtributosTemporarios
+    };
+
+  recalcularAtributosFinais();
+
+  atualizarOpcoesBonusAntecedente();
+
+  agendarDestaqueFicha(
+    "atributos"
+  );
+
+}
+
+function criarSeletoresBonusAntecedente(
+  distribuicao,
+  atributos
+) {
+
+  seletoresBonusAntecedente
+    .replaceChildren();
+
+  distribuicao
+    .valores
+    .forEach(
+      function(
+        bonus,
+        indice
+      ) {
+
+        const grupo =
+          document.createElement(
+            "label"
+          );
+
+        grupo.classList.add(
+          "seletor-bonus-antecedente"
+        );
+
+        const rotulo =
+          document.createElement(
+            "span"
+          );
+
+        rotulo.textContent =
+          `Bônus +${bonus}`;
+
+        const seletor =
+          document.createElement(
+            "select"
+          );
+
+        seletor.dataset.bonus =
+          bonus;
+
+        seletor.setAttribute(
+          "aria-label",
+          `Atributo do bônus +${bonus}, opção ${indice + 1}`
+        );
+
+        const opcaoInicial =
+          document.createElement(
+            "option"
+          );
+
+        opcaoInicial.value =
+          "";
+
+        opcaoInicial.textContent =
+          "Escolha um atributo";
+
+        seletor.appendChild(
+          opcaoInicial
+        );
+
+        atributos.forEach(
+          function(atributoId) {
+
+            const opcao =
+              document.createElement(
+                "option"
+              );
+
+            opcao.value =
+              atributoId;
+
+            opcao.textContent =
+              obterNomeAtributo(
+                atributoId
+              );
+
+            seletor.appendChild(
+              opcao
+            );
+
+          }
+        );
+
+        seletor.addEventListener(
+          "change",
+          function() {
+
+            mensagemBonusAntecedente
+              .textContent =
+              "";
+
+            atualizarPreviewBonusAntecedente();
+
+          }
+        );
+
+        grupo.append(
+          rotulo,
+          seletor
+        );
+
+        seletoresBonusAntecedente
+          .appendChild(
+            grupo
+          );
+
+      }
+    );
 
 }
 
@@ -983,6 +1840,12 @@ function exibirEtapaAtributosAntecedente() {
       ?.distribuicoesPermitidas ??
     [];
 
+  const atributos =
+    dadosAntecedente
+      .atributos
+      ?.opcoes ??
+    [];
+
   etapaAtualModalAntecedente =
     "atributos";
 
@@ -1000,6 +1863,10 @@ function exibirEtapaAtributosAntecedente() {
 
   seletoresBonusAntecedente
     .replaceChildren();
+
+  agendarDestaqueFicha(
+    "atributos"
+  );
 
   for (
     let indice = 0;
@@ -1042,12 +1909,175 @@ function exibirEtapaAtributosAntecedente() {
     botaoDistribuicao.textContent =
       textoValores;
 
+          botaoDistribuicao
+      .addEventListener(
+        "click",
+        function() {
+
+          opcoesDistribuicaoAntecedente
+            .querySelectorAll(
+              ".opcao-distribuicao-antecedente"
+            )
+            .forEach(
+              function(botao) {
+
+                botao.classList.remove(
+                  "selecionado"
+                );
+
+              }
+            );
+
+          botaoDistribuicao
+            .classList.add(
+              "selecionado"
+            );
+
+          indiceDistribuicaoTemporaria =
+            indice;
+
+          bonusAtributosTemporarios =
+            {};
+
+          personagem
+            .bonusAtributosAntecedente =
+            {};
+
+          recalcularAtributosFinais();
+
+          seletoresBonusAntecedente
+            .replaceChildren();
+
+          mensagemBonusAntecedente
+            .textContent =
+            "";
+
+          criarSeletoresBonusAntecedente(
+            distribuicao,
+            atributos
+          );
+
+          agendarDestaqueFicha(
+            "atributos"
+          );
+
+        }
+      );
+
     opcoesDistribuicaoAntecedente
       .appendChild(
         botaoDistribuicao
       );
 
   }
+
+}
+
+function confirmarAntecedenteTemporario() {
+
+  if (
+    !cardAntecedenteTemporario
+  ) {
+    return;
+  }
+
+  if (
+    indiceDistribuicaoTemporaria ===
+      null
+  ) {
+
+    mensagemBonusAntecedente
+      .textContent =
+      "Escolha uma forma de distribuir os bônus.";
+
+    return;
+
+  }
+
+  const seletores =
+    seletoresBonusAntecedente
+      .querySelectorAll(
+        "select"
+      );
+
+  const algumAtributoVazio =
+    Array.from(
+      seletores
+    )
+      .some(
+        seletor =>
+          seletor.value ===
+            ""
+      );
+
+  if (
+    algumAtributoVazio
+  ) {
+
+    mensagemBonusAntecedente
+      .textContent =
+      "Escolha um atributo para cada bônus.";
+
+    return;
+
+  }
+
+  const antecedenteId =
+    cardAntecedenteTemporario
+      .dataset
+      .antecedente;
+
+  const dadosAntecedente =
+    window.bancoAntecedentes[
+      antecedenteId
+    ];
+
+  const opcaoEquipamento =
+    dadosAntecedente
+      .equipamento
+      ?.opcoes
+      ?.find(
+        opcao =>
+          opcao.id ===
+            equipamentoAntecedenteTemporario
+      ) ??
+    null;
+
+  personagem
+    .bonusAtributosAntecedente =
+    {
+      ...bonusAtributosTemporarios
+    };
+
+  personagem
+    .equipamentoAntecedenteId =
+    equipamentoAntecedenteTemporario ??
+    "";
+
+  personagem
+    .equipamentoAntecedente =
+    opcaoEquipamento
+      ? structuredClone(
+          opcaoEquipamento
+        )
+      : null;
+
+  atualizarFichaEquipamentoAntecedente();
+
+  selecionarAntecedente(
+    cardAntecedenteTemporario
+  );
+
+  recalcularAtributosFinais();
+
+  antecedenteModalConfirmado =
+    true;
+
+  fecharModalAntecedente();
+
+  agendarDestaqueFicha(
+    "antecedente"
+  );
 
 }
 
@@ -1068,6 +2098,9 @@ function selecionarAntecedente(cardClicado) {
 
   personagem.antecedenteId = antecedenteId;
   personagem.antecedente = dadosAntecedente.nome;
+
+  antecedentePreviewAnterior =
+    dadosAntecedente.nome;
 
   const periciasAntecedente =
   dadosAntecedente
@@ -1170,7 +2203,52 @@ botaoAvancarAntecedente
           "detalhes"
       ) {
 
+        const antecedenteId =
+          cardAntecedenteTemporario
+            ?.dataset
+            .antecedente;
+
+        const dadosAntecedente =
+          window
+            .bancoAntecedentes[
+              antecedenteId
+            ];
+
+        const opcoesEquipamento =
+          dadosAntecedente
+            ?.equipamento
+            ?.opcoes ??
+          [];
+
+        if (
+          opcoesEquipamento.length >
+            0 &&
+          equipamentoAntecedenteTemporario ===
+            null
+        ) {
+
+          mensagemEquipamentoAntecedente
+            .textContent =
+            "Escolha uma opção de equipamento para continuar.";
+
+          return;
+
+        }
+
         exibirEtapaAtributosAntecedente();
+
+        return;
+
+      }
+
+      if (
+        etapaAtualModalAntecedente ===
+          "atributos"
+      ) {
+
+        confirmarAntecedenteTemporario();
+
+        return;
 
       }
 
@@ -3648,11 +4726,143 @@ function montarTelaRevisao() {
   areaRevisao.appendChild(blocoBasico);
 
   montarRevisaoNarrativa();
+  montarRevisaoAntecedente();
   montarRevisaoAtributos();
   montarRevisaoEquipamentos();
   montarRevisaoHabilidades();
   montarRevisaoTalentos();
   montarRevisaoMagias();
+}
+
+function montarRevisaoAntecedente() {
+
+  if (
+    !personagem.antecedenteId
+  ) {
+    return;
+  }
+
+  const bloco =
+    document.createElement(
+      "section"
+    );
+
+  bloco.classList.add(
+    "bloco-revisao"
+  );
+
+  const titulo =
+    document.createElement(
+      "h3"
+    );
+
+  titulo.textContent =
+    "Benefícios do Antecedente";
+
+  const pericias =
+    personagem
+      .periciasAntecedente ??
+    [];
+
+  const ferramentas =
+    personagem
+      .ferramentasAntecedente ??
+    [];
+
+  const bonusAtributos =
+    Object.entries(
+      personagem
+        .bonusAtributosAntecedente ??
+      {}
+    )
+      .map(
+        function(
+          [
+            atributoId,
+            bonus
+          ]
+        ) {
+
+          return (
+            `+${bonus} ` +
+            obterNomeAtributo(
+              atributoId
+            )
+          );
+
+        }
+      );
+
+  const dadosAntecedente =
+    window.bancoAntecedentes[
+      personagem.antecedenteId
+    ];
+
+  const talentoOrigem =
+    dadosAntecedente
+      ?.talentoOrigem;
+
+  const talentoId =
+    typeof talentoOrigem ===
+      "string"
+      ? talentoOrigem
+      : talentoOrigem?.id;
+
+  const nomeTalento =
+    window.bancoTalentos[
+      talentoId
+    ]?.nome ??
+    talentoId ??
+    "Nenhum";
+
+  bloco.append(
+    titulo,
+
+    criarParagrafoRevisao(
+      "Perícias",
+      pericias.length > 0
+        ? pericias
+            .map(
+              obterNomePericia
+            )
+            .join(
+              ", "
+            )
+        : "Nenhuma"
+    ),
+
+    criarParagrafoRevisao(
+      "Ferramentas",
+      ferramentas.length > 0
+        ? ferramentas
+            .map(
+              obterNomeEquipamento
+            )
+            .join(
+              ", "
+            )
+        : "Nenhuma"
+    ),
+
+    criarParagrafoRevisao(
+      "Talento",
+      nomeTalento
+    ),
+
+    criarParagrafoRevisao(
+      "Bônus de atributos",
+      bonusAtributos.length > 0
+        ? bonusAtributos.join(
+            ", "
+          )
+        : "Nenhum"
+    )
+  );
+
+  areaRevisao.appendChild(
+    bloco
+  );
+
 }
 
 function montarRevisaoNarrativa() {
@@ -3735,6 +4945,104 @@ function criarLinhaArmaRevisao(idArma, rotulo) {
   return container;
 }
 
+function adicionarEquipamentoAntecedenteRevisao(
+  bloco
+) {
+
+  const equipamentoAntecedente =
+    personagem
+      .equipamentoAntecedente;
+
+  if (
+    !equipamentoAntecedente
+  ) {
+    return;
+  }
+
+  const subtitulo =
+    document.createElement(
+      "h4"
+    );
+
+  subtitulo.textContent =
+    "Equipamento do antecedente";
+
+  bloco.appendChild(
+    subtitulo
+  );
+
+  const itens =
+    equipamentoAntecedente
+      .itens ??
+    [];
+
+  if (
+    itens.length >
+      0
+  ) {
+
+    const lista =
+      document.createElement(
+        "ul"
+      );
+
+    lista.classList.add(
+      "lista-equipamento-antecedente-revisao"
+    );
+
+    itens.forEach(
+      function(item) {
+
+        const nomeItem =
+          obterNomeEquipamento(
+            item.id
+          );
+
+        const quantidade =
+          item.quantidade ??
+          1;
+
+        const linha =
+          document.createElement(
+            "li"
+          );
+
+        linha.textContent =
+          quantidade > 1
+            ? `${quantidade}× ${nomeItem}`
+            : nomeItem;
+
+        lista.appendChild(
+          linha
+        );
+
+      }
+    );
+
+    bloco.appendChild(
+      lista
+    );
+
+  }
+
+  const moedas =
+    equipamentoAntecedente
+      .moedas ??
+    {};
+
+  const quantidadeOuro =
+    moedas.ouro ??
+    0;
+
+  bloco.appendChild(
+    criarParagrafoRevisao(
+      "Moedas iniciais",
+      `${quantidadeOuro} peças de ouro`
+    )
+  );
+
+}
+
 function montarRevisaoEquipamentos() {
   const bloco = document.createElement("section");
   bloco.classList.add("bloco-revisao");
@@ -3742,6 +5050,10 @@ function montarRevisaoEquipamentos() {
   const titulo = document.createElement("h3");
   titulo.textContent = "Equipamentos e Valores";
   bloco.appendChild(titulo);
+
+  adicionarEquipamentoAntecedenteRevisao(
+    bloco
+  );
 
   const equipamentos = personagem.detalhes.equipamentos;
 

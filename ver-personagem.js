@@ -18,6 +18,16 @@ const fichaArmadura = document.getElementById("fichaArmadura");
 const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
+const fichaItensAntecedente =
+  document.getElementById(
+    "fichaItensAntecedente"
+  );
+
+const fichaMoedasAntecedente =
+  document.getElementById(
+    "fichaMoedasAntecedente"
+  );
+
 const fichaTalentos = document.getElementById("fichaTalentos");
 const fichaImagemAvatar =
   document.getElementById(
@@ -384,7 +394,117 @@ function obterTamanho(personagem) {
 // 6. Equipamentos, armas e ataques na ficha
 // =====================================================
 
+function obterNomeEquipamentoAntecedente(
+  equipamentoId
+) {
+
+  const banco =
+    window.bancoEquipamentos;
+
+  const dadosEquipamento =
+    banco
+      .itensGerais[
+        equipamentoId
+      ] ??
+    banco
+      .armas[
+        equipamentoId
+      ] ??
+    banco
+      .armaduras[
+        equipamentoId
+      ] ??
+    banco
+      .itensSecundarios[
+        equipamentoId
+      ];
+
+  return (
+    dadosEquipamento?.nome ??
+    equipamentoId
+  );
+
+}
+
+function preencherEquipamentoAntecedente(
+  personagem
+) {
+
+  if (
+    !fichaItensAntecedente ||
+    !fichaMoedasAntecedente
+  ) {
+    return;
+  }
+
+  const equipamento =
+    personagem
+      .equipamentoAntecedente;
+
+  if (
+    !equipamento
+  ) {
+
+    fichaItensAntecedente
+      .textContent =
+      "";
+
+    fichaMoedasAntecedente
+      .textContent =
+      "";
+
+    return;
+
+  }
+
+  const itens =
+    equipamento.itens ??
+    [];
+
+  fichaItensAntecedente
+    .textContent =
+    itens.length > 0
+      ? itens
+          .map(
+            function(item) {
+
+              const nomeItem =
+                obterNomeEquipamentoAntecedente(
+                  item.id
+                );
+
+              const quantidade =
+                item.quantidade ??
+                1;
+
+              return quantidade > 1
+                ? `${quantidade}× ${nomeItem}`
+                : nomeItem;
+
+            }
+          )
+          .join(
+            ", "
+          )
+      : "Nenhum";
+
+  const quantidadeOuro =
+    equipamento
+      .moedas
+      ?.ouro ??
+    0;
+
+  fichaMoedasAntecedente
+    .textContent =
+    `${quantidadeOuro} peças de ouro`;
+
+}
+
 function preencherEquipamentos(personagem) {
+  preencherEquipamentoAntecedente(
+    personagem
+  );
+
   const equipamentos = personagem.detalhes.equipamentos;
 
   if (equipamentos === undefined) {
@@ -1002,19 +1122,102 @@ function obterModificadorFormatado(personagem, idAtributo) {
 
 function obterTextoEquipamento(personagem) {
   const equipamentos = personagem.detalhes.equipamentos;
+  const equipamentoAntecedente =
+    personagem.equipamentoAntecedente;
 
-  if (equipamentos === undefined) {
+  if (
+    equipamentos === undefined &&
+    !equipamentoAntecedente
+  ) {
     return "";
   }
 
   const linhas = [];
-  linhas.push("Armadura: " + obterNomeArmadura(equipamentos.armadura));
-  linhas.push("Arma principal: " + obterNomeArma(equipamentos.armaPrincipal));
 
-  if (equipamentos.itemSecundario === "armaSecundaria") {
-    linhas.push("Arma secundária: " + obterNomeArma(equipamentos.armaSecundaria));
-  } else {
-    linhas.push("Item secundário: " + obterNomeItemSecundario(equipamentos.itemSecundario));
+  if (
+    equipamentoAntecedente
+  ) {
+
+    const itensAntecedente =
+      equipamentoAntecedente
+        .itens ??
+      [];
+
+    itensAntecedente.forEach(
+      function(item) {
+
+        const nomeItem =
+          obterNomeEquipamentoAntecedente(
+            item.id
+          );
+
+        const quantidade =
+          item.quantidade ??
+          1;
+
+        linhas.push(
+          quantidade > 1
+            ? `${quantidade}× ${nomeItem}`
+            : nomeItem
+        );
+
+      }
+    );
+
+    const quantidadeOuro =
+      equipamentoAntecedente
+        .moedas
+        ?.ouro ??
+      0;
+
+    linhas.push(
+      `${quantidadeOuro} peças de ouro`
+    );
+
+  }
+
+  if (
+    equipamentos !==
+      undefined
+  ) {
+
+    linhas.push(
+      "Armadura: " +
+      obterNomeArmadura(
+        equipamentos.armadura
+      )
+    );
+
+    linhas.push(
+      "Arma principal: " +
+      obterNomeArma(
+        equipamentos.armaPrincipal
+      )
+    );
+
+    if (
+      equipamentos.itemSecundario ===
+        "armaSecundaria"
+    ) {
+
+      linhas.push(
+        "Arma secundária: " +
+        obterNomeArma(
+          equipamentos.armaSecundaria
+        )
+      );
+
+    } else {
+
+      linhas.push(
+        "Item secundário: " +
+        obterNomeItemSecundario(
+          equipamentos.itemSecundario
+        )
+      );
+
+    }
+
   }
 
   return linhas.join("\n");

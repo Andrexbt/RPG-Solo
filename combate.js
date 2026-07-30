@@ -59,6 +59,8 @@ window.SistemaCombate = (function() {
 
     participante.estado = participante.estado ?? "ativo";
 
+    participante.estadoEfeitos = criarEstadoEfeitos(participante);
+
     participante.bonusIniciativa =
     participante.bonusIniciativa ?? 0;
 
@@ -643,11 +645,18 @@ const resultadoNatural =
 
   if (acertou) {
 
+    const efeitosDano =
+      prepararEfeitosPorGatilho(
+        atacante,
+        "aoRolarDano"
+      );
+
     combate.danoPendente = {
       atacanteId: atacante.id,
       alvoId: alvo.id,
       ataqueId: ataque.id,
-      critico: acertoCritico
+      critico: acertoCritico,
+      efeitos:efeitosDano
     };
 
   }
