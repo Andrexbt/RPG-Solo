@@ -1050,44 +1050,17 @@ function resolverAtaqueJogador(resultadoRolagem) {
   solicitacaoCombate.hidden = false;
 }
 
-function resolverDanoJogador(resultadoRolagem) {
-  const combate = estadoAtualJogo.combateAtual;
-
-  const danoPendente = combate.danoPendente;
-
-  if (danoPendente?.efeitoAtivo) {
-    const registro = registrarRolagemEfeito(danoPendente, resultadoRolagem);
-
-    if (!registro.sucesso) {
-      console.warn("Não foi possível registrar a rolagem do efeito:", registro.motivo);
-
-      return;
-    }
-
-    if (!registro.concluida) {
-      solicitacaoCombate.textContent = "Primeira rolagem registrada. " + "Role novamente o dano.";
-
-      solicitacaoCombate.hidden = false;
-
-      return;
-    }
-
-    const resultados = registro.rolagens.map((rolagem) => rolagem.total);
-
-    solicitacaoCombate.textContent =
-      "Rolagens de dano: " + resultados.join(" e ") + ". Escolha qual resultado utilizar.";
-
-    solicitacaoCombate.hidden = false;
-
-    console.log("Rolagens do efeito:", registro.rolagens);
-
-    return;
-  }
-
-  const resultadoDano = SistemaCombate.resolverDano(combate, resultadoRolagem);
+function concluirDanoJogador(combate, resultadoRolagem) {
+  const resultadoDano = SistemaCombate.resolverDano(
+    combate,
+    resultadoRolagem,
+  );
 
   if (!resultadoDano.sucesso) {
-    console.warn("Não foi possível resolver o dano:", resultadoDano.motivo);
+    console.warn(
+      "Não foi possível resolver o dano:",
+      resultadoDano.motivo,
+    );
 
     return;
   }
@@ -1099,7 +1072,7 @@ function resolverDanoJogador(resultadoRolagem) {
 
     resultadoDano.foiDerrotado
       ? `Seu ataque derrotou ${resultadoDano.alvo.nome}.`
-      : `Seu ataque causou ` + `${resultadoDano.dano} de dano.`,
+      : `Seu ataque causou ${resultadoDano.dano} de dano.`,
   );
 
   exibirAcaoAtualCombate(
@@ -1107,10 +1080,6 @@ function resolverDanoJogador(resultadoRolagem) {
       ? `Você derrotou ${resultadoDano.alvo.nome}.`
       : `Você causou ${resultadoDano.dano} de dano.`,
   );
-
-  solicitacaoCombate.textContent = resultadoDano.foiDerrotado
-    ? `${resultadoDano.alvo.nome} foi derrotado.`
-    : `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
 
   solicitacaoCombate.hidden = false;
 
@@ -1121,15 +1090,112 @@ function resolverDanoJogador(resultadoRolagem) {
   }
 
   if (resultadoDano.resultadoCombate === "vitoria") {
-    solicitacaoCombate.textContent = "O inimigo foi derrotado. Vitória!";
+    solicitacaoCombate.textContent =
+      "O inimigo foi derrotado. Vitória!";
   } else if (resultadoDano.resultadoCombate === "derrota") {
-    solicitacaoCombate.textContent = "O personagem foi derrotado.";
+    solicitacaoCombate.textContent =
+      "O personagem foi derrotado.";
   } else if (resultadoDano.foiDerrotado) {
-    solicitacaoCombate.textContent = `${resultadoDano.alvo.nome} foi derrotado.`;
+    solicitacaoCombate.textContent =
+      `${resultadoDano.alvo.nome} foi derrotado.`;
   } else {
     solicitacaoCombate.textContent =
-      `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
+      `${resultadoDano.alvo.nome} sofreu ` +
+      `${resultadoDano.dano} de dano.`;
   }
+}
+
+function resolverDanoJogador(resultadoRolagem) {
+  const combate = estadoAtualJogo.combateAtual;
+
+  const danoPendente = combate.danoPendente;
+
+  if (danoPendente?.efeitoAtivo) {
+    const registro = registrarRolagemEfeito(
+      danoPendente,
+      resultadoRolagem,
+    );
+
+    if (!registro.sucesso) {
+      console.warn(
+        "Não foi possível registrar a rolagem do efeito:",
+        registro.motivo,
+      );
+
+      return;
+    }
+
+    if (!registro.concluida) {
+      solicitacaoCombate.textContent =
+        "Primeira rolagem registrada. " +
+        "Role novamente o dano.";
+
+      solicitacaoCombate.hidden = false;
+
+      return;
+    }
+
+    const rolagens = registro.rolagens;
+
+    solicitacaoCombate.textContent =
+      "Escolha qual resultado de dano utilizar.";
+
+    solicitacaoCombate.hidden = false;
+
+    acoesCombate.replaceChildren();
+
+    rolagens.forEach(function (rolagem, indice) {
+      const botaoEscolherRolagem =
+        document.createElement("button");
+
+      botaoEscolherRolagem.type = "button";
+
+      botaoEscolherRolagem.textContent =
+        `Usar rolagem ${indice + 1}: ` +
+        `${rolagem.total}`;
+
+      botaoEscolherRolagem.addEventListener(
+        "click",
+        function escolherRolagemDano() {
+          acoesCombate.replaceChildren();
+
+          solicitacaoCombate.textContent =
+            `Resultado escolhido: ${rolagem.total}.`;
+
+          /*
+           * Desativa o efeito antes de resolver o dano.
+           * Caso contrário, a resolução poderia voltar
+           * ao início deste mesmo bloco.
+           */
+          danoPendente.efeitoAtivo = null;
+
+          concluirDanoJogador(
+            combate,
+            rolagem,
+          );
+        },
+        {
+          once: true,
+        },
+      );
+
+      acoesCombate.append(
+        botaoEscolherRolagem,
+      );
+    });
+
+    console.log(
+      "Rolagens do efeito:",
+      rolagens,
+    );
+
+    return;
+  }
+
+  concluirDanoJogador(
+    combate,
+    resultadoRolagem,
+  );
 }
 
 function receberResultadoRolagem(evento) {
