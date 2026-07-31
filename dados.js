@@ -1,20 +1,5 @@
 "use strict";
 
-function carregarEstilosDaCaixaDeDados() {
-  if (document.querySelector('link[href="dados.css"]')) {
-    return;
-  }
-
-  const folhaDeEstilos = document.createElement("link");
-
-  folhaDeEstilos.rel = "stylesheet";
-  folhaDeEstilos.href = "dados.css";
-
-  document.head.append(folhaDeEstilos);
-}
-
-carregarEstilosDaCaixaDeDados();
-
 const resultadoDado = document.querySelector("#resultadoDado");
 const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
 const camadaDadosLancados = document.querySelector("#camadaDadosLancados");
