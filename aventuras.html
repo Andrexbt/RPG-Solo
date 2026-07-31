@@ -273,54 +273,86 @@
         </header>
 
         <div id="conteudoDados" class="conteudo-dados">
-          <form id="formularioDados" class="formulario-dados">
-            <div id="listaGruposDados" class="lista-grupos-dados">
-              <div class="grupo-dado">
-                <div class="campo-configuracao-dado">
-                  <label>
-                    <span> Quantidade </span>
+          <div class="caixa-dados">
+  <aside
+    id="colecaoDados"
+    class="colecao-dados"
+    aria-label="Dados disponíveis"
+  >
+    <button
+      class="dado-disponivel"
+      type="button"
+      
+      data-faces="4"
+      aria-label="Dado de quatro faces"
+    >
+      d4
+    </button>
 
-                    <input
-                      class="quantidade-dados"
-                      name="quantidade"
-                      type="number"
-                      min="1"
-                      max="20"
-                      value="1"
-                    />
-                  </label>
-                </div>
+    <button
+      class="dado-disponivel"
+      type="button"
+      
+      data-faces="6"
+      aria-label="Dado de seis faces"
+    >
+      d6
+    </button>
 
-                <div class="campo-configuracao-dado">
-                  <label>
-                    <span> Dado </span>
+    <button
+      class="dado-disponivel"
+      type="button"
+      
+      data-faces="8"
+      aria-label="Dado de oito faces"
+    >
+      d8
+    </button>
 
-                    <select class="numero-de-faces" name="numeroDeFaces">
-                      <option value="4">d4</option>
-                      <option value="6">d6</option>
-                      <option value="8">d8</option>
-                      <option value="10">d10</option>
-                      <option value="12">d12</option>
-                      <option value="20" selected>d20</option>
-                      <option value="100">d100</option>
-                    </select>
-                  </label>
-                </div>
-              </div>
-            </div>
+    <button
+      class="dado-disponivel"
+      type="button"
+      
+      data-faces="10"
+      aria-label="Dado de dez faces"
+    >
+      d10
+    </button>
 
-            <div class="campo-configuracao-dado">
-              <label for="modificadorDados"> Modificador </label>
+    <button
+      class="dado-disponivel"
+      type="button"
+      
+      data-faces="12"
+      aria-label="Dado de doze faces"
+    >
+      d12
+    </button>
 
-              <input id="modificadorDados" name="modificador" type="number" value="0" />
-            </div>
+    <button
+      class="dado-disponivel"
+      type="button"
+      
+      data-faces="20"
+      aria-label="Dado de vinte faces"
+    >
+      d20
+    </button>
 
-            <button id="botaoAdicionarGrupoDado" type="button">Adicionar dado</button>
+  </aside>
 
-            <button id="botaoRolarDado" type="button">Rolar</button>
-          </form>
+  <div
+    id="bandejaDados"
+    class="bandeja-dados"
+    aria-label="Bandeja de rolagem"
+  >
+    <p class="instrucao-bandeja">
+      Arraste os dados para esta área.
+    </p>
+  </div>
+</div>
 
-          <output id="resultadoDado" aria-live="polite"> </output>
+          <output id="resultadoDado" aria-live="polite"></output>
         </div>
       </section>
 
@@ -354,6 +386,12 @@
         </div>
       </section>
     </div>
+
+    <div
+  id="camadaDadosLancados"
+  class="camada-dados-lancados"
+  aria-live="polite"
+></div>
 
     <script src="janelas-flutuantes.js" defer></script>
     <script src="dados.js" defer></script>

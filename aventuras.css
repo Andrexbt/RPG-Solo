@@ -1257,3 +1257,248 @@ select {
 
   line-height: 1;
 }
+
+
+/* =========================================================
+   CAIXA DE DADOS — NOVO PROTÓTIPO
+   ========================================================= */
+
+.janela-dados.janela-flutuante {
+  width: min(520px, calc(100vw - 32px));
+}
+
+.caixa-dados {
+  min-height: 320px;
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.colecao-dados {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 10px;
+
+  background: rgba(105, 72, 47, 0.08);
+}
+
+.dado-disponivel {
+  width: 52px;
+  min-height: 42px;
+  padding: 6px;
+
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 9px;
+
+  background: var(--cor-aventura-papel);
+  color: var(--cor-aventura-tinta);
+
+  font-weight: 800;
+  cursor: grab;
+  user-select: none;
+}
+
+.dado-disponivel:hover {
+  background: rgba(105, 72, 47, 0.12);
+  transform: translateY(-1px);
+}
+
+.dado-disponivel:active {
+  cursor: grabbing;
+}
+
+.bandeja-dados {
+  position: relative;
+  min-width: 0;
+  min-height: 320px;
+  padding: 16px;
+
+  display: flex;
+  align-content: flex-start;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  border: 2px dashed var(--cor-aventura-borda);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.instrucao-bandeja {
+  max-width: 220px;
+  margin: auto;
+
+  color: rgba(63, 45, 32, 0.68);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  text-align: center;
+
+  pointer-events: none;
+}
+
+#resultadoDado {
+  min-height: 28px;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+@media (max-width: 560px) {
+  .janela-dados.janela-flutuante {
+    width: calc(100vw - 24px);
+  }
+
+  .caixa-dados {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .colecao-dados {
+    padding-inline: 6px;
+  }
+
+  .dado-disponivel {
+    width: 44px;
+  }
+}
+
+.dado-selecionado {
+  width: 58px;
+  min-height: 48px;
+  padding: 8px;
+
+  border: 2px solid var(--cor-aventura-borda);
+  border-radius: 10px;
+
+  background: var(--cor-aventura-papel);
+  color: var(--cor-aventura-tinta);
+
+  font-weight: 800;
+  cursor: grab;
+  user-select: none;
+
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+.bandeja-dados.bandeja-recebendo-dado {
+  border-style: solid;
+  background: rgba(105, 72, 47, 0.14);
+}
+
+.dado-selecionado.dado-lancando {
+  opacity: 0.65;
+  cursor: grabbing;
+  transform: scale(1.08) rotate(8deg);
+}
+
+.dado-selecionado.dado-lancado {
+  cursor: grab;
+  background: rgba(255, 255, 255, 0.38);
+  font-size: 1.1rem;
+}
+
+.camada-dados-lancados {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  pointer-events: none;
+}
+
+.dado-lancado-na-tela {
+  position: absolute;
+
+  width: 58px;
+  height: 58px;
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 2px solid var(--cor-aventura-borda);
+  border-radius: 12px;
+
+  background: var(--cor-aventura-papel);
+  color: var(--cor-aventura-tinta);
+
+  font-size: 1.15rem;
+  font-weight: 800;
+
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--rotacao-dado, 0deg));
+
+  pointer-events: auto;
+}
+
+.dado-lancado-na-tela.dado-sendo-arrastado {
+  opacity: 0.55;
+}
+
+.dado-lancado-na-tela.dado-girando {
+  pointer-events: none;
+
+  animation:
+    giro-provisorio-dado
+    550ms
+    cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes giro-provisorio-dado {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      rotate(0deg)
+      scale(0.75);
+  }
+
+  25% {
+    transform:
+      translate(-50%, -65%)
+      rotate(160deg)
+      scale(1.12);
+  }
+
+  50% {
+    transform:
+      translate(-50%, -42%)
+      rotate(320deg)
+      scale(0.92);
+  }
+
+  75% {
+    transform:
+      translate(-50%, -58%)
+      rotate(500deg)
+      scale(1.06);
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--rotacao-dado, 0deg))
+      scale(1);
+  }
+}
+
+.dado-disponivel,
+.dado-lancado-na-tela {
+  touch-action: none;
+}
+
+body.arrastando-dado {
+  cursor: grabbing;
+  user-select: none;
+}
+
+body.arrastando-dado * {
+  cursor: grabbing !important;
+}
