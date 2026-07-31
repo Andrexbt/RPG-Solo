@@ -4,6 +4,11 @@ const resultadoDado = document.querySelector("#resultadoDado");
 const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
 const camadaDadosLancados = document.querySelector("#camadaDadosLancados");
 
+const solicitacaoCaixaDados =
+  document.querySelector(
+    "#solicitacaoCaixaDados",
+  );
+
 const estadoCaixaDados = {
   proximoId: 1,
   dadosLancados: [],
@@ -12,9 +17,57 @@ const estadoCaixaDados = {
 let arrasteDadoAtual = null;
 let solicitacaoRolagemAtual = null;
 
+function atualizarSolicitacaoCaixaDados() {
+  if (!solicitacaoCaixaDados) {
+    return;
+  }
+
+  if (!solicitacaoRolagemAtual) {
+    solicitacaoCaixaDados.textContent = "";
+    solicitacaoCaixaDados.hidden = true;
+
+    return;
+  }
+
+  const dadosSolicitados =
+    solicitacaoRolagemAtual
+      .gruposDeDados
+      .map(function formatarGrupo(grupo) {
+        return (
+          `${grupo.quantidade}d` +
+          `${grupo.numeroDeFaces}`
+        );
+      })
+      .join(" + ");
+
+  const modificador =
+    solicitacaoRolagemAtual.modificador;
+
+  let textoModificador = "";
+
+  if (modificador > 0) {
+    textoModificador =
+      ` + ${modificador}`;
+  }
+
+  if (modificador < 0) {
+    textoModificador =
+      ` - ${Math.abs(modificador)}`;
+  }
+
+  solicitacaoCaixaDados.textContent =
+    `${dadosSolicitados}` +
+    `${textoModificador}`;
+
+  solicitacaoCaixaDados.hidden = false;
+}
+
 function configurarRolagemSolicitada(configuracao) {
   if (!configuracao) {
     solicitacaoRolagemAtual = null;
+
+    atualizarSolicitacaoCaixaDados();
+
     return;
   }
 
@@ -30,6 +83,8 @@ function configurarRolagemSolicitada(configuracao) {
       configuracao.descricao ??
       "Rolagem solicitada",
   };
+
+  atualizarSolicitacaoCaixaDados();
 
   console.log(
     "Rolagem solicitada:",
@@ -752,6 +807,8 @@ function emitirRolagemConcluida(
   );
 
   solicitacaoRolagemAtual = null;
+
+  atualizarSolicitacaoCaixaDados();
 }
 
 for (const dadoDisponivel of dadosDisponiveis) {
