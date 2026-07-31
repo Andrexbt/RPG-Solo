@@ -279,6 +279,9 @@ function registrarRolagemEfeito(contextoPendente, resultadoRolagem) {
 
   const quantidadeNecessaria = efeitoAtivo.quantidadeDeRolagens;
 
+  const criterioDeEscolha =
+  efeitoAtivo.criterioDeEscolha ?? "primeiroResultado";
+
   if (rolagens.length >= quantidadeNecessaria) {
     return {
       sucesso: false,
@@ -288,16 +291,61 @@ function registrarRolagemEfeito(contextoPendente, resultadoRolagem) {
 
   rolagens.push(structuredClone(resultadoRolagem));
 
+  const concluida =
+  rolagens.length >= quantidadeNecessaria;
+
   return {
     sucesso: true,
     motivo: null,
 
     quantidadeRegistrada: rolagens.length,
-
     quantidadeNecessaria: quantidadeNecessaria,
 
-    concluida: rolagens.length >= quantidadeNecessaria,
+    concluida: concluida,
 
-    rolagens: rolagens,
+  criterioDeEscolha: criterioDeEscolha,
+
+  exigeEscolhaDoJogador:
+    concluida &&
+    criterioDeEscolha === "escolhaDoJogador",
+
+  rolagens: rolagens,
+};
+}
+
+function finalizarEfeitoPendente(contextoPendente) {
+  if (!contextoPendente) {
+    return {
+      sucesso: false,
+      motivo: "contextoPendenteInexistente",
+    };
+  }
+
+  const efeitoAtivo = contextoPendente.efeitoAtivo;
+
+  if (!efeitoAtivo) {
+    return {
+      sucesso: false,
+      motivo: "nenhumEfeitoAtivo",
+    };
+  }
+
+  const efeitoFinalizado = structuredClone(efeitoAtivo);
+
+  const rolagensRegistradas = Array.isArray(
+    contextoPendente.rolagensEfeito,
+  )
+    ? structuredClone(contextoPendente.rolagensEfeito)
+    : [];
+
+  contextoPendente.efeitoAtivo = null;
+  contextoPendente.rolagensEfeito = [];
+
+  return {
+    sucesso: true,
+    motivo: null,
+
+    efeitoFinalizado: efeitoFinalizado,
+    rolagensRegistradas: rolagensRegistradas,
   };
 }

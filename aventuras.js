@@ -1135,6 +1135,15 @@ function resolverDanoJogador(resultadoRolagem) {
       return;
     }
 
+    if (!registro.exigeEscolhaDoJogador) {
+  console.warn(
+    "O critério de escolha do efeito ainda não foi implementado:",
+    registro.criterioDeEscolha,
+  );
+
+  return;
+}
+
     const rolagens = registro.rolagens;
 
 exibirEscolhaEntreRolagens(
@@ -1143,12 +1152,22 @@ exibirEscolhaEntreRolagens(
     solicitacaoCombate.textContent =
       `Resultado escolhido: ${rolagemEscolhida.total}.`;
 
-    danoPendente.efeitoAtivo = null;
+    const resultadoFinalizacao =
+  finalizarEfeitoPendente(danoPendente);
 
-    concluirDanoJogador(
-      combate,
-      rolagemEscolhida,
-    );
+if (!resultadoFinalizacao.sucesso) {
+  console.warn(
+    "Não foi possível finalizar o efeito:",
+    resultadoFinalizacao.motivo,
+  );
+
+  return;
+}
+
+concluirDanoJogador(
+  combate,
+  rolagemEscolhida,
+);
   },
 );
 
