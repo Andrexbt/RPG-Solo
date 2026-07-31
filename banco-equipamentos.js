@@ -20,22 +20,22 @@ window.bancoEquipamentos = {
       nome: "Sem armadura",
       caBase: 10,
       usaDestreza: true,
-      limiteDestreza: null
+      limiteDestreza: null,
     },
 
     couro: {
       nome: "Armadura de couro",
       caBase: 11,
       usaDestreza: true,
-      limiteDestreza: null
+      limiteDestreza: null,
     },
 
     cotaDeMalha: {
       nome: "Cota de malha",
       caBase: 16,
       usaDestreza: false,
-      limiteDestreza: 0
-    }
+      limiteDestreza: 0,
+    },
   },
 
   // =====================================================
@@ -55,7 +55,7 @@ window.bancoEquipamentos = {
       dano: "1d8",
       tipoDano: "cortante",
       maestria: "sap",
-      propriedades: ["versatil"]
+      propriedades: ["versatil"],
     },
 
     machadoDeBatalha: {
@@ -66,7 +66,7 @@ window.bancoEquipamentos = {
       dano: "1d8",
       tipoDano: "cortante",
       maestria: "topple",
-      propriedades: ["versatil"]
+      propriedades: ["versatil"],
     },
 
     lanca: {
@@ -77,7 +77,7 @@ window.bancoEquipamentos = {
       dano: "1d6",
       tipoDano: "perfurante",
       maestria: "sap",
-      propriedades: ["arremesso", "versatil"]
+      propriedades: ["arremesso", "versatil"],
     },
 
     arcoLongo: {
@@ -88,7 +88,7 @@ window.bancoEquipamentos = {
       dano: "1d8",
       tipoDano: "perfurante",
       maestria: "slow",
-      propriedades: ["duasMaos", "municao"]
+      propriedades: ["duasMaos", "municao"],
     },
 
     espadaCurta: {
@@ -99,7 +99,7 @@ window.bancoEquipamentos = {
       dano: "1d6",
       tipoDano: "perfurante",
       maestria: "vex",
-      propriedades: ["leve", "acuidade"]
+      propriedades: ["leve", "acuidade"],
     },
 
     adaga: {
@@ -110,7 +110,7 @@ window.bancoEquipamentos = {
       dano: "1d4",
       tipoDano: "perfurante",
       maestria: "nick",
-      propriedades: ["leve", "arremesso", "acuidade"]
+      propriedades: ["leve", "arremesso", "acuidade"],
     },
 
     bordao: {
@@ -121,7 +121,7 @@ window.bancoEquipamentos = {
       dano: "1d6",
       tipoDano: "contundente",
       maestria: "topple",
-      propriedades: ["versatil"]
+      propriedades: ["versatil"],
     },
 
     arcoCurto: {
@@ -132,8 +132,8 @@ window.bancoEquipamentos = {
       dano: "1d6",
       tipoDano: "perfurante",
       maestria: "vex",
-      propriedades: ["duasMaos", "municao"]
-    }
+      propriedades: ["duasMaos", "municao"],
+    },
   },
 
   // =====================================================
@@ -145,18 +145,18 @@ window.bancoEquipamentos = {
   itensSecundarios: {
     escudo: {
       nome: "Escudo",
-      bonusCA: 2
+      bonusCA: 2,
     },
 
     armaSecundaria: {
       nome: "Arma secundária",
-      bonusCA: 0
+      bonusCA: 0,
     },
 
     nada: {
       nome: "Nada",
-      bonusCA: 0
-    }
+      bonusCA: 0,
+    },
   },
 
   // =====================================================
@@ -166,77 +166,60 @@ window.bancoEquipamentos = {
   // objetos concedidos durante a criação do personagem.
   // =====================================================
   itensGerais: {
-
     suprimentosCaligrafo: {
-      nome:
-        "Suprimentos de calígrafo"
+      nome: "Suprimentos de calígrafo",
     },
 
     livroOracoes: {
-      nome:
-        "Livro de orações"
+      nome: "Livro de orações",
     },
 
     simboloSagrado: {
-      nome:
-        "Símbolo sagrado"
+      nome: "Símbolo sagrado",
     },
 
     pergaminho: {
-      nome:
-        "Pergaminho"
+      nome: "Pergaminho",
     },
 
     veste: {
-      nome:
-        "Veste"
+      nome: "Veste",
     },
 
     ferramentasLadrao: {
-      nome:
-        "Ferramentas de ladrão"
+      nome: "Ferramentas de ladrão",
     },
 
     peDeCabra: {
-      nome:
-        "Pé de cabra"
+      nome: "Pé de cabra",
     },
 
     bolsa: {
-      nome:
-        "Bolsa"
+      nome: "Bolsa",
     },
 
     roupasViajante: {
-      nome:
-        "Roupas de viajante"
+      nome: "Roupas de viajante",
     },
 
     livroHistoria: {
-      nome:
-        "Livro de história"
+      nome: "Livro de história",
     },
 
     flecha: {
-      nome:
-        "Flecha"
+      nome: "Flecha",
     },
 
     conjuntoJogos: {
-      nome:
-        "Conjunto de jogos"
+      nome: "Conjunto de jogos",
     },
 
     kitCurandeiro: {
-      nome:
-        "Kit de curandeiro"
+      nome: "Kit de curandeiro",
     },
 
     aljava: {
-      nome:
-        "Aljava"
-    }
-
-  }
-
+      nome: "Aljava",
+    },
+  },
 };

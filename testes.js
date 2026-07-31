@@ -1,189 +1,116 @@
 "use strict";
 
-window.SistemaTestes = (function() {
-
+window.SistemaTestes = (function () {
   function calcularModificadorAtributo(valor) {
-
-    return Math.floor(
-      (Number(valor) - 10) / 2
-    );
-
+    return Math.floor((Number(valor) - 10) / 2);
   }
 
   function obterBonusProficiencia(entidade) {
-
     if (entidade.bonusProficiencia !== undefined) {
       return entidade.bonusProficiencia;
     }
 
     return 2;
-
   }
 
   function calcularBonusPericia(entidade, idPericia) {
-
-    const pericia =
-      window.bancoPericias[idPericia];
+    const pericia = window.bancoPericias[idPericia];
 
     if (!pericia) {
-
-      console.warn(
-        "Perícia não encontrada:",
-        idPericia
-      );
+      console.warn("Perícia não encontrada:", idPericia);
 
       return 0;
-
     }
 
-    const valorAtributo =
-      entidade.atributos[pericia.atributo];
+    const valorAtributo = entidade.atributos[pericia.atributo];
 
-    let bonus =
-      calcularModificadorAtributo(valorAtributo);
+    let bonus = calcularModificadorAtributo(valorAtributo);
 
-    const possuiProficiencia =
-      entidade.pericias.includes(idPericia);
+    const possuiProficiencia = entidade.pericias.includes(idPericia);
 
     if (possuiProficiencia) {
-
-      bonus +=
-        obterBonusProficiencia(entidade);
-
+      bonus += obterBonusProficiencia(entidade);
     }
 
     return bonus;
-
   }
 
-  function calcularBonusSalvaguarda(
-  entidade,
-  idAtributo
-) {
+  function calcularBonusSalvaguarda(entidade, idAtributo) {
+    const valorAtributo = entidade.atributos[idAtributo];
 
-  const valorAtributo =
-    entidade.atributos[idAtributo];
+    let bonus = calcularModificadorAtributo(valorAtributo);
 
-  let bonus =
-    calcularModificadorAtributo(valorAtributo);
+    const possuiProficiencia = entidade.salvaguardas.includes(idAtributo);
 
-  const possuiProficiencia =
-    entidade.salvaguardas.includes(idAtributo);
+    if (possuiProficiencia) {
+      bonus += obterBonusProficiencia(entidade);
+    }
 
-  if (possuiProficiencia) {
-    bonus +=
-      obterBonusProficiencia(entidade);
+    return bonus;
   }
 
-  return bonus;
+  function resolverTesteContraCd(resultadoRolagem, dificuldade, tipoRolagem = "normal") {
+    let total = resultadoRolagem.total;
 
+    if (tipoRolagem !== "normal") {
+      total = calcularTotalTesteD20(resultadoRolagem, tipoRolagem);
+    }
+
+    const sucesso = total >= dificuldade;
+
+    const margem = total - dificuldade;
+
+    return {
+      tipo: "testeContraCd",
+      tipoRolagem,
+      total,
+      dificuldade,
+      sucesso,
+      margem,
+    };
   }
 
-  function resolverTesteContraCd(
-  resultadoRolagem,
-  dificuldade,
-  tipoRolagem = "normal"
-) {
+  function resolverTesteOposto(resultadoAtivo, resultadoOponente) {
+    const totalAtivo = resultadoAtivo.total;
 
-  let total =
-    resultadoRolagem.total;
+    const totalOponente = resultadoOponente.total;
 
-  if (tipoRolagem !== "normal") {
-    total =
-      calcularTotalTesteD20(
-        resultadoRolagem,
-        tipoRolagem
-      );
+    const margem = totalAtivo - totalOponente;
+
+    return {
+      tipo: "testeOposto",
+      totalAtivo,
+      totalOponente,
+      sucesso: margem > 0,
+      empate: margem === 0,
+      margem,
+    };
   }
 
-  const sucesso =
-    total >= dificuldade;
+  function selecionarResultadoD20(resultados, tipoRolagem = "normal") {
+    if (tipoRolagem === "vantagem") {
+      return Math.max(...resultados);
+    }
 
-  const margem =
-    total - dificuldade;
+    if (tipoRolagem === "desvantagem") {
+      return Math.min(...resultados);
+    }
 
-  return {
-    tipo: "testeContraCd",
-    tipoRolagem,
-    total,
-    dificuldade,
-    sucesso,
-    margem
-  };
-
+    return resultados[0];
   }
 
-  function resolverTesteOposto(
-  resultadoAtivo,
-  resultadoOponente
-) {
+  function calcularTotalTesteD20(resultadoRolagem, tipoRolagem = "normal") {
+    const grupoD20 = resultadoRolagem.gruposRolados.find((grupo) => grupo.numeroDeFaces === 20);
 
-  const totalAtivo =
-    resultadoAtivo.total;
+    if (!grupoD20) {
+      console.warn("Nenhum d20 foi encontrado na rolagem.");
 
-  const totalOponente =
-    resultadoOponente.total;
+      return null;
+    }
 
-  const margem =
-    totalAtivo - totalOponente;
+    const resultadoD20 = selecionarResultadoD20(grupoD20.resultados, tipoRolagem);
 
-  return {
-    tipo: "testeOposto",
-    totalAtivo,
-    totalOponente,
-    sucesso: margem > 0,
-    empate: margem === 0,
-    margem
-  };
-
-  }
-
-  function selecionarResultadoD20(
-  resultados,
-  tipoRolagem = "normal"
-) {
-
-  if (tipoRolagem === "vantagem") {
-    return Math.max(...resultados);
-  }
-
-  if (tipoRolagem === "desvantagem") {
-    return Math.min(...resultados);
-  }
-
-  return resultados[0];
-
-  }
-
-  function calcularTotalTesteD20(
-  resultadoRolagem,
-  tipoRolagem = "normal"
-) {
-
-  const grupoD20 =
-    resultadoRolagem.gruposRolados.find(
-      grupo => grupo.numeroDeFaces === 20
-    );
-
-  if (!grupoD20) {
-    console.warn(
-      "Nenhum d20 foi encontrado na rolagem."
-    );
-
-    return null;
-  }
-
-  const resultadoD20 =
-    selecionarResultadoD20(
-      grupoD20.resultados,
-      tipoRolagem
-    );
-
-  return (
-    resultadoD20 +
-    resultadoRolagem.modificador
-  );
-
+    return resultadoD20 + resultadoRolagem.modificador;
   }
 
   return {
@@ -193,7 +120,6 @@ window.SistemaTestes = (function() {
     resolverTesteContraCd,
     resolverTesteOposto,
     selecionarResultadoD20,
-    calcularTotalTesteD20
+    calcularTotalTesteD20,
   };
-
 })();

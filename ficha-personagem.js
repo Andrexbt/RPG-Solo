@@ -7,7 +7,7 @@
 // ver-personagem.js possam usar a mesma lógica.
 // =====================================================
 
-(function() {
+(function () {
   // =====================================================
   // 1. Cálculos básicos de atributo e proficiência
   // =====================================================
@@ -77,8 +77,7 @@
       return [];
     }
 
-    const especializacoes =
-      personagemAtual.habilidades.escolhas.especializacoesPericias;
+    const especializacoes = personagemAtual.habilidades.escolhas.especializacoesPericias;
 
     if (Array.isArray(especializacoes) === false) {
       return [];
@@ -298,10 +297,7 @@
     const forca = personagemAtual.atributos.forca;
     const destreza = personagemAtual.atributos.destreza;
 
-    if (
-      (forca === undefined || forca === "") &&
-      (destreza === undefined || destreza === "")
-    ) {
+    if ((forca === undefined || forca === "") && (destreza === undefined || destreza === "")) {
       return arma.atributoAtaque;
     }
 
@@ -343,10 +339,7 @@
       bonusAtaque = bonusAtaque + calcularBonusProficiencia();
     }
 
-    if (
-      personagemTemEstiloDeLuta(personagemAtual, "arquearia") &&
-      arma.categoria === "distancia"
-    ) {
+    if (personagemTemEstiloDeLuta(personagemAtual, "arquearia") && arma.categoria === "distancia") {
       bonusAtaque = bonusAtaque + 2;
     }
 
@@ -361,8 +354,7 @@
     }
 
     return (
-      equipamentos.itemSecundario === "armaSecundaria" &&
-      equipamentos.armaSecundaria === idArma
+      equipamentos.itemSecundario === "armaSecundaria" && equipamentos.armaSecundaria === idArma
     );
   }
 
@@ -479,7 +471,7 @@
       maestria: obterNomeMaestria(arma.maestria),
       maestriaId: arma.maestria,
       propriedades: arma.propriedades || [],
-      ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma)
+      ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma),
     };
   }
 
@@ -501,7 +493,7 @@
 
     const propriedadesSeguras = propriedades || [];
 
-    propriedadesSeguras.forEach(function(idPropriedade, indice) {
+    propriedadesSeguras.forEach(function (idPropriedade, indice) {
       const propriedade = obterDadosPropriedadeArma(idPropriedade);
 
       if (propriedade === undefined) {
@@ -511,7 +503,7 @@
       const referencia = criarReferenciaDetalheSegura(
         "propriedadeArma",
         idPropriedade,
-        propriedade.nome
+        propriedade.nome,
       );
 
       linha.appendChild(referencia);
@@ -539,7 +531,7 @@
     const botaoMaestria = criarReferenciaDetalheSegura(
       "maestria",
       resumo.maestriaId,
-      resumo.maestria
+      resumo.maestria,
     );
 
     linhaAtaque.appendChild(nomeArma);
@@ -610,10 +602,7 @@
       }
     }
 
-    if (
-      personagemTemEstiloDeLuta(personagemAtual, "defesa") &&
-      idArmadura !== "semArmadura"
-    ) {
+    if (personagemTemEstiloDeLuta(personagemAtual, "defesa") && idArmadura !== "semArmadura") {
       classeArmadura += 1;
     }
 
@@ -678,8 +667,7 @@
       return recursos;
     }
 
-    const dadosDaClasse =
-      window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
+    const dadosDaClasse = window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
 
     if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
       return recursos;
@@ -689,7 +677,7 @@
     const habilidadesAutomaticas =
       dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-    habilidadesAutomaticas.forEach(function(idHabilidade) {
+    habilidadesAutomaticas.forEach(function (idHabilidade) {
       const habilidade = obterDadosHabilidade(idHabilidade);
 
       if (habilidade === undefined || habilidade.recurso === undefined) {
@@ -705,7 +693,7 @@
         usosMaximos: recurso.usosMaximos,
         recuperaEm: recurso.recuperaEm,
         efeito: recurso.efeito,
-        formula: formatarFormulaRecurso(recurso.formula)
+        formula: formatarFormulaRecurso(recurso.formula),
       };
     });
 
@@ -739,7 +727,7 @@
       return idEscolhido;
     }
 
-    const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
+    const opcaoEscolhida = grupo.opcoes.find(function (opcao) {
       return opcao.id === idEscolhido;
     });
 
@@ -767,8 +755,7 @@
       return "";
     }
 
-    const dadosDaClasse =
-      window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
+    const dadosDaClasse = window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
 
     if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
       return "";
@@ -778,7 +765,7 @@
     const habilidadesAutomaticas =
       dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-    habilidadesAutomaticas.forEach(function(idHabilidade) {
+    habilidadesAutomaticas.forEach(function (idHabilidade) {
       if (idHabilidade === "maestriaComArmas") {
         return;
       }
@@ -794,7 +781,7 @@
       return linhas.join("\n");
     }
 
-    dadosNivel1.escolhas.forEach(function(escolha) {
+    dadosNivel1.escolhas.forEach(function (escolha) {
       if (escolha.grupo === "especializacoesPericias") {
         return;
       }
@@ -806,11 +793,9 @@
         return;
       }
 
-      const idsEscolhidos = Array.isArray(valorEscolhido)
-        ? valorEscolhido
-        : [valorEscolhido];
+      const idsEscolhidos = Array.isArray(valorEscolhido) ? valorEscolhido : [valorEscolhido];
 
-      const nomesEscolhidos = idsEscolhidos.map(function(idEscolhido) {
+      const nomesEscolhidos = idsEscolhidos.map(function (idEscolhido) {
         return obterNomeEscolhaHabilidade(grupo, idEscolhido);
       });
 
@@ -829,7 +814,7 @@
       return "";
     }
 
-    const nomesEspecializacoes = especializacoes.map(function(idPericia) {
+    const nomesEspecializacoes = especializacoes.map(function (idPericia) {
       return obterNomePericia(idPericia);
     });
 
@@ -899,8 +884,7 @@
       return;
     }
 
-    const dadosDaClasse =
-      window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
+    const dadosDaClasse = window.bancoHabilidades.progressaoClasses[personagemAtual.classeId];
 
     if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
       const item = document.createElement("li");
@@ -913,7 +897,7 @@
     const habilidadesAutomaticas =
       dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-    habilidadesAutomaticas.forEach(function(idHabilidade) {
+    habilidadesAutomaticas.forEach(function (idHabilidade) {
       if (idHabilidade === "maestriaComArmas") {
         return;
       }
@@ -925,11 +909,7 @@
       }
 
       const item = document.createElement("li");
-      const botao = criarReferenciaDetalheSegura(
-        "habilidade",
-        idHabilidade,
-        habilidade.nome
-      );
+      const botao = criarReferenciaDetalheSegura("habilidade", idHabilidade, habilidade.nome);
 
       item.appendChild(botao);
 
@@ -937,16 +917,14 @@
       const recurso = recursos[idHabilidade];
 
       if (recurso !== undefined) {
-        item.appendChild(
-          document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
-        );
+        item.appendChild(document.createTextNode(" — " + obterTextoResumoRecurso(recurso)));
       }
 
       fichaHabilidadesElemento.appendChild(item);
     });
 
     if (Array.isArray(dadosNivel1.escolhas)) {
-      dadosNivel1.escolhas.forEach(function(escolha) {
+      dadosNivel1.escolhas.forEach(function (escolha) {
         const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
         const valorEscolhido = personagemAtual.habilidades.escolhas[escolha.grupo];
 
@@ -958,11 +936,9 @@
         itemGrupo.textContent = grupo.nome + ":";
 
         const sublista = document.createElement("ul");
-        const idsEscolhidos = Array.isArray(valorEscolhido)
-          ? valorEscolhido
-          : [valorEscolhido];
+        const idsEscolhidos = Array.isArray(valorEscolhido) ? valorEscolhido : [valorEscolhido];
 
-        idsEscolhidos.forEach(function(idEscolhido) {
+        idsEscolhidos.forEach(function (idEscolhido) {
           const itemEscolha = document.createElement("li");
           itemEscolha.textContent = obterNomeEscolhaHabilidade(grupo, idEscolhido);
           sublista.appendChild(itemEscolha);
@@ -1070,12 +1046,12 @@
     obterTextoEspecializacoesParaPdf,
     adicionarTextoAoCampoPdf,
     preencherHabilidades,
-    instalarGlobaisFichaPersonagem
+    instalarGlobaisFichaPersonagem,
   };
 
   instalarGlobaisFichaPersonagem();
 
-  window.addEventListener("load", function() {
+  window.addEventListener("load", function () {
     instalarGlobaisFichaPersonagem();
 
     try {
@@ -1110,15 +1086,14 @@
 
     if (resposta.ok === false) {
       throw new Error(
-        "Não foi possível carregar ficha-personagem.html. Status: " +
-        resposta.status
+        "Não foi possível carregar ficha-personagem.html. Status: " + resposta.status,
       );
     }
 
     const htmlFicha = await resposta.text();
     const fichasInseridas = [];
 
-    areasFicha.forEach(function(areaFicha) {
+    areasFicha.forEach(function (areaFicha) {
       areaFicha.innerHTML = htmlFicha;
 
       const fichaInserida = areaFicha.querySelector("[data-ficha-componente]");
@@ -1130,17 +1105,17 @@
 
     document.dispatchEvent(
       new CustomEvent("fichaPersonagemCarregada", {
-        detail: { fichas: fichasInseridas }
-      })
+        detail: { fichas: fichasInseridas },
+      }),
     );
 
     return fichasInseridas;
   }
 
   function carregarScriptDepoisDaFicha(caminhoScript) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       const caminhoAbsoluto = new URL(caminhoScript, document.baseURI).href;
-      const scriptExistente = Array.from(document.scripts).find(function(script) {
+      const scriptExistente = Array.from(document.scripts).find(function (script) {
         return script.src === caminhoAbsoluto;
       });
 
@@ -1154,10 +1129,10 @@
       script.addEventListener("load", resolve, { once: true });
       script.addEventListener(
         "error",
-        function() {
+        function () {
           reject(new Error("Não foi possível carregar o script: " + caminhoScript));
         },
-        { once: true }
+        { once: true },
       );
 
       document.head.appendChild(script);
@@ -1168,7 +1143,7 @@
     const nomePagina = window.location.pathname.split("/").pop() || "index.html";
     const scriptsPorPagina = {
       "criacao-personagem.html": "criacao-personagem.js",
-      "ver-personagem.html": "ver-personagem.js"
+      "ver-personagem.html": "ver-personagem.js",
     };
 
     return scriptsPorPagina[nomePagina] || null;
@@ -1189,10 +1164,10 @@
     if (document.readyState === "loading") {
       document.addEventListener(
         "DOMContentLoaded",
-        function() {
+        function () {
           window.fichaPersonagemPronta = iniciarComponenteFichaPersonagem();
         },
-        { once: true }
+        { once: true },
       );
       return;
     }

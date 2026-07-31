@@ -29,25 +29,20 @@ window.bancoClasses = {
         "intimidacao",
         "persuasao",
         "percepcao",
-        "sobrevivencia"
-      ]
+        "sobrevivencia",
+      ],
     },
 
     // Proficiências usadas pela ficha para equipamentos e ataques.
     proficiencias: {
       armas: ["Armas simples", "Armas marciais"],
-      armaduras: [
-        "Armaduras leves",
-        "Armaduras médias",
-        "Armaduras pesadas",
-        "Escudos"
-      ]
+      armaduras: ["Armaduras leves", "Armaduras médias", "Armaduras pesadas", "Escudos"],
     },
 
     // Quantidade de armas nas quais a classe pode escolher maestria.
     maestriasArmas: {
-      quantidade: 3
-    }
+      quantidade: 3,
+    },
   },
 
   // =====================================================
@@ -73,8 +68,8 @@ window.bancoClasses = {
         "percepcao",
         "persuasao",
         "prestidigitacao",
-        "furtividade"
-      ]
+        "furtividade",
+      ],
     },
 
     // O Ladino tem armas simples, espada curta, armadura leve
@@ -83,12 +78,12 @@ window.bancoClasses = {
       armas: ["Armas simples"],
       armasEspecificas: ["espadaCurta"],
       armaduras: ["Armaduras leves"],
-      ferramentas: ["Ferramentas de ladrão"]
+      ferramentas: ["Ferramentas de ladrão"],
     },
 
     maestriasArmas: {
-      quantidade: 2
-    }
+      quantidade: 2,
+    },
   },
 
   // =====================================================
@@ -104,23 +99,13 @@ window.bancoClasses = {
     // Perícias que o Clérigo pode escolher no nível 1.
     pericias: {
       quantidade: 2,
-      opcoes: [
-        "historia",
-        "intuicao",
-        "medicina",
-        "persuasao",
-        "religiao"
-      ]
+      opcoes: ["historia", "intuicao", "medicina", "persuasao", "religiao"],
     },
 
     // O Clérigo usa magia divina e tem treinamento defensivo básico.
     proficiencias: {
       armas: ["Armas simples"],
-      armaduras: [
-        "Armaduras leves",
-        "Armaduras médias",
-        "Escudos"
-      ]
-    }
-  }
+      armaduras: ["Armaduras leves", "Armaduras médias", "Escudos"],
+    },
+  },
 };

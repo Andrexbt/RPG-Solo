@@ -26,89 +26,51 @@ const modalHabilidadesClasse = document.getElementById("modalHabilidadesClasse")
 
 const botaoEscolherAvatar = document.getElementById("botaoEscolherAvatar");
 
-const modalAvatar =
-  document.getElementById(
-    "modalAvatar"
-  );
+const modalAvatar = document.getElementById("modalAvatar");
 
-const botaoFecharModalAvatar =
-  document.getElementById(
-    "botaoFecharModalAvatar"
-  );
+const botaoFecharModalAvatar = document.getElementById("botaoFecharModalAvatar");
 
-const botaoCancelarAvatar =
-  document.getElementById(
-    "botaoCancelarAvatar"
-  );
+const botaoCancelarAvatar = document.getElementById("botaoCancelarAvatar");
 
-const botaoConfirmarAvatar =
-  document.getElementById(
-    "botaoConfirmarAvatar"
-  );
+const botaoConfirmarAvatar = document.getElementById("botaoConfirmarAvatar");
 
-const galeriaAvatares =
-  document.getElementById(
-    "galeriaAvatares"
-  );
+const galeriaAvatares = document.getElementById("galeriaAvatares");
 
-const galeriaFramesAvatar =
-  document.getElementById(
-    "galeriaFramesAvatar"
-  );
+const galeriaFramesAvatar = document.getElementById("galeriaFramesAvatar");
 
-const filtrosAvatar =
-  document.querySelectorAll(
-    "[data-genero-avatar]"
-  );
+const filtrosAvatar = document.querySelectorAll("[data-genero-avatar]");
 
-  const prefixosAvatarPorEspecie = {
+const prefixosAvatarPorEspecie = {
+  humano: "Human",
 
-  humano:
-    "Human",
+  anao: "Dwarf",
 
-  anao:
-    "Dwarf",
+  elfo: "Elf",
 
-  elfo:
-    "Elf",
+  halfling: "Halfling",
 
-  halfling:
-    "Halfling",
+  aasimar: "Aasimar",
 
-  aasimar:
-    "Aasimar",
+  draconato: "Dragonborn",
 
-  draconato:
-    "Dragonborn",
+  gnomo: "Gnome",
 
-  gnomo:
-    "Gnome",
+  golias: "Goliath",
 
-  golias:
-    "Goliath",
+  orc: "Orc",
 
-  orc:
-    "Orc",
-
-  tiefling:
-    "Tiefling"
-
+  tiefling: "Tiefling",
 };
 
 let avatarTemporario = {
+  imagem: "",
 
-  imagem:
-    "",
-
-  frame:
-    ""
-
+  frame: "",
 };
 
 let generoAvatarAtivo = "All";
 
 const arquetiposAvatar = [
-
   "Alchemist",
   "Artificer",
   "Assassin",
@@ -133,70 +95,37 @@ const arquetiposAvatar = [
   "Summoner",
   "Thief",
   "Warrior",
-  "Wizard"
-
+  "Wizard",
 ];
 
 function criarListaAvataresDisponiveis() {
+  const especieId = personagem.especieId;
 
-  const especieId =
-    personagem.especieId;
-
-  const prefixoEspecie =
-    prefixosAvatarPorEspecie[
-      especieId
-    ];
+  const prefixoEspecie = prefixosAvatarPorEspecie[especieId];
 
   if (prefixoEspecie === undefined) {
     return [];
   }
 
-  const generos = [
-    "Female",
-    "Male"
-  ];
+  const generos = ["Female", "Male"];
 
   const avataresDisponiveis = [];
 
   for (const genero of generos) {
-
-    for (
-      const arquetipo of
-      arquetiposAvatar
-    ) {
-
-      const nomeArquivo =
-        prefixoEspecie +
-        "_" +
-        genero +
-        "_" +
-        arquetipo +
-        ".webp";
+    for (const arquetipo of arquetiposAvatar) {
+      const nomeArquivo = prefixoEspecie + "_" + genero + "_" + arquetipo + ".webp";
 
       avataresDisponiveis.push({
+        genero: genero,
 
-        genero:
-          genero,
+        arquetipo: arquetipo,
 
-        arquetipo:
-          arquetipo,
-
-        caminho:
-          "Imagens/Avatares/" +
-          especieId +
-          "/" +
-          genero +
-          "/" +
-          nomeArquivo
-
+        caminho: "Imagens/Avatares/" + especieId + "/" + genero + "/" + nomeArquivo,
       });
-
     }
-
   }
 
   return avataresDisponiveis;
-
 }
 
 // =====================================================
@@ -212,37 +141,49 @@ const dadosClasses = {
     nome: "Guerreiro",
     dadoVida: 10,
     imagem: "Imagens/Classes/guerreiro-modal.webp",
-    funcionamento: "O Guerreiro é uma classe voltada ao domínio do combate físico. Ele se destaca pelo uso de armas, armaduras e treinamento marcial, podendo atuar como linha de frente, defensor ou atacante principal.",
-    estilo: "Recomendado para jogadores que gostam de combate direto, resistência, presença constante em batalha e domínio de armas e armaduras.",
-    habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Guerreiro conforme as regras usadas pelo jogo."
+    funcionamento:
+      "O Guerreiro é uma classe voltada ao domínio do combate físico. Ele se destaca pelo uso de armas, armaduras e treinamento marcial, podendo atuar como linha de frente, defensor ou atacante principal.",
+    estilo:
+      "Recomendado para jogadores que gostam de combate direto, resistência, presença constante em batalha e domínio de armas e armaduras.",
+    habilidades:
+      "Aqui entrarão os bônus, proficiências, magias e habilidades do Guerreiro conforme as regras usadas pelo jogo.",
   },
 
   mago: {
     nome: "Mago",
     dadoVida: 6,
     imagem: "Imagens/Classes/mago-modal.webp",
-    funcionamento: "O Mago é uma classe voltada ao domínio da magia. Ele se destaca pelo estudo e manipulação de feitiços, podendo atuar como suporte, controlador de campo ou atacante mágico.",
-    estilo: "Recomendado para jogadores que gostam de magia, estratégias complexas, controle do ambiente e uso de poderes sobrenaturais.",
-    habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Mago conforme as regras usadas pelo jogo."
+    funcionamento:
+      "O Mago é uma classe voltada ao domínio da magia. Ele se destaca pelo estudo e manipulação de feitiços, podendo atuar como suporte, controlador de campo ou atacante mágico.",
+    estilo:
+      "Recomendado para jogadores que gostam de magia, estratégias complexas, controle do ambiente e uso de poderes sobrenaturais.",
+    habilidades:
+      "Aqui entrarão os bônus, proficiências, magias e habilidades do Mago conforme as regras usadas pelo jogo.",
   },
 
   ladino: {
     nome: "Ladino",
     dadoVida: 8,
     imagem: "Imagens/Classes/ladino-modal.webp",
-    funcionamento: "O Ladino é uma classe voltada ao roubo, intrusão e combate desarmado. Ele se destaca pela agilidade, precisão e habilidades de furtividade, podendo atuar como explorador, assasino ou ladrão.",
-    estilo: "Recomendado para jogadores que gostam de ação rápida, furtividade, estratégias de engano e uso de armas leves.",
-    habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Ladino conforme as regras usadas pelo jogo."
+    funcionamento:
+      "O Ladino é uma classe voltada ao roubo, intrusão e combate desarmado. Ele se destaca pela agilidade, precisão e habilidades de furtividade, podendo atuar como explorador, assasino ou ladrão.",
+    estilo:
+      "Recomendado para jogadores que gostam de ação rápida, furtividade, estratégias de engano e uso de armas leves.",
+    habilidades:
+      "Aqui entrarão os bônus, proficiências, magias e habilidades do Ladino conforme as regras usadas pelo jogo.",
   },
 
   clerigo: {
     nome: "Clérigo",
     dadoVida: 8,
     imagem: "Imagens/Classes/clerigo-modal.webp",
-    funcionamento: "O Clérigo é uma classe voltada ao domínio da fé e da cura. Ele se destaca pela capacidade de canalizar os poderes de sua divindade, podendo atuar como curandeiro, defensor ou atacante divino.",
-    estilo: "Recomendado para jogadores que gostam de apoio, cura, proteção e uso de poderes divinos.",
-    habilidades: "Aqui entrarão os bônus, proficiências, magias e habilidades do Clérigo conforme as regras usadas pelo jogo."
-  }
+    funcionamento:
+      "O Clérigo é uma classe voltada ao domínio da fé e da cura. Ele se destaca pela capacidade de canalizar os poderes de sua divindade, podendo atuar como curandeiro, defensor ou atacante divino.",
+    estilo:
+      "Recomendado para jogadores que gostam de apoio, cura, proteção e uso de poderes divinos.",
+    habilidades:
+      "Aqui entrarão os bônus, proficiências, magias e habilidades do Clérigo conforme as regras usadas pelo jogo.",
+  },
 };
 const botoesPasso = document.querySelectorAll(".passo");
 const conteudosPasso = document.querySelectorAll(".conteudo-passo");
@@ -262,7 +203,7 @@ const botaoProximoPasso = document.querySelectorAll(".botao-proximo");
 // Define a ordem dos passos e controla quais etapas já foram liberadas.
 // =====================================================
 
-const ordemPassos =[
+const ordemPassos = [
   "classe",
   "atributos",
   "antecedente",
@@ -278,84 +219,40 @@ const ordemPassos =[
 const MODO_TESTE_PASSOS_LIVRES = true;
 
 let passoAtual = "classe";
-let maiorPassoLiberado = MODO_TESTE_PASSOS_LIVRES
-? ordemPassos.length - 1
-: 0;
+let maiorPassoLiberado = MODO_TESTE_PASSOS_LIVRES ? ordemPassos.length - 1 : 0;
 
 let temporizadorMensagemNavegacao = null;
 const mensagemNavegacao = document.getElementById("mensagemNavegacao");
 
 const cardsAntecedente = document.querySelectorAll("[data-antecedente]");
 
-const modalAntecedente =
-  document.getElementById(
-    "modalAntecedente"
-  );
+const modalAntecedente = document.getElementById("modalAntecedente");
 
-const tituloModalAntecedente =
-  document.getElementById(
-    "tituloModalAntecedente"
-  );
+const tituloModalAntecedente = document.getElementById("tituloModalAntecedente");
 
-const descricaoModalAntecedente =
-  document.getElementById(
-    "descricaoModalAntecedente"
-  );
+const descricaoModalAntecedente = document.getElementById("descricaoModalAntecedente");
 
-const resumoModalAntecedente =
-  document.getElementById(
-    "resumoModalAntecedente"
-  );
+const resumoModalAntecedente = document.getElementById("resumoModalAntecedente");
 
-const etapaDetalhesAntecedente =
-  document.getElementById(
-    "etapaDetalhesAntecedente"
-  );
+const etapaDetalhesAntecedente = document.getElementById("etapaDetalhesAntecedente");
 
-const etapaAtributosAntecedente =
-  document.getElementById(
-    "etapaAtributosAntecedente"
-  );
+const etapaAtributosAntecedente = document.getElementById("etapaAtributosAntecedente");
 
-const botaoFecharModalAntecedente =
-  document.getElementById(
-    "botaoFecharModalAntecedente"
-  );
+const botaoFecharModalAntecedente = document.getElementById("botaoFecharModalAntecedente");
 
-const botaoCancelarAntecedente =
-  document.getElementById(
-    "botaoCancelarAntecedente"
-  );
+const botaoCancelarAntecedente = document.getElementById("botaoCancelarAntecedente");
 
-const botaoAvancarAntecedente =
-  document.getElementById(
-    "botaoAvancarAntecedente"
-  );
+const botaoAvancarAntecedente = document.getElementById("botaoAvancarAntecedente");
 
-const escolhaEquipamentoAntecedente =
-  document.getElementById(
-    "escolhaEquipamentoAntecedente"
-  );
+const escolhaEquipamentoAntecedente = document.getElementById("escolhaEquipamentoAntecedente");
 
-const opcoesEquipamentoAntecedente =
-  document.getElementById(
-    "opcoesEquipamentoAntecedente"
-  );
+const opcoesEquipamentoAntecedente = document.getElementById("opcoesEquipamentoAntecedente");
 
-const mensagemEquipamentoAntecedente =
-  document.getElementById(
-    "mensagemEquipamentoAntecedente"
-  );
+const mensagemEquipamentoAntecedente = document.getElementById("mensagemEquipamentoAntecedente");
 
-const opcoesDistribuicaoAntecedente =
-  document.getElementById(
-    "opcoesDistribuicaoAntecedente"
-  );
+const opcoesDistribuicaoAntecedente = document.getElementById("opcoesDistribuicaoAntecedente");
 
-const seletoresBonusAntecedente =
-  document.getElementById(
-    "seletoresBonusAntecedente"
-  );
+const seletoresBonusAntecedente = document.getElementById("seletoresBonusAntecedente");
 
 const mensagemBonusAntecedente = document.getElementById("mensagemBonusAntecedente");
 
@@ -365,17 +262,13 @@ let etapaAtualModalAntecedente = "detalhes";
 
 let equipamentoAntecedenteTemporario = null;
 
-let antecedentePreviewAnterior =
-  "";
+let antecedentePreviewAnterior = "";
 
-let bonusAntecedenteAnterior =
-  {};
+let bonusAntecedenteAnterior = {};
 
-let antecedenteModalConfirmado =
-  false;
+let antecedenteModalConfirmado = false;
 
-let indiceDistribuicaoTemporaria =
-  null;
+let indiceDistribuicaoTemporaria = null;
 
 let bonusAtributosTemporarios = {};
 
@@ -387,162 +280,85 @@ let bonusAtributosTemporarios = {};
 // =====================================================
 
 const camposFichaPorPasso = {
-  classe:
-    "fichaClasseNivel",
+  classe: "fichaClasseNivel",
 
-  atributos:
-    "valfor",
+  atributos: "valfor",
 
-  antecedente:
-    "fichaAntecedente",
+  antecedente: "fichaAntecedente",
 
-  especie:
-    "fichaEspecie",
+  especie: "fichaEspecie",
 
-  habilidades:
-    "fichaHabilidades",
+  habilidades: "fichaHabilidades",
 
-  magias:
-    "fichaMagias",
+  magias: "fichaMagias",
 
-  detalhes:
-    "fichaNome",
+  detalhes: "fichaNome",
 
-  equipamentos:
-    "fichaArmadura",
+  equipamentos: "fichaArmadura",
 
-  revisao:
-    "fichaNome"
+  revisao: "fichaNome",
 };
 
-let temporizadorDestaqueFicha =
-  null;
+let temporizadorDestaqueFicha = null;
 
-function destacarAreaFicha(
-  nomePasso
-) {
+function destacarAreaFicha(nomePasso) {
+  const campoId = camposFichaPorPasso[nomePasso];
 
-  const campoId =
-    camposFichaPorPasso[
-      nomePasso
-    ];
-
-  if (
-    !campoId
-  ) {
+  if (!campoId) {
     return;
   }
 
-  const campo =
-    document.getElementById(
-      campoId
-    );
+  const campo = document.getElementById(campoId);
 
-  const colunaFicha =
-    document.querySelector(
-      ".coluna-ficha"
-    );
+  const colunaFicha = document.querySelector(".coluna-ficha");
 
-  if (
-    !campo ||
-    !colunaFicha
-  ) {
+  if (!campo || !colunaFicha) {
     return;
   }
 
-  const blocoFicha =
-    campo.closest(
-      ".ficha-bloco"
-    ) ??
-    campo;
+  const blocoFicha = campo.closest(".ficha-bloco") ?? campo;
 
-  const retanguloColuna =
-    colunaFicha
-      .getBoundingClientRect();
+  const retanguloColuna = colunaFicha.getBoundingClientRect();
 
-  const retanguloBloco =
-    blocoFicha
-      .getBoundingClientRect();
+  const retanguloBloco = blocoFicha.getBoundingClientRect();
 
   const destino =
     colunaFicha.scrollTop +
     retanguloBloco.top -
     retanguloColuna.top -
-    (
-      colunaFicha.clientHeight -
-      retanguloBloco.height
-    ) /
-    2;
+    (colunaFicha.clientHeight - retanguloBloco.height) / 2;
 
   colunaFicha.scrollTo({
-    top:
-      Math.max(
-        0,
-        destino
-      ),
+    top: Math.max(0, destino),
 
-    behavior:
-      "smooth"
+    behavior: "smooth",
   });
 
-  document
-    .querySelectorAll(
-      ".ficha-bloco-destacado"
-    )
-    .forEach(
-      function(bloco) {
+  document.querySelectorAll(".ficha-bloco-destacado").forEach(function (bloco) {
+    bloco.classList.remove("ficha-bloco-destacado");
+  });
 
-        bloco.classList.remove(
-          "ficha-bloco-destacado"
-        );
-
-      }
-    );
-
-  window.clearTimeout(
-    temporizadorDestaqueFicha
-  );
+  window.clearTimeout(temporizadorDestaqueFicha);
 
   void blocoFicha.offsetWidth;
 
-  blocoFicha.classList.add(
-    "ficha-bloco-destacado"
-  );
+  blocoFicha.classList.add("ficha-bloco-destacado");
 
-  temporizadorDestaqueFicha =
-    window.setTimeout(
-      function() {
-
-        blocoFicha.classList.remove(
-          "ficha-bloco-destacado"
-        );
-
-      },
-      1300
-    );
-
+  temporizadorDestaqueFicha = window.setTimeout(function () {
+    blocoFicha.classList.remove("ficha-bloco-destacado");
+  }, 1300);
 }
 
-function agendarDestaqueFicha(
-  nomePasso
-) {
-
-  window.requestAnimationFrame(
-    function() {
-
-      destacarAreaFicha(
-        nomePasso
-      );
-
-    }
-  );
-
+function agendarDestaqueFicha(nomePasso) {
+  window.requestAnimationFrame(function () {
+    destacarAreaFicha(nomePasso);
+  });
 }
 
 const fichaAntecedente = document.getElementById("fichaAntecedente");
 const fichaHabilidades = document.getElementById("fichaHabilidades");
-const cardsEspecie = document.querySelectorAll("[data-especie]")
-const fichaEspecie = document.getElementById("fichaEspecie")
+const cardsEspecie = document.querySelectorAll("[data-especie]");
+const fichaEspecie = document.getElementById("fichaEspecie");
 const areaMagias = document.getElementById("areaMagias");
 const gerarAtributos = document.getElementById("gerar-atributos");
 const dadosAtributo = document.querySelectorAll(".dado");
@@ -550,7 +366,7 @@ const rolagemAtual = document.getElementById("rolagemAtual");
 const resultadosAtributos = document.querySelectorAll("#resultadosAtributos span");
 let atributosRolados = [];
 let rolando = false;
-const seletoresAtributos = document.querySelectorAll("[data-atributo]")
+const seletoresAtributos = document.querySelectorAll("[data-atributo]");
 const armaduraInicial = document.getElementById("armaduraInicial");
 const armaPrincipal = document.getElementById("armaPrincipal");
 const itemSecundario = document.getElementById("itemSecundario");
@@ -559,15 +375,9 @@ const fichaArmadura = document.getElementById("fichaArmadura");
 const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
-const fichaItensAntecedente =
-  document.getElementById(
-    "fichaItensAntecedente"
-  );
+const fichaItensAntecedente = document.getElementById("fichaItensAntecedente");
 
-const fichaMoedasAntecedente =
-  document.getElementById(
-    "fichaMoedasAntecedente"
-  );
+const fichaMoedasAntecedente = document.getElementById("fichaMoedasAntecedente");
 
 let classeAtualNaModal = "";
 
@@ -596,7 +406,7 @@ const idiomasDisponiveis = [
   "Goblin",
   "Halfling",
   "Orc",
-  "Dracônico"
+  "Dracônico",
 ];
 const proficienciasPorClasse = {
   guerreiro: [
@@ -605,28 +415,14 @@ const proficienciasPorClasse = {
     "Armaduras pesadas",
     "Escudos",
     "Armas simples",
-    "Armas marciais"
+    "Armas marciais",
   ],
 
-  mago: [
-    "Adagas",
-    "Cajados",
-    "Bestas leves"
-  ],
+  mago: ["Adagas", "Cajados", "Bestas leves"],
 
-  ladino: [
-    "Armaduras leves",
-    "Armas simples",
-    "Bestas de mão",
-    "Espadas curtas"
-  ],
+  ladino: ["Armaduras leves", "Armas simples", "Bestas de mão", "Espadas curtas"],
 
-  clerigo: [
-    "Armaduras leves",
-    "Armaduras médias",
-    "Escudos",
-    "Armas simples"
-  ]
+  clerigo: ["Armaduras leves", "Armaduras médias", "Escudos", "Armas simples"],
 };
 
 const pvAtuais = document.getElementById("pvAtuais");
@@ -658,15 +454,9 @@ const botaoFecharModalDetalheFicha = document.getElementById("botaoFecharModalDe
 const modalDetalheTitulo = document.getElementById("modalDetalheTitulo");
 const modalDetalheDescricao = document.getElementById("modalDetalheDescricao");
 const modalDetalheMecanica = document.getElementById("modalDetalheMecanica");
-const fichaImagemAvatar =
-  document.getElementById(
-    "fichaImagemAvatar"
-  );
+const fichaImagemAvatar = document.getElementById("fichaImagemAvatar");
 
-const fichaFrameAvatar =
-  document.getElementById(
-    "fichaFrameAvatar"
-  );
+const fichaFrameAvatar = document.getElementById("fichaFrameAvatar");
 
 // =====================================================
 // 4. ESTADO DO PERSONAGEM EM CRIAÇÃO
@@ -684,24 +474,18 @@ const fichaFrameAvatar =
 // =====================================================
 
 const personagem = {
-
-  classeId:"",
+  classeId: "",
   classe: "",
-  
-  atributosBase:{},
-  bonusAtributosAntecedente:{},
-  atributos:{},
+
+  atributosBase: {},
+  bonusAtributosAntecedente: {},
+  atributos: {},
 
   combate: {
     classeArmadura: null,
-    pontosDeVida: {atuais:null, temporarios:0, maximo: null,
-      dadoVida: "",
-      dadosVidaUsados: 0
-    },
+    pontosDeVida: { atuais: null, temporarios: 0, maximo: null, dadoVida: "", dadosVidaUsados: 0 },
 
-    ataques:
-      []
-
+    ataques: [],
   },
 
   antecedenteId: "",
@@ -710,9 +494,9 @@ const personagem = {
   equipamentoAntecedente: null,
 
   especieId: "",
-  especie:"",
+  especie: "",
 
-  avatar: {imagem: "", frame: ""},
+  avatar: { imagem: "", frame: "" },
 
   idiomasBase: ["comum"],
   idiomasEspecie: [],
@@ -724,28 +508,28 @@ const personagem = {
   periciasAntecedente: [],
   pericias: [],
 
-  ferramentasAntecedente:[],
-  ferramentas:[],
+  ferramentasAntecedente: [],
+  ferramentas: [],
 
   talentos: [],
-  configuracoesTalentos:{},
+  configuracoesTalentos: {},
 
-  habilidades:{
-     escolhas:{},
-     recursos: {},
+  habilidades: {
+    escolhas: {},
+    recursos: {},
   },
 
-  magias:{},
+  magias: {},
 
-  detalhes:{
-    nome:"",
-    historia:"",
-    personalidade:"",
-    equipamentos:{
+  detalhes: {
+    nome: "",
+    historia: "",
+    personalidade: "",
+    equipamentos: {
       armadura: "...",
       armaPrincipal: "...",
       itemSecundario: "...",
-      armaSecundaria: "..."
+      armaSecundaria: "...",
     },
   },
 };
@@ -767,7 +551,7 @@ atualizarVisibilidadeArmaSecundaria();
 // Atualiza classe, proficiências, recursos, habilidades e ficha lateral.
 // =====================================================
 
-function selecionarClasse(){
+function selecionarClasse() {
   const dados = dadosClasses[classeAtualNaModal];
 
   personagem.classeId = classeAtualNaModal;
@@ -792,15 +576,15 @@ function selecionarClasse(){
   atualizarPontosDeVida();
 
   // =====================================================
-// 18. Eventos e inicialização da tela
-// -----------------------------------------------------
-// Liga os botões, cards, selects e inicia o primeiro estado visual.
-// =====================================================
+  // 18. Eventos e inicialização da tela
+  // -----------------------------------------------------
+  // Liga os botões, cards, selects e inicia o primeiro estado visual.
+  // =====================================================
 
-cardsClasse.forEach(function(card){
+  cardsClasse.forEach(function (card) {
     card.classList.remove("selecionado");
 
-    if (card.dataset.classe === classeAtualNaModal){
+    if (card.dataset.classe === classeAtualNaModal) {
       card.classList.add("selecionado");
     }
   });
@@ -811,7 +595,7 @@ cardsClasse.forEach(function(card){
 function atualizarMarcadoresSalvaguardas() {
   const linhasSalvaguarda = document.querySelectorAll("[data-salvaguarda]");
 
-  linhasSalvaguarda.forEach(function(linha) {
+  linhasSalvaguarda.forEach(function (linha) {
     linha.classList.remove("proficiente");
   });
 
@@ -827,7 +611,7 @@ function atualizarMarcadoresSalvaguardas() {
     return;
   }
 
-  linhasSalvaguarda.forEach(function(linha) {
+  linhasSalvaguarda.forEach(function (linha) {
     const idSalvaguarda = linha.dataset.salvaguarda;
 
     if (dadosClasse.salvaguardas.includes(idSalvaguarda)) {
@@ -849,15 +633,14 @@ botaoSelecionarClasse.addEventListener("click", selecionarClasse);
 function abrirModal(classeEscolhida) {
   classeAtualNaModal = classeEscolhida;
 
-    const dados = dadosClasses[classeEscolhida];
+  const dados = dadosClasses[classeEscolhida];
 
-    modalTituloClasse.textContent = dados.nome;
-    modalImagemClasse.src = dados.imagem;
-    modalImagemClasse.alt = dados.nome;
-    modalDescricaoClasse.textContent = dados.funcionamento;
-    modalEstiloJogoClasse.textContent = dados.estilo;
-    modalHabilidadesClasse.textContent = dados.habilidades;
-
+  modalTituloClasse.textContent = dados.nome;
+  modalImagemClasse.src = dados.imagem;
+  modalImagemClasse.alt = dados.nome;
+  modalDescricaoClasse.textContent = dados.funcionamento;
+  modalEstiloJogoClasse.textContent = dados.estilo;
+  modalHabilidadesClasse.textContent = dados.habilidades;
 
   modalClasse.classList.remove("escondida");
 }
@@ -866,15 +649,15 @@ function fecharModal() {
   modalClasse.classList.add("escondida");
 }
 
-cardsClasse.forEach(function(card) {
-  card.addEventListener("click", function() {
+cardsClasse.forEach(function (card) {
+  card.addEventListener("click", function () {
     const classeEscolhida = card.dataset.classe;
 
     abrirModal(classeEscolhida);
   });
 });
 
-botaoVoltarModal.addEventListener("click", function() {
+botaoVoltarModal.addEventListener("click", function () {
   fecharModal();
 });
 
@@ -895,7 +678,7 @@ botaoVoltarModal.addEventListener("click", function() {
 function irParaPasso(nomePasso) {
   passoAtual = nomePasso;
 
-  conteudosPasso.forEach(function(conteudo) {
+  conteudosPasso.forEach(function (conteudo) {
     conteudo.classList.add("escondida");
   });
 
@@ -905,7 +688,7 @@ function irParaPasso(nomePasso) {
     conteudoAtual.classList.remove("escondida");
   }
 
-  botoesPasso.forEach(function(botao) {
+  botoesPasso.forEach(function (botao) {
     botao.classList.remove("atual");
 
     if (botao.dataset.passo === nomePasso) {
@@ -913,29 +696,26 @@ function irParaPasso(nomePasso) {
     }
   });
 
-    if (nomePasso === "habilidades") {
-      montarTelaPericiasClasse();
-      montarTelaHabilidades();
+  if (nomePasso === "habilidades") {
+    montarTelaPericiasClasse();
+    montarTelaHabilidades();
   }
 
   if (nomePasso === "magias") {
-  montarTelaMagias();
+    montarTelaMagias();
   }
 
   if (nomePasso === "revisao") {
-  montarTelaRevisao();
-}
+    montarTelaRevisao();
+  }
 
-  agendarDestaqueFicha(
-    nomePasso
-  );
-
+  agendarDestaqueFicha(nomePasso);
 }
 
 atualizarEstadoNavegacao();
 
-botoesPasso.forEach(function(botao) {
-  botao.addEventListener("click", function() {
+botoesPasso.forEach(function (botao) {
+  botao.addEventListener("click", function () {
     const passoEscolhido = botao.dataset.passo;
     const indiceEscolhido = ordemPassos.indexOf(passoEscolhido);
 
@@ -944,13 +724,13 @@ botoesPasso.forEach(function(botao) {
       return;
     }
 
-      mostrarMensagemNavegacao("");
-      irParaPasso(passoEscolhido);
+    mostrarMensagemNavegacao("");
+    irParaPasso(passoEscolhido);
   });
 });
 
-botaoProximoPasso.forEach(function(botao) {
-  botao.addEventListener("click", function() {
+botaoProximoPasso.forEach(function (botao) {
+  botao.addEventListener("click", function () {
     if (podeAvancarDoPassoAtual() === false) {
       return;
     }
@@ -969,99 +749,41 @@ botaoProximoPasso.forEach(function(botao) {
   });
 });
 
-const areaPassosCriacao =
-  document.querySelector(
-    ".area-passo"
-  );
+const areaPassosCriacao = document.querySelector(".area-passo");
 
-if (
-  areaPassosCriacao
-) {
+if (areaPassosCriacao) {
+  areaPassosCriacao.addEventListener("change", function () {
+    agendarDestaqueFicha(passoAtual);
+  });
 
-  areaPassosCriacao.addEventListener(
-    "change",
-    function() {
+  areaPassosCriacao.addEventListener("click", function (evento) {
+    const elementoInterativo = evento.target.closest(
+      "button, [data-classe], [data-antecedente], [data-especie]",
+    );
 
-      agendarDestaqueFicha(
-        passoAtual
-      );
-
+    if (!elementoInterativo) {
+      return;
     }
-  );
 
-  areaPassosCriacao.addEventListener(
-    "click",
-    function(evento) {
-
-      const elementoInterativo =
-        evento.target.closest(
-          "button, [data-classe], [data-antecedente], [data-especie]"
-        );
-
-      if (
-        !elementoInterativo
-      ) {
-        return;
-      }
-
-      agendarDestaqueFicha(
-        passoAtual
-      );
-
-    }
-  );
-
+    agendarDestaqueFicha(passoAtual);
+  });
 }
 
-document.addEventListener(
-  "change",
-  function(evento) {
-
-    if (
-      evento.target.closest(
-        "#modalAvatar"
-      )
-    ) {
-
-      agendarDestaqueFicha(
-        "detalhes"
-      );
-
-    }
-
+document.addEventListener("change", function (evento) {
+  if (evento.target.closest("#modalAvatar")) {
+    agendarDestaqueFicha("detalhes");
   }
-);
+});
 
-document.addEventListener(
-  "click",
-  function(evento) {
-
-    if (
-      evento.target.closest(
-        "#modalAvatar"
-      )
-    ) {
-
-      agendarDestaqueFicha(
-        "detalhes"
-      );
-
-    }
-
-    if (
-      evento.target.closest(
-        "#modalClasse"
-      )
-    ) {
-
-      agendarDestaqueFicha(
-        "classe"
-      );
-
-    }
-
+document.addEventListener("click", function (evento) {
+  if (evento.target.closest("#modalAvatar")) {
+    agendarDestaqueFicha("detalhes");
   }
-);
+
+  if (evento.target.closest("#modalClasse")) {
+    agendarDestaqueFicha("classe");
+  }
+});
 
 // =====================================================
 // 8. ANTECEDENTES, PERÍCIAS E TALENTOS
@@ -1077,1008 +799,456 @@ document.addEventListener(
 // Aplica dados vindos do banco de antecedentes.
 // =====================================================
 
-function criarLinhaResumoAntecedente(
-  rotulo,
-  valor
-) {
+function criarLinhaResumoAntecedente(rotulo, valor) {
+  const paragrafo = document.createElement("p");
 
-  const paragrafo =
-    document.createElement(
-      "p"
-    );
+  const destaque = document.createElement("strong");
 
-  const destaque =
-    document.createElement(
-      "strong"
-    );
+  destaque.textContent = `${rotulo}: `;
 
-  destaque.textContent =
-    `${rotulo}: `;
-
-  paragrafo.append(
-    destaque,
-    document.createTextNode(
-      valor
-    )
-  );
+  paragrafo.append(destaque, document.createTextNode(valor));
 
   return paragrafo;
-
 }
 
-function obterNomeEquipamento(
-  equipamentoId
-) {
-
-  const banco =
-    window.bancoEquipamentos;
+function obterNomeEquipamento(equipamentoId) {
+  const banco = window.bancoEquipamentos;
 
   const dadosEquipamento =
-    banco
-      .itensGerais[
-        equipamentoId
-      ] ??
-    banco
-      .armas[
-        equipamentoId
-      ] ??
-    banco
-      .armaduras[
-        equipamentoId
-      ] ??
-    banco
-      .itensSecundarios[
-        equipamentoId
-      ];
+    banco.itensGerais[equipamentoId] ??
+    banco.armas[equipamentoId] ??
+    banco.armaduras[equipamentoId] ??
+    banco.itensSecundarios[equipamentoId];
 
-  return (
-    dadosEquipamento?.nome ??
-    equipamentoId
-  );
-
+  return dadosEquipamento?.nome ?? equipamentoId;
 }
 
 function atualizarFichaEquipamentoAntecedente() {
+  const equipamento = personagem.equipamentoAntecedente;
 
-  const equipamento =
-    personagem
-      .equipamentoAntecedente;
-
-  if (
-    !fichaItensAntecedente ||
-    !fichaMoedasAntecedente
-  ) {
+  if (!fichaItensAntecedente || !fichaMoedasAntecedente) {
     return;
   }
 
-  if (
-    !equipamento
-  ) {
+  if (!equipamento) {
+    fichaItensAntecedente.textContent = "";
 
-    fichaItensAntecedente
-      .textContent =
-      "";
-
-    fichaMoedasAntecedente
-      .textContent =
-      "";
+    fichaMoedasAntecedente.textContent = "";
 
     return;
-
   }
 
-  const itens =
-    equipamento.itens ??
-    [];
+  const itens = equipamento.itens ?? [];
 
-  fichaItensAntecedente
-    .textContent =
+  fichaItensAntecedente.textContent =
     itens.length > 0
       ? itens
-          .map(
-            function(item) {
+          .map(function (item) {
+            const nomeItem = obterNomeEquipamento(item.id);
 
-              const nomeItem =
-                obterNomeEquipamento(
-                  item.id
-                );
+            const quantidade = item.quantidade ?? 1;
 
-              const quantidade =
-                item.quantidade ??
-                1;
-
-              return quantidade > 1
-                ? `${quantidade}× ${nomeItem}`
-                : nomeItem;
-
-            }
-          )
-          .join(
-            ", "
-          )
+            return quantidade > 1 ? `${quantidade}× ${nomeItem}` : nomeItem;
+          })
+          .join(", ")
       : "Nenhum";
 
-  const quantidadeOuro =
-    equipamento
-      .moedas
-      ?.ouro ??
-    0;
+  const quantidadeOuro = equipamento.moedas?.ouro ?? 0;
 
-  fichaMoedasAntecedente
-    .textContent =
-    `${quantidadeOuro} peças de ouro`;
-
+  fichaMoedasAntecedente.textContent = `${quantidadeOuro} peças de ouro`;
 }
 
-function criarTextoOpcaoEquipamento(
-  opcao
-) {
+function criarTextoOpcaoEquipamento(opcao) {
+  const partes = [];
 
-  const partes =
-    [];
+  const itens = opcao.itens ?? [];
 
-  const itens =
-    opcao.itens ??
-    [];
+  for (const item of itens) {
+    const nomeItem = obterNomeEquipamento(item.id);
 
-  for (
-    const item of itens
-  ) {
+    const quantidade = item.quantidade ?? 1;
 
-    const nomeItem =
-      obterNomeEquipamento(
-        item.id
-      );
-
-    const quantidade =
-      item.quantidade ??
-      1;
-
-    partes.push(
-      quantidade > 1
-        ? `${quantidade}× ${nomeItem}`
-        : nomeItem
-    );
-
+    partes.push(quantidade > 1 ? `${quantidade}× ${nomeItem}` : nomeItem);
   }
 
-  const quantidadeOuro =
-    opcao.moedas
-      ?.ouro ??
-    0;
+  const quantidadeOuro = opcao.moedas?.ouro ?? 0;
 
-  if (
-    quantidadeOuro > 0
-  ) {
+  if (quantidadeOuro > 0) {
+    if (itens.length === 0) {
+      return opcao.nome;
+    }
 
-    if (
-      itens.length === 0
-    ) {
-
-      return opcao.nome;}
-
-    partes.push(
-      `${quantidadeOuro} peças de ouro`
-    );
-
+    partes.push(`${quantidadeOuro} peças de ouro`);
   }
 
   return `${opcao.nome}: ${partes.join(", ")}`;
-
 }
 
-function abrirModalAntecedente(
-  card
-) {
+function abrirModalAntecedente(card) {
+  const antecedenteId = card.dataset.antecedente;
 
-  const antecedenteId =
-    card.dataset.antecedente;
+  const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
 
-  const dadosAntecedente =
-    window.bancoAntecedentes[
-      antecedenteId
-    ];
-
-  if (
-    !dadosAntecedente
-  ) {
+  if (!dadosAntecedente) {
     return;
   }
 
-  cardAntecedenteTemporario =
-    card;
+  cardAntecedenteTemporario = card;
 
-  antecedentePreviewAnterior =
-    fichaAntecedente.textContent;
+  antecedentePreviewAnterior = fichaAntecedente.textContent;
 
-  bonusAntecedenteAnterior =
-    structuredClone(
-      personagem
-        .bonusAtributosAntecedente
-    );
+  bonusAntecedenteAnterior = structuredClone(personagem.bonusAtributosAntecedente);
 
-  antecedenteModalConfirmado =
-    false;
+  antecedenteModalConfirmado = false;
 
-  equipamentoAntecedenteTemporario =
-    null;
+  equipamentoAntecedenteTemporario = null;
 
-    etapaAtualModalAntecedente =
-  "detalhes";
+  etapaAtualModalAntecedente = "detalhes";
 
-indiceDistribuicaoTemporaria =
-  null;
+  indiceDistribuicaoTemporaria = null;
 
-bonusAtributosTemporarios =
-  {};
+  bonusAtributosTemporarios = {};
 
-  etapaDetalhesAntecedente.hidden =
-    false;
+  etapaDetalhesAntecedente.hidden = false;
 
-  etapaAtributosAntecedente.hidden =
-    true;
+  etapaAtributosAntecedente.hidden = true;
 
-  botaoAvancarAntecedente.textContent =
-    "Escolher este antecedente";
+  botaoAvancarAntecedente.textContent = "Escolher este antecedente";
 
-  mensagemBonusAntecedente.textContent =
-    "";
+  mensagemBonusAntecedente.textContent = "";
 
-      mensagemEquipamentoAntecedente
-    .textContent =
-    "";
+  mensagemEquipamentoAntecedente.textContent = "";
 
-  opcoesEquipamentoAntecedente
-    .replaceChildren();
+  opcoesEquipamentoAntecedente.replaceChildren();
 
-  opcoesDistribuicaoAntecedente
-    .replaceChildren();
+  opcoesDistribuicaoAntecedente.replaceChildren();
 
-  seletoresBonusAntecedente
-    .replaceChildren();
+  seletoresBonusAntecedente.replaceChildren();
 
-  tituloModalAntecedente.textContent =
-    dadosAntecedente.nome;
+  tituloModalAntecedente.textContent = dadosAntecedente.nome;
 
-  fichaAntecedente.textContent =
-    dadosAntecedente.nome;
+  fichaAntecedente.textContent = dadosAntecedente.nome;
 
-  agendarDestaqueFicha(
-    "antecedente"
-  );
+  agendarDestaqueFicha("antecedente");
 
   descricaoModalAntecedente.textContent =
-    dadosAntecedente.descricao ??
-    dadosAntecedente.descricaoCurta ??
-    "";
+    dadosAntecedente.descricao ?? dadosAntecedente.descricaoCurta ?? "";
 
-  const atributos =
-    dadosAntecedente
-      .atributos
-      ?.opcoes ??
-    dadosAntecedente
-      .atributosSugeridos ??
-    [];
+  const atributos = dadosAntecedente.atributos?.opcoes ?? dadosAntecedente.atributosSugeridos ?? [];
 
-  const pericias =
-    dadosAntecedente
-      .proficiencias
-      ?.pericias ??
-    dadosAntecedente.pericias ??
-    [];
+  const pericias = dadosAntecedente.proficiencias?.pericias ?? dadosAntecedente.pericias ?? [];
 
   const ferramentas =
-    dadosAntecedente
-      .proficiencias
-      ?.ferramentas ??
-    dadosAntecedente.ferramentas ??
-    [];
+    dadosAntecedente.proficiencias?.ferramentas ?? dadosAntecedente.ferramentas ?? [];
 
-  const talentoOrigem =
-    dadosAntecedente
-      .talentoOrigem;
+  const talentoOrigem = dadosAntecedente.talentoOrigem;
 
-  const idTalento =
-    typeof talentoOrigem ===
-      "string"
-      ? talentoOrigem
-      : talentoOrigem?.id;
+  const idTalento = typeof talentoOrigem === "string" ? talentoOrigem : talentoOrigem?.id;
 
-  const nomeTalento =
-    window.bancoTalentos[
-      idTalento
-    ]?.nome ??
-    idTalento ??
-    "Nenhum";
+  const nomeTalento = window.bancoTalentos[idTalento]?.nome ?? idTalento ?? "Nenhum";
 
-      const opcoesEquipamento =
-    dadosAntecedente
-      .equipamento
-      ?.opcoes ??
-    [];
+  const opcoesEquipamento = dadosAntecedente.equipamento?.opcoes ?? [];
 
-        escolhaEquipamentoAntecedente.hidden =
-    opcoesEquipamento.length ===
-      0;
+  escolhaEquipamentoAntecedente.hidden = opcoesEquipamento.length === 0;
 
-  for (
-    const opcao of
-      opcoesEquipamento
-  ) {
+  for (const opcao of opcoesEquipamento) {
+    const botaoOpcao = document.createElement("button");
 
-    const botaoOpcao =
-      document.createElement(
-        "button"
-      );
+    botaoOpcao.type = "button";
 
-    botaoOpcao.type =
-      "button";
+    botaoOpcao.classList.add("opcao-equipamento-antecedente");
 
-    botaoOpcao.classList.add(
-      "opcao-equipamento-antecedente"
-    );
+    botaoOpcao.dataset.opcaoId = opcao.id;
 
-    botaoOpcao.dataset.opcaoId =
-      opcao.id;
+    botaoOpcao.textContent = criarTextoOpcaoEquipamento(opcao);
 
-    botaoOpcao.textContent =
-      criarTextoOpcaoEquipamento(
-        opcao
-      );
+    botaoOpcao.addEventListener("click", function () {
+      opcoesEquipamentoAntecedente
+        .querySelectorAll(".opcao-equipamento-antecedente")
+        .forEach(function (botao) {
+          botao.classList.remove("selecionado");
+        });
 
-    botaoOpcao.addEventListener(
-      "click",
-      function() {
+      botaoOpcao.classList.add("selecionado");
 
-        opcoesEquipamentoAntecedente
-          .querySelectorAll(
-            ".opcao-equipamento-antecedente"
-          )
-          .forEach(
-            function(botao) {
+      equipamentoAntecedenteTemporario = opcao.id;
 
-              botao.classList.remove(
-                "selecionado"
-              );
+      mensagemEquipamentoAntecedente.textContent = "";
 
-            }
-          );
+      agendarDestaqueFicha("equipamentos");
+    });
 
-        botaoOpcao.classList.add(
-          "selecionado"
-        );
-
-        equipamentoAntecedenteTemporario =
-          opcao.id;
-
-        mensagemEquipamentoAntecedente
-          .textContent =
-          "";
-
-        agendarDestaqueFicha(
-          "equipamentos"
-        );
-
-      }
-    );
-
-    opcoesEquipamentoAntecedente
-      .appendChild(
-        botaoOpcao
-      );
-
+    opcoesEquipamentoAntecedente.appendChild(botaoOpcao);
   }
 
-  resumoModalAntecedente
-    .replaceChildren(
-      criarLinhaResumoAntecedente(
-        "Atributos",
-        atributos
-          .map(
-            obterNomeAtributo
-          )
-          .join(
-            ", "
-          )
-      ),
+  resumoModalAntecedente.replaceChildren(
+    criarLinhaResumoAntecedente("Atributos", atributos.map(obterNomeAtributo).join(", ")),
 
-      criarLinhaResumoAntecedente(
-        "Perícias",
-        pericias
-          .map(
-            obterNomePericia
-          )
-          .join(
-            ", "
-          )
-      ),
+    criarLinhaResumoAntecedente("Perícias", pericias.map(obterNomePericia).join(", ")),
 
-      criarLinhaResumoAntecedente(
-        "Ferramentas",
-        ferramentas.length > 0
-          ? ferramentas
-              .map(
-                obterNomeEquipamento
-              )
-              .join(
-                ", "
-              )
-          : "Nenhuma"
-      ),
+    criarLinhaResumoAntecedente(
+      "Ferramentas",
+      ferramentas.length > 0 ? ferramentas.map(obterNomeEquipamento).join(", ") : "Nenhuma",
+    ),
 
-      criarLinhaResumoAntecedente(
-        "Talento",
-        nomeTalento
-      ),
-
-    );
-  modalAntecedente.classList.remove(
-    "escondida"
+    criarLinhaResumoAntecedente("Talento", nomeTalento),
   );
-
+  modalAntecedente.classList.remove("escondida");
 }
 
 function fecharModalAntecedente() {
+  modalAntecedente.classList.add("escondida");
 
-  modalAntecedente.classList.add(
-    "escondida"
-  );
+  if (!antecedenteModalConfirmado) {
+    fichaAntecedente.textContent = antecedentePreviewAnterior;
 
-  if (
-    !antecedenteModalConfirmado
-  ) {
-
-    fichaAntecedente.textContent =
-      antecedentePreviewAnterior;
-
-    personagem
-      .bonusAtributosAntecedente =
-      structuredClone(
-        bonusAntecedenteAnterior
-      );
+    personagem.bonusAtributosAntecedente = structuredClone(bonusAntecedenteAnterior);
 
     recalcularAtributosFinais();
-
   }
 
-  cardAntecedenteTemporario =
-    null;
+  cardAntecedenteTemporario = null;
 
-  antecedenteModalConfirmado =
-    false;
-
+  antecedenteModalConfirmado = false;
 }
 
-function obterNomeAtributo(
-  atributoId
-) {
-
+function obterNomeAtributo(atributoId) {
   const nomesAtributos = {
-    forca:
-      "Força",
+    forca: "Força",
 
-    destreza:
-      "Destreza",
+    destreza: "Destreza",
 
-    constituicao:
-      "Constituição",
+    constituicao: "Constituição",
 
-    inteligencia:
-      "Inteligência",
+    inteligencia: "Inteligência",
 
-    sabedoria:
-      "Sabedoria",
+    sabedoria: "Sabedoria",
 
-    carisma:
-      "Carisma"
+    carisma: "Carisma",
   };
 
-  return (
-    nomesAtributos[
-      atributoId
-    ] ??
-    atributoId
-  );
-
+  return nomesAtributos[atributoId] ?? atributoId;
 }
 
 function atualizarOpcoesBonusAntecedente() {
+  const seletores = seletoresBonusAntecedente.querySelectorAll("select");
 
-  const seletores =
-    seletoresBonusAntecedente
-      .querySelectorAll(
-        "select"
-      );
+  const atributosSelecionados = Array.from(seletores)
+    .map((seletor) => seletor.value)
+    .filter((valor) => valor !== "");
 
-  const atributosSelecionados =
-    Array.from(
-      seletores
-    )
-      .map(
-        seletor =>
-          seletor.value
-      )
-      .filter(
-        valor =>
-          valor !==
-            ""
-      );
+  seletores.forEach(function (seletor) {
+    const valorAtual = seletor.value;
 
-  seletores.forEach(
-    function(seletor) {
+    seletor.querySelectorAll("option").forEach(function (opcao) {
+      if (opcao.value === "" || opcao.value === valorAtual) {
+        opcao.disabled = false;
 
-      const valorAtual =
-        seletor.value;
-
-      seletor
-        .querySelectorAll(
-          "option"
-        )
-        .forEach(
-          function(opcao) {
-
-            if (
-              opcao.value ===
-                "" ||
-              opcao.value ===
-                valorAtual
-            ) {
-
-              opcao.disabled =
-                false;
-
-              return;
-
-            }
-
-            opcao.disabled =
-              atributosSelecionados
-                .includes(
-                  opcao.value
-                );
-
-          }
-        );
-
-    }
-  );
-
-}
-
-function atualizarPreviewBonusAntecedente() {
-
-  const seletores =
-    seletoresBonusAntecedente
-      .querySelectorAll(
-        "select"
-      );
-
-  bonusAtributosTemporarios =
-    {};
-
-  seletores.forEach(
-    function(seletor) {
-
-      const atributoId =
-        seletor.value;
-
-      if (
-        atributoId ===
-          ""
-      ) {
         return;
       }
 
-      const bonus =
-        Number(
-          seletor.dataset.bonus
-        );
+      opcao.disabled = atributosSelecionados.includes(opcao.value);
+    });
+  });
+}
 
-      bonusAtributosTemporarios[
-        atributoId
-      ] =
-        (
-          bonusAtributosTemporarios[
-            atributoId
-          ] ??
-          0
-        ) +
-        bonus;
+function atualizarPreviewBonusAntecedente() {
+  const seletores = seletoresBonusAntecedente.querySelectorAll("select");
 
+  bonusAtributosTemporarios = {};
+
+  seletores.forEach(function (seletor) {
+    const atributoId = seletor.value;
+
+    if (atributoId === "") {
+      return;
     }
-  );
 
-  personagem
-    .bonusAtributosAntecedente =
-    {
-      ...bonusAtributosTemporarios
-    };
+    const bonus = Number(seletor.dataset.bonus);
+
+    bonusAtributosTemporarios[atributoId] = (bonusAtributosTemporarios[atributoId] ?? 0) + bonus;
+  });
+
+  personagem.bonusAtributosAntecedente = {
+    ...bonusAtributosTemporarios,
+  };
 
   recalcularAtributosFinais();
 
   atualizarOpcoesBonusAntecedente();
 
-  agendarDestaqueFicha(
-    "atributos"
-  );
-
+  agendarDestaqueFicha("atributos");
 }
 
-function criarSeletoresBonusAntecedente(
-  distribuicao,
-  atributos
-) {
+function criarSeletoresBonusAntecedente(distribuicao, atributos) {
+  seletoresBonusAntecedente.replaceChildren();
 
-  seletoresBonusAntecedente
-    .replaceChildren();
+  distribuicao.valores.forEach(function (bonus, indice) {
+    const grupo = document.createElement("label");
 
-  distribuicao
-    .valores
-    .forEach(
-      function(
-        bonus,
-        indice
-      ) {
+    grupo.classList.add("seletor-bonus-antecedente");
 
-        const grupo =
-          document.createElement(
-            "label"
-          );
+    const rotulo = document.createElement("span");
 
-        grupo.classList.add(
-          "seletor-bonus-antecedente"
-        );
+    rotulo.textContent = `Bônus +${bonus}`;
 
-        const rotulo =
-          document.createElement(
-            "span"
-          );
+    const seletor = document.createElement("select");
 
-        rotulo.textContent =
-          `Bônus +${bonus}`;
+    seletor.dataset.bonus = bonus;
 
-        const seletor =
-          document.createElement(
-            "select"
-          );
+    seletor.setAttribute("aria-label", `Atributo do bônus +${bonus}, opção ${indice + 1}`);
 
-        seletor.dataset.bonus =
-          bonus;
+    const opcaoInicial = document.createElement("option");
 
-        seletor.setAttribute(
-          "aria-label",
-          `Atributo do bônus +${bonus}, opção ${indice + 1}`
-        );
+    opcaoInicial.value = "";
 
-        const opcaoInicial =
-          document.createElement(
-            "option"
-          );
+    opcaoInicial.textContent = "Escolha um atributo";
 
-        opcaoInicial.value =
-          "";
+    seletor.appendChild(opcaoInicial);
 
-        opcaoInicial.textContent =
-          "Escolha um atributo";
+    atributos.forEach(function (atributoId) {
+      const opcao = document.createElement("option");
 
-        seletor.appendChild(
-          opcaoInicial
-        );
+      opcao.value = atributoId;
 
-        atributos.forEach(
-          function(atributoId) {
+      opcao.textContent = obterNomeAtributo(atributoId);
 
-            const opcao =
-              document.createElement(
-                "option"
-              );
+      seletor.appendChild(opcao);
+    });
 
-            opcao.value =
-              atributoId;
+    seletor.addEventListener("change", function () {
+      mensagemBonusAntecedente.textContent = "";
 
-            opcao.textContent =
-              obterNomeAtributo(
-                atributoId
-              );
+      atualizarPreviewBonusAntecedente();
+    });
 
-            seletor.appendChild(
-              opcao
-            );
+    grupo.append(rotulo, seletor);
 
-          }
-        );
-
-        seletor.addEventListener(
-          "change",
-          function() {
-
-            mensagemBonusAntecedente
-              .textContent =
-              "";
-
-            atualizarPreviewBonusAntecedente();
-
-          }
-        );
-
-        grupo.append(
-          rotulo,
-          seletor
-        );
-
-        seletoresBonusAntecedente
-          .appendChild(
-            grupo
-          );
-
-      }
-    );
-
+    seletoresBonusAntecedente.appendChild(grupo);
+  });
 }
 
 function exibirEtapaAtributosAntecedente() {
-
-  if (
-    !cardAntecedenteTemporario
-  ) {
+  if (!cardAntecedenteTemporario) {
     return;
   }
 
-  const antecedenteId =
-    cardAntecedenteTemporario
-      .dataset
-      .antecedente;
+  const antecedenteId = cardAntecedenteTemporario.dataset.antecedente;
 
-  const dadosAntecedente =
-    window.bancoAntecedentes[
-      antecedenteId
-    ];
+  const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
 
-  const distribuicoes =
-    dadosAntecedente
-      .atributos
-      ?.distribuicoesPermitidas ??
-    [];
+  const distribuicoes = dadosAntecedente.atributos?.distribuicoesPermitidas ?? [];
 
-  const atributos =
-    dadosAntecedente
-      .atributos
-      ?.opcoes ??
-    [];
+  const atributos = dadosAntecedente.atributos?.opcoes ?? [];
 
-  etapaAtualModalAntecedente =
-    "atributos";
+  etapaAtualModalAntecedente = "atributos";
 
-  etapaDetalhesAntecedente.hidden =
-    true;
+  etapaDetalhesAntecedente.hidden = true;
 
-  etapaAtributosAntecedente.hidden =
-    false;
+  etapaAtributosAntecedente.hidden = false;
 
-  botaoAvancarAntecedente.textContent =
-    "Confirmar antecedente";
+  botaoAvancarAntecedente.textContent = "Confirmar antecedente";
 
-  opcoesDistribuicaoAntecedente
-    .replaceChildren();
+  opcoesDistribuicaoAntecedente.replaceChildren();
 
-  seletoresBonusAntecedente
-    .replaceChildren();
+  seletoresBonusAntecedente.replaceChildren();
 
-  agendarDestaqueFicha(
-    "atributos"
-  );
+  agendarDestaqueFicha("atributos");
 
-  for (
-    let indice = 0;
-    indice <
-      distribuicoes.length;
-    indice += 1
-  ) {
+  for (let indice = 0; indice < distribuicoes.length; indice += 1) {
+    const distribuicao = distribuicoes[indice];
 
-    const distribuicao =
-      distribuicoes[
-        indice
-      ];
+    const botaoDistribuicao = document.createElement("button");
 
-    const botaoDistribuicao =
-      document.createElement(
-        "button"
-      );
+    botaoDistribuicao.type = "button";
 
-    botaoDistribuicao.type =
-      "button";
+    botaoDistribuicao.classList.add("opcao-distribuicao-antecedente");
 
-    botaoDistribuicao.classList.add(
-      "opcao-distribuicao-antecedente"
-    );
+    botaoDistribuicao.dataset.indice = indice;
 
-    botaoDistribuicao.dataset.indice =
-      indice;
+    const textoValores = distribuicao.valores.map((valor) => `+${valor}`).join(" e ");
 
-    const textoValores =
-      distribuicao
-        .valores
-        .map(
-          valor =>
-            `+${valor}`
-        )
-        .join(
-          " e "
-        );
+    botaoDistribuicao.textContent = textoValores;
 
-    botaoDistribuicao.textContent =
-      textoValores;
+    botaoDistribuicao.addEventListener("click", function () {
+      opcoesDistribuicaoAntecedente
+        .querySelectorAll(".opcao-distribuicao-antecedente")
+        .forEach(function (botao) {
+          botao.classList.remove("selecionado");
+        });
 
-          botaoDistribuicao
-      .addEventListener(
-        "click",
-        function() {
+      botaoDistribuicao.classList.add("selecionado");
 
-          opcoesDistribuicaoAntecedente
-            .querySelectorAll(
-              ".opcao-distribuicao-antecedente"
-            )
-            .forEach(
-              function(botao) {
+      indiceDistribuicaoTemporaria = indice;
 
-                botao.classList.remove(
-                  "selecionado"
-                );
+      bonusAtributosTemporarios = {};
 
-              }
-            );
+      personagem.bonusAtributosAntecedente = {};
 
-          botaoDistribuicao
-            .classList.add(
-              "selecionado"
-            );
+      recalcularAtributosFinais();
 
-          indiceDistribuicaoTemporaria =
-            indice;
+      seletoresBonusAntecedente.replaceChildren();
 
-          bonusAtributosTemporarios =
-            {};
+      mensagemBonusAntecedente.textContent = "";
 
-          personagem
-            .bonusAtributosAntecedente =
-            {};
+      criarSeletoresBonusAntecedente(distribuicao, atributos);
 
-          recalcularAtributosFinais();
+      agendarDestaqueFicha("atributos");
+    });
 
-          seletoresBonusAntecedente
-            .replaceChildren();
-
-          mensagemBonusAntecedente
-            .textContent =
-            "";
-
-          criarSeletoresBonusAntecedente(
-            distribuicao,
-            atributos
-          );
-
-          agendarDestaqueFicha(
-            "atributos"
-          );
-
-        }
-      );
-
-    opcoesDistribuicaoAntecedente
-      .appendChild(
-        botaoDistribuicao
-      );
-
+    opcoesDistribuicaoAntecedente.appendChild(botaoDistribuicao);
   }
-
 }
 
 function confirmarAntecedenteTemporario() {
-
-  if (
-    !cardAntecedenteTemporario
-  ) {
+  if (!cardAntecedenteTemporario) {
     return;
   }
 
-  if (
-    indiceDistribuicaoTemporaria ===
-      null
-  ) {
-
-    mensagemBonusAntecedente
-      .textContent =
-      "Escolha uma forma de distribuir os bônus.";
+  if (indiceDistribuicaoTemporaria === null) {
+    mensagemBonusAntecedente.textContent = "Escolha uma forma de distribuir os bônus.";
 
     return;
-
   }
 
-  const seletores =
-    seletoresBonusAntecedente
-      .querySelectorAll(
-        "select"
-      );
+  const seletores = seletoresBonusAntecedente.querySelectorAll("select");
 
-  const algumAtributoVazio =
-    Array.from(
-      seletores
-    )
-      .some(
-        seletor =>
-          seletor.value ===
-            ""
-      );
+  const algumAtributoVazio = Array.from(seletores).some((seletor) => seletor.value === "");
 
-  if (
-    algumAtributoVazio
-  ) {
-
-    mensagemBonusAntecedente
-      .textContent =
-      "Escolha um atributo para cada bônus.";
+  if (algumAtributoVazio) {
+    mensagemBonusAntecedente.textContent = "Escolha um atributo para cada bônus.";
 
     return;
-
   }
 
-  const antecedenteId =
-    cardAntecedenteTemporario
-      .dataset
-      .antecedente;
+  const antecedenteId = cardAntecedenteTemporario.dataset.antecedente;
 
-  const dadosAntecedente =
-    window.bancoAntecedentes[
-      antecedenteId
-    ];
+  const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
 
   const opcaoEquipamento =
-    dadosAntecedente
-      .equipamento
-      ?.opcoes
-      ?.find(
-        opcao =>
-          opcao.id ===
-            equipamentoAntecedenteTemporario
-      ) ??
-    null;
+    dadosAntecedente.equipamento?.opcoes?.find(
+      (opcao) => opcao.id === equipamentoAntecedenteTemporario,
+    ) ?? null;
 
-  personagem
-    .bonusAtributosAntecedente =
-    {
-      ...bonusAtributosTemporarios
-    };
+  personagem.bonusAtributosAntecedente = {
+    ...bonusAtributosTemporarios,
+  };
 
-  personagem
-    .equipamentoAntecedenteId =
-    equipamentoAntecedenteTemporario ??
-    "";
+  personagem.equipamentoAntecedenteId = equipamentoAntecedenteTemporario ?? "";
 
-  personagem
-    .equipamentoAntecedente =
-    opcaoEquipamento
-      ? structuredClone(
-          opcaoEquipamento
-        )
-      : null;
+  personagem.equipamentoAntecedente = opcaoEquipamento ? structuredClone(opcaoEquipamento) : null;
 
   atualizarFichaEquipamentoAntecedente();
 
-  selecionarAntecedente(
-    cardAntecedenteTemporario
-  );
+  selecionarAntecedente(cardAntecedenteTemporario);
 
   recalcularAtributosFinais();
 
-  antecedenteModalConfirmado =
-    true;
+  antecedenteModalConfirmado = true;
 
   fecharModalAntecedente();
 
-  agendarDestaqueFicha(
-    "antecedente"
-  );
-
+  agendarDestaqueFicha("antecedente");
 }
 
 function selecionarAntecedente(cardClicado) {
@@ -2090,7 +1260,7 @@ function selecionarAntecedente(cardClicado) {
     return;
   }
 
-  cardsAntecedente.forEach(function(card) {
+  cardsAntecedente.forEach(function (card) {
     card.classList.remove("selecionado");
   });
 
@@ -2099,82 +1269,39 @@ function selecionarAntecedente(cardClicado) {
   personagem.antecedenteId = antecedenteId;
   personagem.antecedente = dadosAntecedente.nome;
 
-  antecedentePreviewAnterior =
-    dadosAntecedente.nome;
+  antecedentePreviewAnterior = dadosAntecedente.nome;
 
   const periciasAntecedente =
-  dadosAntecedente
-    .proficiencias
-    ?.pericias ??
-  dadosAntecedente.pericias ??
-  [];
+    dadosAntecedente.proficiencias?.pericias ?? dadosAntecedente.pericias ?? [];
 
-personagem.periciasAntecedente =
-  [
-    ...periciasAntecedente
-  ];
+  personagem.periciasAntecedente = [...periciasAntecedente];
 
   const ferramentasAntecedente =
-  dadosAntecedente
-    .proficiencias
-    ?.ferramentas ??
-  dadosAntecedente.ferramentas ??
-  [];
+    dadosAntecedente.proficiencias?.ferramentas ?? dadosAntecedente.ferramentas ?? [];
 
-personagem.ferramentasAntecedente =
-  [
-    ...ferramentasAntecedente
-  ];
+  personagem.ferramentasAntecedente = [...ferramentasAntecedente];
 
-personagem.ferramentas =
-  [
-    ...ferramentasAntecedente
-  ];
+  personagem.ferramentas = [...ferramentasAntecedente];
 
   personagem.talentos = [];
 
-  personagem.talentos =
-  [];
+  personagem.talentos = [];
 
-personagem.configuracoesTalentos =
-  {};
+  personagem.configuracoesTalentos = {};
 
-const talentoOrigem =
-  dadosAntecedente
-    .talentoOrigem;
+  const talentoOrigem = dadosAntecedente.talentoOrigem;
 
-if (
-  talentoOrigem !==
-    undefined
-) {
+  if (talentoOrigem !== undefined) {
+    const idTalentoOrigem = typeof talentoOrigem === "string" ? talentoOrigem : talentoOrigem.id;
 
-  const idTalentoOrigem =
-    typeof talentoOrigem ===
-      "string"
-      ? talentoOrigem
-      : talentoOrigem.id;
+    personagem.talentos.push(idTalentoOrigem);
 
-  personagem.talentos.push(
-    idTalentoOrigem
-  );
-
-  if (
-    typeof talentoOrigem ===
-      "object" &&
-    talentoOrigem.configuracao
-  ) {
-
-    personagem
-      .configuracoesTalentos[
-        idTalentoOrigem
-      ] =
-      structuredClone(
-        talentoOrigem.configuracao
+    if (typeof talentoOrigem === "object" && talentoOrigem.configuracao) {
+      personagem.configuracoesTalentos[idTalentoOrigem] = structuredClone(
+        talentoOrigem.configuracao,
       );
-
+    }
   }
-
-}
 
   atualizarPericiasPersonagem();
   limparEspecializacoesInvalidas();
@@ -2186,89 +1313,45 @@ if (
   atualizarFichaTalentos();
 }
 
-cardsAntecedente.forEach(function(card) {
-  card.addEventListener("click", function() {
+cardsAntecedente.forEach(function (card) {
+  card.addEventListener("click", function () {
     abrirModalAntecedente(card);
-  }
-);
+  });
 });
 
-botaoAvancarAntecedente
-  .addEventListener(
-    "click",
-    function() {
+botaoAvancarAntecedente.addEventListener("click", function () {
+  if (etapaAtualModalAntecedente === "detalhes") {
+    const antecedenteId = cardAntecedenteTemporario?.dataset.antecedente;
 
-      if (
-        etapaAtualModalAntecedente ===
-          "detalhes"
-      ) {
+    const dadosAntecedente = window.bancoAntecedentes[antecedenteId];
 
-        const antecedenteId =
-          cardAntecedenteTemporario
-            ?.dataset
-            .antecedente;
+    const opcoesEquipamento = dadosAntecedente?.equipamento?.opcoes ?? [];
 
-        const dadosAntecedente =
-          window
-            .bancoAntecedentes[
-              antecedenteId
-            ];
+    if (opcoesEquipamento.length > 0 && equipamentoAntecedenteTemporario === null) {
+      mensagemEquipamentoAntecedente.textContent =
+        "Escolha uma opção de equipamento para continuar.";
 
-        const opcoesEquipamento =
-          dadosAntecedente
-            ?.equipamento
-            ?.opcoes ??
-          [];
-
-        if (
-          opcoesEquipamento.length >
-            0 &&
-          equipamentoAntecedenteTemporario ===
-            null
-        ) {
-
-          mensagemEquipamentoAntecedente
-            .textContent =
-            "Escolha uma opção de equipamento para continuar.";
-
-          return;
-
-        }
-
-        exibirEtapaAtributosAntecedente();
-
-        return;
-
-      }
-
-      if (
-        etapaAtualModalAntecedente ===
-          "atributos"
-      ) {
-
-        confirmarAntecedenteTemporario();
-
-        return;
-
-      }
-
+      return;
     }
-  );
 
-botaoFecharModalAntecedente
-  .addEventListener(
-    "click",
-    fecharModalAntecedente
-  );
+    exibirEtapaAtributosAntecedente();
 
-botaoCancelarAntecedente
-  .addEventListener(
-    "click",
-    fecharModalAntecedente
-  );
+    return;
+  }
 
-cardsEspecie.forEach(function(card) {
-  card.addEventListener("click", function() {
+  if (etapaAtualModalAntecedente === "atributos") {
+    confirmarAntecedenteTemporario();
+
+    return;
+  }
+});
+
+botaoFecharModalAntecedente.addEventListener("click", fecharModalAntecedente);
+
+botaoCancelarAntecedente.addEventListener("click", fecharModalAntecedente);
+
+cardsEspecie.forEach(function (card) {
+  card.addEventListener("click", function () {
     selecionarEspecie(card);
   });
 });
@@ -2287,7 +1370,7 @@ cardsEspecie.forEach(function(card) {
 // =====================================================
 
 function selecionarEspecie(cardClicado) {
-  cardsEspecie.forEach(function(card) {
+  cardsEspecie.forEach(function (card) {
     card.classList.remove("selecionado");
   });
 
@@ -2338,7 +1421,7 @@ function resultadoAtributo(valoresDados) {
 
   let soma = 0;
 
-  valoresDados.forEach(function(valor, indice) {
+  valoresDados.forEach(function (valor, indice) {
     if (indice !== valorDescartado) {
       soma = soma + valor;
     }
@@ -2346,7 +1429,7 @@ function resultadoAtributo(valoresDados) {
 
   return {
     soma: soma,
-    valorDescartado: valorDescartado
+    valorDescartado: valorDescartado,
   };
 }
 
@@ -2361,30 +1444,25 @@ function dadosRolando() {
 
   rolando = true;
 
-  dadosAtributo.forEach(function(dado) {
+  dadosAtributo.forEach(function (dado) {
     dado.classList.remove("descartado");
     dado.classList.add("rolando");
   });
 
   rolagemAtual.textContent = "Rolando...";
 
-  const animacao = setInterval(function() {
-    dadosAtributo.forEach(function(dado) {
-      dado.textContent = rolarD6() ;
+  const animacao = setInterval(function () {
+    dadosAtributo.forEach(function (dado) {
+      dado.textContent = rolarD6();
     });
-  },80);
+  }, 80);
 
-  setTimeout(function() {
+  setTimeout(function () {
     clearInterval(animacao);
 
-    const valoresFinais = [
-      rolarD6(),
-      rolarD6(),
-      rolarD6(),
-      rolarD6(),
-    ];
+    const valoresFinais = [rolarD6(), rolarD6(), rolarD6(), rolarD6()];
 
-    dadosAtributo.forEach(function(dado, indice){
+    dadosAtributo.forEach(function (dado, indice) {
       dado.textContent = valoresFinais[indice];
       dado.classList.remove("rolando");
     });
@@ -2404,7 +1482,7 @@ function dadosRolando() {
 }
 
 function atualizarResultadosAtributos() {
-  resultadosAtributos.forEach(function(casa, indice) {
+  resultadosAtributos.forEach(function (casa, indice) {
     if (atributosRolados[indice] !== undefined) {
       casa.textContent = atributosRolados[indice];
     } else {
@@ -2452,21 +1530,21 @@ function atualizarFichaHabilidades() {
   const dadosNivel1 = dadosDaClasse.nivel1;
 
   const habilidadesAutomaticas =
-  dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
+    dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
-  if (idHabilidade === "maestriaComArmas") {
-    return;
-  }
+  habilidadesAutomaticas.forEach(function (idHabilidade) {
+    if (idHabilidade === "maestriaComArmas") {
+      return;
+    }
 
-  const item = criarItemHabilidadeAutomaticaFicha(idHabilidade);
+    const item = criarItemHabilidadeAutomaticaFicha(idHabilidade);
 
-  if (item !== undefined) {
-    fichaHabilidades.appendChild(item);
-  }
- });
+    if (item !== undefined) {
+      fichaHabilidades.appendChild(item);
+    }
+  });
 
-  dadosNivel1.escolhas.forEach(function(escolha) {
+  dadosNivel1.escolhas.forEach(function (escolha) {
     const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
     const valorEscolhido = personagem.habilidades.escolhas[escolha.grupo];
 
@@ -2477,53 +1555,47 @@ function atualizarFichaHabilidades() {
     const opcoes = obterOpcoesDoGrupoEscolha(grupo);
 
     if (Array.isArray(valorEscolhido)) {
-  const nomesEscolhidos = [];
+      const nomesEscolhidos = [];
 
-  valorEscolhido.forEach(function(idEscolhido) {
-    const opcaoEscolhida = opcoes.find(function(opcao) {
-      return opcao.id === idEscolhido;
-    });
+      valorEscolhido.forEach(function (idEscolhido) {
+        const opcaoEscolhida = opcoes.find(function (opcao) {
+          return opcao.id === idEscolhido;
+        });
 
-    if (opcaoEscolhida !== undefined) {
-      nomesEscolhidos.push(opcaoEscolhida.nome);
+        if (opcaoEscolhida !== undefined) {
+          nomesEscolhidos.push(opcaoEscolhida.nome);
+        }
+      });
+
+      if (nomesEscolhidos.length > 0) {
+        const item = criarItemHabilidadeComEscolha(grupo.nome, nomesEscolhidos.join(", "));
+        fichaHabilidades.appendChild(item);
+      }
+
+      return;
     }
-  });
 
-  if (nomesEscolhidos.length > 0) {
-    const item = criarItemHabilidadeComEscolha(
-    grupo.nome,
-    nomesEscolhidos.join(", ")
-   );
-    fichaHabilidades.appendChild(item);
-  }
-
-  return;
-}
-
-    const opcaoEscolhida = opcoes.find(function(opcao) {
+    const opcaoEscolhida = opcoes.find(function (opcao) {
       return opcao.id === valorEscolhido;
     });
 
     if (opcaoEscolhida !== undefined) {
-      const item = criarItemHabilidadeComEscolha(
-    grupo.nome,
-    opcaoEscolhida.nome
-   );
+      const item = criarItemHabilidadeComEscolha(grupo.nome, opcaoEscolhida.nome);
       fichaHabilidades.appendChild(item);
     }
   });
 }
 
-function preencherSeletoresAtributos(){
-  seletoresAtributos.forEach(function(seletor){
+function preencherSeletoresAtributos() {
+  seletoresAtributos.forEach(function (seletor) {
     seletor.innerHTML = "";
 
-    const opcaoInicial = document.createElement("option")
+    const opcaoInicial = document.createElement("option");
     opcaoInicial.value = "";
     opcaoInicial.textContent = "Escolha";
     seletor.appendChild(opcaoInicial);
 
-    atributosRolados.forEach(function(valor, indice) {
+    atributosRolados.forEach(function (valor, indice) {
       const opcao = document.createElement("option");
 
       opcao.value = indice;
@@ -2549,108 +1621,57 @@ function formatarModificador(modificador) {
 const camposFichaAtributos = {
   forca: {
     valor: document.getElementById("valfor"),
-    modificador: document.getElementById("modfor")
+    modificador: document.getElementById("modfor"),
   },
   destreza: {
     valor: document.getElementById("valdes"),
-    modificador: document.getElementById("moddes")
+    modificador: document.getElementById("moddes"),
   },
   constituicao: {
     valor: document.getElementById("valcon"),
-    modificador: document.getElementById("modcon")
+    modificador: document.getElementById("modcon"),
   },
   inteligencia: {
     valor: document.getElementById("valint"),
-    modificador: document.getElementById("modint")
+    modificador: document.getElementById("modint"),
   },
   sabedoria: {
     valor: document.getElementById("valsab"),
-    modificador: document.getElementById("modsab")
+    modificador: document.getElementById("modsab"),
   },
   carisma: {
     valor: document.getElementById("valcar"),
-    modificador: document.getElementById("modcar")
-  }
+    modificador: document.getElementById("modcar"),
+  },
 };
 
 function recalcularAtributosFinais() {
+  const nomesAtributos = Object.keys(camposFichaAtributos);
 
-  const nomesAtributos =
-    Object.keys(
-      camposFichaAtributos
-    );
+  for (const nomeAtributo of nomesAtributos) {
+    const valorBase = personagem.atributosBase[nomeAtributo];
 
-  for (
-    const nomeAtributo of
-    nomesAtributos
-  ) {
+    const campoFicha = camposFichaAtributos[nomeAtributo];
 
-    const valorBase =
-      personagem
-        .atributosBase[
-          nomeAtributo
-        ];
+    if (valorBase === undefined || valorBase === "") {
+      personagem.atributos[nomeAtributo] = "";
 
-    const campoFicha =
-      camposFichaAtributos[
-        nomeAtributo
-      ];
+      campoFicha.valor.textContent = "—";
 
-    if (
-      valorBase ===
-        undefined ||
-      valorBase ===
-        ""
-    ) {
-
-      personagem.atributos[
-        nomeAtributo
-      ] =
-        "";
-
-      campoFicha.valor.textContent =
-        "—";
-
-      campoFicha.modificador.textContent =
-        "mod —";
+      campoFicha.modificador.textContent = "mod —";
 
       continue;
-
     }
 
-    const bonusAntecedente =
-      personagem
-        .bonusAtributosAntecedente[
-          nomeAtributo
-        ] ??
-      0;
+    const bonusAntecedente = personagem.bonusAtributosAntecedente[nomeAtributo] ?? 0;
 
-    const valorFinal =
-      Math.min(
-        20,
-        Number(
-          valorBase
-        ) +
-        Number(
-          bonusAntecedente
-        )
-      );
+    const valorFinal = Math.min(20, Number(valorBase) + Number(bonusAntecedente));
 
-    personagem.atributos[
-      nomeAtributo
-    ] =
-      valorFinal;
+    personagem.atributos[nomeAtributo] = valorFinal;
 
-    campoFicha.valor.textContent =
-      valorFinal;
+    campoFicha.valor.textContent = valorFinal;
 
-    campoFicha.modificador.textContent =
-      formatarModificador(
-        calcularModificador(
-          valorFinal
-        )
-      );
-
+    campoFicha.modificador.textContent = formatarModificador(calcularModificador(valorFinal));
   }
 
   atualizarClasseArmadura();
@@ -2659,7 +1680,6 @@ function recalcularAtributosFinais() {
   atualizarFichaArmasAtaques();
   atualizarNumerosMagiasPersonagem();
   atualizarFichaMagias();
-
 }
 
 function selecionarAtributo(seletor) {
@@ -2710,18 +1730,18 @@ function selecionarAtributo(seletor) {
 function atualizarOpcoesDisponiveis() {
   const indicesUsados = [];
 
-  seletoresAtributos.forEach(function(seletor) {
+  seletoresAtributos.forEach(function (seletor) {
     if (seletor.value !== "") {
       indicesUsados.push(seletor.value);
     }
   });
 
-  seletoresAtributos.forEach(function(seletor) {
+  seletoresAtributos.forEach(function (seletor) {
     const valorAtualDoSeletor = seletor.value;
 
     const opcoes = seletor.querySelectorAll("option");
 
-    opcoes.forEach(function(opcao) {
+    opcoes.forEach(function (opcao) {
       if (opcao.value === "") {
         opcao.disabled = false;
         return;
@@ -2737,29 +1757,30 @@ function atualizarOpcoesDisponiveis() {
   });
 }
 
-seletoresAtributos.forEach(function(seletor) {
-  seletor.addEventListener("change", function() {
+seletoresAtributos.forEach(function (seletor) {
+  seletor.addEventListener("change", function () {
     selecionarAtributo(seletor);
   });
 });
 
-function atributosEstaoCompletos(){
+function atributosEstaoCompletos() {
   const nomesAtributos = [
     "forca",
     "destreza",
     "constituicao",
     "inteligencia",
     "sabedoria",
-    "carisma"
+    "carisma",
   ];
 
-  return nomesAtributos.every(function(nomeAtributo){
-  return personagem.atributos[nomeAtributo] !== undefined &&
-         personagem.atributos[nomeAtributo] !== "";
+  return nomesAtributos.every(function (nomeAtributo) {
+    return (
+      personagem.atributos[nomeAtributo] !== undefined && personagem.atributos[nomeAtributo] !== ""
+    );
   });
 }
 
-function classeEstaEscolhida(){
+function classeEstaEscolhida() {
   return personagem.classe !== "";
 }
 
@@ -2783,11 +1804,11 @@ function antecedenteEstaEscolhido() {
   return personagem.antecedente !== "";
 }
 
-function especieEstaEscolhida(){
+function especieEstaEscolhida() {
   return personagem.especie !== "";
 }
 
-function habilidadesEstaoEscolhidas(){
+function habilidadesEstaoEscolhidas() {
   const classeId = personagem.classeId;
 
   if (classeId === "") {
@@ -2808,22 +1829,18 @@ function habilidadesEstaoEscolhidas(){
 
   const escolhasObrigatorias = dadosNivel1.escolhas;
 
-    return escolhasObrigatorias.every(function(escolha) {
+  return escolhasObrigatorias.every(function (escolha) {
     const valorEscolhido = personagem.habilidades.escolhas[escolha.grupo];
 
     if (escolha.quantidade === 1) {
       return valorEscolhido !== undefined && valorEscolhido !== "";
     }
 
-    return (
-      Array.isArray(valorEscolhido) &&
-      valorEscolhido.length === escolha.quantidade
-    );
+    return Array.isArray(valorEscolhido) && valorEscolhido.length === escolha.quantidade;
   });
 }
 
 function podeAvancarDoPassoAtual() {
-
   if (passoAtual === "classe") {
     const mensagem = document.getElementById("mensagemClasse");
 
@@ -2889,19 +1906,19 @@ function podeAvancarDoPassoAtual() {
   }
 
   if (passoAtual === "habilidades") {
-  const mensagem = document.getElementById("mensagemHabilidades");
+    const mensagem = document.getElementById("mensagemHabilidades");
 
-  if (habilidadesEstaoEscolhidas() === false) {
-    mensagem.textContent = "Escolha as habilidades da classe antes de continuar.";
-    return false;
-  }
+    if (habilidadesEstaoEscolhidas() === false) {
+      mensagem.textContent = "Escolha as habilidades da classe antes de continuar.";
+      return false;
+    }
 
-  if (periciasClasseEstaoEscolhidas() === false) {
-    mensagem.textContent = "Escolha as perícias da classe antes de continuar.";
-    return false;
-  }
+    if (periciasClasseEstaoEscolhidas() === false) {
+      mensagem.textContent = "Escolha as perícias da classe antes de continuar.";
+      return false;
+    }
 
-  mensagem.textContent = "";
+    mensagem.textContent = "";
   }
 
   if (passoAtual === "magias") {
@@ -2909,8 +1926,7 @@ function podeAvancarDoPassoAtual() {
 
     if (magiasEstaoEscolhidas() === false) {
       if (mensagem !== null) {
-        mensagem.textContent =
-          "Escolha todos os truques e magias preparadas antes de continuar.";
+        mensagem.textContent = "Escolha todos os truques e magias preparadas antes de continuar.";
       }
 
       return false;
@@ -2922,33 +1938,27 @@ function podeAvancarDoPassoAtual() {
   }
 
   if (passoAtual === "detalhes") {
-  const mensagem = document.getElementById("mensagemDetalhes");
+    const mensagem = document.getElementById("mensagemDetalhes");
 
-  if (avatarEstaEscolhido() === false) {
+    if (avatarEstaEscolhido() === false) {
+      if (mensagem !== null) {
+        mensagem.textContent = "Escolha e confirme um avatar antes de continuar.";
+      }
 
-  if (mensagem !== null) {
-
-    mensagem.textContent =
-      "Escolha e confirme um avatar antes de continuar.";
-
-  }
-
-  return false;
-
- }
-
-  if (detalhesEstaoCompletos() === false) {
-    if (mensagem !== null) {
-      mensagem.textContent =
-        "Faça todas as escolhas antes de continuar.";
+      return false;
     }
 
-    return false;
-  }
+    if (detalhesEstaoCompletos() === false) {
+      if (mensagem !== null) {
+        mensagem.textContent = "Faça todas as escolhas antes de continuar.";
+      }
 
-  if (mensagem !== null) {
-    mensagem.textContent = "";
-  }
+      return false;
+    }
+
+    if (mensagem !== null) {
+      mensagem.textContent = "";
+    }
   }
 
   return true;
@@ -3012,7 +2022,7 @@ function montarHabilidadesAutomaticas(dadosNivel) {
   const grade = document.createElement("div");
   grade.classList.add("grade-opcoes");
 
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
+  habilidadesAutomaticas.forEach(function (idHabilidade) {
     const habilidade = obterDadosHabilidade(idHabilidade);
 
     if (habilidade === undefined) {
@@ -3042,17 +2052,17 @@ function montarHabilidadesAutomaticas(dadosNivel) {
 function obterOpcoesDoGrupoEscolha(grupo) {
   if (grupo.origemDasOpcoes === "armas") {
     return Object.keys(window.bancoEquipamentos.armas)
-      .filter(function(idArma) {
+      .filter(function (idArma) {
         return personagemTemProficienciaComArma(personagem, idArma);
       })
-      .map(function(idArma) {
+      .map(function (idArma) {
         const arma = window.bancoEquipamentos.armas[idArma];
 
         if (typeof arma === "string") {
           return {
             id: idArma,
             nome: arma,
-            descricaoCurta: ""
+            descricaoCurta: "",
           };
         }
 
@@ -3061,17 +2071,17 @@ function obterOpcoesDoGrupoEscolha(grupo) {
           nome: arma.nome,
           descricaoCurta: "",
           maestriaId: arma.maestria,
-          propriedades: arma.propriedades || []
+          propriedades: arma.propriedades || [],
         };
       });
   }
 
   if (grupo.origemDasOpcoes === "periciasProficientes") {
-    return personagem.pericias.map(function(idPericia) {
+    return personagem.pericias.map(function (idPericia) {
       return {
         id: idPericia,
         nome: obterNomePericia(idPericia),
-        descricaoCurta: "O bônus de proficiência desta perícia é dobrado."
+        descricaoCurta: "O bônus de proficiência desta perícia é dobrado.",
       };
     });
   }
@@ -3091,7 +2101,7 @@ function criarDetalhesArmaOpcao(opcao) {
     const referenciaMaestria = window.criarReferenciaDetalhe(
       "maestria",
       opcao.maestriaId,
-      obterNomeMaestria(opcao.maestriaId)
+      obterNomeMaestria(opcao.maestriaId),
     );
 
     linhaMaestria.appendChild(referenciaMaestria);
@@ -3103,7 +2113,7 @@ function criarDetalhesArmaOpcao(opcao) {
 
     linhaPropriedades.appendChild(document.createTextNode("Propriedades: "));
 
-    opcao.propriedades.forEach(function(idPropriedade, indice) {
+    opcao.propriedades.forEach(function (idPropriedade, indice) {
       const propriedade = obterDadosPropriedadeArma(idPropriedade);
 
       if (propriedade === undefined) {
@@ -3113,7 +2123,7 @@ function criarDetalhesArmaOpcao(opcao) {
       const referenciaPropriedade = window.criarReferenciaDetalhe(
         "propriedadeArma",
         idPropriedade,
-        propriedade.nome
+        propriedade.nome,
       );
 
       linhaPropriedades.appendChild(referenciaPropriedade);
@@ -3134,7 +2144,7 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
     return;
   }
 
-  dadosNivel1.escolhas.forEach(function(escolha) {
+  dadosNivel1.escolhas.forEach(function (escolha) {
     const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
 
     if (grupo === undefined) {
@@ -3163,7 +2173,7 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
     listaOpcoes.classList.add("grade-opcoes");
     areaHabilidadesClasse.appendChild(listaOpcoes);
 
-    opcoes.forEach(function(opcao) {
+    opcoes.forEach(function (opcao) {
       const card = document.createElement("div");
       card.classList.add("card-opcao");
       card.setAttribute("role", "button");
@@ -3192,41 +2202,32 @@ function montarEscolhasDeHabilidades(dadosNivel1) {
       } else if (opcao.descricaoCurta !== undefined && opcao.descricaoCurta !== "") {
         const descricao = document.createElement("p");
         descricao.textContent = opcao.descricaoCurta;
-         card.appendChild(descricao);
+        card.appendChild(descricao);
       }
 
-      card.addEventListener("click", function(evento) {
-  if (
-    evento.target.closest !== undefined &&
-    evento.target.closest(".botao-detalhe-inline") !== null
-  ) {
-    return;
-  }
+      card.addEventListener("click", function (evento) {
+        if (
+          evento.target.closest !== undefined &&
+          evento.target.closest(".botao-detalhe-inline") !== null
+        ) {
+          return;
+        }
 
-  selecionarOpcaoDeHabilidade(
-    escolha.grupo,
-    opcao.id,
-    quantidadeEscolhas
-  );
-});
+        selecionarOpcaoDeHabilidade(escolha.grupo, opcao.id, quantidadeEscolhas);
+      });
 
-card.addEventListener("keydown", function(evento) {
-  if (evento.key === "Enter" || evento.key === " ") {
-    evento.preventDefault();
+      card.addEventListener("keydown", function (evento) {
+        if (evento.key === "Enter" || evento.key === " ") {
+          evento.preventDefault();
 
-    selecionarOpcaoDeHabilidade(
-      escolha.grupo,
-      opcao.id,
-      quantidadeEscolhas
-    );
-  }
-});
+          selecionarOpcaoDeHabilidade(escolha.grupo, opcao.id, quantidadeEscolhas);
+        }
+      });
 
- listaOpcoes.appendChild(card);
+      listaOpcoes.appendChild(card);
     });
   });
 }
-
 
 function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
   if (quantidadeEscolhas === 1) {
@@ -3252,14 +2253,13 @@ function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
   const jaEscolhida = escolhasAtuais.includes(opcaoId);
 
   if (jaEscolhida) {
-    escolhasAtuais = escolhasAtuais.filter(function(idEscolhido) {
+    escolhasAtuais = escolhasAtuais.filter(function (idEscolhido) {
       return idEscolhido !== opcaoId;
     });
   } else {
     if (escolhasAtuais.length >= quantidadeEscolhas) {
       const mensagem = document.getElementById("mensagemHabilidades");
-      mensagem.textContent =
-        "Você já escolheu o número máximo de opções para este grupo.";
+      mensagem.textContent = "Você já escolheu o número máximo de opções para este grupo.";
       return;
     }
 
@@ -3291,10 +2291,7 @@ function selecionarOpcaoDeHabilidade(grupoId, opcaoId, quantidadeEscolhas) {
 function obterProgressaoMagiasAtual() {
   const classeId = personagem.classeId;
 
-  if (
-    window.bancoMagias === undefined ||
-    window.bancoMagias.progressaoMagias === undefined
-  ) {
+  if (window.bancoMagias === undefined || window.bancoMagias.progressaoMagias === undefined) {
     return undefined;
   }
 
@@ -3308,10 +2305,7 @@ function obterProgressaoMagiasAtual() {
 }
 
 function obterDadosMagia(idMagia) {
-  if (
-    window.bancoMagias === undefined ||
-    window.bancoMagias.magias === undefined
-  ) {
+  if (window.bancoMagias === undefined || window.bancoMagias.magias === undefined) {
     return undefined;
   }
 
@@ -3329,18 +2323,13 @@ function obterNomeMagia(idMagia) {
 }
 
 function obterMagiasDaClassePorNivel(classeId, nivelMagia) {
-  if (
-    window.bancoMagias === undefined ||
-    window.bancoMagias.magias === undefined
-  ) {
+  if (window.bancoMagias === undefined || window.bancoMagias.magias === undefined) {
     return [];
   }
 
-  return Object.values(window.bancoMagias.magias).filter(function(magia) {
+  return Object.values(window.bancoMagias.magias).filter(function (magia) {
     return (
-      magia.nivel === nivelMagia &&
-      Array.isArray(magia.classes) &&
-      magia.classes.includes(classeId)
+      magia.nivel === nivelMagia && Array.isArray(magia.classes) && magia.classes.includes(classeId)
     );
   });
 }
@@ -3388,10 +2377,7 @@ function inicializarMagiasPersonagem() {
 
   let espacosNivel1 = 0;
 
-  if (
-    progressao.espacosMagia !== undefined &&
-    progressao.espacosMagia.nivel1 !== undefined
-  ) {
+  if (progressao.espacosMagia !== undefined && progressao.espacosMagia.nivel1 !== undefined) {
     espacosNivel1 = progressao.espacosMagia.nivel1;
   }
 
@@ -3406,19 +2392,16 @@ function inicializarMagiasPersonagem() {
     espacosMagia: {
       nivel1: {
         maximos: espacosNivel1,
-        usados: 0
-      }
-    }
+        usados: 0,
+      },
+    },
   };
 
   atualizarFichaMagias();
 }
 
 function atualizarNumerosMagiasPersonagem() {
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     return;
   }
 
@@ -3433,7 +2416,7 @@ function obterNomeAtributoConjuracao(idAtributo) {
     constituicao: "Constituição",
     inteligencia: "Inteligência",
     sabedoria: "Sabedoria",
-    carisma: "Carisma"
+    carisma: "Carisma",
   };
 
   return nomes[idAtributo] || idAtributo;
@@ -3454,9 +2437,7 @@ function criarResumoConjuracao(progressao) {
   resumo.appendChild(atributo);
 
   const cd = document.createElement("p");
-  cd.innerHTML =
-    "<strong>CD das magias:</strong> " +
-    (personagem.magias.cdSalvamento || "-");
+  cd.innerHTML = "<strong>CD das magias:</strong> " + (personagem.magias.cdSalvamento || "-");
   resumo.appendChild(cd);
 
   const bonusAtaque = personagem.magias.bonusAtaqueMagico;
@@ -3495,7 +2476,7 @@ function selecionarMagia(grupo, idMagia, limite) {
   const jaEscolhida = escolhas.includes(idMagia);
 
   if (jaEscolhida) {
-    escolhas = escolhas.filter(function(idEscolhido) {
+    escolhas = escolhas.filter(function (idEscolhido) {
       return idEscolhido !== idMagia;
     });
   } else {
@@ -3503,8 +2484,7 @@ function selecionarMagia(grupo, idMagia, limite) {
       const mensagem = document.getElementById("mensagemMagias");
 
       if (mensagem !== null) {
-        mensagem.textContent =
-          "Você já escolheu o número máximo de magias deste grupo.";
+        mensagem.textContent = "Você já escolheu o número máximo de magias deste grupo.";
       }
 
       return;
@@ -3576,11 +2556,11 @@ function criarCardMagia(magia, grupo, limite) {
     card.appendChild(salvaguarda);
   }
 
-  card.addEventListener("click", function() {
+  card.addEventListener("click", function () {
     selecionarMagia(grupo, magia.id, limite);
   });
 
-  card.addEventListener("keydown", function(evento) {
+  card.addEventListener("keydown", function (evento) {
     if (evento.key === "Enter" || evento.key === " ") {
       evento.preventDefault();
       selecionarMagia(grupo, magia.id, limite);
@@ -3628,7 +2608,7 @@ function montarGrupoMagias(tituloGrupo, nivelMagia, grupo, quantidadeEscolhas) {
   const grade = document.createElement("div");
   grade.classList.add("grade-opcoes");
 
-  magias.forEach(function(magia) {
+  magias.forEach(function (magia) {
     const card = criarCardMagia(magia, grupo, quantidadeEscolhas);
     grade.appendChild(card);
   });
@@ -3663,10 +2643,7 @@ function montarTelaMagias() {
     return;
   }
 
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     inicializarMagiasPersonagem();
   }
 
@@ -3681,18 +2658,13 @@ function montarTelaMagias() {
 
   areaMagias.appendChild(criarResumoConjuracao(progressao));
 
-  montarGrupoMagias(
-    "Truques",
-    0,
-    "truquesConhecidos",
-    progressao.truquesConhecidos
-  );
+  montarGrupoMagias("Truques", 0, "truquesConhecidos", progressao.truquesConhecidos);
 
   montarGrupoMagias(
     "Magias preparadas de 1º círculo",
     1,
     "magiasPreparadas",
-    progressao.magiasPreparadas
+    progressao.magiasPreparadas,
   );
 
   atualizarFichaMagias();
@@ -3739,18 +2711,13 @@ function atualizarFichaMagias() {
 
   const itemTruques = document.createElement("li");
   itemTruques.textContent =
-    "Truques: " +
-    (truques.length === 0
-      ? "pendente"
-      : truques.map(obterNomeMagia).join(", "));
+    "Truques: " + (truques.length === 0 ? "pendente" : truques.map(obterNomeMagia).join(", "));
   fichaMagias.appendChild(itemTruques);
 
   const itemPreparadas = document.createElement("li");
   itemPreparadas.textContent =
     "Preparadas: " +
-    (magiasPreparadas.length === 0
-      ? "pendente"
-      : magiasPreparadas.map(obterNomeMagia).join(", "));
+    (magiasPreparadas.length === 0 ? "pendente" : magiasPreparadas.map(obterNomeMagia).join(", "));
   fichaMagias.appendChild(itemPreparadas);
 
   if (
@@ -3759,8 +2726,7 @@ function atualizarFichaMagias() {
   ) {
     const itemEspacos = document.createElement("li");
     itemEspacos.textContent =
-      "Espaços de 1º círculo: " +
-      personagem.magias.espacosMagia.nivel1.maximos;
+      "Espaços de 1º círculo: " + personagem.magias.espacosMagia.nivel1.maximos;
     fichaMagias.appendChild(itemEspacos);
   }
 }
@@ -3772,10 +2738,7 @@ function magiasEstaoEscolhidas() {
     return true;
   }
 
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     return false;
   }
 
@@ -3789,468 +2752,217 @@ function magiasEstaoEscolhidas() {
 }
 
 function atualizarBotaoConfirmarAvatar() {
+  const imagemFoiEscolhida = avatarTemporario.imagem !== "";
 
-  const imagemFoiEscolhida =
-    avatarTemporario.imagem !== "";
+  const frameFoiEscolhido = avatarTemporario.frame !== "";
 
-  const frameFoiEscolhido =
-    avatarTemporario.frame !== "";
-
-  botaoConfirmarAvatar.disabled =
-    imagemFoiEscolhida === false ||
-    frameFoiEscolhido === false;
-
+  botaoConfirmarAvatar.disabled = imagemFoiEscolhida === false || frameFoiEscolhido === false;
 }
 
-function atualizarAvatarNaFicha(
-  dadosAvatar
-) {
-
+function atualizarAvatarNaFicha(dadosAvatar) {
   if (dadosAvatar.imagem === "") {
+    fichaImagemAvatar.removeAttribute("src");
 
-    fichaImagemAvatar.removeAttribute(
-      "src"
-    );
-
-    fichaImagemAvatar.classList.add(
-      "escondida"
-    );
-
+    fichaImagemAvatar.classList.add("escondida");
   } else {
+    fichaImagemAvatar.src = dadosAvatar.imagem;
 
-    fichaImagemAvatar.src =
-      dadosAvatar.imagem;
-
-    fichaImagemAvatar.classList.remove(
-      "escondida"
-    );
-
+    fichaImagemAvatar.classList.remove("escondida");
   }
 
   if (dadosAvatar.frame === "") {
+    fichaFrameAvatar.removeAttribute("src");
 
-    fichaFrameAvatar.removeAttribute(
-      "src"
-    );
-
-    fichaFrameAvatar.classList.add(
-      "escondida"
-    );
-
+    fichaFrameAvatar.classList.add("escondida");
   } else {
+    fichaFrameAvatar.src = dadosAvatar.frame;
 
-    fichaFrameAvatar.src =
-      dadosAvatar.frame;
-
-    fichaFrameAvatar.classList.remove(
-      "escondida"
-    );
-
+    fichaFrameAvatar.classList.remove("escondida");
   }
-
 }
 
-function selecionarImagemAvatar(
-  botaoClicado
-) {
+function selecionarImagemAvatar(botaoClicado) {
+  const opcoesAvatar = galeriaAvatares.querySelectorAll(".opcao-avatar");
 
-  const opcoesAvatar =
-    galeriaAvatares.querySelectorAll(
-      ".opcao-avatar"
-    );
-
-  for (
-    const opcaoAvatar of
-    opcoesAvatar
-  ) {
-
-    opcaoAvatar.classList.remove(
-      "selecionado"
-    );
-
+  for (const opcaoAvatar of opcoesAvatar) {
+    opcaoAvatar.classList.remove("selecionado");
   }
 
-  botaoClicado.classList.add(
-    "selecionado"
-  );
+  botaoClicado.classList.add("selecionado");
 
-  avatarTemporario.imagem =
-    botaoClicado.dataset
-      .caminhoAvatar;
+  avatarTemporario.imagem = botaoClicado.dataset.caminhoAvatar;
 
   atualizarBotaoConfirmarAvatar();
 
-  atualizarAvatarNaFicha(
-  avatarTemporario
- );
-
+  atualizarAvatarNaFicha(avatarTemporario);
 }
 
-function renderizarAvatares(
-  avataresDisponiveis
-) {
-
+function renderizarAvatares(avataresDisponiveis) {
   galeriaAvatares.replaceChildren();
 
-  for (
-    const avatar of
-    avataresDisponiveis
-  ) {
+  for (const avatar of avataresDisponiveis) {
+    const botaoAvatar = document.createElement("button");
 
-    const botaoAvatar =
-      document.createElement(
-        "button"
-      );
+    botaoAvatar.type = "button";
 
-    botaoAvatar.type =
-      "button";
+    botaoAvatar.classList.add("opcao-avatar");
 
-    botaoAvatar.classList.add(
-      "opcao-avatar"
-    );
+    botaoAvatar.dataset.caminhoAvatar = avatar.caminho;
 
-    botaoAvatar.dataset.caminhoAvatar =
-      avatar.caminho;
+    if (avatar.caminho === avatarTemporario.imagem) {
+      botaoAvatar.classList.add("selecionado");
+    }
 
-      if (
-  avatar.caminho ===
-  avatarTemporario.imagem
-) {
+    botaoAvatar.dataset.generoAvatar = avatar.genero;
 
-  botaoAvatar.classList.add(
-    "selecionado"
-  );
+    const imagemAvatar = document.createElement("img");
 
-}
+    imagemAvatar.src = avatar.caminho;
 
-    botaoAvatar.dataset.generoAvatar =
-      avatar.genero;
+    imagemAvatar.alt = "Avatar " + avatar.arquetipo;
 
-    const imagemAvatar =
-      document.createElement(
-        "img"
-      );
+    imagemAvatar.loading = "lazy";
 
-    imagemAvatar.src =
-      avatar.caminho;
+    imagemAvatar.decoding = "async";
 
-    imagemAvatar.alt =
-      "Avatar " +
-      avatar.arquetipo;
+    botaoAvatar.appendChild(imagemAvatar);
 
-    imagemAvatar.loading =
-      "lazy";
+    botaoAvatar.addEventListener("click", function () {
+      selecionarImagemAvatar(botaoAvatar);
+    });
 
-    imagemAvatar.decoding =
-      "async";
-
-    botaoAvatar.appendChild(
-      imagemAvatar
-    );
-
-    botaoAvatar.addEventListener(
-  "click",
-  function() {
-
-    selecionarImagemAvatar(
-      botaoAvatar
-    );
-
+    galeriaAvatares.appendChild(botaoAvatar);
   }
-);
-
-    galeriaAvatares.appendChild(
-      botaoAvatar
-    );
-
-  }
-
 }
 
 function renderizarFramesAvatar() {
-
   galeriaFramesAvatar.replaceChildren();
 
-  const quantidadeFrames =
-    12;
+  const quantidadeFrames = 12;
 
-  for (
-    let numeroFrame = 1;
-    numeroFrame <= quantidadeFrames;
-    numeroFrame += 1
-  ) {
+  for (let numeroFrame = 1; numeroFrame <= quantidadeFrames; numeroFrame += 1) {
+    const numeroFormatado = String(numeroFrame).padStart(2, "0");
 
-    const numeroFormatado =
-      String(
-        numeroFrame
-      ).padStart(
-        2,
-        "0"
-      );
+    const caminhoFrame = "Imagens/Avatares/frame/" + "frame-" + numeroFormatado + ".webp";
 
-    const caminhoFrame =
-      "Imagens/Avatares/frame/" +
-      "frame-" +
-      numeroFormatado +
-      ".webp";
+    const botaoFrame = document.createElement("button");
 
-    const botaoFrame =
-      document.createElement(
-        "button"
-      );
+    botaoFrame.type = "button";
 
-    botaoFrame.type =
-      "button";
+    botaoFrame.classList.add("opcao-frame-avatar");
 
-    botaoFrame.classList.add(
-      "opcao-frame-avatar"
-    );
+    botaoFrame.dataset.caminhoFrame = caminhoFrame;
 
-    botaoFrame.dataset.caminhoFrame =
-      caminhoFrame;
+    if (caminhoFrame === avatarTemporario.frame) {
+      botaoFrame.classList.add("selecionado");
+    }
 
-      if (
-  caminhoFrame ===
-  avatarTemporario.frame
-) {
+    const imagemFrame = document.createElement("img");
 
-  botaoFrame.classList.add(
-    "selecionado"
-  );
+    imagemFrame.src = caminhoFrame;
 
+    imagemFrame.alt = "Frame " + numeroFrame;
+
+    imagemFrame.loading = "lazy";
+
+    botaoFrame.appendChild(imagemFrame);
+
+    botaoFrame.addEventListener("click", function () {
+      selecionarFrameAvatar(botaoFrame);
+    });
+
+    galeriaFramesAvatar.appendChild(botaoFrame);
+  }
 }
 
-    const imagemFrame =
-      document.createElement(
-        "img"
-      );
+function selecionarFrameAvatar(botaoClicado) {
+  const opcoesFrame = galeriaFramesAvatar.querySelectorAll(".opcao-frame-avatar");
 
-    imagemFrame.src =
-      caminhoFrame;
-
-    imagemFrame.alt =
-      "Frame " +
-      numeroFrame;
-
-    imagemFrame.loading =
-      "lazy";
-
-    botaoFrame.appendChild(
-      imagemFrame
-    );
-
-    botaoFrame.addEventListener(
-  "click",
-  function() {
-
-    selecionarFrameAvatar(
-      botaoFrame
-    );
-
-  }
-);
-
-    galeriaFramesAvatar.appendChild(
-      botaoFrame
-    );
-
+  for (const opcaoFrame of opcoesFrame) {
+    opcaoFrame.classList.remove("selecionado");
   }
 
-}
+  botaoClicado.classList.add("selecionado");
 
-function selecionarFrameAvatar(
-  botaoClicado
-) {
-
-  const opcoesFrame =
-    galeriaFramesAvatar
-      .querySelectorAll(
-        ".opcao-frame-avatar"
-      );
-
-  for (
-    const opcaoFrame of
-    opcoesFrame
-  ) {
-
-    opcaoFrame.classList.remove(
-      "selecionado"
-    );
-
-  }
-
-  botaoClicado.classList.add(
-    "selecionado"
-  );
-
-  avatarTemporario.frame =
-    botaoClicado.dataset
-      .caminhoFrame;
+  avatarTemporario.frame = botaoClicado.dataset.caminhoFrame;
 
   atualizarBotaoConfirmarAvatar();
 
-  atualizarAvatarNaFicha(
-  avatarTemporario
- );
-
+  atualizarAvatarNaFicha(avatarTemporario);
 }
 
-function filtrarAvataresPorGenero(
-  generoEscolhido
-) {
+function filtrarAvataresPorGenero(generoEscolhido) {
+  generoAvatarAtivo = generoEscolhido;
 
-  generoAvatarAtivo =
-    generoEscolhido;
+  for (const filtroAvatar of filtrosAvatar) {
+    const filtroEstaAtivo = filtroAvatar.dataset.generoAvatar === generoEscolhido;
 
-  for (
-    const filtroAvatar of
-    filtrosAvatar
-  ) {
-
-    const filtroEstaAtivo =
-      filtroAvatar.dataset
-        .generoAvatar ===
-      generoEscolhido;
-
-    filtroAvatar.classList.toggle(
-      "ativo",
-      filtroEstaAtivo
-    );
-
+    filtroAvatar.classList.toggle("ativo", filtroEstaAtivo);
   }
 
-  const opcoesAvatar =
-    galeriaAvatares.querySelectorAll(
-      ".opcao-avatar"
-    );
+  const opcoesAvatar = galeriaAvatares.querySelectorAll(".opcao-avatar");
 
-  for (
-    const opcaoAvatar of
-    opcoesAvatar
-  ) {
-
+  for (const opcaoAvatar of opcoesAvatar) {
     const mostrarAvatar =
-      generoEscolhido === "All" ||
-      opcaoAvatar.dataset
-        .generoAvatar ===
-      generoEscolhido;
+      generoEscolhido === "All" || opcaoAvatar.dataset.generoAvatar === generoEscolhido;
 
-    opcaoAvatar.classList.toggle(
-      "escondida",
-      mostrarAvatar === false
-    );
-
+    opcaoAvatar.classList.toggle("escondida", mostrarAvatar === false);
   }
-
 }
 
-for (
-  const filtroAvatar of
-  filtrosAvatar
-) {
+for (const filtroAvatar of filtrosAvatar) {
+  filtroAvatar.addEventListener("click", function () {
+    const generoEscolhido = filtroAvatar.dataset.generoAvatar;
 
-  filtroAvatar.addEventListener(
-    "click",
-    function() {
-
-      const generoEscolhido =
-        filtroAvatar.dataset
-          .generoAvatar;
-
-      filtrarAvataresPorGenero(
-        generoEscolhido
-      );
-
-    }
-  );
-
+    filtrarAvataresPorGenero(generoEscolhido);
+  });
 }
 
 function abrirModalAvatar() {
-
   avatarTemporario = {
+    imagem: personagem.avatar.imagem,
 
-  imagem:
-    personagem.avatar.imagem,
-
-  frame:
-    personagem.avatar.frame
-
+    frame: personagem.avatar.frame,
   };
 
-  const avataresDisponiveis =
-    criarListaAvataresDisponiveis();
+  const avataresDisponiveis = criarListaAvataresDisponiveis();
 
-  renderizarAvatares(
-    avataresDisponiveis
-  );
+  renderizarAvatares(avataresDisponiveis);
 
   renderizarFramesAvatar();
   atualizarBotaoConfirmarAvatar();
-  filtrarAvataresPorGenero(
-  generoAvatarAtivo
- );
+  filtrarAvataresPorGenero(generoAvatarAtivo);
 
-  modalAvatar.classList.remove(
-    "escondida"
-  );
-
+  modalAvatar.classList.remove("escondida");
 }
 
 function fecharModalAvatar() {
+  atualizarAvatarNaFicha(personagem.avatar);
 
-  atualizarAvatarNaFicha(
-  personagem.avatar
- );
-
-  modalAvatar.classList.add(
-    "escondida"
-  );
-
+  modalAvatar.classList.add("escondida");
 }
 
 function confirmarAvatar() {
-
-  if (
-    avatarTemporario.imagem === "" ||
-    avatarTemporario.frame === ""
-  ) {
-
+  if (avatarTemporario.imagem === "" || avatarTemporario.frame === "") {
     return;
-
   }
 
-  personagem.avatar.imagem =
-    avatarTemporario.imagem;
+  personagem.avatar.imagem = avatarTemporario.imagem;
 
-  personagem.avatar.frame =
-    avatarTemporario.frame;
+  personagem.avatar.frame = avatarTemporario.frame;
 
   fecharModalAvatar();
-
 }
 
-botaoEscolherAvatar.addEventListener(
-  "click",
-  abrirModalAvatar
-);
+botaoEscolherAvatar.addEventListener("click", abrirModalAvatar);
 
-botaoConfirmarAvatar.addEventListener(
-  "click",
-  confirmarAvatar
-);
+botaoConfirmarAvatar.addEventListener("click", confirmarAvatar);
 
-botaoFecharModalAvatar.addEventListener(
-  "click",
-  fecharModalAvatar
-);
+botaoFecharModalAvatar.addEventListener("click", fecharModalAvatar);
 
-botaoCancelarAvatar.addEventListener(
-  "click",
-  fecharModalAvatar
-);
+botaoCancelarAvatar.addEventListener("click", fecharModalAvatar);
 
-nomePersonagem.addEventListener("input", function() {
+nomePersonagem.addEventListener("input", function () {
   personagem.detalhes.nome = nomePersonagem.value;
 
   if (nomePersonagem.value === "") {
@@ -4261,13 +2973,13 @@ nomePersonagem.addEventListener("input", function() {
 });
 
 if (historiaPersonagem !== null) {
-  historiaPersonagem.addEventListener("input", function() {
+  historiaPersonagem.addEventListener("input", function () {
     personagem.detalhes.historia = historiaPersonagem.value;
   });
 }
 
 if (personalidadePersonagem !== null) {
-  personalidadePersonagem.addEventListener("input", function() {
+  personalidadePersonagem.addEventListener("input", function () {
     personagem.detalhes.personalidade = personalidadePersonagem.value;
   });
 }
@@ -4288,19 +3000,18 @@ function atualizarFichaIdiomas() {
     return;
   }
 
-  const nomesIdiomas = personagem.idiomas.map(function(idIdioma) {
+  const nomesIdiomas = personagem.idiomas.map(function (idIdioma) {
     return obterNomeIdioma(idIdioma);
   });
 
   fichaIdiomas.textContent = nomesIdiomas.join(", ");
 }
 
-seletorIdioma1.addEventListener("change", function() {
+seletorIdioma1.addEventListener("change", function () {
   atualizarIdiomasEscolhidos();
 });
 
-
-seletorIdioma2.addEventListener("change", function() {
+seletorIdioma2.addEventListener("change", function () {
   atualizarIdiomasEscolhidos();
 });
 
@@ -4321,7 +3032,7 @@ function atualizarEquipamentos() {
     armaPrincipal: armaPrincipal.value,
     itemSecundario: itemSecundario.value,
     armaSecundaria: armaSecundaria.value,
-    proficiencias: proficienciasPorClasse[personagem.classeId] || []
+    proficiencias: proficienciasPorClasse[personagem.classeId] || [],
   };
 
   atualizarFichaEquipamentos();
@@ -4342,32 +3053,31 @@ function atualizarFichaEquipamentos() {
   }
   const armadura = bancoEquipamentos.armaduras[equipamentos.armadura];
 
-if (armadura === undefined) {
-  fichaArmadura.textContent = "";
-} else {
-  fichaArmadura.textContent = armadura.nome;
-}
+  if (armadura === undefined) {
+    fichaArmadura.textContent = "";
+  } else {
+    fichaArmadura.textContent = armadura.nome;
+  }
 
-  fichaArmaPrincipal.textContent =
-    obterNomeArma(equipamentos.armaPrincipal);
+  fichaArmaPrincipal.textContent = obterNomeArma(equipamentos.armaPrincipal);
 
   if (equipamentos.itemSecundario === "armaSecundaria") {
-  const nomeArmaSecundaria = obterNomeArma(equipamentos.armaSecundaria);
+    const nomeArmaSecundaria = obterNomeArma(equipamentos.armaSecundaria);
 
-  if (nomeArmaSecundaria === "") {
-    fichaItemSecundario.textContent = "Arma secundária";
+    if (nomeArmaSecundaria === "") {
+      fichaItemSecundario.textContent = "Arma secundária";
+    } else {
+      fichaItemSecundario.textContent = nomeArmaSecundaria;
+    }
   } else {
-    fichaItemSecundario.textContent = nomeArmaSecundaria;
-  }
-} else {
-  const item = bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
+    const item = bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
 
-  if (item === undefined) {
-    fichaItemSecundario.textContent = "";
-  } else {
-    fichaItemSecundario.textContent = item.nome;
+    if (item === undefined) {
+      fichaItemSecundario.textContent = "";
+    } else {
+      fichaItemSecundario.textContent = item.nome;
+    }
   }
-}
 
   if (equipamentos.proficiencias.length === 0) {
     fichaProficiencias.textContent = "";
@@ -4380,20 +3090,20 @@ if (armadura === undefined) {
   }
 }
 
-armaduraInicial.addEventListener("change", function() {
+armaduraInicial.addEventListener("change", function () {
   atualizarEquipamentos();
 });
 
-armaPrincipal.addEventListener("change", function() {
+armaPrincipal.addEventListener("change", function () {
   atualizarEquipamentos();
 });
 
-itemSecundario.addEventListener("change", function() {
+itemSecundario.addEventListener("change", function () {
   atualizarVisibilidadeArmaSecundaria();
   atualizarEquipamentos();
 });
 
-armaSecundaria.addEventListener("change", function() {
+armaSecundaria.addEventListener("change", function () {
   atualizarEquipamentos();
 });
 
@@ -4432,12 +3142,9 @@ function calcularClasseArmaduraCriacao() {
     classeArmadura = classeArmadura + itemSecundario.bonusCA;
   }
 
-  if (
-  personagemTemEstiloDeLuta("defesa") &&
-  idArmadura !== "semArmadura"
-) {
-  classeArmadura = classeArmadura + 1;
-}
+  if (personagemTemEstiloDeLuta("defesa") && idArmadura !== "semArmadura") {
+    classeArmadura = classeArmadura + 1;
+  }
 
   return classeArmadura;
 }
@@ -4445,9 +3152,7 @@ function calcularClasseArmaduraCriacao() {
 function atualizarClasseArmadura() {
   const classeArmadura = calcularClasseArmaduraCriacao();
 
-  personagem.combate.classeArmadura = classeArmadura === ""
-      ? null
-      : classeArmadura;
+  personagem.combate.classeArmadura = classeArmadura === "" ? null : classeArmadura;
 
   fichaClasseArmadura.textContent = classeArmadura;
 
@@ -4497,12 +3202,12 @@ function atualizarPontosDeVida() {
   pvMaximo.textContent = pontosDeVidaMaximos;
   pvAtuais.textContent = pontosDeVidaMaximos;
 
-   personagem.combate.pontosDeVida = {
+  personagem.combate.pontosDeVida = {
     atuais: pontosDeVidaMaximos,
     temporarios: 0,
     maximo: pontosDeVidaMaximos,
     dadoVida: "1d" + dadoVida,
-    dadosVidaUsados: 0
+    dadosVidaUsados: 0,
   };
 }
 
@@ -4548,7 +3253,7 @@ function atualizarVelocidadeETamanho() {
 }
 
 function atualizarPercepcaoPassiva() {
-  const valorPercepcao = calcularValorPericia(personagem,"percepcao");
+  const valorPercepcao = calcularValorPericia(personagem, "percepcao");
 
   if (valorPercepcao === "") {
     fichaPercepcaoPassiva.textContent = "";
@@ -4559,27 +3264,18 @@ function atualizarPercepcaoPassiva() {
 }
 
 function avatarEstaEscolhido() {
+  const imagemFoiEscolhida = personagem.avatar.imagem !== "";
 
-  const imagemFoiEscolhida =
-    personagem.avatar.imagem !== "";
+  const frameFoiEscolhido = personagem.avatar.frame !== "";
 
-  const frameFoiEscolhido =
-    personagem.avatar.frame !== "";
-
-  return (
-    imagemFoiEscolhida &&
-    frameFoiEscolhido
-  );
-
+  return imagemFoiEscolhida && frameFoiEscolhido;
 }
 
 function detalhesEstaoCompletos() {
   const nomePreenchido =
-    personagem.detalhes.nome !== undefined &&
-    personagem.detalhes.nome.trim() !== "";
+    personagem.detalhes.nome !== undefined && personagem.detalhes.nome.trim() !== "";
 
-  const idiomasPreenchidos =
-    personagem.idiomasEscolhidos.length >= 2;
+  const idiomasPreenchidos = personagem.idiomasEscolhidos.length >= 2;
 
   const equipamentos = personagem.detalhes.equipamentos;
 
@@ -4592,18 +3288,17 @@ function detalhesEstaoCompletos() {
     equipamentos.itemSecundario !== undefined &&
     equipamentos.itemSecundario !== "";
 
-    const armaSecundariaPreenchida =
-  equipamentos.itemSecundario !== "armaSecundaria" ||
-  (
-    equipamentos.armaSecundaria !== undefined &&
-    equipamentos.armaSecundaria !== ""
-  );
+  const armaSecundariaPreenchida =
+    equipamentos.itemSecundario !== "armaSecundaria" ||
+    (equipamentos.armaSecundaria !== undefined && equipamentos.armaSecundaria !== "");
 
-  return nomePreenchido && idiomasPreenchidos && equipamentosPreenchidos && armaSecundariaPreenchida;
+  return (
+    nomePreenchido && idiomasPreenchidos && equipamentosPreenchidos && armaSecundariaPreenchida
+  );
 }
 
 function atualizarEstadoNavegacao() {
-  botoesPasso.forEach(function(botao) {
+  botoesPasso.forEach(function (botao) {
     const nomePasso = botao.dataset.passo;
     const indicePasso = ordemPassos.indexOf(nomePasso);
 
@@ -4637,66 +3332,38 @@ function mostrarMensagemNavegacao(texto) {
   }
 
   if (texto !== "") {
-    temporizadorMensagemNavegacao = setTimeout(function() {
+    temporizadorMensagemNavegacao = setTimeout(function () {
       mensagemNavegacao.textContent = "";
     }, 3000);
   }
 }
 
 function criarAvatarRevisao() {
+  const avatarRevisao = document.createElement("div");
 
-  const avatarRevisao =
-    document.createElement(
-      "div"
-    );
+  avatarRevisao.classList.add("avatar-revisao");
 
-  avatarRevisao.classList.add(
-    "avatar-revisao"
-  );
+  const imagemAvatar = document.createElement("img");
 
-  const imagemAvatar =
-    document.createElement(
-      "img"
-    );
+  imagemAvatar.classList.add("imagem-avatar-revisao");
 
-  imagemAvatar.classList.add(
-    "imagem-avatar-revisao"
-  );
+  imagemAvatar.src = personagem.avatar.imagem;
 
-  imagemAvatar.src =
-    personagem.avatar.imagem;
+  imagemAvatar.alt = "Avatar de " + personagem.detalhes.nome;
 
-  imagemAvatar.alt =
-    "Avatar de " +
-    personagem.detalhes.nome;
+  const frameAvatar = document.createElement("img");
 
-  const frameAvatar =
-    document.createElement(
-      "img"
-    );
+  frameAvatar.classList.add("frame-avatar-revisao");
 
-  frameAvatar.classList.add(
-    "frame-avatar-revisao"
-  );
+  frameAvatar.src = personagem.avatar.frame;
 
-  frameAvatar.src =
-    personagem.avatar.frame;
+  frameAvatar.alt = "";
 
-  frameAvatar.alt =
-    "";
+  frameAvatar.setAttribute("aria-hidden", "true");
 
-  frameAvatar.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  avatarRevisao.append(
-    imagemAvatar,
-    frameAvatar
-  );
+  avatarRevisao.append(imagemAvatar, frameAvatar);
 
   return avatarRevisao;
-
 }
 
 function montarTelaRevisao() {
@@ -4707,8 +3374,7 @@ function montarTelaRevisao() {
 
   const tituloBasico = document.createElement("h3");
   tituloBasico.textContent = "Informações Básicas";
-  const avatarBasico =
-  criarAvatarRevisao();
+  const avatarBasico = criarAvatarRevisao();
 
   blocoBasico.append(
     tituloBasico,
@@ -4717,10 +3383,7 @@ function montarTelaRevisao() {
     criarParagrafoRevisao("Classe", personagem.classe + " 1"),
     criarParagrafoRevisao("Antecedente", personagem.antecedente),
     criarParagrafoRevisao("Espécie", personagem.especie),
-    criarParagrafoRevisao(
-      "Idiomas",
-      personagem.idiomas.map(obterNomeIdioma).join(", ")
-    )
+    criarParagrafoRevisao("Idiomas", personagem.idiomas.map(obterNomeIdioma).join(", ")),
   );
 
   areaRevisao.appendChild(blocoBasico);
@@ -4735,134 +3398,59 @@ function montarTelaRevisao() {
 }
 
 function montarRevisaoAntecedente() {
-
-  if (
-    !personagem.antecedenteId
-  ) {
+  if (!personagem.antecedenteId) {
     return;
   }
 
-  const bloco =
-    document.createElement(
-      "section"
-    );
+  const bloco = document.createElement("section");
 
-  bloco.classList.add(
-    "bloco-revisao"
-  );
+  bloco.classList.add("bloco-revisao");
 
-  const titulo =
-    document.createElement(
-      "h3"
-    );
+  const titulo = document.createElement("h3");
 
-  titulo.textContent =
-    "Benefícios do Antecedente";
+  titulo.textContent = "Benefícios do Antecedente";
 
-  const pericias =
-    personagem
-      .periciasAntecedente ??
-    [];
+  const pericias = personagem.periciasAntecedente ?? [];
 
-  const ferramentas =
-    personagem
-      .ferramentasAntecedente ??
-    [];
+  const ferramentas = personagem.ferramentasAntecedente ?? [];
 
-  const bonusAtributos =
-    Object.entries(
-      personagem
-        .bonusAtributosAntecedente ??
-      {}
-    )
-      .map(
-        function(
-          [
-            atributoId,
-            bonus
-          ]
-        ) {
+  const bonusAtributos = Object.entries(personagem.bonusAtributosAntecedente ?? {}).map(function ([
+    atributoId,
+    bonus,
+  ]) {
+    return `+${bonus} ` + obterNomeAtributo(atributoId);
+  });
 
-          return (
-            `+${bonus} ` +
-            obterNomeAtributo(
-              atributoId
-            )
-          );
+  const dadosAntecedente = window.bancoAntecedentes[personagem.antecedenteId];
 
-        }
-      );
+  const talentoOrigem = dadosAntecedente?.talentoOrigem;
 
-  const dadosAntecedente =
-    window.bancoAntecedentes[
-      personagem.antecedenteId
-    ];
+  const talentoId = typeof talentoOrigem === "string" ? talentoOrigem : talentoOrigem?.id;
 
-  const talentoOrigem =
-    dadosAntecedente
-      ?.talentoOrigem;
-
-  const talentoId =
-    typeof talentoOrigem ===
-      "string"
-      ? talentoOrigem
-      : talentoOrigem?.id;
-
-  const nomeTalento =
-    window.bancoTalentos[
-      talentoId
-    ]?.nome ??
-    talentoId ??
-    "Nenhum";
+  const nomeTalento = window.bancoTalentos[talentoId]?.nome ?? talentoId ?? "Nenhum";
 
   bloco.append(
     titulo,
 
     criarParagrafoRevisao(
       "Perícias",
-      pericias.length > 0
-        ? pericias
-            .map(
-              obterNomePericia
-            )
-            .join(
-              ", "
-            )
-        : "Nenhuma"
+      pericias.length > 0 ? pericias.map(obterNomePericia).join(", ") : "Nenhuma",
     ),
 
     criarParagrafoRevisao(
       "Ferramentas",
-      ferramentas.length > 0
-        ? ferramentas
-            .map(
-              obterNomeEquipamento
-            )
-            .join(
-              ", "
-            )
-        : "Nenhuma"
+      ferramentas.length > 0 ? ferramentas.map(obterNomeEquipamento).join(", ") : "Nenhuma",
     ),
 
-    criarParagrafoRevisao(
-      "Talento",
-      nomeTalento
-    ),
+    criarParagrafoRevisao("Talento", nomeTalento),
 
     criarParagrafoRevisao(
       "Bônus de atributos",
-      bonusAtributos.length > 0
-        ? bonusAtributos.join(
-            ", "
-          )
-        : "Nenhum"
-    )
+      bonusAtributos.length > 0 ? bonusAtributos.join(", ") : "Nenhum",
+    ),
   );
 
-  areaRevisao.appendChild(
-    bloco
-  );
-
+  areaRevisao.appendChild(bloco);
 }
 
 function montarRevisaoNarrativa() {
@@ -4945,102 +3533,46 @@ function criarLinhaArmaRevisao(idArma, rotulo) {
   return container;
 }
 
-function adicionarEquipamentoAntecedenteRevisao(
-  bloco
-) {
+function adicionarEquipamentoAntecedenteRevisao(bloco) {
+  const equipamentoAntecedente = personagem.equipamentoAntecedente;
 
-  const equipamentoAntecedente =
-    personagem
-      .equipamentoAntecedente;
-
-  if (
-    !equipamentoAntecedente
-  ) {
+  if (!equipamentoAntecedente) {
     return;
   }
 
-  const subtitulo =
-    document.createElement(
-      "h4"
-    );
+  const subtitulo = document.createElement("h4");
 
-  subtitulo.textContent =
-    "Equipamento do antecedente";
+  subtitulo.textContent = "Equipamento do antecedente";
 
-  bloco.appendChild(
-    subtitulo
-  );
+  bloco.appendChild(subtitulo);
 
-  const itens =
-    equipamentoAntecedente
-      .itens ??
-    [];
+  const itens = equipamentoAntecedente.itens ?? [];
 
-  if (
-    itens.length >
-      0
-  ) {
+  if (itens.length > 0) {
+    const lista = document.createElement("ul");
 
-    const lista =
-      document.createElement(
-        "ul"
-      );
+    lista.classList.add("lista-equipamento-antecedente-revisao");
 
-    lista.classList.add(
-      "lista-equipamento-antecedente-revisao"
-    );
+    itens.forEach(function (item) {
+      const nomeItem = obterNomeEquipamento(item.id);
 
-    itens.forEach(
-      function(item) {
+      const quantidade = item.quantidade ?? 1;
 
-        const nomeItem =
-          obterNomeEquipamento(
-            item.id
-          );
+      const linha = document.createElement("li");
 
-        const quantidade =
-          item.quantidade ??
-          1;
+      linha.textContent = quantidade > 1 ? `${quantidade}× ${nomeItem}` : nomeItem;
 
-        const linha =
-          document.createElement(
-            "li"
-          );
+      lista.appendChild(linha);
+    });
 
-        linha.textContent =
-          quantidade > 1
-            ? `${quantidade}× ${nomeItem}`
-            : nomeItem;
-
-        lista.appendChild(
-          linha
-        );
-
-      }
-    );
-
-    bloco.appendChild(
-      lista
-    );
-
+    bloco.appendChild(lista);
   }
 
-  const moedas =
-    equipamentoAntecedente
-      .moedas ??
-    {};
+  const moedas = equipamentoAntecedente.moedas ?? {};
 
-  const quantidadeOuro =
-    moedas.ouro ??
-    0;
+  const quantidadeOuro = moedas.ouro ?? 0;
 
-  bloco.appendChild(
-    criarParagrafoRevisao(
-      "Moedas iniciais",
-      `${quantidadeOuro} peças de ouro`
-    )
-  );
-
+  bloco.appendChild(criarParagrafoRevisao("Moedas iniciais", `${quantidadeOuro} peças de ouro`));
 }
 
 function montarRevisaoEquipamentos() {
@@ -5051,9 +3583,7 @@ function montarRevisaoEquipamentos() {
   titulo.textContent = "Equipamentos e Valores";
   bloco.appendChild(titulo);
 
-  adicionarEquipamentoAntecedenteRevisao(
-    bloco
-  );
+  adicionarEquipamentoAntecedenteRevisao(bloco);
 
   const equipamentos = personagem.detalhes.equipamentos;
 
@@ -5064,63 +3594,38 @@ function montarRevisaoEquipamentos() {
   }
 
   const armadura = window.bancoEquipamentos.armaduras[equipamentos.armadura];
-  const itemSecundario =
-    window.bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
+  const itemSecundario = window.bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
 
-  bloco.appendChild(
-    criarParagrafoRevisao(
-      "Armadura",
-      armadura !== undefined ? armadura.nome : ""
-    )
-  );
+  bloco.appendChild(criarParagrafoRevisao("Armadura", armadura !== undefined ? armadura.nome : ""));
 
   if (equipamentos.armaPrincipal !== undefined && equipamentos.armaPrincipal !== "") {
-    bloco.appendChild(
-      criarLinhaArmaRevisao(equipamentos.armaPrincipal, "Arma principal")
-    );
+    bloco.appendChild(criarLinhaArmaRevisao(equipamentos.armaPrincipal, "Arma principal"));
   }
 
   if (equipamentos.itemSecundario === "armaSecundaria") {
-    if (
-      equipamentos.armaSecundaria !== undefined &&
-      equipamentos.armaSecundaria !== ""
-    ) {
-      bloco.appendChild(
-        criarLinhaArmaRevisao(equipamentos.armaSecundaria, "Arma secundária")
-      );
+    if (equipamentos.armaSecundaria !== undefined && equipamentos.armaSecundaria !== "") {
+      bloco.appendChild(criarLinhaArmaRevisao(equipamentos.armaSecundaria, "Arma secundária"));
     }
   } else {
     bloco.appendChild(
       criarParagrafoRevisao(
         "Item secundário",
-        itemSecundario !== undefined ? itemSecundario.nome : ""
-      )
+        itemSecundario !== undefined ? itemSecundario.nome : "",
+      ),
     );
   }
 
-  bloco.appendChild(
-    criarParagrafoRevisao("Classe de Armadura", fichaClasseArmadura.textContent)
-  );
+  bloco.appendChild(criarParagrafoRevisao("Classe de Armadura", fichaClasseArmadura.textContent));
 
-  bloco.appendChild(
-    criarParagrafoRevisao("Pontos de Vida", pvMaximo.textContent)
-  );
+  bloco.appendChild(criarParagrafoRevisao("Pontos de Vida", pvMaximo.textContent));
 
-  bloco.appendChild(
-    criarParagrafoRevisao("Iniciativa", fichaIniciativa.textContent)
-  );
+  bloco.appendChild(criarParagrafoRevisao("Iniciativa", fichaIniciativa.textContent));
 
-  bloco.appendChild(
-    criarParagrafoRevisao("Velocidade", fichaVelocidade.textContent)
-  );
+  bloco.appendChild(criarParagrafoRevisao("Velocidade", fichaVelocidade.textContent));
 
-  bloco.appendChild(
-    criarParagrafoRevisao("Tamanho", fichaTamanho.textContent)
-  );
+  bloco.appendChild(criarParagrafoRevisao("Tamanho", fichaTamanho.textContent));
 
-  bloco.appendChild(
-    criarParagrafoRevisao("Percepção Passiva", fichaPercepcaoPassiva.textContent)
-  );
+  bloco.appendChild(criarParagrafoRevisao("Percepção Passiva", fichaPercepcaoPassiva.textContent));
 
   areaRevisao.appendChild(bloco);
 }
@@ -5140,18 +3645,14 @@ function criarResumoArmaEscolhidaRevisao(idArma) {
     item.appendChild(document.createTextNode(" — Maestria: "));
 
     item.appendChild(
-      window.criarReferenciaDetalhe(
-        "maestria",
-        arma.maestria,
-        obterNomeMaestria(arma.maestria)
-      )
+      window.criarReferenciaDetalhe("maestria", arma.maestria, obterNomeMaestria(arma.maestria)),
     );
   }
 
   if (arma.propriedades !== undefined && arma.propriedades.length > 0) {
     item.appendChild(document.createTextNode(" — Propriedades: "));
 
-    arma.propriedades.forEach(function(idPropriedade, indice) {
+    arma.propriedades.forEach(function (idPropriedade, indice) {
       const propriedade = obterDadosPropriedadeArma(idPropriedade);
 
       if (propriedade === undefined) {
@@ -5159,11 +3660,7 @@ function criarResumoArmaEscolhidaRevisao(idArma) {
       }
 
       item.appendChild(
-        window.criarReferenciaDetalhe(
-          "propriedadeArma",
-          idPropriedade,
-          propriedade.nome
-        )
+        window.criarReferenciaDetalhe("propriedadeArma", idPropriedade, propriedade.nome),
       );
 
       if (indice < arma.propriedades.length - 1) {
@@ -5185,8 +3682,7 @@ function montarRevisaoHabilidades() {
 
   const lista = document.createElement("ul");
 
-  const dadosDaClasse =
-    window.bancoHabilidades.progressaoClasses[personagem.classeId];
+  const dadosDaClasse = window.bancoHabilidades.progressaoClasses[personagem.classeId];
 
   if (dadosDaClasse === undefined || dadosDaClasse.nivel1 === undefined) {
     const item = document.createElement("li");
@@ -5203,7 +3699,7 @@ function montarRevisaoHabilidades() {
   const habilidadesAutomaticas =
     dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
+  habilidadesAutomaticas.forEach(function (idHabilidade) {
     if (idHabilidade === "maestriaComArmas") {
       return;
     }
@@ -5217,29 +3713,22 @@ function montarRevisaoHabilidades() {
     const item = document.createElement("li");
 
     item.appendChild(
-      window.criarReferenciaDetalhe(
-        "habilidade",
-        idHabilidade,
-        habilidade.nome,
-        {
-          recursos: personagem.habilidades.recursos
-        }
-      )
+      window.criarReferenciaDetalhe("habilidade", idHabilidade, habilidade.nome, {
+        recursos: personagem.habilidades.recursos,
+      }),
     );
 
     const recurso = personagem.habilidades.recursos[idHabilidade];
 
     if (recurso !== undefined) {
-      item.appendChild(
-        document.createTextNode(" — " + obterTextoResumoRecurso(recurso))
-      );
+      item.appendChild(document.createTextNode(" — " + obterTextoResumoRecurso(recurso)));
     }
 
     lista.appendChild(item);
   });
 
   if (dadosNivel1.escolhas !== undefined) {
-    dadosNivel1.escolhas.forEach(function(escolha) {
+    dadosNivel1.escolhas.forEach(function (escolha) {
       const grupo = window.bancoHabilidades.gruposDeEscolha[escolha.grupo];
       const valorEscolhido = personagem.habilidades.escolhas[escolha.grupo];
 
@@ -5248,26 +3737,26 @@ function montarRevisaoHabilidades() {
       }
 
       if (grupo.origemDasOpcoes === "periciasProficientes") {
-  const itemGrupo = document.createElement("li");
-  itemGrupo.textContent = grupo.nome + ":";
+        const itemGrupo = document.createElement("li");
+        itemGrupo.textContent = grupo.nome + ":";
 
-  const sublista = document.createElement("ul");
+        const sublista = document.createElement("ul");
 
-  const periciasEscolhidas = Array.isArray(valorEscolhido)
-    ? valorEscolhido
-    : [valorEscolhido];
+        const periciasEscolhidas = Array.isArray(valorEscolhido)
+          ? valorEscolhido
+          : [valorEscolhido];
 
-  periciasEscolhidas.forEach(function(idPericia) {
-    const itemPericia = document.createElement("li");
-    itemPericia.textContent = obterNomePericia(idPericia);
-    sublista.appendChild(itemPericia);
-  });
+        periciasEscolhidas.forEach(function (idPericia) {
+          const itemPericia = document.createElement("li");
+          itemPericia.textContent = obterNomePericia(idPericia);
+          sublista.appendChild(itemPericia);
+        });
 
-  itemGrupo.appendChild(sublista);
-  lista.appendChild(itemGrupo);
+        itemGrupo.appendChild(sublista);
+        lista.appendChild(itemGrupo);
 
-  return;
-}
+        return;
+      }
 
       if (grupo.origemDasOpcoes === "armas") {
         const itemGrupo = document.createElement("li");
@@ -5275,11 +3764,9 @@ function montarRevisaoHabilidades() {
 
         const sublista = document.createElement("ul");
 
-        const armasEscolhidas = Array.isArray(valorEscolhido)
-          ? valorEscolhido
-          : [valorEscolhido];
+        const armasEscolhidas = Array.isArray(valorEscolhido) ? valorEscolhido : [valorEscolhido];
 
-        armasEscolhidas.forEach(function(idArma) {
+        armasEscolhidas.forEach(function (idArma) {
           const itemArma = criarResumoArmaEscolhidaRevisao(idArma);
 
           if (itemArma !== undefined) {
@@ -5297,7 +3784,7 @@ function montarRevisaoHabilidades() {
         return;
       }
 
-      const opcaoEscolhida = grupo.opcoes.find(function(opcao) {
+      const opcaoEscolhida = grupo.opcoes.find(function (opcao) {
         return opcao.id === valorEscolhido;
       });
 
@@ -5334,7 +3821,7 @@ function montarRevisaoTalentos() {
     item.textContent = "Nenhum talento selecionado.";
     lista.appendChild(item);
   } else {
-    personagem.talentos.forEach(function(idTalento) {
+    personagem.talentos.forEach(function (idTalento) {
       const talento = obterDadosTalento(idTalento);
 
       if (talento === undefined) {
@@ -5343,13 +3830,7 @@ function montarRevisaoTalentos() {
 
       const item = document.createElement("li");
 
-      item.appendChild(
-        window.criarReferenciaDetalhe(
-          "talento",
-          idTalento,
-          talento.nome
-        )
-      );
+      item.appendChild(window.criarReferenciaDetalhe("talento", idTalento, talento.nome));
 
       lista.appendChild(item);
     });
@@ -5386,24 +3867,24 @@ function montarRevisaoMagias() {
   bloco.append(
     criarParagrafoRevisao(
       "Atributo de conjuração",
-      obterNomeAtributoConjuracao(personagem.magias.atributoConjuracao)
+      obterNomeAtributoConjuracao(personagem.magias.atributoConjuracao),
     ),
     criarParagrafoRevisao("CD das magias", personagem.magias.cdSalvamento || "-"),
     criarParagrafoRevisao(
       "Ataque mágico",
       personagem.magias.bonusAtaqueMagico === ""
         ? "-"
-        : formatarModificador(personagem.magias.bonusAtaqueMagico)
+        : formatarModificador(personagem.magias.bonusAtaqueMagico),
     ),
     criarParagrafoRevisao(
       "Truques",
-      truques.length === 0 ? "Nenhum" : truques.map(obterNomeMagia).join(", ")
+      truques.length === 0 ? "Nenhum" : truques.map(obterNomeMagia).join(", "),
     ),
     criarParagrafoRevisao(
       "Magias preparadas",
-      preparadas.length === 0 ? "Nenhuma" : preparadas.map(obterNomeMagia).join(", ")
+      preparadas.length === 0 ? "Nenhuma" : preparadas.map(obterNomeMagia).join(", "),
     ),
-    criarParagrafoRevisao("Espaços de 1º círculo", espacosNivel1)
+    criarParagrafoRevisao("Espaços de 1º círculo", espacosNivel1),
   );
 
   areaRevisao.appendChild(bloco);
@@ -5416,18 +3897,14 @@ function atualizarFichaTalentos() {
     return;
   }
 
-  personagem.talentos.forEach(function(idTalento) {
+  personagem.talentos.forEach(function (idTalento) {
     const talento = obterDadosTalento(idTalento);
     const item = document.createElement("li");
 
     if (talento === undefined) {
       item.textContent = idTalento;
     } else {
-      const referencia = window.criarReferenciaDetalhe(
-        "talento",
-        idTalento,
-        talento.nome
-      );
+      const referencia = window.criarReferenciaDetalhe("talento", idTalento, talento.nome);
 
       item.appendChild(referencia);
     }
@@ -5443,7 +3920,6 @@ function atualizarFichaTalentos() {
 // =====================================================
 
 function salvarPersonagemLocal() {
-
   atualizarPericiasPersonagem();
   atualizarIdiomasPersonagem();
 
@@ -5467,16 +3943,12 @@ function salvarPersonagemLocal() {
 
   personagensSalvos.push(personagemParaSalvar);
 
-  localStorage.setItem(
-    "personagensRpgSolo",
-    JSON.stringify(personagensSalvos)
-  );
+  localStorage.setItem("personagensRpgSolo", JSON.stringify(personagensSalvos));
 
   return personagemParaSalvar;
-
 }
 
-botaoFinalizarPersonagem.addEventListener("click", function() {
+botaoFinalizarPersonagem.addEventListener("click", function () {
   if (personagemJaFoiSalvo === true) {
     return;
   }
@@ -5508,7 +3980,6 @@ botaoFinalizarPersonagem.addEventListener("click", function() {
 
   acoesPersonagemSalvo.appendChild(linkVerFicha);
   acoesPersonagemSalvo.appendChild(linkMeusPersonagens);
-
 });
 
 // =====================================================
@@ -5546,7 +4017,7 @@ function montarTelaPericiasClasse() {
   lista.classList.add("grade-opcoes");
   areaPericiasClasse.appendChild(lista);
 
-  dadosClasse.pericias.opcoes.forEach(function(idPericia) {
+  dadosClasse.pericias.opcoes.forEach(function (idPericia) {
     const pericia = obterDadosPericia(idPericia);
 
     if (pericia === undefined) {
@@ -5557,11 +4028,9 @@ function montarTelaPericiasClasse() {
     card.type = "button";
     card.classList.add("card-opcao");
 
-    const vemDoAntecedente =
-      personagem.periciasAntecedente.includes(idPericia);
+    const vemDoAntecedente = personagem.periciasAntecedente.includes(idPericia);
 
-    const foiEscolhidaNaClasse =
-      personagem.periciasClasse.includes(idPericia);
+    const foiEscolhidaNaClasse = personagem.periciasClasse.includes(idPericia);
 
     if (foiEscolhidaNaClasse) {
       card.classList.add("selecionado");
@@ -5575,7 +4044,7 @@ function montarTelaPericiasClasse() {
       card.textContent = pericia.nome;
     }
 
-    card.addEventListener("click", function() {
+    card.addEventListener("click", function () {
       selecionarPericiaClasse(idPericia);
     });
 
@@ -5599,7 +4068,7 @@ function selecionarPericiaClasse(idPericia) {
   const jaSelecionada = personagem.periciasClasse.includes(idPericia);
 
   if (jaSelecionada) {
-    personagem.periciasClasse = personagem.periciasClasse.filter(function(pericia) {
+    personagem.periciasClasse = personagem.periciasClasse.filter(function (pericia) {
       return pericia !== idPericia;
     });
   } else {
@@ -5607,8 +4076,7 @@ function selecionarPericiaClasse(idPericia) {
       const mensagem = document.getElementById("mensagemHabilidades");
 
       if (mensagem !== null) {
-        mensagem.textContent =
-          "Você já escolheu o número máximo de perícias para esta classe.";
+        mensagem.textContent = "Você já escolheu o número máximo de perícias para esta classe.";
       }
 
       return;
@@ -5635,7 +4103,7 @@ function selecionarPericiaClasse(idPericia) {
 function atualizarMarcadoresPericias() {
   const linhasPericia = document.querySelectorAll("[data-pericia]");
 
-  linhasPericia.forEach(function(linha) {
+  linhasPericia.forEach(function (linha) {
     const idPericia = linha.dataset.pericia;
 
     linha.classList.remove("proficiente");
@@ -5646,11 +4114,11 @@ function atualizarMarcadoresPericias() {
     }
 
     if (
-  personagemTemEspecializacaoEmPericia(personagem, idPericia) ||
-  personagemTemEspecializacaoEmPericia(idPericia)
-) {
-  linha.classList.add("especializada");
-}
+      personagemTemEspecializacaoEmPericia(personagem, idPericia) ||
+      personagemTemEspecializacaoEmPericia(idPericia)
+    ) {
+      linha.classList.add("especializada");
+    }
   });
 }
 
@@ -5698,8 +4166,8 @@ function calcularValorPericia(idPericia) {
 
     if (personagemTemEspecializacaoEmPericia(idPericia)) {
       valorFinal = valorFinal + calcularBonusProficiencia();
+    }
   }
-}
 
   return valorFinal;
 }
@@ -5889,7 +4357,7 @@ function obterResumoArma(personagemAtual, idArma) {
     maestria: obterNomeMaestria(arma.maestria),
     maestriaId: arma.maestria,
     propriedades: arma.propriedades || [],
-    ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma)
+    ataqueFurtivo: obterTextoAtaqueFurtivo(personagemAtual, idArma),
   };
 }
 
@@ -5925,210 +4393,122 @@ function obterTextoAtaqueFurtivo(personagemAtual, idArma) {
   return "Ataque Furtivo: +1d6 quando aplicável";
 }
 
-function converterDanoArma(
-  dano
-) {
-  const partes =
-    dano.split(
-      "d"
-    );
+function converterDanoArma(dano) {
+  const partes = dano.split("d");
 
   if (partes.length !== 2) {
     return null;
   }
 
-  const quantidade =
-    Number(
-      partes[0]
-    );
+  const quantidade = Number(partes[0]);
 
-  const numeroDeFaces =
-    Number(
-      partes[1]
-    );
+  const numeroDeFaces = Number(partes[1]);
 
-  if (
-    !Number.isInteger(
-      quantidade
-    ) ||
-    !Number.isInteger(
-      numeroDeFaces
-    )
-  ) {
+  if (!Number.isInteger(quantidade) || !Number.isInteger(numeroDeFaces)) {
     return null;
   }
 
   return {
-    quantidade:
-      quantidade,
+    quantidade: quantidade,
 
-    numeroDeFaces:
-      numeroDeFaces
+    numeroDeFaces: numeroDeFaces,
   };
 }
 
-function criarAtaqueCombateArma(
-  personagemAtual,
-  idArma
-) {
-  const arma =
-    obterDadosArma(
-      idArma
-    );
+function criarAtaqueCombateArma(personagemAtual, idArma) {
+  const arma = obterDadosArma(idArma);
 
   if (!arma) {
     return null;
   }
 
-  const grupoDano =
-    converterDanoArma(
-      arma.dano
-    );
+  const grupoDano = converterDanoArma(arma.dano);
 
   if (!grupoDano) {
     return null;
   }
 
-  const bonusAtaque =
-    calcularBonusAtaqueArma(
-      personagemAtual,
-      idArma
-    );
+  const bonusAtaque = calcularBonusAtaqueArma(personagemAtual, idArma);
 
-  const bonusDano =
-    calcularBonusDanoArma(
-      personagemAtual,
-      idArma
-    );
+  const bonusDano = calcularBonusDanoArma(personagemAtual, idArma);
 
-  const ataqueDistancia =
-    arma.categoria ===
-    "distancia";
+  const ataqueDistancia = arma.categoria === "distancia";
 
   return {
-    id:
-      idArma,
+    id: idArma,
 
-    nome:
-      arma.nome,
+    nome: arma.nome,
 
-    categoria:
-      ataqueDistancia
-        ? "distancia"
-        : "corpoACorpo",
+    categoria: ataqueDistancia ? "distancia" : "corpoACorpo",
 
     selecao: {
-      tipo:
-        "criatura",
+      tipo: "criatura",
 
       alcance: ataqueDistancia
         ? {
             normal: 16,
-            longo: 64
+            longo: 64,
           }
         : {
-            normal: 1
+            normal: 1,
           },
 
-      area:
-        null
+      area: null,
     },
 
-    bonusAtaque:
-      bonusAtaque === ""
-        ? 0
-        : bonusAtaque,
+    bonusAtaque: bonusAtaque === "" ? 0 : bonusAtaque,
 
     dano: {
-      gruposDeDados: [
-        grupoDano
-      ],
+      gruposDeDados: [grupoDano],
 
-      modificador:
-        bonusDano === ""
-          ? 0
-          : bonusDano,
+      modificador: bonusDano === "" ? 0 : bonusDano,
 
-      tipo:
-        arma.tipoDano
+      tipo: arma.tipoDano,
     },
 
-    maestriaId:
-      arma.maestria,
+    maestriaId: arma.maestria,
 
-    propriedades:
-      structuredClone(
-        arma.propriedades ?? []
-      )
+    propriedades: structuredClone(arma.propriedades ?? []),
   };
 }
 
 function atualizarAtaquesCombatePersonagem() {
-  const equipamentos =
-    personagem
-      .detalhes
-      .equipamentos;
+  const equipamentos = personagem.detalhes.equipamentos;
 
-  const ataques =
-    [];
+  const ataques = [];
 
   if (!equipamentos) {
-    personagem.combate.ataques =
-      ataques;
+    personagem.combate.ataques = ataques;
 
     return;
   }
 
-  if (
-    equipamentos.armaPrincipal
-  ) {
-    const ataquePrincipal =
-      criarAtaqueCombateArma(
-        personagem,
-        equipamentos.armaPrincipal
-      );
+  if (equipamentos.armaPrincipal) {
+    const ataquePrincipal = criarAtaqueCombateArma(personagem, equipamentos.armaPrincipal);
 
     if (ataquePrincipal) {
-      ataques.push(
-        ataquePrincipal
-      );
+      ataques.push(ataquePrincipal);
     }
   }
 
-  if (
-    equipamentos.itemSecundario ===
-      "armaSecundaria" &&
-    equipamentos.armaSecundaria
-  ) {
-    const ataqueSecundario =
-      criarAtaqueCombateArma(
-        personagem,
-        equipamentos.armaSecundaria
-      );
+  if (equipamentos.itemSecundario === "armaSecundaria" && equipamentos.armaSecundaria) {
+    const ataqueSecundario = criarAtaqueCombateArma(personagem, equipamentos.armaSecundaria);
 
     if (ataqueSecundario) {
-      ataqueSecundario.id =
-        ataqueSecundario.id +
-        "Secundaria";
+      ataqueSecundario.id = ataqueSecundario.id + "Secundaria";
 
-      ataqueSecundario.nome =
-        ataqueSecundario.nome +
-        " (secundária)";
+      ataqueSecundario.nome = ataqueSecundario.nome + " (secundária)";
 
-      ataques.push(
-        ataqueSecundario
-      );
+      ataques.push(ataqueSecundario);
     }
   }
 
-  personagem.combate.ataques =
-    ataques;
+  personagem.combate.ataques = ataques;
 }
 
 function atualizarFichaArmasAtaques() {
+  atualizarAtaquesCombatePersonagem();
 
-  atualizarAtaquesCombatePersonagem()
-  
   if (fichaArmasAtaques === null) {
     return;
   }
@@ -6144,10 +4524,7 @@ function atualizarFichaArmasAtaques() {
 
   const armasParaMostrar = [];
 
-  if (
-    equipamentos.armaPrincipal !== undefined &&
-    equipamentos.armaPrincipal !== ""
-  ) {
+  if (equipamentos.armaPrincipal !== undefined && equipamentos.armaPrincipal !== "") {
     armasParaMostrar.push(equipamentos.armaPrincipal);
   }
 
@@ -6164,7 +4541,7 @@ function atualizarFichaArmasAtaques() {
     return;
   }
 
-  armasParaMostrar.forEach(function(idArma) {
+  armasParaMostrar.forEach(function (idArma) {
     const resumo = obterResumoArma(personagem, idArma);
 
     if (resumo !== undefined) {
@@ -6200,7 +4577,7 @@ function preencherSelectArmaSecundaria() {
   opcaoInicial.textContent = "Escolha uma arma";
   armaSecundaria.appendChild(opcaoInicial);
 
-  Object.keys(bancoEquipamentos.armas).forEach(function(idArma) {
+  Object.keys(bancoEquipamentos.armas).forEach(function (idArma) {
     const arma = bancoEquipamentos.armas[idArma];
 
     const opcao = document.createElement("option");
@@ -6244,26 +4621,26 @@ function criarLinhaAtaque(resumo) {
   const botaoMaestria = window.criarReferenciaDetalhe(
     "maestria",
     resumo.maestriaId,
-    resumo.maestria
+    resumo.maestria,
   );
 
   linhaAtaque.appendChild(nomeArma);
   linhaAtaque.appendChild(valoresAtaque);
   linhaAtaque.appendChild(botaoMaestria);
 
-   if (resumo.propriedades.length > 0) {
+  if (resumo.propriedades.length > 0) {
     linhaAtaque.appendChild(document.createElement("br"));
     linhaAtaque.appendChild(criarLinhaPropriedadesArma(resumo.propriedades));
-   }
-    if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
-      linhaAtaque.appendChild(document.createElement("br"));
+  }
+  if (resumo.ataqueFurtivo !== undefined && resumo.ataqueFurtivo !== "") {
+    linhaAtaque.appendChild(document.createElement("br"));
 
-      const linhaAtaqueFurtivo = document.createElement("span");
-      linhaAtaqueFurtivo.classList.add("linha-ataque-furtivo");
-      linhaAtaqueFurtivo.textContent = resumo.ataqueFurtivo;
+    const linhaAtaqueFurtivo = document.createElement("span");
+    linhaAtaqueFurtivo.classList.add("linha-ataque-furtivo");
+    linhaAtaqueFurtivo.textContent = resumo.ataqueFurtivo;
 
-      linhaAtaque.appendChild(linhaAtaqueFurtivo);
-    }
+    linhaAtaque.appendChild(linhaAtaqueFurtivo);
+  }
 
   return linhaAtaque;
 }
@@ -6274,7 +4651,7 @@ function criarLinhaPropriedadesArma(propriedades) {
 
   linha.textContent = "Propriedades: ";
 
-  propriedades.forEach(function(idPropriedade, indice) {
+  propriedades.forEach(function (idPropriedade, indice) {
     const propriedade = obterDadosPropriedadeArma(idPropriedade);
 
     if (propriedade === undefined) {
@@ -6284,7 +4661,7 @@ function criarLinhaPropriedadesArma(propriedades) {
     const referencia = window.criarReferenciaDetalhe(
       "propriedadeArma",
       idPropriedade,
-      propriedade.nome
+      propriedade.nome,
     );
 
     linha.appendChild(referencia);
@@ -6308,10 +4685,7 @@ function armaEhSecundaria(personagemAtual, idArma) {
     return false;
   }
 
-  return (
-    equipamentos.itemSecundario === "armaSecundaria" &&
-    equipamentos.armaSecundaria === idArma
-  );
+  return equipamentos.itemSecundario === "armaSecundaria" && equipamentos.armaSecundaria === idArma;
 }
 
 function obterPropriedadesArma(idArma) {
@@ -6350,7 +4724,9 @@ function obterAvisosEquipamentos() {
     armaTemPropriedade(armaPrincipalId, "duasMaos") &&
     itemSecundarioId === "escudo"
   ) {
-    avisos.push("A arma principal parece exigir duas mãos, então ela pode não combinar com escudo.");
+    avisos.push(
+      "A arma principal parece exigir duas mãos, então ela pode não combinar com escudo.",
+    );
   }
 
   if (
@@ -6359,7 +4735,9 @@ function obterAvisosEquipamentos() {
     armaTemPropriedade(armaPrincipalId, "duasMaos") &&
     itemSecundarioId === "armaSecundaria"
   ) {
-    avisos.push("A arma principal parece exigir duas mãos, então ela pode não combinar com uma arma secundária.");
+    avisos.push(
+      "A arma principal parece exigir duas mãos, então ela pode não combinar com uma arma secundária.",
+    );
   }
 
   if (
@@ -6368,7 +4746,9 @@ function obterAvisosEquipamentos() {
     armaSecundariaId !== "" &&
     armaTemPropriedade(armaSecundariaId, "leve") === false
   ) {
-    avisos.push("Para lutar com duas armas, a arma secundária normalmente deveria ter a propriedade leve.");
+    avisos.push(
+      "Para lutar com duas armas, a arma secundária normalmente deveria ter a propriedade leve.",
+    );
   }
 
   if (
@@ -6410,7 +4790,7 @@ function atualizarAvisosEquipamentos() {
     return;
   }
 
-  avisos.forEach(function(textoAviso) {
+  avisos.forEach(function (textoAviso) {
     const linha = document.createElement("div");
     linha.textContent = "⚠ " + textoAviso;
     avisoEquipamentos.appendChild(linha);
@@ -6442,10 +4822,7 @@ function obterAtributoDaPericia(idPericia) {
 }
 
 function atualizarPericiasPersonagem() {
-  const todasAsPericias = [
-    ...personagem.periciasAntecedente,
-    ...personagem.periciasClasse
-  ];
+  const todasAsPericias = [...personagem.periciasAntecedente, ...personagem.periciasClasse];
 
   personagem.pericias = [...new Set(todasAsPericias)];
 }
@@ -6493,7 +4870,7 @@ function atualizarIdiomasPersonagem() {
     ...personagem.idiomasBase,
     ...personagem.idiomasEspecie,
     ...personagem.idiomasAntecedente,
-    ...personagem.idiomasEscolhidos
+    ...personagem.idiomasEscolhidos,
   ];
 
   personagem.idiomas = [...new Set(todosOsIdiomas)];
@@ -6503,7 +4880,7 @@ function obterIdiomasBloqueadosParaEscolha() {
   return [
     ...personagem.idiomasBase,
     ...personagem.idiomasEspecie,
-    ...personagem.idiomasAntecedente
+    ...personagem.idiomasAntecedente,
   ];
 }
 
@@ -6521,7 +4898,7 @@ function preencherSelectIdioma(select, valorAtual, valoresEscolhidosEmOutrosSele
   opcaoVazia.textContent = "Escolha um idioma";
   select.appendChild(opcaoVazia);
 
-  Object.keys(window.bancoIdiomas).forEach(function(idIdioma) {
+  Object.keys(window.bancoIdiomas).forEach(function (idIdioma) {
     const idioma = window.bancoIdiomas[idIdioma];
 
     if (idioma.tipo !== "padrao") {
@@ -6551,17 +4928,9 @@ function atualizarSelectsIdiomas() {
   const valorIdioma1 = seletorIdioma1.value;
   const valorIdioma2 = seletorIdioma2.value;
 
-  preencherSelectIdioma(
-    seletorIdioma1,
-    valorIdioma1,
-    [valorIdioma2]
-  );
+  preencherSelectIdioma(seletorIdioma1, valorIdioma1, [valorIdioma2]);
 
-  preencherSelectIdioma(
-    seletorIdioma2,
-    valorIdioma2,
-    [valorIdioma1]
-  );
+  preencherSelectIdioma(seletorIdioma2, valorIdioma2, [valorIdioma1]);
 }
 
 function atualizarIdiomasEscolhidos() {
@@ -6620,7 +4989,7 @@ function obterTextoPropriedadesArma(propriedades) {
     return "";
   }
 
-  const nomesPropriedades = propriedades.map(function(idPropriedade) {
+  const nomesPropriedades = propriedades.map(function (idPropriedade) {
     return obterNomePropriedadeArma(idPropriedade);
   });
 
@@ -6643,10 +5012,7 @@ function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
   const forca = personagemAtual.atributos.forca;
   const destreza = personagemAtual.atributos.destreza;
 
-  if (
-    (forca === undefined || forca === "") &&
-    (destreza === undefined || destreza === "")
-  ) {
+  if ((forca === undefined || forca === "") && (destreza === undefined || destreza === "")) {
     return arma.atributoAtaque;
   }
 
@@ -6735,7 +5101,7 @@ function atualizarRecursosHabilidadesPersonagem() {
   const habilidadesAutomaticas =
     dadosNivel1.classFeaturesAutomaticas || dadosNivel1.habilidadesAutomaticas || [];
 
-  habilidadesAutomaticas.forEach(function(idHabilidade) {
+  habilidadesAutomaticas.forEach(function (idHabilidade) {
     const habilidade = obterDadosHabilidade(idHabilidade);
 
     if (habilidade === undefined || habilidade.recurso === undefined) {
@@ -6751,7 +5117,7 @@ function atualizarRecursosHabilidadesPersonagem() {
       usosMaximos: recurso.usosMaximos,
       recuperaEm: recurso.recuperaEm,
       efeito: recurso.efeito,
-      formula: formatarFormulaRecurso(recurso.formula)
+      formula: formatarFormulaRecurso(recurso.formula),
     };
   });
 }
@@ -6799,17 +5165,12 @@ function criarItemHabilidadeAutomaticaFicha(idHabilidade) {
     botao.appendChild(resumoRecurso);
   }
 
-  botao.addEventListener("click", function(evento) {
-  evento.stopPropagation();
+  botao.addEventListener("click", function (evento) {
+    evento.stopPropagation();
 
-  window.abrirPopoverDetalhe(
-    "habilidade",
-    idHabilidade,
-    botao,
-    {
-      recursos: personagem.habilidades.recursos
-    }
-  );
+    window.abrirPopoverDetalhe("habilidade", idHabilidade, botao, {
+      recursos: personagem.habilidades.recursos,
+    });
   });
 
   item.appendChild(botao);
@@ -6836,14 +5197,10 @@ function criarItemTalentoFicha(idTalento) {
 
   botao.appendChild(nome);
 
-  botao.addEventListener("click", function(evento) {
-  evento.stopPropagation();
+  botao.addEventListener("click", function (evento) {
+    evento.stopPropagation();
 
-  window.abrirPopoverDetalhe(
-    "talento",
-    idTalento,
-    botao
-  );
+    window.abrirPopoverDetalhe("talento", idTalento, botao);
   });
 
   item.appendChild(botao);
@@ -6853,7 +5210,7 @@ function criarItemTalentoFicha(idTalento) {
 
 function abrirModalDetalheHabilidade(idHabilidade) {
   window.abrirModalDetalhe("habilidade", idHabilidade, {
-    recursos: personagem.habilidades.recursos
+    recursos: personagem.habilidades.recursos,
   });
 }
 
@@ -6870,13 +5227,13 @@ function fecharModalDetalheFicha() {
 }
 
 if (botaoFecharModalDetalheFicha !== null) {
-  botaoFecharModalDetalheFicha.addEventListener("click", function() {
+  botaoFecharModalDetalheFicha.addEventListener("click", function () {
     fecharModalDetalheFicha();
   });
 }
 
 if (modalDetalheFicha !== null) {
-  modalDetalheFicha.addEventListener("click", function(evento) {
+  modalDetalheFicha.addEventListener("click", function (evento) {
     if (evento.target === modalDetalheFicha) {
       fecharModalDetalheFicha();
     }
@@ -6888,8 +5245,7 @@ function abrirModalDetalheTalento(idTalento) {
 }
 
 function obterEspecializacoesPericias() {
-  const especializacoes =
-    personagem.habilidades.escolhas.especializacoesPericias;
+  const especializacoes = personagem.habilidades.escolhas.especializacoesPericias;
 
   if (Array.isArray(especializacoes) === false) {
     return [];
@@ -6905,8 +5261,9 @@ function personagemTemEspecializacaoEmPericia(idPericia) {
 function limparEspecializacoesInvalidas() {
   const especializacoes = obterEspecializacoesPericias();
 
-  personagem.habilidades.escolhas.especializacoesPericias =
-    especializacoes.filter(function(idPericia) {
+  personagem.habilidades.escolhas.especializacoesPericias = especializacoes.filter(
+    function (idPericia) {
       return personagem.pericias.includes(idPericia);
-    });
+    },
+  );
 }

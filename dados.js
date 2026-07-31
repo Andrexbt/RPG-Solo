@@ -11,29 +11,16 @@ const listaGruposDados = document.querySelector("#listaGruposDados");
 const botaoAdicionarGrupoDado = document.querySelector("#botaoAdicionarGrupoDado");
 
 function rolarDado(numeroDeFaces) {
-
-  const resultado =
-    Math.floor(
-      Math.random() * numeroDeFaces
-    ) + 1;
+  const resultado = Math.floor(Math.random() * numeroDeFaces) + 1;
 
   return resultado;
 }
 
-function rolarGrupoDeDados(
-  quantidade,
-  numeroDeFaces
-) {
-
+function rolarGrupoDeDados(quantidade, numeroDeFaces) {
   const resultados = [];
 
-  for (
-    let indice = 0;
-    indice < quantidade;
-    indice += 1) {
-
-    const resultado =
-      rolarDado(numeroDeFaces);
+  for (let indice = 0; indice < quantidade; indice += 1) {
+    const resultado = rolarDado(numeroDeFaces);
 
     resultados.push(resultado);
   }
@@ -42,248 +29,149 @@ function rolarGrupoDeDados(
 }
 
 function somarResultados(resultados) {
-
   let total = 0;
 
   for (const resultado of resultados) {
-
     total += resultado;
   }
 
   return total;
 }
 
-function realizarRolagem(
-  quantidade,
-  numeroDeFaces
-) {
+function realizarRolagem(quantidade, numeroDeFaces) {
+  const resultados = rolarGrupoDeDados(quantidade, numeroDeFaces);
 
-  const resultados =
-    rolarGrupoDeDados(
-      quantidade,
-      numeroDeFaces
-    );
-
-  const total =
-    somarResultados(resultados);
+  const total = somarResultados(resultados);
 
   return {
+    quantidade: quantidade,
 
-    quantidade:
-      quantidade,
+    numeroDeFaces: numeroDeFaces,
 
-    numeroDeFaces:
-      numeroDeFaces,
+    resultados: resultados,
 
-    resultados:
-      resultados,
-
-    total:
-      total
+    total: total,
   };
 }
 
 function rolarGruposDeDados(configuracao) {
-
   const resultadosDosGrupos = [];
 
-  for (
-    const grupoDeDados
-    of configuracao.gruposDeDados) {
+  for (const grupoDeDados of configuracao.gruposDeDados) {
+    const resultadoDoGrupo = realizarRolagem(grupoDeDados.quantidade, grupoDeDados.numeroDeFaces);
 
-    const resultadoDoGrupo =
-      realizarRolagem(
-        grupoDeDados.quantidade,
-        grupoDeDados.numeroDeFaces
-      );
-
-    resultadosDosGrupos.push(
-      resultadoDoGrupo
-    );
+    resultadosDosGrupos.push(resultadoDoGrupo);
   }
   return resultadosDosGrupos;
 }
 
 function realizarRolagemComposta(configuracao) {
-
-  const gruposRolados =
-    rolarGruposDeDados(configuracao);
+  const gruposRolados = rolarGruposDeDados(configuracao);
 
   let subtotal = 0;
 
   for (const grupoRolado of gruposRolados) {
-
     subtotal += grupoRolado.total;
-
   }
 
-  const modificador =
-    configuracao.modificador;
+  const modificador = configuracao.modificador;
 
-  const total =
-    subtotal + modificador;
+  const total = subtotal + modificador;
 
   return {
+    gruposRolados: gruposRolados,
 
-    gruposRolados:
-      gruposRolados,
+    subtotal: subtotal,
 
-    subtotal:
-      subtotal,
+    modificador: modificador,
 
-    modificador:
-      modificador,
-
-    total:
-      total
+    total: total,
   };
 }
 
 function formatarResultadoRolagem(rolagem) {
-
-  let textoDosDados =
-    "";
+  let textoDosDados = "";
 
   for (const grupo of rolagem.gruposRolados) {
-
-    const descricaoDoGrupo =
-      `${grupo.quantidade}d${grupo.numeroDeFaces} [${grupo.resultados.join(", ")}]`;
+    const descricaoDoGrupo = `${grupo.quantidade}d${grupo.numeroDeFaces} [${grupo.resultados.join(", ")}]`;
 
     if (textoDosDados !== "") {
-
-      textoDosDados +=
-        " + ";
-
+      textoDosDados += " + ";
     }
 
-    textoDosDados +=
-      descricaoDoGrupo;
-
+    textoDosDados += descricaoDoGrupo;
   }
 
   const textoDoModificador =
-    rolagem.modificador >= 0
-      ? ` + ${rolagem.modificador}`
-      : ` - ${Math.abs(rolagem.modificador)}`;
+    rolagem.modificador >= 0 ? ` + ${rolagem.modificador}` : ` - ${Math.abs(rolagem.modificador)}`;
 
   return `${textoDosDados}${textoDoModificador} = ${rolagem.total}`;
-
 }
 
 function executarRolagemConfigurada() {
-
-  const elementosDosGrupos =
-    listaGruposDados.querySelectorAll(
-      ".grupo-dado"
-    );
+  const elementosDosGrupos = listaGruposDados.querySelectorAll(".grupo-dado");
 
   const gruposDeDados = [];
 
   for (const elementoDoGrupo of elementosDosGrupos) {
+    const campoQuantidade = elementoDoGrupo.querySelector(".quantidade-dados");
 
-    const campoQuantidade =
-      elementoDoGrupo.querySelector(
-        ".quantidade-dados"
-      );
-
-    const campoNumeroDeFaces =
-      elementoDoGrupo.querySelector(
-        ".numero-de-faces"
-      );
+    const campoNumeroDeFaces = elementoDoGrupo.querySelector(".numero-de-faces");
 
     const grupoDeDados = {
       quantidade: Number(campoQuantidade.value),
-      numeroDeFaces: Number(campoNumeroDeFaces.value)
+      numeroDeFaces: Number(campoNumeroDeFaces.value),
     };
 
     gruposDeDados.push(grupoDeDados);
-
   }
 
-  const modificador =
-    Number(campoModificadorDados.value);
+  const modificador = Number(campoModificadorDados.value);
 
   const configuracao = {
     gruposDeDados: gruposDeDados,
-    modificador: modificador
+    modificador: modificador,
   };
 
-  const resultado =
-    realizarRolagemComposta(configuracao);
+  const resultado = realizarRolagemComposta(configuracao);
 
   resultadoDado.textContent = resultado.total;
 
-  const eventoRolagem = new CustomEvent(
-    "rolagemConcluida",
-    {
-      detail: resultado
-    }
-  );
+  const eventoRolagem = new CustomEvent("rolagemConcluida", {
+    detail: resultado,
+  });
 
   document.dispatchEvent(eventoRolagem);
 
-  console.log(
-    "Rolagem solicitada pela interface:",
-    resultado
-  );
+  console.log("Rolagem solicitada pela interface:", resultado);
 
-  const resultadoFormatado =
-    formatarResultadoRolagem(resultado);
+  const resultadoFormatado = formatarResultadoRolagem(resultado);
 
   console.log(resultadoFormatado);
 }
 
 function removerGrupoDado(evento) {
+  const botaoRemover = evento.currentTarget;
 
-  const botaoRemover =
-    evento.currentTarget;
-
-
-  const grupoDado =
-    botaoRemover.closest(
-      ".grupo-dado"
-    );
-
+  const grupoDado = botaoRemover.closest(".grupo-dado");
 
   grupoDado.remove();
-
 }
 
 function adicionarGrupoDado() {
+  const grupoOriginal = listaGruposDados.querySelector(".grupo-dado");
 
-  const grupoOriginal =
-    listaGruposDados.querySelector(
-      ".grupo-dado"
-    );
+  const novoGrupo = grupoOriginal.cloneNode(true);
 
+  const novaQuantidade = novoGrupo.querySelector(".quantidade-dados");
 
-  const novoGrupo =
-    grupoOriginal.cloneNode(true);
+  const novoNumeroDeFaces = novoGrupo.querySelector(".numero-de-faces");
 
+  novaQuantidade.value = 1;
 
-  const novaQuantidade =
-    novoGrupo.querySelector(
-      ".quantidade-dados"
-    );
+  novoNumeroDeFaces.value = 20;
 
-
-  const novoNumeroDeFaces =
-    novoGrupo.querySelector(
-      ".numero-de-faces"
-    );
-
-
-  novaQuantidade.value =
-    1;
-
-
-  novoNumeroDeFaces.value =
-    20;
-
-  const botaoRemover =
-    document.createElement(
-      "button"
-    );
+  const botaoRemover = document.createElement("button");
 
   botaoRemover.type = "button";
 
@@ -291,22 +179,13 @@ function adicionarGrupoDado() {
 
   botaoRemover.textContent = "Remover";
 
-  botaoRemover.addEventListener(
-    "click",
-    removerGrupoDado
-  );
+  botaoRemover.addEventListener("click", removerGrupoDado);
 
   novoGrupo.append(botaoRemover);
 
   listaGruposDados.append(novoGrupo);
 }
 
-botaoRolarDado.addEventListener(
-  "click",
-  executarRolagemConfigurada
-);
+botaoRolarDado.addEventListener("click", executarRolagemConfigurada);
 
-botaoAdicionarGrupoDado.addEventListener(
-  "click",
-  adicionarGrupoDado
-);
+botaoAdicionarGrupoDado.addEventListener("click", adicionarGrupoDado);

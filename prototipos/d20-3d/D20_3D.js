@@ -2,7 +2,7 @@ const cena = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 
-const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha:true});
+const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderizador.setSize(400, 400);
 renderizador.setClearColor(0x000000, 0);
 
@@ -12,7 +12,7 @@ const geometria = new THREE.IcosahedronGeometry(1, 0);
 
 const material = new THREE.MeshStandardMaterial({
   color: 0x055081,
-  flatShading: true
+  flatShading: true,
 });
 
 const dado = new THREE.Mesh(geometria, material);
@@ -43,15 +43,15 @@ function animar() {
 
     if (velocidadeX < 0.01 && velocidadeY < 0.01) {
       estaRolando = false;
-        velocidadeX = 0;
-        velocidadeY = 0;
+      velocidadeX = 0;
+      velocidadeY = 0;
     }
   }
 
   renderizador.render(cena, camera);
 }
 
-renderizador.domElement.addEventListener("dblclick", function() {
+renderizador.domElement.addEventListener("dblclick", function () {
   estaRolando = true;
 
   velocidadeX = 0.2 + Math.random() * 0.2;
@@ -61,27 +61,27 @@ renderizador.domElement.addEventListener("dblclick", function() {
 let estaArrastando = false;
 
 function moverDadoComMouse(evento) {
-    const retangulo = renderizador.domElement.getBoundingClientRect();
-    const mouseX = (evento.clientX - retangulo.left) / retangulo.width;
-    const mouseY = (evento.clientY - retangulo.top) / retangulo.height;
+  const retangulo = renderizador.domElement.getBoundingClientRect();
+  const mouseX = (evento.clientX - retangulo.left) / retangulo.width;
+  const mouseY = (evento.clientY - retangulo.top) / retangulo.height;
 
-    dado.position.x = (mouseX - 0.5) * 4;
-    dado.position.y = -(mouseY - 0.5) * 4;
+  dado.position.x = (mouseX - 0.5) * 4;
+  dado.position.y = -(mouseY - 0.5) * 4;
 }
 
-renderizador.domElement.addEventListener("pointerdown", function(evento) {
+renderizador.domElement.addEventListener("pointerdown", function (evento) {
   estaArrastando = true;
   moverDadoComMouse(evento);
 });
 
-window.addEventListener("pointermove", function(evento) {
+window.addEventListener("pointermove", function (evento) {
   if (estaArrastando === true) {
     moverDadoComMouse(evento);
   }
 });
 
-window.addEventListener("pointerup", function() {
+window.addEventListener("pointerup", function () {
   estaArrastando = false;
 });
 
-animar()
+animar();

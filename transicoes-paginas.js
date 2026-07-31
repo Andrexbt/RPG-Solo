@@ -5,11 +5,11 @@
 // internos do próprio site.
 // =====================================================
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const links = document.querySelectorAll("a[href]");
 
-  links.forEach(function(link) {
-    link.addEventListener("click", function(evento) {
+  links.forEach(function (link) {
+    link.addEventListener("click", function (evento) {
       const href = link.getAttribute("href");
 
       if (href === null || href === "") {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
       evento.preventDefault();
       document.body.classList.add("saindo-pagina");
 
-      window.setTimeout(function() {
+      window.setTimeout(function () {
         window.location.href = href;
       }, 340);
     });

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <!-- =====================================================
      Arquivo: criacao-personagem.html
@@ -7,51 +7,49 @@
      ===================================================== -->
 
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Criação de Personagem</title>
 
-    <link rel="stylesheet" href="tema.css">
-    <link rel="stylesheet" href="ficha-personagem.css">
-    <link rel="stylesheet" href="criacao-personagem.css">
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="ficha-personagem.css" />
+    <link rel="stylesheet" href="criacao-personagem.css" />
 
     <script src="transicoes-paginas.js" defer></script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <header class="cabecalho-site">
+      <a class="marca" href="index.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Projeto RPG Solo</span>
+      </a>
 
-  <header class="cabecalho-site">
-  <a class="marca" href="index.html">
-    <span class="marca-simbolo">✦</span>
-    <span>Projeto RPG Solo</span>
-  </a>
+      <nav class="menu-principal" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="meus-personagens.html">Meus personagens</a>
+        <a href="criacao-personagem.html">Criar personagem</a>
+      </nav>
+    </header>
 
-  <nav class="menu-principal" aria-label="Navegação principal">
-    <a href="index.html">Início</a>
-    <a href="meus-personagens.html">Meus personagens</a>
-    <a href="criacao-personagem.html">Criar personagem</a>
-  </nav>
-  </header>
+    <section class="hero-criacao">
+      <div class="decoracao-fundo decoracao-um"></div>
+      <div class="decoracao-fundo decoracao-dois"></div>
+      <div class="ornamento-rpg ornamento-dado">20</div>
 
-  <section class="hero-criacao">
-  <div class="decoracao-fundo decoracao-um"></div>
-  <div class="decoracao-fundo decoracao-dois"></div>
-  <div class="ornamento-rpg ornamento-dado">20</div>
+      <div class="conteudo-hero-criacao">
+        <p class="etiqueta-pagina">Criador de personagens</p>
 
-  <div class="conteudo-hero-criacao">
-    <p class="etiqueta-pagina">Criador de personagens</p>
+        <h1>Monte sua ficha passo a passo.</h1>
 
-    <h1>Monte sua ficha passo a passo.</h1>
-
-    <p>
-      Escolha classe, atributos, origem, espécie, habilidades, equipamentos
-      e magias em um fluxo guiado.
-    </p>
-  </div>
-  </section>
+        <p>
+          Escolha classe, atributos, origem, espécie, habilidades, equipamentos e magias em um fluxo
+          guiado.
+        </p>
+      </div>
+    </section>
 
     <!-- =====================================================
        Layout principal
@@ -59,884 +57,713 @@
        Divide a tela entre ficha lateral e passos de criação.
        ===================================================== -->
     <main class="criador-personagem">
-
       <!-- =====================================================
        Ficha lateral
        -----------------------------------------------------
        Mostra o resumo do personagem enquanto ele é criado.
        ===================================================== -->
-<section class="coluna-ficha">
-
-      <aside data-ficha-personagem>
-      </aside>
-
-    </section>
+      <section class="coluna-ficha">
+        <aside data-ficha-personagem></aside>
+      </section>
 
       <!-- =====================================================
        Área dos passos
        -----------------------------------------------------
        Cada seção abaixo representa uma etapa da criação.
        ===================================================== -->
-<section class="area-passo">
-
-       <!-- =====================================================
+      <section class="area-passo">
+        <!-- =====================================================
        Passo: classe
        ===================================================== -->
-<section class="conteudo-passo" id="passo-classe">
-      <h2>Passo 1: Escolha sua Classe</h2>
+        <section class="conteudo-passo" id="passo-classe">
+          <h2>Passo 1: Escolha sua Classe</h2>
 
-      <div class="grade-classes">
-        <article class="card-classe" data-classe="guerreiro">
-          <div class="imagem-classe">
-            <img src="Imagens/Classes/guerreiro-card.webp" alt="Guerreiro">
+          <div class="grade-classes">
+            <article class="card-classe" data-classe="guerreiro">
+              <div class="imagem-classe">
+                <img src="Imagens/Classes/guerreiro-card.webp" alt="Guerreiro" />
+              </div>
+
+              <h3>Guerreiro</h3>
+
+              <p>
+                Mestres na utilização de armas, os guerreiros são combatentes resistentes, com
+                treinamento profissional em técnicas e estratégias de combate.
+              </p>
+            </article>
+
+            <article class="card-classe" data-classe="mago">
+              <div class="imagem-classe">
+                <img src="Imagens/Classes/mago-card.webp" alt="Mago" />
+              </div>
+
+              <h3>Mago</h3>
+
+              <p>
+                Por meio de práticas incansáveis de estudo, os magos buscam entender e manipular os
+                mistérios da magia, alterando a realidade das mais diversas formas.
+              </p>
+            </article>
+
+            <article class="card-classe" data-classe="ladino">
+              <div class="imagem-classe">
+                <img src="Imagens/Classes/ladino-card.webp" alt="Ladino" />
+              </div>
+
+              <h3>Ladino</h3>
+
+              <p>
+                Ágeis e precisos, os melhores ladinos só são vistos se assim o desejarem, podendo se
+                tornar armas letais de assassinato e infiltração.
+              </p>
+            </article>
+
+            <article class="card-classe" data-classe="clerigo">
+              <div class="imagem-classe">
+                <img src="Imagens/Classes/clerigo-card.webp" alt="Clérigo" />
+              </div>
+
+              <h3>Clérigo</h3>
+
+              <p>
+                A fé inabalável dos clérigos permite-lhes canalizar os poderes de sua divindade,
+                protegendo e curando seus aliados ou esmagando seus oponentes com fúria divina.
+              </p>
+            </article>
           </div>
 
-            <h3>Guerreiro</h3>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemClasse"></p>
 
-            <p>
-            Mestres na utilização de armas, os guerreiros são combatentes resistentes,
-            com treinamento profissional em técnicas e estratégias de combate.
-            </p>
-        </article>
+            <button type="button" class="botao-proximo">Próximo Passo</button>
+          </div>
+        </section>
 
-        <article class="card-classe" data-classe="mago">
-            <div class="imagem-classe">
-              <img src="Imagens/Classes/mago-card.webp" alt="Mago">
-            </div>
-
-            <h3>Mago</h3>
-
-            <p>
-            Por meio de práticas incansáveis de estudo, os magos buscam entender e
-            manipular os mistérios da magia, alterando a realidade das mais diversas formas.
-            </p>
-          </article>
-
-      <article class="card-classe" data-classe="ladino">
-            <div class="imagem-classe">
-              <img src="Imagens/Classes/ladino-card.webp" alt="Ladino">
-            </div>
-
-            <h3>Ladino</h3>
-
-            <p>
-            Ágeis e precisos, os melhores ladinos só são vistos se assim o desejarem,
-            podendo se tornar armas letais de assassinato e infiltração.
-            </p>
-        </article>
-
-        <article class="card-classe" data-classe="clerigo">
-            <div class="imagem-classe">
-              <img src="Imagens/Classes/clerigo-card.webp" alt="Clérigo">
-            </div>
-
-            <h3>Clérigo</h3>
-
-            <p>
-            A fé inabalável dos clérigos permite-lhes canalizar os poderes de sua divindade,
-            protegendo e curando seus aliados ou esmagando seus oponentes com fúria divina.
-            </p>
-        </article>
-        </div>
-
-        <div class="acoes-passo">
-          <p class="mensagem-passo" id="mensagemClasse"></p>
-
-          <button type="button" class="botao-proximo">
-           Próximo Passo
-          </button>
-        </div>
-     </section>
-
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: atributos
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-atributos">
-     <h2>Passo 2: Determine seus Atributos</h2>
+        <section class="conteudo-passo escondida" id="passo-atributos">
+          <h2>Passo 2: Determine seus Atributos</h2>
 
-     <p class="texto-explicativo">
-     Aqui o jogador distribuirá os valores de Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma.
-     </p>
+          <p class="texto-explicativo">
+            Aqui o jogador distribuirá os valores de Força, Destreza, Constituição, Inteligência,
+            Sabedoria e Carisma.
+          </p>
 
-     <button type="button" class="botao-rolar" id="gerar-atributos">Rolar Dados</button>
+          <button type="button" class="botao-rolar" id="gerar-atributos">Rolar Dados</button>
 
-     <div class="caixa-rolagem-dados">
+          <div class="caixa-rolagem-dados">
+            <div class="dados-atributo" id="dadosAtributo">
+              <div class="dado" id="dado1">—</div>
+              <div class="dado" id="dado2">—</div>
+              <div class="dado" id="dado3">—</div>
+              <div class="dado" id="dado4">—</div>
+            </div>
 
-      <div class="dados-atributo" id="dadosAtributo">
-       <div class="dado" id="dado1">—</div>
-       <div class="dado" id="dado2">—</div>
-       <div class="dado" id="dado3">—</div>
-       <div class="dado" id="dado4">—</div>
-      </div>
+            <p class="resultado-rolagem" id="rolagemAtual"></p>
+          </div>
 
-       <p class="resultado-rolagem" id="rolagemAtual"> </p>
-      </div>
+          <div class="resultados-atributos" id="resultadosAtributos">
+            <span>—</span>
+            <span>—</span>
+            <span>—</span>
+            <span>—</span>
+            <span>—</span>
+            <span>—</span>
+          </div>
+          <div class="bloco-distribuicao-atributos">
+            <h3>Distribua os valores rolados</h3>
 
-       <div class="resultados-atributos" id="resultadosAtributos">
-       <span>—</span>
-       <span>—</span>
-       <span>—</span>
-       <span>—</span>
-       <span>—</span>
-       <span>—</span>
-       </div>
-      <div class="bloco-distribuicao-atributos">
-    <h3>Distribua os valores rolados</h3>
+            <div class="linha-atributo">
+              <label for="atributoForca">Força</label>
+              <select id="atributoForca" data-atributo="forca"></select>
+            </div>
 
-    <div class="linha-atributo">
-      <label for="atributoForca">Força</label>
-      <select id="atributoForca" data-atributo="forca"></select>
-    </div>
+            <div class="linha-atributo">
+              <label for="atributoDestreza">Destreza</label>
+              <select id="atributoDestreza" data-atributo="destreza"></select>
+            </div>
 
-    <div class="linha-atributo">
-      <label for="atributoDestreza">Destreza</label>
-      <select id="atributoDestreza" data-atributo="destreza"></select>
-    </div>
+            <div class="linha-atributo">
+              <label for="atributoConstituicao">Constituição</label>
+              <select id="atributoConstituicao" data-atributo="constituicao"></select>
+            </div>
 
-    <div class="linha-atributo">
-      <label for="atributoConstituicao">Constituição</label>
-      <select id="atributoConstituicao" data-atributo="constituicao"></select>
-    </div>
+            <div class="linha-atributo">
+              <label for="atributoInteligencia">Inteligência</label>
+              <select id="atributoInteligencia" data-atributo="inteligencia"></select>
+            </div>
 
-    <div class="linha-atributo">
-      <label for="atributoInteligencia">Inteligência</label>
-      <select id="atributoInteligencia" data-atributo="inteligencia"></select>
-    </div>
+            <div class="linha-atributo">
+              <label for="atributoSabedoria">Sabedoria</label>
+              <select id="atributoSabedoria" data-atributo="sabedoria"></select>
+            </div>
 
-    <div class="linha-atributo">
-      <label for="atributoSabedoria">Sabedoria</label>
-      <select id="atributoSabedoria" data-atributo="sabedoria"></select>
-    </div>
+            <div class="linha-atributo">
+              <label for="atributoCarisma">Carisma</label>
+              <select id="atributoCarisma" data-atributo="carisma"></select>
+            </div>
+          </div>
 
-    <div class="linha-atributo">
-      <label for="atributoCarisma">Carisma</label>
-      <select id="atributoCarisma" data-atributo="carisma"></select>
-    </div>
-  </div>
+          <p class="mensagem-passo" id="mensagemAtributos"></p>
 
-  <p class="mensagem-passo" id="mensagemAtributos"></p>
+          <div class="acoes-passo">
+            <button type="button" class="botao-proximo">Próximo Passo</button>
+          </div>
+        </section>
 
-  <div class="acoes-passo">
-         <button type="button" class="botao-proximo">
-          Próximo Passo
-         </button>
-        </div>
-     </section>
-
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: antecedente
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-antecedente">
-      <h2>Passo 2: Defina seu Antecedente</h2>
+        <section class="conteudo-passo escondida" id="passo-antecedente">
+          <h2>Passo 2: Defina seu Antecedente</h2>
 
-       <p class="texto-explicativo">
-      Seu antecedente representa o lugar, a ocupação ou a experiência que mais
-      marcou sua vida antes da aventura.
-    </p>
+          <p class="texto-explicativo">
+            Seu antecedente representa o lugar, a ocupação ou a experiência que mais marcou sua vida
+            antes da aventura.
+          </p>
 
-     <div class="grade-opcoes">
-      <article class="card-opcao" data-antecedente="acolito">
-        <h4>Acólito</h4>
+          <div class="grade-opcoes">
+            <article class="card-opcao" data-antecedente="acolito">
+              <h4>Acólito</h4>
 
-        <p>
-          Você viveu ligado a um templo, ordem religiosa ou tradição espiritual.
-        </p>
+              <p>Você viveu ligado a um templo, ordem religiosa ou tradição espiritual.</p>
 
-        <ul>
-          <li>Atributos: Inteligência, Sabedoria ou Carisma</li>
-          <li>Perícias: Intuição e Religião</li>
-          <li>Talento: Iniciado em Magia, Clérigo</li>
-        </ul>
-      </article>
+              <ul>
+                <li>Atributos: Inteligência, Sabedoria ou Carisma</li>
+                <li>Perícias: Intuição e Religião</li>
+                <li>Talento: Iniciado em Magia, Clérigo</li>
+              </ul>
+            </article>
 
-      <article class="card-opcao" data-antecedente="criminoso">
-        <h4>Criminoso</h4>
+            <article class="card-opcao" data-antecedente="criminoso">
+              <h4>Criminoso</h4>
 
-        <p>
-          Você aprendeu a sobreviver à margem da lei, usando furtividade,
-          astúcia e contatos perigosos.
-        </p>
+              <p>
+                Você aprendeu a sobreviver à margem da lei, usando furtividade, astúcia e contatos
+                perigosos.
+              </p>
 
-        <ul>
-          <li>Atributos: Destreza, Constituição ou Inteligência</li>
-          <li>Perícias: Prestidigitação e Furtividade</li>
-          <li>Talento: Alerta</li>
-        </ul>
-      </article>
+              <ul>
+                <li>Atributos: Destreza, Constituição ou Inteligência</li>
+                <li>Perícias: Prestidigitação e Furtividade</li>
+                <li>Talento: Alerta</li>
+              </ul>
+            </article>
 
-      <article class="card-opcao" data-antecedente="sabio">
-        <h4>Sábio</h4>
+            <article class="card-opcao" data-antecedente="sabio">
+              <h4>Sábio</h4>
 
-        <p>
-          Você dedicou boa parte da vida ao estudo, à pesquisa e à busca por
-          conhecimento.
-        </p>
+              <p>
+                Você dedicou boa parte da vida ao estudo, à pesquisa e à busca por conhecimento.
+              </p>
 
-        <ul>
-          <li>Atributos: Constituição, Inteligência ou Sabedoria</li>
-          <li>Perícias: Arcanismo e História</li>
-          <li>Talento: Iniciado em Magia, Mago</li>
-        </ul>
-      </article>
+              <ul>
+                <li>Atributos: Constituição, Inteligência ou Sabedoria</li>
+                <li>Perícias: Arcanismo e História</li>
+                <li>Talento: Iniciado em Magia, Mago</li>
+              </ul>
+            </article>
 
-      <article class="card-opcao" data-antecedente="soldado">
-        <h4>Soldado</h4>
+            <article class="card-opcao" data-antecedente="soldado">
+              <h4>Soldado</h4>
 
-        <p>
-          Você recebeu treinamento militar e conhece disciplina, armas,
-          hierarquia e os horrores da guerra.
-        </p>
+              <p>
+                Você recebeu treinamento militar e conhece disciplina, armas, hierarquia e os
+                horrores da guerra.
+              </p>
 
-        <ul>
-          <li>Atributos: Força, Destreza ou Constituição</li>
-          <li>Perícias: Atletismo e Intimidação</li>
-          <li>Talento: Atacante Selvagem</li>
-        </ul>
-      </article>
-    </div>
-    <div class="acoes-passo">
-      <p class="mensagem-passo" id="mensagemAntecedente"></p>
-         <button type="button" class="botao-proximo">
-          Próximo Passo
-         </button>
-        </div>
-     </section>
+              <ul>
+                <li>Atributos: Força, Destreza ou Constituição</li>
+                <li>Perícias: Atletismo e Intimidação</li>
+                <li>Talento: Atacante Selvagem</li>
+              </ul>
+            </article>
+          </div>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemAntecedente"></p>
+            <button type="button" class="botao-proximo">Próximo Passo</button>
+          </div>
+        </section>
 
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: espécie
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-especie">
-       <h3>Escolha sua Espécie</h3>
+        <section class="conteudo-passo escondida" id="passo-especie">
+          <h3>Escolha sua Espécie</h3>
 
-       <p class="texto-explicativo">
-      Sua espécie determina suas características físicas e habilidades naturais.
-    </p>
+          <p class="texto-explicativo">
+            Sua espécie determina suas características físicas e habilidades naturais.
+          </p>
 
-     <div class="grade-opcoes">
+          <div class="grade-opcoes">
+            <article class="card-opcao" data-especie="humano">
+              <h4>Humano</h4>
+              <p>
+                Os humanos são uma espécie versátil e adaptável, com habilidades equilibradas em
+                todos os aspectos.
+              </p>
+            </article>
 
-       <article class="card-opcao" data-especie="humano">
-         <h4>Humano</h4>
-         <p>
-           Os humanos são uma espécie versátil e adaptável, com habilidades equilibradas em todos os aspectos.
-         </p>
-       </article>
+            <article class="card-opcao" data-especie="anao">
+              <h4>Anão</h4>
+              <p>
+                Os anões são uma espécie resistente e trabalhadora, com habilidades em mineração e
+                artesanato.
+              </p>
+            </article>
 
-       <article class="card-opcao" data-especie="anao">
-         <h4>Anão</h4>
-         <p>
-           Os anões são uma espécie resistente e trabalhadora, com habilidades em mineração e artesanato.
-         </p>
-       </article>
+            <article class="card-opcao" data-especie="elfo">
+              <h4>Elfo</h4>
+              <p>
+                Os elfos são uma espécie ágil e longa-viva, com habilidades em arquearia e magia.
+              </p>
+            </article>
 
-       <article class="card-opcao" data-especie="elfo">
-         <h4>Elfo</h4>
-         <p>
-           Os elfos são uma espécie ágil e longa-viva, com habilidades em arquearia e magia.
-         </p>
-       </article>
+            <article class="card-opcao" data-especie="halfling">
+              <h4>Halfling</h4>
+              <p>
+                Os halflings são uma espécie pequena e agil, com habilidades em furtividade e
+                adaptação.
+              </p>
+            </article>
+          </div>
 
-       <article class="card-opcao" data-especie="halfling">
-         <h4>Halfling</h4>
-         <p>
-           Os halflings são uma espécie pequena e agil, com habilidades em furtividade e adaptação.
-         </p>
-       </article>
-       </div>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemEspecie"></p>
+            <button type="button" class="botao-proximo">Próximo Passo</button>
+          </div>
+        </section>
 
-    <div class="acoes-passo">
-      <p class="mensagem-passo" id="mensagemEspecie"></p>
-         <button type="button" class="botao-proximo">
-          Próximo Passo
-         </button>
-        </div>
-     </section>
-
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: habilidades, perícias e maestrias
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-habilidades">
-     <h2>Passo 5: Habilidades</h2>
+        <section class="conteudo-passo escondida" id="passo-habilidades">
+          <h2>Passo 5: Habilidades</h2>
 
-      <div id="areaPericiasClasse">
-      <!-- O JavaScript vai preencher esta área -->
-      </div>
+          <div id="areaPericiasClasse">
+            <!-- O JavaScript vai preencher esta área -->
+          </div>
 
-      <div id="areaHabilidadesClasse">
-      <!-- O JavaScript vai preencher esta área -->
-      </div>
+          <div id="areaHabilidadesClasse">
+            <!-- O JavaScript vai preencher esta área -->
+          </div>
 
-     <div class="acoes-passo">
-      <p class="mensagem-passo" id="mensagemHabilidades"></p>
-         <button type="button" class="botao-proximo">
-          Próximo Passo
-         </button>
-        </div>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemHabilidades"></p>
+            <button type="button" class="botao-proximo">Próximo Passo</button>
+          </div>
+        </section>
 
-     </section>
-
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: magias
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-magias">
-     <h2>Passo 6: Magias</h2>
+        <section class="conteudo-passo escondida" id="passo-magias">
+          <h2>Passo 6: Magias</h2>
 
-     <div id="areaMagias">
-       <!-- O JavaScript vai preencher esta área -->
-     </div>
+          <div id="areaMagias">
+            <!-- O JavaScript vai preencher esta área -->
+          </div>
 
-     <div class="acoes-passo">
-      <p class="mensagem-passo" id="mensagemMagias"></p>
-         <button type="button" class="botao-proximo">
-          Próximo Passo
-         </button>
-        </div>
-     </section>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemMagias"></p>
+            <button type="button" class="botao-proximo">Próximo Passo</button>
+          </div>
+        </section>
 
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: detalhes finais
        -----------------------------------------------------
        Nome, idiomas, equipamentos e valores derivados.
        ===================================================== -->
-       <section class="conteudo-passo escondida" id="passo-detalhes">
-         <h2>Passo 7: Detalhes</h2>
+        <section class="conteudo-passo escondida" id="passo-detalhes">
+          <h2>Passo 7: Detalhes</h2>
 
-      <div class="layout-detalhes-personagem">
+          <div class="layout-detalhes-personagem">
+            <section class="painel-detalhes-principais">
+              <h3>Nome do Personagem</h3>
+              <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem" />
 
-        <section class="painel-detalhes-principais">
+              <section class="selecao-avatar-personagem">
+                <h3>Avatar</h3>
 
-          <h3>Nome do Personagem</h3>
-          <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
+                <button type="button" class="botao-escolher-avatar" id="botaoEscolherAvatar">
+                  Escolher avatar
+                </button>
+              </section>
 
-          <section class="selecao-avatar-personagem">
+              <h3>Idiomas Conhecidos</h3>
+              <label for="idioma1">Idioma 1</label>
+              <select id="idioma1"></select>
 
-  <h3>Avatar</h3>
+              <label for="idioma2">Idioma 2</label>
+              <select id="idioma2"></select>
 
-  <button
-    type="button"
-    class="botao-escolher-avatar"
-    id="botaoEscolherAvatar"
-  >
-    Escolher avatar
-  </button>
+              <h3>Equipamento</h3>
+              <div class="campo-formulario">
+                <label for="armaduraInicial">Armadura</label>
+                <select id="armaduraInicial">
+                  <option value="">Escolha</option>
+                  <option value="semArmadura">Sem armadura</option>
+                  <option value="couro">Armadura de couro</option>
+                  <option value="cotaDeMalha">Cota de malha</option>
+                </select>
+              </div>
 
-</section>
+              <div class="campo-formulario">
+                <label for="armaPrincipal">Arma principal</label>
+                <select id="armaPrincipal">
+                  <option value="">Escolha</option>
+                  <option value="espadaLonga">Espada longa</option>
+                  <option value="machadoDeBatalha">Machado de batalha</option>
+                  <option value="lanca">Lança</option>
+                  <option value="arcoLongo">Arco longo</option>
+                </select>
+              </div>
 
-          <h3>Idiomas Conhecidos</h3>
-          <label for="idioma1">Idioma 1</label>
-          <select id="idioma1"></select>
+              <div class="campo-formulario">
+                <label for="itemSecundario">Item secundário</label>
+                <select id="itemSecundario">
+                  <option value="">Escolha</option>
+                  <option value="escudo">Escudo</option>
+                  <option value="armaSecundaria">Arma secundária</option>
+                  <option value="nada">Nada</option>
+                </select>
+              </div>
 
-          <label for="idioma2">Idioma 2</label>
-          <select id="idioma2"></select>
+              <div class="campo-formulario escondida" id="grupoArmaSecundaria">
+                <label for="armaSecundaria">Escolha a arma secundária</label>
+                <select id="armaSecundaria">
+                  <option value="">Escolha uma arma</option>
+                </select>
+              </div>
 
-          <h3>Equipamento</h3>
-          <div class="campo-formulario">
-          <label for="armaduraInicial">Armadura</label>
-          <select id="armaduraInicial">
-            <option value="">Escolha</option>
-            <option value="semArmadura">Sem armadura</option>
-            <option value="couro">Armadura de couro</option>
-            <option value="cotaDeMalha">Cota de malha</option>
-          </select>
+              <p class="aviso-equipamentos" id="avisoEquipamentos"></p>
+            </section>
+
+            <section class="painel-detalhes-narrativos">
+              <div class="campo-narrativo">
+                <label for="historiaPersonagem">História do personagem</label>
+                <textarea
+                  id="historiaPersonagem"
+                  rows="9"
+                  placeholder="Conte de onde seu personagem veio, o que viveu e por que decidiu se aventurar."
+                ></textarea>
+              </div>
+
+              <div class="campo-narrativo">
+                <label for="personalidadePersonagem">Personalidade</label>
+                <textarea
+                  id="personalidadePersonagem"
+                  rows="9"
+                  placeholder="Descreva como seu personagem age, fala, pensa e se relaciona com o mundo."
+                ></textarea>
+              </div>
+            </section>
           </div>
 
-          <div class="campo-formulario">
-          <label for="armaPrincipal">Arma principal</label>
-          <select id="armaPrincipal">
-            <option value="">Escolha</option>
-            <option value="espadaLonga">Espada longa</option>
-            <option value="machadoDeBatalha">Machado de batalha</option>
-            <option value="lanca">Lança</option>
-            <option value="arcoLongo">Arco longo</option>
-          </select>
+          <div class="detalhes-calculados-ocultos" aria-hidden="true">
+            <span id="resultadoClasseArmadura">-</span>
           </div>
 
-          <div class="campo-formulario">
-          <label for="itemSecundario">Item secundário</label>
-          <select id="itemSecundario">
-            <option value="">Escolha</option>
-            <option value="escudo">Escudo</option>
-            <option value="armaSecundaria">Arma secundária</option>
-            <option value="nada">Nada</option>
-          </select>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemDetalhes"></p>
+
+            <button type="button" class="botao-proximo">Ir para o próximo passo</button>
           </div>
-
-          <div class="campo-formulario escondida" id="grupoArmaSecundaria">
-          <label for="armaSecundaria">Escolha a arma secundária</label>
-          <select id="armaSecundaria">
-            <option value="">Escolha uma arma</option>
-          </select>
-          </div>
-
-          <p class="aviso-equipamentos" id="avisoEquipamentos"></p>
-
         </section>
 
-        <section class="painel-detalhes-narrativos">
-
-          <div class="campo-narrativo">
-      <label for="historiaPersonagem">História do personagem</label>
-      <textarea
-        id="historiaPersonagem"
-        rows="9"
-        placeholder="Conte de onde seu personagem veio, o que viveu e por que decidiu se aventurar."></textarea>
-          </div>
-
-          <div class="campo-narrativo">
-      <label for="personalidadePersonagem">Personalidade</label>
-      <textarea
-        id="personalidadePersonagem"
-        rows="9"
-        placeholder="Descreva como seu personagem age, fala, pensa e se relaciona com o mundo."></textarea>
-          </div>
-
-        </section>
-
-      </div>
-
-<div class="detalhes-calculados-ocultos" aria-hidden="true">
-  <span id="resultadoClasseArmadura">-</span>
-</div>
-
-  <div class="acoes-passo">
-    <p class="mensagem-passo" id="mensagemDetalhes"></p>
-
-    <button type="button" class="botao-proximo">
-      Ir para o próximo passo
-    </button>
-  </div>
-     </section>
-
-       <!-- =====================================================
+        <!-- =====================================================
        Passo: revisão e salvamento
        ===================================================== -->
-<section class="conteudo-passo escondida" id="passo-revisao">
-        <h2>Passo 8: Revisão</h2>
+        <section class="conteudo-passo escondida" id="passo-revisao">
+          <h2>Passo 8: Revisão</h2>
 
-        <p>
-        Revise as escolhas do personagem antes de finalizar.
-        </p>
+          <p>Revise as escolhas do personagem antes de finalizar.</p>
 
-        <div id="areaRevisao">
-         <!-- O JavaScript vai preencher esta área -->
-        </div>
+          <div id="areaRevisao">
+            <!-- O JavaScript vai preencher esta área -->
+          </div>
 
-        <div class="acoes-passo">
-          <p class="mensagem-passo" id="mensagemRevisao"></p>
+          <div class="acoes-passo">
+            <p class="mensagem-passo" id="mensagemRevisao"></p>
 
-          <button type="button" class="botao-finalizar" id="botaoFinalizarPersonagem">
-            Finalizar Personagem
-          </button>
-        </div>
+            <button type="button" class="botao-finalizar" id="botaoFinalizarPersonagem">
+              Finalizar Personagem
+            </button>
+          </div>
 
-        <div id="acoesPersonagemSalvo" class="acoes-personagem-salvo"></div>
+          <div id="acoesPersonagemSalvo" class="acoes-personagem-salvo"></div>
+        </section>
 
-     </section>
-
-     <!-- =====================================================
+        <!-- =====================================================
        Navegação entre passos
        ===================================================== -->
-<section>
-       <nav class="navegacao-passos" aria-label="Etapas da criação de personagem">
-  <button type="button" class="passo atual" data-passo="classe">1. Classe</button>
-  <button type="button" class="passo" data-passo="atributos">2. Atributos</button>
-  <button type="button" class="passo" data-passo="antecedente">3. Antecedentes</button>
-  <button type="button" class="passo" data-passo="especie">4. Espécie</button>
-  <button type="button" class="passo" data-passo="habilidades">5. Habilidades</button>
-  <button type="button" class="passo" data-passo="magias">6. Magias</button>
-  <button type="button" class="passo" data-passo="detalhes">7. Detalhes</button>
-  <button type="button" class="passo" data-passo="revisao">8. Revisão</button>
-  </nav>
+        <section>
+          <nav class="navegacao-passos" aria-label="Etapas da criação de personagem">
+            <button type="button" class="passo atual" data-passo="classe">1. Classe</button>
+            <button type="button" class="passo" data-passo="atributos">2. Atributos</button>
+            <button type="button" class="passo" data-passo="antecedente">3. Antecedentes</button>
+            <button type="button" class="passo" data-passo="especie">4. Espécie</button>
+            <button type="button" class="passo" data-passo="habilidades">5. Habilidades</button>
+            <button type="button" class="passo" data-passo="magias">6. Magias</button>
+            <button type="button" class="passo" data-passo="detalhes">7. Detalhes</button>
+            <button type="button" class="passo" data-passo="revisao">8. Revisão</button>
+          </nav>
 
-  <p class="mensagem-navegacao" id="mensagemNavegacao"></p>
+          <p class="mensagem-navegacao" id="mensagemNavegacao"></p>
+        </section>
+      </section>
+    </main>
 
-    </section>
+    <footer class="rodape-site">
+      <small lang="en">
+        This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by
+        Wizards of the Coast LLC, available at
+        <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1 is licensed under
+        the
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
+          Creative Commons Attribution 4.0 International License </a
+        >.
+      </small>
+    </footer>
 
-  </section>
-
-  </main>
-
-  <footer class="rodape-site">
-    <small lang="en">
-      This work includes material from the System Reference Document 5.2.1
-      (“SRD 5.2.1”) by Wizards of the Coast LLC, available at
-      <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1
-      is licensed under the
-      <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
-        Creative Commons Attribution 4.0 International License
-      </a>.
-    </small>
-  </footer>
-
-
-   <!-- =====================================================
+    <!-- =====================================================
        Modal de classe
        -----------------------------------------------------
        Mostra detalhes da classe antes da confirmação.
        ===================================================== -->
-<div class="modal-overlay escondida" id="modalClasse">
-   <div class="modal">
+    <div class="modal-overlay escondida" id="modalClasse">
+      <div class="modal">
+        <div class="modal-cabecalho">
+          <h2 id="modalTituloClasse">Guerreiro</h2>
+        </div>
 
-    <div class="modal-cabecalho">
-    <h2 id="modalTituloClasse">Guerreiro</h2>
-  </div>
+        <div class="modal-corpo">
+          <div class="modal-imagem-container">
+            <img
+              class="modal-imagem"
+              id="modalImagemClasse"
+              src="Imagens/Classes/guerreiro-modal.webp"
+              alt="Guerreiro"
+            />
+          </div>
 
-  <div class="modal-corpo">
+          <div class="modal-textos">
+            <section class="modal-secao">
+              <h3>Como a classe funciona</h3>
 
-    <div class="modal-imagem-container">
-      <img
-      class="modal-imagem"
-      id="modalImagemClasse"
-      src="Imagens/Classes/guerreiro-modal.webp"
-      alt="Guerreiro">
+              <p id="modalDescricaoClasse">
+                Aqui entrará um texto mais completo explicando como a classe funciona, quais são
+                suas principais características e qual papel ela costuma ocupar dentro de uma
+                aventura.
+              </p>
+            </section>
+
+            <section class="modal-secao">
+              <h3>Estilo de jogo recomendado</h3>
+
+              <p id="modalEstiloJogoClasse">
+                Recomendado para jogadores que gostam de combate direto, presença na linha de
+                frente, resistência e uso estratégico de armas e armaduras.
+              </p>
+            </section>
+
+            <section class="modal-secao">
+              <h3>Bônus e habilidades específicas</h3>
+
+              <p id="modalHabilidadesClasse">
+                (Aqui entrarão os bônus, proficiências e habilidades da classe conforme as regras
+                usadas pelo jogo.)
+              </p>
+            </section>
+          </div>
+        </div>
+
+        <div class="modal-acoes">
+          <button type="button" class="botao-voltar" id="botaoVoltarModal">Voltar</button>
+          <button type="button" class="botao-selecionar" id="botaoSelecionarClasse">
+            Selecionar Classe
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="modal-textos">
-      <section class="modal-secao">
-        <h3>Como a classe funciona</h3>
-
-        <p id="modalDescricaoClasse">
-          Aqui entrará um texto mais completo explicando como a classe funciona,
-          quais são suas principais características e qual papel ela costuma ocupar
-          dentro de uma aventura.
-        </p>
-        </section>
-
-        <section class="modal-secao">
-        <h3>Estilo de jogo recomendado</h3>
-
-        <p id="modalEstiloJogoClasse">
-          Recomendado para jogadores que gostam de combate direto, presença na linha
-          de frente, resistência e uso estratégico de armas e armaduras.
-        </p>
-      </section>
-
-      <section class="modal-secao">
-        <h3>Bônus e habilidades específicas</h3>
-
-        <p id="modalHabilidadesClasse">
-          (Aqui entrarão os bônus, proficiências e habilidades da classe conforme
-          as regras usadas pelo jogo.)
-        </p>
-      </section>
-    </div>
-</div>
-
-<div class="modal-acoes">
-      <button type="button" class="botao-voltar" id="botaoVoltarModal">Voltar</button>
-      <button type="button" class="botao-selecionar" id="botaoSelecionarClasse">
-        Selecionar Classe
-      </button>
-    </div>
-
-
- </div>
- </div>
-
-   <!-- =====================================================
+    <!-- =====================================================
        Modal de detalhes da ficha
        -----------------------------------------------------
        Usada para habilidades, talentos, maestrias e propriedades.
        ===================================================== -->
-<div id="modalDetalheFicha" class="modal-detalhe-ficha escondida">
-  <div class="modal-detalhe-conteudo">
-    <button
-      type="button"
-      id="botaoFecharModalDetalheFicha"
-      class="botao-fechar-detalhe"
-    >
-      Fechar
-    </button>
+    <div id="modalDetalheFicha" class="modal-detalhe-ficha escondida">
+      <div class="modal-detalhe-conteudo">
+        <button type="button" id="botaoFecharModalDetalheFicha" class="botao-fechar-detalhe">
+          Fechar
+        </button>
 
-    <h2 id="modalDetalheTitulo">Detalhes</h2>
+        <h2 id="modalDetalheTitulo">Detalhes</h2>
 
-    <p id="modalDetalheDescricao"></p>
+        <p id="modalDetalheDescricao"></p>
 
-    <div id="modalDetalheMecanica" class="modal-detalhe-mecanica"></div>
-  </div>
-</div>
+        <div id="modalDetalheMecanica" class="modal-detalhe-mecanica"></div>
+      </div>
+    </div>
 
-<!-- =====================================================
+    <!-- =====================================================
      Modal de antecedente
      -----------------------------------------------------
      Exibe os detalhes e reúne as escolhas do antecedente.
      ===================================================== -->
 
-<div
-  class="modal-overlay escondida"
-  id="modalAntecedente"
->
-
-  <div
-    class="modal modal-antecedente"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="tituloModalAntecedente"
-  >
-
-    <div class="modal-cabecalho">
-
-      <h2 id="tituloModalAntecedente">
-        Antecedente
-      </h2>
-
-      <button
-        type="button"
-        class="botao-fechar-modal-avatar"
-        id="botaoFecharModalAntecedente"
-        aria-label="Fechar detalhes do antecedente"
+    <div class="modal-overlay escondida" id="modalAntecedente">
+      <div
+        class="modal modal-antecedente"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tituloModalAntecedente"
       >
-        ×
-      </button>
+        <div class="modal-cabecalho">
+          <h2 id="tituloModalAntecedente">Antecedente</h2>
 
-    </div>
-
-    <div class="modal-corpo-antecedente">
-
-      <section
-        id="etapaDetalhesAntecedente"
-        class="etapa-modal-antecedente"
-      >
-
-        <p
-          id="descricaoModalAntecedente"
-          class="descricao-modal-antecedente"
-        >
-        </p>
-
-        <div
-          id="resumoModalAntecedente"
-          class="resumo-modal-antecedente"
-        >
-          <!-- Preenchido pelo JavaScript. -->
+          <button
+            type="button"
+            class="botao-fechar-modal-avatar"
+            id="botaoFecharModalAntecedente"
+            aria-label="Fechar detalhes do antecedente"
+          >
+            ×
+          </button>
         </div>
 
-        <div
-  id="escolhaEquipamentoAntecedente"
-  class="escolha-equipamento-antecedente"
->
+        <div class="modal-corpo-antecedente">
+          <section id="etapaDetalhesAntecedente" class="etapa-modal-antecedente">
+            <p id="descricaoModalAntecedente" class="descricao-modal-antecedente"></p>
 
-  <h3>
-    Escolha seu equipamento
-  </h3>
+            <div id="resumoModalAntecedente" class="resumo-modal-antecedente">
+              <!-- Preenchido pelo JavaScript. -->
+            </div>
 
-  <div
-    id="opcoesEquipamentoAntecedente"
-    class="opcoes-equipamento-antecedente"
-  >
-    <!-- Opções criadas pelo JavaScript. -->
-  </div>
+            <div id="escolhaEquipamentoAntecedente" class="escolha-equipamento-antecedente">
+              <h3>Escolha seu equipamento</h3>
 
-  <p
-    id="mensagemEquipamentoAntecedente"
-    class="mensagem-passo"
-    aria-live="polite"
-  >
-  </p>
+              <div id="opcoesEquipamentoAntecedente" class="opcoes-equipamento-antecedente">
+                <!-- Opções criadas pelo JavaScript. -->
+              </div>
 
-</div>
+              <p id="mensagemEquipamentoAntecedente" class="mensagem-passo" aria-live="polite"></p>
+            </div>
+          </section>
 
-      </section>
+          <section id="etapaAtributosAntecedente" class="etapa-modal-antecedente" hidden>
+            <h3>Distribua os bônus de atributos</h3>
 
-      <section
-        id="etapaAtributosAntecedente"
-        class="etapa-modal-antecedente"
-        hidden
-      >
+            <p class="texto-explicativo">
+              Escolha uma das distribuições permitidas e aplique os bônus entre os atributos deste
+              antecedente.
+            </p>
 
-        <h3>
-          Distribua os bônus de atributos
-        </h3>
+            <div id="opcoesDistribuicaoAntecedente" class="opcoes-distribuicao-antecedente">
+              <!-- Formas de distribuição criadas pelo JavaScript. -->
+            </div>
 
-        <p class="texto-explicativo">
-          Escolha uma das distribuições permitidas e aplique
-          os bônus entre os atributos deste antecedente.
-        </p>
+            <div id="seletoresBonusAntecedente" class="seletores-bonus-antecedente">
+              <!-- Seletores criados pelo JavaScript. -->
+            </div>
 
-        <div
-          id="opcoesDistribuicaoAntecedente"
-          class="opcoes-distribuicao-antecedente"
-        >
-          <!-- Formas de distribuição criadas pelo JavaScript. -->
+            <p id="mensagemBonusAntecedente" class="mensagem-passo" aria-live="polite"></p>
+          </section>
         </div>
 
-        <div
-          id="seletoresBonusAntecedente"
-          class="seletores-bonus-antecedente"
-        >
-          <!-- Seletores criados pelo JavaScript. -->
+        <div class="modal-acoes">
+          <button type="button" class="botao-voltar" id="botaoCancelarAntecedente">Cancelar</button>
+
+          <button type="button" class="botao-selecionar" id="botaoAvancarAntecedente">
+            Escolher este antecedente
+          </button>
         </div>
-
-        <p
-          id="mensagemBonusAntecedente"
-          class="mensagem-passo"
-          aria-live="polite"
-        >
-        </p>
-
-      </section>
-
+      </div>
     </div>
 
-    <div class="modal-acoes">
-
-      <button
-        type="button"
-        class="botao-voltar"
-        id="botaoCancelarAntecedente"
-      >
-        Cancelar
-      </button>
-
-      <button
-        type="button"
-        class="botao-selecionar"
-        id="botaoAvancarAntecedente"
-      >
-        Escolher este antecedente
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<!-- =====================================================
+    <!-- =====================================================
      Modal de seleção de avatar
      -----------------------------------------------------
      Permite escolher o retrato e o frame do personagem.
      ===================================================== -->
 
-<div
-  class="modal-overlay escondida"
-  id="modalAvatar"
->
-
-  <div
-    class="modal modal-avatar"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="tituloModalAvatar"
-  >
-
-    <div class="modal-cabecalho">
-
-      <h2 id="tituloModalAvatar">
-        Escolha seu avatar
-      </h2>
-
-      <button
-        type="button"
-        class="botao-fechar-modal-avatar"
-        id="botaoFecharModalAvatar"
-        aria-label="Fechar seleção de avatar"
+    <div class="modal-overlay escondida" id="modalAvatar">
+      <div
+        class="modal modal-avatar"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tituloModalAvatar"
       >
-        ×
-      </button>
-
-    </div>
-
-    <div class="modal-corpo-avatar">
-
-      <section class="selecao-retrato-avatar">
-
-        <h3>Retrato</h3>
-
-        <div
-          class="filtros-avatar"
-          aria-label="Filtrar avatares"
-        >
+        <div class="modal-cabecalho">
+          <h2 id="tituloModalAvatar">Escolha seu avatar</h2>
 
           <button
             type="button"
-            class="filtro-avatar ativo"
-            data-genero-avatar="All"
+            class="botao-fechar-modal-avatar"
+            id="botaoFecharModalAvatar"
+            aria-label="Fechar seleção de avatar"
           >
-            Todos
+            ×
           </button>
-
-          <button
-            type="button"
-            class="filtro-avatar"
-            data-genero-avatar="Female"
-          >
-            Femininos
-          </button>
-
-          <button
-            type="button"
-            class="filtro-avatar"
-            data-genero-avatar="Male"
-          >
-            Masculinos
-          </button>
-
         </div>
 
-        <div
-          class="galeria-avatares"
-          id="galeriaAvatares"
-        ></div>
+        <div class="modal-corpo-avatar">
+          <section class="selecao-retrato-avatar">
+            <h3>Retrato</h3>
 
-      </section>
+            <div class="filtros-avatar" aria-label="Filtrar avatares">
+              <button type="button" class="filtro-avatar ativo" data-genero-avatar="All">
+                Todos
+              </button>
 
-      <section class="selecao-frame-avatar">
+              <button type="button" class="filtro-avatar" data-genero-avatar="Female">
+                Femininos
+              </button>
 
-        <h3>Frame</h3>
+              <button type="button" class="filtro-avatar" data-genero-avatar="Male">
+                Masculinos
+              </button>
+            </div>
 
-        <div
-          class="galeria-frames-avatar"
-          id="galeriaFramesAvatar"
-        ></div>
+            <div class="galeria-avatares" id="galeriaAvatares"></div>
+          </section>
 
-      </section>
+          <section class="selecao-frame-avatar">
+            <h3>Frame</h3>
 
+            <div class="galeria-frames-avatar" id="galeriaFramesAvatar"></div>
+          </section>
+        </div>
+
+        <div class="modal-acoes">
+          <button type="button" class="botao-voltar" id="botaoCancelarAvatar">Cancelar</button>
+
+          <button type="button" class="botao-selecionar" id="botaoConfirmarAvatar" disabled>
+            Confirmar avatar
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="modal-acoes">
-
-      <button
-        type="button"
-        class="botao-voltar"
-        id="botaoCancelarAvatar"
-      >
-        Cancelar
-      </button>
-
-      <button
-        type="button"
-        class="botao-selecionar"
-        id="botaoConfirmarAvatar"
-        disabled
-      >
-        Confirmar avatar
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-   <!-- =====================================================
+    <!-- =====================================================
        Scripts
        -----------------------------------------------------
        Bancos primeiro, arquivos compartilhados depois, script principal por último.
        ===================================================== -->
-<script src="banco-pericias.js"></script>
-<script src="banco-idiomas.js"></script>
-<script src="banco-talentos.js"></script>
-<script src="banco-antecedentes.js"></script>
-<script src="banco-classes.js"></script>
-<script src="banco-habilidades.js"></script>
-<script src="banco-magias.js"></script>
-<script src="banco-equipamentos.js"></script>
-<script src="banco-maestrias.js"></script>
-<script src="banco-propriedades-armas.js"></script>
-<script src="banco-especies.js"></script>
-<script src="detalhes-ficha.js"></script>
-<script src="ficha-personagem.js"></script>
-</body>
-
-
+    <script src="banco-pericias.js"></script>
+    <script src="banco-idiomas.js"></script>
+    <script src="banco-talentos.js"></script>
+    <script src="banco-antecedentes.js"></script>
+    <script src="banco-classes.js"></script>
+    <script src="banco-habilidades.js"></script>
+    <script src="banco-magias.js"></script>
+    <script src="banco-equipamentos.js"></script>
+    <script src="banco-maestrias.js"></script>
+    <script src="banco-propriedades-armas.js"></script>
+    <script src="banco-especies.js"></script>
+    <script src="detalhes-ficha.js"></script>
+    <script src="ficha-personagem.js"></script>
+  </body>
 </html>

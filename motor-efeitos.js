@@ -7,14 +7,14 @@ function buscarEfeitoPorId(efeitoId) {
     return {
       sucesso: false,
       motivo: "efeitoNaoEncontrado",
-      efeito: null
+      efeito: null,
     };
   }
 
   return {
     sucesso: true,
     motivo: null,
-    efeito: efeitoEncontrado
+    efeito: efeitoEncontrado,
   };
 }
 
@@ -22,432 +22,282 @@ function buscarEfeitosPorGatilho(efeitosIds, gatilho) {
   const efeitosEncontrados = [];
 
   for (const efeitoId of efeitosIds) {
-    const resultadoBusca =
-      buscarEfeitoPorId(efeitoId);
+    const resultadoBusca = buscarEfeitoPorId(efeitoId);
 
     if (!resultadoBusca.sucesso) {
       continue;
     }
 
-    const efeito =
-      resultadoBusca.efeito;
+    const efeito = resultadoBusca.efeito;
 
     if (efeito.gatilho !== gatilho) {
       continue;
     }
 
-    efeitosEncontrados.push(
-      efeito
-    );
+    efeitosEncontrados.push(efeito);
   }
 
   return efeitosEncontrados;
 }
 
-function efeitoEstaDisponivel(
-  participante,
-  efeito
-) {
+function efeitoEstaDisponivel(participante, efeito) {
   if (!efeito.usos) {
     return true;
   }
 
-  const estadoEfeito =
-    participante
-      .estadoEfeitos
-      ?.[efeito.id];
+  const estadoEfeito = participante.estadoEfeitos?.[efeito.id];
 
   if (!estadoEfeito) {
     return false;
   }
 
-  return (
-    estadoEfeito.usosRestantes >
-    0
-  );
+  return estadoEfeito.usosRestantes > 0;
 }
 
-function buscarEfeitosDoParticipante(
-  participante,
-  gatilho
-) {
-  const talentos =
-    participante.talentos ?? [];
+function buscarEfeitosDoParticipante(participante, gatilho) {
+  const talentos = participante.talentos ?? [];
 
-  const efeitos =
-    buscarEfeitosPorGatilho(
-      talentos,
-      gatilho
-    );
+  const efeitos = buscarEfeitosPorGatilho(talentos, gatilho);
 
-  return efeitos.filter(
-    efeito =>
-      efeitoEstaDisponivel(
-        participante,
-        efeito
-      )
-  );
+  return efeitos.filter((efeito) => efeitoEstaDisponivel(participante, efeito));
 }
 
-function prepararOperacaoEfeito(
-  efeito,
-  contexto
-) {
+function prepararOperacaoEfeito(efeito, contexto) {
   if (!efeito) {
     return {
       sucesso: false,
-      motivo: "efeitoInexistente"
+      motivo: "efeitoInexistente",
     };
   }
 
   if (!efeito.operacao) {
     return {
       sucesso: false,
-      motivo: "operacaoInexistente"
+      motivo: "operacaoInexistente",
     };
   }
 
-  if (
-    efeito.operacao.tipo ===
-    "rolarNovamente"
-  ) {
+  if (efeito.operacao.tipo === "rolarNovamente") {
     return {
       sucesso: true,
       tipo: "rolarNovamente",
 
-      efeitoId:
-        efeito.id,
+      efeitoId: efeito.id,
 
-      participanteId:
-        contexto.participanteId,
+      participanteId: contexto.participanteId,
 
-      rolagemAfetada:
-        efeito.operacao
-          .rolagemAfetada,
+      rolagemAfetada: efeito.operacao.rolagemAfetada,
 
-      quantidadeDeRolagens:
-        efeito.operacao
-          .quantidadeDeRolagens,
+      quantidadeDeRolagens: efeito.operacao.quantidadeDeRolagens,
 
-      criterioDeEscolha:
-        efeito.operacao
-          .criterioDeEscolha
+      criterioDeEscolha: efeito.operacao.criterioDeEscolha,
     };
   }
 
   return {
     sucesso: false,
-    motivo: "operacaoNaoImplementada"
+    motivo: "operacaoNaoImplementada",
   };
 }
 
-function prepararEfeitosPorGatilho(
-  participante,
-  gatilho
-) {
-  const efeitos =
-    buscarEfeitosDoParticipante(
-      participante,
-      gatilho
-    );
+function prepararEfeitosPorGatilho(participante, gatilho) {
+  const efeitos = buscarEfeitosDoParticipante(participante, gatilho);
 
-  const operacoesPreparadas =
-    [];
+  const operacoesPreparadas = [];
 
   for (const efeito of efeitos) {
-    const resultado =
-      prepararOperacaoEfeito(
-        efeito,
-        {
-          participanteId:
-            participante.id
-        }
-      );
+    const resultado = prepararOperacaoEfeito(efeito, {
+      participanteId: participante.id,
+    });
 
     if (!resultado.sucesso) {
       continue;
     }
 
-    operacoesPreparadas.push(
-      resultado
-    );
+    operacoesPreparadas.push(resultado);
   }
 
   return operacoesPreparadas;
 }
 
-function criarEstadoEfeitos(
-  participante
-) {
+function criarEstadoEfeitos(participante) {
   const estadoEfeitos = {};
 
-  const talentos =
-    participante.talentos ?? [];
+  const talentos = participante.talentos ?? [];
 
   for (const talentoId of talentos) {
-    const resultadoBusca =
-      buscarEfeitoPorId(
-        talentoId
-      );
+    const resultadoBusca = buscarEfeitoPorId(talentoId);
 
     if (!resultadoBusca.sucesso) {
       continue;
     }
 
-    const efeito =
-      resultadoBusca.efeito;
+    const efeito = resultadoBusca.efeito;
 
     estadoEfeitos[efeito.id] = {
-      usosRestantes:
-        efeito.usos
-          ?.quantidade ??
-        null,
+      usosRestantes: efeito.usos?.quantidade ?? null,
 
-      recarga:
-        efeito.usos
-          ?.recarga ??
-        null
+      recarga: efeito.usos?.recarga ?? null,
     };
   }
 
   return estadoEfeitos;
 }
 
-function consumirUsoEfeito(
-  participante,
-  efeitoId
-) {
-  const resultadoBusca =
-    buscarEfeitoPorId(
-      efeitoId
-    );
+function consumirUsoEfeito(participante, efeitoId) {
+  const resultadoBusca = buscarEfeitoPorId(efeitoId);
 
   if (!resultadoBusca.sucesso) {
     return {
       sucesso: false,
-      motivo: "efeitoNaoEncontrado"
+      motivo: "efeitoNaoEncontrado",
     };
   }
 
-  const efeito =
-    resultadoBusca.efeito;
+  const efeito = resultadoBusca.efeito;
 
   if (!efeito.usos) {
     return {
       sucesso: true,
       motivo: null,
-      usoConsumido: false
+      usoConsumido: false,
     };
   }
 
-  const estadoEfeito =
-    participante
-      .estadoEfeitos
-      ?.[efeitoId];
+  const estadoEfeito = participante.estadoEfeitos?.[efeitoId];
 
   if (!estadoEfeito) {
     return {
       sucesso: false,
-      motivo: "estadoEfeitoNaoEncontrado"
+      motivo: "estadoEfeitoNaoEncontrado",
     };
   }
 
-  if (
-    estadoEfeito.usosRestantes <=
-    0
-  ) {
+  if (estadoEfeito.usosRestantes <= 0) {
     return {
       sucesso: false,
-      motivo: "efeitoSemUsos"
+      motivo: "efeitoSemUsos",
     };
   }
 
-  estadoEfeito.usosRestantes -=
-    1;
+  estadoEfeito.usosRestantes -= 1;
 
   return {
     sucesso: true,
     motivo: null,
     usoConsumido: true,
 
-    usosRestantes:
-      estadoEfeito.usosRestantes
+    usosRestantes: estadoEfeito.usosRestantes,
   };
 }
 
-function recarregarEfeitos(
-  participante,
-  tipoRecarga
-) {
-  const estadoEfeitos =
-    participante.estadoEfeitos ??
-    {};
+function recarregarEfeitos(participante, tipoRecarga) {
+  const estadoEfeitos = participante.estadoEfeitos ?? {};
 
-  const efeitosRecarregados =
-    [];
+  const efeitosRecarregados = [];
 
-  for (
-    const efeitoId in
-    estadoEfeitos
-  ) {
-    const resultadoBusca =
-      buscarEfeitoPorId(
-        efeitoId
-      );
+  for (const efeitoId in estadoEfeitos) {
+    const resultadoBusca = buscarEfeitoPorId(efeitoId);
 
     if (!resultadoBusca.sucesso) {
       continue;
     }
 
-    const efeito =
-      resultadoBusca.efeito;
+    const efeito = resultadoBusca.efeito;
 
-    if (
-      efeito.usos?.recarga !==
-      tipoRecarga
-    ) {
+    if (efeito.usos?.recarga !== tipoRecarga) {
       continue;
     }
 
-    estadoEfeitos[
-      efeitoId
-    ].usosRestantes =
-      efeito.usos.quantidade;
+    estadoEfeitos[efeitoId].usosRestantes = efeito.usos.quantidade;
 
-    efeitosRecarregados.push(
-      efeitoId
-    );
+    efeitosRecarregados.push(efeitoId);
   }
 
   return {
     sucesso: true,
 
-    efeitosRecarregados:
-      efeitosRecarregados
+    efeitosRecarregados: efeitosRecarregados,
   };
 }
 
-function ativarEfeitoPendente(
-  participante,
-  contextoPendente,
-  efeitoId
-) {
+function ativarEfeitoPendente(participante, contextoPendente, efeitoId) {
   if (!contextoPendente) {
     return {
       sucesso: false,
-      motivo: "contextoPendenteInexistente"
+      motivo: "contextoPendenteInexistente",
     };
   }
 
-  const operacao =
-    contextoPendente
-      .efeitos
-      ?.find(
-        efeito =>
-          efeito.efeitoId ===
-          efeitoId
-      );
+  const operacao = contextoPendente.efeitos?.find((efeito) => efeito.efeitoId === efeitoId);
 
   if (!operacao) {
     return {
       sucesso: false,
-      motivo: "efeitoIndisponivel"
+      motivo: "efeitoIndisponivel",
     };
   }
 
-  const resultadoConsumo =
-    consumirUsoEfeito(
-      participante,
-      efeitoId
-    );
+  const resultadoConsumo = consumirUsoEfeito(participante, efeitoId);
 
   if (!resultadoConsumo.sucesso) {
     return resultadoConsumo;
   }
 
-  contextoPendente.efeitoAtivo =
-    structuredClone(
-      operacao
-    );
+  contextoPendente.efeitoAtivo = structuredClone(operacao);
 
-  contextoPendente.rolagensEfeito =
-    [];
+  contextoPendente.rolagensEfeito = [];
 
   return {
     sucesso: true,
     motivo: null,
 
-    efeitoAtivo:
-      contextoPendente
-        .efeitoAtivo,
+    efeitoAtivo: contextoPendente.efeitoAtivo,
 
-    usosRestantes:
-      resultadoConsumo
-        .usosRestantes
+    usosRestantes: resultadoConsumo.usosRestantes,
   };
 }
 
-function registrarRolagemEfeito(
-  contextoPendente,
-  resultadoRolagem
-) {
-  const efeitoAtivo =
-    contextoPendente
-      ?.efeitoAtivo;
+function registrarRolagemEfeito(contextoPendente, resultadoRolagem) {
+  const efeitoAtivo = contextoPendente?.efeitoAtivo;
 
   if (!efeitoAtivo) {
     return {
       sucesso: false,
-      motivo: "nenhumEfeitoAtivo"
+      motivo: "nenhumEfeitoAtivo",
     };
   }
 
-  const rolagens =
-    contextoPendente
-      .rolagensEfeito;
+  const rolagens = contextoPendente.rolagensEfeito;
 
   if (!Array.isArray(rolagens)) {
     return {
       sucesso: false,
-      motivo: "listaRolagensInexistente"
+      motivo: "listaRolagensInexistente",
     };
   }
 
-  const quantidadeNecessaria =
-    efeitoAtivo
-      .quantidadeDeRolagens;
+  const quantidadeNecessaria = efeitoAtivo.quantidadeDeRolagens;
 
-  if (
-    rolagens.length >=
-    quantidadeNecessaria
-  ) {
+  if (rolagens.length >= quantidadeNecessaria) {
     return {
       sucesso: false,
-      motivo: "rolagensJaCompletas"
+      motivo: "rolagensJaCompletas",
     };
   }
 
-  rolagens.push(
-    structuredClone(
-      resultadoRolagem
-    )
-  );
+  rolagens.push(structuredClone(resultadoRolagem));
 
   return {
     sucesso: true,
     motivo: null,
 
-    quantidadeRegistrada:
-      rolagens.length,
+    quantidadeRegistrada: rolagens.length,
 
-    quantidadeNecessaria:
-      quantidadeNecessaria,
+    quantidadeNecessaria: quantidadeNecessaria,
 
-    concluida:
-      rolagens.length >=
-      quantidadeNecessaria,
+    concluida: rolagens.length >= quantidadeNecessaria,
 
-    rolagens:
-      rolagens
+    rolagens: rolagens,
   };
 }

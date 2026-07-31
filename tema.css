@@ -30,7 +30,7 @@
   --cor-ficha-texto: #ddcfb8;
   --cor-ficha-titulo: #f4dfba;
   --cor-ficha-rotulo: #cdbb9e;
-  --cor-ficha-borda: rgba(215, 163, 95, 0.20);
+  --cor-ficha-borda: rgba(215, 163, 95, 0.2);
   --cor-ficha-borda-forte: rgba(215, 163, 95, 0.38);
 
   --sombra-painel: 0 28px 90px rgba(0, 0, 0, 0.42);
@@ -118,8 +118,7 @@ html::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
+  background: radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
     radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
     radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
     radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
@@ -182,10 +181,7 @@ textarea {
 }
 
 .container-pagina {
-  width: min(
-    calc(100% - (var(--margem-pagina) * 2)),
-    var(--largura-pagina)
-  );
+  width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-pagina));
 
   margin-inline: auto;
 }
@@ -199,10 +195,7 @@ textarea {
   top: 0;
   z-index: 500;
 
-  width: min(
-    calc(100% - (var(--margem-pagina) * 2)),
-    var(--largura-pagina)
-  );
+  width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-pagina));
 
   min-height: 70px;
   margin-inline: auto;
@@ -266,9 +259,7 @@ textarea {
 .menu-principal a {
   flex: 0 0 auto;
 
-  padding:
-    clamp(7px, 0.7vw, 9px)
-    clamp(9px, 1vw, 13px);
+  padding: clamp(7px, 0.7vw, 9px) clamp(9px, 1vw, 13px);
 
   border-radius: var(--raio-botao);
 
@@ -307,7 +298,7 @@ textarea {
   border: 1px solid rgba(215, 163, 95, 0.42);
   border-radius: var(--raio-botao);
   color: var(--cor-ambar);
-  background: rgba(215, 163, 95, 0.10);
+  background: rgba(215, 163, 95, 0.1);
   font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -345,7 +336,7 @@ textarea {
   content: "";
   position: absolute;
   inset: 18%;
-  border: 1px solid rgba(255, 248, 235, 0.10);
+  border: 1px solid rgba(255, 248, 235, 0.1);
   border-radius: inherit;
 }
 
@@ -496,7 +487,7 @@ textarea {
   padding-right: 34px;
   color: #1b1210;
   background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
-  box-shadow: 0 18px 50px rgba(217, 118, 95, 0.20);
+  box-shadow: 0 18px 50px rgba(217, 118, 95, 0.2);
 }
 
 .botao-principal:hover,
@@ -572,14 +563,8 @@ body::after {
   inset: 0;
   z-index: 99999;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
-    linear-gradient(
-      135deg,
-      #08070a,
-      #24131d 52%,
-      #100f14
-    );
+  background: radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
+    linear-gradient(135deg, #08070a, #24131d 52%, #100f14);
   animation: entradaCortinaPagina 420ms ease forwards;
 }
 

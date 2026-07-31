@@ -14,25 +14,19 @@ body {
    ===================================================== */
 
 .hero-criacao {
-  --opacidade-decoracao: 0.10;
-  --opacidade-ornamento: 0.10;
-  --cor-borda-decoracao: rgba(215, 163, 95, 0.20);
+  --opacidade-decoracao: 0.1;
+  --opacidade-ornamento: 0.1;
+  --cor-borda-decoracao: rgba(215, 163, 95, 0.2);
   --cor-borda-ornamento: rgba(215, 163, 95, 0.42);
 
   position: relative;
 
-  width: min(
-    calc(100% - (var(--margem-pagina) * 2)),
-    var(--largura-pagina)
-  );
+  width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-pagina));
 
   min-height: auto;
   margin-inline: auto;
 
-  padding:
-    clamp(24px, 3vw, 42px)
-    0
-    clamp(20px, 2.4vw, 34px);
+  padding: clamp(24px, 3vw, 42px) 0 clamp(20px, 2.4vw, 34px);
 
   display: grid;
   align-items: center;
@@ -80,17 +74,11 @@ body {
 .criador-personagem {
   position: relative;
 
-  width: min(
-    calc(100% - (var(--margem-pagina) * 2)),
-    var(--largura-pagina)
-  );
+  width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-pagina));
 
   margin-inline: auto;
 
-  padding:
-    var(--espaco-md)
-    0
-    var(--espaco-xl);
+  padding: var(--espaco-md) 0 var(--espaco-xl);
 
   display: grid;
 
@@ -162,8 +150,7 @@ body {
 
   overflow-wrap: anywhere;
 
-  text-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.32);
+  text-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
 }
 
 .texto-explicativo {
@@ -291,8 +278,7 @@ body {
 #passo-magias .bloco-magias,
 #areaRevisao .bloco-revisao {
   border: 1px solid rgba(215, 163, 95, 0.22);
-  background:
-    radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.12), transparent 30%),
+  background: radial-gradient(circle at 92% 10%, rgba(111, 61, 75, 0.12), transparent 30%),
     linear-gradient(155deg, #181310 0%, #211619 100%);
   box-shadow: 0 18px 52px rgba(0, 0, 0, 0.16);
   backdrop-filter: none;
@@ -368,7 +354,7 @@ body {
   right: -52px;
   top: -52px;
   border-radius: 50%;
-  background: rgba(111, 61, 75, 0.20);
+  background: rgba(111, 61, 75, 0.2);
   transition:
     transform 220ms ease,
     opacity 220ms ease;
@@ -378,8 +364,7 @@ body {
 .card-opcao:hover {
   transform: translateY(-6px);
   border-color: rgba(215, 163, 95, 0.48);
-  background:
-    radial-gradient(circle at 92% 10%, rgba(217, 118, 95, 0.16), transparent 30%),
+  background: radial-gradient(circle at 92% 10%, rgba(217, 118, 95, 0.16), transparent 30%),
     linear-gradient(155deg, #211713 0%, #2a171d 100%);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
 }
@@ -389,14 +374,12 @@ body {
 
   border: none;
 
-
   background-image: url("Imagens/Assets/old-paper-02.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
 
-  box-shadow:
-    0 20px 42px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.38);
 
   filter: brightness(1.04);
 }
@@ -410,8 +393,7 @@ body {
 .card-classe.selecionado,
 .card-opcao.selecionado {
   border-color: rgba(215, 163, 95, 0.86);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(215, 163, 95, 0.18), transparent 30%),
+  background: radial-gradient(circle at 92% 8%, rgba(215, 163, 95, 0.18), transparent 30%),
     rgba(215, 163, 95, 0.12);
   box-shadow:
     0 0 0 2px rgba(215, 163, 95, 0.18),
@@ -420,7 +402,6 @@ body {
 
 .card-classe.selecionado {
   border: none;
-
 
   background-image: url("Imagens/Assets/old-paper-02.webp");
   background-size: 100% 100%;
@@ -466,10 +447,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 
-  filter:
-    brightness(0.5)
-    saturate(0.4)
-    sepia(0.3);
+  filter: brightness(0.5) saturate(0.4) sepia(0.3);
 }
 
 .imagem-classe img {
@@ -484,8 +462,7 @@ body {
 
   display: block;
 
-  transition:
-    transform 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
 .card-classe:hover .imagem-classe img {
@@ -510,8 +487,7 @@ body {
   line-height: 1;
   letter-spacing: -0.02em;
 
-  text-shadow:
-    0 1px 0 rgba(255, 239, 203, 0.35);
+  text-shadow: 0 1px 0 rgba(255, 239, 203, 0.35);
 }
 
 .card-opcao h4 {
@@ -543,7 +519,6 @@ body {
   overflow: hidden;
   flex-grow: 1;
 }
-
 
 .card-opcao ul {
   margin: 0;
@@ -621,8 +596,7 @@ body {
   padding: 14px;
   border: 1px solid rgba(215, 163, 95, 0.18);
   border-radius: 20px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(154, 170, 117, 0.12), transparent 30%),
+  background: radial-gradient(circle at 92% 10%, rgba(154, 170, 117, 0.12), transparent 30%),
     linear-gradient(155deg, #181310 0%, #211619 100%);
   color: rgba(246, 234, 215, 0.72);
   font-size: 0.84rem;
@@ -662,8 +636,7 @@ body {
   place-items: center;
   border: 1px solid rgba(215, 163, 95, 0.58);
   border-radius: 13px;
-  background:
-    radial-gradient(circle at 35% 22%, rgba(255, 248, 235, 0.12), transparent 32%),
+  background: radial-gradient(circle at 35% 22%, rgba(255, 248, 235, 0.12), transparent 32%),
     #15100f;
   color: var(--cor-texto);
   font-size: 1.05rem;
@@ -849,7 +822,7 @@ body {
   position: relative;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255, 248, 235, 0.10);
+  border-top: 1px solid rgba(255, 248, 235, 0.1);
 }
 
 #passo-habilidades .detalhes-arma-opcao p {
@@ -871,7 +844,7 @@ body {
 #passo-magias .bloco-magias:first-of-type p {
   margin: 0;
   padding: 12px;
-  border: 1px solid rgba(255, 248, 235, 0.10);
+  border: 1px solid rgba(255, 248, 235, 0.1);
   border-radius: 16px;
   background: #171311;
   color: rgba(246, 234, 215, 0.72);
@@ -1068,7 +1041,8 @@ label,
 #areaRevisao .bloco-revisao:first-child {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 120px
+  grid-template-columns:
+    120px
     repeat(2, minmax(0, 1fr));
   gap: 8px 18px;
 }
@@ -1076,9 +1050,7 @@ label,
 .avatar-revisao {
   position: relative;
 
-  grid-row:
-    2
-    / span 3;
+  grid-row: 2 / span 3;
 
   align-self: start;
 
@@ -1130,10 +1102,7 @@ label,
 }
 
 #areaRevisao .bloco-revisao h4 {
-  margin:
-    14px
-    0
-    8px;
+  margin: 14px 0 8px;
 
   color: var(--cor-ambar);
   font-size: 0.78rem;
@@ -1171,7 +1140,7 @@ label,
 #areaRevisao .linha-arma-revisao {
   margin: 10px 0;
   padding: 10px;
-  border: 1px solid rgba(255, 248, 235, 0.10);
+  border: 1px solid rgba(255, 248, 235, 0.1);
   border-radius: 14px;
   background: #171311;
 }
@@ -1210,8 +1179,7 @@ label,
   justify-content: center;
   padding: 24px;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 78% 18%, rgba(111, 61, 75, 0.24), transparent 30%),
+  background: radial-gradient(circle at 78% 18%, rgba(111, 61, 75, 0.24), transparent 30%),
     rgba(5, 4, 5, 0.88);
   backdrop-filter: none;
 }
@@ -1224,8 +1192,7 @@ label,
   flex-direction: column;
   border: 1px solid rgba(215, 163, 95, 0.28);
   border-radius: 30px;
-  background:
-    radial-gradient(circle at 92% 8%, rgba(217, 118, 95, 0.14), transparent 28%),
+  background: radial-gradient(circle at 92% 8%, rgba(217, 118, 95, 0.14), transparent 28%),
     linear-gradient(150deg, #17120f 0%, #231619 58%, #120f0d 100%);
   box-shadow: 0 34px 120px rgba(0, 0, 0, 0.62);
   overflow: hidden;
@@ -1295,8 +1262,7 @@ label,
   object-position: center center;
   border: 1px solid rgba(215, 163, 95, 0.22);
   border-radius: 24px;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(215, 163, 95, 0.16), transparent 34%),
+  background: radial-gradient(circle at 50% 18%, rgba(215, 163, 95, 0.16), transparent 34%),
     linear-gradient(160deg, #211713 0%, #120f0d 100%);
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
 }
@@ -1378,29 +1344,20 @@ label,
 
   padding: 16px;
 
-  background:
-    rgba(5, 4, 5, 0.08);
+  background: rgba(5, 4, 5, 0.08);
 
   pointer-events: none;
 }
 
 #modalAvatar .modal-avatar,
 #modalAntecedente .modal-antecedente {
-  width:
-    min(
-      680px,
-      calc(100vw - 470px)
-    );
+  width: min(680px, calc(100vw - 470px));
 
-  height:
-    calc(100dvh - 32px);
+  height: calc(100dvh - 32px);
 
-  max-height:
-    calc(100dvh - 32px);
+  max-height: calc(100dvh - 32px);
 
-  box-shadow:
-    -18px 0 70px
-    rgba(0, 0, 0, 0.42);
+  box-shadow: -18px 0 70px rgba(0, 0, 0, 0.42);
 
   pointer-events: auto;
 }
@@ -1412,9 +1369,7 @@ label,
   flex: 1;
   min-height: 0;
 
-  padding:
-    18px
-    30px;
+  padding: 18px 30px;
 
   overflow-y: auto;
 }
@@ -1517,37 +1472,25 @@ label,
   position: relative;
   z-index: 3;
 
-  animation:
-    destacarBlocoFicha
-    1200ms
-    ease-out;
+  animation: destacarBlocoFicha 1200ms ease-out;
 }
 
 @keyframes destacarBlocoFicha {
   0% {
-    filter:
-      brightness(1)
-      drop-shadow(0 0 0 rgba(224, 165, 91, 0));
+    filter: brightness(1) drop-shadow(0 0 0 rgba(224, 165, 91, 0));
   }
 
   28% {
-    filter:
-      brightness(1.16)
-      drop-shadow(0 0 12px rgba(224, 165, 91, 0.8));
+    filter: brightness(1.16) drop-shadow(0 0 12px rgba(224, 165, 91, 0.8));
   }
 
   100% {
-    filter:
-      brightness(1)
-      drop-shadow(0 0 0 rgba(224, 165, 91, 0));
+    filter: brightness(1) drop-shadow(0 0 0 rgba(224, 165, 91, 0));
   }
 }
 
 .modal-avatar {
-  width: min(
-    920px,
-    calc(100vw - 40px)
-  );
+  width: min(920px, calc(100vw - 40px));
 }
 
 .botao-fechar-modal-avatar {
@@ -1579,9 +1522,7 @@ label,
 
   gap: 22px;
 
-  padding:
-    18px
-    30px;
+  padding: 18px 30px;
 
   overflow: hidden;
 }
@@ -1592,10 +1533,7 @@ label,
 }
 
 .modal-corpo-avatar h3 {
-  margin:
-    0
-    0
-    12px;
+  margin: 0 0 12px;
 
   color: #f1bd6a;
 
@@ -1615,48 +1553,33 @@ label,
 .filtro-avatar {
   min-height: 34px;
 
-  padding:
-    6px
-    14px;
+  padding: 6px 14px;
 
-  border:
-    1px solid
-    rgba(215, 163, 95, 0.28);
+  border: 1px solid rgba(215, 163, 95, 0.28);
 
   border-radius: 999px;
 
   color: #ddcfb8;
   cursor: pointer;
 
-  background:
-    rgba(255, 248, 235, 0.04);
+  background: rgba(255, 248, 235, 0.04);
 }
 
 .filtro-avatar:hover,
 .filtro-avatar.ativo {
-  border-color:
-    rgba(215, 163, 95, 0.72);
+  border-color: rgba(215, 163, 95, 0.72);
 
   color: #1b1210;
 
-  background:
-    var(--cor-ambar);
+  background: var(--cor-ambar);
 }
 
 .galeria-avatares {
-  max-height:
-    min(
-      430px,
-      calc(100dvh - 260px)
-    );
+  max-height: min(430px, calc(100dvh - 260px));
 
   display: grid;
 
-  grid-template-columns:
-    repeat(
-      auto-fill,
-      minmax(86px, 1fr)
-    );
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
 
   gap: 10px;
 
@@ -1670,17 +1593,14 @@ label,
 
   padding: 3px;
 
-  border:
-    1px solid
-    rgba(215, 163, 95, 0.22);
+  border: 1px solid rgba(215, 163, 95, 0.22);
 
   border-radius: 14px;
 
   overflow: hidden;
   cursor: pointer;
 
-  background:
-    rgba(255, 248, 235, 0.04);
+  background: rgba(255, 248, 235, 0.04);
 
   transition:
     transform 160ms ease,
@@ -1690,8 +1610,7 @@ label,
 .opcao-avatar:hover {
   transform: translateY(-3px);
 
-  border-color:
-    rgba(215, 163, 95, 0.82);
+  border-color: rgba(215, 163, 95, 0.82);
 }
 
 .opcao-avatar img {
@@ -1708,8 +1627,7 @@ label,
 .galeria-frames-avatar {
   display: grid;
 
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
 }
@@ -1724,16 +1642,13 @@ label,
 
   padding: 4px;
 
-  border:
-    1px solid
-    rgba(215, 163, 95, 0.22);
+  border: 1px solid rgba(215, 163, 95, 0.22);
 
   border-radius: 14px;
 
   cursor: pointer;
 
-  background:
-    rgba(255, 248, 235, 0.04);
+  background: rgba(255, 248, 235, 0.04);
 
   transition:
     transform 160ms ease,
@@ -1743,8 +1658,7 @@ label,
 .opcao-frame-avatar:hover {
   transform: translateY(-3px);
 
-  border-color:
-    rgba(215, 163, 95, 0.82);
+  border-color: rgba(215, 163, 95, 0.82);
 }
 
 .opcao-frame-avatar img {
@@ -1760,50 +1674,35 @@ label,
 .opcao-frame-avatar.selecionado {
   border-color: var(--cor-ambar);
 
-  box-shadow:
-    0 0 0 2px
-    rgba(215, 163, 95, 0.28);
+  box-shadow: 0 0 0 2px rgba(215, 163, 95, 0.28);
 
-  background:
-    rgba(215, 163, 95, 0.14);
+  background: rgba(215, 163, 95, 0.14);
 }
 
 @media (max-width: 1100px) {
-
   #modalAvatar {
     align-items: center;
     justify-content: center;
 
     padding: 12px;
 
-    background:
-      rgba(5, 4, 5, 0.82);
+    background: rgba(5, 4, 5, 0.82);
   }
 
   #modalAvatar .modal-avatar {
-    width:
-      min(
-        680px,
-        calc(100vw - 24px)
-      );
+    width: min(680px, calc(100vw - 24px));
 
     height: auto;
 
-    max-height:
-      calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
   }
-
 }
 
 @media (max-width: 760px) {
-
   .modal-corpo-avatar {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
 
-    padding:
-      16px
-      20px;
+    padding: 16px 20px;
 
     overflow: visible;
   }
@@ -1811,18 +1710,12 @@ label,
   .galeria-avatares {
     max-height: 360px;
 
-    grid-template-columns:
-      repeat(
-        auto-fill,
-        minmax(74px, 1fr)
-      );
+    grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
   }
 
   .galeria-frames-avatar {
-    grid-template-columns:
-      repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-
 }
 
 /* =====================================================

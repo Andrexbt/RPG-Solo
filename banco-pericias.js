@@ -13,7 +13,7 @@ window.bancoPericias = {
   atletismo: {
     id: "atletismo",
     nome: "Atletismo",
-    atributo: "forca"
+    atributo: "forca",
   },
 
   // =====================================================
@@ -22,19 +22,19 @@ window.bancoPericias = {
   acrobacia: {
     id: "acrobacia",
     nome: "Acrobacia",
-    atributo: "destreza"
+    atributo: "destreza",
   },
 
   prestidigitacao: {
     id: "prestidigitacao",
     nome: "Prestidigitação",
-    atributo: "destreza"
+    atributo: "destreza",
   },
 
   furtividade: {
     id: "furtividade",
     nome: "Furtividade",
-    atributo: "destreza"
+    atributo: "destreza",
   },
 
   // =====================================================
@@ -43,31 +43,31 @@ window.bancoPericias = {
   arcanismo: {
     id: "arcanismo",
     nome: "Arcanismo",
-    atributo: "inteligencia"
+    atributo: "inteligencia",
   },
 
   historia: {
     id: "historia",
     nome: "História",
-    atributo: "inteligencia"
+    atributo: "inteligencia",
   },
 
   investigacao: {
     id: "investigacao",
     nome: "Investigação",
-    atributo: "inteligencia"
+    atributo: "inteligencia",
   },
 
   natureza: {
     id: "natureza",
     nome: "Natureza",
-    atributo: "inteligencia"
+    atributo: "inteligencia",
   },
 
   religiao: {
     id: "religiao",
     nome: "Religião",
-    atributo: "inteligencia"
+    atributo: "inteligencia",
   },
 
   // =====================================================
@@ -76,31 +76,31 @@ window.bancoPericias = {
   adestrarAnimais: {
     id: "adestrarAnimais",
     nome: "Adestrar Animais",
-    atributo: "sabedoria"
+    atributo: "sabedoria",
   },
 
   intuicao: {
     id: "intuicao",
     nome: "Intuição",
-    atributo: "sabedoria"
+    atributo: "sabedoria",
   },
 
   medicina: {
     id: "medicina",
     nome: "Medicina",
-    atributo: "sabedoria"
+    atributo: "sabedoria",
   },
 
   percepcao: {
     id: "percepcao",
     nome: "Percepção",
-    atributo: "sabedoria"
+    atributo: "sabedoria",
   },
 
   sobrevivencia: {
     id: "sobrevivencia",
     nome: "Sobrevivência",
-    atributo: "sabedoria"
+    atributo: "sabedoria",
   },
 
   // =====================================================
@@ -109,24 +109,24 @@ window.bancoPericias = {
   enganacao: {
     id: "enganacao",
     nome: "Enganação",
-    atributo: "carisma"
+    atributo: "carisma",
   },
 
   intimidacao: {
     id: "intimidacao",
     nome: "Intimidação",
-    atributo: "carisma"
+    atributo: "carisma",
   },
 
   performance: {
     id: "performance",
     nome: "Performance",
-    atributo: "carisma"
+    atributo: "carisma",
   },
 
   persuasao: {
     id: "persuasao",
     nome: "Persuasão",
-    atributo: "carisma"
-  }
+    atributo: "carisma",
+  },
 };

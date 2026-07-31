@@ -6,87 +6,81 @@
      A lista é preenchida por meus-personagens.js.
      ===================================================== -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Personagens</title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meus Personagens</title>
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="meus-personagens.css" />
+    <script src="transicoes-paginas.js" defer></script>
+  </head>
 
-  <link rel="stylesheet" href="tema.css">
-  <link rel="stylesheet" href="meus-personagens.css">
-  <script src="transicoes-paginas.js" defer></script>
-</head>
+  <body>
+    <header class="cabecalho-site">
+      <a class="marca" href="index.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Projeto RPG Solo</span>
+      </a>
 
-<body>
+      <nav class="menu-principal" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="criacao-personagem.html">Criar personagem</a>
+        <a href="meus-personagens.html">Meus personagens</a>
+      </nav>
+    </header>
 
-  <header class="cabecalho-site">
-    <a class="marca" href="index.html">
-      <span class="marca-simbolo">✦</span>
-      <span>Projeto RPG Solo</span>
-    </a>
+    <main class="pagina-personagens">
+      <section class="hero-personagens">
+        <div class="decoracao-fundo decoracao-um"></div>
+        <div class="decoracao-fundo decoracao-dois"></div>
+        <div class="ornamento-rpg ornamento-ficha"></div>
 
-    <nav class="menu-principal" aria-label="Navegação principal">
-      <a href="index.html">Início</a>
-      <a href="criacao-personagem.html">Criar personagem</a>
-      <a href="meus-personagens.html">Meus personagens</a>
-    </nav>
-  </header>
+        <div class="conteudo-hero-personagens">
+          <p class="etiqueta-pagina">Arquivo de personagens</p>
 
-  <main class="pagina-personagens">
+          <h1>Meus personagens</h1>
 
-    <section class="hero-personagens">
-      <div class="decoracao-fundo decoracao-um"></div>
-      <div class="decoracao-fundo decoracao-dois"></div>
-      <div class="ornamento-rpg ornamento-ficha"></div>
+          <p>
+            Consulte as fichas criadas, acompanhe os principais dados de cada personagem e acesse a
+            ficha completa quando quiser continuar.
+          </p>
 
-      <div class="conteudo-hero-personagens">
-        <p class="etiqueta-pagina">Arquivo de personagens</p>
-
-        <h1>Meus personagens</h1>
-
-        <p>
-          Consulte as fichas criadas, acompanhe os principais dados de cada
-          personagem e acesse a ficha completa quando quiser continuar.
-        </p>
-
-        <a class="botao botao-principal" href="criacao-personagem.html">
-          Criar novo personagem
-        </a>
-      </div>
-    </section>
-
-    <section class="secao-lista-personagens">
-      <div class="cabecalho-personagens">
-        <div>
-          <p class="etiqueta-secao">Biblioteca</p>
-          <h2>Personagens salvos</h2>
+          <a class="botao botao-principal" href="criacao-personagem.html">
+            Criar novo personagem
+          </a>
         </div>
-      </div>
-
-      <section id="listaPersonagens" class="lista-personagens">
-        <!-- O JavaScript vai preencher esta área -->
       </section>
-    </section>
 
-  </main>
+      <section class="secao-lista-personagens">
+        <div class="cabecalho-personagens">
+          <div>
+            <p class="etiqueta-secao">Biblioteca</p>
+            <h2>Personagens salvos</h2>
+          </div>
+        </div>
 
-  <footer class="rodape-site">
-    <small lang="en">
-      This work includes material from the System Reference Document 5.2.1
-      (“SRD 5.2.1”) by Wizards of the Coast LLC, available at
-      <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1
-      is licensed under the
-      <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
-        Creative Commons Attribution 4.0 International License
-      </a>.
-    </small>
-  </footer>
+        <section id="listaPersonagens" class="lista-personagens">
+          <!-- O JavaScript vai preencher esta área -->
+        </section>
+      </section>
+    </main>
 
-  <script src="banco-equipamentos.js"></script>
-  <script src="meus-personagens.js"></script>
+    <footer class="rodape-site">
+      <small lang="en">
+        This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by
+        Wizards of the Coast LLC, available at
+        <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1 is licensed under
+        the
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
+          Creative Commons Attribution 4.0 International License </a
+        >.
+      </small>
+    </footer>
 
-</body>
-
+    <script src="banco-equipamentos.js"></script>
+    <script src="meus-personagens.js"></script>
+  </body>
 </html>

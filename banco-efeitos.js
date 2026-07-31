@@ -1,31 +1,29 @@
 "use strict";
 
 const bancoEfeitos = {
-    
-    atacanteSelvagem: {
+  atacanteSelvagem: {
+    id: "atacanteSelvagem",
+    nome: "Atacante Selvagem",
+
+    origem: {
+      tipo: "talento",
       id: "atacanteSelvagem",
-      nome: "Atacante Selvagem",
-          
-      origem: {
-          tipo: "talento",
-          id: "atacanteSelvagem",
-        },
+    },
 
-      tipo: "alterarRolagem",
-      gatilho: "aoRolarDano",
-      alvo: "proprioPersonagem",
+    tipo: "alterarRolagem",
+    gatilho: "aoRolarDano",
+    alvo: "proprioPersonagem",
 
-      operacao: {
-          tipo: "rolarNovamente",
-          rolagemAfetada: "danoDaArma",
-          quantidadeDeRolagens: 2,
-          criterioDeEscolha: "escolhaDoJogador"
-        },
+    operacao: {
+      tipo: "rolarNovamente",
+      rolagemAfetada: "danoDaArma",
+      quantidadeDeRolagens: 2,
+      criterioDeEscolha: "escolhaDoJogador",
+    },
 
-      usos: {
-          quantidade: 1,
-          recarga: "turno",
-        }
-    }
-
+    usos: {
+      quantidade: 1,
+      recarga: "turno",
+    },
+  },
 };

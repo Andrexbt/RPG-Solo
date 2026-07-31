@@ -7,7 +7,6 @@
 // =====================================================
 
 window.bancoMagias = {
-
   // =====================================================
   // Magias disponíveis
   // -----------------------------------------------------
@@ -16,7 +15,6 @@ window.bancoMagias = {
   // =====================================================
 
   magias: {
-
     // =====================================================
     // Truques de Clérigo
     // =====================================================
@@ -35,7 +33,8 @@ window.bancoMagias = {
       exigeSalvaguarda: true,
       salvaguarda: "destreza",
       descricaoCurta: "Uma criatura é atingida por energia radiante se falhar em uma salvaguarda.",
-      descricaoLonga: "Você invoca energia radiante contra uma criatura que possa ver dentro do alcance. A criatura precisa resistir com uma salvaguarda de Destreza; se falhar, sofre dano radiante."
+      descricaoLonga:
+        "Você invoca energia radiante contra uma criatura que possa ver dentro do alcance. A criatura precisa resistir com uma salvaguarda de Destreza; se falhar, sofre dano radiante.",
     },
 
     orientacao: {
@@ -51,7 +50,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Ajuda uma criatura em um teste de atributo.",
-      descricaoLonga: "Você concede uma breve orientação divina a uma criatura tocada, ajudando-a em um teste de atributo durante a duração da magia."
+      descricaoLonga:
+        "Você concede uma breve orientação divina a uma criatura tocada, ajudando-a em um teste de atributo durante a duração da magia.",
     },
 
     taumaturgia: {
@@ -67,7 +67,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Produz pequenos sinais sobrenaturais ligados ao poder divino.",
-      descricaoLonga: "Você manifesta um pequeno sinal sobrenatural, como alterar a voz, fazer chamas tremularem, abrir portas destrancadas ou criar outros efeitos narrativos simples."
+      descricaoLonga:
+        "Você manifesta um pequeno sinal sobrenatural, como alterar a voz, fazer chamas tremularem, abrir portas destrancadas ou criar outros efeitos narrativos simples.",
     },
 
     pouparOsMortos: {
@@ -83,7 +84,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Estabiliza uma criatura morrendo.",
-      descricaoLonga: "Você toca uma criatura viva que esteja morrendo e a estabiliza, impedindo que continue fazendo salvaguardas contra a morte."
+      descricaoLonga:
+        "Você toca uma criatura viva que esteja morrendo e a estabiliza, impedindo que continue fazendo salvaguardas contra a morte.",
     },
 
     // =====================================================
@@ -103,7 +105,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Recupera pontos de vida de uma criatura tocada.",
-      descricaoLonga: "Você canaliza energia curativa para uma criatura que tocar, restaurando parte dos seus pontos de vida."
+      descricaoLonga:
+        "Você canaliza energia curativa para uma criatura que tocar, restaurando parte dos seus pontos de vida.",
     },
 
     bencao: {
@@ -119,7 +122,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Abençoa aliados, melhorando ataques e salvaguardas.",
-      descricaoLonga: "Você abençoa criaturas dentro do alcance. Enquanto a magia durar, elas recebem ajuda divina em jogadas de ataque e salvaguardas."
+      descricaoLonga:
+        "Você abençoa criaturas dentro do alcance. Enquanto a magia durar, elas recebem ajuda divina em jogadas de ataque e salvaguardas.",
     },
 
     escudoDaFe: {
@@ -135,7 +139,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Protege uma criatura com energia divina.",
-      descricaoLonga: "Uma criatura escolhida é envolvida por uma proteção cintilante, aumentando sua defesa enquanto a magia durar."
+      descricaoLonga:
+        "Uma criatura escolhida é envolvida por uma proteção cintilante, aumentando sua defesa enquanto a magia durar.",
     },
 
     raioGuiador: {
@@ -150,8 +155,10 @@ window.bancoMagias = {
       duracao: "1 rodada",
       exigeAtaqueMagico: true,
       exigeSalvaguarda: false,
-      descricaoCurta: "Um raio luminoso causa dano radiante e ajuda o próximo ataque contra o alvo.",
-      descricaoLonga: "Você dispara um raio de luz contra uma criatura. Se atingir, causa dano radiante e deixa o alvo iluminado por energia divina, facilitando o próximo ataque contra ele."
+      descricaoCurta:
+        "Um raio luminoso causa dano radiante e ajuda o próximo ataque contra o alvo.",
+      descricaoLonga:
+        "Você dispara um raio de luz contra uma criatura. Se atingir, causa dano radiante e deixa o alvo iluminado por energia divina, facilitando o próximo ataque contra ele.",
     },
 
     detectarMagia: {
@@ -167,7 +174,8 @@ window.bancoMagias = {
       exigeAtaqueMagico: false,
       exigeSalvaguarda: false,
       descricaoCurta: "Permite perceber a presença de magia nas proximidades.",
-      descricaoLonga: "Durante a duração da magia, você pode perceber a presença de efeitos mágicos próximos e identificar sua escola quando apropriado."
+      descricaoLonga:
+        "Durante a duração da magia, você pode perceber a presença de efeitos mágicos próximos e identificar sua escola quando apropriado.",
     },
 
     comando: {
@@ -184,8 +192,9 @@ window.bancoMagias = {
       exigeSalvaguarda: true,
       salvaguarda: "sabedoria",
       descricaoCurta: "Dá uma ordem curta a uma criatura.",
-      descricaoLonga: "Você pronuncia uma ordem breve para uma criatura dentro do alcance. Se ela falhar na salvaguarda, tenta obedecer ao comando em seu próximo turno."
-    }
+      descricaoLonga:
+        "Você pronuncia uma ordem breve para uma criatura dentro do alcance. Se ela falhar na salvaguarda, tenta obedecer ao comando em seu próximo turno.",
+    },
   },
 
   // =====================================================
@@ -196,7 +205,6 @@ window.bancoMagias = {
   // =====================================================
 
   progressaoMagias: {
-
     mago: {
       nivel1: {
         temMagias: true,
@@ -204,11 +212,11 @@ window.bancoMagias = {
         truquesConhecidos: 3,
         magiasPreparadas: 4,
         espacosMagia: {
-          nivel1: 2
+          nivel1: 2,
         },
         mensagem: "Esta classe possui escolhas de magia no nível atual.",
-        escolhas: []
-      }
+        escolhas: [],
+      },
     },
 
     clerigo: {
@@ -218,12 +226,11 @@ window.bancoMagias = {
         truquesConhecidos: 3,
         magiasPreparadas: 4,
         espacosMagia: {
-          nivel1: 2
+          nivel1: 2,
         },
         mensagem: "Escolha 3 truques e 4 magias preparadas de 1º círculo.",
-        escolhas: []
-      }
-    }
-  }
-
+        escolhas: [],
+      },
+    },
+  },
 };
