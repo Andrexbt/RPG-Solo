@@ -7,7 +7,7 @@
 // personagens salvos.
 // =====================================================
 
-(function() {
+(function () {
   // =====================================================
   // 1. Busca dos dados que podem aparecer em detalhes
   // =====================================================
@@ -123,11 +123,7 @@
       return;
     }
 
-    adicionarParagrafoMecanica(
-      container,
-      "Usos",
-      recurso.usosAtuais + " / " + recurso.usosMaximos
-    );
+    adicionarParagrafoMecanica(container, "Usos", recurso.usosAtuais + " / " + recurso.usosMaximos);
 
     if (recurso.efeito === "cura") {
       adicionarParagrafoMecanica(container, "Cura", recurso.formula);
@@ -141,11 +137,7 @@
   }
 
   function preencherMecanicaDetalhe(container, tipo, id, detalhe, contexto) {
-    adicionarParagrafoMecanica(
-      container,
-      "Tipo",
-      obterTipoLegivelDetalhe(tipo, detalhe)
-    );
+    adicionarParagrafoMecanica(container, "Tipo", obterTipoLegivelDetalhe(tipo, detalhe));
 
     if (tipo === "habilidade") {
       preencherMecanicaHabilidade(container, id, contexto);
@@ -175,18 +167,11 @@
     }
 
     modalDetalheTitulo.textContent = detalhe.nome;
-    modalDetalheDescricao.textContent =
-      detalhe.descricaoLonga || detalhe.descricaoCurta || "";
+    modalDetalheDescricao.textContent = detalhe.descricaoLonga || detalhe.descricaoCurta || "";
 
     modalDetalheMecanica.innerHTML = "";
 
-    preencherMecanicaDetalhe(
-      modalDetalheMecanica,
-      tipo,
-      id,
-      detalhe,
-      contexto || {}
-    );
+    preencherMecanicaDetalhe(modalDetalheMecanica, tipo, id, detalhe, contexto || {});
 
     modalDetalheFicha.classList.remove("escondida");
   }
@@ -220,15 +205,10 @@
       botao.textContent = id;
     }
 
-    botao.addEventListener("click", function(evento) {
+    botao.addEventListener("click", function (evento) {
       evento.stopPropagation();
 
-      abrirPopoverDetalhe(
-        tipo,
-        id,
-        botao,
-        contexto || {}
-      );
+      abrirPopoverDetalhe(tipo, id, botao, contexto || {});
     });
 
     return botao;
@@ -240,16 +220,12 @@
 
   function inicializarModalDetalhe() {
     const modalDetalheFicha = document.getElementById("modalDetalheFicha");
-    const botaoFecharModalDetalheFicha =
-      document.getElementById("botaoFecharModalDetalheFicha");
+    const botaoFecharModalDetalheFicha = document.getElementById("botaoFecharModalDetalheFicha");
 
-    if (
-      modalDetalheFicha !== null &&
-      modalDetalheFicha.dataset.inicializado !== "true"
-    ) {
+    if (modalDetalheFicha !== null && modalDetalheFicha.dataset.inicializado !== "true") {
       modalDetalheFicha.dataset.inicializado = "true";
 
-      modalDetalheFicha.addEventListener("click", function(evento) {
+      modalDetalheFicha.addEventListener("click", function (evento) {
         if (evento.target === modalDetalheFicha) {
           fecharModalDetalhe();
         }
@@ -262,7 +238,7 @@
     ) {
       botaoFecharModalDetalheFicha.dataset.inicializado = "true";
 
-      botaoFecharModalDetalheFicha.addEventListener("click", function() {
+      botaoFecharModalDetalheFicha.addEventListener("click", function () {
         fecharModalDetalhe();
       });
     }
@@ -270,7 +246,7 @@
     if (document.body.dataset.popoverDetalheInicializado !== "true") {
       document.body.dataset.popoverDetalheInicializado = "true";
 
-      document.addEventListener("click", function(evento) {
+      document.addEventListener("click", function (evento) {
         const popoverAtual = document.getElementById("popoverDetalheFicha");
 
         if (popoverAtual === null) {
@@ -291,7 +267,7 @@
         fecharPopoverDetalhe();
       });
 
-      document.addEventListener("keydown", function(evento) {
+      document.addEventListener("keydown", function (evento) {
         if (evento.key === "Escape") {
           fecharPopoverDetalhe();
           fecharModalDetalhe();
@@ -392,7 +368,7 @@ function abrirPopoverDetalhe(tipo, id, elementoReferencia, contexto) {
   botaoDetalhes.classList.add("botao-popover-detalhes");
   botaoDetalhes.textContent = "Ver detalhes";
 
-  botaoDetalhes.addEventListener("click", function(evento) {
+  botaoDetalhes.addEventListener("click", function (evento) {
     evento.stopPropagation();
 
     fecharPopoverDetalhe();

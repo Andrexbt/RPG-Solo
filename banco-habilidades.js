@@ -29,7 +29,8 @@ window.bancoHabilidades = {
       classe: "guerreiro",
       nivel: 1,
       descricaoCurta: "Você pode recuperar pontos de vida usando uma reserva limitada de usos.",
-      descricaoLonga: "Você possui uma reserva limitada de vigor que pode usar para se recuperar. No nível 1, você tem 2 usos de Segundo Fôlego. Ao usar esta habilidade, recupera 1d10 + seu nível de Guerreiro pontos de vida. Você recupera os usos gastos ao terminar um descanso longo.",
+      descricaoLonga:
+        "Você possui uma reserva limitada de vigor que pode usar para se recuperar. No nível 1, você tem 2 usos de Segundo Fôlego. Ao usar esta habilidade, recupera 1d10 + seu nível de Guerreiro pontos de vida. Você recupera os usos gastos ao terminar um descanso longo.",
 
       recurso: {
         id: "segundoFolego",
@@ -37,8 +38,8 @@ window.bancoHabilidades = {
         usosMaximos: 2,
         recuperaEm: "descansoLongo",
         efeito: "cura",
-        formula: "1d10 + nivelClasse"
-      }
+        formula: "1d10 + nivelClasse",
+      },
     },
 
     maestriaComArmas: {
@@ -47,7 +48,7 @@ window.bancoHabilidades = {
       categoria: "classFeature",
       classe: "guerreiro",
       nivel: 1,
-      descricaoCurta: "Você escolhe armas para dominar suas propriedades de maestria."
+      descricaoCurta: "Você escolhe armas para dominar suas propriedades de maestria.",
     },
 
     ataqueFurtivo: {
@@ -57,7 +58,8 @@ window.bancoHabilidades = {
       classe: "ladino",
       nivel: 1,
       descricaoCurta: "Você causa dano extra quando ataca explorando uma abertura.",
-      descricaoLonga: "O Ataque Furtivo representa a capacidade do Ladino de atingir pontos vulneráveis do inimigo. No nível 1, ele adiciona 1d6 de dano em certas condições. A automação completa dessas condições será implementada futuramente no sistema de combate."
+      descricaoLonga:
+        "O Ataque Furtivo representa a capacidade do Ladino de atingir pontos vulneráveis do inimigo. No nível 1, ele adiciona 1d6 de dano em certas condições. A automação completa dessas condições será implementada futuramente no sistema de combate.",
     },
 
     especializacao: {
@@ -67,7 +69,8 @@ window.bancoHabilidades = {
       classe: "ladino",
       nivel: 1,
       descricaoCurta: "Você se torna excepcionalmente competente em algumas perícias.",
-      descricaoLonga: "A Especialização representa treinamento refinado em áreas específicas. Futuramente, o sistema permitirá escolher quais perícias recebem esse benefício e aplicará automaticamente o bônus ampliado."
+      descricaoLonga:
+        "A Especialização representa treinamento refinado em áreas específicas. Futuramente, o sistema permitirá escolher quais perícias recebem esse benefício e aplicará automaticamente o bônus ampliado.",
     },
 
     giriaDeLadrao: {
@@ -76,8 +79,10 @@ window.bancoHabilidades = {
       categoria: "classFeature",
       classe: "ladino",
       nivel: 1,
-      descricaoCurta: "Você conhece códigos, sinais e expressões usados por criminosos e informantes.",
-      descricaoLonga: "A Gíria de Ladrão permite reconhecer e transmitir mensagens ocultas em conversas, símbolos e sinais discretos. No sistema, ela será tratada inicialmente como uma habilidade narrativa."
+      descricaoCurta:
+        "Você conhece códigos, sinais e expressões usados por criminosos e informantes.",
+      descricaoLonga:
+        "A Gíria de Ladrão permite reconhecer e transmitir mensagens ocultas em conversas, símbolos e sinais discretos. No sistema, ela será tratada inicialmente como uma habilidade narrativa.",
     },
 
     conjuracaoClerigo: {
@@ -87,8 +92,9 @@ window.bancoHabilidades = {
       classe: "clerigo",
       nivel: 1,
       descricaoCurta: "Você canaliza magia divina usando Sabedoria como atributo de conjuração.",
-      descricaoLonga: "A Conjuração do Clérigo representa sua capacidade de canalizar magia divina por meio da fé, devoção ou vínculo com uma força sagrada. No nível 1, o Clérigo começa a preparar e conjurar magias usando Sabedoria. A escolha detalhada das magias será desenvolvida no próximo módulo do sistema."
-    }
+      descricaoLonga:
+        "A Conjuração do Clérigo representa sua capacidade de canalizar magia divina por meio da fé, devoção ou vínculo com uma força sagrada. No nível 1, o Clérigo começa a preparar e conjurar magias usando Sabedoria. A escolha detalhada das magias será desenvolvida no próximo módulo do sistema.",
+    },
   },
 
   // =====================================================
@@ -108,39 +114,39 @@ window.bancoHabilidades = {
         {
           id: "arquearia",
           nome: "Arquearia",
-          descricaoCurta: "Estilo voltado para ataques com armas à distância."
+          descricaoCurta: "Estilo voltado para ataques com armas à distância.",
         },
         {
           id: "defesa",
           nome: "Defesa",
-          descricaoCurta: "Estilo voltado para proteção ao usar armadura."
+          descricaoCurta: "Estilo voltado para proteção ao usar armadura.",
         },
         {
           id: "duelismo",
           nome: "Duelismo",
-          descricaoCurta: "Estilo voltado para lutar com uma arma em uma mão."
+          descricaoCurta: "Estilo voltado para lutar com uma arma em uma mão.",
         },
         {
           id: "combateDuasArmas",
           nome: "Combate com Duas Armas",
-          descricaoCurta: "Estilo voltado para lutar com uma arma em cada mão."
-        }
-      ]
+          descricaoCurta: "Estilo voltado para lutar com uma arma em cada mão.",
+        },
+      ],
     },
 
     maestriasArmas: {
       id: "maestriasArmas",
       nome: "Maestria com Armas",
       quantidadeEscolhas: 3,
-      origemDasOpcoes: "armas"
+      origemDasOpcoes: "armas",
     },
 
     especializacoesPericias: {
       id: "especializacoesPericias",
       nome: "Especialização em Perícias",
       quantidadeEscolhas: 2,
-      origemDasOpcoes: "periciasProficientes"
-    }
+      origemDasOpcoes: "periciasProficientes",
+    },
   },
 
   // =====================================================
@@ -153,22 +159,19 @@ window.bancoHabilidades = {
   progressaoClasses: {
     guerreiro: {
       nivel1: {
-        classFeaturesAutomaticas: [
-          "segundoFolego",
-          "maestriaComArmas"
-        ],
+        classFeaturesAutomaticas: ["segundoFolego", "maestriaComArmas"],
 
         escolhas: [
           {
             grupo: "estilosDeLuta",
-            quantidade: 1
+            quantidade: 1,
           },
           {
             grupo: "maestriasArmas",
-            quantidade: 3
-          }
-        ]
-      }
+            quantidade: 3,
+          },
+        ],
+      },
     },
 
     ladino: {
@@ -177,30 +180,28 @@ window.bancoHabilidades = {
           "ataqueFurtivo",
           "especializacao",
           "giriaDeLadrao",
-          "maestriaComArmas"
+          "maestriaComArmas",
         ],
 
         escolhas: [
           {
             grupo: "especializacoesPericias",
-            quantidade: 2
+            quantidade: 2,
           },
           {
             grupo: "maestriasArmas",
-            quantidade: 2
-          }
-        ]
-      }
+            quantidade: 2,
+          },
+        ],
+      },
     },
 
     clerigo: {
       nivel1: {
-        classFeaturesAutomaticas: [
-          "conjuracaoClerigo"
-        ],
+        classFeaturesAutomaticas: ["conjuracaoClerigo"],
 
-        escolhas: []
-      }
-    }
-  }
+        escolhas: [],
+      },
+    },
+  },
 };

@@ -16,7 +16,7 @@ window.bancoEspecies = {
       nome: "Humano",
       velocidade: "9 m",
       tamanho: "Médio",
-      idiomasFixos: []
+      idiomasFixos: [],
     },
 
     anao: {
@@ -24,7 +24,7 @@ window.bancoEspecies = {
       nome: "Anão",
       velocidade: "9 m",
       tamanho: "Médio",
-      idiomasFixos: ["anao"]
+      idiomasFixos: ["anao"],
     },
 
     elfo: {
@@ -32,7 +32,7 @@ window.bancoEspecies = {
       nome: "Elfo",
       velocidade: "9 m",
       tamanho: "Médio",
-      idiomasFixos: ["elfico"]
+      idiomasFixos: ["elfico"],
     },
 
     halfling: {
@@ -40,7 +40,7 @@ window.bancoEspecies = {
       nome: "Halfling",
       velocidade: "9 m",
       tamanho: "Pequeno",
-      idiomasFixos: ["halfling"]
-    }
-  }
+      idiomasFixos: ["halfling"],
+    },
+  },
 };

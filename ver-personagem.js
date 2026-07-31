@@ -18,26 +18,14 @@ const fichaArmadura = document.getElementById("fichaArmadura");
 const fichaArmaPrincipal = document.getElementById("fichaArmaPrincipal");
 const fichaItemSecundario = document.getElementById("fichaItemSecundario");
 const fichaProficiencias = document.getElementById("fichaProficiencias");
-const fichaItensAntecedente =
-  document.getElementById(
-    "fichaItensAntecedente"
-  );
+const fichaItensAntecedente = document.getElementById("fichaItensAntecedente");
 
-const fichaMoedasAntecedente =
-  document.getElementById(
-    "fichaMoedasAntecedente"
-  );
+const fichaMoedasAntecedente = document.getElementById("fichaMoedasAntecedente");
 
 const fichaTalentos = document.getElementById("fichaTalentos");
-const fichaImagemAvatar =
-  document.getElementById(
-    "fichaImagemAvatar"
-  );
+const fichaImagemAvatar = document.getElementById("fichaImagemAvatar");
 
-const fichaFrameAvatar =
-  document.getElementById(
-    "fichaFrameAvatar"
-  );
+const fichaFrameAvatar = document.getElementById("fichaFrameAvatar");
 
 // =====================================================
 // 2. Mapeamento dos campos da ficha PDF
@@ -105,36 +93,216 @@ const camposFichaPdf = {
   magiaEspacosNivel1Total: "Text112",
 
   linhasMagias: [
-    { nivel: "Text105.0", nome: "Text106.0", tempo: "Text107.0", alcance: "Text109.0", notas: "Text108" },
-    { nivel: "Text105.1", nome: "Text106.1", tempo: "Text107.1", alcance: "Text109.1", notas: "Text208" },
-    { nivel: "Text105.2", nome: "Text106.2", tempo: "Text107.2", alcance: "Text109.2", notas: "Text209" },
-    { nivel: "Text105.3", nome: "Text106.3", tempo: "Text107.3", alcance: "Text109.3", notas: "Text210" },
-    { nivel: "Text105.4", nome: "Text106.4", tempo: "Text107.4", alcance: "Text109.4", notas: "Text211" },
-    { nivel: "Text105.5", nome: "Text106.5", tempo: "Text107.5", alcance: "Text109.5", notas: "Text212" },
-    { nivel: "Text105.6", nome: "Text106.6", tempo: "Text107.6", alcance: "Text109.6", notas: "Text213" },
-    { nivel: "Text105.7", nome: "Text106.7", tempo: "Text107.7", alcance: "Text109.7", notas: "Text214" },
-    { nivel: "Text105.8", nome: "Text106.8", tempo: "Text107.8", alcance: "Text109.8", notas: "Text215" },
-    { nivel: "Text105.9", nome: "Text106.9", tempo: "Text107.9", alcance: "Text109.9", notas: "Text216" },
-    { nivel: "Text105.10", nome: "Text106.10", tempo: "Text107.10", alcance: "Text109.10", notas: "Text217" },
-    { nivel: "Text105.11", nome: "Text106.11", tempo: "Text107.11", alcance: "Text109.11", notas: "Text218" },
-    { nivel: "Text105.12", nome: "Text106.12", tempo: "Text107.12", alcance: "Text109.12", notas: "Text219" },
-    { nivel: "Text105.13", nome: "Text106.13", tempo: "Text107.13", alcance: "Text109.13", notas: "Text220" },
-    { nivel: "Text105.14", nome: "Text106.14", tempo: "Text107.14", alcance: "Text109.14", notas: "Text221" },
-    { nivel: "Text105.15", nome: "Text106.15", tempo: "Text107.15", alcance: "Text109.15", notas: "Text222" },
-    { nivel: "Text105.16", nome: "Text106.16", tempo: "Text107.16", alcance: "Text109.16", notas: "Text223" },
-    { nivel: "Text105.17", nome: "Text106.17", tempo: "Text107.17", alcance: "Text109.17", notas: "Text224" },
-    { nivel: "Text105.18", nome: "Text106.18", tempo: "Text107.18", alcance: "Text109.18", notas: "Text225" },
-    { nivel: "Text105.19", nome: "Text106.19", tempo: "Text107.19", alcance: "Text109.19", notas: "Text227" },
-    { nivel: "Text105.20", nome: "Text106.20", tempo: "Text107.20", alcance: "Text109.20", notas: "Text228" },
-    { nivel: "Text105.21", nome: "Text106.21", tempo: "Text107.21", alcance: "Text109.21", notas: "Text229" },
-    { nivel: "Text105.22", nome: "Text106.22", tempo: "Text107.22", alcance: "Text109.22", notas: "Text230" },
-    { nivel: "Text105.23", nome: "Text106.23", tempo: "Text107.23", alcance: "Text109.23", notas: "Text244" },
-    { nivel: "Text105.24", nome: "Text106.24", tempo: "Text107.24", alcance: "Text109.24", notas: "Text231" },
-    { nivel: "Text105.25", nome: "Text106.25", tempo: "Text107.25", alcance: "Text109.25", notas: "Text232" },
-    { nivel: "Text105.26", nome: "Text106.26", tempo: "Text107.26", alcance: "Text109.26", notas: "Text233" },
-    { nivel: "Text105.27", nome: "Text106.27", tempo: "Text107.27", alcance: "Text109.27", notas: "Text234" },
-    { nivel: "Text105.28", nome: "Text106.28", tempo: "Text107.28", alcance: "Text109.28", notas: "Text235" },
-    { nivel: "Text105.29", nome: "Text106.29", tempo: "Text107.29", alcance: "Text109.29", notas: "Text236" }
+    {
+      nivel: "Text105.0",
+      nome: "Text106.0",
+      tempo: "Text107.0",
+      alcance: "Text109.0",
+      notas: "Text108",
+    },
+    {
+      nivel: "Text105.1",
+      nome: "Text106.1",
+      tempo: "Text107.1",
+      alcance: "Text109.1",
+      notas: "Text208",
+    },
+    {
+      nivel: "Text105.2",
+      nome: "Text106.2",
+      tempo: "Text107.2",
+      alcance: "Text109.2",
+      notas: "Text209",
+    },
+    {
+      nivel: "Text105.3",
+      nome: "Text106.3",
+      tempo: "Text107.3",
+      alcance: "Text109.3",
+      notas: "Text210",
+    },
+    {
+      nivel: "Text105.4",
+      nome: "Text106.4",
+      tempo: "Text107.4",
+      alcance: "Text109.4",
+      notas: "Text211",
+    },
+    {
+      nivel: "Text105.5",
+      nome: "Text106.5",
+      tempo: "Text107.5",
+      alcance: "Text109.5",
+      notas: "Text212",
+    },
+    {
+      nivel: "Text105.6",
+      nome: "Text106.6",
+      tempo: "Text107.6",
+      alcance: "Text109.6",
+      notas: "Text213",
+    },
+    {
+      nivel: "Text105.7",
+      nome: "Text106.7",
+      tempo: "Text107.7",
+      alcance: "Text109.7",
+      notas: "Text214",
+    },
+    {
+      nivel: "Text105.8",
+      nome: "Text106.8",
+      tempo: "Text107.8",
+      alcance: "Text109.8",
+      notas: "Text215",
+    },
+    {
+      nivel: "Text105.9",
+      nome: "Text106.9",
+      tempo: "Text107.9",
+      alcance: "Text109.9",
+      notas: "Text216",
+    },
+    {
+      nivel: "Text105.10",
+      nome: "Text106.10",
+      tempo: "Text107.10",
+      alcance: "Text109.10",
+      notas: "Text217",
+    },
+    {
+      nivel: "Text105.11",
+      nome: "Text106.11",
+      tempo: "Text107.11",
+      alcance: "Text109.11",
+      notas: "Text218",
+    },
+    {
+      nivel: "Text105.12",
+      nome: "Text106.12",
+      tempo: "Text107.12",
+      alcance: "Text109.12",
+      notas: "Text219",
+    },
+    {
+      nivel: "Text105.13",
+      nome: "Text106.13",
+      tempo: "Text107.13",
+      alcance: "Text109.13",
+      notas: "Text220",
+    },
+    {
+      nivel: "Text105.14",
+      nome: "Text106.14",
+      tempo: "Text107.14",
+      alcance: "Text109.14",
+      notas: "Text221",
+    },
+    {
+      nivel: "Text105.15",
+      nome: "Text106.15",
+      tempo: "Text107.15",
+      alcance: "Text109.15",
+      notas: "Text222",
+    },
+    {
+      nivel: "Text105.16",
+      nome: "Text106.16",
+      tempo: "Text107.16",
+      alcance: "Text109.16",
+      notas: "Text223",
+    },
+    {
+      nivel: "Text105.17",
+      nome: "Text106.17",
+      tempo: "Text107.17",
+      alcance: "Text109.17",
+      notas: "Text224",
+    },
+    {
+      nivel: "Text105.18",
+      nome: "Text106.18",
+      tempo: "Text107.18",
+      alcance: "Text109.18",
+      notas: "Text225",
+    },
+    {
+      nivel: "Text105.19",
+      nome: "Text106.19",
+      tempo: "Text107.19",
+      alcance: "Text109.19",
+      notas: "Text227",
+    },
+    {
+      nivel: "Text105.20",
+      nome: "Text106.20",
+      tempo: "Text107.20",
+      alcance: "Text109.20",
+      notas: "Text228",
+    },
+    {
+      nivel: "Text105.21",
+      nome: "Text106.21",
+      tempo: "Text107.21",
+      alcance: "Text109.21",
+      notas: "Text229",
+    },
+    {
+      nivel: "Text105.22",
+      nome: "Text106.22",
+      tempo: "Text107.22",
+      alcance: "Text109.22",
+      notas: "Text230",
+    },
+    {
+      nivel: "Text105.23",
+      nome: "Text106.23",
+      tempo: "Text107.23",
+      alcance: "Text109.23",
+      notas: "Text244",
+    },
+    {
+      nivel: "Text105.24",
+      nome: "Text106.24",
+      tempo: "Text107.24",
+      alcance: "Text109.24",
+      notas: "Text231",
+    },
+    {
+      nivel: "Text105.25",
+      nome: "Text106.25",
+      tempo: "Text107.25",
+      alcance: "Text109.25",
+      notas: "Text232",
+    },
+    {
+      nivel: "Text105.26",
+      nome: "Text106.26",
+      tempo: "Text107.26",
+      alcance: "Text109.26",
+      notas: "Text233",
+    },
+    {
+      nivel: "Text105.27",
+      nome: "Text106.27",
+      tempo: "Text107.27",
+      alcance: "Text109.27",
+      notas: "Text234",
+    },
+    {
+      nivel: "Text105.28",
+      nome: "Text106.28",
+      tempo: "Text107.28",
+      alcance: "Text109.28",
+      notas: "Text235",
+    },
+    {
+      nivel: "Text105.29",
+      nome: "Text106.29",
+      tempo: "Text107.29",
+      alcance: "Text109.29",
+      notas: "Text236",
+    },
   ],
 };
 
@@ -146,7 +314,7 @@ const linhasArmasPdf = [
   { nome: "Text38", ataque: "Text39", dano: "Text40", notas: "Text41" },
   { nome: "Text42", ataque: "Text43", dano: "Text44", notas: "Text45" },
   { nome: "Text46", ataque: "Text47", dano: "Text48", notas: "Text49" },
-  { nome: "Text50", ataque: "Text51", dano: "Text52", notas: "Text53" }
+  { nome: "Text50", ataque: "Text51", dano: "Text52", notas: "Text53" },
 ];
 
 const camposCheckboxPdf = {
@@ -156,7 +324,7 @@ const camposCheckboxPdf = {
     constituicao: "Check Box32",
     inteligencia: "Check Box4",
     sabedoria: "Check Box21",
-    carisma: "Check Box26"
+    carisma: "Check Box26",
   },
 
   pericias: {
@@ -177,15 +345,15 @@ const camposCheckboxPdf = {
     enganacao: "Check Box27",
     intimidacao: "Check Box28",
     performance: "Check Box30",
-    persuasao: "Check Box29"
+    persuasao: "Check Box29",
   },
 
   treinoArmadura: {
     leve: "Check Box13",
     media: "Check Box14",
     pesada: "Check Box15",
-    escudos: "Check Box12"
-  }
+    escudos: "Check Box12",
+  },
 };
 
 // =====================================================
@@ -215,7 +383,7 @@ function pegarIdDaUrl() {
 function buscarPersonagemPorId(idPersonagem) {
   const personagens = carregarPersonagensSalvos();
 
-  return personagens.find(function(personagem) {
+  return personagens.find(function (personagem) {
     return personagem.id === idPersonagem;
   });
 }
@@ -238,49 +406,26 @@ function preencherFichaPersonagem(personagem) {
   atualizarMarcadoresSalvaguardas(personagem);
 }
 
-function preencherAvatarPersonagem(
-  personagem
-) {
+function preencherAvatarPersonagem(personagem) {
+  const avatar = personagem.avatar;
 
-  const avatar =
-    personagem.avatar;
+  if (avatar === undefined || avatar.imagem === undefined || avatar.frame === undefined) {
+    fichaImagemAvatar.classList.add("escondida");
 
-  if (
-    avatar === undefined ||
-    avatar.imagem === undefined ||
-    avatar.frame === undefined
-  ) {
-
-    fichaImagemAvatar.classList.add(
-      "escondida"
-    );
-
-    fichaFrameAvatar.classList.add(
-      "escondida"
-    );
+    fichaFrameAvatar.classList.add("escondida");
 
     return;
-
   }
 
-  fichaImagemAvatar.src =
-    avatar.imagem;
+  fichaImagemAvatar.src = avatar.imagem;
 
-  fichaFrameAvatar.src =
-    avatar.frame;
+  fichaFrameAvatar.src = avatar.frame;
 
-  fichaImagemAvatar.alt =
-    "Avatar de " +
-    personagem.detalhes.nome;
+  fichaImagemAvatar.alt = "Avatar de " + personagem.detalhes.nome;
 
-  fichaImagemAvatar.classList.remove(
-    "escondida"
-  );
+  fichaImagemAvatar.classList.remove("escondida");
 
-  fichaFrameAvatar.classList.remove(
-    "escondida"
-  );
-
+  fichaFrameAvatar.classList.remove("escondida");
 }
 
 function preencherInformacoesBasicas(personagem) {
@@ -320,25 +465,14 @@ function preencherUmAtributo(nomeAtributo, idValor, idModificador, personagem) {
 // 5. Combate, espécie e valores derivados
 // =====================================================
 
-function obterPontosDeVidaPersonagem(
-  personagem
-) {
-
-  return (
-    personagem?.combate
-      ?.pontosDeVida ??
-    personagem?.detalhes
-      ?.pontosDeVida ??
-    {}
-  );
-
+function obterPontosDeVidaPersonagem(personagem) {
+  return personagem?.combate?.pontosDeVida ?? personagem?.detalhes?.pontosDeVida ?? {};
 }
 
 function preencherCombate(personagem) {
-   const pontosDeVida = obterPontosDeVidaPersonagem(personagem);
+  const pontosDeVida = obterPontosDeVidaPersonagem(personagem);
 
-  document.getElementById("fichaClasseArmadura").textContent =
-    calcularClasseArmadura(personagem);
+  document.getElementById("fichaClasseArmadura").textContent = calcularClasseArmadura(personagem);
 
   document.getElementById("pvAtuais").textContent = pontosDeVida.atuais || "";
   document.getElementById("pvTemporarios").textContent = pontosDeVida.temporarios ?? "";
@@ -349,7 +483,8 @@ function preencherCombate(personagem) {
   document.getElementById("fichaIniciativa").textContent = calcularIniciativa(personagem);
   document.getElementById("fichaVelocidade").textContent = obterVelocidade(personagem);
   document.getElementById("fichaTamanho").textContent = obterTamanho(personagem);
-  document.getElementById("fichaPercepcaoPassiva").textContent = calcularPercepcaoPassiva(personagem);
+  document.getElementById("fichaPercepcaoPassiva").textContent =
+    calcularPercepcaoPassiva(personagem);
 }
 
 function calcularIniciativa(personagem) {
@@ -394,116 +529,55 @@ function obterTamanho(personagem) {
 // 6. Equipamentos, armas e ataques na ficha
 // =====================================================
 
-function obterNomeEquipamentoAntecedente(
-  equipamentoId
-) {
-
-  const banco =
-    window.bancoEquipamentos;
+function obterNomeEquipamentoAntecedente(equipamentoId) {
+  const banco = window.bancoEquipamentos;
 
   const dadosEquipamento =
-    banco
-      .itensGerais[
-        equipamentoId
-      ] ??
-    banco
-      .armas[
-        equipamentoId
-      ] ??
-    banco
-      .armaduras[
-        equipamentoId
-      ] ??
-    banco
-      .itensSecundarios[
-        equipamentoId
-      ];
+    banco.itensGerais[equipamentoId] ??
+    banco.armas[equipamentoId] ??
+    banco.armaduras[equipamentoId] ??
+    banco.itensSecundarios[equipamentoId];
 
-  return (
-    dadosEquipamento?.nome ??
-    equipamentoId
-  );
-
+  return dadosEquipamento?.nome ?? equipamentoId;
 }
 
-function preencherEquipamentoAntecedente(
-  personagem
-) {
-
-  if (
-    !fichaItensAntecedente ||
-    !fichaMoedasAntecedente
-  ) {
+function preencherEquipamentoAntecedente(personagem) {
+  if (!fichaItensAntecedente || !fichaMoedasAntecedente) {
     return;
   }
 
-  const equipamento =
-    personagem
-      .equipamentoAntecedente;
+  const equipamento = personagem.equipamentoAntecedente;
 
-  if (
-    !equipamento
-  ) {
+  if (!equipamento) {
+    fichaItensAntecedente.textContent = "";
 
-    fichaItensAntecedente
-      .textContent =
-      "";
-
-    fichaMoedasAntecedente
-      .textContent =
-      "";
+    fichaMoedasAntecedente.textContent = "";
 
     return;
-
   }
 
-  const itens =
-    equipamento.itens ??
-    [];
+  const itens = equipamento.itens ?? [];
 
-  fichaItensAntecedente
-    .textContent =
+  fichaItensAntecedente.textContent =
     itens.length > 0
       ? itens
-          .map(
-            function(item) {
+          .map(function (item) {
+            const nomeItem = obterNomeEquipamentoAntecedente(item.id);
 
-              const nomeItem =
-                obterNomeEquipamentoAntecedente(
-                  item.id
-                );
+            const quantidade = item.quantidade ?? 1;
 
-              const quantidade =
-                item.quantidade ??
-                1;
-
-              return quantidade > 1
-                ? `${quantidade}× ${nomeItem}`
-                : nomeItem;
-
-            }
-          )
-          .join(
-            ", "
-          )
+            return quantidade > 1 ? `${quantidade}× ${nomeItem}` : nomeItem;
+          })
+          .join(", ")
       : "Nenhum";
 
-  const quantidadeOuro =
-    equipamento
-      .moedas
-      ?.ouro ??
-    0;
+  const quantidadeOuro = equipamento.moedas?.ouro ?? 0;
 
-  fichaMoedasAntecedente
-    .textContent =
-    `${quantidadeOuro} peças de ouro`;
-
+  fichaMoedasAntecedente.textContent = `${quantidadeOuro} peças de ouro`;
 }
 
 function preencherEquipamentos(personagem) {
-  preencherEquipamentoAntecedente(
-    personagem
-  );
+  preencherEquipamentoAntecedente(personagem);
 
   const equipamentos = personagem.detalhes.equipamentos;
 
@@ -542,7 +616,7 @@ function obterTextoProficiencias(personagem) {
     ...(dadosClasse.proficiencias.armaduras || []),
     ...(dadosClasse.proficiencias.armas || []),
     ...(dadosClasse.proficiencias.armasEspecificas || []).map(obterNomeArma),
-    ...(dadosClasse.proficiencias.ferramentas || [])
+    ...(dadosClasse.proficiencias.ferramentas || []),
   ];
 
   return proficiencias.join(", ");
@@ -562,7 +636,7 @@ function preencherArmasAtaques(personagem) {
     return;
   }
 
-  armasParaMostrar.forEach(function(idArma) {
+  armasParaMostrar.forEach(function (idArma) {
     const resumo = obterResumoArma(personagem, idArma);
 
     if (resumo !== undefined) {
@@ -603,10 +677,7 @@ function obterArmasDoPersonagem(personagem) {
 // =====================================================
 
 function obterDadosMagia(idMagia) {
-  if (
-    window.bancoMagias === undefined ||
-    window.bancoMagias.magias === undefined
-  ) {
+  if (window.bancoMagias === undefined || window.bancoMagias.magias === undefined) {
     return undefined;
   }
 
@@ -630,7 +701,7 @@ function obterNomeAtributoConjuracao(idAtributo) {
     constituicao: "Constituição",
     inteligencia: "Inteligência",
     sabedoria: "Sabedoria",
-    carisma: "Carisma"
+    carisma: "Carisma",
   };
 
   return nomes[idAtributo] || idAtributo;
@@ -688,10 +759,7 @@ function preencherMagias(personagem) {
 
   lista.innerHTML = "";
 
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     lista.appendChild(criarItemTextoMagia("Este personagem não possui magias."));
     return;
   }
@@ -702,41 +770,27 @@ function preencherMagias(personagem) {
 
   const bonusAtaque = magias.bonusAtaqueMagico;
   const bonusAtaqueTexto =
-    bonusAtaque === "" || bonusAtaque === undefined
-      ? "-"
-      : formatarModificador(bonusAtaque);
+    bonusAtaque === "" || bonusAtaque === undefined ? "-" : formatarModificador(bonusAtaque);
 
   lista.appendChild(
     criarItemTextoMagia(
-      "Atributo de conjuração: " +
-      obterNomeAtributoConjuracao(magias.atributoConjuracao)
-    )
+      "Atributo de conjuração: " + obterNomeAtributoConjuracao(magias.atributoConjuracao),
+    ),
   );
 
-  lista.appendChild(
-    criarItemTextoMagia(
-      "CD das magias: " + (magias.cdSalvamento || "-")
-    )
-  );
+  lista.appendChild(criarItemTextoMagia("CD das magias: " + (magias.cdSalvamento || "-")));
 
-  lista.appendChild(
-    criarItemTextoMagia(
-      "Ataque mágico: " + bonusAtaqueTexto
-    )
-  );
+  lista.appendChild(criarItemTextoMagia("Ataque mágico: " + bonusAtaqueTexto));
 
-  if (
-    magias.espacosMagia !== undefined &&
-    magias.espacosMagia.nivel1 !== undefined
-  ) {
+  if (magias.espacosMagia !== undefined && magias.espacosMagia.nivel1 !== undefined) {
     lista.appendChild(
       criarItemTextoMagia(
         "Espaços de magia de 1º círculo: " +
-        magias.espacosMagia.nivel1.usados +
-        " / " +
-        magias.espacosMagia.nivel1.maximos +
-        " usados"
-      )
+          magias.espacosMagia.nivel1.usados +
+          " / " +
+          magias.espacosMagia.nivel1.maximos +
+          " usados",
+      ),
     );
   }
 
@@ -745,7 +799,7 @@ function preencherMagias(personagem) {
     tituloTruques.classList.add("titulo-lista-magias");
     lista.appendChild(tituloTruques);
 
-    truques.forEach(function(idMagia) {
+    truques.forEach(function (idMagia) {
       lista.appendChild(criarItemMagiaFicha(idMagia));
     });
   }
@@ -755,17 +809,14 @@ function preencherMagias(personagem) {
     tituloPreparadas.classList.add("titulo-lista-magias");
     lista.appendChild(tituloPreparadas);
 
-    preparadas.forEach(function(idMagia) {
+    preparadas.forEach(function (idMagia) {
       lista.appendChild(criarItemMagiaFicha(idMagia));
     });
   }
 }
 
 function obterTextoMagiasParaPdf(personagem) {
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     return "";
   }
 
@@ -778,48 +829,33 @@ function obterTextoMagiasParaPdf(personagem) {
     constituicao: "Constituição",
     inteligencia: "Inteligência",
     sabedoria: "Sabedoria",
-    carisma: "Carisma"
+    carisma: "Carisma",
   };
 
-  const nomeAtributo =
-    nomesAtributos[magias.atributoConjuracao] || magias.atributoConjuracao;
+  const nomeAtributo = nomesAtributos[magias.atributoConjuracao] || magias.atributoConjuracao;
 
   const bonusAtaque = magias.bonusAtaqueMagico;
   const bonusAtaqueTexto =
-    bonusAtaque === "" || bonusAtaque === undefined
-      ? "-"
-      : formatarModificador(bonusAtaque);
+    bonusAtaque === "" || bonusAtaque === undefined ? "-" : formatarModificador(bonusAtaque);
 
   linhas.push("Conjuração");
   linhas.push("Atributo: " + nomeAtributo);
   linhas.push("CD das magias: " + (magias.cdSalvamento || "-"));
   linhas.push("Ataque mágico: " + bonusAtaqueTexto);
 
-  if (
-    magias.espacosMagia !== undefined &&
-    magias.espacosMagia.nivel1 !== undefined
-  ) {
-    linhas.push(
-      "Espaços de 1º círculo: " +
-      magias.espacosMagia.nivel1.maximos
-    );
+  if (magias.espacosMagia !== undefined && magias.espacosMagia.nivel1 !== undefined) {
+    linhas.push("Espaços de 1º círculo: " + magias.espacosMagia.nivel1.maximos);
   }
 
   const truques = magias.truquesConhecidos || [];
   const preparadas = magias.magiasPreparadas || [];
 
   if (truques.length > 0) {
-    linhas.push(
-      "Truques: " +
-      truques.map(obterNomeMagia).join(", ")
-    );
+    linhas.push("Truques: " + truques.map(obterNomeMagia).join(", "));
   }
 
   if (preparadas.length > 0) {
-    linhas.push(
-      "Magias preparadas: " +
-      preparadas.map(obterNomeMagia).join(", ")
-    );
+    linhas.push("Magias preparadas: " + preparadas.map(obterNomeMagia).join(", "));
   }
 
   return linhas.join("\n");
@@ -856,9 +892,9 @@ function obterTextoNotasMagiaPdf(magia, personagem) {
   if (magia.exigeSalvaguarda === true) {
     partes.push(
       "Salv. " +
-      obterNomeAtributoConjuracao(magia.salvaguarda) +
-      " CD " +
-      personagem.magias.cdSalvamento
+        obterNomeAtributoConjuracao(magia.salvaguarda) +
+        " CD " +
+        personagem.magias.cdSalvamento,
     );
   }
 
@@ -866,10 +902,7 @@ function obterTextoNotasMagiaPdf(magia, personagem) {
 }
 
 function obterListaMagiasParaPdf(personagem) {
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     return [];
   }
 
@@ -880,10 +913,7 @@ function obterListaMagiasParaPdf(personagem) {
 }
 
 function preencherMagiasNoPdf(formulario, personagem) {
-  if (
-    personagem.magias === undefined ||
-    personagem.magias.atributoConjuracao === undefined
-  ) {
+  if (personagem.magias === undefined || personagem.magias.atributoConjuracao === undefined) {
     return;
   }
 
@@ -892,7 +922,7 @@ function preencherMagiasNoPdf(formulario, personagem) {
   definirTextoCampoPdf(
     formulario,
     camposFichaPdf.magiaAtributoConjuracao,
-    obterNomeAtributoConjuracao(magias.atributoConjuracao)
+    obterNomeAtributoConjuracao(magias.atributoConjuracao),
   );
 
   const valorAtributo = personagem.atributos[magias.atributoConjuracao];
@@ -901,38 +931,31 @@ function preencherMagiasNoPdf(formulario, personagem) {
     definirTextoCampoPdf(
       formulario,
       camposFichaPdf.magiaModificadorConjuracao,
-      formatarModificador(calcularModificador(valorAtributo))
+      formatarModificador(calcularModificador(valorAtributo)),
     );
   }
 
-  definirTextoCampoPdf(
-    formulario,
-    camposFichaPdf.magiaCdSalvamento,
-    magias.cdSalvamento || "-"
-  );
+  definirTextoCampoPdf(formulario, camposFichaPdf.magiaCdSalvamento, magias.cdSalvamento || "-");
 
   definirTextoCampoPdf(
     formulario,
     camposFichaPdf.magiaBonusAtaque,
     magias.bonusAtaqueMagico === "" || magias.bonusAtaqueMagico === undefined
       ? "-"
-      : formatarModificador(magias.bonusAtaqueMagico)
+      : formatarModificador(magias.bonusAtaqueMagico),
   );
 
-  if (
-    magias.espacosMagia !== undefined &&
-    magias.espacosMagia.nivel1 !== undefined
-  ) {
+  if (magias.espacosMagia !== undefined && magias.espacosMagia.nivel1 !== undefined) {
     definirTextoCampoPdf(
       formulario,
       camposFichaPdf.magiaEspacosNivel1Total,
-      magias.espacosMagia.nivel1.maximos
+      magias.espacosMagia.nivel1.maximos,
     );
   }
 
   const idsMagias = obterListaMagiasParaPdf(personagem);
 
-  idsMagias.forEach(function(idMagia, indice) {
+  idsMagias.forEach(function (idMagia, indice) {
     const linha = camposFichaPdf.linhasMagias[indice];
 
     if (linha === undefined) {
@@ -945,21 +968,13 @@ function preencherMagiasNoPdf(formulario, personagem) {
       return;
     }
 
-    definirTextoCampoPdf(
-      formulario,
-      linha.nivel,
-      magia.nivel === 0 ? "0" : magia.nivel
-    );
+    definirTextoCampoPdf(formulario, linha.nivel, magia.nivel === 0 ? "0" : magia.nivel);
 
     definirTextoCampoPdf(formulario, linha.nome, magia.nome);
     definirTextoCampoPdf(formulario, linha.tempo, magia.tempoConjuracao);
     definirTextoCampoPdf(formulario, linha.alcance, magia.alcance);
 
-    definirTextoCampoPdf(
-      formulario,
-      linha.notas,
-      obterTextoNotasMagiaPdf(magia, personagem)
-    );
+    definirTextoCampoPdf(formulario, linha.notas, obterTextoNotasMagiaPdf(magia, personagem));
   });
 }
 
@@ -996,7 +1011,7 @@ function preencherTalentos(personagem) {
     return;
   }
 
-  personagem.talentos.forEach(function(idTalento) {
+  personagem.talentos.forEach(function (idTalento) {
     const item = criarItemTalentoFicha(idTalento);
 
     if (item !== undefined) {
@@ -1023,7 +1038,7 @@ function criarItemTalentoFicha(idTalento) {
 
   botao.appendChild(nome);
 
-  botao.addEventListener("click", function(evento) {
+  botao.addEventListener("click", function (evento) {
     evento.stopPropagation();
 
     if (typeof window.abrirPopoverDetalhe === "function") {
@@ -1040,7 +1055,7 @@ function obterTextoTalentosParaPdf(personagem) {
     return "";
   }
 
-  const nomesTalentos = personagem.talentos.map(function(idTalento) {
+  const nomesTalentos = personagem.talentos.map(function (idTalento) {
     return obterNomeTalento(idTalento);
   });
 
@@ -1054,7 +1069,7 @@ function obterTextoTalentosParaPdf(personagem) {
 function atualizarMarcadoresPericias(personagem) {
   const linhasPericia = document.querySelectorAll("[data-pericia]");
 
-  linhasPericia.forEach(function(linha) {
+  linhasPericia.forEach(function (linha) {
     const idPericia = linha.dataset.pericia;
 
     linha.classList.remove("proficiente");
@@ -1073,7 +1088,7 @@ function atualizarMarcadoresPericias(personagem) {
 function atualizarMarcadoresSalvaguardas(personagem) {
   const linhasSalvaguarda = document.querySelectorAll("[data-salvaguarda]");
 
-  linhasSalvaguarda.forEach(function(linha) {
+  linhasSalvaguarda.forEach(function (linha) {
     linha.classList.remove("proficiente");
   });
 
@@ -1083,7 +1098,7 @@ function atualizarMarcadoresSalvaguardas(personagem) {
     return;
   }
 
-  linhasSalvaguarda.forEach(function(linha) {
+  linhasSalvaguarda.forEach(function (linha) {
     const idSalvaguarda = linha.dataset.salvaguarda;
 
     if (dadosClasse.salvaguardas.includes(idSalvaguarda)) {
@@ -1122,102 +1137,40 @@ function obterModificadorFormatado(personagem, idAtributo) {
 
 function obterTextoEquipamento(personagem) {
   const equipamentos = personagem.detalhes.equipamentos;
-  const equipamentoAntecedente =
-    personagem.equipamentoAntecedente;
+  const equipamentoAntecedente = personagem.equipamentoAntecedente;
 
-  if (
-    equipamentos === undefined &&
-    !equipamentoAntecedente
-  ) {
+  if (equipamentos === undefined && !equipamentoAntecedente) {
     return "";
   }
 
   const linhas = [];
 
-  if (
-    equipamentoAntecedente
-  ) {
+  if (equipamentoAntecedente) {
+    const itensAntecedente = equipamentoAntecedente.itens ?? [];
 
-    const itensAntecedente =
-      equipamentoAntecedente
-        .itens ??
-      [];
+    itensAntecedente.forEach(function (item) {
+      const nomeItem = obterNomeEquipamentoAntecedente(item.id);
 
-    itensAntecedente.forEach(
-      function(item) {
+      const quantidade = item.quantidade ?? 1;
 
-        const nomeItem =
-          obterNomeEquipamentoAntecedente(
-            item.id
-          );
+      linhas.push(quantidade > 1 ? `${quantidade}× ${nomeItem}` : nomeItem);
+    });
 
-        const quantidade =
-          item.quantidade ??
-          1;
+    const quantidadeOuro = equipamentoAntecedente.moedas?.ouro ?? 0;
 
-        linhas.push(
-          quantidade > 1
-            ? `${quantidade}× ${nomeItem}`
-            : nomeItem
-        );
-
-      }
-    );
-
-    const quantidadeOuro =
-      equipamentoAntecedente
-        .moedas
-        ?.ouro ??
-      0;
-
-    linhas.push(
-      `${quantidadeOuro} peças de ouro`
-    );
-
+    linhas.push(`${quantidadeOuro} peças de ouro`);
   }
 
-  if (
-    equipamentos !==
-      undefined
-  ) {
+  if (equipamentos !== undefined) {
+    linhas.push("Armadura: " + obterNomeArmadura(equipamentos.armadura));
 
-    linhas.push(
-      "Armadura: " +
-      obterNomeArmadura(
-        equipamentos.armadura
-      )
-    );
+    linhas.push("Arma principal: " + obterNomeArma(equipamentos.armaPrincipal));
 
-    linhas.push(
-      "Arma principal: " +
-      obterNomeArma(
-        equipamentos.armaPrincipal
-      )
-    );
-
-    if (
-      equipamentos.itemSecundario ===
-        "armaSecundaria"
-    ) {
-
-      linhas.push(
-        "Arma secundária: " +
-        obterNomeArma(
-          equipamentos.armaSecundaria
-        )
-      );
-
+    if (equipamentos.itemSecundario === "armaSecundaria") {
+      linhas.push("Arma secundária: " + obterNomeArma(equipamentos.armaSecundaria));
     } else {
-
-      linhas.push(
-        "Item secundário: " +
-        obterNomeItemSecundario(
-          equipamentos.itemSecundario
-        )
-      );
-
+      linhas.push("Item secundário: " + obterNomeItemSecundario(equipamentos.itemSecundario));
     }
-
   }
 
   return linhas.join("\n");
@@ -1239,13 +1192,13 @@ function marcarCheckboxesPersonagemPdf(formulario, personagem) {
   const dadosClasse = window.bancoClasses[personagem.classeId];
 
   if (dadosClasse !== undefined && dadosClasse.salvaguardas !== undefined) {
-    dadosClasse.salvaguardas.forEach(function(idSalvaguarda) {
+    dadosClasse.salvaguardas.forEach(function (idSalvaguarda) {
       marcarCheckboxPdf(formulario, camposCheckboxPdf.salvaguardas[idSalvaguarda]);
     });
   }
 
   if (personagem.pericias !== undefined) {
-    personagem.pericias.forEach(function(idPericia) {
+    personagem.pericias.forEach(function (idPericia) {
       marcarCheckboxPdf(formulario, camposCheckboxPdf.pericias[idPericia]);
     });
   }
@@ -1278,7 +1231,7 @@ function marcarCheckboxesPersonagemPdf(formulario, personagem) {
 function preencherArmasPdf(formulario, personagem) {
   const armas = obterArmasDoPersonagem(personagem);
 
-  armas.forEach(function(idArma, indice) {
+  armas.forEach(function (idArma, indice) {
     const linhaPdf = linhasArmasPdf[indice];
 
     if (linhaPdf === undefined) {
@@ -1335,19 +1288,55 @@ async function baixarPdfFichaEditavel(personagem) {
 
   preencherCampoTexto(formulario, camposFichaPdf.forcaValor, personagem.atributos.forca);
   preencherCampoTexto(formulario, camposFichaPdf.destrezaValor, personagem.atributos.destreza);
-  preencherCampoTexto(formulario, camposFichaPdf.constituicaoValor, personagem.atributos.constituicao);
-  preencherCampoTexto(formulario, camposFichaPdf.inteligenciaValor, personagem.atributos.inteligencia);
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.constituicaoValor,
+    personagem.atributos.constituicao,
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.inteligenciaValor,
+    personagem.atributos.inteligencia,
+  );
   preencherCampoTexto(formulario, camposFichaPdf.sabedoriaValor, personagem.atributos.sabedoria);
   preencherCampoTexto(formulario, camposFichaPdf.carismaValor, personagem.atributos.carisma);
 
-  preencherCampoTexto(formulario, camposFichaPdf.forcaMod, obterModificadorFormatado(personagem, "forca"));
-  preencherCampoTexto(formulario, camposFichaPdf.destrezaMod, obterModificadorFormatado(personagem, "destreza"));
-  preencherCampoTexto(formulario, camposFichaPdf.constituicaoMod, obterModificadorFormatado(personagem, "constituicao"));
-  preencherCampoTexto(formulario, camposFichaPdf.inteligenciaMod, obterModificadorFormatado(personagem, "inteligencia"));
-  preencherCampoTexto(formulario, camposFichaPdf.sabedoriaMod, obterModificadorFormatado(personagem, "sabedoria"));
-  preencherCampoTexto(formulario, camposFichaPdf.carismaMod, obterModificadorFormatado(personagem, "carisma"));
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.forcaMod,
+    obterModificadorFormatado(personagem, "forca"),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.destrezaMod,
+    obterModificadorFormatado(personagem, "destreza"),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.constituicaoMod,
+    obterModificadorFormatado(personagem, "constituicao"),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.inteligenciaMod,
+    obterModificadorFormatado(personagem, "inteligencia"),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.sabedoriaMod,
+    obterModificadorFormatado(personagem, "sabedoria"),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.carismaMod,
+    obterModificadorFormatado(personagem, "carisma"),
+  );
 
-  preencherCampoTexto(formulario, camposFichaPdf.classeArmadura, calcularClasseArmadura(personagem));
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.classeArmadura,
+    calcularClasseArmadura(personagem),
+  );
   preencherCampoTexto(formulario, camposFichaPdf.pvAtual, pontosDeVida.atuais);
   preencherCampoTexto(formulario, camposFichaPdf.pvTemporario, pontosDeVida.temporarios);
   preencherCampoTexto(formulario, camposFichaPdf.pvMaximo, pontosDeVida.maximo);
@@ -1358,19 +1347,35 @@ async function baixarPdfFichaEditavel(personagem) {
   preencherCampoTexto(formulario, camposFichaPdf.iniciativa, calcularIniciativa(personagem));
   preencherCampoTexto(formulario, camposFichaPdf.velocidade, obterVelocidade(personagem));
   preencherCampoTexto(formulario, camposFichaPdf.tamanho, obterTamanho(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.percepcaoPassiva, calcularPercepcaoPassiva(personagem));
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.percepcaoPassiva,
+    calcularPercepcaoPassiva(personagem),
+  );
 
   preencherCampoTexto(formulario, camposFichaPdf.idiomas, (personagem.idiomas || []).join(", "));
   preencherCampoTexto(formulario, camposFichaPdf.equipamento, obterTextoEquipamento(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.equipamentosArmas, obterTextoEquipamento(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.equipamentosFerramentas, obterTextoProficiencias(personagem));
-  preencherCampoTexto(formulario, camposFichaPdf.caracteristicasClasse1, obterTextoHabilidadesParaPdf(personagem));
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.equipamentosArmas,
+    obterTextoEquipamento(personagem),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.equipamentosFerramentas,
+    obterTextoProficiencias(personagem),
+  );
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.caracteristicasClasse1,
+    obterTextoHabilidadesParaPdf(personagem),
+  );
   preencherCampoTexto(formulario, camposFichaPdf.talentos, obterTextoTalentosParaPdf(personagem));
 
   adicionarTextoAoCampoPdf(
     formulario,
     camposFichaPdf.caracteristicasClasse2,
-    obterTextoEspecializacoesParaPdf(personagem)
+    obterTextoEspecializacoesParaPdf(personagem),
   );
 
   preencherMagiasNoPdf(formulario, personagem);
@@ -1379,9 +1384,13 @@ async function baixarPdfFichaEditavel(personagem) {
   preencherCampoTexto(
     formulario,
     camposFichaPdf.historiaPersonalidade,
-    personagem.detalhes.historia || personagem.detalhes.personalidade || ""
+    personagem.detalhes.historia || personagem.detalhes.personalidade || "",
   );
-  preencherCampoTexto(formulario, camposFichaPdf.alinhamento, personagem.detalhes.alinhamento || "");
+  preencherCampoTexto(
+    formulario,
+    camposFichaPdf.alinhamento,
+    personagem.detalhes.alinhamento || "",
+  );
 
   preencherArmasPdf(formulario, personagem);
   marcarCheckboxesPersonagemPdf(formulario, personagem);
@@ -1405,19 +1414,19 @@ async function baixarPdfFichaEditavel(personagem) {
 // =====================================================
 
 if (botaoImprimirFicha !== null) {
-  botaoImprimirFicha.addEventListener("click", function() {
+  botaoImprimirFicha.addEventListener("click", function () {
     window.print();
   });
 }
 
 if (botaoBaixarPdfEditavel !== null) {
-  botaoBaixarPdfEditavel.addEventListener("click", function() {
+  botaoBaixarPdfEditavel.addEventListener("click", function () {
     if (personagemEncontrado === undefined) {
       alert("Personagem não encontrado. Não foi possível gerar o PDF.");
       return;
     }
 
-    baixarPdfFichaEditavel(personagemEncontrado).catch(function(erro) {
+    baixarPdfFichaEditavel(personagemEncontrado).catch(function (erro) {
       console.error("Erro ao baixar PDF editável:", erro);
     });
   });

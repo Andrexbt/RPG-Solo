@@ -1,22 +1,16 @@
 "use strict";
 
 window.bancoNpcs = {
-
   aFuga: {
-
     ned: {
       id: "ned",
       nome: "Ned",
       tipo: "aliado",
 
       avatar: {
+        imagem: "Imagens/Avatares/npcs/ned.webp",
 
-        imagem:
-          "Imagens/Avatares/npcs/ned.webp",
-
-        frame:
-          "Imagens/Avatares/frame/frame-08.webp"
-
+        frame: "Imagens/Avatares/frame/frame-08.webp",
       },
 
       atributos: {
@@ -25,13 +19,11 @@ window.bancoNpcs = {
         constituicao: 10,
         inteligencia: 10,
         sabedoria: 11,
-        carisma: 14
+        carisma: 14,
       },
 
       bonusProficiencia: 2,
-      pericias: [
-        "persuasao"
-      ],
+      pericias: ["persuasao"],
       salvaguardas: [],
 
       combate: {
@@ -39,12 +31,11 @@ window.bancoNpcs = {
 
         pontosDeVida: {
           atuais: 9,
-          maximo: 9
-        }
+          maximo: 9,
+        },
       },
 
       ataques: [
-
         {
           id: "espadaCurta",
           nome: "Espada curta",
@@ -54,27 +45,25 @@ window.bancoNpcs = {
             tipo: "criatura",
 
             alcance: {
-              normal: 1
+              normal: 1,
             },
 
-            area: null
+            area: null,
           },
 
           bonusAtaque: 3,
 
           dano: {
             gruposDeDados: [
-
               {
                 quantidade: 1,
-                numeroDeFaces: 6
-              }
-
+                numeroDeFaces: 6,
+              },
             ],
 
             modificador: 1,
-            tipo: "perfurante"
-          }
+            tipo: "perfurante",
+          },
         },
 
         {
@@ -87,30 +76,27 @@ window.bancoNpcs = {
 
             alcance: {
               normal: 16,
-              longo: 64
+              longo: 64,
             },
 
-            area: null
+            area: null,
           },
 
           bonusAtaque: 3,
 
           dano: {
             gruposDeDados: [
-
               {
                 quantidade: 1,
-                numeroDeFaces: 6
-              }
-
+                numeroDeFaces: 6,
+              },
             ],
 
             modificador: 1,
-            tipo: "perfurante"
-          }
-        }
-
-      ]
+            tipo: "perfurante",
+          },
+        },
+      ],
     },
 
     guardaConde: {
@@ -119,13 +105,9 @@ window.bancoNpcs = {
       tipo: "inimigo",
 
       avatar: {
+        imagem: "Imagens/Avatares/npcs/guardaConde.webp",
 
-        imagem:
-          "Imagens/Avatares/npcs/guardaConde.webp",
-
-        frame:
-          "Imagens/Avatares/frame/frame-07.webp"
-
+        frame: "Imagens/Avatares/frame/frame-07.webp",
       },
 
       atributos: {
@@ -134,14 +116,11 @@ window.bancoNpcs = {
         constituicao: 12,
         inteligencia: 10,
         sabedoria: 11,
-        carisma: 10
+        carisma: 10,
       },
 
       bonusProficiencia: 2,
-      pericias: [
-        "atletismo",
-        "percepcao"
-      ],
+      pericias: ["atletismo", "percepcao"],
       salvaguardas: [],
 
       combate: {
@@ -149,12 +128,11 @@ window.bancoNpcs = {
 
         pontosDeVida: {
           atuais: 11,
-          maximo: 11
-        }
+          maximo: 11,
+        },
       },
 
       ataques: [
-
         {
           id: "espadaCurta",
           nome: "Espada curta",
@@ -164,27 +142,25 @@ window.bancoNpcs = {
             tipo: "criatura",
 
             alcance: {
-              normal: 1
+              normal: 1,
             },
 
-            area: null
+            area: null,
           },
 
           bonusAtaque: 3,
 
           dano: {
             gruposDeDados: [
-
               {
                 quantidade: 1,
-                numeroDeFaces: 6
-              }
-
+                numeroDeFaces: 6,
+              },
             ],
 
             modificador: 1,
-            tipo: "perfurante"
-          }
+            tipo: "perfurante",
+          },
         },
 
         {
@@ -197,30 +173,27 @@ window.bancoNpcs = {
 
             alcance: {
               normal: 16,
-              longo: 64
+              longo: 64,
             },
 
-            area: null
+            area: null,
           },
 
           bonusAtaque: 3,
 
           dano: {
             gruposDeDados: [
-
               {
                 quantidade: 1,
-                numeroDeFaces: 6
-              }
-
+                numeroDeFaces: 6,
+              },
             ],
 
             modificador: 1,
-            tipo: "perfurante"
-          }
-        }
-
-      ]
+            tipo: "perfurante",
+          },
+        },
+      ],
     },
 
     lagartoBronze: {
@@ -229,13 +202,9 @@ window.bancoNpcs = {
       tipo: "inimigo",
 
       avatar: {
+        imagem: "Imagens/Avatares/npcs/lagartoBronze.webp",
 
-        imagem:
-          "Imagens/Avatares/npcs/lagartoBronze.webp",
-
-        frame:
-          "Imagens/Avatares/frame/frame-01.webp"
-
+        frame: "Imagens/Avatares/frame/frame-01.webp",
       },
 
       atributos: {
@@ -244,14 +213,11 @@ window.bancoNpcs = {
         constituicao: 14,
         inteligencia: 10,
         sabedoria: 12,
-        carisma: 10
+        carisma: 10,
       },
 
       bonusProficiencia: 2,
-      pericias: [
-        "intimidacao",
-        "percepcao"
-      ],
+      pericias: ["intimidacao", "percepcao"],
       salvaguardas: [],
 
       combate: {
@@ -259,12 +225,11 @@ window.bancoNpcs = {
 
         pontosDeVida: {
           atuais: 13,
-          maximo: 13
-        }
+          maximo: 13,
+        },
       },
 
       ataques: [
-
         {
           id: "lanca",
           nome: "Lança",
@@ -274,27 +239,25 @@ window.bancoNpcs = {
             tipo: "criatura",
 
             alcance: {
-              normal: 1
+              normal: 1,
             },
 
-            area: null
+            area: null,
           },
 
           bonusAtaque: 4,
 
           dano: {
             gruposDeDados: [
-
               {
                 quantidade: 1,
-                numeroDeFaces: 6
-              }
-
+                numeroDeFaces: 6,
+              },
             ],
 
             modificador: 2,
-            tipo: "perfurante"
-          }
+            tipo: "perfurante",
+          },
         },
 
         {
@@ -307,32 +270,27 @@ window.bancoNpcs = {
 
             alcance: {
               normal: 16,
-              longo: 64
+              longo: 64,
             },
 
-            area: null
+            area: null,
           },
 
           bonusAtaque: 3,
 
           dano: {
             gruposDeDados: [
-
               {
                 quantidade: 1,
-                numeroDeFaces: 8
-              }
-
+                numeroDeFaces: 8,
+              },
             ],
 
             modificador: 1,
-            tipo: "perfurante"
-          }
-        }
-
-      ]
-    }
-
-  }
-
+            tipo: "perfurante",
+          },
+        },
+      ],
+    },
+  },
 };

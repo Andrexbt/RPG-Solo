@@ -1,256 +1,147 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projeto RPG Solo</title>
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="home.css" />
+    <script src="transicoes-paginas.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projeto RPG Solo</title>
-  <link rel="stylesheet" href="tema.css">
-  <link rel="stylesheet" href="home.css">
-  <script src="transicoes-paginas.js"></script>
-</head>
-
-<body>
-
-  <header class="cabecalho-site">
-    <a class="marca" href="index.html">
-      <span class="marca-simbolo">✦</span>
-      <span>Projeto RPG Solo</span>
-    </a>
-
-    <nav
-      class="menu-principal"
-      aria-label="Navegação principal">
-
-      <a href="#inicio">
-        Início
+  <body>
+    <header class="cabecalho-site">
+      <a class="marca" href="index.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Projeto RPG Solo</span>
       </a>
 
-      <a href="criacao-personagem.html">
-        Criar personagem
-      </a>
+      <nav class="menu-principal" aria-label="Navegação principal">
+        <a href="#inicio"> Início </a>
 
-      <a href="meus-personagens.html">
-        Meus personagens
-      </a>
+        <a href="criacao-personagem.html"> Criar personagem </a>
 
-      <a href="aventuras-disponiveis.html">
-        Aventuras
-      </a>
+        <a href="meus-personagens.html"> Meus personagens </a>
 
-    </nav>
-  </header>
+        <a href="aventuras-disponiveis.html"> Aventuras </a>
+      </nav>
+    </header>
 
-  <main
-    id="inicio"
-    class="home-page">
+    <main id="inicio" class="home-page">
+      <section class="apresentacao-home" aria-label="Destaques do RPG Solo">
+        <section id="destaques" class="vitrine-home" aria-labelledby="tituloDestaque">
+          <div class="vitrine-conteudo">
+            <p id="etiquetaDestaque" class="vitrine-etiqueta">Aventura em destaque</p>
 
-    <section
-      class="apresentacao-home"
-      aria-label="Destaques do RPG Solo">
+            <h2 id="tituloDestaque">A Fuga</h2>
 
-      <section
-        id="destaques"
-        class="vitrine-home"
-        aria-labelledby="tituloDestaque">
+            <p id="textoDestaque">
+              Encontre uma maneira de escapar da cidade enquanto diferentes forças disputam o
+              controle das ruas.
+            </p>
 
-        <div class="vitrine-conteudo">
-
-          <p
-            id="etiquetaDestaque"
-            class="vitrine-etiqueta">
-            Aventura em destaque
-          </p>
-
-          <h2 id="tituloDestaque">
-            A Fuga
-          </h2>
-
-          <p id="textoDestaque">
-            Encontre uma maneira de escapar da cidade enquanto
-            diferentes forças disputam o controle das ruas.
-          </p>
-
-          <a
-            id="linkDestaque"
-            class="botao botao-principal"
-            href="aventuras-disponiveis.html">
-            Ver aventura
-          </a>
-
-        </div>
-
-        <div
-          class="vitrine-controles"
-          aria-label="Controles dos destaques">
-
-          <button
-            id="botaoDestaqueAnterior"
-            type="button"
-            aria-label="Mostrar destaque anterior">
-            ←
-          </button>
-
-          <div
-            id="indicadoresDestaque"
-            class="indicadores-destaque"
-            aria-label="Posição do destaque">
-
-            <button
-              class="indicador-destaque indicador-ativo"
-              type="button"
-              aria-label="Mostrar primeiro destaque"
-              aria-current="true">
-            </button>
-
-            <button
-              class="indicador-destaque"
-              type="button"
-              aria-label="Mostrar segundo destaque">
-            </button>
-
-            <button
-              class="indicador-destaque"
-              type="button"
-              aria-label="Mostrar terceiro destaque">
-            </button>
-
+            <a id="linkDestaque" class="botao botao-principal" href="aventuras-disponiveis.html">
+              Ver aventura
+            </a>
           </div>
 
-          <button
-            id="botaoProximoDestaque"
-            type="button"
-            aria-label="Mostrar próximo destaque">
-            →
-          </button>
+          <div class="vitrine-controles" aria-label="Controles dos destaques">
+            <button id="botaoDestaqueAnterior" type="button" aria-label="Mostrar destaque anterior">
+              ←
+            </button>
 
-        </div>
+            <div
+              id="indicadoresDestaque"
+              class="indicadores-destaque"
+              aria-label="Posição do destaque"
+            >
+              <button
+                class="indicador-destaque indicador-ativo"
+                type="button"
+                aria-label="Mostrar primeiro destaque"
+                aria-current="true"
+              ></button>
 
+              <button
+                class="indicador-destaque"
+                type="button"
+                aria-label="Mostrar segundo destaque"
+              ></button>
+
+              <button
+                class="indicador-destaque"
+                type="button"
+                aria-label="Mostrar terceiro destaque"
+              ></button>
+            </div>
+
+            <button id="botaoProximoDestaque" type="button" aria-label="Mostrar próximo destaque">
+              →
+            </button>
+          </div>
+        </section>
+
+        <aside class="destaque-lateral" aria-labelledby="tituloDestaqueLateral">
+          <p class="destaque-lateral-etiqueta">Seus personagens</p>
+
+          <h2 id="tituloDestaqueLateral">Continue sua jornada</h2>
+
+          <p>Consulte seus personagens salvos e escolha quem participará da próxima aventura.</p>
+
+          <a class="botao botao-secundario" href="meus-personagens.html"> Ver personagens </a>
+        </aside>
       </section>
 
-      <aside
-        class="destaque-lateral"
-        aria-labelledby="tituloDestaqueLateral">
+      <section id="recursos" class="recursos-home" aria-labelledby="tituloRecursos">
+        <header class="cabecalho-recursos">
+          <h2 id="tituloRecursos">O que você deseja fazer?</h2>
+        </header>
 
-        <p class="destaque-lateral-etiqueta">
-          Seus personagens
-        </p>
+        <div class="grade-recursos">
+          <article class="card-recurso">
+            <h3>Criar personagem</h3>
 
-        <h2 id="tituloDestaqueLateral">
-          Continue sua jornada
-        </h2>
+            <p>
+              Monte um novo personagem escolhendo atributos, espécie, classe, habilidades e
+              equipamentos.
+            </p>
 
-        <p>
-          Consulte seus personagens salvos e escolha quem
-          participará da próxima aventura.
-        </p>
+            <a class="botao botao-secundario" href="criacao-personagem.html"> Criar personagem </a>
+          </article>
 
-        <a
-          class="botao botao-secundario"
-          href="meus-personagens.html">
-          Ver personagens
-        </a>
+          <article class="card-recurso">
+            <h3>Meus personagens</h3>
 
-      </aside>
+            <p>
+              Consulte seus personagens salvos, veja suas fichas e escolha quem participará de uma
+              aventura.
+            </p>
 
-    </section>
+            <a class="botao botao-secundario" href="meus-personagens.html"> Ver personagens </a>
+          </article>
 
-    <section
-      id="recursos"
-      class="recursos-home"
-      aria-labelledby="tituloRecursos">
+          <article class="card-recurso">
+            <h3>Aventuras</h3>
 
-      <header class="cabecalho-recursos">
+            <p>Conheça as histórias disponíveis e selecione um personagem para começar a jogar.</p>
 
-        <h2 id="tituloRecursos">
-          O que você deseja fazer?
-        </h2>
+            <a class="botao botao-secundario" href="aventuras-disponiveis.html"> Ver aventuras </a>
+          </article>
+        </div>
+      </section>
+    </main>
 
-      </header>
-
-      <div class="grade-recursos">
-
-        <article class="card-recurso">
-
-
-          <h3>
-            Criar personagem
-          </h3>
-
-          <p>
-            Monte um novo personagem escolhendo atributos,
-            espécie, classe, habilidades e equipamentos.
-          </p>
-
-          <a
-            class="botao botao-secundario"
-            href="criacao-personagem.html">
-            Criar personagem
-          </a>
-
-        </article>
-
-        <article class="card-recurso">
-
-          
-
-          <h3>
-            Meus personagens
-          </h3>
-
-          <p>
-            Consulte seus personagens salvos, veja suas fichas
-            e escolha quem participará de uma aventura.
-          </p>
-
-          <a
-            class="botao botao-secundario"
-            href="meus-personagens.html">
-            Ver personagens
-          </a>
-
-        </article>
-
-        <article class="card-recurso">
-
-          
-
-          <h3>
-            Aventuras
-          </h3>
-
-          <p>
-            Conheça as histórias disponíveis e selecione um
-            personagem para começar a jogar.
-          </p>
-
-          <a
-            class="botao botao-secundario"
-            href="aventuras-disponiveis.html">
-            Ver aventuras
-          </a>
-
-        </article>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <footer class="rodape-site">
-    <small lang="en">
-      This work includes material from the System Reference Document 5.2.1
-      (“SRD 5.2.1”) by Wizards of the Coast LLC, available at
-      <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1
-      is licensed under the
-      <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
-        Creative Commons Attribution 4.0 International License
-      </a>.
-    </small>
-  </footer>
-
-</body>
-
+    <footer class="rodape-site">
+      <small lang="en">
+        This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by
+        Wizards of the Coast LLC, available at
+        <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1 is licensed under
+        the
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
+          Creative Commons Attribution 4.0 International License </a
+        >.
+      </small>
+    </footer>
+  </body>
 </html>

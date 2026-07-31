@@ -38,21 +38,15 @@ function calcularModificador(valor) {
 }
 
 function calcularClasseArmadura(personagem) {
+  const classeArmaduraSalva = personagem?.combate?.classeArmadura;
 
-  const classeArmaduraSalva = personagem?.combate ?.classeArmadura;
-
-    if (
-      classeArmaduraSalva !==
-        undefined &&
-      classeArmaduraSalva !==
-        null &&
-      classeArmaduraSalva !==
-        ""
-    ) {
-
-      return classeArmaduraSalva;
-
-    }
+  if (
+    classeArmaduraSalva !== undefined &&
+    classeArmaduraSalva !== null &&
+    classeArmaduraSalva !== ""
+  ) {
+    return classeArmaduraSalva;
+  }
 
   const equipamentos = personagem?.detalhes?.equipamentos;
   const atributos = personagem?.atributos;
@@ -90,11 +84,9 @@ function calcularClasseArmadura(personagem) {
 }
 
 function obterPontosDeVidaMaximos(personagem) {
-
-  const pontosDeVida = personagem?.combate ?.pontosDeVida ?? personagem?.detalhes ?.pontosDeVida;
+  const pontosDeVida = personagem?.combate?.pontosDeVida ?? personagem?.detalhes?.pontosDeVida;
 
   return textoOuTraco(pontosDeVida?.maximo);
-
 }
 
 function criarParagrafoComRotulo(rotulo, valor) {
@@ -120,80 +112,40 @@ function criarValorResumo(rotulo, valor) {
   return caixa;
 }
 
-function criarAvatarCardPersonagem(
-  personagem
-) {
+function criarAvatarCardPersonagem(personagem) {
+  const avatar = personagem?.avatar;
 
-  const avatar =
-    personagem?.avatar;
-
-  if (
-    avatar === undefined ||
-    avatar.imagem === undefined ||
-    avatar.frame === undefined
-  ) {
-
+  if (avatar === undefined || avatar.imagem === undefined || avatar.frame === undefined) {
     return null;
-
   }
 
-  const avatarCard =
-    document.createElement(
-      "div"
-    );
+  const avatarCard = document.createElement("div");
 
-  avatarCard.classList.add(
-    "avatar-card-personagem"
-  );
+  avatarCard.classList.add("avatar-card-personagem");
 
-  const imagemAvatar =
-    document.createElement(
-      "img"
-    );
+  const imagemAvatar = document.createElement("img");
 
-  imagemAvatar.classList.add(
-    "imagem-avatar-card"
-  );
+  imagemAvatar.classList.add("imagem-avatar-card");
 
-  imagemAvatar.src =
-    avatar.imagem;
+  imagemAvatar.src = avatar.imagem;
 
-  imagemAvatar.alt =
-    "Avatar de " +
-    textoOuTraco(
-      personagem?.detalhes?.nome
-    );
+  imagemAvatar.alt = "Avatar de " + textoOuTraco(personagem?.detalhes?.nome);
 
-  imagemAvatar.loading =
-    "lazy";
+  imagemAvatar.loading = "lazy";
 
-  const frameAvatar =
-    document.createElement(
-      "img"
-    );
+  const frameAvatar = document.createElement("img");
 
-  frameAvatar.classList.add(
-    "frame-avatar-card"
-  );
+  frameAvatar.classList.add("frame-avatar-card");
 
-  frameAvatar.src =
-    avatar.frame;
+  frameAvatar.src = avatar.frame;
 
-  frameAvatar.alt =
-    "";
+  frameAvatar.alt = "";
 
-  frameAvatar.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+  frameAvatar.setAttribute("aria-hidden", "true");
 
-  avatarCard.append(
-    imagemAvatar,
-    frameAvatar
-  );
+  avatarCard.append(imagemAvatar, frameAvatar);
 
   return avatarCard;
-
 }
 
 function montarTelaPersonagens() {
@@ -212,26 +164,17 @@ function montarTelaPersonagens() {
     return;
   }
 
-  personagens.forEach(function(personagem) {
+  personagens.forEach(function (personagem) {
     const card = document.createElement("article");
     card.classList.add("card-personagem");
 
-    const avatarCard =
-  criarAvatarCardPersonagem(
-    personagem
-  );
+    const avatarCard = criarAvatarCardPersonagem(personagem);
 
-if (avatarCard !== null) {
+    if (avatarCard !== null) {
+      card.classList.add("com-avatar");
 
-  card.classList.add(
-    "com-avatar"
-  );
-
-  card.appendChild(
-    avatarCard
-  );
-
-}
+      card.appendChild(avatarCard);
+    }
 
     const cabecalho = document.createElement("div");
     cabecalho.classList.add("card-personagem-cabecalho");
@@ -249,14 +192,14 @@ if (avatarCard !== null) {
     informacoes.classList.add("card-personagem-info");
     informacoes.append(
       criarParagrafoComRotulo("Espécie", personagem?.especie),
-      criarParagrafoComRotulo("Antecedente", personagem?.antecedente)
+      criarParagrafoComRotulo("Antecedente", personagem?.antecedente),
     );
 
     const valores = document.createElement("div");
     valores.classList.add("card-personagem-valores");
     valores.append(
       criarValorResumo("CA", calcularClasseArmadura(personagem)),
-      criarValorResumo("PV", obterPontosDeVidaMaximos(personagem))
+      criarValorResumo("PV", obterPontosDeVidaMaximos(personagem)),
     );
 
     const acoes = document.createElement("div");
@@ -271,7 +214,7 @@ if (avatarCard !== null) {
     botaoExcluir.type = "button";
     botaoExcluir.classList.add("botao-excluir");
     botaoExcluir.textContent = "Excluir";
-    botaoExcluir.addEventListener("click", function() {
+    botaoExcluir.addEventListener("click", function () {
       confirmarExclusaoPersonagem(personagem.id, personagem?.detalhes?.nome);
     });
 
@@ -282,7 +225,7 @@ if (avatarCard !== null) {
 }
 
 function excluirPersonagem(idPersonagem) {
-  const personagensAtualizados = carregarPersonagensSalvos().filter(function(personagem) {
+  const personagensAtualizados = carregarPersonagensSalvos().filter(function (personagem) {
     return personagem.id !== idPersonagem;
   });
 
@@ -292,7 +235,7 @@ function excluirPersonagem(idPersonagem) {
 
 function confirmarExclusaoPersonagem(idPersonagem, nomePersonagem) {
   const confirmou = window.confirm(
-    "Tem certeza que deseja excluir " + textoOuTraco(nomePersonagem) + "?"
+    "Tem certeza que deseja excluir " + textoOuTraco(nomePersonagem) + "?",
   );
 
   if (confirmou === true) {

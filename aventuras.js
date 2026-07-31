@@ -1,111 +1,59 @@
 "use strict";
 
-function buscarPersonagemSalvo(
-  idPersonagem
-) {
-
+function buscarPersonagemSalvo(idPersonagem) {
   if (!idPersonagem) {
     return null;
   }
 
   try {
-
-    const dadosSalvos =
-      localStorage.getItem(
-        "personagensRpgSolo"
-      );
+    const dadosSalvos = localStorage.getItem("personagensRpgSolo");
 
     if (!dadosSalvos) {
       return null;
     }
 
-    const personagens =
-      JSON.parse(
-        dadosSalvos
-      );
+    const personagens = JSON.parse(dadosSalvos);
 
     if (!Array.isArray(personagens)) {
       return null;
     }
 
-    const personagem =
-      personagens.find(
-        function(
-          personagemSalvo
-        ) {
-
-          return (
-            personagemSalvo.id ===
-            idPersonagem
-          );
-
-        }
-      );
+    const personagem = personagens.find(function (personagemSalvo) {
+      return personagemSalvo.id === idPersonagem;
+    });
 
     return personagem ?? null;
-
   } catch (erro) {
-
-    console.error(
-      "Não foi possível carregar o personagem.",
-      erro
-    );
+    console.error("Não foi possível carregar o personagem.", erro);
 
     return null;
-
   }
-
 }
 
-const parametrosAventura =
-  new URLSearchParams(
-    window.location.search
-  );
+const parametrosAventura = new URLSearchParams(window.location.search);
 
-const idAventuraSelecionada =
-  parametrosAventura.get(
-    "aventura"
-  ) ?? "aFuga";
+const idAventuraSelecionada = parametrosAventura.get("aventura") ?? "aFuga";
 
-const idPersonagemSelecionado =
-  parametrosAventura.get(
-    "personagem"
-  );
+const idPersonagemSelecionado = parametrosAventura.get("personagem");
 
-const aventuraAtual =
-  bancoAventuras[
-    idAventuraSelecionada
-  ];
+const aventuraAtual = bancoAventuras[idAventuraSelecionada];
 
 if (!aventuraAtual) {
-
-  throw new Error(
-    `Aventura não encontrada: ${idAventuraSelecionada}`
-  );
-
+  throw new Error(`Aventura não encontrada: ${idAventuraSelecionada}`);
 }
 
-const personagemSelecionado =
-  buscarPersonagemSalvo(
-    idPersonagemSelecionado
-  );
+const personagemSelecionado = buscarPersonagemSalvo(idPersonagemSelecionado);
 
-const estadoAtualJogo =
-  window.estadoJogo;
+const estadoAtualJogo = window.estadoJogo;
 
-estadoAtualJogo.personagem.id =
-  personagemSelecionado?.id ?? null;
+estadoAtualJogo.personagem.id = personagemSelecionado?.id ?? null;
 
-estadoAtualJogo.personagem.dados =
-  personagemSelecionado
-    ? structuredClone(
-        personagemSelecionado
-      )
-    : null;
+estadoAtualJogo.personagem.dados = personagemSelecionado
+  ? structuredClone(personagemSelecionado)
+  : null;
 
-const idCenaInicial =
-  aventuraAtual.cenaInicial;
-  
+const idCenaInicial = aventuraAtual.cenaInicial;
+
 estadoAtualJogo.aventuraId = aventuraAtual.id;
 estadoAtualJogo.progresso.cenaId = idCenaInicial;
 let cenaAtual = aventuraAtual.cenas[idCenaInicial];
@@ -117,22 +65,15 @@ let inicioArraste = null;
 let escolhasAtuais = [];
 
 const cameraCombate = {
+  deslocamentoX: 0,
 
-  deslocamentoX:
-    0,
+  deslocamentoY: 0,
 
-  deslocamentoY:
-    0,
+  zoom: 1,
 
-  zoom:
-    1,
+  zoomMinimo: 0.5,
 
-  zoomMinimo:
-    0.5,
-
-  zoomMaximo:
-    1.6
-
+  zoomMaximo: 1.6,
 };
 
 let arrasteCamera = null;
@@ -143,59 +84,29 @@ const painelComandosCombate = document.querySelector("#painelComandosCombate");
 
 const numeroRodadaCombate = document.querySelector("#numeroRodadaCombate");
 
-const filaIniciativaCombate =
-  document.querySelector(
-    "#filaIniciativaCombate"
-  );
+const filaIniciativaCombate = document.querySelector("#filaIniciativaCombate");
 
 const movimentoRestanteCombate = document.querySelector("#movimentoRestanteCombate");
 const acaoDisponivelCombate = document.querySelector("#acaoDisponivelCombate");
 const acaoBonusDisponivelCombate = document.querySelector("#acaoBonusDisponivelCombate");
 
-const listaAcoesTurno =
-  document.querySelector(
-    "#listaAcoesTurno"
-  );
+const listaAcoesTurno = document.querySelector("#listaAcoesTurno");
 
-const listaAcoesBonusTurno =
-  document.querySelector(
-    "#listaAcoesBonusTurno"
-  );
+const listaAcoesBonusTurno = document.querySelector("#listaAcoesBonusTurno");
 
-const painelAtaquesCombate =
-  document.querySelector(
-    "#painelAtaquesCombate"
-  );
+const painelAtaquesCombate = document.querySelector("#painelAtaquesCombate");
 
-const botaoFecharAtaquesCombate =
-  document.querySelector(
-    "#botaoFecharAtaquesCombate"
-  );
+const botaoFecharAtaquesCombate = document.querySelector("#botaoFecharAtaquesCombate");
 
-const mensagemAtaquesCombate =
-  document.querySelector(
-    "#mensagemAtaquesCombate"
-  );
+const mensagemAtaquesCombate = document.querySelector("#mensagemAtaquesCombate");
 
-const listaAtaquesCombate =
-  document.querySelector(
-    "#listaAtaquesCombate"
-  );
+const listaAtaquesCombate = document.querySelector("#listaAtaquesCombate");
 
-  const painelHistoricoCombate =
-  document.querySelector(
-    "#painelHistoricoCombate"
-  );
+const painelHistoricoCombate = document.querySelector("#painelHistoricoCombate");
 
-const listaHistoricoCombate =
-  document.querySelector(
-    "#listaHistoricoCombate"
-  );
+const listaHistoricoCombate = document.querySelector("#listaHistoricoCombate");
 
-  const botaoExpandirHistorico =
-  document.querySelector(
-    "#botaoExpandirHistorico"
-  );
+const botaoExpandirHistorico = document.querySelector("#botaoExpandirHistorico");
 
 const botaoEncerrarTurno = document.querySelector("#botaoEncerrarTurno");
 const acoesCombate = document.querySelector("#acoesCombate");
@@ -221,1623 +132,274 @@ const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 
 const areaEscolhas = document.querySelector(".area-escolhas");
 
-const painelAcaoAtualCombate =
-  document.querySelector(
-    "#painelAcaoAtualCombate"
-  );
+const painelAcaoAtualCombate = document.querySelector("#painelAcaoAtualCombate");
 
-const mensagemAcaoAtualCombate =
-  document.querySelector(
-    "#mensagemAcaoAtualCombate"
-  );
+const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualCombate");
 
-carregarNpcsDaAventura( aventuraAtual.id);
-
-function obterZoomMinimoVisivel() {
-
-  if (
-    visualizacaoCombate.clientWidth === 0 ||
-    visualizacaoCombate.clientHeight === 0 ||
-    tabuleiroCombate.offsetWidth === 0 ||
-    tabuleiroCombate.offsetHeight === 0
-  ) {
-
-    return cameraCombate.zoomMinimo;
-
-  }
-
-  const zoomMinimoHorizontal =
-    visualizacaoCombate.clientWidth /
-    tabuleiroCombate.offsetWidth;
-
-  const zoomMinimoVertical =
-    visualizacaoCombate.clientHeight /
-    tabuleiroCombate.offsetHeight;
-
-  return Math.min(
-    cameraCombate.zoomMaximo,
-    Math.max(
-      cameraCombate.zoomMinimo,
-      zoomMinimoHorizontal,
-      zoomMinimoVertical
-    )
-  );
-
-}
-
-function limitarCameraCombate() {
-
-  const larguraTabuleiro =
-    tabuleiroCombate.offsetWidth *
-    cameraCombate.zoom;
-
-  const alturaTabuleiro =
-    tabuleiroCombate.offsetHeight *
-    cameraCombate.zoom;
-
-  const limiteHorizontal =
-    Math.max(
-      0,
-      (
-        larguraTabuleiro -
-        visualizacaoCombate.clientWidth
-      ) / 2
-    );
-
-  const limiteVertical =
-    Math.max(
-      0,
-      (
-        alturaTabuleiro -
-        visualizacaoCombate.clientHeight
-      ) / 2
-    );
-
-  cameraCombate.deslocamentoX =
-    Math.min(
-      limiteHorizontal,
-      Math.max(
-        -limiteHorizontal,
-        cameraCombate.deslocamentoX
-      )
-    );
-
-  cameraCombate.deslocamentoY =
-    Math.min(
-      limiteVertical,
-      Math.max(
-        -limiteVertical,
-        cameraCombate.deslocamentoY
-      )
-    );
-
-}
-
-function atualizarCameraCombate() {
-
-  tabuleiroCombate.style.setProperty(
-    "--camera-x",
-    `${cameraCombate.deslocamentoX}px`
-  );
-
-  tabuleiroCombate.style.setProperty(
-    "--camera-y",
-    `${cameraCombate.deslocamentoY}px`
-  );
-
-  tabuleiroCombate.style.setProperty(
-    "--camera-zoom",
-    cameraCombate.zoom
-  );
-
-}
-
-function controlarZoomCombate(
-  evento
-) {
-
-  evento.preventDefault();
-
-  const variacaoZoom =
-    evento.deltaY < 0
-      ? 0.1
-      : -0.1;
-
-  const novoZoom =
-    cameraCombate.zoom +
-    variacaoZoom;
-
-  cameraCombate.zoom =
-    Math.min(
-      cameraCombate.zoomMaximo,
-      Math.max(
-        obterZoomMinimoVisivel(),
-        Number(
-          novoZoom.toFixed(
-            2
-          )
-        )
-      )
-    );
-
-  limitarCameraCombate();
-  atualizarCameraCombate();
-
-}
-
-function iniciarArrasteCamera(
-  evento
-) {
-
-  const iniciouEmToken =
-    evento.target.closest(
-      ".token-combate"
-    );
-
-  if (
-    iniciouEmToken ||
-    evento.button !== 2
-  ) {
-    return;
-  }
-
-  arrasteCamera = {
-
-    ponteiroId:
-      evento.pointerId,
-
-    inicioX:
-      evento.clientX,
-
-    inicioY:
-      evento.clientY,
-
-    deslocamentoInicialX:
-      cameraCombate.deslocamentoX,
-
-    deslocamentoInicialY:
-      cameraCombate.deslocamentoY
-
-  };
-
-  visualizacaoCombate.setPointerCapture(
-    evento.pointerId
-  );
-
-  visualizacaoCombate.classList.add(
-    "camera-arrastando"
-  );
-
-  evento.preventDefault();
-
-}
-
-function continuarArrasteCamera(
-  evento
-) {
-
-  if (
-    !arrasteCamera ||
-    evento.pointerId !==
-      arrasteCamera.ponteiroId
-  ) {
-    return;
-  }
-
-  cameraCombate.deslocamentoX =
-    arrasteCamera.deslocamentoInicialX +
-    evento.clientX -
-    arrasteCamera.inicioX;
-
-  cameraCombate.deslocamentoY =
-    arrasteCamera.deslocamentoInicialY +
-    evento.clientY -
-    arrasteCamera.inicioY;
-
-  limitarCameraCombate();
-  atualizarCameraCombate();
-
-}
-
-function finalizarArrasteCamera(
-  evento
-) {
-
-  if (
-    !arrasteCamera ||
-    evento.pointerId !==
-      arrasteCamera.ponteiroId
-  ) {
-    return;
-  }
-
-  if (
-    visualizacaoCombate.hasPointerCapture(
-      evento.pointerId
-    )
-  ) {
-
-    visualizacaoCombate.releasePointerCapture(
-      evento.pointerId
-    );
-
-  }
-
-  visualizacaoCombate.classList.remove(
-    "camera-arrastando"
-  );
-
-  arrasteCamera =
-    null;
-
-}
+carregarNpcsDaAventura(aventuraAtual.id);
 
 function alternarFicha() {
-
   layoutAventura.classList.toggle("ficha-recolhida");
-
 }
 
 function alternarPainelExplicativo() {
-
   layoutAventura.classList.toggle("painelExplicativo-recolhido");
-
 }
 
-function exibirTelaCombate() {
-
-  visualizacaoAventura.hidden =
-    true;
-
-  painelComandosCombate.hidden =
-    false;
-
-  visualizacaoCombate.hidden =
-    false;
-
-  layoutAventura.classList.add(
-    "modo-combate"
-  );
-
-}
-
-function exibirTelaAventura() {
-
-  visualizacaoCombate.hidden =
-    true;
-
-  visualizacaoAventura.hidden =
-    false;
-
-  painelComandosCombate.hidden =
-    true;
-
-  layoutAventura.classList.remove(
-    "modo-combate"
-  );
-
-}
-
-function criarTokenCombate(
-  participante
-) {
-
-  const token =
-    document.createElement(
-      "button"
-    );
-
-  token.type =
-    "button";
-
-  token.classList.add(
-    "token-combate",
-    `token-${participante.tipo}`
-  );
-
-  token.dataset.idParticipante =
-    participante.id;
-
-  token.style.gridColumn =
-    participante.posicao.coluna;
-
-  token.style.gridRow =
-    participante.posicao.linha;
-
-  const representacao =
-  participante.representacao;
-
-if (
-  representacao?.imagem
-) {
-
-  token.classList.add(
-    "token-com-imagem"
-  );
-
-  const imagemAvatar =
-    document.createElement(
-      "img"
-    );
-
-  imagemAvatar.classList.add(
-    "imagem-token-combate"
-  );
-
-  imagemAvatar.src =
-    representacao.imagem;
-
-  imagemAvatar.alt =
-    "";
-
-  token.append(
-    imagemAvatar
-  );
-
-  if (
-    representacao.frame
-  ) {
-
-    const imagemFrame =
-      document.createElement(
-        "img"
-      );
-
-    imagemFrame.classList.add(
-      "frame-token-combate"
-    );
-
-    imagemFrame.src =
-      representacao.frame;
-
-    imagemFrame.alt =
-      "";
-
-    token.append(
-      imagemFrame
-    );
-
-  }
-
-  const numeroParticipante =
-  obterNumeroParticipante(
-    participante
-  );
-
-if (numeroParticipante) {
-
-  const identificador =
-    document.createElement(
-      "span"
-    );
-
-  identificador.className =
-    "identificador-participante";
-
-  identificador.textContent =
-    numeroParticipante;
-
-  token.append(
-    identificador
-  );
-
-}
-
-} else {
-
-  token.textContent =
-    participante.tipo === "jogador"
-      ? "P"
-      : "I";
-
-}
-
-  token.setAttribute(
-    "aria-label",
-    participante.id
-  );
-
-  return token;
-
-}
-
-function criarCelulasTabuleiro(
-  combate
-) {
-
-  const quantidadeColunas =
-    combate.tabuleiro.colunas;
-
-  const quantidadeLinhas =
-    combate.tabuleiro.linhas;
-
-  for (
-    let linha = 1;
-    linha <= quantidadeLinhas;
-    linha++
-  ) {
-
-    for (
-      let coluna = 1;
-      coluna <= quantidadeColunas;
-      coluna++
-    ) {
-
-      const celula =
-        document.createElement(
-          "button"
-        );
-
-      celula.type =
-        "button";
-
-      celula.classList.add(
-        "celula-combate"
-      );
-
-      celula.dataset.coluna =
-        coluna;
-
-      celula.dataset.linha =
-        linha;
-
-      celula.style.gridColumn =
-        coluna;
-
-      celula.style.gridRow =
-        linha;
-
-      celula.setAttribute(
-        "aria-label",
-        `Coluna ${coluna}, linha ${linha}`
-      );
-
-      tabuleiroCombate.append(
-        celula
-      );
-
-    }
-
-  }
-
-}
-
-function obterNumeroParticipante(
-  participante
-) {
-
-  if (
-    participante.tipo !==
-    "inimigo"
-  ) {
-    return null;
-  }
-
-  const numeroEncontrado =
-    participante.nome.match(
-      /\d+$/
-    );
-
-  return numeroEncontrado
-    ? numeroEncontrado[0]
-    : null;
-
-}
-
-function renderizarParticipantesCombate(
-  participantes
-) {
-
-  for (const participante of participantes) {
-
-    const token =
-      criarTokenCombate(
-        participante
-      );
-
-    tabuleiroCombate.append(
-      token
-    );
-
-  }
-
-}
-
-function renderizarTabuleiroCombate(
-  combate
-) {
-
-  tabuleiroCombate.innerHTML =
-    "";
-
-  criarCelulasTabuleiro(
-    combate
-  );
-
-  renderizarParticipantesCombate(
-    combate.participantes
-  );
-
-}
-
-function abrirPainelAtaquesCombate() {
-  painelAtaquesCombate.hidden =
-    false;
-}
-
-function reabrirPainelComandosCombate() {
-  if (
-    visualizacaoCombate.hidden
-  ) {
+async function animarMovimentoInimigo(participante, caminho) {
+  if (!Array.isArray(caminho) || caminho.length === 0) {
     return;
   }
 
-  painelComandosCombate.hidden =
-    false;
-
-  painelComandosCombate.classList.remove(
-    "janela-minimizada"
-  );
-
-  const botaoMinimizar =
-    painelComandosCombate.querySelector(
-      "[data-minimizar-janela]"
-    );
-
-  if (!botaoMinimizar) {
-    return;
-  }
-
-  botaoMinimizar.setAttribute(
-    "aria-expanded",
-    "true"
-  );
-
-  botaoMinimizar.textContent =
-    "−";
-}
-
-function verificarNovaSolicitacaoCombate() {
-  const possuiSolicitacao =
-    !solicitacaoCombate.hidden &&
-    solicitacaoCombate
-      .textContent
-      .trim() !==
-      "";
-
-  if (!possuiSolicitacao) {
-    return;
-  }
-
-  reabrirPainelComandosCombate();
-}
-
-function exibirAcaoAtualCombate(
-  mensagem
-) {
-
-  mensagemAcaoAtualCombate.textContent =
-    mensagem;
-
-  painelAcaoAtualCombate.hidden =
-    false;
-
-}
-
-function adicionarEventoHistoricoCombate(
-  titulo,
-  descricao
-) {
-
-  const evento =
-    document.createElement(
-      "details"
-    );
-
-  evento.className =
-    "evento-historico-combate";
-
-  const resumo =
-    document.createElement(
-      "summary"
-    );
-
-  resumo.textContent =
-    titulo;
-
-  const detalhes =
-    document.createElement(
-      "p"
-    );
-
-  detalhes.textContent =
-    descricao;
-
-  evento.append(
-    resumo,
-    detalhes
-  );
-
-  listaHistoricoCombate.append(
-    evento
-  );
-
-  painelHistoricoCombate.hidden =
-    false;
-
-    if (
-  painelHistoricoCombate.classList.contains(
-    "historico-expandido"
-  )
-) {
-
-  painelHistoricoCombate.scrollTop =
-    painelHistoricoCombate.scrollHeight;
-
-}
-
-}
-
-function alternarHistoricoCombate() {
-
-  const estaExpandido =
-    painelHistoricoCombate.classList.toggle(
-      "historico-expandido"
-    );
-
-  botaoExpandirHistorico.setAttribute(
-    "aria-expanded",
-    estaExpandido
-  );
-
-  botaoExpandirHistorico.setAttribute(
-    "aria-label",
-    estaExpandido
-      ? "Recolher histórico"
-      : "Expandir histórico"
-  );
-
-  botaoExpandirHistorico.title =
-    estaExpandido
-      ? "Recolher histórico"
-      : "Expandir histórico";
-
-  botaoExpandirHistorico.textContent =
-    estaExpandido
-      ? "−"
-      : "+";
-
-  if (estaExpandido) {
-
-    painelHistoricoCombate.scrollTop =
-      painelHistoricoCombate.scrollHeight;
-
-  }
-
-}
-
-async function animarMovimentoInimigo(
-  participante,
-  caminho
-) {
-
-  if (
-    !Array.isArray(
-      caminho
-    ) ||
-    caminho.length === 0
-  ) {
-    return;
-  }
-
-  const token =
-    tabuleiroCombate.querySelector(
-      `[data-id-participante="${participante.id}"]`
-    );
+  const token = tabuleiroCombate.querySelector(`[data-id-participante="${participante.id}"]`);
 
   if (!token) {
     return;
   }
 
-  for (
-    const posicao of
-    caminho
-  ) {
+  for (const posicao of caminho) {
+    const posicaoAnterior = token.getBoundingClientRect();
 
-    const posicaoAnterior =
-    token.getBoundingClientRect();
+    token.style.gridColumn = posicao.coluna;
 
-  token.style.gridColumn =
-    posicao.coluna;
+    token.style.gridRow = posicao.linha;
 
-  token.style.gridRow =
-    posicao.linha;
+    const novaPosicao = token.getBoundingClientRect();
 
-  const novaPosicao =
-    token.getBoundingClientRect();
+    const zoom = cameraCombate.zoom || 1;
 
-  const zoom =
-    cameraCombate.zoom || 1;
+    const deslocamentoX = (posicaoAnterior.left - novaPosicao.left) / zoom;
 
-  const deslocamentoX =
-    (
-      posicaoAnterior.left -
-      novaPosicao.left
-    ) / zoom;
+    const deslocamentoY = (posicaoAnterior.top - novaPosicao.top) / zoom;
 
-  const deslocamentoY =
-    (
-      posicaoAnterior.top -
-      novaPosicao.top
-    ) / zoom;
-
-  const animacao =
-    token.animate(
+    const animacao = token.animate(
       [
         {
-          translate:
-            `${deslocamentoX}px ` +
-            `${deslocamentoY}px`
+          translate: `${deslocamentoX}px ` + `${deslocamentoY}px`,
         },
 
         {
-          translate:
-            "0 0"
-        }
+          translate: "0 0",
+        },
       ],
       {
-        duration:
-          700,
+        duration: 700,
 
-        easing:
-          "ease-in-out",
+        easing: "ease-in-out",
 
-        fill:
-          "both"
-      }
+        fill: "both",
+      },
     );
 
-  try {
-
-    await animacao.finished;
-
-  } catch (erro) {
-
-    console.warn(
-      "A animação do movimento foi interrompida.",
-      erro
-    );
-
-  }
-
-  animacao.cancel();
-
-  await esperar(
-    200
-  );
-
-}
-
-}
-
-function esperar(
-  milissegundos
-) {
-
-  return new Promise(
-    function(resolve) {
-
-      setTimeout(
-        resolve,
-        milissegundos
-      );
-
+    try {
+      await animacao.finished;
+    } catch (erro) {
+      console.warn("A animação do movimento foi interrompida.", erro);
     }
-  );
 
+    animacao.cancel();
+
+    await esperar(200);
+  }
 }
 
-async function registrarResultadoTurnoInimigo(
-  resultado,
-  participante
-) {
+function esperar(milissegundos) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, milissegundos);
+  });
+}
 
-  const resultadoMovimento =
-    resultado.resultadoMovimento;
+async function registrarResultadoTurnoInimigo(resultado, participante) {
+  const resultadoMovimento = resultado.resultadoMovimento;
 
-  if (
-    resultadoMovimento?.celulasPercorridas >
-    0
-  ) {
-
-    exibirAcaoAtualCombate(
-      `${participante.nome} está se movimentando.`
-    );
+  if (resultadoMovimento?.celulasPercorridas > 0) {
+    exibirAcaoAtualCombate(`${participante.nome} está se movimentando.`);
 
     adicionarEventoHistoricoCombate(
       `${participante.nome} se movimentou`,
-      `${participante.nome} avançou pelo campo de batalha.`
+      `${participante.nome} avançou pelo campo de batalha.`,
     );
 
-    await animarMovimentoInimigo(
-      participante,
-      resultadoMovimento.caminho
-    );
+    await animarMovimentoInimigo(participante, resultadoMovimento.caminho);
 
-    atualizarInterfaceTurno(
-      estadoAtualJogo.combateAtual
-    );
+    atualizarInterfaceTurno(estadoAtualJogo.combateAtual);
 
-    await esperar(
-      900
-    );
-
+    await esperar(900);
   }
 
   if (!resultado.sucesso) {
+    exibirAcaoAtualCombate(`${participante.nome} encerrou sua movimentação.`);
 
-    exibirAcaoAtualCombate(
-      `${participante.nome} encerrou sua movimentação.`
-    );
-
-    await esperar(
-      1200
-    );
+    await esperar(1200);
 
     return;
-
   }
 
-  exibirAcaoAtualCombate(
-    `${participante.nome} está atacando ` +
-    `${resultado.alvo.nome}.`
-  );
+  exibirAcaoAtualCombate(`${participante.nome} está atacando ` + `${resultado.alvo.nome}.`);
 
-  await esperar(
-    1000
-  );
+  await esperar(1000);
 
-  if (
-    !resultado.resultadoAtaque.acertou
-  ) {
-
-    exibirAcaoAtualCombate(
-      `${participante.nome} errou o ataque.`
-    );
+  if (!resultado.resultadoAtaque.acertou) {
+    exibirAcaoAtualCombate(`${participante.nome} errou o ataque.`);
 
     adicionarEventoHistoricoCombate(
       `${participante.nome} errou o ataque`,
       `${participante.nome} tentou atingir ` +
-      `${resultado.alvo.nome} com ` +
-      `${resultado.ataque.nome}, mas errou.`
+        `${resultado.alvo.nome} com ` +
+        `${resultado.ataque.nome}, mas errou.`,
     );
 
-    await esperar(
-      1400
-    );
+    await esperar(1400);
 
     return;
-
   }
 
-  exibirAcaoAtualCombate(
-    `${participante.nome} acertou o ataque.`
-  );
+  exibirAcaoAtualCombate(`${participante.nome} acertou o ataque.`);
 
-  if (
-    resultado.alvo.tipo ===
-    "jogador"
-  ) {
-
+  if (resultado.alvo.tipo === "jogador") {
     adicionarEventoHistoricoCombate(
       `${participante.nome} acertou o ataque`,
       `Você sofreu ` +
-      `${resultado.resultadoDano.dano} de dano. ` +
-      `Seus pontos de vida restantes são ` +
-      `${resultado.resultadoDano.pontosDeVidaRestantes}.`
+        `${resultado.resultadoDano.dano} de dano. ` +
+        `Seus pontos de vida restantes são ` +
+        `${resultado.resultadoDano.pontosDeVidaRestantes}.`,
     );
-
   } else {
-
     adicionarEventoHistoricoCombate(
       `${participante.nome} acertou o ataque`,
-      `${participante.nome} atingiu ` +
-      `${resultado.alvo.nome} com ` +
-      `${resultado.ataque.nome}.`
+      `${participante.nome} atingiu ` + `${resultado.alvo.nome} com ` + `${resultado.ataque.nome}.`,
     );
-
   }
 
-  await esperar(
-    1400
-  );
-
+  await esperar(1400);
 }
 
-const observadorSolicitacaoCombate =
-  new MutationObserver(
-    verificarNovaSolicitacaoCombate
-  );
+const observadorSolicitacaoCombate = new MutationObserver(verificarNovaSolicitacaoCombate);
 
-observadorSolicitacaoCombate.observe(
-  solicitacaoCombate,
-  {
-    attributes:
-      true,
+observadorSolicitacaoCombate.observe(solicitacaoCombate, {
+  attributes: true,
 
-    attributeFilter: [
-      "hidden"
-    ],
+  attributeFilter: ["hidden"],
 
-    childList:
-      true,
+  childList: true,
 
-    characterData:
-      true,
+  characterData: true,
 
-    subtree:
-      true
-  }
-);
-
-function fecharPainelAtaquesCombate() {
-  painelAtaquesCombate.hidden =
-    true;
-}
-
-function renderizarAcoesCombate(
-  participante
-) {
-  listaAcoesTurno.innerHTML =
-    "";
-
-  listaAcoesBonusTurno.innerHTML =
-    "";
-
-  acoesCombate.innerHTML =
-    "";
-
-  if (
-    !participante ||
-    participante.tipo !==
-      "jogador"
-  ) {
-    fecharPainelAtaquesCombate();
-
-    return;
-  }
-
-  const botaoAtacar =
-    document.createElement(
-      "button"
-    );
-
-  botaoAtacar.type =
-    "button";
-
-  botaoAtacar.textContent =
-    "Atacar";
-
-  botaoAtacar.disabled =
-    !participante.acaoDisponivel;
-
-  botaoAtacar.addEventListener(
-    "click",
-    abrirPainelAtaquesCombate
-  );
-
-  listaAcoesTurno.append(
-    botaoAtacar
-  );
-
-  const mensagemAcaoBonus =
-    document.createElement(
-      "p"
-    );
-
-  mensagemAcaoBonus.textContent =
-    participante.acaoBonusDisponivel
-      ? "Nenhuma opção disponível."
-      : "Ação bônus utilizada.";
-
-  listaAcoesBonusTurno.append(
-    mensagemAcaoBonus
-  );
-}
-
-function renderizarListaAtaquesCombate(
-  combate,
-  participante
-) {
-  listaAtaquesCombate.innerHTML =
-    "";
-
-  if (
-    !participante ||
-    participante.tipo !==
-      "jogador"
-  ) {
-    mensagemAtaquesCombate.textContent =
-      "";
-
-    return;
-  }
-
-  const ataques =
-    participante.ataques ?? [];
-
-  if (ataques.length === 0) {
-    mensagemAtaquesCombate.textContent =
-      "Nenhum ataque disponível.";
-
-    return;
-  }
-
-  const alvo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-          combate.alvoSelecionadoId &&
-        participante.estado !==
-          "derrotado"
-    );
-
-  let quantidadeDisponivel =
-    0;
-
-  for (const ataque of ataques) {
-    const botao =
-      document.createElement(
-        "button"
-      );
-
-    botao.type =
-      "button";
-
-    botao.classList.add(
-      "botao-ataque-combate"
-    );
-
-    botao.dataset.idAtaque =
-      ataque.id;
-
-    botao.textContent =
-      ataque.nome;
-
-    let ataqueDisponivel =
-      false;
-
-    if (
-      alvo &&
-      participante.acaoDisponivel
-    ) {
-      const validacao =
-        SistemaCombate
-          .validarSelecaoAcao(
-            participante,
-            alvo,
-            ataque
-          );
-
-      ataqueDisponivel =
-        validacao.sucesso;
-    }
-
-    botao.disabled =
-      !ataqueDisponivel;
-
-    if (ataqueDisponivel) {
-      quantidadeDisponivel +=
-        1;
-    }
-
-    listaAtaquesCombate.append(
-      botao
-    );
-  }
-
-  if (!participante.acaoDisponivel) {
-    mensagemAtaquesCombate.textContent =
-      "Sua ação já foi utilizada.";
-
-    return;
-  }
-
-  if (!alvo) {
-    mensagemAtaquesCombate.textContent =
-      "Selecione um inimigo no tabuleiro.";
-
-    return;
-  }
-
-  if (quantidadeDisponivel === 0) {
-    mensagemAtaquesCombate.textContent =
-      `Aproxime-se de ${alvo.nome} ` +
-      "para entrar no alcance de um ataque.";
-
-    return;
-  }
-
-  mensagemAtaquesCombate.textContent =
-    `Escolha um ataque contra ` +
-    `${alvo.nome}.`;
-}
-
-function atualizarIndicadorRecurso(
-  elemento,
-  disponivel
-) {
-  if (
-    typeof disponivel !==
-    "boolean"
-  ) {
-    elemento.textContent =
-      "—";
-
-    elemento.removeAttribute(
-      "data-disponivel"
-    );
-
-    return;
-  }
-
-  elemento.textContent =
-    disponivel
-      ? "Disponível"
-      : "Utilizada";
-
-  elemento.dataset.disponivel =
-    String(
-      disponivel
-    );
-}
-
-function criarAvatarIniciativa(
-  participante
-) {
-  const avatar =
-    document.createElement(
-      "div"
-    );
-
-  avatar.classList.add(
-    "avatar-iniciativa"
-  );
-
-  const representacao =
-    participante.representacao;
-
-  if (representacao?.imagem) {
-    const imagem =
-      document.createElement(
-        "img"
-      );
-
-    imagem.classList.add(
-      "imagem-avatar-iniciativa"
-    );
-
-    imagem.src =
-      representacao.imagem;
-
-    imagem.alt =
-      "";
-
-    avatar.append(
-      imagem
-    );
-
-    if (representacao.frame) {
-      const frame =
-        document.createElement(
-          "img"
-        );
-
-      frame.classList.add(
-        "frame-avatar-iniciativa"
-      );
-
-      frame.src =
-        representacao.frame;
-
-      frame.alt =
-        "";
-
-      avatar.append(
-        frame
-      );
-    }
-
-    return avatar;
-  }
-
-  avatar.textContent =
-    participante.nome
-      ?.charAt(0)
-      .toUpperCase() ??
-    "?";
-
-  return avatar;
-}
-
-function renderizarFilaIniciativa(
-  combate
-) {
-  filaIniciativaCombate.innerHTML =
-    "";
-
-  for (
-    const participanteId of
-    combate.ordemTurnos
-  ) {
-    const participante =
-      combate.participantes.find(
-        participante =>
-          participante.id ===
-          participanteId
-      );
-
-    if (!participante) {
-      continue;
-    }
-
-    const item =
-      document.createElement(
-        "div"
-      );
-
-    item.classList.add(
-      "item-iniciativa"
-    );
-
-    item.setAttribute(
-      "role",
-      "listitem"
-    );
-
-    item.title = participante.nome;
-
-    if (
-      participante.id ===
-      combate.participanteAtivoId
-    ) {
-      item.classList.add(
-        "turno-ativo"
-      );
-    }
-
-    const avatar =
-      criarAvatarIniciativa(
-        participante
-      );
-
-      const numeroParticipante =
-  obterNumeroParticipante(
-    participante
-  );
-
-if (numeroParticipante) {
-
-  const identificador =
-    document.createElement(
-      "span"
-    );
-
-  identificador.className =
-    "identificador-participante";
-
-  identificador.textContent =
-    numeroParticipante;
-
-  avatar.append(
-    identificador
-  );
-
-}
-
-    item.append(
-      avatar
-    );
-
-    filaIniciativaCombate.append(
-      item
-    );
-  }
-}
-
-function atualizarInterfaceTurno(
-  combate
-) {
-
-  const participanteAtivo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        combate.participanteAtivoId
-    );
-
-    const participanteJogadorAtivo =
-  participanteAtivo?.tipo ===
-    "jogador"
-      ? participanteAtivo
-      : null;
-
-  botaoEncerrarTurno.disabled =
-  !participanteJogadorAtivo ||
-  combate.status !==
-    "ativo";
-
-  numeroRodadaCombate.textContent =
-    combate.rodada;
-
-    renderizarFilaIniciativa(
-    combate
-  );
-
- movimentoRestanteCombate.textContent =
-  participanteJogadorAtivo
-    ? `${participanteJogadorAtivo.movimentoRestante} / ` +
-      `${participanteJogadorAtivo.movimentoMaximo}`
-    : "—";
-
-atualizarIndicadorRecurso(
-  acaoDisponivelCombate,
-  participanteJogadorAtivo
-    ?.acaoDisponivel
-);
-
-atualizarIndicadorRecurso(
-  acaoBonusDisponivelCombate,
-  participanteJogadorAtivo
-    ?.acaoBonusDisponivel
-);
-
-renderizarAcoesCombate(
-  participanteJogadorAtivo
-);
-
-renderizarListaAtaquesCombate(
-  combate,
-  participanteJogadorAtivo
-);
-
-  const tokens =
-    tabuleiroCombate.querySelectorAll(
-      ".token-combate"
-    );
-
-  for (const token of tokens) {
-
-    const participanteDoToken =
-      combate.participantes.find(
-        participante =>
-          participante.id ===
-          token.dataset.idParticipante
-      );
-
-    if (participanteDoToken) {
-
-      token.style.gridColumn =
-        participanteDoToken.posicao.coluna;
-
-      token.style.gridRow =
-        participanteDoToken.posicao.linha;
-
-    }
-
-    token.classList.toggle(
-      "token-turno-ativo",
-      token.dataset.idParticipante ===
-        combate.participanteAtivoId
-    );
-
-    token.classList.toggle(
-      "token-alvo-selecionado",
-      token.dataset.idParticipante ===
-        combate.alvoSelecionadoId
-    );
-
-    token.classList.toggle(
-      "token-derrotado",
-      participanteDoToken?.estado ===
-        "derrotado"
-    );
-
-  }
-
-  painelTurnoCombate.hidden =
-    false;
-
-}
+  subtree: true,
+});
 
 function selecionarTokenJogador(evento) {
-
-  const token =
-    evento.target.closest(
-      ".token-combate"
-    );
+  const token = evento.target.closest(".token-combate");
 
   if (!token) {
     return;
   }
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
   if (!combate) {
     return;
   }
 
-  const participante =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        token.dataset.idParticipante
-    );
+  const participante = combate.participantes.find(
+    (participante) => participante.id === token.dataset.idParticipante,
+  );
 
-  if (
-    !participante ||
-    participante.tipo !== "jogador"
-  ) {
+  if (!participante || participante.tipo !== "jogador") {
     return;
   }
 
-  combate.participanteSelecionadoId =
-    participante.id;
+  combate.participanteSelecionadoId = participante.id;
 
-  const tokens =
-    tabuleiroCombate.querySelectorAll(
-      ".token-combate"
-    );
+  const tokens = tabuleiroCombate.querySelectorAll(".token-combate");
 
   for (const tokenAtual of tokens) {
-
-    tokenAtual.classList.remove(
-      "token-selecionado"
-    );
-
+    tokenAtual.classList.remove("token-selecionado");
   }
 
-  token.classList.add(
-    "token-selecionado"
-  );
-
+  token.classList.add("token-selecionado");
 }
 
-function selecionarAlvoCombate(
-  evento
-) {
-
-  const token =
-    evento.target.closest(
-      ".token-combate"
-    );
+function selecionarAlvoCombate(evento) {
+  const token = evento.target.closest(".token-combate");
 
   if (!token) {
     return;
   }
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
   if (!combate) {
     return;
   }
 
-  const participanteAtivo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        combate.participanteAtivoId
-    );
-
-  if (
-    !participanteAtivo ||
-    participanteAtivo.tipo !== "jogador"
-  ) {
-    return;
-  }
-
-  const alvo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        token.dataset.idParticipante
-    );
-
-  if (
-    !alvo ||
-    alvo.tipo !== "inimigo"
-  ) {
-    return;
-  }
-
-  combate.alvoSelecionadoId =
-    alvo.id;
-
-  atualizarInterfaceTurno(
-    combate
+  const participanteAtivo = combate.participantes.find(
+    (participante) => participante.id === combate.participanteAtivoId,
   );
 
-}
-
-function selecionarAtaqueCombate(
-  evento
-) {
-  const botao =
-    evento.target.closest(
-      ".botao-ataque-combate"
-    );
-
-  if (
-    !botao ||
-    botao.disabled
-  ) {
+  if (!participanteAtivo || participanteAtivo.tipo !== "jogador") {
     return;
   }
 
-  const combate =
-    estadoAtualJogo
-      .combateAtual;
+  const alvo = combate.participantes.find(
+    (participante) => participante.id === token.dataset.idParticipante,
+  );
+
+  if (!alvo || alvo.tipo !== "inimigo") {
+    return;
+  }
+
+  combate.alvoSelecionadoId = alvo.id;
+
+  atualizarInterfaceTurno(combate);
+}
+
+function selecionarAtaqueCombate(evento) {
+  const botao = evento.target.closest(".botao-ataque-combate");
+
+  if (!botao || botao.disabled) {
+    return;
+  }
+
+  const combate = estadoAtualJogo.combateAtual;
 
   if (!combate) {
     return;
   }
 
   if (!combate.alvoSelecionadoId) {
-    solicitacaoCombate.textContent =
-      "Selecione um inimigo antes de atacar.";
+    solicitacaoCombate.textContent = "Selecione um inimigo antes de atacar.";
 
-    solicitacaoCombate.hidden =
-      false;
+    solicitacaoCombate.hidden = false;
 
     return;
   }
 
-  const resultado =
-    SistemaCombate.prepararAtaque(
-      combate,
-      combate.participanteAtivoId,
-      combate.alvoSelecionadoId,
-      botao.dataset.idAtaque
-    );
+  const resultado = SistemaCombate.prepararAtaque(
+    combate,
+    combate.participanteAtivoId,
+    combate.alvoSelecionadoId,
+    botao.dataset.idAtaque,
+  );
 
   if (!resultado.sucesso) {
-    console.warn(
-      "Ataque recusado:",
-      resultado.motivo
-    );
+    console.warn("Ataque recusado:", resultado.motivo);
 
-    atualizarInterfaceTurno(
-      combate
-    );
+    atualizarInterfaceTurno(combate);
 
     return;
   }
 
-  const sinalBonus =
-    resultado.ataque.bonusAtaque >=
-      0
-      ? "+"
-      : "";
+  const sinalBonus = resultado.ataque.bonusAtaque >= 0 ? "+" : "";
 
-  let instrucaoD20 =
-    "Role 1d20";
+  let instrucaoD20 = "Role 1d20";
 
-  if (
-    resultado.tipoRolagem ===
-    "vantagem"
-  ) {
-    instrucaoD20 =
-      "Role 2d20 e use o maior resultado";
+  if (resultado.tipoRolagem === "vantagem") {
+    instrucaoD20 = "Role 2d20 e use o maior resultado";
   }
 
-  if (
-    resultado.tipoRolagem ===
-    "desvantagem"
-  ) {
-    instrucaoD20 =
-      "Role 2d20 e use o menor resultado";
+  if (resultado.tipoRolagem === "desvantagem") {
+    instrucaoD20 = "Role 2d20 e use o menor resultado";
   }
 
   solicitacaoCombate.textContent =
@@ -1845,535 +407,277 @@ function selecionarAtaqueCombate(
     `${resultado.ataque.bonusAtaque} ` +
     `para atacar ${resultado.alvo.nome}.`;
 
-  solicitacaoCombate.hidden =
-    false;
+  solicitacaoCombate.hidden = false;
 
   fecharPainelAtaquesCombate();
 }
 
-function criarParticipanteJogadorCombate(
-  configuracao
-) {
+function criarParticipanteJogadorCombate(configuracao) {
+  const personagem = estadoAtualJogo.personagem.dados;
 
-  const personagem =
-    estadoAtualJogo
-      .personagem
-      .dados;
-
-  if (
-    !personagem
-  ) {
-
-    console.warn(
-      "Nenhum personagem foi selecionado para o combate."
-    );
+  if (!personagem) {
+    console.warn("Nenhum personagem foi selecionado para o combate.");
 
     return null;
-
   }
 
-  const entidadeJogador =
-    structuredClone(
-      personagem
-    );
+  const entidadeJogador = structuredClone(personagem);
 
-  entidadeJogador.nome =
-    personagem
-      .detalhes
-      ?.nome ??
-    "Jogador";
+  entidadeJogador.nome = personagem.detalhes?.nome ?? "Jogador";
 
-  entidadeJogador.ataques =
-    structuredClone(
-      personagem
-        .combate
-        ?.ataques ??
-      []
-    );
+  entidadeJogador.ataques = structuredClone(personagem.combate?.ataques ?? []);
 
   const configuracaoParticipante = {
+    id: personagem.id ?? "jogador",
 
-    id:
-      personagem.id ??
-      "jogador",
+    tipo: "jogador",
 
-    tipo:
-      "jogador",
+    posicao: configuracao.posicao,
 
-    posicao:
-      configuracao.posicao,
-
-    movimentoMaximo:
-      configuracao.movimentoMaximo ??
-      6
-
+    movimentoMaximo: configuracao.movimentoMaximo ?? 6,
   };
 
-  return SistemaCombate
-    .criarParticipanteCombate(
-      entidadeJogador,
-      configuracaoParticipante
-    );
-
+  return SistemaCombate.criarParticipanteCombate(entidadeJogador, configuracaoParticipante);
 }
 
-function criarParticipantesNpcsCombate(
-  configuracoes
-) {
+function criarParticipantesNpcsCombate(configuracoes) {
+  const participantes = [];
 
-  const participantes =
-    [];
-
-  for (
-    const configuracao of
-      configuracoes
-  ) {
-
-    const npc =
-      estadoAtualJogo.npcs[
-        configuracao.npcId
-      ];
+  for (const configuracao of configuracoes) {
+    const npc = estadoAtualJogo.npcs[configuracao.npcId];
 
     if (!npc) {
-
-      console.warn(
-        "NPC não encontrado:",
-        configuracao.npcId
-      );
+      console.warn("NPC não encontrado:", configuracao.npcId);
 
       continue;
-
     }
 
-    const quantidade =
-      configuracao.quantidade ?? 1;
+    const quantidade = configuracao.quantidade ?? 1;
 
-    for (
-      let indice = 0;
-      indice < quantidade;
-      indice += 1
-    ) {
-
-      const posicao =
-        configuracao.posicoes?.[
-          indice
-        ];
+    for (let indice = 0; indice < quantidade; indice += 1) {
+      const posicao = configuracao.posicoes?.[indice];
 
       if (!posicao) {
-
-        console.warn(
-          "Posição não encontrada para:",
-          configuracao.npcId,
-          indice
-        );
+        console.warn("Posição não encontrada para:", configuracao.npcId, indice);
 
         continue;
-
       }
 
       const configuracaoParticipante = {
+        id: `${configuracao.npcId}-${indice + 1}`,
 
-        id:
-          `${configuracao.npcId}-${indice + 1}`,
+        nome: quantidade > 1 ? `${npc.nome} ${indice + 1}` : npc.nome,
 
-          nome:
-  quantidade > 1
-    ? `${npc.nome} ${indice + 1}`
-    : npc.nome,
+        tipo: npc.tipo,
 
-        tipo:
-          npc.tipo,
+        posicao: posicao,
 
-        posicao:
-          posicao,
+        movimentoMaximo: configuracao.movimentoMaximo ?? 6,
 
-        movimentoMaximo:
-          configuracao.movimentoMaximo ?? 6,
-
-        representacao:
-          configuracao.representacao ?? null
-
+        representacao: configuracao.representacao ?? null,
       };
 
-      const participante =
-        SistemaCombate.criarParticipanteCombate(
-          npc,
-          configuracaoParticipante
-        );
+      const participante = SistemaCombate.criarParticipanteCombate(npc, configuracaoParticipante);
 
-      participantes.push(
-        participante
-      );
-
+      participantes.push(participante);
     }
-
   }
 
   return participantes;
-
 }
 
 function iniciarCombateDaAventura(configuracao) {
+  const configuracaoCombate = structuredClone(configuracao);
 
-  const configuracaoCombate =
-    structuredClone(
-      configuracao
-    );
-
-  const participanteJogador =
-    configuracaoCombate
-      .participantes.find(
-        participante =>
-          participante.tipo ===
-          "jogador"
-      );
-
-  if (
-    participanteJogador
-  ) {
-
-    participanteJogador.representacao =
-      structuredClone(
-        estadoAtualJogo
-          .personagem
-          .dados
-          ?.avatar ??
-        null
-      );
-
-  }
-
-  const combate =
-    SistemaCombate.iniciarCombate(
-      configuracaoCombate
-    );
-
-
-
-  const jogador =
-  combate.participantes.find(
-    participante =>
-      participante.tipo === "jogador"
+  const participanteJogador = configuracaoCombate.participantes.find(
+    (participante) => participante.tipo === "jogador",
   );
 
-combate.iniciativaPendenteId =
-  jogador
-    ? jogador.id
-    : null;
+  if (participanteJogador) {
+    participanteJogador.representacao = structuredClone(
+      estadoAtualJogo.personagem.dados?.avatar ?? null,
+    );
+  }
 
-SistemaCombate.rolarIniciativasInimigos(
-  combate
-);
+  const combate = SistemaCombate.iniciarCombate(configuracaoCombate);
 
-if (jogador) {
+  const jogador = combate.participantes.find((participante) => participante.tipo === "jogador");
 
-  solicitacaoCombate.textContent =
-    "Role 1d20 e adicione seu modificador de iniciativa.";
+  combate.iniciativaPendenteId = jogador ? jogador.id : null;
 
-  solicitacaoCombate.hidden =
-    false;
+  SistemaCombate.rolarIniciativasInimigos(combate);
 
-}
+  if (jogador) {
+    solicitacaoCombate.textContent = "Role 1d20 e adicione seu modificador de iniciativa.";
+
+    solicitacaoCombate.hidden = false;
+  }
 
   renderizarTabuleiroCombate(combate);
 
   exibirTelaCombate();
 
-  console.log(
-    "Combate iniciado:",
-    combate
-  );
-
+  console.log("Combate iniciado:", combate);
 }
 
-function moverParticipante(
-  participante,
-  coluna,
-  linha
-) {
-
-  const resultadoMovimento =
-  SistemaCombate.movimentarParticipante(
+function moverParticipante(participante, coluna, linha) {
+  const resultadoMovimento = SistemaCombate.movimentarParticipante(
     estadoAtualJogo.combateAtual,
     participante.id,
     coluna,
-    linha
+    linha,
   );
 
-if (!resultadoMovimento.sucesso) {
+  if (!resultadoMovimento.sucesso) {
+    console.warn("Movimento recusado:", resultadoMovimento.motivo);
 
-  console.warn(
-    "Movimento recusado:",
-    resultadoMovimento.motivo
-  );
+    return false;
+  }
 
-  return false;
-
-}
-
-if (
-  participante.tipo ===
-  "jogador"
-) {
-
-  adicionarEventoHistoricoCombate(
-    `${participante.nome} se movimentou`,
-    "Você mudou de posição no campo de batalha."
-  );
-
-  exibirAcaoAtualCombate(
-    "Você se movimentou."
-  );
-
-}
-
-  const token =
-    tabuleiroCombate.querySelector(
-      `[data-id-participante="${participante.id}"]`
+  if (participante.tipo === "jogador") {
+    adicionarEventoHistoricoCombate(
+      `${participante.nome} se movimentou`,
+      "Você mudou de posição no campo de batalha.",
     );
+
+    exibirAcaoAtualCombate("Você se movimentou.");
+  }
+
+  const token = tabuleiroCombate.querySelector(`[data-id-participante="${participante.id}"]`);
 
   if (!token) {
     return;
   }
 
-  token.style.gridColumn =
-    coluna;
+  token.style.gridColumn = coluna;
 
-  token.style.gridRow =
-    linha;
+  token.style.gridRow = linha;
 
-    atualizarInterfaceTurno(
-  estadoAtualJogo.combateAtual
-);
+  atualizarInterfaceTurno(estadoAtualJogo.combateAtual);
 
-    return true;
-
+  return true;
 }
 
-function iniciarArrasteToken(
-  evento
-) {
-
-  const token =
-    evento.target.closest(
-      ".token-combate"
-    );
+function iniciarArrasteToken(evento) {
+  const token = evento.target.closest(".token-combate");
 
   if (!token) {
     return;
   }
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
   if (!combate) {
     return;
   }
 
-  const participante =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        token.dataset.idParticipante
-    );
+  const participante = combate.participantes.find(
+    (participante) => participante.id === token.dataset.idParticipante,
+  );
 
-  if (
-    !participante ||
-    participante.tipo !== "jogador"
-  ) {
+  if (!participante || participante.tipo !== "jogador") {
     return;
   }
 
-  selecionarTokenJogador(
-    evento
-  );
+  selecionarTokenJogador(evento);
 
-  tokenArrastado =
-    token;
+  tokenArrastado = token;
 
   inicioArraste = {
     x: evento.clientX,
     y: evento.clientY,
-    ponteiroId: evento.pointerId
+    ponteiroId: evento.pointerId,
   };
 
-  tokenArrastado.classList.add(
-    "token-arrastando"
-  );
+  tokenArrastado.classList.add("token-arrastando");
 
-  tokenArrastado.setPointerCapture(
-    evento.pointerId
-  );
+  tokenArrastado.setPointerCapture(evento.pointerId);
 
   evento.preventDefault();
-
 }
 
-function continuarArrasteToken(
-  evento
-) {
-
-  if (
-    !tokenArrastado ||
-    evento.pointerId !==
-      inicioArraste.ponteiroId
-  ) {
+function continuarArrasteToken(evento) {
+  if (!tokenArrastado || evento.pointerId !== inicioArraste.ponteiroId) {
     return;
   }
 
-  const deslocamentoX =
-    evento.clientX -
-    inicioArraste.x;
+  const deslocamentoX = evento.clientX - inicioArraste.x;
 
-  const deslocamentoY =
-    evento.clientY -
-    inicioArraste.y;
+  const deslocamentoY = evento.clientY - inicioArraste.y;
 
-  tokenArrastado.style.transform =
-    `translate(
+  tokenArrastado.style.transform = `translate(
       ${deslocamentoX}px,
       ${deslocamentoY}px
     )`;
-
 }
 
-function finalizarArrasteToken(
-  evento
-) {
-
-  if (
-    !tokenArrastado ||
-    evento.pointerId !==
-      inicioArraste.ponteiroId
-  ) {
+function finalizarArrasteToken(evento) {
+  if (!tokenArrastado || evento.pointerId !== inicioArraste.ponteiroId) {
     return;
   }
 
-  tokenArrastado.style.pointerEvents =
-    "none";
+  tokenArrastado.style.pointerEvents = "none";
 
-  const elementoDestino =
-    document.elementFromPoint(
-      evento.clientX,
-      evento.clientY
-    );
+  const elementoDestino = document.elementFromPoint(evento.clientX, evento.clientY);
 
-  tokenArrastado.style.pointerEvents =
-    "";
+  tokenArrastado.style.pointerEvents = "";
 
-  const celula =
-    elementoDestino
-      ? elementoDestino.closest(
-          ".celula-combate"
-        )
-      : null;
+  const celula = elementoDestino ? elementoDestino.closest(".celula-combate") : null;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-  const participante =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        tokenArrastado.dataset.idParticipante
-    );
+  const participante = combate.participantes.find(
+    (participante) => participante.id === tokenArrastado.dataset.idParticipante,
+  );
 
-  if (
-    celula &&
-    participante
-  ) {
+  if (celula && participante) {
+    const coluna = Number(celula.dataset.coluna);
 
-    const coluna =
-      Number(
-        celula.dataset.coluna
-      );
+    const linha = Number(celula.dataset.linha);
 
-    const linha =
-      Number(
-        celula.dataset.linha
-      );
-
-    moverParticipante(
-      participante,
-      coluna,
-      linha
-    );
-
+    moverParticipante(participante, coluna, linha);
   }
 
-  tokenArrastado.style.transform =
-    "";
+  tokenArrastado.style.transform = "";
 
-  tokenArrastado.classList.remove(
-    "token-arrastando"
-  );
+  tokenArrastado.classList.remove("token-arrastando");
 
-  tokenArrastado.releasePointerCapture(
-    evento.pointerId
-  );
+  tokenArrastado.releasePointerCapture(evento.pointerId);
 
-  tokenArrastado =
-    null;
+  tokenArrastado = null;
 
-  inicioArraste =
-    null;
-
+  inicioArraste = null;
 }
 
-function moverTokenSelecionado(
-  evento
-) {
-
-  const celula =
-    evento.target.closest(
-      ".celula-combate"
-    );
+function moverTokenSelecionado(evento) {
+  const celula = evento.target.closest(".celula-combate");
 
   if (!celula) {
     return;
   }
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-  if (
-    !combate ||
-    !combate.participanteSelecionadoId
-  ) {
+  if (!combate || !combate.participanteSelecionadoId) {
     return;
   }
 
-  const participante =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        combate.participanteSelecionadoId
-    );
+  const participante = combate.participantes.find(
+    (participante) => participante.id === combate.participanteSelecionadoId,
+  );
 
   if (!participante) {
     return;
   }
 
-  const coluna =
-    Number(
-      celula.dataset.coluna
-    );
+  const coluna = Number(celula.dataset.coluna);
 
-  const linha =
-    Number(
-      celula.dataset.linha
-    );
+  const linha = Number(celula.dataset.linha);
 
-  moverParticipante(
-  participante,
-  coluna,
-  linha
-);
-
+  moverParticipante(participante, coluna, linha);
 }
 
 function exibirEscolhas(escolhas) {
-
   escolhasAtuais = escolhas;
 
   const possuiEscolhas = escolhas.length > 0;
@@ -2384,114 +688,69 @@ function exibirEscolhas(escolhas) {
 
   listaEscolhas.hidden = !possuiEscolhas;
 
-  listaEscolhas.innerHTML =
-    "";
+  listaEscolhas.innerHTML = "";
 
-    for (const escolha of escolhas) {
+  for (const escolha of escolhas) {
+    const botaoEscolha = document.createElement("button");
 
-    const botaoEscolha =
-      document.createElement(
-        "button"
-      );
+    botaoEscolha.type = "button";
 
+    botaoEscolha.classList.add("botao-escolha");
 
-    botaoEscolha.type =
-      "button";
+    botaoEscolha.dataset.idEscolha = escolha.id;
 
+    botaoEscolha.textContent = escolha.texto;
 
-    botaoEscolha.classList.add(
-      "botao-escolha"
-    );
-
-
-    botaoEscolha.dataset.idEscolha =
-      escolha.id;
-
-
-    botaoEscolha.textContent =
-      escolha.texto;
-
-
-    listaEscolhas.append(
-      botaoEscolha
-    );
-
-    }
+    listaEscolhas.append(botaoEscolha);
+  }
 }
 
 function exibirContexto(contexto) {
-
   contextoCena.replaceChildren();
 
-
-  const paragrafos =
-    Array.isArray(contexto)
-      ? contexto
-      : [contexto];
-
+  const paragrafos = Array.isArray(contexto) ? contexto : [contexto];
 
   for (const texto of paragrafos) {
+    const paragrafo = document.createElement("p");
 
-    const paragrafo =
-      document.createElement(
-        "p"
-      );
+    paragrafo.textContent = texto;
 
-
-    paragrafo.textContent =
-      texto;
-
-
-    contextoCena.append(
-      paragrafo
-    );
-
+    contextoCena.append(paragrafo);
   }
-
 }
 
 function exibirCena(aventura, cena) {
-
   tituloAventura.textContent = aventura.titulo;
 
   exibirContexto(cena.contexto);
 
   verificarCombateDaCena(cena);
 
-  solicitacaoTeste.textContent ="";
+  solicitacaoTeste.textContent = "";
 
   solicitacaoTeste.hidden = true;
 
-  const escolhasDisponiveis =
-  obterEscolhasDisponiveis(
+  const escolhasDisponiveis = obterEscolhasDisponiveis(
     estadoAtualJogo.progresso.cenaId,
-    cena.escolhas
+    cena.escolhas,
   );
 
-exibirEscolhas(
-  escolhasDisponiveis
-);
+  exibirEscolhas(escolhasDisponiveis);
 }
 
 function ocultarEscolhas() {
-
-  areaEscolhas.hidden =
-    true;
-
+  areaEscolhas.hidden = true;
 }
 
 function iniciarCaminho(escolha) {
-
   caminhoAtual = escolha;
 
   estadoAtualJogo.progresso.caminhoId = escolha.id;
 
   iniciarEtapa(escolha.etapaInicial);
-
 }
 
 function obterAvisoTipoRolagem(teste) {
-
   if (teste.tipoRolagem === "vantagem") {
     return " Role 2d20 e use o maior resultado.";
   }
@@ -2501,77 +760,50 @@ function obterAvisoTipoRolagem(teste) {
   }
 
   return "";
-
 }
 
 function iniciarEtapa(idEtapa) {
-
   const etapa = caminhoAtual.etapas[idEtapa];
 
-
   if (!etapa) {
-
-    console.warn(
-      "Etapa não encontrada:",
-      idEtapa
-    );
+    console.warn("Etapa não encontrada:", idEtapa);
 
     return;
-
   }
-
 
   etapaAtual = etapa;
 
   estadoAtualJogo.progresso.etapaId = idEtapa;
 
-    exibirContexto( etapa.descricao);
-
+  exibirContexto(etapa.descricao);
 
   testePendente = etapa.teste;
 
   estadoAtualJogo.testePendente = etapa.teste;
 
-
   ocultarEscolhas();
 
+  const avisoTipoRolagem = obterAvisoTipoRolagem(etapa.teste);
 
-  const avisoTipoRolagem =
-  obterAvisoTipoRolagem(etapa.teste);
+  solicitacaoTeste.textContent = etapa.instrucao + avisoTipoRolagem;
 
-solicitacaoTeste.textContent =
-  etapa.instrucao +
-  avisoTipoRolagem;
+  solicitacaoTeste.hidden = false;
 
-
-  solicitacaoTeste.hidden =
-    false;
-
-
-  console.log(
-    "Etapa atual:",
-    etapaAtual
-  );
-
+  console.log("Etapa atual:", etapaAtual);
 }
 
 function resolverTeste(resultadoRolagem) {
-
   const testeResolvido = testePendente;
 
-  const resultadoTeste =
-  SistemaTestes.resolverTesteContraCd(
+  const resultadoTeste = SistemaTestes.resolverTesteContraCd(
     resultadoRolagem,
     testeResolvido.dificuldade,
-    testeResolvido.tipoRolagem || "normal"
+    testeResolvido.tipoRolagem || "normal",
   );
 
   const testeFoiBemSucedido = resultadoTeste.sucesso;
 
-  const tipoResultado =
-    testeFoiBemSucedido
-      ? "sucesso"
-      : "fracasso";
+  const tipoResultado = testeFoiBemSucedido ? "sucesso" : "fracasso";
 
   const consequencia = etapaAtual.resultados[tipoResultado];
 
@@ -2585,729 +817,407 @@ function resolverTeste(resultadoRolagem) {
 
   exibirContexto(consequencia.texto);
 
-  console.log(
-    "Consequência:",
-    consequencia
-  );
+  console.log("Consequência:", consequencia);
 
   if (consequencia.escolhas) {
-
-    exibirEscolhas(
-      consequencia.escolhas
-    );
+    exibirEscolhas(consequencia.escolhas);
     return;
   }
 
-  if (
-    consequencia.voltarParaEscolhas) {
-
-      if (
-  consequencia.removerEscolha &&
-  caminhoAtual
-) {
-
-  registrarEscolhaRemovida(
-  estadoAtualJogo.progresso.cenaId,
-  caminhoAtual.id
-);
-
-}
-const escolhasDisponiveis =
-  obterEscolhasDisponiveis(
-    estadoAtualJogo.progresso.cenaId,
-    cenaAtual.escolhas
-  );
-    caminhoAtual =
-      null;
-
-
-    etapaAtual =
-      null;
-
-      estadoAtualJogo.progresso.caminhoId = null;
-      estadoAtualJogo.progresso.etapaId = null;
-
-    exibirEscolhas(
-  escolhasDisponiveis
-);
-
-    return;
+  if (consequencia.voltarParaEscolhas) {
+    if (consequencia.removerEscolha && caminhoAtual) {
+      registrarEscolhaRemovida(estadoAtualJogo.progresso.cenaId, caminhoAtual.id);
     }
-
-    if (consequencia.proximaEtapa) {
-
-    exibirEscolhas(
-      [
-
-        {
-
-          id:
-            "continuarEtapa",
-
-          texto:
-            "Continuar.",
-
-          proximaEtapa:
-            consequencia.proximaEtapa
-
-        }
-
-      ]
+    const escolhasDisponiveis = obterEscolhasDisponiveis(
+      estadoAtualJogo.progresso.cenaId,
+      cenaAtual.escolhas,
     );
+    caminhoAtual = null;
+
+    etapaAtual = null;
+
+    estadoAtualJogo.progresso.caminhoId = null;
+    estadoAtualJogo.progresso.etapaId = null;
+
+    exibirEscolhas(escolhasDisponiveis);
 
     return;
-
   }
 
+  if (consequencia.proximaEtapa) {
+    exibirEscolhas([
+      {
+        id: "continuarEtapa",
+
+        texto: "Continuar.",
+
+        proximaEtapa: consequencia.proximaEtapa,
+      },
+    ]);
+
+    return;
+  }
 
   if (consequencia.proximaCena) {
+    exibirEscolhas([
+      {
+        id: "continuarCena",
 
-    exibirEscolhas(
-      [
+        texto: "Continuar.",
 
-        {
-
-          id:
-            "continuarCena",
-
-          texto:
-            "Continuar.",
-
-          proximaCena:
-            consequencia.proximaCena
-
-        }
-
-      ]
-    );
+        proximaCena: consequencia.proximaCena,
+      },
+    ]);
 
     return;
-
   }
 
-
-  console.warn(
-    "A consequência não possui um destino:",
-    consequencia
-  );
-
+  console.warn("A consequência não possui um destino:", consequencia);
 }
 
-function resolverIniciativaJogador(
-  resultadoRolagem
-) {
+function resolverIniciativaJogador(resultadoRolagem) {
+  const combate = estadoAtualJogo.combateAtual;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
-
-  if (
-    !combate ||
-    !combate.iniciativaPendenteId
-  ) {
+  if (!combate || !combate.iniciativaPendenteId) {
     return;
   }
 
-  SistemaCombate.registrarIniciativa(
-    combate,
-    combate.iniciativaPendenteId,
-    resultadoRolagem.total
-  );
+  SistemaCombate.registrarIniciativa(combate, combate.iniciativaPendenteId, resultadoRolagem.total);
 
-  combate.iniciativaPendenteId =
-    null;
+  combate.iniciativaPendenteId = null;
 
-  const ordemTurnos =
-    SistemaCombate.ordenarTurnos(
-      combate
-    );
+  const ordemTurnos = SistemaCombate.ordenarTurnos(combate);
 
-    processarTurnoAtual(
-  combate
-);
+  processarTurnoAtual(combate);
 
-  solicitacaoCombate.textContent =
-    "";
+  solicitacaoCombate.textContent = "";
 
-  solicitacaoCombate.hidden =
-    true;
+  solicitacaoCombate.hidden = true;
 
-  console.log(
-    "Ordem dos turnos:",
-    ordemTurnos
-  );
+  console.log("Ordem dos turnos:", ordemTurnos);
 
-  console.log(
-    "Participante ativo:",
-    combate.participanteAtivoId
-  );
-
+  console.log("Participante ativo:", combate.participanteAtivoId);
 }
 
-function formatarRolagemDano(
-  ataque,
-  critico
-) {
+function formatarRolagemDano(ataque, critico) {
+  const partes = [];
 
-  const partes =
-    [];
+  for (const grupo of ataque.dano.gruposDeDados) {
+    const quantidade = critico ? grupo.quantidade * 2 : grupo.quantidade;
 
-  for (
-    const grupo of
-      ataque.dano.gruposDeDados
-  ) {
-
-    const quantidade =
-      critico
-        ? grupo.quantidade * 2
-        : grupo.quantidade;
-
-    partes.push(
-      `${quantidade}d${grupo.numeroDeFaces}`
-    );
-
+    partes.push(`${quantidade}d${grupo.numeroDeFaces}`);
   }
 
-  const modificador =
-    ataque.dano.modificador;
+  const modificador = ataque.dano.modificador;
 
   if (modificador > 0) {
-    partes.push(
-      `+ ${modificador}`
-    );
+    partes.push(`+ ${modificador}`);
   }
 
   if (modificador < 0) {
-    partes.push(
-      `- ${Math.abs(modificador)}`
-    );
+    partes.push(`- ${Math.abs(modificador)}`);
   }
 
-  return partes.join(
-    " "
-  );
-
+  return partes.join(" ");
 }
 
-function oferecerEfeitoDano(
-  combate,
-  textoDano
-) {
-  const danoPendente =
-    combate.danoPendente;
+function oferecerEfeitoDano(combate, textoDano) {
+  const danoPendente = combate.danoPendente;
 
-  const operacao =
-    danoPendente
-      ?.efeitos
-      ?.find(
-        efeito =>
-          efeito.tipo ===
-          "rolarNovamente"
-      );
+  const operacao = danoPendente?.efeitos?.find((efeito) => efeito.tipo === "rolarNovamente");
 
   if (!operacao) {
     return false;
   }
 
-  const atacante =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        danoPendente.atacanteId
-    );
+  const atacante = combate.participantes.find(
+    (participante) => participante.id === danoPendente.atacanteId,
+  );
 
   if (!atacante) {
     return false;
   }
 
-  const resultadoBusca =
-    buscarEfeitoPorId(
-      operacao.efeitoId
-    );
+  const resultadoBusca = buscarEfeitoPorId(operacao.efeitoId);
 
   if (!resultadoBusca.sucesso) {
     return false;
   }
 
-  const efeito =
-    resultadoBusca.efeito;
+  const efeito = resultadoBusca.efeito;
 
-  acoesCombate.innerHTML =
-    "";
+  acoesCombate.innerHTML = "";
 
-  const botaoUsar =
-    document.createElement(
-      "button"
-    );
+  const botaoUsar = document.createElement("button");
 
-  botaoUsar.type =
-    "button";
+  botaoUsar.type = "button";
 
-  botaoUsar.textContent =
-    `Usar ${efeito.nome}`;
+  botaoUsar.textContent = `Usar ${efeito.nome}`;
 
-  const botaoIgnorar =
-    document.createElement(
-      "button"
-    );
+  const botaoIgnorar = document.createElement("button");
 
-  botaoIgnorar.type =
-    "button";
+  botaoIgnorar.type = "button";
 
-  botaoIgnorar.textContent =
-    "Rolar dano normal";
+  botaoIgnorar.textContent = "Rolar dano normal";
 
-  botaoUsar.addEventListener(
-    "click",
-    function() {
-      const resultado =
-        ativarEfeitoPendente(
-          atacante,
-          danoPendente,
-          efeito.id
-        );
+  botaoUsar.addEventListener("click", function () {
+    const resultado = ativarEfeitoPendente(atacante, danoPendente, efeito.id);
 
-      if (!resultado.sucesso) {
-        console.warn(
-          "Não foi possível ativar o efeito:",
-          resultado.motivo
-        );
+    if (!resultado.sucesso) {
+      console.warn("Não foi possível ativar o efeito:", resultado.motivo);
 
-        return;
-      }
-
-      acoesCombate.innerHTML =
-        "";
-
-      solicitacaoCombate.textContent =
-        `${efeito.nome} ativado. ` +
-        `Role ${textoDano} duas vezes.`;
-
-      solicitacaoCombate.hidden =
-        false;
+      return;
     }
-  );
 
-  botaoIgnorar.addEventListener(
-    "click",
-    function() {
-      acoesCombate.innerHTML =
-        "";
+    acoesCombate.innerHTML = "";
 
-      solicitacaoCombate.textContent =
-        `Role ${textoDano} de dano.`;
+    solicitacaoCombate.textContent = `${efeito.nome} ativado. ` + `Role ${textoDano} duas vezes.`;
 
-      solicitacaoCombate.hidden =
-        false;
-    }
-  );
+    solicitacaoCombate.hidden = false;
+  });
 
-  acoesCombate.append(
-    botaoUsar,
-    botaoIgnorar
-  );
+  botaoIgnorar.addEventListener("click", function () {
+    acoesCombate.innerHTML = "";
 
-  solicitacaoCombate.textContent =
-    `${efeito.nome} está disponível. ` +
-    "Deseja utilizá-lo?";
+    solicitacaoCombate.textContent = `Role ${textoDano} de dano.`;
 
-  solicitacaoCombate.hidden =
-    false;
+    solicitacaoCombate.hidden = false;
+  });
+
+  acoesCombate.append(botaoUsar, botaoIgnorar);
+
+  solicitacaoCombate.textContent = `${efeito.nome} está disponível. ` + "Deseja utilizá-lo?";
+
+  solicitacaoCombate.hidden = false;
 
   return true;
 }
 
-function resolverAtaqueJogador(
-  resultadoRolagem
-) {
+function resolverAtaqueJogador(resultadoRolagem) {
+  const combate = estadoAtualJogo.combateAtual;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
-
-  const resultadoAtaque =
-    SistemaCombate.resolverAtaque(
-      combate,
-      resultadoRolagem
-    );
+  const resultadoAtaque = SistemaCombate.resolverAtaque(combate, resultadoRolagem);
 
   if (!resultadoAtaque.sucesso) {
-
-    console.warn(
-      "Não foi possível resolver o ataque:",
-      resultadoAtaque.motivo
-    );
+    console.warn("Não foi possível resolver o ataque:", resultadoAtaque.motivo);
 
     return;
-
   }
 
-  atualizarInterfaceTurno(
-    combate
-  );
+  atualizarInterfaceTurno(combate);
 
   if (!resultadoAtaque.acertou) {
-
     adicionarEventoHistoricoCombate(
-  `${resultadoAtaque.atacante.nome} errou o ataque`,
-  `Você tentou atingir ` +
-  `${resultadoAtaque.alvo.nome} com ` +
-  `${resultadoAtaque.ataque.nome}, mas errou.`
-);
+      `${resultadoAtaque.atacante.nome} errou o ataque`,
+      `Você tentou atingir ` +
+        `${resultadoAtaque.alvo.nome} com ` +
+        `${resultadoAtaque.ataque.nome}, mas errou.`,
+    );
 
-exibirAcaoAtualCombate(
-  "Você errou o ataque."
-);
+    exibirAcaoAtualCombate("Você errou o ataque.");
 
-    solicitacaoCombate.textContent =
-      "O ataque errou.";
+    solicitacaoCombate.textContent = "O ataque errou.";
 
-    solicitacaoCombate.hidden =
-      false;
+    solicitacaoCombate.hidden = false;
 
     return;
-
   }
 
   adicionarEventoHistoricoCombate(
-  resultadoAtaque.acertoCritico
-    ? `${resultadoAtaque.atacante.nome} conseguiu um acerto crítico`
-    : `${resultadoAtaque.atacante.nome} acertou o ataque`,
+    resultadoAtaque.acertoCritico
+      ? `${resultadoAtaque.atacante.nome} conseguiu um acerto crítico`
+      : `${resultadoAtaque.atacante.nome} acertou o ataque`,
 
-  `Você atingiu ` +
-  `${resultadoAtaque.alvo.nome} com ` +
-  `${resultadoAtaque.ataque.nome}.`
-);
+    `Você atingiu ` + `${resultadoAtaque.alvo.nome} com ` + `${resultadoAtaque.ataque.nome}.`,
+  );
 
-exibirAcaoAtualCombate(
-  resultadoAtaque.acertoCritico
-    ? "Você conseguiu um acerto crítico."
-    : "Você acertou o ataque."
-);
+  exibirAcaoAtualCombate(
+    resultadoAtaque.acertoCritico ? "Você conseguiu um acerto crítico." : "Você acertou o ataque.",
+  );
 
-  const textoDano =
-    formatarRolagemDano(
-      resultadoAtaque.ataque,
-      resultadoAtaque.acertoCritico
-    );
+  const textoDano = formatarRolagemDano(resultadoAtaque.ataque, resultadoAtaque.acertoCritico);
 
-      const efeitoFoiOferecido =
-    oferecerEfeitoDano(
-      combate,
-      textoDano
-    );
+  const efeitoFoiOferecido = oferecerEfeitoDano(combate, textoDano);
 
   if (efeitoFoiOferecido) {
     return;
   }
 
-  solicitacaoCombate.textContent =
-    resultadoAtaque.acertoCritico
-      ? `Acerto crítico! Role ${textoDano} de dano.`
-      : `O ataque acertou! Role ${textoDano} de dano.`;
+  solicitacaoCombate.textContent = resultadoAtaque.acertoCritico
+    ? `Acerto crítico! Role ${textoDano} de dano.`
+    : `O ataque acertou! Role ${textoDano} de dano.`;
 
-  solicitacaoCombate.hidden =
-    false;
-
+  solicitacaoCombate.hidden = false;
 }
 
-function resolverDanoJogador(
-  resultadoRolagem
-) {
+function resolverDanoJogador(resultadoRolagem) {
+  const combate = estadoAtualJogo.combateAtual;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const danoPendente = combate.danoPendente;
 
-      const danoPendente =
-    combate.danoPendente;
-
-  if (
-    danoPendente
-      ?.efeitoAtivo
-  ) {
-    const registro =
-      registrarRolagemEfeito(
-        danoPendente,
-        resultadoRolagem
-      );
+  if (danoPendente?.efeitoAtivo) {
+    const registro = registrarRolagemEfeito(danoPendente, resultadoRolagem);
 
     if (!registro.sucesso) {
-      console.warn(
-        "Não foi possível registrar a rolagem do efeito:",
-        registro.motivo
-      );
+      console.warn("Não foi possível registrar a rolagem do efeito:", registro.motivo);
 
       return;
     }
 
     if (!registro.concluida) {
-      solicitacaoCombate.textContent =
-        "Primeira rolagem registrada. " +
-        "Role novamente o dano.";
+      solicitacaoCombate.textContent = "Primeira rolagem registrada. " + "Role novamente o dano.";
 
-      solicitacaoCombate.hidden =
-        false;
+      solicitacaoCombate.hidden = false;
 
       return;
     }
 
-    const resultados =
-      registro.rolagens.map(
-        rolagem =>
-          rolagem.total
-      );
+    const resultados = registro.rolagens.map((rolagem) => rolagem.total);
 
     solicitacaoCombate.textContent =
-      "Rolagens de dano: " +
-      resultados.join(
-        " e "
-      ) +
-      ". Escolha qual resultado utilizar.";
+      "Rolagens de dano: " + resultados.join(" e ") + ". Escolha qual resultado utilizar.";
 
-    solicitacaoCombate.hidden =
-      false;
+    solicitacaoCombate.hidden = false;
 
-    console.log(
-      "Rolagens do efeito:",
-      registro.rolagens
-    );
+    console.log("Rolagens do efeito:", registro.rolagens);
 
     return;
   }
 
-  const resultadoDano =
-    SistemaCombate.resolverDano(
-      combate,
-      resultadoRolagem
-    );
+  const resultadoDano = SistemaCombate.resolverDano(combate, resultadoRolagem);
 
   if (!resultadoDano.sucesso) {
-
-    console.warn(
-      "Não foi possível resolver o dano:",
-      resultadoDano.motivo
-    );
+    console.warn("Não foi possível resolver o dano:", resultadoDano.motivo);
 
     return;
-
   }
 
   adicionarEventoHistoricoCombate(
-  resultadoDano.foiDerrotado
-    ? `${resultadoDano.alvo.nome} foi derrotado`
-    : `${resultadoDano.alvo.nome} sofreu dano`,
-
-  resultadoDano.foiDerrotado
-    ? `Seu ataque derrotou ${resultadoDano.alvo.nome}.`
-    : `Seu ataque causou ` +
-      `${resultadoDano.dano} de dano.`
-);
-
-exibirAcaoAtualCombate(
-  resultadoDano.foiDerrotado
-    ? `Você derrotou ${resultadoDano.alvo.nome}.`
-    : `Você causou ${resultadoDano.dano} de dano.`
-);
-
-  solicitacaoCombate.textContent =
     resultadoDano.foiDerrotado
-      ? `${resultadoDano.alvo.nome} foi derrotado.`
-      : `${resultadoDano.alvo.nome} sofreu ` +
-        `${resultadoDano.dano} de dano.`;
+      ? `${resultadoDano.alvo.nome} foi derrotado`
+      : `${resultadoDano.alvo.nome} sofreu dano`,
 
-  solicitacaoCombate.hidden =
-    false;
-
-  atualizarInterfaceTurno(
-    combate
+    resultadoDano.foiDerrotado
+      ? `Seu ataque derrotou ${resultadoDano.alvo.nome}.`
+      : `Seu ataque causou ` + `${resultadoDano.dano} de dano.`,
   );
 
-  if (
-  resultadoDano.resultadoCombate
-) {
-
-  notificarFimCombate(
-    combate
+  exibirAcaoAtualCombate(
+    resultadoDano.foiDerrotado
+      ? `Você derrotou ${resultadoDano.alvo.nome}.`
+      : `Você causou ${resultadoDano.dano} de dano.`,
   );
 
+  solicitacaoCombate.textContent = resultadoDano.foiDerrotado
+    ? `${resultadoDano.alvo.nome} foi derrotado.`
+    : `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
+
+  solicitacaoCombate.hidden = false;
+
+  atualizarInterfaceTurno(combate);
+
+  if (resultadoDano.resultadoCombate) {
+    notificarFimCombate(combate);
+  }
+
+  if (resultadoDano.resultadoCombate === "vitoria") {
+    solicitacaoCombate.textContent = "O inimigo foi derrotado. Vitória!";
+  } else if (resultadoDano.resultadoCombate === "derrota") {
+    solicitacaoCombate.textContent = "O personagem foi derrotado.";
+  } else if (resultadoDano.foiDerrotado) {
+    solicitacaoCombate.textContent = `${resultadoDano.alvo.nome} foi derrotado.`;
+  } else {
+    solicitacaoCombate.textContent =
+      `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
+  }
 }
 
-  if (
-  resultadoDano.resultadoCombate ===
-  "vitoria"
-) {
+function receberResultadoRolagem(evento) {
+  const resultadoRolagem = evento.detail;
 
-  solicitacaoCombate.textContent =
-    "O inimigo foi derrotado. Vitória!";
+  const combate = estadoAtualJogo.combateAtual;
 
-} else if (
-  resultadoDano.resultadoCombate ===
-  "derrota"
-) {
-
-  solicitacaoCombate.textContent =
-    "O personagem foi derrotado.";
-
-} else if (
-  resultadoDano.foiDerrotado
-) {
-
-  solicitacaoCombate.textContent =
-    `${resultadoDano.alvo.nome} foi derrotado.`;
-
-} else {
-
-  solicitacaoCombate.textContent =
-    `${resultadoDano.alvo.nome} sofreu ` +
-    `${resultadoDano.dano} de dano.`;
-
-}
-
-}
-
-function receberResultadoRolagem(
-  evento
-) {
-
-  const resultadoRolagem =
-    evento.detail;
-
-  const combate =
-    estadoAtualJogo.combateAtual;
-
-  if (
-    combate &&
-    combate.iniciativaPendenteId
-  ) {
-
-    resolverIniciativaJogador(
-      resultadoRolagem
-    );
+  if (combate && combate.iniciativaPendenteId) {
+    resolverIniciativaJogador(resultadoRolagem);
 
     return;
-
   }
 
-  if (
-  combate &&
-  combate.ataquePendente
-) {
+  if (combate && combate.ataquePendente) {
+    resolverAtaqueJogador(resultadoRolagem);
 
-  resolverAtaqueJogador(
-    resultadoRolagem
-  );
-
-  return;
+    return;
   }
 
-  if (
-  combate &&
-  combate.danoPendente
-) {
+  if (combate && combate.danoPendente) {
+    resolverDanoJogador(resultadoRolagem);
 
-  resolverDanoJogador(
-    resultadoRolagem
-  );
-
-  return;
+    return;
   }
 
   if (!testePendente) {
     return;
   }
 
-  console.log(
-    "Resultado recebido pela aventura:",
-    resultadoRolagem
-  );
+  console.log("Resultado recebido pela aventura:", resultadoRolagem);
 
-  resolverTeste(
-    resultadoRolagem
-  );
-
+  resolverTeste(resultadoRolagem);
 }
 
 function selecionarEscolha(evento) {
-
-  if (testePendente) {return;}
+  if (testePendente) {
+    return;
+  }
 
   const botaoEscolha = evento.target.closest(".botao-escolha");
 
-  if (!botaoEscolha) {return;}
+  if (!botaoEscolha) {
+    return;
+  }
 
   const idEscolha = botaoEscolha.dataset.idEscolha;
 
-  const escolhaSelecionada =
-    escolhasAtuais.find(
-      function (escolha) {
+  const escolhaSelecionada = escolhasAtuais.find(function (escolha) {
+    return escolha.id === idEscolha;
+  });
 
-        return escolha.id === idEscolha;
+  if (!escolhaSelecionada) {
+    console.warn("Escolha não encontrada:", idEscolha);
 
-      }
-    );
+    return;
+  }
 
-    if (!escolhaSelecionada) {
-
-  console.warn(
-    "Escolha não encontrada:",
-    idEscolha
-  );
-
-  return;
-
- }
-
-
-  console.log(
-    "Escolha selecionada:",
-    escolhaSelecionada
-  );
+  console.log("Escolha selecionada:", escolhaSelecionada);
 
   if (escolhaSelecionada.etapaInicial) {
+    iniciarCaminho(escolhaSelecionada);
 
-  iniciarCaminho(escolhaSelecionada);
-
-  return;
-
+    return;
   }
 
   if (escolhaSelecionada.proximaEtapa) {
+    iniciarEtapa(escolhaSelecionada.proximaEtapa);
 
-  iniciarEtapa(escolhaSelecionada.proximaEtapa);
-
-  return;
-
+    return;
   }
 
   if (!escolhaSelecionada.proximaCena) {
+    console.log("Esta escolha ainda não possui uma próxima cena.");
 
-  console.log( "Esta escolha ainda não possui uma próxima cena.");
-
-  return;
-
+    return;
   }
 
-
-  mudarCena(
-  escolhaSelecionada.proximaCena
-  );
-
+  mudarCena(escolhaSelecionada.proximaCena);
 }
 
 function mudarCena(idProximaCena) {
-
   const proximaCena = aventuraAtual.cenas[idProximaCena];
 
-
   if (!proximaCena) {
-
-    console.warn(
-      "Cena não encontrada:",
-      idProximaCena
-    );
+    console.warn("Cena não encontrada:", idProximaCena);
 
     return;
-
   }
-
 
   cenaAtual = proximaCena;
 
@@ -3316,469 +1226,230 @@ function mudarCena(idProximaCena) {
   estadoAtualJogo.progresso.etapaId = null;
   estadoAtualJogo.testePendente = null;
 
-   caminhoAtual = null;
+  caminhoAtual = null;
 
+  etapaAtual = null;
 
-etapaAtual =
-  null;
+  testePendente = null;
 
-
-testePendente =
-  null;
-
-
-  exibirCena(
-    aventuraAtual,
-    cenaAtual
-  );
-
+  exibirCena(aventuraAtual, cenaAtual);
 }
 
-function processarTurnoAtual(
-  combate
-) {
-
-  atualizarInterfaceTurno(
-    combate
-  );
+function processarTurnoAtual(combate) {
+  atualizarInterfaceTurno(combate);
 
   if (combate.status !== "ativo") {
     return;
   }
 
-  const participanteAtivo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        combate.participanteAtivoId
-    );
-
-  if (!participanteAtivo) {
-  return;
-}
-
-if (
-  participanteAtivo.tipo ===
-  "jogador"
-) {
-
-  exibirAcaoAtualCombate(
-    "É o seu turno."
+  const participanteAtivo = combate.participantes.find(
+    (participante) => participante.id === combate.participanteAtivoId,
   );
 
-  return;
+  if (!participanteAtivo) {
+    return;
+  }
 
-}
+  if (participanteAtivo.tipo === "jogador") {
+    exibirAcaoAtualCombate("É o seu turno.");
 
-exibirAcaoAtualCombate(
-  `${participanteAtivo.nome} está decidindo o que fazer.`
-);
+    return;
+  }
 
-  solicitacaoCombate.textContent =
-  "";
+  exibirAcaoAtualCombate(`${participanteAtivo.nome} está decidindo o que fazer.`);
 
-solicitacaoCombate.hidden =
-  true;
+  solicitacaoCombate.textContent = "";
 
-  setTimeout(
-  async function() {
+  solicitacaoCombate.hidden = true;
 
+  setTimeout(async function () {
     try {
+      await esperar(800);
 
-      await esperar(
-        800
-      );
+      const resultado = SistemaCombate.executarTurnoInimigo(combate);
 
-      const resultado =
-        SistemaCombate.executarTurnoInimigo(
-          combate
-        );
+      await registrarResultadoTurnoInimigo(resultado, participanteAtivo);
 
-      await registrarResultadoTurnoInimigo(
-        resultado,
-        participanteAtivo
-      );
-
-      atualizarInterfaceTurno(
-        combate
-      );
-
+      atualizarInterfaceTurno(combate);
     } catch (erro) {
+      console.error("Erro durante o turno inimigo:", erro);
 
-      console.error(
-        "Erro durante o turno inimigo:",
-        erro
-      );
-
-      exibirAcaoAtualCombate(
-        `${participanteAtivo.nome} não conseguiu concluir o turno.`
-      );
+      exibirAcaoAtualCombate(`${participanteAtivo.nome} não conseguiu concluir o turno.`);
 
       adicionarEventoHistoricoCombate(
         `Erro no turno de ${participanteAtivo.nome}`,
-        "O turno foi encerrado para que o combate pudesse continuar."
+        "O turno foi encerrado para que o combate pudesse continuar.",
       );
 
-      await esperar(
-        1200
-      );
-
+      await esperar(1200);
     }
 
-    if (
-      combate.status !==
-      "ativo"
-    ) {
+    if (combate.status !== "ativo") {
+      notificarFimCombate(combate);
 
-      notificarFimCombate(
-        combate
-      );
-
-      return;
-
-    }
-
-    if (
-      combate.participanteAtivoId !==
-      participanteAtivo.id
-    ) {
       return;
     }
 
-    SistemaCombate.encerrarTurno(
-      combate
-    );
+    if (combate.participanteAtivoId !== participanteAtivo.id) {
+      return;
+    }
 
-    processarTurnoAtual(
-      combate
-    );
+    SistemaCombate.encerrarTurno(combate);
 
-  },
-  1000
-);
-
+    processarTurnoAtual(combate);
+  }, 1000);
 }
 
 function encerrarTurnoAtual() {
+  const combate = estadoAtualJogo.combateAtual;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
-
-  if (
-    !combate ||
-    combate.status !== "ativo"
-  ) {
+  if (!combate || combate.status !== "ativo") {
     return;
   }
 
-  const participanteAtivo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        combate.participanteAtivoId
-    );
+  const participanteAtivo = combate.participantes.find(
+    (participante) => participante.id === combate.participanteAtivoId,
+  );
 
-  if (
-    !participanteAtivo ||
-    participanteAtivo.tipo !== "jogador"
-  ) {
+  if (!participanteAtivo || participanteAtivo.tipo !== "jogador") {
     return;
   }
 
-  SistemaCombate.encerrarTurno(
-    combate
-  );
+  SistemaCombate.encerrarTurno(combate);
 
-  processarTurnoAtual(
-    combate
-  );
-
+  processarTurnoAtual(combate);
 }
 
-function notificarFimCombate(
-  combate
-) {
-
-  if (
-    combate.status === "ativo" ||
-    combate.resultadoNotificado
-  ) {
+function notificarFimCombate(combate) {
+  if (combate.status === "ativo" || combate.resultadoNotificado) {
     return;
   }
 
-  combate.resultadoNotificado =
-    true;
+  combate.resultadoNotificado = true;
 
-  botaoEncerrarTurno.disabled =
-    true;
+  botaoEncerrarTurno.disabled = true;
 
-  acoesCombate.innerHTML =
-    "";
+  acoesCombate.innerHTML = "";
 
   const mensagem =
-    combate.status === "vitoria"
-      ? "Combate encerrado: vitória."
-      : "Combate encerrado: derrota.";
+    combate.status === "vitoria" ? "Combate encerrado: vitória." : "Combate encerrado: derrota.";
 
-  solicitacaoCombate.textContent =
-    mensagem;
+  solicitacaoCombate.textContent = mensagem;
 
-  solicitacaoCombate.hidden =
-    false;
+  solicitacaoCombate.hidden = false;
 
-  const eventoFimCombate =
-    new CustomEvent(
-      "combateEncerrado",
-      {
-        detail: {
-          combateId: combate.id,
-          resultado: combate.status,
-          combate
-        }
-      }
-    );
-
-  document.dispatchEvent(
-    eventoFimCombate
-  );
-
-}
-
-function processarResultadoCombate(
-  evento
-) {
-
-  const idResultado =
-    evento.detail
-      ?.resultado;
-
-  const resultado =
-    cenaAtual
-      .combate
-      ?.resultados
-      ?.[idResultado];
-
-  if (
-    !resultado
-  ) {
-
-    console.warn(
-      "Consequência de combate não encontrada:",
-      idResultado
-    );
-
-    return;
-
-  }
-
-  setTimeout(
-    function() {
-
-      exibirTelaAventura();
-
-      exibirContexto(
-        resultado.contexto
-      );
-
-      ocultarEscolhas();
-
-      solicitacaoTeste.textContent =
-        "";
-
-      solicitacaoTeste.hidden =
-        true;
-
+  const eventoFimCombate = new CustomEvent("combateEncerrado", {
+    detail: {
+      combateId: combate.id,
+      resultado: combate.status,
+      combate,
     },
-    1200
-  );
+  });
 
+  document.dispatchEvent(eventoFimCombate);
 }
 
-function verificarCombateDaCena(
-  cena
-) {
+function processarResultadoCombate(evento) {
+  const idResultado = evento.detail?.resultado;
 
-  if (
-    !cena.combate
-  ) {
+  const resultado = cenaAtual.combate?.resultados?.[idResultado];
+
+  if (!resultado) {
+    console.warn("Consequência de combate não encontrada:", idResultado);
+
     return;
   }
 
-  if (
-    estadoAtualJogo
-      .combateAtual
-      ?.status ===
-      "ativo"
-  ) {
+  setTimeout(function () {
+    exibirTelaAventura();
+
+    exibirContexto(resultado.contexto);
+
+    ocultarEscolhas();
+
+    solicitacaoTeste.textContent = "";
+
+    solicitacaoTeste.hidden = true;
+  }, 1200);
+}
+
+function verificarCombateDaCena(cena) {
+  if (!cena.combate) {
     return;
   }
 
-  const participanteJogador =
-    criarParticipanteJogadorCombate(
-      cena.combate.jogador
-    );
-
-  if (
-    !participanteJogador
-  ) {
+  if (estadoAtualJogo.combateAtual?.status === "ativo") {
     return;
   }
 
-  const participantesInimigos =
-    criarParticipantesNpcsCombate(
-      cena.combate.inimigos
-    );
+  const participanteJogador = criarParticipanteJogadorCombate(cena.combate.jogador);
 
-  const participantes = [
+  if (!participanteJogador) {
+    return;
+  }
 
-    participanteJogador,
-    ...participantesInimigos
+  const participantesInimigos = criarParticipantesNpcsCombate(cena.combate.inimigos);
 
-  ];
+  const participantes = [participanteJogador, ...participantesInimigos];
 
   const configuracaoCombate = {
+    id: `${aventuraAtual.id}-` + `${estadoAtualJogo.progresso.cenaId}`,
 
-    id:
-      `${aventuraAtual.id}-` +
-      `${estadoAtualJogo.progresso.cenaId}`,
-
-    participantes:
-      participantes
-
+    participantes: participantes,
   };
 
-  iniciarCombateDaAventura(
-    configuracaoCombate
-  );
-
+  iniciarCombateDaAventura(configuracaoCombate);
 }
 
-botaoRecolherFicha.addEventListener(
-  "click",
-  alternarFicha
-);
+botaoRecolherFicha.addEventListener("click", alternarFicha);
 
-botaoRecolherPainelExplicativo.addEventListener(
-  "click",
-  alternarPainelExplicativo
-);
+botaoRecolherPainelExplicativo.addEventListener("click", alternarPainelExplicativo);
 
-listaEscolhas.addEventListener(
-  "click",
-  selecionarEscolha
-);
+listaEscolhas.addEventListener("click", selecionarEscolha);
 
-tabuleiroCombate.addEventListener(
-  "click",
-  selecionarTokenJogador
-);
+tabuleiroCombate.addEventListener("click", selecionarTokenJogador);
 
-tabuleiroCombate.addEventListener(
-  "click",
-  moverTokenSelecionado
-);
+tabuleiroCombate.addEventListener("click", moverTokenSelecionado);
 
-tabuleiroCombate.addEventListener(
-  "pointerdown",
-  iniciarArrasteToken
-);
+tabuleiroCombate.addEventListener("pointerdown", iniciarArrasteToken);
 
-tabuleiroCombate.addEventListener(
-  "pointermove",
-  continuarArrasteToken
-);
+tabuleiroCombate.addEventListener("pointermove", continuarArrasteToken);
 
-tabuleiroCombate.addEventListener(
-  "pointerup",
-  finalizarArrasteToken
-);
+tabuleiroCombate.addEventListener("pointerup", finalizarArrasteToken);
 
-tabuleiroCombate.addEventListener(
-  "pointercancel",
-  finalizarArrasteToken
-);
+tabuleiroCombate.addEventListener("pointercancel", finalizarArrasteToken);
 
-tabuleiroCombate.addEventListener(
-  "click",
-  selecionarAlvoCombate
-);
+tabuleiroCombate.addEventListener("click", selecionarAlvoCombate);
 
-listaAtaquesCombate.addEventListener(
-  "click",
-  selecionarAtaqueCombate
-);
+listaAtaquesCombate.addEventListener("click", selecionarAtaqueCombate);
 
-botaoEncerrarTurno.addEventListener(
-  "click",
-  encerrarTurnoAtual
-);
+botaoEncerrarTurno.addEventListener("click", encerrarTurnoAtual);
 
-exibirCena(
-  aventuraAtual,
-  cenaAtual
-);
+exibirCena(aventuraAtual, cenaAtual);
 
-document.addEventListener(
-  "rolagemConcluida",
-  receberResultadoRolagem
-);
+document.addEventListener("rolagemConcluida", receberResultadoRolagem);
 
-document.addEventListener(
-  "combateEncerrado",
-  processarResultadoCombate
-);
+document.addEventListener("combateEncerrado", processarResultadoCombate);
 
-visualizacaoCombate.addEventListener(
-  "wheel",
-  controlarZoomCombate,
-  {
-    passive:
-      false
-  }
-);
+visualizacaoCombate.addEventListener("wheel", controlarZoomCombate, {
+  passive: false,
+});
 
-visualizacaoCombate.addEventListener(
-  "pointerdown",
-  iniciarArrasteCamera
-);
+visualizacaoCombate.addEventListener("pointerdown", iniciarArrasteCamera);
 
-visualizacaoCombate.addEventListener(
-  "pointermove",
-  continuarArrasteCamera
-);
+visualizacaoCombate.addEventListener("pointermove", continuarArrasteCamera);
 
-visualizacaoCombate.addEventListener(
-  "pointerup",
-  finalizarArrasteCamera
-);
+visualizacaoCombate.addEventListener("pointerup", finalizarArrasteCamera);
 
-visualizacaoCombate.addEventListener(
-  "pointercancel",
-  finalizarArrasteCamera
-);
+visualizacaoCombate.addEventListener("pointercancel", finalizarArrasteCamera);
 
-window.addEventListener(
-  "resize",
-  function() {
+window.addEventListener("resize", function () {
+  cameraCombate.zoom = Math.max(obterZoomMinimoVisivel(), cameraCombate.zoom);
 
-    cameraCombate.zoom =
-      Math.max(
-        obterZoomMinimoVisivel(),
-        cameraCombate.zoom
-      );
+  limitarCameraCombate();
+  atualizarCameraCombate();
+});
 
-    limitarCameraCombate();
-    atualizarCameraCombate();
+botaoFecharAtaquesCombate.addEventListener("click", fecharPainelAtaquesCombate);
 
-  }
-);
-
-botaoFecharAtaquesCombate.addEventListener(
-  "click",
-  fecharPainelAtaquesCombate
-);
-
-botaoExpandirHistorico.addEventListener(
-  "click",
-  alternarHistoricoCombate
-);
+botaoExpandirHistorico.addEventListener("click", alternarHistoricoCombate);

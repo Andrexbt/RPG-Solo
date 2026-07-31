@@ -14,49 +14,49 @@ window.bancoIdiomas = {
   comum: {
     id: "comum",
     nome: "Comum",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   anao: {
     id: "anao",
     nome: "Anão",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   elfico: {
     id: "elfico",
     nome: "Élfico",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   gigante: {
     id: "gigante",
     nome: "Gigante",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   gnomico: {
     id: "gnomico",
     nome: "Gnômico",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   goblin: {
     id: "goblin",
     nome: "Goblin",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   halfling: {
     id: "halfling",
     nome: "Halfling",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   orc: {
     id: "orc",
     nome: "Orc",
-    tipo: "padrao"
+    tipo: "padrao",
   },
 
   // =====================================================
@@ -65,42 +65,42 @@ window.bancoIdiomas = {
   abissal: {
     id: "abissal",
     nome: "Abissal",
-    tipo: "raro"
+    tipo: "raro",
   },
 
   celestial: {
     id: "celestial",
     nome: "Celestial",
-    tipo: "raro"
+    tipo: "raro",
   },
 
   draconico: {
     id: "draconico",
     nome: "Dracônico",
-    tipo: "raro"
+    tipo: "raro",
   },
 
   infernal: {
     id: "infernal",
     nome: "Infernal",
-    tipo: "raro"
+    tipo: "raro",
   },
 
   primordial: {
     id: "primordial",
     nome: "Primordial",
-    tipo: "raro"
+    tipo: "raro",
   },
 
   silvestre: {
     id: "silvestre",
     nome: "Silvestre",
-    tipo: "raro"
+    tipo: "raro",
   },
 
   subcomum: {
     id: "subcomum",
     nome: "Subcomum",
-    tipo: "raro"
-  }
+    tipo: "raro",
+  },
 };

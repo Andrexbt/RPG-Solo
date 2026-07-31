@@ -12,8 +12,9 @@
 .ficha-componente {
   --largura-cartao-atributo: 130px;
   --espaco-interno-ficha: 8px;
-  --largura-grade-atributos:
-    calc((var(--largura-cartao-atributo) * 2) + var(--espaco-interno-ficha));
+  --largura-grade-atributos: calc(
+    (var(--largura-cartao-atributo) * 2) + var(--espaco-interno-ficha)
+  );
 
   width: fit-content;
   max-width: 100%;
@@ -65,11 +66,11 @@
   --largura-canto-moldura: 110px;
 
   /* Cores de tinta sobre o pergaminho */
-   --cor-ficha-titulo: #4b2d1b;
-   --cor-ficha-rotulo: #68472f;
-   --cor-ficha-texto: #3d2a1f;
-   --cor-texto: #3d2a1f;
-   --cor-ambar: #704322;
+  --cor-ficha-titulo: #4b2d1b;
+  --cor-ficha-rotulo: #68472f;
+  --cor-ficha-texto: #3d2a1f;
+  --cor-texto: #3d2a1f;
+  --cor-ambar: #704322;
 
   position: relative;
   isolation: isolate;
@@ -146,17 +147,9 @@
   height: 36px;
   transform: rotate(180deg) scaleX(1.1);
 
-  left:
-    calc(
-      var(--largura-canto-moldura) -
-      var(--avanco-moldura)
-    );
+  left: calc(var(--largura-canto-moldura) - var(--avanco-moldura));
 
-  right:
-    calc(
-      var(--largura-canto-moldura) -
-      var(--avanco-moldura)
-    );
+  right: calc(var(--largura-canto-moldura) - var(--avanco-moldura));
 }
 
 .moldura-topo-esquerda,
@@ -201,7 +194,7 @@
 .moldura-lateral-esquerda,
 .moldura-lateral-direita {
   top: 104px;
-  bottom:  calc(108px + var(--ajuste-base-moldura));
+  bottom: calc(108px + var(--ajuste-base-moldura));
   width: 20px;
   background-size: 100% auto;
   background-repeat: repeat-y;
@@ -262,7 +255,7 @@
   max-width: 100%;
   margin: 8px 0 0;
   padding: 16px;
-  border: 0
+  border: 0;
 }
 
 .ficha-bloco::before {
@@ -277,7 +270,7 @@
   border-image-width: 8px;
   border-image-repeat: stretch;
 
-  opacity: 0.70;
+  opacity: 0.7;
 }
 
 .ficha-bloco:first-child {
@@ -355,12 +348,7 @@
 
   border-radius: 50%;
 
-  background:
-    radial-gradient(
-      circle,
-      rgba(111, 76, 43, 0.16),
-      rgba(111, 76, 43, 0.04)
-    );
+  background: radial-gradient(circle, rgba(111, 76, 43, 0.16), rgba(111, 76, 43, 0.04));
 }
 
 .ficha-imagem-avatar,
@@ -447,13 +435,12 @@
   pointer-events: none;
 
   border: 1px solid transparent;
-  border-image-source:
-    url("Imagens/Assets/borda-carvao-arredondada.webp");
+  border-image-source: url("Imagens/Assets/borda-carvao-arredondada.webp");
   border-image-slice: 180;
   border-image-width: 16;
   border-image-repeat: stretch;
 
-  opacity: 0.70;
+  opacity: 0.7;
 }
 
 .campo-mini,
@@ -599,11 +586,7 @@
   font-size: 1.3rem;
   border: 0.5;
   border-image: none;
-  background:
-    transparent
-    url("Imagens/Assets/circulo-carvao.webp")
-    center / 100% 100%
-    no-repeat
+  background: transparent url("Imagens/Assets/circulo-carvao.webp") center / 100% 100% no-repeat;
 }
 
 .grupo-modificador {
@@ -624,11 +607,7 @@
   font-size: 0.9rem;
   border: 0.5;
   border-image: none;
-  background:
-    transparent
-    url("Imagens/Assets/capsula-carvao.webp")
-    center / 100% 100%
-    no-repeat;
+  background: transparent url("Imagens/Assets/capsula-carvao.webp") center / 100% 100% no-repeat;
 }
 
 .rotulo-modificador {
@@ -662,7 +641,7 @@
   border: 1px solid rgba(70, 42, 24, 0.72);
   border-radius: 50%;
   transform: translateY(-50%);
-  background: transparent
+  background: transparent;
 }
 
 .linha-salvaguarda::before {
@@ -675,7 +654,7 @@
   border: 1px solid rgba(70, 42, 24, 0.72);
   border-radius: 50%;
   transform: translateY(-50%);
-  background: transparent
+  background: transparent;
 }
 
 .linha-salvaguarda {
