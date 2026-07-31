@@ -71,3 +71,8 @@ window.obterEscolhasDisponiveis = obterEscolhasDisponiveis;
 window.carregarNpcsDaAventura = carregarNpcsDaAventura;
 window.estadoJogo = criarEstadoInicialJogo();
 window.criarEstadoInicialJogo = criarEstadoInicialJogo;
+
+const scriptConfirmacaoCombate = document.createElement("script");
+scriptConfirmacaoCombate.src = "confirmacao-combate.js";
+scriptConfirmacaoCombate.async = false;
+document.head.append(scriptConfirmacaoCombate);
