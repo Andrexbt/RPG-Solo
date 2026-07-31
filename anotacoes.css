@@ -1,0 +1,27 @@
+/* =========================================================
+   JANELA DE ANOTAÇÕES
+   ========================================================= */
+
+.janela-anotacoes.janela-flutuante {
+  left: 24px;
+  bottom: 24px;
+}
+
+#campoAnotacoes {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #69482f;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.24);
+  color: inherit;
+  resize: vertical;
+}
+
+@media (max-width: 560px) {
+  .janela-anotacoes.janela-flutuante {
+    right: 10px;
+    left: auto;
+    bottom: 10px;
+  }
+}
