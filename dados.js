@@ -1,5 +1,20 @@
 "use strict";
 
+function carregarEstilosDaCaixaDeDados() {
+  if (document.querySelector('link[href="dados.css"]')) {
+    return;
+  }
+
+  const folhaDeEstilos = document.createElement("link");
+
+  folhaDeEstilos.rel = "stylesheet";
+  folhaDeEstilos.href = "dados.css";
+
+  document.head.append(folhaDeEstilos);
+}
+
+carregarEstilosDaCaixaDeDados();
+
 const resultadoDado = document.querySelector("#resultadoDado");
 const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
 const camadaDadosLancados = document.querySelector("#camadaDadosLancados");
@@ -50,11 +65,9 @@ function rolarGruposDeDados(configuracao) {
 
 function realizarRolagemComposta(configuracao) {
   const gruposRolados = rolarGruposDeDados(configuracao);
-
   const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
     return total + grupo.total;
   }, 0);
-
   const modificador = Number(configuracao.modificador) || 0;
 
   return {
@@ -71,7 +84,6 @@ function formatarResultadoRolagem(rolagem) {
       return `${grupo.quantidade}d${grupo.numeroDeFaces} [${grupo.resultados.join(", ")}]`;
     })
     .join(" + ");
-
   const textoDoModificador =
     rolagem.modificador >= 0
       ? ` + ${rolagem.modificador}`
@@ -99,7 +111,6 @@ function criarFantasmaArraste(numeroDeFaces, x, y) {
 
   fantasma.append(quantidade);
   camadaDadosLancados.append(fantasma);
-
   posicionarFantasmaArraste(fantasma, x, y);
 
   return fantasma;
@@ -136,7 +147,6 @@ function iniciarArrasteManualDado(evento) {
 
   elementoDado.classList.add("dado-sendo-arrastado");
   document.body.classList.add("arrastando-dado");
-
   atualizarMensagemPreparacao();
 }
 
@@ -239,11 +249,7 @@ function executarLancamentoPreparado(lancamento, x, y) {
     }
   }
 
-  for (
-    let indice = primeiroIndiceNovo;
-    indice < lancamento.quantidade;
-    indice += 1
-  ) {
+  for (let indice = primeiroIndiceNovo; indice < lancamento.quantidade; indice += 1) {
     const dadoNovo = criarNovoDadoLancado(
       lancamento.numeroDeFaces,
       x,
@@ -302,7 +308,6 @@ function criarElementoDadoLancado(dado) {
   const rotacao = Math.floor(Math.random() * 81) - 40;
 
   elementoDado.style.setProperty("--rotacao-dado", `${rotacao}deg`);
-
   elementoDado.addEventListener("mousedown", iniciarArrasteManualDado);
   elementoDado.addEventListener("contextmenu", removerDadoLancado);
 
@@ -321,7 +326,6 @@ function posicionarDadoLancado(elementoDado, x, y, indice) {
     { x: 0, y: 42 },
     { x: 0, y: -42 },
   ];
-
   const deslocamento = deslocamentos[indice % deslocamentos.length];
 
   elementoDado.style.left = `${x + deslocamento.x}px`;
@@ -387,7 +391,6 @@ function atualizarResultadoDadosLancados() {
   const subtotal = dadosLancados.reduce(function somarDados(total, dado) {
     return total + dado.resultado;
   }, 0);
-
   const descricao = dadosLancados
     .map(function descreverDado(dado) {
       return `d${dado.numeroDeFaces}: ${dado.resultado}`;
@@ -421,11 +424,9 @@ function emitirRolagemConcluida(dadosDoLancamento) {
       };
     },
   );
-
   const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
     return total + grupo.total;
   }, 0);
-
   const resultado = {
     gruposRolados: gruposRolados,
     subtotal: subtotal,
