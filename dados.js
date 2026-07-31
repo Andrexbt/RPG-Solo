@@ -1,86 +1,143 @@
 "use strict";
 
-const botaoRolarDado = document.querySelector("#botaoRolarDado");
-
 const resultadoDado = document.querySelector("#resultadoDado");
-
-const campoModificadorDados = document.querySelector("#modificadorDados");
-
-const listaGruposDados = document.querySelector("#listaGruposDados");
-
-const botaoAdicionarGrupoDado = document.querySelector("#botaoAdicionarGrupoDado");
-
-const colecaoDados = document.querySelector("#colecaoDados");
-
-const bandejaDados = document.querySelector("#bandejaDados");
-
-const dadosDisponiveis = document.querySelectorAll(".dado-disponivel",);
-
-const camadaDadosLancados = document.querySelector(
-  "#camadaDadosLancados",
-);
+const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
+const camadaDadosLancados = document.querySelector("#camadaDadosLancados");
 
 const estadoCaixaDados = {
   proximoId: 1,
   dadosLancados: [],
 };
 
-let lancamentoEmPreparacao = null;
 let arrasteDadoAtual = null;
 
 function rolarDado(numeroDeFaces) {
-  const resultado = Math.floor(Math.random() * numeroDeFaces) + 1;
+  return Math.floor(Math.random() * numeroDeFaces) + 1;
+}
 
-  return resultado;
+function rolarGrupoDeDados(quantidade, numeroDeFaces) {
+  const resultados = [];
+
+  for (let indice = 0; indice < quantidade; indice += 1) {
+    resultados.push(rolarDado(numeroDeFaces));
+  }
+
+  return resultados;
+}
+
+function somarResultados(resultados) {
+  return resultados.reduce(function somar(total, resultado) {
+    return total + resultado;
+  }, 0);
+}
+
+function realizarRolagem(quantidade, numeroDeFaces) {
+  const resultados = rolarGrupoDeDados(quantidade, numeroDeFaces);
+
+  return {
+    quantidade: quantidade,
+    numeroDeFaces: numeroDeFaces,
+    resultados: resultados,
+    total: somarResultados(resultados),
+  };
+}
+
+function rolarGruposDeDados(configuracao) {
+  return configuracao.gruposDeDados.map(function rolarGrupo(grupoDeDados) {
+    return realizarRolagem(grupoDeDados.quantidade, grupoDeDados.numeroDeFaces);
+  });
+}
+
+function realizarRolagemComposta(configuracao) {
+  const gruposRolados = rolarGruposDeDados(configuracao);
+
+  const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
+    return total + grupo.total;
+  }, 0);
+
+  const modificador = Number(configuracao.modificador) || 0;
+
+  return {
+    gruposRolados: gruposRolados,
+    subtotal: subtotal,
+    modificador: modificador,
+    total: subtotal + modificador,
+  };
+}
+
+function formatarResultadoRolagem(rolagem) {
+  const textoDosDados = rolagem.gruposRolados
+    .map(function descreverGrupo(grupo) {
+      return `${grupo.quantidade}d${grupo.numeroDeFaces} [${grupo.resultados.join(", ")}]`;
+    })
+    .join(" + ");
+
+  const textoDoModificador =
+    rolagem.modificador >= 0
+      ? ` + ${rolagem.modificador}`
+      : ` - ${Math.abs(rolagem.modificador)}`;
+
+  return `${textoDosDados}${textoDoModificador} = ${rolagem.total}`;
+}
+
+function buscarDadoLancado(idDado) {
+  return estadoCaixaDados.dadosLancados.find(function encontrarDado(dado) {
+    return dado.id === idDado;
+  });
+}
+
+function criarFantasmaArraste(numeroDeFaces, x, y) {
+  const fantasma = document.createElement("div");
+
+  fantasma.classList.add("dado-em-arraste");
+  fantasma.textContent = `d${numeroDeFaces}`;
+
+  const quantidade = document.createElement("span");
+
+  quantidade.classList.add("quantidade-dados-arraste");
+  quantidade.textContent = "1";
+
+  fantasma.append(quantidade);
+  camadaDadosLancados.append(fantasma);
+
+  posicionarFantasmaArraste(fantasma, x, y);
+
+  return fantasma;
+}
+
+function posicionarFantasmaArraste(fantasma, x, y) {
+  fantasma.style.left = `${x}px`;
+  fantasma.style.top = `${y}px`;
 }
 
 function iniciarArrasteManualDado(evento) {
-  if (evento.button !== 0) {
+  if (evento.button !== 0 || arrasteDadoAtual) {
+    return;
+  }
+
+  const elementoDado = evento.currentTarget;
+  const numeroDeFaces = Number(elementoDado.dataset.faces);
+
+  if (!numeroDeFaces || !camadaDadosLancados) {
     return;
   }
 
   evento.preventDefault();
 
-  const elementoDado = evento.currentTarget;
-
-  const numeroDeFaces = Number(
-    elementoDado.dataset.faces,
-  );
-
-  if (!numeroDeFaces) {
-    return;
-  }
-
-  const dadoExistenteId =
-    elementoDado.dataset.idDado ?? null;
-
-  lancamentoEmPreparacao = {
-    numeroDeFaces: numeroDeFaces,
-    quantidade: 1,
-    dadoExistenteId: dadoExistenteId,
-  };
-
   arrasteDadoAtual = {
     elementoOrigem: elementoDado,
-    ponteiroId: evento.pointerId,
+    numeroDeFaces: numeroDeFaces,
+    quantidade: 1,
+    dadoExistenteId: elementoDado.dataset.idDado ?? null,
     x: evento.clientX,
     y: evento.clientY,
+    fantasma: criarFantasmaArraste(numeroDeFaces, evento.clientX, evento.clientY),
   };
 
-  elementoDado.classList.add(
-    "dado-sendo-arrastado",
-  );
+  elementoDado.classList.add("dado-sendo-arrastado");
+  document.body.classList.add("arrastando-dado");
 
-  elementoDado.setPointerCapture(
-    evento.pointerId,
-  );
-
-  document.body.classList.add(
-    "arrastando-dado",
-  );
-
-  resultadoDado.textContent =
-    `1d${numeroDeFaces} preparado para lançamento.`;
+  atualizarMensagemPreparacao();
 }
 
 function moverArrasteManualDado(evento) {
@@ -88,405 +145,124 @@ function moverArrasteManualDado(evento) {
     return;
   }
 
-  if (
-    evento.pointerId !==
-    arrasteDadoAtual.ponteiroId
-  ) {
-    return;
-  }
-
   arrasteDadoAtual.x = evento.clientX;
   arrasteDadoAtual.y = evento.clientY;
-}
 
-function rolarGrupoDeDados(quantidade, numeroDeFaces) {
-  const resultados = [];
-
-  for (let indice = 0; indice < quantidade; indice += 1) {
-    const resultado = rolarDado(numeroDeFaces);
-
-    resultados.push(resultado);
-  }
-
-  return resultados;
-}
-
-function somarResultados(resultados) {
-  let total = 0;
-
-  for (const resultado of resultados) {
-    total += resultado;
-  }
-
-  return total;
-}
-
-function realizarRolagem(quantidade, numeroDeFaces) {
-  const resultados = rolarGrupoDeDados(quantidade, numeroDeFaces);
-
-  const total = somarResultados(resultados);
-
-  return {
-    quantidade: quantidade,
-
-    numeroDeFaces: numeroDeFaces,
-
-    resultados: resultados,
-
-    total: total,
-  };
-}
-
-function rolarGruposDeDados(configuracao) {
-  const resultadosDosGrupos = [];
-
-  for (const grupoDeDados of configuracao.gruposDeDados) {
-    const resultadoDoGrupo = realizarRolagem(grupoDeDados.quantidade, grupoDeDados.numeroDeFaces);
-
-    resultadosDosGrupos.push(resultadoDoGrupo);
-  }
-  return resultadosDosGrupos;
-}
-
-function realizarRolagemComposta(configuracao) {
-  const gruposRolados = rolarGruposDeDados(configuracao);
-
-  let subtotal = 0;
-
-  for (const grupoRolado of gruposRolados) {
-    subtotal += grupoRolado.total;
-  }
-
-  const modificador = configuracao.modificador;
-
-  const total = subtotal + modificador;
-
-  return {
-    gruposRolados: gruposRolados,
-
-    subtotal: subtotal,
-
-    modificador: modificador,
-
-    total: total,
-  };
-}
-
-function formatarResultadoRolagem(rolagem) {
-  let textoDosDados = "";
-
-  for (const grupo of rolagem.gruposRolados) {
-    const descricaoDoGrupo = `${grupo.quantidade}d${grupo.numeroDeFaces} [${grupo.resultados.join(", ")}]`;
-
-    if (textoDosDados !== "") {
-      textoDosDados += " + ";
-    }
-
-    textoDosDados += descricaoDoGrupo;
-  }
-
-  const textoDoModificador =
-    rolagem.modificador >= 0 ? ` + ${rolagem.modificador}` : ` - ${Math.abs(rolagem.modificador)}`;
-
-  return `${textoDosDados}${textoDoModificador} = ${rolagem.total}`;
-}
-
-function executarRolagemConfigurada() {
-  if (
-    !listaGruposDados ||
-    !campoModificadorDados ||
-    !resultadoDado
-  ) {
-    console.warn(
-      "A interface antiga de dados não está disponível.",
-    );
-
-    return;
-  }
-  const elementosDosGrupos = listaGruposDados.querySelectorAll(".grupo-dado");
-
-  const gruposDeDados = [];
-
-  for (const elementoDoGrupo of elementosDosGrupos) {
-    const campoQuantidade = elementoDoGrupo.querySelector(".quantidade-dados");
-
-    const campoNumeroDeFaces = elementoDoGrupo.querySelector(".numero-de-faces");
-
-    const grupoDeDados = {
-      quantidade: Number(campoQuantidade.value),
-      numeroDeFaces: Number(campoNumeroDeFaces.value),
-    };
-
-    gruposDeDados.push(grupoDeDados);
-  }
-
-  const modificador = Number(campoModificadorDados.value);
-
-  const configuracao = {
-    gruposDeDados: gruposDeDados,
-    modificador: modificador,
-  };
-
-  const resultado = realizarRolagemComposta(configuracao);
-
-  resultadoDado.textContent = resultado.total;
-
-  const eventoRolagem = new CustomEvent("rolagemConcluida", {
-    detail: resultado,
-  });
-
-  document.dispatchEvent(eventoRolagem);
-
-  console.log("Rolagem solicitada pela interface:", resultado);
-
-  const resultadoFormatado = formatarResultadoRolagem(resultado);
-
-  console.log(resultadoFormatado);
-}
-
-function removerGrupoDado(evento) {
-  const botaoRemover = evento.currentTarget;
-
-  const grupoDado = botaoRemover.closest(".grupo-dado");
-
-  grupoDado.remove();
-}
-
-function adicionarGrupoDado() {
-  const grupoOriginal = listaGruposDados.querySelector(".grupo-dado");
-
-  const novoGrupo = grupoOriginal.cloneNode(true);
-
-  const novaQuantidade = novoGrupo.querySelector(".quantidade-dados");
-
-  const novoNumeroDeFaces = novoGrupo.querySelector(".numero-de-faces");
-
-  novaQuantidade.value = 1;
-
-  novoNumeroDeFaces.value = 20;
-
-  const botaoRemover = document.createElement("button");
-
-  botaoRemover.type = "button";
-
-  botaoRemover.classList.add("botao-remover-grupo-dado");
-
-  botaoRemover.textContent = "Remover";
-
-  botaoRemover.addEventListener("click", removerGrupoDado);
-
-  novoGrupo.append(botaoRemover);
-
-  listaGruposDados.append(novoGrupo);
-}
-
-
-
-function permitirSoltarDado(evento) {
-  evento.preventDefault();
-
-  bandejaDados.classList.add("bandeja-recebendo-dado");
-}
-
-function sairDaAreaDeSoltura(evento) {
-  if (evento.currentTarget.contains(evento.relatedTarget)) {
-    return;
-  }
-
-  bandejaDados.classList.remove("bandeja-recebendo-dado");
-}
-
-
-function iniciarArrasteDado(evento) {
-  const elementoDado = evento.currentTarget;
-
-  const numeroDeFaces = Number(
-    elementoDado.dataset.faces,
+  posicionarFantasmaArraste(
+    arrasteDadoAtual.fantasma,
+    arrasteDadoAtual.x,
+    arrasteDadoAtual.y,
   );
-
-  if (!numeroDeFaces) {
-    return;
-  }
-
-  const dadoExistenteId =
-    elementoDado.dataset.idDado ?? null;
-
-  lancamentoEmPreparacao = {
-    numeroDeFaces: numeroDeFaces,
-    quantidade: 1,
-    dadoExistenteId: dadoExistenteId,
-  };
-
-  evento.dataTransfer.effectAllowed = "copyMove";
-
-  evento.dataTransfer.setData(
-    "application/x-dado-rpg",
-    String(numeroDeFaces),
-  );
-
-  if (dadoExistenteId) {
-    evento.dataTransfer.setData(
-      "application/x-dado-existente",
-      dadoExistenteId,
-    );
-  }
-
-  elementoDado.classList.add(
-    "dado-sendo-arrastado",
-  );
-}
-
-function encerrarArrasteDado(evento) {
-  evento.currentTarget.classList.remove(
-    "dado-sendo-arrastado",
-  );
-
-  lancamentoEmPreparacao = null;
 }
 
 function adicionarDadoAoLancamento(evento) {
-  if (
-    !arrasteDadoAtual ||
-    !lancamentoEmPreparacao
-  ) {
-    return;
-  }
-
-  if (evento.button !== 2) {
+  if (!arrasteDadoAtual || evento.button !== 2) {
     return;
   }
 
   evento.preventDefault();
   evento.stopPropagation();
 
-  lancamentoEmPreparacao.quantidade += 1;
+  arrasteDadoAtual.quantidade += 1;
 
-  const quantidade =
-    lancamentoEmPreparacao.quantidade;
+  const indicador = arrasteDadoAtual.fantasma.querySelector(
+    ".quantidade-dados-arraste",
+  );
 
-  const faces =
-    lancamentoEmPreparacao.numeroDeFaces;
+  if (indicador) {
+    indicador.textContent = String(arrasteDadoAtual.quantidade);
+  }
+
+  atualizarMensagemPreparacao();
+}
+
+function atualizarMensagemPreparacao() {
+  if (!resultadoDado || !arrasteDadoAtual) {
+    return;
+  }
 
   resultadoDado.textContent =
-    `${quantidade}d${faces} preparados para lançamento.`;
+    `${arrasteDadoAtual.quantidade}d${arrasteDadoAtual.numeroDeFaces} ` +
+    "preparados para lançamento.";
 }
 
 function concluirArrasteManualDado(evento) {
-  if (!arrasteDadoAtual) {
-    return;
-  }
-
-  if (
-    evento.pointerId !==
-    arrasteDadoAtual.ponteiroId
-  ) {
-    return;
-  }
-
-  const elementoOrigem =
-    arrasteDadoAtual.elementoOrigem;
-
-  elementoOrigem.classList.remove(
-    "dado-sendo-arrastado",
-  );
-
-  document.body.classList.remove(
-    "arrastando-dado",
-  );
-
-  const x = evento.clientX;
-  const y = evento.clientY;
-
-  executarLancamentoPreparado(x, y);
-
-  arrasteDadoAtual = null;
-  lancamentoEmPreparacao = null;
-}
-
-function permitirSoltarDadoNaTela(evento) {
-  const tipos = Array.from(
-    evento.dataTransfer.types,
-  );
-
-  if (!tipos.includes("application/x-dado-rpg")) {
+  if (!arrasteDadoAtual || evento.button !== 0) {
     return;
   }
 
   evento.preventDefault();
 
-  evento.dataTransfer.dropEffect = "copy";
+  const lancamento = arrasteDadoAtual;
+
+  arrasteDadoAtual = null;
+
+  lancamento.elementoOrigem.classList.remove("dado-sendo-arrastado");
+  lancamento.fantasma.remove();
+  document.body.classList.remove("arrastando-dado");
+
+  executarLancamentoPreparado(lancamento, evento.clientX, evento.clientY);
 }
 
-function executarLancamentoPreparado(x, y) {
-  if (!lancamentoEmPreparacao) {
+function cancelarArrasteManualDado() {
+  if (!arrasteDadoAtual) {
     return;
   }
 
-  const numeroDeFaces =
-    lancamentoEmPreparacao.numeroDeFaces;
+  arrasteDadoAtual.elementoOrigem.classList.remove("dado-sendo-arrastado");
+  arrasteDadoAtual.fantasma.remove();
+  arrasteDadoAtual = null;
 
-  const quantidade =
-    lancamentoEmPreparacao.quantidade;
+  document.body.classList.remove("arrastando-dado");
+}
 
-  const dadoExistenteId =
-    lancamentoEmPreparacao.dadoExistenteId;
+function executarLancamentoPreparado(lancamento, x, y) {
+  const dadosDoLancamento = [];
+  let primeiroIndiceNovo = 0;
 
-  let primeiroIndice = 0;
-
-  if (dadoExistenteId) {
-    const dadoExistente =
-      buscarDadoLancado(dadoExistenteId);
-
-    const elementoExistente =
-      document.querySelector(
-        `[data-id-dado="${dadoExistenteId}"]`,
-      );
+  if (lancamento.dadoExistenteId) {
+    const dadoExistente = buscarDadoLancado(lancamento.dadoExistenteId);
+    const elementoExistente = camadaDadosLancados.querySelector(
+      `[data-id-dado="${lancamento.dadoExistenteId}"]`,
+    );
 
     if (dadoExistente && elementoExistente) {
       dadoExistente.x = x;
       dadoExistente.y = y;
+      dadoExistente.resultado = rolarDado(dadoExistente.numeroDeFaces);
 
-      dadoExistente.resultado =
-        rolarDado(
-          dadoExistente.numeroDeFaces,
-        );
+      posicionarDadoLancado(elementoExistente, x, y, 0);
+      animarDadoLancado(elementoExistente, dadoExistente);
 
-      posicionarDadoLancado(
-        elementoExistente,
-        x,
-        y,
-        0,
-      );
-
-      animarDadoLancado(
-        elementoExistente,
-        dadoExistente,
-      );
-
-      primeiroIndice = 1;
+      dadosDoLancamento.push(dadoExistente);
+      primeiroIndiceNovo = 1;
     }
   }
 
   for (
-    let indice = primeiroIndice;
-    indice < quantidade;
+    let indice = primeiroIndiceNovo;
+    indice < lancamento.quantidade;
     indice += 1
   ) {
-    criarNovoDadoLancado(
-      numeroDeFaces,
+    const dadoNovo = criarNovoDadoLancado(
+      lancamento.numeroDeFaces,
       x,
       y,
       indice,
     );
+
+    if (dadoNovo) {
+      dadosDoLancamento.push(dadoNovo);
+    }
   }
+
+  window.setTimeout(function concluirLancamento() {
+    atualizarResultadoDadosLancados();
+    emitirRolagemConcluida(dadosDoLancamento);
+  }, 560);
 }
 
-function criarNovoDadoLancado(
-  numeroDeFaces,
-  x,
-  y,
-  indice,
-) {
+function criarNovoDadoLancado(numeroDeFaces, x, y, indice) {
   const dadoLancado = {
     id: `dado-${estadoCaixaDados.proximoId}`,
     numeroDeFaces: numeroDeFaces,
@@ -496,51 +272,18 @@ function criarNovoDadoLancado(
   };
 
   estadoCaixaDados.proximoId += 1;
+  estadoCaixaDados.dadosLancados.push(dadoLancado);
 
-  estadoCaixaDados.dadosLancados.push(
-    dadoLancado,
-  );
+  const elementoDado = criarElementoDadoLancado(dadoLancado);
 
-  const elementoDado =
-    criarElementoDadoLancado(dadoLancado);
+  if (!elementoDado) {
+    return null;
+  }
 
-  posicionarDadoLancado(
-    elementoDado,
-    x,
-    y,
-    indice,
-  );
+  posicionarDadoLancado(elementoDado, x, y, indice);
+  animarDadoLancado(elementoDado, dadoLancado);
 
-  animarDadoLancado(
-    elementoDado,
-    dadoLancado,
-  );
-}
-
-function posicionarDadoLancado(
-  elementoDado,
-  x,
-  y,
-  indice,
-) {
-  const deslocamentos = [
-    { x: 0, y: 0 },
-    { x: 34, y: 16 },
-    { x: -34, y: 16 },
-    { x: 34, y: -16 },
-    { x: -34, y: -16 },
-    { x: 0, y: 38 },
-    { x: 0, y: -38 },
-  ];
-
-  const deslocamento =
-    deslocamentos[indice % deslocamentos.length];
-
-  elementoDado.style.left =
-    `${x + deslocamento.x}px`;
-
-  elementoDado.style.top =
-    `${y + deslocamento.y}px`;
+  return dadoLancado;
 }
 
 function criarElementoDadoLancado(dado) {
@@ -548,61 +291,65 @@ function criarElementoDadoLancado(dado) {
     return null;
   }
 
-  const elementoDado =
-    document.createElement("button");
+  const elementoDado = document.createElement("button");
 
   elementoDado.type = "button";
-  elementoDado.draggable = false;
-
-  elementoDado.classList.add(
-    "dado-lancado-na-tela",
-  );
-
+  elementoDado.classList.add("dado-lancado-na-tela");
   elementoDado.dataset.idDado = dado.id;
+  elementoDado.dataset.faces = String(dado.numeroDeFaces);
+  elementoDado.textContent = `d${dado.numeroDeFaces}`;
 
-  elementoDado.dataset.faces = String(
-    dado.numeroDeFaces,
-  );
+  const rotacao = Math.floor(Math.random() * 81) - 40;
 
-  elementoDado.textContent =
-    `d${dado.numeroDeFaces}`;
+  elementoDado.style.setProperty("--rotacao-dado", `${rotacao}deg`);
 
-  const rotacao =
-    Math.floor(Math.random() * 81) - 40;
+  elementoDado.addEventListener("mousedown", iniciarArrasteManualDado);
+  elementoDado.addEventListener("contextmenu", removerDadoLancado);
 
-  elementoDado.style.setProperty(
-    "--rotacao-dado",
-    `${rotacao}deg`,
-  );
-
-  elementoDado.addEventListener(
-    "contextmenu",
-    removerDadoLancado,
-  );
-
-  camadaDadosLancados.append(
-    elementoDado,
-  );
-
-  elementoDado.addEventListener(
-  "pointerdown",
-  iniciarArrasteManualDado,
-);
-
-elementoDado.addEventListener(
-  "contextmenu",
-  removerDadoLancado,
-);
+  camadaDadosLancados.append(elementoDado);
 
   return elementoDado;
 }
 
+function posicionarDadoLancado(elementoDado, x, y, indice) {
+  const deslocamentos = [
+    { x: 0, y: 0 },
+    { x: 38, y: 18 },
+    { x: -38, y: 18 },
+    { x: 38, y: -18 },
+    { x: -38, y: -18 },
+    { x: 0, y: 42 },
+    { x: 0, y: -42 },
+  ];
+
+  const deslocamento = deslocamentos[indice % deslocamentos.length];
+
+  elementoDado.style.left = `${x + deslocamento.x}px`;
+  elementoDado.style.top = `${y + deslocamento.y}px`;
+}
+
+function animarDadoLancado(elementoDado, dado) {
+  elementoDado.disabled = true;
+  elementoDado.textContent = "?";
+  elementoDado.classList.remove("dado-girando");
+
+  void elementoDado.offsetWidth;
+
+  elementoDado.classList.add("dado-girando");
+
+  window.setTimeout(function finalizarAnimacao() {
+    elementoDado.classList.remove("dado-girando");
+    elementoDado.textContent = String(dado.resultado);
+    elementoDado.disabled = false;
+    elementoDado.setAttribute(
+      "aria-label",
+      `d${dado.numeroDeFaces}: resultado ${dado.resultado}`,
+    );
+  }, 550);
+}
+
 function removerDadoLancado(evento) {
-  /*
-   * Durante um arraste, o botão direito adiciona
-   * outro dado. Portanto, não removemos nada.
-   */
-  if (lancamentoEmPreparacao) {
+  if (arrasteDadoAtual) {
     return;
   }
 
@@ -610,211 +357,108 @@ function removerDadoLancado(evento) {
   evento.stopPropagation();
 
   const elementoDado = evento.currentTarget;
-
-  const idDado =
-    elementoDado.dataset.idDado;
-
-  const indiceDado =
-    estadoCaixaDados.dadosLancados.findIndex(
-      function encontrarIndice(dado) {
-        return dado.id === idDado;
-      },
-    );
-
-  if (indiceDado >= 0) {
-    estadoCaixaDados.dadosLancados.splice(
-      indiceDado,
-      1,
-    );
-  }
-
-  elementoDado.remove();
-
-  atualizarResultadoDadosLancados();
-}
-
-function animarDadoLancado(
-  elementoDado,
-  dado,
-) {
-  elementoDado.draggable = false;
-
-  elementoDado.textContent = "?";
-
-  elementoDado.classList.remove(
-    "dado-girando",
-  );
-
-  /*
-   * Força o navegador a reiniciar a animação,
-   * inclusive quando o mesmo dado é rolado de novo.
-   */
-  void elementoDado.offsetWidth;
-
-  elementoDado.classList.add(
-    "dado-girando",
-  );
-
-  window.setTimeout(function finalizarAnimacao() {
-    elementoDado.classList.remove(
-      "dado-girando",
-    );
-
-    elementoDado.textContent = String(
-      dado.resultado,
-    );
-
-    elementoDado.setAttribute(
-      "aria-label",
-      `d${dado.numeroDeFaces}: resultado ${dado.resultado}`,
-    );
-
-    elementoDado.draggable = true;
-
-    atualizarResultadoDadosLancados();
-  }, 550);
-}
-
-function atualizarResultadoDadosLancados() {
-  const dadosComResultado =
-    estadoCaixaDados.dadosLancados.filter(
-      function filtrarDados(dado) {
-        return Number.isFinite(
-          dado.resultado,
-        );
-      },
-    );
-
-  if (dadosComResultado.length === 0) {
-    resultadoDado.textContent = "";
-
-    return;
-  }
-
-  const subtotal =
-    dadosComResultado.reduce(
-      function somarDados(total, dado) {
-        return total + dado.resultado;
-      },
-      0,
-    );
-
-  const descricao =
-    dadosComResultado
-      .map(function descreverDado(dado) {
-        return (
-          `d${dado.numeroDeFaces}: ` +
-          `${dado.resultado}`
-        );
-      })
-      .join(" • ");
-
-  resultadoDado.textContent =
-    `${descricao} | Total: ${subtotal}`;
-}
-
-
-for (const dadoDisponivel of dadosDisponiveis) {
-  dadoDisponivel.addEventListener(
-    "pointerdown",
-    iniciarArrasteManualDado,
-  );
-}
-
-
-
-
-
-function atualizarResultadoDadosSelecionados() {
-  const dadosLancados =
-    estadoCaixaDados.dadosSelecionados.filter(
-      (dado) => dado.estado === "lancado",
-    );
-
-  if (dadosLancados.length === 0) {
-    resultadoDado.textContent = "";
-
-    return;
-  }
-
-  const subtotal = dadosLancados.reduce(
-    (total, dado) => total + dado.resultado,
-    0,
-  );
-
-  const descricao = dadosLancados
-    .map(
-      (dado) =>
-        `d${dado.numeroDeFaces}: ${dado.resultado}`,
-    )
-    .join(" • ");
-
-  resultadoDado.textContent =
-    `${descricao} | Total: ${subtotal}`;
-}
-
-function buscarDadoLancado(idDado) {
-  return estadoCaixaDados.dadosLancados.find(
-    function encontrarDado(dado) {
+  const idDado = elementoDado.dataset.idDado;
+  const indiceDado = estadoCaixaDados.dadosLancados.findIndex(
+    function encontrarIndice(dado) {
       return dado.id === idDado;
     },
   );
+
+  if (indiceDado >= 0) {
+    estadoCaixaDados.dadosLancados.splice(indiceDado, 1);
+  }
+
+  elementoDado.remove();
+  atualizarResultadoDadosLancados();
 }
 
+function atualizarResultadoDadosLancados() {
+  if (!resultadoDado) {
+    return;
+  }
 
+  const dadosLancados = estadoCaixaDados.dadosLancados;
 
-if (botaoRolarDado) {
-  botaoRolarDado.addEventListener(
-    "click",
-    executarRolagemConfigurada,
-  );
+  if (dadosLancados.length === 0) {
+    resultadoDado.textContent = "";
+    return;
+  }
+
+  const subtotal = dadosLancados.reduce(function somarDados(total, dado) {
+    return total + dado.resultado;
+  }, 0);
+
+  const descricao = dadosLancados
+    .map(function descreverDado(dado) {
+      return `d${dado.numeroDeFaces}: ${dado.resultado}`;
+    })
+    .join(" • ");
+
+  resultadoDado.textContent = `${descricao} | Total: ${subtotal}`;
 }
 
-if (botaoAdicionarGrupoDado) {
-  botaoAdicionarGrupoDado.addEventListener(
-    "click",
-    adicionarGrupoDado,
+function emitirRolagemConcluida(dadosDoLancamento) {
+  if (!Array.isArray(dadosDoLancamento) || dadosDoLancamento.length === 0) {
+    return;
+  }
+
+  const gruposPorFaces = new Map();
+
+  for (const dado of dadosDoLancamento) {
+    const resultados = gruposPorFaces.get(dado.numeroDeFaces) ?? [];
+
+    resultados.push(dado.resultado);
+    gruposPorFaces.set(dado.numeroDeFaces, resultados);
+  }
+
+  const gruposRolados = Array.from(gruposPorFaces.entries()).map(
+    function criarGrupo([numeroDeFaces, resultados]) {
+      return {
+        quantidade: resultados.length,
+        numeroDeFaces: numeroDeFaces,
+        resultados: resultados,
+        total: somarResultados(resultados),
+      };
+    },
   );
+
+  const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
+    return total + grupo.total;
+  }, 0);
+
+  const resultado = {
+    gruposRolados: gruposRolados,
+    subtotal: subtotal,
+    modificador: 0,
+    total: subtotal,
+  };
+
+  document.dispatchEvent(
+    new CustomEvent("rolagemConcluida", {
+      detail: resultado,
+    }),
+  );
+
+  console.log("Rolagem concluída pela caixa de dados:", resultado);
 }
 
-if (bandejaDados) {
-  bandejaDados.addEventListener(
-    "dragover",
-    permitirSoltarDado,
-  );
-
-  bandejaDados.addEventListener(
-    "dragleave",
-    sairDaAreaDeSoltura,
-  );
-
-  
-}
-
-document.addEventListener(
-  "pointermove",
-  moverArrasteManualDado,
-);
-
-document.addEventListener(
-  "pointerup",
-  concluirArrasteManualDado,
-);
-
-document.addEventListener(
-  "pointerdown",
-  adicionarDadoAoLancamento,
-  true,
-);
-
-document.addEventListener(
-  "contextmenu",
-  function impedirMenuDuranteLancamento(evento) {
-    if (!arrasteDadoAtual) {
-      return;
-    }
-
+for (const dadoDisponivel of dadosDisponiveis) {
+  dadoDisponivel.addEventListener("mousedown", iniciarArrasteManualDado);
+  dadoDisponivel.addEventListener("contextmenu", function impedirMenu(evento) {
     evento.preventDefault();
-  },
-);
+  });
+}
 
+document.addEventListener("mousemove", moverArrasteManualDado);
+document.addEventListener("mouseup", concluirArrasteManualDado);
+document.addEventListener("mousedown", adicionarDadoAoLancamento, true);
+document.addEventListener("keydown", function tratarTecla(evento) {
+  if (evento.key === "Escape") {
+    cancelarArrasteManualDado();
+  }
+});
+document.addEventListener("contextmenu", function impedirMenuDuranteArraste(evento) {
+  if (arrasteDadoAtual) {
+    evento.preventDefault();
+  }
+});
