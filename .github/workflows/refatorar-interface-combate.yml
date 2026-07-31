@@ -1,0 +1,279 @@
+name: Refatorar interface de combate
+
+on:
+  push:
+    branches:
+      - refatoracao-interface-combate-e-revisao-geral
+
+permissions:
+  contents: write
+
+jobs:
+  refatorar:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          ref: refatoracao-interface-combate-e-revisao-geral
+          fetch-depth: 0
+
+      - name: Extrair interface de combate
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          arquivo_aventuras = Path("aventuras.js")
+          arquivo_interface = Path("interface-combate.js")
+          arquivo_html = Path("aventuras.html")
+
+          codigo = arquivo_aventuras.read_text(encoding="utf-8")
+
+          funcoes_interface = [
+              "obterZoomMinimoVisivel",
+              "limitarCameraCombate",
+              "atualizarCameraCombate",
+              "controlarZoomCombate",
+              "iniciarArrasteCamera",
+              "continuarArrasteCamera",
+              "finalizarArrasteCamera",
+              "exibirTelaCombate",
+              "exibirTelaAventura",
+              "criarTokenCombate",
+              "criarCelulasTabuleiro",
+              "obterNumeroParticipante",
+              "renderizarParticipantesCombate",
+              "renderizarTabuleiroCombate",
+              "abrirPainelAtaquesCombate",
+              "reabrirPainelComandosCombate",
+              "verificarNovaSolicitacaoCombate",
+              "exibirAcaoAtualCombate",
+              "adicionarEventoHistoricoCombate",
+              "alternarHistoricoCombate",
+              "fecharPainelAtaquesCombate",
+              "renderizarAcoesCombate",
+              "renderizarListaAtaquesCombate",
+              "atualizarIndicadorRecurso",
+              "criarAvatarIniciativa",
+              "renderizarFilaIniciativa",
+              "atualizarInterfaceTurno",
+          ]
+
+          def encontrar_fim_bloco(texto: str, inicio_abertura: int) -> int:
+              profundidade = 0
+              i = inicio_abertura
+              estado = "codigo"
+              escape = False
+
+              while i < len(texto):
+                  caractere = texto[i]
+                  proximo = texto[i + 1] if i + 1 < len(texto) else ""
+
+                  if estado in {"aspas_simples", "aspas_duplas", "template"}:
+                      if escape:
+                          escape = False
+                      elif caractere == "\\":
+                          escape = True
+                      elif (
+                          estado == "aspas_simples" and caractere == "'"
+                      ) or (
+                          estado == "aspas_duplas" and caractere == '"'
+                      ) or (
+                          estado == "template" and caractere == "`"
+                      ):
+                          estado = "codigo"
+                      i += 1
+                      continue
+
+                  if estado == "comentario_linha":
+                      if caractere == "\n":
+                          estado = "codigo"
+                      i += 1
+                      continue
+
+                  if estado == "comentario_bloco":
+                      if caractere == "*" and proximo == "/":
+                          estado = "codigo"
+                          i += 2
+                      else:
+                          i += 1
+                      continue
+
+                  if caractere == "'":
+                      estado = "aspas_simples"
+                  elif caractere == '"':
+                      estado = "aspas_duplas"
+                  elif caractere == "`":
+                      estado = "template"
+                  elif caractere == "/" and proximo == "/":
+                      estado = "comentario_linha"
+                      i += 2
+                      continue
+                  elif caractere == "/" and proximo == "*":
+                      estado = "comentario_bloco"
+                      i += 2
+                      continue
+                  elif caractere == "{":
+                      profundidade += 1
+                  elif caractere == "}":
+                      profundidade -= 1
+                      if profundidade == 0:
+                          return i + 1
+
+                  i += 1
+
+              raise ValueError("Bloco JavaScript sem fechamento encontrado.")
+
+          blocos = []
+
+          for nome in funcoes_interface:
+              padrao = re.compile(
+                  rf"(?m)^(?:async\s+)?function\s+{re.escape(nome)}\s*\("
+              )
+              correspondencia = padrao.search(codigo)
+
+              if not correspondencia:
+                  raise ValueError(f"Função não encontrada: {nome}")
+
+              inicio = correspondencia.start()
+              abertura = codigo.find("{", correspondencia.end())
+
+              if abertura == -1:
+                  raise ValueError(f"Abertura da função não encontrada: {nome}")
+
+              fim = encontrar_fim_bloco(codigo, abertura)
+
+              while fim < len(codigo) and codigo[fim] in " \t":
+                  fim += 1
+
+              while fim < len(codigo) and codigo[fim] == "\n":
+                  fim += 1
+
+              blocos.append((inicio, fim, codigo[inicio:fim].rstrip()))
+
+          blocos.sort(key=lambda item: item[0])
+
+          for indice in range(1, len(blocos)):
+              if blocos[indice][0] < blocos[indice - 1][1]:
+                  raise ValueError("Sobreposição inesperada entre funções extraídas.")
+
+          codigo_interface = '"use strict";\n\n' + "\n\n".join(
+              bloco for _, _, bloco in blocos
+          ) + "\n"
+
+          codigo_restante = codigo
+          for inicio, fim, _ in reversed(blocos):
+              codigo_restante = codigo_restante[:inicio] + codigo_restante[fim:]
+
+          codigo_restante = re.sub(r"\n{3,}", "\n\n", codigo_restante).rstrip() + "\n"
+
+          arquivo_interface.write_text(codigo_interface, encoding="utf-8")
+          arquivo_aventuras.write_text(codigo_restante, encoding="utf-8")
+
+          html = arquivo_html.read_text(encoding="utf-8")
+          html = html.replace(
+              '<script src="banco-efeitos.js"></script>',
+              '<script src="banco-efeitos.js" defer></script>',
+          )
+          html = html.replace(
+              '<script src="motor-efeitos.js"></script>',
+              '<script src="motor-efeitos.js" defer></script>',
+          )
+
+          marcador = (
+              '  <script src="combate.js" defer></script>\n'
+              '  <script src="aventuras.js" defer></script>'
+          )
+          substituicao = (
+              '  <script src="combate.js" defer></script>\n'
+              '  <script src="interface-combate.js" defer></script>\n'
+              '  <script src="aventuras.js" defer></script>'
+          )
+
+          if marcador not in html:
+              raise ValueError("Não foi possível localizar a ordem dos scripts em aventuras.html.")
+
+          arquivo_html.write_text(
+              html.replace(marcador, substituicao),
+              encoding="utf-8",
+          )
+
+          Path(".prettierrc.json").write_text(
+              "{\n"
+              '  "tabWidth": 2,\n'
+              '  "useTabs": false,\n'
+              '  "semi": true,\n'
+              '  "singleQuote": false,\n'
+              '  "printWidth": 100,\n'
+              '  "htmlWhitespaceSensitivity": "css"\n'
+              "}\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Padronizar formatação dos arquivos de texto
+        shell: bash
+        run: |
+          npx --yes prettier@3.3.3 --write "**/*.{js,css,html,json,md}"
+
+      - name: Verificar sintaxe JavaScript
+        shell: bash
+        run: |
+          find . -type f -name "*.js" -not -path "./.git/*" -print0 \
+            | xargs -0 -n 1 node --check
+
+      - name: Verificar referências e repetições óbvias
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          erros = []
+          htmls = list(Path(".").glob("*.html"))
+
+          for html_path in htmls:
+              html = html_path.read_text(encoding="utf-8")
+              ids = re.findall(r'\bid="([^"]+)"', html)
+              duplicados = sorted({item for item in ids if ids.count(item) > 1})
+              if duplicados:
+                  erros.append(f"{html_path}: IDs duplicados: {', '.join(duplicados)}")
+
+              for script in re.findall(r'<script[^>]+src="([^"]+)"', html):
+                  if script.startswith(("http://", "https://")):
+                      continue
+                  if not Path(script).exists():
+                      erros.append(f"{html_path}: script inexistente: {script}")
+
+              for estilo in re.findall(r'<link[^>]+href="([^"]+\.css)"', html):
+                  if estilo.startswith(("http://", "https://")):
+                      continue
+                  if not Path(estilo).exists():
+                      erros.append(f"{html_path}: CSS inexistente: {estilo}")
+
+          if erros:
+              raise SystemExit("\n".join(erros))
+          PY
+
+      - name: Remover automação temporária e registrar alterações
+        shell: bash
+        run: |
+          rm -f .github/workflows/refatorar-interface-combate.yml
+          rmdir .github/workflows 2>/dev/null || true
+          rmdir .github 2>/dev/null || true
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração encontrada."
+            exit 0
+          fi
+
+          git commit -m "refactor: separar interface de combate e padronizar projeto"
+          git push origin HEAD:refatoracao-interface-combate-e-revisao-geral
