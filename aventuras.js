@@ -1137,59 +1137,29 @@ function resolverDanoJogador(resultadoRolagem) {
 
     const rolagens = registro.rolagens;
 
+exibirEscolhaEntreRolagens(
+  rolagens,
+  function concluirEscolhaRolagem(rolagemEscolhida) {
     solicitacaoCombate.textContent =
-      "Escolha qual resultado de dano utilizar.";
+      `Resultado escolhido: ${rolagemEscolhida.total}.`;
 
-    solicitacaoCombate.hidden = false;
+    danoPendente.efeitoAtivo = null;
 
-    acoesCombate.replaceChildren();
-
-    rolagens.forEach(function (rolagem, indice) {
-      const botaoEscolherRolagem =
-        document.createElement("button");
-
-      botaoEscolherRolagem.type = "button";
-
-      botaoEscolherRolagem.textContent =
-        `Usar rolagem ${indice + 1}: ` +
-        `${rolagem.total}`;
-
-      botaoEscolherRolagem.addEventListener(
-        "click",
-        function escolherRolagemDano() {
-          acoesCombate.replaceChildren();
-
-          solicitacaoCombate.textContent =
-            `Resultado escolhido: ${rolagem.total}.`;
-
-          /*
-           * Desativa o efeito antes de resolver o dano.
-           * Caso contrário, a resolução poderia voltar
-           * ao início deste mesmo bloco.
-           */
-          danoPendente.efeitoAtivo = null;
-
-          concluirDanoJogador(
-            combate,
-            rolagem,
-          );
-        },
-        {
-          once: true,
-        },
-      );
-
-      acoesCombate.append(
-        botaoEscolherRolagem,
-      );
-    });
-
-    console.log(
-      "Rolagens do efeito:",
-      rolagens,
+    concluirDanoJogador(
+      combate,
+      rolagemEscolhida,
     );
+  },
+);
 
-    return;
+console.log(
+  "Rolagens do efeito:",
+  rolagens,
+);
+
+return;
+
+    
   }
 
   concluirDanoJogador(

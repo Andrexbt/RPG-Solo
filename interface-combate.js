@@ -375,6 +375,60 @@ function renderizarAcoesCombate(participante) {
   listaAcoesBonusTurno.append(mensagemAcaoBonus);
 }
 
+function exibirEscolhaEntreRolagens(rolagens, aoEscolher) {
+  if (!Array.isArray(rolagens) || rolagens.length === 0) {
+    console.warn("Nenhuma rolagem foi fornecida para escolha.");
+
+    return;
+  }
+
+  if (typeof aoEscolher !== "function") {
+    console.warn("A escolha das rolagens não possui uma função de conclusão.");
+
+    return;
+  }
+
+  acoesCombate.replaceChildren();
+
+  solicitacaoCombate.textContent =
+    "Escolha qual resultado de dano utilizar.";
+
+  solicitacaoCombate.hidden = false;
+
+  rolagens.forEach(function (rolagem, indice) {
+    const botaoEscolherRolagem = document.createElement("button");
+
+    botaoEscolherRolagem.type = "button";
+
+    botaoEscolherRolagem.textContent =
+      `Usar rolagem ${indice + 1}: ${rolagem.total}`;
+
+    botaoEscolherRolagem.addEventListener(
+      "click",
+      function escolherRolagem() {
+        /*
+         * Desativa todos os botões imediatamente para impedir
+         * que duas escolhas sejam processadas em cliques rápidos.
+         */
+        const botoes = acoesCombate.querySelectorAll("button");
+
+        botoes.forEach(function (botao) {
+          botao.disabled = true;
+        });
+
+        acoesCombate.replaceChildren();
+
+        aoEscolher(rolagem, indice);
+      },
+      {
+        once: true,
+      },
+    );
+
+    acoesCombate.append(botaoEscolherRolagem);
+  });
+}
+
 function renderizarListaAtaquesCombate(combate, participante) {
   listaAtaquesCombate.innerHTML = "";
 
