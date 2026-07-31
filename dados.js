@@ -98,22 +98,72 @@ function buscarDadoLancado(idDado) {
   });
 }
 
+function criarMiniaturaDadoArraste(numeroDeFaces, indice) {
+  const miniatura = document.createElement("span");
+
+  miniatura.classList.add("miniatura-dado-arraste");
+  miniatura.dataset.indice = String(indice);
+  miniatura.textContent = `d${numeroDeFaces}`;
+
+  return miniatura;
+}
+
+function posicionarMiniaturasArraste(grupo) {
+  const miniaturas = grupo.querySelectorAll(".miniatura-dado-arraste");
+  const quantidade = miniaturas.length;
+
+  miniaturas.forEach(function posicionarMiniatura(miniatura, indice) {
+    if (indice === 0) {
+      miniatura.style.setProperty("--miniatura-x", "0px");
+      miniatura.style.setProperty("--miniatura-y", "0px");
+      miniatura.style.setProperty("--miniatura-rotacao", "8deg");
+      miniatura.style.zIndex = String(quantidade + 1);
+      return;
+    }
+
+    const indiceAoRedor = indice - 1;
+    const quantidadeNoAnel = Math.min(8, Math.max(1, quantidade - 1));
+    const anel = Math.floor(indiceAoRedor / 8);
+    const posicaoNoAnel = indiceAoRedor % 8;
+    const angulo = (Math.PI * 2 * posicaoNoAnel) / quantidadeNoAnel - Math.PI / 2;
+    const raio = 46 + anel * 32;
+    const x = Math.cos(angulo) * raio;
+    const y = Math.sin(angulo) * raio;
+    const rotacao = -18 + ((indice * 17) % 37);
+
+    miniatura.style.setProperty("--miniatura-x", `${x}px`);
+    miniatura.style.setProperty("--miniatura-y", `${y}px`);
+    miniatura.style.setProperty("--miniatura-rotacao", `${rotacao}deg`);
+    miniatura.style.zIndex = String(quantidade - indice);
+  });
+}
+
 function criarFantasmaArraste(numeroDeFaces, x, y) {
-  const fantasma = document.createElement("div");
+  const grupo = document.createElement("div");
 
-  fantasma.classList.add("dado-em-arraste");
-  fantasma.textContent = `d${numeroDeFaces}`;
+  grupo.classList.add("grupo-dados-em-arraste");
+  grupo.append(criarMiniaturaDadoArraste(numeroDeFaces, 0));
 
-  const quantidade = document.createElement("span");
+  camadaDadosLancados.append(grupo);
+  posicionarMiniaturasArraste(grupo);
+  posicionarFantasmaArraste(grupo, x, y);
 
-  quantidade.classList.add("quantidade-dados-arraste");
-  quantidade.textContent = "1";
+  return grupo;
+}
 
-  fantasma.append(quantidade);
-  camadaDadosLancados.append(fantasma);
-  posicionarFantasmaArraste(fantasma, x, y);
+function adicionarMiniaturaAoArraste() {
+  if (!arrasteDadoAtual) {
+    return;
+  }
 
-  return fantasma;
+  const indice = arrasteDadoAtual.quantidade - 1;
+  const miniatura = criarMiniaturaDadoArraste(
+    arrasteDadoAtual.numeroDeFaces,
+    indice,
+  );
+
+  arrasteDadoAtual.fantasma.append(miniatura);
+  posicionarMiniaturasArraste(arrasteDadoAtual.fantasma);
 }
 
 function posicionarFantasmaArraste(fantasma, x, y) {
@@ -174,15 +224,7 @@ function adicionarDadoAoLancamento(evento) {
   evento.stopPropagation();
 
   arrasteDadoAtual.quantidade += 1;
-
-  const indicador = arrasteDadoAtual.fantasma.querySelector(
-    ".quantidade-dados-arraste",
-  );
-
-  if (indicador) {
-    indicador.textContent = String(arrasteDadoAtual.quantidade);
-  }
-
+  adicionarMiniaturaAoArraste();
   atualizarMensagemPreparacao();
 }
 
@@ -241,7 +283,13 @@ function executarLancamentoPreparado(lancamento, x, y) {
       dadoExistente.y = y;
       dadoExistente.resultado = rolarDado(dadoExistente.numeroDeFaces);
 
-      posicionarDadoLancado(elementoExistente, x, y, 0);
+      posicionarDadoLancado(
+        elementoExistente,
+        x,
+        y,
+        0,
+        lancamento.quantidade,
+      );
       animarDadoLancado(elementoExistente, dadoExistente);
 
       dadosDoLancamento.push(dadoExistente);
@@ -255,6 +303,7 @@ function executarLancamentoPreparado(lancamento, x, y) {
       x,
       y,
       indice,
+      lancamento.quantidade,
     );
 
     if (dadoNovo) {
@@ -268,7 +317,7 @@ function executarLancamentoPreparado(lancamento, x, y) {
   }, 560);
 }
 
-function criarNovoDadoLancado(numeroDeFaces, x, y, indice) {
+function criarNovoDadoLancado(numeroDeFaces, x, y, indice, quantidadeTotal) {
   const dadoLancado = {
     id: `dado-${estadoCaixaDados.proximoId}`,
     numeroDeFaces: numeroDeFaces,
@@ -286,10 +335,38 @@ function criarNovoDadoLancado(numeroDeFaces, x, y, indice) {
     return null;
   }
 
-  posicionarDadoLancado(elementoDado, x, y, indice);
+  posicionarDadoLancado(elementoDado, x, y, indice, quantidadeTotal);
   animarDadoLancado(elementoDado, dadoLancado);
 
   return dadoLancado;
+}
+
+function calcularDeslocamentoLancamento(indice, quantidadeTotal) {
+  if (quantidadeTotal <= 1) {
+    return { x: 0, y: 0 };
+  }
+
+  const quantidadePrimeiroAnel = Math.min(8, quantidadeTotal);
+  const anel = Math.floor(indice / 8);
+  const posicaoNoAnel = indice % 8;
+  const itensNesteAnel =
+    anel === 0
+      ? quantidadePrimeiroAnel
+      : Math.min(8, quantidadeTotal - anel * 8);
+  const angulo = (Math.PI * 2 * posicaoNoAnel) / itensNesteAnel - Math.PI / 2;
+  const raio = 82 + anel * 72;
+
+  return {
+    x: Math.cos(angulo) * raio,
+    y: Math.sin(angulo) * raio,
+  };
+}
+
+function posicionarDadoLancado(elementoDado, x, y, indice, quantidadeTotal) {
+  const deslocamento = calcularDeslocamentoLancamento(indice, quantidadeTotal);
+
+  elementoDado.style.left = `${x + deslocamento.x}px`;
+  elementoDado.style.top = `${y + deslocamento.y}px`;
 }
 
 function criarElementoDadoLancado(dado) {
@@ -314,22 +391,6 @@ function criarElementoDadoLancado(dado) {
   camadaDadosLancados.append(elementoDado);
 
   return elementoDado;
-}
-
-function posicionarDadoLancado(elementoDado, x, y, indice) {
-  const deslocamentos = [
-    { x: 0, y: 0 },
-    { x: 38, y: 18 },
-    { x: -38, y: 18 },
-    { x: 38, y: -18 },
-    { x: -38, y: -18 },
-    { x: 0, y: 42 },
-    { x: 0, y: -42 },
-  ];
-  const deslocamento = deslocamentos[indice % deslocamentos.length];
-
-  elementoDado.style.left = `${x + deslocamento.x}px`;
-  elementoDado.style.top = `${y + deslocamento.y}px`;
 }
 
 function animarDadoLancado(elementoDado, dado) {
