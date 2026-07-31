@@ -3,6 +3,8 @@
    ========================================================= */
 
 .janela-dados.janela-flutuante {
+  right: 24px;
+  bottom: 24px;
   width: min(520px, calc(100vw - 32px));
 }
 
@@ -179,6 +181,9 @@ body.arrastando-dado * {
 
 @media (max-width: 560px) {
   .janela-dados.janela-flutuante {
+    right: 10px;
+    left: auto;
+    bottom: 10px;
     width: calc(100vw - 24px);
   }
 
