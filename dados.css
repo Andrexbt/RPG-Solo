@@ -91,8 +91,7 @@
 }
 
 .dado-lancado-na-tela,
-.dado-em-arraste {
-  position: absolute;
+.miniatura-dado-arraste {
   width: 58px;
   height: 58px;
   padding: 0;
@@ -105,12 +104,13 @@
   font-size: 1.15rem;
   font-weight: 800;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
-  transform: translate(-50%, -50%) rotate(var(--rotacao-dado, 0deg));
   user-select: none;
   touch-action: none;
 }
 
 .dado-lancado-na-tela {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(var(--rotacao-dado, 0deg));
   pointer-events: auto;
   cursor: grab;
 }
@@ -119,28 +119,26 @@
   opacity: 0.35;
 }
 
-.dado-em-arraste {
-  z-index: 2;
+.grupo-dados-em-arraste {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 3;
   pointer-events: none;
-  cursor: grabbing;
-  transform: translate(-50%, -50%) scale(1.08) rotate(8deg);
 }
 
-.quantidade-dados-arraste {
+.miniatura-dado-arraste {
   position: absolute;
-  top: -9px;
-  right: -9px;
-  min-width: 24px;
-  height: 24px;
-  padding-inline: 6px;
-  display: grid;
-  place-items: center;
-  border: 2px solid var(--cor-aventura-papel);
-  border-radius: 999px;
-  background: #69482f;
-  color: #f4ead2;
-  font-size: 0.75rem;
-  line-height: 1;
+  left: 0;
+  top: 0;
+  transform:
+    translate(calc(-50% + var(--miniatura-x, 0px)), calc(-50% + var(--miniatura-y, 0px)))
+    rotate(var(--miniatura-rotacao, 0deg))
+    scale(0.88);
+  cursor: grabbing;
+  transition:
+    transform 120ms ease-out,
+    opacity 120ms ease-out;
 }
 
 .dado-lancado-na-tela.dado-girando {
