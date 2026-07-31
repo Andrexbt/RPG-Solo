@@ -10,7 +10,9 @@ window.SistemaCombate = (function() {
   return {
     id: configuracao.id ??
         entidade.id,
-    nome: entidade.nome,
+    nome:
+  configuracao.nome ??
+  entidade.nome,
     tipo:
       configuracao.tipo ??
       entidade.tipo,
@@ -39,6 +41,11 @@ window.SistemaCombate = (function() {
     ataques:
       structuredClone(
         entidade.ataques
+      ),
+
+          talentos:
+      structuredClone(
+        entidade.talentos ?? []
       ),
 
     representacao:
@@ -367,6 +374,16 @@ window.SistemaCombate = (function() {
         linha
       }
     );
+
+    if (distancia === 0) {
+
+  return {
+    sucesso: false,
+    motivo:
+      "mesmaCelula"
+  };
+
+}
 
   if (
     distancia >
@@ -796,6 +813,9 @@ const resultadoNatural =
   let celulasPercorridas =
     0;
 
+    const caminho =
+  [];
+
   while (
     inimigo.movimentoRestante > 0
   ) {
@@ -871,6 +891,14 @@ const resultadoNatural =
       if (resultadoMovimento.sucesso) {
 
         celulasPercorridas++;
+
+        caminho.push({
+  coluna:
+    destino.coluna,
+
+  linha:
+    destino.linha
+});
         conseguiuMover =
           true;
 
@@ -890,7 +918,7 @@ const resultadoNatural =
     sucesso:
       celulasPercorridas > 0,
 
-    celulasPercorridas
+    celulasPercorridas, caminho
   };
 
   }
@@ -958,9 +986,13 @@ if (!ataque) {
 }
 
   if (!ataque) {
+
     return {
       sucesso: false,
-      motivo: "nenhumAtaqueNoAlcance"
+      motivo: "nenhumAtaqueNoAlcance",
+      inimigo,
+    alvo,
+    resultadoMovimento
     };
   }
 
@@ -1150,6 +1182,9 @@ if (!ataque) {
         idParticipante
     );
 
+    
+
+
   if (!participante) {
 
     combate.participanteAtivoId = null;
@@ -1158,6 +1193,11 @@ if (!ataque) {
     return null;
 
   }
+
+  recarregarEfeitos(
+    participante,
+    "turno"
+  );
 
   combate.participanteAtivoId = participante.id;
   participante.movimentoRestante = participante.movimentoMaximo;

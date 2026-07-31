@@ -326,3 +326,128 @@ function recarregarEfeitos(
       efeitosRecarregados
   };
 }
+
+function ativarEfeitoPendente(
+  participante,
+  contextoPendente,
+  efeitoId
+) {
+  if (!contextoPendente) {
+    return {
+      sucesso: false,
+      motivo: "contextoPendenteInexistente"
+    };
+  }
+
+  const operacao =
+    contextoPendente
+      .efeitos
+      ?.find(
+        efeito =>
+          efeito.efeitoId ===
+          efeitoId
+      );
+
+  if (!operacao) {
+    return {
+      sucesso: false,
+      motivo: "efeitoIndisponivel"
+    };
+  }
+
+  const resultadoConsumo =
+    consumirUsoEfeito(
+      participante,
+      efeitoId
+    );
+
+  if (!resultadoConsumo.sucesso) {
+    return resultadoConsumo;
+  }
+
+  contextoPendente.efeitoAtivo =
+    structuredClone(
+      operacao
+    );
+
+  contextoPendente.rolagensEfeito =
+    [];
+
+  return {
+    sucesso: true,
+    motivo: null,
+
+    efeitoAtivo:
+      contextoPendente
+        .efeitoAtivo,
+
+    usosRestantes:
+      resultadoConsumo
+        .usosRestantes
+  };
+}
+
+function registrarRolagemEfeito(
+  contextoPendente,
+  resultadoRolagem
+) {
+  const efeitoAtivo =
+    contextoPendente
+      ?.efeitoAtivo;
+
+  if (!efeitoAtivo) {
+    return {
+      sucesso: false,
+      motivo: "nenhumEfeitoAtivo"
+    };
+  }
+
+  const rolagens =
+    contextoPendente
+      .rolagensEfeito;
+
+  if (!Array.isArray(rolagens)) {
+    return {
+      sucesso: false,
+      motivo: "listaRolagensInexistente"
+    };
+  }
+
+  const quantidadeNecessaria =
+    efeitoAtivo
+      .quantidadeDeRolagens;
+
+  if (
+    rolagens.length >=
+    quantidadeNecessaria
+  ) {
+    return {
+      sucesso: false,
+      motivo: "rolagensJaCompletas"
+    };
+  }
+
+  rolagens.push(
+    structuredClone(
+      resultadoRolagem
+    )
+  );
+
+  return {
+    sucesso: true,
+    motivo: null,
+
+    quantidadeRegistrada:
+      rolagens.length,
+
+    quantidadeNecessaria:
+      quantidadeNecessaria,
+
+    concluida:
+      rolagens.length >=
+      quantidadeNecessaria,
+
+    rolagens:
+      rolagens
+  };
+}

@@ -624,10 +624,363 @@ select {
   bottom: 24px;
 }
 
-.solicitacao-combate {
-  margin: 0 0 16px;
+.painel-comandos-combate.janela-minimizada
+.painel-ataques-combate {
+  display:
+    none;
+}
+
+.painel-comandos-combate .solicitacao-combate {
+  margin: 0;
+  padding: 10px;
+  border-radius: 7px;
+  background:rgba(105, 72, 47, 0.08);
   font-weight: 700;
-  text-align: center;
+  line-height:1.4;
+  text-align: left;
+}
+
+.painel-comandos-combate.janela-flutuante {
+  left:
+    calc(
+      50% - 160px
+    );
+
+  right:
+    auto;
+
+  bottom:
+    24px;
+
+  width:
+    min(
+      320px,
+      calc(100vw - 32px)
+    );
+
+  max-height:
+    calc(100vh - 48px);
+
+  padding:
+    16px;
+
+  overflow:
+    visible;
+
+  border:
+    1px solid
+    var(--cor-aventura-borda);
+
+  border-radius:
+    12px;
+
+  background:
+    var(--cor-aventura-papel);
+
+  color:
+    var(--cor-aventura-tinta);
+
+  box-shadow:
+    0 12px 32px
+    rgba(0, 0, 0, 0.45);
+
+  transform:
+    none;
+}
+
+.conteudo-comandos-combate {
+  display:
+    grid;
+
+  gap:
+    14px;
+
+  margin-top:
+    14px;
+
+  max-height:
+    calc(100vh - 110px);
+
+  overflow:
+    auto;
+}
+
+.grupo-acoes-turno {
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    rgba(105, 72, 47, 0.35);
+
+  border-radius:
+    8px;
+}
+
+.titulo-grupo-acoes {
+  padding:
+    9px 10px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+
+  background:
+    rgba(105, 72, 47, 0.1);
+}
+
+.titulo-grupo-acoes h3 {
+  margin:
+    0;
+
+  font-size:
+    0.95rem;
+}
+
+.titulo-grupo-acoes strong {
+  font-size:
+    0.75rem;
+
+  text-transform:
+    uppercase;
+}
+
+.lista-acoes-turno {
+  display:
+    grid;
+
+  gap:
+    6px;
+
+  padding:
+    8px;
+}
+
+.lista-acoes-turno:empty {
+  display:
+    none;
+}
+
+.lista-acoes-turno button {
+  width:
+    100%;
+
+  padding:
+    8px 10px;
+
+  border:
+    0;
+
+  border-radius:
+    6px;
+
+  background:
+    transparent;
+
+  color:
+    inherit;
+
+  text-align:
+    left;
+
+  cursor:
+    pointer;
+}
+
+.lista-acoes-turno button:hover:not(:disabled) {
+  background:
+    rgba(105, 72, 47, 0.12);
+}
+
+.lista-acoes-turno button:disabled {
+  opacity:
+    0.45;
+
+  cursor:
+    not-allowed;
+}
+
+.painel-ataques-combate {
+  position:
+    absolute;
+
+  top:
+    48px;
+
+  left:
+  calc(100% + 8px);
+
+right:
+  auto;
+
+  z-index:
+    2;
+
+  width:
+    280px;
+
+  max-height:
+    min(
+      440px,
+      calc(100vh - 80px)
+    );
+
+  padding:
+    14px;
+
+  overflow:
+    auto;
+
+  border:
+    1px solid
+    var(--cor-aventura-borda);
+
+  border-radius:
+    10px;
+
+  background:
+    var(--cor-aventura-papel);
+
+  box-shadow:
+    0 12px 28px
+    rgba(0, 0, 0, 0.4);
+}
+
+.cabecalho-painel-ataques {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+}
+
+.cabecalho-painel-ataques h3 {
+  margin:
+    0;
+
+  font-size:
+    1rem;
+}
+
+.cabecalho-painel-ataques button {
+  width:
+    30px;
+
+  height:
+    30px;
+
+  padding:
+    0;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+}
+
+.mensagem-ataques-combate {
+  margin:
+    12px 0;
+
+  font-size:
+    0.85rem;
+
+  line-height:
+    1.4;
+}
+
+.lista-ataques-combate {
+  display:
+    grid;
+
+  gap:
+    8px;
+}
+
+.lista-ataques-combate button {
+  width:
+    100%;
+
+  padding:
+    9px 10px;
+
+  text-align:
+    left;
+}
+
+.lista-ataques-combate button:disabled {
+  opacity:
+    0.4;
+
+  filter:
+    grayscale(1);
+
+  cursor:
+    not-allowed;
+}
+
+.janela-flutuante.janela-minimizada
+.conteudo-comandos-combate {
+  display:
+    none;
+}
+
+.economia-acoes-combate {
+  display:
+    grid;
+
+  gap:
+    6px;
+}
+
+.economia-acoes-combate p {
+  margin:
+    0;
+
+  padding:
+    7px 10px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+
+  border:
+    1px solid
+    rgba(105, 72, 47, 0.35);
+
+  border-radius:
+    7px;
+}
+
+.economia-acoes-combate strong {
+  font-size:
+    0.85rem;
+
+  text-transform:
+    uppercase;
 }
 
 .painel-turno-combate {
@@ -636,20 +989,52 @@ select {
   left: 50%;
   z-index: 5;
   padding: 12px 16px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 16px;
+  gap: 8px 16px;
   transform: translateX(-50%);
   border: 1px solid var(--cor-aventura-borda);
   border-radius: 12px;
   background: var(--cor-aventura-papel);
   color: var(--cor-aventura-tinta);
-  box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  min-width: 290px;
 }
 
 .painel-turno-combate p {
   margin: 0;
+}
+
+.painel-acao-atual-combate {
+  grid-column:
+    1 / -1;
+
+  padding:
+    7px 10px;
+
+  border-top:
+    1px solid
+    rgba(105, 72, 47, 0.3);
+}
+
+.painel-acao-atual-combate strong {
+  display:
+    block;
+
+  margin-bottom:
+    3px;
+
+  font-size:
+    0.75rem;
+
+  text-transform:
+    uppercase;
+}
+
+.painel-acao-atual-combate p {
+  margin:
+    0;
 }
 
 .token-combate.token-turno-ativo {
@@ -664,9 +1049,28 @@ select {
     0 0 20px rgba(200, 73, 63, 0.9);
 }
 
-.acoes-combate {
-  display: flex;
+.painel-comandos-combate .acoes-combate {
+  display: grid;
   gap: 8px;
+  margin: 0px;
+}
+
+.painel-comandos-combate
+.acoes-combate:empty {
+  display:
+    none;
+}
+
+.painel-comandos-combate
+.acoes-combate button,
+.botao-encerrar-turno {
+  width:
+    100%;
+}
+
+.botao-encerrar-turno {
+  padding:
+    9px 12px;
 }
 
 .botao-ataque-combate {
@@ -775,4 +1179,362 @@ select {
     bottom: 10px;
   }
 
+}
+
+.economia-acoes-combate
+[data-disponivel="true"] {
+  color:
+    #386641;
+}
+
+.economia-acoes-combate
+[data-disponivel="false"] {
+  color:
+    #9b3d32;
+}
+
+.fila-iniciativa-combate {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  max-width:
+    min(
+      620px,
+      calc(100vw - 180px)
+    );
+
+  padding:
+    8px;
+
+  overflow-x:
+    auto;
+
+    overflow-y:
+  hidden;
+
+scrollbar-width:
+  none;
+}
+
+.fila-iniciativa-combate::-webkit-scrollbar {
+  display:
+    none;
+}
+
+.item-iniciativa {
+  position:
+    relative;
+
+  flex:
+    0 0 auto;
+
+  display:
+    grid;
+
+  justify-items:
+    center;
+
+  gap:
+    2px;
+}
+
+.avatar-iniciativa {
+  position:
+    relative;
+
+  width:
+    46px;
+
+  height:
+    46px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  overflow:
+    visible;
+
+  border:
+    2px solid
+    rgba(105, 72, 47, 0.55);
+
+  border-radius:
+    50%;
+
+  background:
+    #3f2d20;
+
+  color:
+    #f4ead2;
+
+  font-weight:
+    700;
+}
+
+.imagem-avatar-iniciativa,
+.frame-avatar-iniciativa {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  border-radius:
+    50%;
+
+  object-fit:
+    cover;
+}
+
+.frame-avatar-iniciativa {
+  pointer-events:
+    none;
+}
+
+.item-iniciativa.turno-ativo
+.avatar-iniciativa::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    -6px;
+
+  border:
+    3px solid
+    transparent;
+
+  border-top-color:
+    #f0c66c;
+
+  border-right-color:
+    rgba(240, 198, 108, 0.35);
+
+  border-radius:
+    50%;
+
+  animation:
+    girar-indicador-turno
+    1.4s
+    linear
+    infinite;
+}
+
+@keyframes girar-indicador-turno {
+  to {
+    transform:
+      rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item-iniciativa.turno-ativo
+  .avatar-iniciativa::after {
+    border-color:
+      #f0c66c;
+
+    animation:
+      none;
+  }
+}
+
+.painel-historico-combate {
+  position:
+    absolute;
+
+  top:
+    16px;
+
+  left:
+    auto;
+
+    right:
+  calc(50% + 160px);
+
+  z-index:
+    5;
+
+  width:
+    240px;
+
+  max-height:
+    none;
+
+  padding:
+    10px;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    var(--cor-aventura-borda);
+
+  border-radius:
+    10px;
+
+  background:
+    var(--cor-aventura-papel);
+
+  color:
+    var(--cor-aventura-tinta);
+
+  box-shadow:
+    0 8px 20px
+    rgba(0, 0, 0, 0.3);
+}
+
+.painel-historico-combate.historico-expandido {
+  max-height:
+    calc(100vh - 32px);
+
+  overflow-y:
+    auto;
+}
+
+.cabecalho-historico-combate {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+
+  margin-bottom:
+    8px;
+}
+
+.cabecalho-historico-combate h2 {
+  margin:
+    0;
+}
+
+.cabecalho-historico-combate button {
+  width:
+    26px;
+
+  height:
+    26px;
+
+  padding:
+    0;
+
+  cursor:
+    pointer;
+}
+
+.painel-historico-combate h2 {
+  margin:
+    0 0 8px;
+
+  font-size:
+    0.9rem;
+}
+
+.painel-historico-combate[hidden] {
+  display: none;
+}
+
+.lista-historico-combate {
+  display: grid;
+  gap: 8px;
+}
+
+.evento-historico-combate {
+  padding: 6px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.evento-historico-combate summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.evento-historico-combate p {
+  margin: 8px 0 0;
+}
+
+.painel-historico-combate:not(
+  .historico-expandido
+)
+.evento-historico-combate:nth-last-child(
+  n + 4
+) {
+  display:
+    none;
+}
+
+.identificador-participante {
+  position:
+    absolute;
+
+  right:
+    -3px;
+
+  bottom:
+    -3px;
+
+  z-index:
+    4;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  min-width:
+    18px;
+
+  height:
+    18px;
+
+  padding:
+    0 4px;
+
+  border:
+    1px solid
+    #f4ead2;
+
+  border-radius:
+    999px;
+
+  background:
+    #5f211d;
+
+  color:
+    #f4ead2;
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    700;
+
+  line-height:
+    1;
 }

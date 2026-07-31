@@ -5925,7 +5925,210 @@ function obterTextoAtaqueFurtivo(personagemAtual, idArma) {
   return "Ataque Furtivo: +1d6 quando aplicável";
 }
 
+function converterDanoArma(
+  dano
+) {
+  const partes =
+    dano.split(
+      "d"
+    );
+
+  if (partes.length !== 2) {
+    return null;
+  }
+
+  const quantidade =
+    Number(
+      partes[0]
+    );
+
+  const numeroDeFaces =
+    Number(
+      partes[1]
+    );
+
+  if (
+    !Number.isInteger(
+      quantidade
+    ) ||
+    !Number.isInteger(
+      numeroDeFaces
+    )
+  ) {
+    return null;
+  }
+
+  return {
+    quantidade:
+      quantidade,
+
+    numeroDeFaces:
+      numeroDeFaces
+  };
+}
+
+function criarAtaqueCombateArma(
+  personagemAtual,
+  idArma
+) {
+  const arma =
+    obterDadosArma(
+      idArma
+    );
+
+  if (!arma) {
+    return null;
+  }
+
+  const grupoDano =
+    converterDanoArma(
+      arma.dano
+    );
+
+  if (!grupoDano) {
+    return null;
+  }
+
+  const bonusAtaque =
+    calcularBonusAtaqueArma(
+      personagemAtual,
+      idArma
+    );
+
+  const bonusDano =
+    calcularBonusDanoArma(
+      personagemAtual,
+      idArma
+    );
+
+  const ataqueDistancia =
+    arma.categoria ===
+    "distancia";
+
+  return {
+    id:
+      idArma,
+
+    nome:
+      arma.nome,
+
+    categoria:
+      ataqueDistancia
+        ? "distancia"
+        : "corpoACorpo",
+
+    selecao: {
+      tipo:
+        "criatura",
+
+      alcance: ataqueDistancia
+        ? {
+            normal: 16,
+            longo: 64
+          }
+        : {
+            normal: 1
+          },
+
+      area:
+        null
+    },
+
+    bonusAtaque:
+      bonusAtaque === ""
+        ? 0
+        : bonusAtaque,
+
+    dano: {
+      gruposDeDados: [
+        grupoDano
+      ],
+
+      modificador:
+        bonusDano === ""
+          ? 0
+          : bonusDano,
+
+      tipo:
+        arma.tipoDano
+    },
+
+    maestriaId:
+      arma.maestria,
+
+    propriedades:
+      structuredClone(
+        arma.propriedades ?? []
+      )
+  };
+}
+
+function atualizarAtaquesCombatePersonagem() {
+  const equipamentos =
+    personagem
+      .detalhes
+      .equipamentos;
+
+  const ataques =
+    [];
+
+  if (!equipamentos) {
+    personagem.combate.ataques =
+      ataques;
+
+    return;
+  }
+
+  if (
+    equipamentos.armaPrincipal
+  ) {
+    const ataquePrincipal =
+      criarAtaqueCombateArma(
+        personagem,
+        equipamentos.armaPrincipal
+      );
+
+    if (ataquePrincipal) {
+      ataques.push(
+        ataquePrincipal
+      );
+    }
+  }
+
+  if (
+    equipamentos.itemSecundario ===
+      "armaSecundaria" &&
+    equipamentos.armaSecundaria
+  ) {
+    const ataqueSecundario =
+      criarAtaqueCombateArma(
+        personagem,
+        equipamentos.armaSecundaria
+      );
+
+    if (ataqueSecundario) {
+      ataqueSecundario.id =
+        ataqueSecundario.id +
+        "Secundaria";
+
+      ataqueSecundario.nome =
+        ataqueSecundario.nome +
+        " (secundária)";
+
+      ataques.push(
+        ataqueSecundario
+      );
+    }
+  }
+
+  personagem.combate.ataques =
+    ataques;
+}
+
 function atualizarFichaArmasAtaques() {
+
+  atualizarAtaquesCombatePersonagem()
+  
   if (fichaArmasAtaques === null) {
     return;
   }

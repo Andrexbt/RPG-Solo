@@ -52,7 +52,10 @@ function obterEscolhasDisponiveis(cenaId, escolhas) {
   const escolhasRemovidas =
     window.estadoJogo.progresso.escolhasRemovidas[cenaId] || [];
 
-  return escolhas.filter(
+      const listaEscolhas =
+    escolhas ?? [];
+
+  return listaEscolhas.filter(
     function (escolha) {
 
       return !escolhasRemovidas.includes(escolha.id);

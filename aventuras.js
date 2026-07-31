@@ -139,9 +139,64 @@ let arrasteCamera = null;
 
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
 const painelTurnoCombate = document.querySelector("#painelTurnoCombate");
+const painelComandosCombate = document.querySelector("#painelComandosCombate");
+
 const numeroRodadaCombate = document.querySelector("#numeroRodadaCombate");
-const participanteAtivoCombate = document.querySelector("#participanteAtivoCombate");
+
+const filaIniciativaCombate =
+  document.querySelector(
+    "#filaIniciativaCombate"
+  );
+
 const movimentoRestanteCombate = document.querySelector("#movimentoRestanteCombate");
+const acaoDisponivelCombate = document.querySelector("#acaoDisponivelCombate");
+const acaoBonusDisponivelCombate = document.querySelector("#acaoBonusDisponivelCombate");
+
+const listaAcoesTurno =
+  document.querySelector(
+    "#listaAcoesTurno"
+  );
+
+const listaAcoesBonusTurno =
+  document.querySelector(
+    "#listaAcoesBonusTurno"
+  );
+
+const painelAtaquesCombate =
+  document.querySelector(
+    "#painelAtaquesCombate"
+  );
+
+const botaoFecharAtaquesCombate =
+  document.querySelector(
+    "#botaoFecharAtaquesCombate"
+  );
+
+const mensagemAtaquesCombate =
+  document.querySelector(
+    "#mensagemAtaquesCombate"
+  );
+
+const listaAtaquesCombate =
+  document.querySelector(
+    "#listaAtaquesCombate"
+  );
+
+  const painelHistoricoCombate =
+  document.querySelector(
+    "#painelHistoricoCombate"
+  );
+
+const listaHistoricoCombate =
+  document.querySelector(
+    "#listaHistoricoCombate"
+  );
+
+  const botaoExpandirHistorico =
+  document.querySelector(
+    "#botaoExpandirHistorico"
+  );
+
 const botaoEncerrarTurno = document.querySelector("#botaoEncerrarTurno");
 const acoesCombate = document.querySelector("#acoesCombate");
 
@@ -165,6 +220,16 @@ const solicitacaoTeste = document.querySelector("#solicitacaoTeste");
 const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 
 const areaEscolhas = document.querySelector(".area-escolhas");
+
+const painelAcaoAtualCombate =
+  document.querySelector(
+    "#painelAcaoAtualCombate"
+  );
+
+const mensagemAcaoAtualCombate =
+  document.querySelector(
+    "#mensagemAcaoAtualCombate"
+  );
 
 carregarNpcsDaAventura( aventuraAtual.id);
 
@@ -424,6 +489,9 @@ function exibirTelaCombate() {
   visualizacaoAventura.hidden =
     true;
 
+  painelComandosCombate.hidden =
+    false;
+
   visualizacaoCombate.hidden =
     false;
 
@@ -440,6 +508,9 @@ function exibirTelaAventura() {
 
   visualizacaoAventura.hidden =
     false;
+
+  painelComandosCombate.hidden =
+    true;
 
   layoutAventura.classList.remove(
     "modo-combate"
@@ -528,6 +599,30 @@ if (
 
   }
 
+  const numeroParticipante =
+  obterNumeroParticipante(
+    participante
+  );
+
+if (numeroParticipante) {
+
+  const identificador =
+    document.createElement(
+      "span"
+    );
+
+  identificador.className =
+    "identificador-participante";
+
+  identificador.textContent =
+    numeroParticipante;
+
+  token.append(
+    identificador
+  );
+
+}
+
 } else {
 
   token.textContent =
@@ -607,6 +702,28 @@ function criarCelulasTabuleiro(
 
 }
 
+function obterNumeroParticipante(
+  participante
+) {
+
+  if (
+    participante.tipo !==
+    "inimigo"
+  ) {
+    return null;
+  }
+
+  const numeroEncontrado =
+    participante.nome.match(
+      /\d+$/
+    );
+
+  return numeroEncontrado
+    ? numeroEncontrado[0]
+    : null;
+
+}
+
 function renderizarParticipantesCombate(
   participantes
 ) {
@@ -643,25 +760,532 @@ function renderizarTabuleiroCombate(
 
 }
 
+function abrirPainelAtaquesCombate() {
+  painelAtaquesCombate.hidden =
+    false;
+}
+
+function reabrirPainelComandosCombate() {
+  if (
+    visualizacaoCombate.hidden
+  ) {
+    return;
+  }
+
+  painelComandosCombate.hidden =
+    false;
+
+  painelComandosCombate.classList.remove(
+    "janela-minimizada"
+  );
+
+  const botaoMinimizar =
+    painelComandosCombate.querySelector(
+      "[data-minimizar-janela]"
+    );
+
+  if (!botaoMinimizar) {
+    return;
+  }
+
+  botaoMinimizar.setAttribute(
+    "aria-expanded",
+    "true"
+  );
+
+  botaoMinimizar.textContent =
+    "−";
+}
+
+function verificarNovaSolicitacaoCombate() {
+  const possuiSolicitacao =
+    !solicitacaoCombate.hidden &&
+    solicitacaoCombate
+      .textContent
+      .trim() !==
+      "";
+
+  if (!possuiSolicitacao) {
+    return;
+  }
+
+  reabrirPainelComandosCombate();
+}
+
+function exibirAcaoAtualCombate(
+  mensagem
+) {
+
+  mensagemAcaoAtualCombate.textContent =
+    mensagem;
+
+  painelAcaoAtualCombate.hidden =
+    false;
+
+}
+
+function adicionarEventoHistoricoCombate(
+  titulo,
+  descricao
+) {
+
+  const evento =
+    document.createElement(
+      "details"
+    );
+
+  evento.className =
+    "evento-historico-combate";
+
+  const resumo =
+    document.createElement(
+      "summary"
+    );
+
+  resumo.textContent =
+    titulo;
+
+  const detalhes =
+    document.createElement(
+      "p"
+    );
+
+  detalhes.textContent =
+    descricao;
+
+  evento.append(
+    resumo,
+    detalhes
+  );
+
+  listaHistoricoCombate.append(
+    evento
+  );
+
+  painelHistoricoCombate.hidden =
+    false;
+
+    if (
+  painelHistoricoCombate.classList.contains(
+    "historico-expandido"
+  )
+) {
+
+  painelHistoricoCombate.scrollTop =
+    painelHistoricoCombate.scrollHeight;
+
+}
+
+}
+
+function alternarHistoricoCombate() {
+
+  const estaExpandido =
+    painelHistoricoCombate.classList.toggle(
+      "historico-expandido"
+    );
+
+  botaoExpandirHistorico.setAttribute(
+    "aria-expanded",
+    estaExpandido
+  );
+
+  botaoExpandirHistorico.setAttribute(
+    "aria-label",
+    estaExpandido
+      ? "Recolher histórico"
+      : "Expandir histórico"
+  );
+
+  botaoExpandirHistorico.title =
+    estaExpandido
+      ? "Recolher histórico"
+      : "Expandir histórico";
+
+  botaoExpandirHistorico.textContent =
+    estaExpandido
+      ? "−"
+      : "+";
+
+  if (estaExpandido) {
+
+    painelHistoricoCombate.scrollTop =
+      painelHistoricoCombate.scrollHeight;
+
+  }
+
+}
+
+async function animarMovimentoInimigo(
+  participante,
+  caminho
+) {
+
+  if (
+    !Array.isArray(
+      caminho
+    ) ||
+    caminho.length === 0
+  ) {
+    return;
+  }
+
+  const token =
+    tabuleiroCombate.querySelector(
+      `[data-id-participante="${participante.id}"]`
+    );
+
+  if (!token) {
+    return;
+  }
+
+  for (
+    const posicao of
+    caminho
+  ) {
+
+    const posicaoAnterior =
+    token.getBoundingClientRect();
+
+  token.style.gridColumn =
+    posicao.coluna;
+
+  token.style.gridRow =
+    posicao.linha;
+
+  const novaPosicao =
+    token.getBoundingClientRect();
+
+  const zoom =
+    cameraCombate.zoom || 1;
+
+  const deslocamentoX =
+    (
+      posicaoAnterior.left -
+      novaPosicao.left
+    ) / zoom;
+
+  const deslocamentoY =
+    (
+      posicaoAnterior.top -
+      novaPosicao.top
+    ) / zoom;
+
+  const animacao =
+    token.animate(
+      [
+        {
+          translate:
+            `${deslocamentoX}px ` +
+            `${deslocamentoY}px`
+        },
+
+        {
+          translate:
+            "0 0"
+        }
+      ],
+      {
+        duration:
+          700,
+
+        easing:
+          "ease-in-out",
+
+        fill:
+          "both"
+      }
+    );
+
+  try {
+
+    await animacao.finished;
+
+  } catch (erro) {
+
+    console.warn(
+      "A animação do movimento foi interrompida.",
+      erro
+    );
+
+  }
+
+  animacao.cancel();
+
+  await esperar(
+    200
+  );
+
+}
+
+}
+
+function esperar(
+  milissegundos
+) {
+
+  return new Promise(
+    function(resolve) {
+
+      setTimeout(
+        resolve,
+        milissegundos
+      );
+
+    }
+  );
+
+}
+
+async function registrarResultadoTurnoInimigo(
+  resultado,
+  participante
+) {
+
+  const resultadoMovimento =
+    resultado.resultadoMovimento;
+
+  if (
+    resultadoMovimento?.celulasPercorridas >
+    0
+  ) {
+
+    exibirAcaoAtualCombate(
+      `${participante.nome} está se movimentando.`
+    );
+
+    adicionarEventoHistoricoCombate(
+      `${participante.nome} se movimentou`,
+      `${participante.nome} avançou pelo campo de batalha.`
+    );
+
+    await animarMovimentoInimigo(
+      participante,
+      resultadoMovimento.caminho
+    );
+
+    atualizarInterfaceTurno(
+      estadoAtualJogo.combateAtual
+    );
+
+    await esperar(
+      900
+    );
+
+  }
+
+  if (!resultado.sucesso) {
+
+    exibirAcaoAtualCombate(
+      `${participante.nome} encerrou sua movimentação.`
+    );
+
+    await esperar(
+      1200
+    );
+
+    return;
+
+  }
+
+  exibirAcaoAtualCombate(
+    `${participante.nome} está atacando ` +
+    `${resultado.alvo.nome}.`
+  );
+
+  await esperar(
+    1000
+  );
+
+  if (
+    !resultado.resultadoAtaque.acertou
+  ) {
+
+    exibirAcaoAtualCombate(
+      `${participante.nome} errou o ataque.`
+    );
+
+    adicionarEventoHistoricoCombate(
+      `${participante.nome} errou o ataque`,
+      `${participante.nome} tentou atingir ` +
+      `${resultado.alvo.nome} com ` +
+      `${resultado.ataque.nome}, mas errou.`
+    );
+
+    await esperar(
+      1400
+    );
+
+    return;
+
+  }
+
+  exibirAcaoAtualCombate(
+    `${participante.nome} acertou o ataque.`
+  );
+
+  if (
+    resultado.alvo.tipo ===
+    "jogador"
+  ) {
+
+    adicionarEventoHistoricoCombate(
+      `${participante.nome} acertou o ataque`,
+      `Você sofreu ` +
+      `${resultado.resultadoDano.dano} de dano. ` +
+      `Seus pontos de vida restantes são ` +
+      `${resultado.resultadoDano.pontosDeVidaRestantes}.`
+    );
+
+  } else {
+
+    adicionarEventoHistoricoCombate(
+      `${participante.nome} acertou o ataque`,
+      `${participante.nome} atingiu ` +
+      `${resultado.alvo.nome} com ` +
+      `${resultado.ataque.nome}.`
+    );
+
+  }
+
+  await esperar(
+    1400
+  );
+
+}
+
+const observadorSolicitacaoCombate =
+  new MutationObserver(
+    verificarNovaSolicitacaoCombate
+  );
+
+observadorSolicitacaoCombate.observe(
+  solicitacaoCombate,
+  {
+    attributes:
+      true,
+
+    attributeFilter: [
+      "hidden"
+    ],
+
+    childList:
+      true,
+
+    characterData:
+      true,
+
+    subtree:
+      true
+  }
+);
+
+function fecharPainelAtaquesCombate() {
+  painelAtaquesCombate.hidden =
+    true;
+}
+
 function renderizarAcoesCombate(
   participante
 ) {
+  listaAcoesTurno.innerHTML =
+    "";
+
+  listaAcoesBonusTurno.innerHTML =
+    "";
 
   acoesCombate.innerHTML =
     "";
 
   if (
     !participante ||
-    participante.tipo !== "jogador"
+    participante.tipo !==
+      "jogador"
   ) {
+    fecharPainelAtaquesCombate();
+
     return;
   }
 
-  for (
-    const ataque of
-      participante.ataques
-  ) {
+  const botaoAtacar =
+    document.createElement(
+      "button"
+    );
 
+  botaoAtacar.type =
+    "button";
+
+  botaoAtacar.textContent =
+    "Atacar";
+
+  botaoAtacar.disabled =
+    !participante.acaoDisponivel;
+
+  botaoAtacar.addEventListener(
+    "click",
+    abrirPainelAtaquesCombate
+  );
+
+  listaAcoesTurno.append(
+    botaoAtacar
+  );
+
+  const mensagemAcaoBonus =
+    document.createElement(
+      "p"
+    );
+
+  mensagemAcaoBonus.textContent =
+    participante.acaoBonusDisponivel
+      ? "Nenhuma opção disponível."
+      : "Ação bônus utilizada.";
+
+  listaAcoesBonusTurno.append(
+    mensagemAcaoBonus
+  );
+}
+
+function renderizarListaAtaquesCombate(
+  combate,
+  participante
+) {
+  listaAtaquesCombate.innerHTML =
+    "";
+
+  if (
+    !participante ||
+    participante.tipo !==
+      "jogador"
+  ) {
+    mensagemAtaquesCombate.textContent =
+      "";
+
+    return;
+  }
+
+  const ataques =
+    participante.ataques ?? [];
+
+  if (ataques.length === 0) {
+    mensagemAtaquesCombate.textContent =
+      "Nenhum ataque disponível.";
+
+    return;
+  }
+
+  const alvo =
+    combate.participantes.find(
+      participante =>
+        participante.id ===
+          combate.alvoSelecionadoId &&
+        participante.estado !==
+          "derrotado"
+    );
+
+  let quantidadeDisponivel =
+    0;
+
+  for (const ataque of ataques) {
     const botao =
       document.createElement(
         "button"
@@ -680,15 +1304,245 @@ function renderizarAcoesCombate(
     botao.textContent =
       ataque.nome;
 
-    botao.disabled =
-      !participante.acaoDisponivel;
+    let ataqueDisponivel =
+      false;
 
-    acoesCombate.append(
+    if (
+      alvo &&
+      participante.acaoDisponivel
+    ) {
+      const validacao =
+        SistemaCombate
+          .validarSelecaoAcao(
+            participante,
+            alvo,
+            ataque
+          );
+
+      ataqueDisponivel =
+        validacao.sucesso;
+    }
+
+    botao.disabled =
+      !ataqueDisponivel;
+
+    if (ataqueDisponivel) {
+      quantidadeDisponivel +=
+        1;
+    }
+
+    listaAtaquesCombate.append(
       botao
     );
-
   }
 
+  if (!participante.acaoDisponivel) {
+    mensagemAtaquesCombate.textContent =
+      "Sua ação já foi utilizada.";
+
+    return;
+  }
+
+  if (!alvo) {
+    mensagemAtaquesCombate.textContent =
+      "Selecione um inimigo no tabuleiro.";
+
+    return;
+  }
+
+  if (quantidadeDisponivel === 0) {
+    mensagemAtaquesCombate.textContent =
+      `Aproxime-se de ${alvo.nome} ` +
+      "para entrar no alcance de um ataque.";
+
+    return;
+  }
+
+  mensagemAtaquesCombate.textContent =
+    `Escolha um ataque contra ` +
+    `${alvo.nome}.`;
+}
+
+function atualizarIndicadorRecurso(
+  elemento,
+  disponivel
+) {
+  if (
+    typeof disponivel !==
+    "boolean"
+  ) {
+    elemento.textContent =
+      "—";
+
+    elemento.removeAttribute(
+      "data-disponivel"
+    );
+
+    return;
+  }
+
+  elemento.textContent =
+    disponivel
+      ? "Disponível"
+      : "Utilizada";
+
+  elemento.dataset.disponivel =
+    String(
+      disponivel
+    );
+}
+
+function criarAvatarIniciativa(
+  participante
+) {
+  const avatar =
+    document.createElement(
+      "div"
+    );
+
+  avatar.classList.add(
+    "avatar-iniciativa"
+  );
+
+  const representacao =
+    participante.representacao;
+
+  if (representacao?.imagem) {
+    const imagem =
+      document.createElement(
+        "img"
+      );
+
+    imagem.classList.add(
+      "imagem-avatar-iniciativa"
+    );
+
+    imagem.src =
+      representacao.imagem;
+
+    imagem.alt =
+      "";
+
+    avatar.append(
+      imagem
+    );
+
+    if (representacao.frame) {
+      const frame =
+        document.createElement(
+          "img"
+        );
+
+      frame.classList.add(
+        "frame-avatar-iniciativa"
+      );
+
+      frame.src =
+        representacao.frame;
+
+      frame.alt =
+        "";
+
+      avatar.append(
+        frame
+      );
+    }
+
+    return avatar;
+  }
+
+  avatar.textContent =
+    participante.nome
+      ?.charAt(0)
+      .toUpperCase() ??
+    "?";
+
+  return avatar;
+}
+
+function renderizarFilaIniciativa(
+  combate
+) {
+  filaIniciativaCombate.innerHTML =
+    "";
+
+  for (
+    const participanteId of
+    combate.ordemTurnos
+  ) {
+    const participante =
+      combate.participantes.find(
+        participante =>
+          participante.id ===
+          participanteId
+      );
+
+    if (!participante) {
+      continue;
+    }
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+    item.classList.add(
+      "item-iniciativa"
+    );
+
+    item.setAttribute(
+      "role",
+      "listitem"
+    );
+
+    item.title = participante.nome;
+
+    if (
+      participante.id ===
+      combate.participanteAtivoId
+    ) {
+      item.classList.add(
+        "turno-ativo"
+      );
+    }
+
+    const avatar =
+      criarAvatarIniciativa(
+        participante
+      );
+
+      const numeroParticipante =
+  obterNumeroParticipante(
+    participante
+  );
+
+if (numeroParticipante) {
+
+  const identificador =
+    document.createElement(
+      "span"
+    );
+
+  identificador.className =
+    "identificador-participante";
+
+  identificador.textContent =
+    numeroParticipante;
+
+  avatar.append(
+    identificador
+  );
+
+}
+
+    item.append(
+      avatar
+    );
+
+    filaIniciativaCombate.append(
+      item
+    );
+  }
 }
 
 function atualizarInterfaceTurno(
@@ -702,28 +1556,50 @@ function atualizarInterfaceTurno(
         combate.participanteAtivoId
     );
 
+    const participanteJogadorAtivo =
+  participanteAtivo?.tipo ===
+    "jogador"
+      ? participanteAtivo
+      : null;
+
   botaoEncerrarTurno.disabled =
-    !participanteAtivo ||
-    participanteAtivo.tipo !== "jogador" ||
-    combate.status !== "ativo";
+  !participanteJogadorAtivo ||
+  combate.status !==
+    "ativo";
 
   numeroRodadaCombate.textContent =
     combate.rodada;
 
-  participanteAtivoCombate.textContent =
-    participanteAtivo
-      ? participanteAtivo.nome ??
-        participanteAtivo.id
-      : "—";
-
-  movimentoRestanteCombate.textContent =
-    participanteAtivo
-      ? participanteAtivo.movimentoRestante
-      : "—";
-
-  renderizarAcoesCombate(
-    participanteAtivo
+    renderizarFilaIniciativa(
+    combate
   );
+
+ movimentoRestanteCombate.textContent =
+  participanteJogadorAtivo
+    ? `${participanteJogadorAtivo.movimentoRestante} / ` +
+      `${participanteJogadorAtivo.movimentoMaximo}`
+    : "—";
+
+atualizarIndicadorRecurso(
+  acaoDisponivelCombate,
+  participanteJogadorAtivo
+    ?.acaoDisponivel
+);
+
+atualizarIndicadorRecurso(
+  acaoBonusDisponivelCombate,
+  participanteJogadorAtivo
+    ?.acaoBonusDisponivel
+);
+
+renderizarAcoesCombate(
+  participanteJogadorAtivo
+);
+
+renderizarListaAtaquesCombate(
+  combate,
+  participanteJogadorAtivo
+);
 
   const tokens =
     tabuleiroCombate.querySelectorAll(
@@ -888,54 +1764,34 @@ function selecionarAlvoCombate(
 function selecionarAtaqueCombate(
   evento
 ) {
-
   const botao =
     evento.target.closest(
       ".botao-ataque-combate"
     );
 
-  if (!botao) {
+  if (
+    !botao ||
+    botao.disabled
+  ) {
     return;
   }
 
   const combate =
-    estadoAtualJogo.combateAtual;
+    estadoAtualJogo
+      .combateAtual;
 
   if (!combate) {
     return;
   }
 
   if (!combate.alvoSelecionadoId) {
-
-    let instrucaoD20 =
-  "Role 1d20";
-
-if (
-  resultado.tipoRolagem ===
-  "vantagem"
-) {
-  instrucaoD20 =
-    "Role 2d20 e use o maior resultado";
-}
-
-if (
-  resultado.tipoRolagem ===
-  "desvantagem"
-) {
-  instrucaoD20 =
-    "Role 2d20 e use o menor resultado";
-}
-
-solicitacaoCombate.textContent =
-  `${instrucaoD20} ${sinalBonus}` +
-  `${resultado.ataque.bonusAtaque} ` +
-  `para atacar ${resultado.alvo.nome}.`;
+    solicitacaoCombate.textContent =
+      "Selecione um inimigo antes de atacar.";
 
     solicitacaoCombate.hidden =
       false;
 
     return;
-
   }
 
   const resultado =
@@ -947,29 +1803,52 @@ solicitacaoCombate.textContent =
     );
 
   if (!resultado.sucesso) {
-
     console.warn(
       "Ataque recusado:",
       resultado.motivo
     );
 
-    return;
+    atualizarInterfaceTurno(
+      combate
+    );
 
+    return;
   }
 
   const sinalBonus =
-    resultado.ataque.bonusAtaque >= 0
+    resultado.ataque.bonusAtaque >=
+      0
       ? "+"
       : "";
 
+  let instrucaoD20 =
+    "Role 1d20";
+
+  if (
+    resultado.tipoRolagem ===
+    "vantagem"
+  ) {
+    instrucaoD20 =
+      "Role 2d20 e use o maior resultado";
+  }
+
+  if (
+    resultado.tipoRolagem ===
+    "desvantagem"
+  ) {
+    instrucaoD20 =
+      "Role 2d20 e use o menor resultado";
+  }
+
   solicitacaoCombate.textContent =
-    `Role 1d20 ${sinalBonus}` +
+    `${instrucaoD20} ${sinalBonus}` +
     `${resultado.ataque.bonusAtaque} ` +
     `para atacar ${resultado.alvo.nome}.`;
 
   solicitacaoCombate.hidden =
     false;
 
+  fecharPainelAtaquesCombate();
 }
 
 function criarParticipanteJogadorCombate(
@@ -1096,6 +1975,11 @@ function criarParticipantesNpcsCombate(
 
         id:
           `${configuracao.npcId}-${indice + 1}`,
+
+          nome:
+  quantidade > 1
+    ? `${npc.nome} ${indice + 1}`
+    : npc.nome,
 
         tipo:
           npc.tipo,
@@ -1224,6 +2108,22 @@ if (!resultadoMovimento.sucesso) {
   );
 
   return false;
+
+}
+
+if (
+  participante.tipo ===
+  "jogador"
+) {
+
+  adicionarEventoHistoricoCombate(
+    `${participante.nome} se movimentou`,
+    "Você mudou de posição no campo de batalha."
+  );
+
+  exibirAcaoAtualCombate(
+    "Você se movimentou."
+  );
 
 }
 
@@ -1888,6 +2788,134 @@ function formatarRolagemDano(
 
 }
 
+function oferecerEfeitoDano(
+  combate,
+  textoDano
+) {
+  const danoPendente =
+    combate.danoPendente;
+
+  const operacao =
+    danoPendente
+      ?.efeitos
+      ?.find(
+        efeito =>
+          efeito.tipo ===
+          "rolarNovamente"
+      );
+
+  if (!operacao) {
+    return false;
+  }
+
+  const atacante =
+    combate.participantes.find(
+      participante =>
+        participante.id ===
+        danoPendente.atacanteId
+    );
+
+  if (!atacante) {
+    return false;
+  }
+
+  const resultadoBusca =
+    buscarEfeitoPorId(
+      operacao.efeitoId
+    );
+
+  if (!resultadoBusca.sucesso) {
+    return false;
+  }
+
+  const efeito =
+    resultadoBusca.efeito;
+
+  acoesCombate.innerHTML =
+    "";
+
+  const botaoUsar =
+    document.createElement(
+      "button"
+    );
+
+  botaoUsar.type =
+    "button";
+
+  botaoUsar.textContent =
+    `Usar ${efeito.nome}`;
+
+  const botaoIgnorar =
+    document.createElement(
+      "button"
+    );
+
+  botaoIgnorar.type =
+    "button";
+
+  botaoIgnorar.textContent =
+    "Rolar dano normal";
+
+  botaoUsar.addEventListener(
+    "click",
+    function() {
+      const resultado =
+        ativarEfeitoPendente(
+          atacante,
+          danoPendente,
+          efeito.id
+        );
+
+      if (!resultado.sucesso) {
+        console.warn(
+          "Não foi possível ativar o efeito:",
+          resultado.motivo
+        );
+
+        return;
+      }
+
+      acoesCombate.innerHTML =
+        "";
+
+      solicitacaoCombate.textContent =
+        `${efeito.nome} ativado. ` +
+        `Role ${textoDano} duas vezes.`;
+
+      solicitacaoCombate.hidden =
+        false;
+    }
+  );
+
+  botaoIgnorar.addEventListener(
+    "click",
+    function() {
+      acoesCombate.innerHTML =
+        "";
+
+      solicitacaoCombate.textContent =
+        `Role ${textoDano} de dano.`;
+
+      solicitacaoCombate.hidden =
+        false;
+    }
+  );
+
+  acoesCombate.append(
+    botaoUsar,
+    botaoIgnorar
+  );
+
+  solicitacaoCombate.textContent =
+    `${efeito.nome} está disponível. ` +
+    "Deseja utilizá-lo?";
+
+  solicitacaoCombate.hidden =
+    false;
+
+  return true;
+}
+
 function resolverAtaqueJogador(
   resultadoRolagem
 ) {
@@ -1918,6 +2946,17 @@ function resolverAtaqueJogador(
 
   if (!resultadoAtaque.acertou) {
 
+    adicionarEventoHistoricoCombate(
+  `${resultadoAtaque.atacante.nome} errou o ataque`,
+  `Você tentou atingir ` +
+  `${resultadoAtaque.alvo.nome} com ` +
+  `${resultadoAtaque.ataque.nome}, mas errou.`
+);
+
+exibirAcaoAtualCombate(
+  "Você errou o ataque."
+);
+
     solicitacaoCombate.textContent =
       "O ataque errou.";
 
@@ -1928,11 +2967,37 @@ function resolverAtaqueJogador(
 
   }
 
+  adicionarEventoHistoricoCombate(
+  resultadoAtaque.acertoCritico
+    ? `${resultadoAtaque.atacante.nome} conseguiu um acerto crítico`
+    : `${resultadoAtaque.atacante.nome} acertou o ataque`,
+
+  `Você atingiu ` +
+  `${resultadoAtaque.alvo.nome} com ` +
+  `${resultadoAtaque.ataque.nome}.`
+);
+
+exibirAcaoAtualCombate(
+  resultadoAtaque.acertoCritico
+    ? "Você conseguiu um acerto crítico."
+    : "Você acertou o ataque."
+);
+
   const textoDano =
     formatarRolagemDano(
       resultadoAtaque.ataque,
       resultadoAtaque.acertoCritico
     );
+
+      const efeitoFoiOferecido =
+    oferecerEfeitoDano(
+      combate,
+      textoDano
+    );
+
+  if (efeitoFoiOferecido) {
+    return;
+  }
 
   solicitacaoCombate.textContent =
     resultadoAtaque.acertoCritico
@@ -1951,6 +3016,63 @@ function resolverDanoJogador(
   const combate =
     estadoAtualJogo.combateAtual;
 
+      const danoPendente =
+    combate.danoPendente;
+
+  if (
+    danoPendente
+      ?.efeitoAtivo
+  ) {
+    const registro =
+      registrarRolagemEfeito(
+        danoPendente,
+        resultadoRolagem
+      );
+
+    if (!registro.sucesso) {
+      console.warn(
+        "Não foi possível registrar a rolagem do efeito:",
+        registro.motivo
+      );
+
+      return;
+    }
+
+    if (!registro.concluida) {
+      solicitacaoCombate.textContent =
+        "Primeira rolagem registrada. " +
+        "Role novamente o dano.";
+
+      solicitacaoCombate.hidden =
+        false;
+
+      return;
+    }
+
+    const resultados =
+      registro.rolagens.map(
+        rolagem =>
+          rolagem.total
+      );
+
+    solicitacaoCombate.textContent =
+      "Rolagens de dano: " +
+      resultados.join(
+        " e "
+      ) +
+      ". Escolha qual resultado utilizar.";
+
+    solicitacaoCombate.hidden =
+      false;
+
+    console.log(
+      "Rolagens do efeito:",
+      registro.rolagens
+    );
+
+    return;
+  }
+
   const resultadoDano =
     SistemaCombate.resolverDano(
       combate,
@@ -1967,6 +3089,23 @@ function resolverDanoJogador(
     return;
 
   }
+
+  adicionarEventoHistoricoCombate(
+  resultadoDano.foiDerrotado
+    ? `${resultadoDano.alvo.nome} foi derrotado`
+    : `${resultadoDano.alvo.nome} sofreu dano`,
+
+  resultadoDano.foiDerrotado
+    ? `Seu ataque derrotou ${resultadoDano.alvo.nome}.`
+    : `Seu ataque causou ` +
+      `${resultadoDano.dano} de dano.`
+);
+
+exibirAcaoAtualCombate(
+  resultadoDano.foiDerrotado
+    ? `Você derrotou ${resultadoDano.alvo.nome}.`
+    : `Você causou ${resultadoDano.dano} de dano.`
+);
 
   solicitacaoCombate.textContent =
     resultadoDano.foiDerrotado
@@ -2214,73 +3353,109 @@ function processarTurnoAtual(
         combate.participanteAtivoId
     );
 
-  if (
-    !participanteAtivo ||
-    participanteAtivo.tipo !== "inimigo"
-  ) {
-    return;
-  }
+  if (!participanteAtivo) {
+  return;
+}
 
-  solicitacaoCombate.textContent =
-    `Turno de ${participanteAtivo.nome}.`;
+if (
+  participanteAtivo.tipo ===
+  "jogador"
+) {
 
-  solicitacaoCombate.hidden =
-    false;
-
-  setTimeout(
-    function() {
-
-      const resultado =
-        SistemaCombate.executarTurnoInimigo(
-          combate
-        );
-
-      if (!resultado.sucesso) {
-
-        solicitacaoCombate.textContent =
-          `${participanteAtivo.nome} não conseguiu agir.`;
-
-      } else if (
-        resultado.resultadoAtaque.acertou
-      ) {
-
-        solicitacaoCombate.textContent =
-          `${participanteAtivo.nome} atingiu ` +
-          `${resultado.alvo.nome} e causou ` +
-          `${resultado.resultadoDano.dano} de dano.`;
-
-      } else {
-
-        solicitacaoCombate.textContent =
-          `${participanteAtivo.nome} errou o ataque.`;
-
-      }
-
-      atualizarInterfaceTurno(
-        combate
-      );
-
-      if (combate.status !== "ativo") {
-
-  notificarFimCombate(
-    combate
+  exibirAcaoAtualCombate(
+    "É o seu turno."
   );
 
   return;
 
 }
 
-      SistemaCombate.encerrarTurno(
+exibirAcaoAtualCombate(
+  `${participanteAtivo.nome} está decidindo o que fazer.`
+);
+
+  solicitacaoCombate.textContent =
+  "";
+
+solicitacaoCombate.hidden =
+  true;
+
+  setTimeout(
+  async function() {
+
+    try {
+
+      await esperar(
+        800
+      );
+
+      const resultado =
+        SistemaCombate.executarTurnoInimigo(
+          combate
+        );
+
+      await registrarResultadoTurnoInimigo(
+        resultado,
+        participanteAtivo
+      );
+
+      atualizarInterfaceTurno(
         combate
       );
 
-      processarTurnoAtual(
+    } catch (erro) {
+
+      console.error(
+        "Erro durante o turno inimigo:",
+        erro
+      );
+
+      exibirAcaoAtualCombate(
+        `${participanteAtivo.nome} não conseguiu concluir o turno.`
+      );
+
+      adicionarEventoHistoricoCombate(
+        `Erro no turno de ${participanteAtivo.nome}`,
+        "O turno foi encerrado para que o combate pudesse continuar."
+      );
+
+      await esperar(
+        1200
+      );
+
+    }
+
+    if (
+      combate.status !==
+      "ativo"
+    ) {
+
+      notificarFimCombate(
         combate
       );
 
-    },
-    800
-  );
+      return;
+
+    }
+
+    if (
+      combate.participanteAtivoId !==
+      participanteAtivo.id
+    ) {
+      return;
+    }
+
+    SistemaCombate.encerrarTurno(
+      combate
+    );
+
+    processarTurnoAtual(
+      combate
+    );
+
+  },
+  1000
+);
 
 }
 
@@ -2528,7 +3703,7 @@ tabuleiroCombate.addEventListener(
   selecionarAlvoCombate
 );
 
-acoesCombate.addEventListener(
+listaAtaquesCombate.addEventListener(
   "click",
   selecionarAtaqueCombate
 );
@@ -2596,4 +3771,14 @@ window.addEventListener(
     atualizarCameraCombate();
 
   }
+);
+
+botaoFecharAtaquesCombate.addEventListener(
+  "click",
+  fecharPainelAtaquesCombate
+);
+
+botaoExpandirHistorico.addEventListener(
+  "click",
+  alternarHistoricoCombate
 );

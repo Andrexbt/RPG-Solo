@@ -144,43 +144,214 @@
         hidden>
 
         <div
-          id="painelTurnoCombate"
-          class="painel-turno-combate"
-          hidden>
+  id="painelTurnoCombate"
+  class="painel-turno-combate"
+  hidden
+>
 
-          <p>
-            Rodada
-            <span id="numeroRodadaCombate">
-              1
-            </span>
-          </p>
+  <p>
+    Rodada
+    <span id="numeroRodadaCombate">
+      1
+    </span>
+  </p>
 
-          <p>
-            Turno:
-            <span id="participanteAtivoCombate">
-              —
-            </span>
-          </p>
+  <div
+    id="filaIniciativaCombate"
+    class="fila-iniciativa-combate"
+    role="list"
+    aria-label="Ordem dos turnos"
+  ></div>
 
-          <p>
-            Movimento:
-            <span id="movimentoRestanteCombate">
-              —
-            </span>
-          </p>
+  <section
+    id="painelAcaoAtualCombate"
+    class="painel-acao-atual-combate"
+    aria-live="polite"
+    hidden
+  >
 
-          <div
-            id="acoesCombate"
-            class="acoes-combate">
-          </div>
+    <strong>
+      Ação atual
+    </strong>
 
-          <button
-            id="botaoEncerrarTurno"
-            type="button">
-            Encerrar turno
-          </button>
+    <p id="mensagemAcaoAtualCombate">
+      Aguardando o início do turno.
+    </p>
 
-        </div>
+  </section>
+
+</div>
+
+<section
+  id="painelHistoricoCombate"
+  class="painel-historico-combate"
+  hidden
+>
+
+  <header class="cabecalho-historico-combate">
+
+  <h2>
+    Histórico
+  </h2>
+
+  <button
+    id="botaoExpandirHistorico"
+    type="button"
+    aria-expanded="false"
+    aria-label="Expandir histórico"
+    title="Expandir histórico"
+  >
+    +
+  </button>
+
+</header>
+
+  <div
+    id="listaHistoricoCombate"
+    class="lista-historico-combate"
+    aria-live="polite"
+  ></div>
+
+</section>
+
+        <section
+  id="painelComandosCombate"
+  class="painel-comandos-combate janela-flutuante"
+  aria-labelledby="tituloComandosCombate"
+  hidden>
+
+  <header
+    class="cabecalho-janela-flutuante"
+    data-alca-arraste>
+
+    <h2 id="tituloComandosCombate">
+      Ações do turno
+    </h2>
+
+    <button
+      class="botao-minimizar-janela"
+      type="button"
+      aria-controls="conteudoComandosCombate"
+      aria-expanded="true"
+      aria-label="Minimizar ações do turno"
+      data-minimizar-janela>
+      −
+    </button>
+
+  </header>
+
+  <div
+    id="conteudoComandosCombate"
+    class="conteudo-comandos-combate">
+
+    <div class="economia-acoes-combate">
+
+      <p>
+        Movimento
+        <strong id="movimentoRestanteCombate">
+          —
+        </strong>
+      </p>
+
+      <section class="grupo-acoes-turno">
+
+  <header class="titulo-grupo-acoes">
+
+    <h3>
+      Ação
+    </h3>
+
+    <strong id="acaoDisponivelCombate">
+      —
+    </strong>
+
+  </header>
+
+  <div
+    id="listaAcoesTurno"
+    class="lista-acoes-turno">
+  </div>
+
+</section>
+
+<section class="grupo-acoes-turno">
+
+  <header class="titulo-grupo-acoes">
+
+    <h3>
+      Ação bônus
+    </h3>
+
+    <strong id="acaoBonusDisponivelCombate">
+      —
+    </strong>
+
+  </header>
+
+  <div
+    id="listaAcoesBonusTurno"
+    class="lista-acoes-turno">
+  </div>
+
+</section>
+
+    </div>
+
+    <p
+      id="solicitacaoCombate"
+      class="solicitacao-combate"
+      aria-live="polite"
+      hidden>
+    </p>
+
+    <div
+      id="acoesCombate"
+      class="acoes-combate">
+    </div>
+
+    <button
+      id="botaoEncerrarTurno"
+      class="botao-encerrar-turno"
+      type="button">
+      Encerrar turno
+    </button>
+
+  </div>
+
+  <aside
+  id="painelAtaquesCombate"
+  class="painel-ataques-combate"
+  aria-labelledby="tituloAtaquesCombate"
+  hidden>
+
+  <header class="cabecalho-painel-ataques">
+
+    <h3 id="tituloAtaquesCombate">
+      Ataques
+    </h3>
+
+    <button
+      id="botaoFecharAtaquesCombate"
+      type="button"
+      aria-label="Fechar opções de ataque">
+      ×
+    </button>
+
+  </header>
+
+  <p
+    id="mensagemAtaquesCombate"
+    class="mensagem-ataques-combate">
+  </p>
+
+  <div
+    id="listaAtaquesCombate"
+    class="lista-ataques-combate">
+  </div>
+
+</aside>
+
+        </section>
 
         <div class="campo-combate">
 
@@ -253,13 +424,6 @@
       <div
         id="conteudoDados"
         class="conteudo-dados">
-
-        <p
-          id="solicitacaoCombate"
-          class="solicitacao-combate"
-          aria-live="polite"
-          hidden>
-        </p>
 
         <form
           id="formularioDados"
