@@ -60,6 +60,10 @@ function configurarConfirmacaoDeCombate() {
   };
 }
 
-document.addEventListener("DOMContentLoaded", configurarConfirmacaoDeCombate, {
-  once: true,
-});
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", configurarConfirmacaoDeCombate, {
+    once: true,
+  });
+} else {
+  configurarConfirmacaoDeCombate();
+}
