@@ -5,21 +5,24 @@
 .janela-flutuante {
   position: fixed;
   z-index: 20;
-  width: min(360px, calc(100vw - 32px));
+
+  width: min(300px, calc(100vw - 24px));
   min-width: 0;
-  padding: 24px;
+  padding: 14px;
+
   border: 1px solid var(--cor-aventura-borda);
-  border-radius: 16px;
+  border-radius: 11px;
+
   background: var(--cor-aventura-papel);
   color: var(--cor-aventura-tinta);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
 }
 
 .cabecalho-janela-flutuante {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -27,13 +30,13 @@
 
 .janela-flutuante .cabecalho-janela-flutuante h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
   text-align: center;
 }
 
 .botao-minimizar-janela {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   padding: 0;
   display: grid;
   place-items: center;
@@ -47,7 +50,7 @@
 
 .janela-flutuante .conteudo-dados,
 .janela-flutuante .conteudo-anotacoes {
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .janela-flutuante.janela-minimizada .conteudo-dados,
@@ -57,8 +60,8 @@
 
 .janela-flutuante.janela-minimizada {
   width: auto;
-  min-width: 180px;
-  padding: 14px 16px;
+  min-width: 130px;
+  padding: 3px 11px;
 }
 
 .janela-arrastando .cabecalho-janela-flutuante {
@@ -67,8 +70,8 @@
 
 @media (max-width: 560px) {
   .janela-flutuante {
-    width: calc(100vw - 20px);
-    padding: 20px;
+    width: calc(100vw - 16px);
+    padding: 12px;
   }
 
   .janela-dados.janela-flutuante,

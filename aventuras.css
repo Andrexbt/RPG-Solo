@@ -600,23 +600,35 @@ select {
   text-transform: uppercase;
 }
 
-.painel-turno-combate {
+.faixa-superior-combate {
   position: absolute;
-  top: 16px;
+  top: 12px;
   left: 50%;
   z-index: 5;
-  padding: 12px 16px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+
+  max-width: calc(100vw - 32px);
+
+  transform: translateX(-50%);
+}
+
+.painel-turno-combate {
+  position: relative;
+  min-width: 260px;
+  padding: 8px 12px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 8px 16px;
-  transform: translateX(-50%);
+  gap: 6px 16px;
   border: 1px solid var(--cor-aventura-borda);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--cor-aventura-papel);
   color: var(--cor-aventura-tinta);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-  min-width: 290px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .painel-turno-combate p {
@@ -724,14 +736,21 @@ select {
     align-self: stretch;
   }
 
-  .painel-turno-combate {
-    position: relative;
-    top: auto;
-    left: auto;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    transform: none;
-  }
+  .faixa-superior-combate {
+  top: 8px;
+  width: calc(100vw - 16px);
+  align-items: stretch;
+  gap: 6px;
+}
+
+.painel-turno-combate {
+  min-width: 0;
+  flex: 1;
+}
+
+.painel-historico-combate {
+  width: 190px;
+}
 }
 
 @media (max-width: 560px) {
@@ -842,20 +861,16 @@ select {
 }
 
 .painel-historico-combate {
-  position: absolute;
-  top: 16px;
-  left: auto;
-  right: calc(50% + 160px);
-  z-index: 5;
-  width: 240px;
+  position: relative;
+  width: 210px;
   max-height: none;
-  padding: 10px;
+  padding: 8px;
   overflow: hidden;
   border: 1px solid var(--cor-aventura-borda);
   border-radius: 10px;
   background: var(--cor-aventura-papel);
   color: var(--cor-aventura-tinta);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .painel-historico-combate.historico-expandido {

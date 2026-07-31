@@ -394,6 +394,17 @@ function selecionarAtaqueCombate(evento) {
 
   let instrucaoD20 = "Role 1d20";
 
+  let quantidadeD20 = 1;
+
+if (
+  resultado.tipoRolagem ===
+  "vantagem" ||
+  resultado.tipoRolagem ===
+  "desvantagem"
+) {
+  quantidadeD20 = 2;
+}
+
   if (resultado.tipoRolagem === "vantagem") {
     instrucaoD20 = "Role 2d20 e use o maior resultado";
   }
@@ -406,6 +417,19 @@ function selecionarAtaqueCombate(evento) {
     `${instrucaoD20} ${sinalBonus}` +
     `${resultado.ataque.bonusAtaque} ` +
     `para atacar ${resultado.alvo.nome}.`;
+
+    solicitarRolagemNaCaixa(
+  [
+    {
+      quantidade: quantidadeD20,
+      numeroDeFaces: 20,
+    },
+  ],
+
+  resultado.ataque.bonusAtaque,
+
+  "Rolagem de ataque",
+);
 
   solicitacaoCombate.hidden = false;
 
@@ -921,7 +945,7 @@ function formatarRolagemDano(ataque, critico) {
   return partes.join(" ");
 }
 
-function oferecerEfeitoDano(combate, textoDano) {
+function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
   const danoPendente = combate.danoPendente;
 
   const operacao = danoPendente?.efeitos?.find((efeito) => efeito.tipo === "rolarNovamente");
@@ -971,6 +995,21 @@ function oferecerEfeitoDano(combate, textoDano) {
 
     acoesCombate.innerHTML = "";
 
+    const gruposDuasRolagens =
+      obterGruposDanoParaRolagem(
+        ataque,
+        critico,
+        2,
+      );
+
+    solicitarRolagemNaCaixa(
+      gruposDuasRolagens,
+
+      ataque.dano.modificador,
+
+      "Duas rolagens de dano do Atacante Selvagem",
+    );
+
     solicitacaoCombate.textContent = `${efeito.nome} ativado. ` + `Role ${textoDano} duas vezes.`;
 
     solicitacaoCombate.hidden = false;
@@ -982,6 +1021,17 @@ function oferecerEfeitoDano(combate, textoDano) {
     solicitacaoCombate.textContent = `Role ${textoDano} de dano.`;
 
     solicitacaoCombate.hidden = false;
+
+    solicitarRolagemNaCaixa(
+  obterGruposDanoParaRolagem(
+    ataque,
+    critico,
+  ),
+
+  ataque.dano.modificador,
+
+  "Rolagem de dano",
+);
   });
 
   acoesCombate.append(botaoUsar, botaoIgnorar);
@@ -991,6 +1041,29 @@ function oferecerEfeitoDano(combate, textoDano) {
   solicitacaoCombate.hidden = false;
 
   return true;
+}
+
+function obterGruposDanoParaRolagem(
+  ataque,
+  critico,
+  multiplicador = 1,
+) {
+  return ataque.dano.gruposDeDados.map(
+    function prepararGrupo(grupo) {
+      const multiplicadorCritico =
+        critico ? 2 : 1;
+
+      return {
+        quantidade:
+          grupo.quantidade *
+          multiplicadorCritico *
+          multiplicador,
+
+        numeroDeFaces:
+          grupo.numeroDeFaces,
+      };
+    },
+  );
 }
 
 function resolverAtaqueJogador(resultadoRolagem) {
@@ -1037,11 +1110,34 @@ function resolverAtaqueJogador(resultadoRolagem) {
 
   const textoDano = formatarRolagemDano(resultadoAtaque.ataque, resultadoAtaque.acertoCritico);
 
-  const efeitoFoiOferecido = oferecerEfeitoDano(combate, textoDano);
+  const gruposDano =
+  obterGruposDanoParaRolagem(
+    resultadoAtaque.ataque,
+    resultadoAtaque.acertoCritico,
+  );
+
+  const efeitoFoiOferecido =
+  oferecerEfeitoDano(
+    combate,
+    textoDano,
+    resultadoAtaque.ataque,
+    resultadoAtaque.acertoCritico,
+  );
 
   if (efeitoFoiOferecido) {
     return;
   }
+
+  solicitarRolagemNaCaixa(
+  gruposDano,
+
+  resultadoAtaque
+    .ataque
+    .dano
+    .modificador,
+
+  "Rolagem de dano",
+);
 
   solicitacaoCombate.textContent = resultadoAtaque.acertoCritico
     ? `Acerto crítico! Role ${textoDano} de dano.`
@@ -1105,80 +1201,221 @@ function concluirDanoJogador(combate, resultadoRolagem) {
   }
 }
 
-function resolverDanoJogador(resultadoRolagem) {
-  const combate = estadoAtualJogo.combateAtual;
+function separarRolagensSimultaneasEfeito(
+  resultadoRolagem,
+  quantidadeDeRolagens,
+) {
+  if (
+    !resultadoRolagem ||
+    !Array.isArray(resultadoRolagem.gruposRolados) ||
+    quantidadeDeRolagens <= 1
+  ) {
+    return [resultadoRolagem];
+  }
 
-  const danoPendente = combate.danoPendente;
-
-  if (danoPendente?.efeitoAtivo) {
-    const registro = registrarRolagemEfeito(
-      danoPendente,
-      resultadoRolagem,
+  const gruposPodemSerDivididos =
+    resultadoRolagem.gruposRolados.every(
+      function verificarGrupo(grupo) {
+        return (
+          Array.isArray(grupo.resultados) &&
+          grupo.resultados.length %
+            quantidadeDeRolagens ===
+            0
+        );
+      },
     );
 
-    if (!registro.sucesso) {
-      console.warn(
-        "Não foi possível registrar a rolagem do efeito:",
-        registro.motivo,
+  if (!gruposPodemSerDivididos) {
+    return [resultadoRolagem];
+  }
+
+  const rolagensSeparadas = [];
+
+  for (
+    let indiceRolagem = 0;
+    indiceRolagem < quantidadeDeRolagens;
+    indiceRolagem += 1
+  ) {
+    const gruposRolados =
+      resultadoRolagem.gruposRolados.map(
+        function separarGrupo(grupo) {
+          const quantidadePorRolagem =
+            grupo.resultados.length /
+            quantidadeDeRolagens;
+
+          const inicio =
+            indiceRolagem *
+            quantidadePorRolagem;
+
+          const fim =
+            inicio + quantidadePorRolagem;
+
+          const resultados =
+            grupo.resultados.slice(
+              inicio,
+              fim,
+            );
+
+          return {
+            quantidade: resultados.length,
+            numeroDeFaces:
+              grupo.numeroDeFaces,
+            resultados: resultados,
+            total: somarResultados(
+              resultados,
+            ),
+          };
+        },
       );
 
-      return;
+    const subtotal = gruposRolados.reduce(
+      function somarGrupos(total, grupo) {
+        return total + grupo.total;
+      },
+      0,
+    );
+
+    const modificador =
+      Number(
+        resultadoRolagem.modificador,
+      ) || 0;
+
+    rolagensSeparadas.push({
+      gruposRolados: gruposRolados,
+      subtotal: subtotal,
+      modificador: modificador,
+      total: subtotal + modificador,
+    });
+  }
+
+  return rolagensSeparadas;
+}
+
+function resolverDanoJogador(resultadoRolagem) {
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  const danoPendente =
+    combate.danoPendente;
+
+  if (danoPendente?.efeitoAtivo) {
+    const quantidadeNecessaria =
+      danoPendente.efeitoAtivo
+        .quantidadeDeRolagens;
+
+    const quantidadeRegistrada =
+      danoPendente.rolagensEfeito
+        ?.length ?? 0;
+
+    const quantidadeRestante =
+      quantidadeNecessaria -
+      quantidadeRegistrada;
+
+    const rolagensRecebidas =
+      separarRolagensSimultaneasEfeito(
+        resultadoRolagem,
+        quantidadeRestante,
+      );
+
+    let ultimoRegistro = null;
+
+    for (
+      const rolagemRecebida
+      of rolagensRecebidas
+    ) {
+      ultimoRegistro =
+        registrarRolagemEfeito(
+          danoPendente,
+          rolagemRecebida,
+        );
+
+      if (!ultimoRegistro.sucesso) {
+        console.warn(
+          "Não foi possível registrar a rolagem do efeito:",
+          ultimoRegistro.motivo,
+        );
+
+        return;
+      }
+
+      if (ultimoRegistro.concluida) {
+        break;
+      }
     }
 
-    if (!registro.concluida) {
+    if (!ultimoRegistro.concluida) {
+      const quantidadeAindaNecessaria =
+        ultimoRegistro
+          .quantidadeNecessaria -
+        ultimoRegistro
+          .quantidadeRegistrada;
+
       solicitacaoCombate.textContent =
-        "Primeira rolagem registrada. " +
-        "Role novamente o dano.";
+        quantidadeAindaNecessaria === 1
+          ? "Primeira rolagem registrada. Role novamente o dano."
+          : (
+              `${ultimoRegistro.quantidadeRegistrada} ` +
+              "rolagens registradas. " +
+              `Ainda faltam ${quantidadeAindaNecessaria}.`
+            );
 
       solicitacaoCombate.hidden = false;
 
       return;
     }
 
-    if (!registro.exigeEscolhaDoJogador) {
-  console.warn(
-    "O critério de escolha do efeito ainda não foi implementado:",
-    registro.criterioDeEscolha,
-  );
+    if (
+      !ultimoRegistro
+        .exigeEscolhaDoJogador
+    ) {
+      console.warn(
+        "O critério de escolha do efeito ainda não foi implementado:",
+        ultimoRegistro.criterioDeEscolha,
+      );
 
-  return;
-}
+      return;
+    }
 
-    const rolagens = registro.rolagens;
+    const rolagens =
+      ultimoRegistro.rolagens;
 
-exibirEscolhaEntreRolagens(
-  rolagens,
-  function concluirEscolhaRolagem(rolagemEscolhida) {
-    solicitacaoCombate.textContent =
-      `Resultado escolhido: ${rolagemEscolhida.total}.`;
+    exibirEscolhaEntreRolagens(
+      rolagens,
+      function concluirEscolhaRolagem(
+        rolagemEscolhida,
+      ) {
+        solicitacaoCombate.textContent =
+          `Resultado escolhido: ${rolagemEscolhida.total}.`;
 
-    const resultadoFinalizacao =
-  finalizarEfeitoPendente(danoPendente);
+        const resultadoFinalizacao =
+          finalizarEfeitoPendente(
+            danoPendente,
+          );
 
-if (!resultadoFinalizacao.sucesso) {
-  console.warn(
-    "Não foi possível finalizar o efeito:",
-    resultadoFinalizacao.motivo,
-  );
+        if (
+          !resultadoFinalizacao.sucesso
+        ) {
+          console.warn(
+            "Não foi possível finalizar o efeito:",
+            resultadoFinalizacao.motivo,
+          );
 
-  return;
-}
+          return;
+        }
 
-concluirDanoJogador(
-  combate,
-  rolagemEscolhida,
-);
-  },
-);
+        concluirDanoJogador(
+          combate,
+          rolagemEscolhida,
+        );
+      },
+    );
 
-console.log(
-  "Rolagens do efeito:",
-  rolagens,
-);
+    console.log(
+      "Rolagens do efeito:",
+      rolagens,
+    );
 
-return;
-
-    
+    return;
   }
 
   concluirDanoJogador(
@@ -1217,6 +1454,35 @@ function receberResultadoRolagem(evento) {
   console.log("Resultado recebido pela aventura:", resultadoRolagem);
 
   resolverTeste(resultadoRolagem);
+}
+
+function solicitarRolagemNaCaixa(
+  gruposDeDados,
+  modificador,
+  descricao,
+) {
+  if (
+    typeof window
+      .configurarRolagemSolicitada !==
+    "function"
+  ) {
+    console.warn(
+      "A caixa de dados não está disponível.",
+    );
+
+    return;
+  }
+
+  window.configurarRolagemSolicitada({
+    gruposDeDados:
+      gruposDeDados,
+
+    modificador:
+      modificador,
+
+    descricao:
+      descricao,
+  });
 }
 
 function selecionarEscolha(evento) {
