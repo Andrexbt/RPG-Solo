@@ -1,0 +1,80 @@
+/* =========================================================
+   JANELAS FLUTUANTES — ESTRUTURA COMPARTILHADA
+   ========================================================= */
+
+.janela-flutuante {
+  position: fixed;
+  z-index: 20;
+  width: min(360px, calc(100vw - 32px));
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 16px;
+  background: var(--cor-aventura-papel);
+  color: var(--cor-aventura-tinta);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.cabecalho-janela-flutuante {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.janela-flutuante .cabecalho-janela-flutuante h2 {
+  margin: 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.botao-minimizar-janela {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.janela-flutuante .conteudo-dados,
+.janela-flutuante .conteudo-anotacoes {
+  margin-top: 16px;
+}
+
+.janela-flutuante.janela-minimizada .conteudo-dados,
+.janela-flutuante.janela-minimizada .conteudo-anotacoes {
+  display: none;
+}
+
+.janela-flutuante.janela-minimizada {
+  width: auto;
+  min-width: 180px;
+  padding: 14px 16px;
+}
+
+.janela-arrastando .cabecalho-janela-flutuante {
+  cursor: grabbing;
+}
+
+@media (max-width: 560px) {
+  .janela-flutuante {
+    width: calc(100vw - 20px);
+    padding: 20px;
+  }
+
+  .janela-dados.janela-flutuante,
+  .janela-anotacoes.janela-flutuante {
+    right: 10px;
+    left: auto;
+    bottom: 10px;
+  }
+}
