@@ -156,6 +156,23 @@ window.mensagensNarrativas = {
 };
 
 (function integrarMensagensNarrativasLegadas() {
+  function injetarEstilosMensagensNarrativas() {
+    if (document.querySelector("#estilosMensagensNarrativas")) {
+      return;
+    }
+
+    const estilo = document.createElement("style");
+    estilo.id = "estilosMensagensNarrativas";
+    estilo.textContent = `
+      #solicitacaoCombate strong {
+        color: #8b2f25;
+        font-weight: 900;
+      }
+    `;
+
+    document.head.append(estilo);
+  }
+
   function obterCombate() {
     return window.estadoJogo?.combateAtual ?? null;
   }
@@ -359,6 +376,7 @@ window.mensagensNarrativas = {
   }
 
   function iniciar() {
+    injetarEstilosMensagensNarrativas();
     observarElemento("#solicitacaoCombate", corrigirSolicitacaoCombate);
     observarElemento("#mensagemAcaoAtualCombate", corrigirMensagemTurno);
     observarElemento("#resultadoDado", corrigirErroDados);
