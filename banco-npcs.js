@@ -108,8 +108,10 @@ window.bancoNpcs = {
         },
 
         ataques: {
+          espadaCurta: {tipoNarrativo: "espadaCurta"},
+          arcoCurto: {tipoNarrativo: "arcoCurto"}
+        },
           
-       },
       },
 
     },
@@ -209,6 +211,25 @@ window.bancoNpcs = {
           },
         },
       ],
+
+      narracao: {
+  categoria: "humanoide",
+
+  termos: {
+    sujeito: "o guarda",
+  },
+
+  ataques: {
+    espadaCurta: {
+      tipoNarrativo: "espadaCurta",
+    },
+
+    arcoCurto: {
+      tipoNarrativo: "arcoCurto",
+    },
+  },
+      },
+
     },
 
     lagartoBronze: {
@@ -306,6 +327,25 @@ window.bancoNpcs = {
           },
         },
       ],
+
+      narracao: {
+  categoria: "humanoide",
+
+  termos: {
+    sujeito: "o bandido",
+  },
+
+  ataques: {
+    lanca: {
+      tipoNarrativo: "lanca",
+    },
+
+    bestaLeve: {
+      tipoNarrativo: "bestaLeve",
+    },
+  },
+      },
+
     },
     
   },
