@@ -368,7 +368,10 @@ function selecionarAtaqueCombate(evento) {
   }
 
   if (!combate.alvoSelecionadoId) {
-    solicitacaoCombate.textContent = "Selecione um inimigo antes de atacar.";
+    exibirMensagemNarrativa(
+  solicitacaoCombate,
+  mensagensNarrativas.ataque.selecionarAlvo,
+);
 
     solicitacaoCombate.hidden = false;
 
@@ -390,33 +393,43 @@ function selecionarAtaqueCombate(evento) {
     return;
   }
 
-  const sinalBonus = resultado.ataque.bonusAtaque >= 0 ? "+" : "";
-
-  let instrucaoD20 = "Role 1d20";
-
   let quantidadeD20 = 1;
 
 if (
-  resultado.tipoRolagem ===
-  "vantagem" ||
-  resultado.tipoRolagem ===
-  "desvantagem"
+  resultado.tipoRolagem === "vantagem" ||
+  resultado.tipoRolagem === "desvantagem"
 ) {
   quantidadeD20 = 2;
 }
 
-  if (resultado.tipoRolagem === "vantagem") {
-    instrucaoD20 = "Role 2d20 e use o maior resultado";
-  }
+let mensagemAtaque;
 
-  if (resultado.tipoRolagem === "desvantagem") {
-    instrucaoD20 = "Role 2d20 e use o menor resultado";
-  }
+if (resultado.tipoRolagem === "vantagem") {
+  mensagemAtaque =
+    mensagensNarrativas.ataque.pedirVantagem(
+      resultado.ataque.bonusAtaque,
+      resultado.alvo.nome,
+    );
+} else if (
+  resultado.tipoRolagem === "desvantagem"
+) {
+  mensagemAtaque =
+    mensagensNarrativas.ataque.pedirDesvantagem(
+      resultado.ataque.bonusAtaque,
+      resultado.alvo.nome,
+    );
+} else {
+  mensagemAtaque =
+    mensagensNarrativas.ataque.pedirNormal(
+      resultado.ataque.bonusAtaque,
+      resultado.alvo.nome,
+    );
+}
 
-  solicitacaoCombate.textContent =
-    `${instrucaoD20} ${sinalBonus}` +
-    `${resultado.ataque.bonusAtaque} ` +
-    `para atacar ${resultado.alvo.nome}.`;
+exibirMensagemNarrativa(
+  solicitacaoCombate,
+  mensagemAtaque,
+);
 
     solicitarRolagemNaCaixa(
   [
@@ -425,10 +438,10 @@ if (
       numeroDeFaces: 20,
     },
   ],
-
   resultado.ataque.bonusAtaque,
-
   "Rolagem de ataque",
+  1,
+  false,
 );
 
   solicitacaoCombate.hidden = false;
@@ -532,7 +545,12 @@ function iniciarCombateDaAventura(configuracao) {
   SistemaCombate.rolarIniciativasInimigos(combate);
 
   if (jogador) {
-    solicitacaoCombate.textContent = "Role 1d20 e adicione seu modificador de iniciativa.";
+    exibirMensagemNarrativa(
+  solicitacaoCombate,
+  mensagensNarrativas.iniciativa.pedir(
+    jogador.bonusIniciativa,
+  ),
+);
 
     solicitacaoCombate.hidden = false;
   }
@@ -923,16 +941,17 @@ function resolverIniciativaJogador(resultadoRolagem) {
   console.log("Participante ativo:", combate.participanteAtivoId);
 }
 
-function formatarRolagemDano(ataque, critico) {
+function formatarRolagemDano(ataque) {
   const partes = [];
 
   for (const grupo of ataque.dano.gruposDeDados) {
-    const quantidade = critico ? grupo.quantidade * 2 : grupo.quantidade;
-
-    partes.push(`${quantidade}d${grupo.numeroDeFaces}`);
+    partes.push(
+      `${grupo.quantidade}d${grupo.numeroDeFaces}`,
+    );
   }
 
-  const modificador = ataque.dano.modificador;
+  const modificador =
+    Number(ataque.dano.modificador) || 0;
 
   if (modificador > 0) {
     partes.push(`+ ${modificador}`);
@@ -1003,14 +1022,39 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
       );
 
     solicitarRolagemNaCaixa(
-      gruposDuasRolagens,
+  gruposDuasRolagens,
+  ataque.dano.modificador,
+  "Duas rolagens de dano do Atacante Selvagem",
+  2,
+  critico,
+);
 
-      ataque.dano.modificador,
+    const dadosDaArma =
+  ataque.dano.gruposDeDados
+    .map(function (grupo) {
+      return (
+        `${grupo.quantidade}` +
+        `d${grupo.numeroDeFaces}`
+      );
+    })
+    .join(" + ");
 
-      "Duas rolagens de dano do Atacante Selvagem",2,
-    );
-
-    solicitacaoCombate.textContent = `${efeito.nome} ativado. ` + `Role ${textoDano} duas vezes.`;
+exibirMensagemNarrativa(
+  solicitacaoCombate,
+  critico
+    ? mensagensNarrativas
+        .efeitos
+        .atacanteSelvagemCritico(
+          dadosDaArma,
+          ataque.dano.modificador,
+        )
+    : mensagensNarrativas
+        .efeitos
+        .atacanteSelvagemNormal(
+          dadosDaArma,
+          ataque.dano.modificador,
+        ),
+);
 
     solicitacaoCombate.hidden = false;
   });
@@ -1036,7 +1080,12 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
 
   acoesCombate.append(botaoUsar, botaoIgnorar);
 
-  solicitacaoCombate.textContent = `${efeito.nome} está disponível. ` + "Deseja utilizá-lo?";
+  exibirMensagemNarrativa(
+  solicitacaoCombate,
+  mensagensNarrativas.efeitos.disponivel(
+    efeito.nome,
+  ),
+);
 
   solicitacaoCombate.hidden = false;
 
@@ -1050,13 +1099,9 @@ function obterGruposDanoParaRolagem(
 ) {
   return ataque.dano.gruposDeDados.map(
     function prepararGrupo(grupo) {
-      const multiplicadorCritico =
-        critico ? 2 : 1;
-
       return {
         quantidade:
           grupo.quantidade *
-          multiplicadorCritico *
           multiplicador,
 
         numeroDeFaces:
@@ -1108,7 +1153,10 @@ function resolverAtaqueJogador(resultadoRolagem) {
     resultadoAtaque.acertoCritico ? "Você conseguiu um acerto crítico." : "Você acertou o ataque.",
   );
 
-  const textoDano = formatarRolagemDano(resultadoAtaque.ataque, resultadoAtaque.acertoCritico);
+  const textoDano =
+  formatarRolagemDano(
+    resultadoAtaque.ataque,
+  );
 
   const gruposDano =
   obterGruposDanoParaRolagem(
@@ -1130,26 +1178,85 @@ function resolverAtaqueJogador(resultadoRolagem) {
 
   solicitarRolagemNaCaixa(
   gruposDano,
-
-  resultadoAtaque
-    .ataque
-    .dano
-    .modificador,
-
+  resultadoAtaque.ataque.dano.modificador,
   "Rolagem de dano",
+  1,
+  resultadoAtaque.acertoCritico,
 );
 
-  solicitacaoCombate.textContent = resultadoAtaque.acertoCritico
-    ? `Acerto crítico! Role ${textoDano} de dano.`
-    : `O ataque acertou! Role ${textoDano} de dano.`;
+  exibirMensagemNarrativa(
+  solicitacaoCombate,
+  resultadoAtaque.acertoCritico
+    ? mensagensNarrativas.dano
+        .acertoCritico()
+    : mensagensNarrativas.dano
+        .acertoNormal(textoDano),
+);
 
   solicitacaoCombate.hidden = false;
 }
 
+function aplicarCriticoNaRolagem(
+  resultadoRolagem,
+  critico,
+) {
+  if (!critico) {
+    return resultadoRolagem;
+  }
+
+  const subtotal =
+    Number(resultadoRolagem.subtotal) || 0;
+
+  const modificador =
+    Number(resultadoRolagem.modificador) || 0;
+
+  const subtotalCritico =
+    subtotal * 2;
+
+  return {
+    ...resultadoRolagem,
+
+    subtotalOriginal:
+      subtotal,
+
+    subtotal:
+      subtotalCritico,
+
+    modificador:
+      modificador,
+
+    total:
+      subtotalCritico + modificador,
+
+    critico:
+      true,
+  };
+}
+
 function concluirDanoJogador(combate, resultadoRolagem) {
+  const critico =
+  Boolean(
+    combate.danoPendente?.critico,
+  );
+
+const resultadoFinal =
+  aplicarCriticoNaRolagem(
+    resultadoRolagem,
+    critico,
+  );
+
+  console.log(
+    "DANO ORIGINAL:",
+    resultadoRolagem,
+  );
+
+  console.log(
+    "DANO APÓS CRÍTICO:",
+    resultadoFinal,
+  );
   const resultadoDano = SistemaCombate.resolverDano(
     combate,
-    resultadoRolagem,
+    resultadoFinal,
   );
 
   if (!resultadoDano.sucesso) {
@@ -1463,6 +1570,7 @@ function solicitarRolagemNaCaixa(
   modificador,
   descricao,
   quantidadeDeRolagens = 1,
+  critico = false,
 ) {
   if (
     typeof window
@@ -1487,6 +1595,7 @@ function solicitarRolagemNaCaixa(
       descricao,
 
       quantidadeDeRolagens: quantidadeDeRolagens,
+      critico: critico,
   });
 }
 
@@ -1577,7 +1686,9 @@ function processarTurnoAtual(combate) {
   }
 
   if (participanteAtivo.tipo === "jogador") {
-    exibirAcaoAtualCombate("É o seu turno.");
+    exibirAcaoAtualCombate(
+  mensagensNarrativas.turno.jogador,
+);
 
     return;
   }
@@ -1598,14 +1709,11 @@ function processarTurnoAtual(combate) {
 
       atualizarInterfaceTurno(combate);
     } catch (erro) {
-      console.error("Erro durante o turno inimigo:", erro);
-
-      exibirAcaoAtualCombate(`${participanteAtivo.nome} não conseguiu concluir o turno.`);
-
-      adicionarEventoHistoricoCombate(
-        `Erro no turno de ${participanteAtivo.nome}`,
-        "O turno foi encerrado para que o combate pudesse continuar.",
-      );
+      exibirAcaoAtualCombate(
+  mensagensNarrativas.turno.erroInimigo(
+    participanteAtivo.nome,
+  ),
+);
 
       await esperar(1200);
     }

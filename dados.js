@@ -149,13 +149,61 @@
   return resultadosSeparados;
 }
 
-  function formatarExpressaoResultado(subtotal, modificador, total) {
+  function formatarExpressaoResultado(
+  subtotal,
+  modificador,
+  total,
+  critico = false,
+) {
+  if (critico) {
+    const subtotalDobrado =
+      subtotal * 2;
+
+    const totalCritico =
+      subtotalDobrado + modificador;
+
     if (modificador < 0) {
-      return `${subtotal} - ${Math.abs(modificador)} = ${total}`;
+      return (
+        `${subtotal} × 2 = ` +
+        `${subtotalDobrado} - ` +
+        `${Math.abs(modificador)} = ` +
+        `${totalCritico}`
+      );
     }
 
-    return `${subtotal} + ${modificador} = ${total}`;
+    if (modificador > 0) {
+      return (
+        `${subtotal} × 2 = ` +
+        `${subtotalDobrado} + ` +
+        `${modificador} = ` +
+        `${totalCritico}`
+      );
+    }
+
+    return (
+      `${subtotal} × 2 = ` +
+      `${subtotalDobrado}`
+    );
   }
+
+  if (modificador < 0) {
+    return (
+      `${subtotal} - ` +
+      `${Math.abs(modificador)} = ` +
+      `${total}`
+    );
+  }
+
+  if (modificador > 0) {
+    return (
+      `${subtotal} + ` +
+      `${modificador} = ` +
+      `${total}`
+    );
+  }
+
+  return String(subtotal);
+}
 
   function atualizarSolicitacaoCaixaDados() {
     if (!solicitacaoCaixaDados) {
@@ -217,10 +265,11 @@ solicitacaoCaixaDados.textContent =
       gruposDeDados: structuredClone(configuracao.gruposDeDados ?? []),
       modificador: Number(configuracao.modificador) || 0,
       descricao: configuracao.descricao ?? "Rolagem solicitada",
-       quantidadeDeRolagens: Math.max(
-    1,
+      quantidadeDeRolagens: Math.max(1,
     Number(configuracao.quantidadeDeRolagens) || 1,
   ),
+
+  critico: Boolean(configuracao.critico),
     };
 
     atualizarSolicitacaoCaixaDados();
@@ -632,10 +681,13 @@ solicitacaoCaixaDados.textContent =
         resultadoVisual,
       ) {
         return formatarExpressaoResultado(
-          resultadoVisual.subtotal,
-          resultadoVisual.modificador,
-          resultadoVisual.total,
-        );
+  resultadoVisual.subtotal,
+  resultadoVisual.modificador,
+  resultadoVisual.total,
+  Boolean(
+    solicitacaoRolagemAtual?.critico,
+  ),
+);
       })
       .join("\n");
 
