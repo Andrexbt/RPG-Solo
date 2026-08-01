@@ -1,5 +1,25 @@
 "use strict";
 
+/*
+ * Algumas rotinas de aventuras.js ainda usam somarResultados como
+ * utilitário global ao separar as duas rolagens do Atacante Selvagem.
+ * O sistema de dados passou a ficar isolado em uma IIFE, então esse
+ * utilitário deixou de existir no escopo global. Mantemos aqui uma
+ * versão compartilhada para preservar a integração sem reabrir todo o
+ * escopo interno de dados.js.
+ */
+if (typeof window.somarResultados !== "function") {
+  window.somarResultados = function somarResultados(resultados) {
+    if (!Array.isArray(resultados)) {
+      return 0;
+    }
+
+    return resultados.reduce(function somar(total, resultado) {
+      return total + Number(resultado || 0);
+    }, 0);
+  };
+}
+
 (function iniciarIntegracaoRolagens() {
   const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 
@@ -151,7 +171,7 @@
   }
 
   document.addEventListener("rolagemConcluida", function () {
-    queueMicrotask(sincronizarSolicitacao);
+    window.setTimeout(sincronizarSolicitacao, 0);
   });
 
   window.setTimeout(sincronizarSolicitacao, 0);
