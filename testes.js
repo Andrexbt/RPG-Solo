@@ -1,5 +1,68 @@
 "use strict";
 
+function realizarRolagemComposta(configuracao) {
+  const gruposDeDados = Array.isArray(configuracao?.gruposDeDados)
+    ? configuracao.gruposDeDados
+    : [];
+
+  const gruposRolados = gruposDeDados.map(function rolarGrupo(grupo) {
+    const quantidade = Number(grupo.quantidade) || 0;
+    const numeroDeFaces = Number(grupo.numeroDeFaces) || 0;
+    const resultados = [];
+
+    for (let indice = 0; indice < quantidade; indice += 1) {
+      resultados.push(
+        Math.floor(Math.random() * numeroDeFaces) + 1,
+      );
+    }
+
+    const total = resultados.reduce(
+      function somarResultados(soma, resultado) {
+        return soma + resultado;
+      },
+      0,
+    );
+
+    return {
+      quantidade,
+      numeroDeFaces,
+      resultados,
+      total,
+    };
+  });
+
+  const subtotal = gruposRolados.reduce(
+    function somarGrupos(soma, grupo) {
+      return soma + grupo.total;
+    },
+    0,
+  );
+
+  const modificador = Number(configuracao?.modificador) || 0;
+
+  return {
+    gruposRolados,
+    subtotal,
+    modificador,
+    total: subtotal + modificador,
+  };
+}
+
+function formatarResultadoRolagem(rolagem) {
+  const subtotal = Number(rolagem?.subtotal) || 0;
+  const modificador = Number(rolagem?.modificador) || 0;
+  const total = Number(rolagem?.total) || subtotal + modificador;
+
+  if (modificador < 0) {
+    return `${subtotal} - ${Math.abs(modificador)} = ${total}`;
+  }
+
+  return `${subtotal} + ${modificador} = ${total}`;
+}
+
+window.realizarRolagemComposta = realizarRolagemComposta;
+window.formatarResultadoRolagem = formatarResultadoRolagem;
+
 window.SistemaTestes = (function () {
   function calcularModificadorAtributo(valor) {
     return Math.floor((Number(valor) - 10) / 2);
