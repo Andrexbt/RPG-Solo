@@ -1007,7 +1007,7 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
 
       ataque.dano.modificador,
 
-      "Duas rolagens de dano do Atacante Selvagem",
+      "Duas rolagens de dano do Atacante Selvagem",2,
     );
 
     solicitacaoCombate.textContent = `${efeito.nome} ativado. ` + `Role ${textoDano} duas vezes.`;
@@ -1291,6 +1291,8 @@ function separarRolagensSimultaneasEfeito(
   return rolagensSeparadas;
 }
 
+
+
 function resolverDanoJogador(resultadoRolagem) {
   const combate =
     estadoAtualJogo.combateAtual;
@@ -1460,6 +1462,7 @@ function solicitarRolagemNaCaixa(
   gruposDeDados,
   modificador,
   descricao,
+  quantidadeDeRolagens = 1,
 ) {
   if (
     typeof window
@@ -1482,6 +1485,8 @@ function solicitarRolagemNaCaixa(
 
     descricao:
       descricao,
+
+      quantidadeDeRolagens: quantidadeDeRolagens,
   });
 }
 

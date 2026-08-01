@@ -29,15 +29,21 @@ if (typeof window.somarResultados !== "function") {
     return window.estadoJogo?.combateAtual ?? null;
   }
 
-  function criarAssinatura(gruposDeDados, modificador, descricao) {
-    return JSON.stringify({
-      gruposDeDados: gruposDeDados,
-      modificador: modificador,
-      descricao: descricao,
-    });
-  }
+  function criarAssinatura(
+  gruposDeDados,
+  modificador,
+  descricao,
+  quantidadeDeRolagens = 1,
+) {
+  return JSON.stringify({
+    gruposDeDados: gruposDeDados,
+    modificador: modificador,
+    descricao: descricao,
+    quantidadeDeRolagens: quantidadeDeRolagens,
+  });
+}
 
-  function configurarSeNecessario(gruposDeDados, modificador, descricao) {
+  function configurarSeNecessario(gruposDeDados, modificador, descricao, quantidadeDeRolagens = 1,) {
     if (typeof window.configurarRolagemSolicitada !== "function") {
       return;
     }
@@ -46,6 +52,7 @@ if (typeof window.somarResultados !== "function") {
       gruposDeDados,
       modificador,
       descricao,
+      quantidadeDeRolagens,
     );
 
     if (assinatura === assinaturaConfiguracaoAtual) {
@@ -58,6 +65,7 @@ if (typeof window.somarResultados !== "function") {
       gruposDeDados: gruposDeDados,
       modificador: modificador,
       descricao: descricao,
+      quantidadeDeRolagens: quantidadeDeRolagens,
     });
   }
 
@@ -130,10 +138,11 @@ if (typeof window.somarResultados !== "function") {
     );
 
     configurarSeNecessario(
-      gruposDeDados,
-      Number(ataque.dano.modificador) || 0,
-      "Duas rolagens de dano do Atacante Selvagem",
-    );
+  gruposDeDados,
+  Number(ataque.dano.modificador) || 0,
+  "Duas rolagens de dano do Atacante Selvagem",
+  quantidadeDeRolagens,
+);
 
     return true;
   }

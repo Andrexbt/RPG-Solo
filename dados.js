@@ -56,6 +56,99 @@
     }, 0);
   }
 
+  function separarResultadosVisuais(
+  gruposRolados,
+  quantidadeDeRolagens,
+  modificador,
+) {
+  if (quantidadeDeRolagens <= 1) {
+    const subtotal = gruposRolados.reduce(
+      function somarGrupos(total, grupo) {
+        return total + grupo.total;
+      },
+      0,
+    );
+
+    return [
+      {
+        subtotal: subtotal,
+        modificador: modificador,
+        total: subtotal + modificador,
+      },
+    ];
+  }
+
+  const divisaoValida = gruposRolados.every(
+    function verificarGrupo(grupo) {
+      return (
+        Array.isArray(grupo.resultados) &&
+        grupo.resultados.length %
+          quantidadeDeRolagens ===
+          0
+      );
+    },
+  );
+
+  if (!divisaoValida) {
+    const subtotal = gruposRolados.reduce(
+      function somarGrupos(total, grupo) {
+        return total + grupo.total;
+      },
+      0,
+    );
+
+    return [
+      {
+        subtotal: subtotal,
+        modificador: modificador,
+        total: subtotal + modificador,
+      },
+    ];
+  }
+
+  const resultadosSeparados = [];
+
+  for (
+    let indiceRolagem = 0;
+    indiceRolagem < quantidadeDeRolagens;
+    indiceRolagem += 1
+  ) {
+    let subtotal = 0;
+
+    for (const grupo of gruposRolados) {
+      const quantidadePorRolagem =
+        grupo.resultados.length /
+        quantidadeDeRolagens;
+
+      const inicio =
+        indiceRolagem *
+        quantidadePorRolagem;
+
+      const fim =
+        inicio +
+        quantidadePorRolagem;
+
+      const resultadosDestaRolagem =
+        grupo.resultados.slice(
+          inicio,
+          fim,
+        );
+
+      subtotal += somarResultados(
+        resultadosDestaRolagem,
+      );
+    }
+
+    resultadosSeparados.push({
+      subtotal: subtotal,
+      modificador: modificador,
+      total: subtotal + modificador,
+    });
+  }
+
+  return resultadosSeparados;
+}
+
   function formatarExpressaoResultado(subtotal, modificador, total) {
     if (modificador < 0) {
       return `${subtotal} - ${Math.abs(modificador)} = ${total}`;
@@ -75,11 +168,23 @@
       return;
     }
 
-    const dadosSolicitados = solicitacaoRolagemAtual.gruposDeDados
-      .map(function formatarGrupo(grupo) {
-        return `${grupo.quantidade}d${grupo.numeroDeFaces}`;
-      })
-      .join(" + ");
+    const quantidadeDeRolagens =
+  solicitacaoRolagemAtual
+    .quantidadeDeRolagens ?? 1;
+
+const dadosSolicitados =
+  solicitacaoRolagemAtual.gruposDeDados
+    .map(function formatarGrupo(grupo) {
+      const quantidadePorRolagem =
+        grupo.quantidade /
+        quantidadeDeRolagens;
+
+      return (
+        `${quantidadePorRolagem}` +
+        `d${grupo.numeroDeFaces}`
+      );
+    })
+    .join(" + ");
 
     const modificador = solicitacaoRolagemAtual.modificador;
     const textoModificador =
@@ -89,7 +194,15 @@
           ? ` - ${Math.abs(modificador)}`
           : "";
 
-    solicitacaoCaixaDados.textContent = `${dadosSolicitados}${textoModificador}`;
+    const textoRepeticao =
+  quantidadeDeRolagens > 1
+    ? ` — ${quantidadeDeRolagens} vezes`
+    : "";
+
+solicitacaoCaixaDados.textContent =
+  `${dadosSolicitados}` +
+  `${textoModificador}` +
+  `${textoRepeticao}`;
     solicitacaoCaixaDados.hidden = false;
   }
 
@@ -104,6 +217,10 @@
       gruposDeDados: structuredClone(configuracao.gruposDeDados ?? []),
       modificador: Number(configuracao.modificador) || 0,
       descricao: configuracao.descricao ?? "Rolagem solicitada",
+       quantidadeDeRolagens: Math.max(
+    1,
+    Number(configuracao.quantidadeDeRolagens) || 1,
+  ),
     };
 
     atualizarSolicitacaoCaixaDados();
@@ -378,6 +495,13 @@
     }
 
     elementoDado.remove();
+
+    if (resultadoDado) {
+  resultadoDado.textContent = "";
+  resultadoDado.classList.remove(
+    "resultado-rolagem-erro",
+  );
+}
   }
 
   function agruparDadosLancadosPorFaces(dadosDoLancamento) {
@@ -468,13 +592,34 @@
     };
 
     if (resultadoDado) {
-      resultadoDado.textContent = formatarExpressaoResultado(
-        resultado.subtotal,
-        resultado.modificador,
-        resultado.total,
-      );
-      resultadoDado.classList.remove("resultado-rolagem-erro");
-    }
+  const quantidadeDeRolagens =
+    solicitacaoRolagemAtual
+      ?.quantidadeDeRolagens ?? 1;
+
+  const resultadosVisuais =
+    separarResultadosVisuais(
+      resultado.gruposRolados,
+      quantidadeDeRolagens,
+      resultado.modificador,
+    );
+
+  resultadoDado.textContent =
+    resultadosVisuais
+      .map(function formatarResultado(
+        resultadoVisual,
+      ) {
+        return formatarExpressaoResultado(
+          resultadoVisual.subtotal,
+          resultadoVisual.modificador,
+          resultadoVisual.total,
+        );
+      })
+      .join("\n");
+
+  resultadoDado.classList.remove(
+    "resultado-rolagem-erro",
+  );
+}
 
     document.dispatchEvent(
       new CustomEvent("rolagemConcluida", {

@@ -375,57 +375,106 @@ function renderizarAcoesCombate(participante) {
   listaAcoesBonusTurno.append(mensagemAcaoBonus);
 }
 
-function exibirEscolhaEntreRolagens(rolagens, aoEscolher) {
-  if (!Array.isArray(rolagens) || rolagens.length === 0) {
-    console.warn("Nenhuma rolagem foi fornecida para escolha.");
+function formatarResultadoEscolhaRolagem(
+  rolagem,
+) {
+  const subtotal =
+    Number(rolagem.subtotal) || 0;
 
-    return;
+  const modificador =
+    Number(rolagem.modificador) || 0;
+
+  const total =
+    Number(rolagem.total) ||
+    subtotal + modificador;
+
+  if (modificador < 0) {
+    return (
+      `${subtotal} - ` +
+      `${Math.abs(modificador)} = ` +
+      `${total}`
+    );
   }
 
-  if (typeof aoEscolher !== "function") {
-    console.warn("A escolha das rolagens não possui uma função de conclusão.");
+  return (
+    `${subtotal} + ` +
+    `${modificador} = ` +
+    `${total}`
+  );
+}
 
-    return;
-  }
-
-  acoesCombate.replaceChildren();
+function exibirEscolhaEntreRolagens(
+  rolagens,
+  aoEscolher,
+) {
+  acoesCombate.innerHTML = "";
 
   solicitacaoCombate.textContent =
     "Escolha qual resultado de dano utilizar.";
 
   solicitacaoCombate.hidden = false;
 
-  rolagens.forEach(function (rolagem, indice) {
-    const botaoEscolherRolagem = document.createElement("button");
+  if (
+    !Array.isArray(rolagens) ||
+    rolagens.length === 0
+  ) {
+    console.warn(
+      "Nenhuma rolagem disponível para escolha.",
+      rolagens,
+    );
 
-    botaoEscolherRolagem.type = "button";
+    return;
+  }
 
-    botaoEscolherRolagem.textContent =
-      `Usar rolagem ${indice + 1}: ${rolagem.total}`;
+  rolagens.forEach(function criarBotaoRolagem(
+    rolagem,
+    indice,
+  ) {
+    const subtotal =
+      Number(rolagem.subtotal) || 0;
 
-    botaoEscolherRolagem.addEventListener(
+    const modificador =
+      Number(rolagem.modificador) || 0;
+
+    const total =
+      Number.isFinite(Number(rolagem.total))
+        ? Number(rolagem.total)
+        : subtotal + modificador;
+
+    let conta;
+
+    if (modificador < 0) {
+      conta =
+        `${subtotal} - ` +
+        `${Math.abs(modificador)} = ` +
+        `${total}`;
+    } else {
+      conta =
+        `${subtotal} + ` +
+        `${modificador} = ` +
+        `${total}`;
+    }
+
+    const botao = document.createElement(
+      "button",
+    );
+
+    botao.type = "button";
+
+    botao.textContent =
+      `Usar rolagem ${indice + 1}: ` +
+      conta;
+
+    botao.addEventListener(
       "click",
       function escolherRolagem() {
-        /*
-         * Desativa todos os botões imediatamente para impedir
-         * que duas escolhas sejam processadas em cliques rápidos.
-         */
-        const botoes = acoesCombate.querySelectorAll("button");
+        acoesCombate.innerHTML = "";
 
-        botoes.forEach(function (botao) {
-          botao.disabled = true;
-        });
-
-        acoesCombate.replaceChildren();
-
-        aoEscolher(rolagem, indice);
-      },
-      {
-        once: true,
+        aoEscolher(rolagem);
       },
     );
 
-    acoesCombate.append(botaoEscolherRolagem);
+    acoesCombate.append(botao);
   });
 }
 
