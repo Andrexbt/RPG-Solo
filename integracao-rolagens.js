@@ -108,44 +108,61 @@ if (typeof window.somarResultados !== "function") {
     return true;
   }
 
-  function configurarAtacanteSelvagem(combate) {
-    const danoPendente = combate?.danoPendente;
-    const efeitoAtivo = danoPendente?.efeitoAtivo;
+ function configurarEfeitoDeNovaRolagem(combate) {
+  const danoPendente =
+    combate?.danoPendente;
 
-    if (!efeitoAtivo || efeitoAtivo.tipo !== "rolarNovamente") {
-      return false;
-    }
+  const efeitoAtivo =
+    danoPendente?.efeitoAtivo;
 
-    const ataque = obterAtaqueDoDanoPendente(combate);
+  if (
+    !efeitoAtivo ||
+    efeitoAtivo.tipo !== "rolarNovamente"
+  ) {
+    return false;
+  }
 
-    if (!ataque?.dano?.gruposDeDados) {
-      return false;
-    }
+  const ataque =
+    obterAtaqueDoDanoPendente(combate);
 
-    const multiplicadorCritico = danoPendente.critico ? 2 : 1;
-    const quantidadeDeRolagens = Number(efeitoAtivo.quantidadeDeRolagens) || 2;
+  if (!ataque?.dano?.gruposDeDados) {
+    return false;
+  }
 
-    const gruposDeDados = ataque.dano.gruposDeDados.map(
+  const quantidadeDeRolagens =
+    Number(
+      efeitoAtivo.quantidadeDeRolagens,
+    ) || 1;
+
+  const multiplicadorCritico =
+    danoPendente.critico ? 2 : 1;
+
+  const gruposDeDados =
+    ataque.dano.gruposDeDados.map(
       function prepararGrupo(grupo) {
         return {
           quantidade:
             grupo.quantidade *
             multiplicadorCritico *
             quantidadeDeRolagens,
-          numeroDeFaces: grupo.numeroDeFaces,
+
+          numeroDeFaces:
+            grupo.numeroDeFaces,
         };
       },
     );
 
-    configurarSeNecessario(
-  gruposDeDados,
-  Number(ataque.dano.modificador) || 0,
-  "Duas rolagens de dano do Atacante Selvagem",
-  quantidadeDeRolagens,
-);
+  configurarSeNecessario(
+    gruposDeDados,
+    Number(
+      ataque.dano.modificador,
+    ) || 0,
+    "Rolagens adicionais de dano",
+    quantidadeDeRolagens,
+  );
 
-    return true;
-  }
+  return true;
+}
 
   function sincronizarSolicitacao() {
     const combate = obterCombateAtual();
@@ -159,7 +176,7 @@ if (typeof window.somarResultados !== "function") {
       return;
     }
 
-    if (configurarAtacanteSelvagem(combate)) {
+    if (configurarEfeitoDeNovaRolagem(combate)) {
       return;
     }
 

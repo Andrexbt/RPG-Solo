@@ -559,17 +559,40 @@ solicitacaoCaixaDados.textContent =
     );
 
     if (!validacao.sucesso) {
-      if (resultadoDado && solicitacaoRolagemAtual) {
-        const esperado = solicitacaoRolagemAtual.gruposDeDados
-          .map((grupo) => `${grupo.quantidade}d${grupo.numeroDeFaces}`)
-          .join(" + ");
+  if (resultadoDado && solicitacaoRolagemAtual) {
+    const quantidadeDeRolagens =
+      solicitacaoRolagemAtual
+        .quantidadeDeRolagens ?? 1;
 
-        resultadoDado.textContent = `Use ${esperado}`;
-        resultadoDado.classList.add("resultado-rolagem-erro");
-      }
+    const esperado =
+      solicitacaoRolagemAtual.gruposDeDados
+        .map(function formatarGrupo(grupo) {
+          const quantidadePorRolagem =
+            grupo.quantidade /
+            quantidadeDeRolagens;
 
-      return;
-    }
+          return (
+            `${quantidadePorRolagem}` +
+            `d${grupo.numeroDeFaces}`
+          );
+        })
+        .join(" + ");
+
+    const textoRepeticao =
+      quantidadeDeRolagens > 1
+        ? ` — ${quantidadeDeRolagens} vezes`
+        : "";
+
+    resultadoDado.textContent =
+      `Use ${esperado}${textoRepeticao}`;
+
+    resultadoDado.classList.add(
+      "resultado-rolagem-erro",
+    );
+  }
+
+  return;
+}
 
     const gruposRolados = Array.from(
       agruparDadosLancadosPorFaces(dadosDoLancamento).entries(),
