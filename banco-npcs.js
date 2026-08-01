@@ -108,12 +108,15 @@ window.bancoNpcs = {
         },
 
         ataques: {
-          espadaCurta: {tipoNarrativo: "espadaCurta"},
-          arcoCurto: {tipoNarrativo: "arcoCurto"}
-        },
-          
-      },
+          espadaCurta: {
+            tipoNarrativo: "espadaCurta",
+          },
 
+          arcoCurto: {
+            tipoNarrativo: "arcoCurto",
+          },
+        },
+      },
     },
 
     guardaConde: {
@@ -213,23 +216,22 @@ window.bancoNpcs = {
       ],
 
       narracao: {
-  categoria: "humanoide",
+        categoria: "humanoide",
 
-  termos: {
-    sujeito: "o guarda",
-  },
+        termos: {
+          sujeito: "o guarda",
+        },
 
-  ataques: {
-    espadaCurta: {
-      tipoNarrativo: "espadaCurta",
-    },
+        ataques: {
+          espadaCurta: {
+            tipoNarrativo: "espadaCurta",
+          },
 
-    arcoCurto: {
-      tipoNarrativo: "arcoCurto",
-    },
-  },
+          arcoCurto: {
+            tipoNarrativo: "arcoCurto",
+          },
+        },
       },
-
     },
 
     lagartoBronze: {
@@ -329,25 +331,22 @@ window.bancoNpcs = {
       ],
 
       narracao: {
-  categoria: "humanoide",
+        categoria: "humanoide",
 
-  termos: {
-    sujeito: "o bandido",
-  },
+        termos: {
+          sujeito: "o Lagarto de Bronze",
+        },
 
-  ataques: {
-    lanca: {
-      tipoNarrativo: "lanca",
-    },
+        ataques: {
+          lanca: {
+            tipoNarrativo: "lanca",
+          },
 
-    bestaLeve: {
-      tipoNarrativo: "bestaLeve",
-    },
-  },
+          bestaLeve: {
+            tipoNarrativo: "bestaLeve",
+          },
+        },
       },
-
     },
-    
   },
-
 };
