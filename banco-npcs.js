@@ -1,7 +1,9 @@
 "use strict";
 
 window.bancoNpcs = {
+
   aFuga: {
+
     ned: {
       id: "ned",
       nome: "Ned",
@@ -97,6 +99,19 @@ window.bancoNpcs = {
           },
         },
       ],
+
+      narracao: {
+        categoria: "humanoide",
+
+        termos: {
+          sujeito: "Ned",
+        },
+
+        ataques: {
+          
+       },
+      },
+
     },
 
     guardaConde: {
@@ -292,5 +307,7 @@ window.bancoNpcs = {
         },
       ],
     },
+    
   },
+
 };
