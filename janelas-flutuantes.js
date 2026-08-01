@@ -120,54 +120,9 @@ for (const alca of alcasArraste) {
   alca.addEventListener("pointercancel", finalizarArrasteJanela);
 }
 
-/* =========================================================
-   COMPATIBILIDADE ENTRE COMBATE E CAIXA DE DADOS
-   ========================================================= */
+const scriptIntegracaoRolagens = document.createElement("script");
 
-document.addEventListener("DOMContentLoaded", function prepararFluxoRolagens() {
-  const configurarRolagemOriginal = window.configurarRolagemSolicitada;
+scriptIntegracaoRolagens.src = "integracao-rolagens.js";
+scriptIntegracaoRolagens.defer = true;
 
-  if (typeof configurarRolagemOriginal !== "function") {
-    return;
-  }
-
-  /*
-   * Durante o evento rolagemConcluida, a aventura pode solicitar
-   * imediatamente a próxima rolagem. A caixa de dados ainda está
-   * concluindo a anterior nesse instante. Adiar a nova configuração
-   * até o próximo ciclo evita que ela seja apagada pela finalização
-   * da rolagem anterior.
-   */
-  window.configurarRolagemSolicitada = function configurarRolagemEncadeada(configuracao) {
-    window.setTimeout(function aplicarConfiguracaoRolagem() {
-      configurarRolagemOriginal(configuracao);
-    }, 0);
-  };
-
-  const combate = window.estadoJogo?.combateAtual;
-
-  if (!combate?.iniciativaPendenteId) {
-    return;
-  }
-
-  const jogador = combate.participantes?.find(
-    function encontrarJogador(participante) {
-      return participante.id === combate.iniciativaPendenteId;
-    },
-  );
-
-  if (!jogador) {
-    return;
-  }
-
-  configurarRolagemOriginal({
-    gruposDeDados: [
-      {
-        quantidade: 1,
-        numeroDeFaces: 20,
-      },
-    ],
-    modificador: Number(jogador.bonusIniciativa) || 0,
-    descricao: "Rolagem de iniciativa",
-  });
-});
+document.head.append(scriptIntegracaoRolagens);
