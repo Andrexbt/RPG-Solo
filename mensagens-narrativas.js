@@ -10,6 +10,39 @@ function formatarSinalNarrativo(valor) {
   return `+ ${numero}`;
 }
 
+function formatarDadosNarrativos(ataque) {
+  if (!ataque?.dano?.gruposDeDados) {
+    return "dados de dano";
+  }
+
+  return ataque.dano.gruposDeDados
+    .map(function formatarGrupo(grupo) {
+      return `${grupo.quantidade}d${grupo.numeroDeFaces}`;
+    })
+    .join(" + ");
+}
+
+function formatarExpressaoDanoNarrativa(ataque) {
+  const dados = formatarDadosNarrativos(ataque);
+  const modificador = Number(ataque?.dano?.modificador) || 0;
+
+  if (modificador === 0) {
+    return dados;
+  }
+
+  return `${dados} ${formatarSinalNarrativo(modificador)}`;
+}
+
+function exibirMensagemNarrativa(elemento, mensagem) {
+  if (!elemento) {
+    return;
+  }
+
+  elemento.innerHTML = mensagem ?? "";
+}
+
+window.exibirMensagemNarrativa = exibirMensagemNarrativa;
+
 window.mensagensNarrativas = {
   iniciativa: {
     pedir: function (modificador) {
@@ -26,22 +59,22 @@ window.mensagensNarrativas = {
 
     pedirNormal: function (modificador, alvoNome) {
       return (
-        `Role <strong>1d20 ${formatarSinalNarrativo(modificador)}</strong> ` +
+        `Você vai rolar <strong>1d20 ${formatarSinalNarrativo(modificador)}</strong> ` +
         `para atacar ${alvoNome}.`
       );
     },
 
     pedirVantagem: function (modificador, alvoNome) {
       return (
-        `Role <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
-        `use o maior resultado e ataque ${alvoNome}.`
+        `Você vai rolar <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
+        `<strong>usar o maior resultado</strong> para atacar ${alvoNome}.`
       );
     },
 
     pedirDesvantagem: function (modificador, alvoNome) {
       return (
-        `Role <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
-        `use o menor resultado e ataque ${alvoNome}.`
+        `Você vai rolar <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
+        `<strong>usar o menor resultado</strong> para atacar ${alvoNome}.`
       );
     },
   },
@@ -121,3 +154,219 @@ window.mensagensNarrativas = {
     },
   },
 };
+
+(function integrarMensagensNarrativasLegadas() {
+  function obterCombate() {
+    return window.estadoJogo?.combateAtual ?? null;
+  }
+
+  function obterAtaquePendente(combate) {
+    const pendencia = combate?.ataquePendente ?? combate?.danoPendente;
+
+    if (!pendencia) {
+      return null;
+    }
+
+    const atacante = combate.participantes?.find(
+      (participante) => participante.id === pendencia.atacanteId,
+    );
+
+    const alvo = combate.participantes?.find(
+      (participante) => participante.id === pendencia.alvoId,
+    );
+
+    const ataque = atacante?.ataques?.find(
+      (item) => item.id === pendencia.ataqueId,
+    );
+
+    if (!atacante || !alvo || !ataque) {
+      return null;
+    }
+
+    return { atacante, alvo, ataque, pendencia };
+  }
+
+  function corrigirSolicitacaoCombate() {
+    const elemento = document.querySelector("#solicitacaoCombate");
+
+    if (!elemento) {
+      return;
+    }
+
+    const textoAtual = elemento.textContent?.trim() ?? "";
+
+    if (!textoAtual) {
+      return;
+    }
+
+    const combate = obterCombate();
+
+    if (textoAtual === "Role 1d20 e adicione seu modificador de iniciativa.") {
+      const jogador = combate?.participantes?.find(
+        (participante) => participante.tipo === "jogador",
+      );
+
+      exibirMensagemNarrativa(
+        elemento,
+        window.mensagensNarrativas.iniciativa.pedir(
+          Number(jogador?.bonusIniciativa) || 0,
+        ),
+      );
+      return;
+    }
+
+    if (/^Role (1d20|2d20).*para atacar .+\.$/i.test(textoAtual)) {
+      const contexto = obterAtaquePendente(combate);
+
+      if (!contexto) {
+        return;
+      }
+
+      const tipoRolagem = contexto.pendencia.tipoRolagem ?? "normal";
+      const modificador = Number(contexto.ataque.bonusAtaque) || 0;
+      const alvoNome = contexto.alvo.nome;
+
+      const mensagem =
+        tipoRolagem === "vantagem"
+          ? window.mensagensNarrativas.ataque.pedirVantagem(modificador, alvoNome)
+          : tipoRolagem === "desvantagem"
+            ? window.mensagensNarrativas.ataque.pedirDesvantagem(modificador, alvoNome)
+            : window.mensagensNarrativas.ataque.pedirNormal(modificador, alvoNome);
+
+      exibirMensagemNarrativa(elemento, mensagem);
+      return;
+    }
+
+    if (/Atacante Selvagem ativado\./i.test(textoAtual)) {
+      const contexto = obterAtaquePendente(combate);
+
+      if (!contexto) {
+        return;
+      }
+
+      const dados = formatarDadosNarrativos(contexto.ataque);
+      const bonus = Number(contexto.ataque.dano?.modificador) || 0;
+      const critico = Boolean(combate?.danoPendente?.critico);
+
+      exibirMensagemNarrativa(
+        elemento,
+        critico
+          ? window.mensagensNarrativas.efeitos.atacanteSelvagemCritico(dados, bonus)
+          : window.mensagensNarrativas.efeitos.atacanteSelvagemNormal(dados, bonus),
+      );
+      return;
+    }
+
+    if (/^Acerto crítico! Role /i.test(textoAtual)) {
+      exibirMensagemNarrativa(
+        elemento,
+        window.mensagensNarrativas.dano.acertoCritico(),
+      );
+      return;
+    }
+
+    if (/^O ataque acertou! Role /i.test(textoAtual)) {
+      const contexto = obterAtaquePendente(combate);
+
+      if (!contexto) {
+        return;
+      }
+
+      exibirMensagemNarrativa(
+        elemento,
+        window.mensagensNarrativas.dano.acertoNormal(
+          formatarExpressaoDanoNarrativa(contexto.ataque),
+        ),
+      );
+    }
+  }
+
+  function corrigirMensagemTurno() {
+    const elemento = document.querySelector("#mensagemAcaoAtualCombate");
+
+    if (!elemento) {
+      return;
+    }
+
+    const textoAtual = elemento.textContent?.trim() ?? "";
+
+    if (textoAtual === "É o seu turno.") {
+      elemento.textContent = window.mensagensNarrativas.turno.jogador;
+      return;
+    }
+
+    const combate = obterCombate();
+    const participanteAtivo = combate?.participantes?.find(
+      (participante) => participante.id === combate.participanteAtivoId,
+    );
+
+    if (
+      participanteAtivo?.tipo !== "jogador" &&
+      textoAtual === `${participanteAtivo?.nome} está decidindo o que fazer.`
+    ) {
+      elemento.textContent = window.mensagensNarrativas.turno.inimigo(
+        participanteAtivo.nome,
+      );
+    }
+  }
+
+  function corrigirErroDados() {
+    const elemento = document.querySelector("#resultadoDado");
+
+    if (!elemento) {
+      return;
+    }
+
+    const textoAtual = elemento.textContent?.trim() ?? "";
+
+    if (/^Use\s+/i.test(textoAtual)) {
+      elemento.textContent = window.mensagensNarrativas.dados.erroRolagem;
+    }
+  }
+
+  function observarElemento(seletor, callback) {
+    const elemento = document.querySelector(seletor);
+
+    if (!elemento) {
+      return;
+    }
+
+    let processando = false;
+
+    const executar = function () {
+      if (processando) {
+        return;
+      }
+
+      processando = true;
+
+      try {
+        callback();
+      } finally {
+        processando = false;
+      }
+    };
+
+    const observador = new MutationObserver(executar);
+
+    observador.observe(elemento, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+
+    executar();
+  }
+
+  function iniciar() {
+    observarElemento("#solicitacaoCombate", corrigirSolicitacaoCombate);
+    observarElemento("#mensagemAcaoAtualCombate", corrigirMensagemTurno);
+    observarElemento("#resultadoDado", corrigirErroDados);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciar, { once: true });
+  } else {
+    iniciar();
+  }
+})();
