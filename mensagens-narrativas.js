@@ -1,100 +1,123 @@
 "use strict";
 
+function formatarSinalNarrativo(valor) {
+  const numero = Number(valor) || 0;
+
+  if (numero < 0) {
+    return `- ${Math.abs(numero)}`;
+  }
+
+  return `+ ${numero}`;
+}
+
 window.mensagensNarrativas = {
   iniciativa: {
     pedir: function (modificador) {
-      const sinal =
-        modificador >= 0 ? "+" : "-";
-
       return (
-        `Role 1d20 ${sinal} ` +
-        `${Math.abs(modificador)} ` +
-        "para determinar sua iniciativa."
+        "A batalha começou! Você vai rolar " +
+        `<strong>1d20 ${formatarSinalNarrativo(modificador)}</strong>` +
+        " para definir sua posição na fila de combate."
       );
     },
-
-    erro: "Para a iniciativa, use exatamente 1d20.",
   },
 
   ataque: {
-    pedirNormal: function (
-      modificador,
-      alvoNome,
-    ) {
-      const sinal =
-        modificador >= 0 ? "+" : "-";
+    selecionarAlvo: "Selecione um inimigo antes de atacar.",
 
+    pedirNormal: function (modificador, alvoNome) {
       return (
-        `Role 1d20 ${sinal} ` +
-        `${Math.abs(modificador)} ` +
+        `Role <strong>1d20 ${formatarSinalNarrativo(modificador)}</strong> ` +
         `para atacar ${alvoNome}.`
       );
     },
 
-    pedirVantagem: function (
-      modificador,
-      alvoNome,
-    ) {
+    pedirVantagem: function (modificador, alvoNome) {
       return (
-        "Role 2d20 e use o maior resultado " +
-        `para atacar ${alvoNome}.`
+        `Role <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
+        `use o maior resultado e ataque ${alvoNome}.`
       );
     },
 
-    pedirDesvantagem: function (
-      modificador,
-      alvoNome,
-    ) {
+    pedirDesvantagem: function (modificador, alvoNome) {
       return (
-        "Role 2d20 e use o menor resultado " +
-        `para atacar ${alvoNome}.`
+        `Role <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
+        `use o menor resultado e ataque ${alvoNome}.`
       );
     },
   },
 
   dano: {
-    acertoNormal: function (expressao) {
+    acertoNormal: function (expressaoCompleta) {
       return (
-        `O ataque acertou! ` +
-        `Role ${expressao} de dano.`
+        "O ataque acertou. Você vai rolar " +
+        `<strong>${expressaoCompleta}</strong> de dano.`
       );
     },
 
-    acertoCritico: function (expressao) {
+    acertoCritico: function () {
       return (
-        `Acerto crítico! ` +
-        `Role ${expressao} de dano.`
+        "Acerto Crítico! Você vai rolar seu dano normalmente, " +
+        "<strong>multiplicar por 2</strong>, e depois adicionar " +
+        "o bônus de dano do ataque escolhido."
       );
     },
   },
 
   efeitos: {
     disponivel: function (nome) {
+      return `${nome} está disponível. Deseja utilizá-lo?`;
+    },
+
+    atacanteSelvagemNormal: function (dadosDaArma, bonusDano) {
       return (
-        `${nome} está disponível. ` +
-        "Deseja utilizá-lo?"
+        "Você escolheu utilizar Atacante Selvagem. Role " +
+        `<strong>${dadosDaArma}</strong> duas vezes, ` +
+        "<strong>escolha o maior valor</strong> e adicione " +
+        `<strong>${formatarSinalNarrativo(bonusDano)}</strong> ` +
+        "de bônus de dano do ataque escolhido."
       );
     },
 
-    ativado: function (
-      nome,
-      expressao,
-      quantidadeDeRolagens,
-    ) {
+    atacanteSelvagemCritico: function (dadosDaArma, bonusDano) {
       return (
-        `${nome} ativado. ` +
-        `Role ${expressao} ` +
-        `${quantidadeDeRolagens} vezes.`
+        "Você escolheu utilizar Atacante Selvagem em combinação com seu Acerto Crítico. Role " +
+        `<strong>${dadosDaArma}</strong> duas vezes, ` +
+        "<strong>escolha o maior valor, multiplique por dois</strong> e adicione " +
+        `<strong>${formatarSinalNarrativo(bonusDano)}</strong> ` +
+        "de bônus de dano do ataque escolhido."
       );
     },
 
-    escolherResultado:
-      "Escolha qual resultado de dano utilizar.",
+    escolherResultado: "Escolha qual resultado de dano utilizar.",
   },
 
   dados: {
-    erroRolagem: function (expressao) {
-      return `Use ${expressao}`;
+    erroRolagem: "Você não jogou a combinação certa de dados.",
+
+    resultadoNormal: function (subtotal, modificador, total) {
+      return `${subtotal} ${formatarSinalNarrativo(modificador)} = ${total}`;
+    },
+
+    resultadoCritico: function (subtotal, modificador) {
+      const dobrado = subtotal * 2;
+      const total = dobrado + (Number(modificador) || 0);
+
+      return (
+        `${subtotal} × 2 = ${dobrado} ` +
+        `${formatarSinalNarrativo(modificador)} = ${total}`
+      );
+    },
+  },
+
+  turno: {
+    jogador: "Seu turno começou. O que você irá fazer?",
+
+    inimigo: function (nome) {
+      return `${nome} está decidindo o que fazer.`;
+    },
+
+    erroInimigo: function (nome) {
+      return `${nome} não conseguiu concluir o turno.`;
     },
   },
 };
