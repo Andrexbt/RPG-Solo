@@ -141,6 +141,11 @@
   pointer-events: none;
 }
 
+.grupo-dados-em-arraste-fixo {
+  position: fixed;
+  z-index: 1000;
+}
+
 .miniatura-dado-arraste {
   position: absolute;
   left: 0;
