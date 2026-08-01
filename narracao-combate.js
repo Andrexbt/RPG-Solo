@@ -127,16 +127,26 @@ function escolherVariacaoNarrativa(lista) {
   return lista[indice];
 }
 
+function capitalizarPrimeiraLetra(texto) {
+  if (!texto) {
+    return "";
+  }
+
+  return texto.charAt(0).toLocaleUpperCase("pt-BR") + texto.slice(1);
+}
+
 function substituirTermosNarrativos(texto, contexto) {
   if (!texto) {
     return "";
   }
 
-  return texto
+  const textoSubstituido = texto
     .replaceAll("{atacante}", contexto.atacante ?? "O atacante")
     .replaceAll("{alvo}", contexto.alvo ?? "o alvo")
     .replaceAll("{ataque}", contexto.ataque ?? "o ataque")
     .replaceAll("{dano}", String(contexto.dano ?? ""));
+
+  return capitalizarPrimeiraLetra(textoSubstituido);
 }
 
 function obterFonteNarrativaParticipante(participante) {
