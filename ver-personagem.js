@@ -475,7 +475,6 @@ function preencherCombate(personagem) {
   document.getElementById("fichaClasseArmadura").textContent = calcularClasseArmadura(personagem);
 
   document.getElementById("pvAtuais").textContent = pontosDeVida.atuais || "";
-  document.getElementById("pvTemporarios").textContent = pontosDeVida.temporarios ?? "";
   document.getElementById("pvMaximo").textContent = pontosDeVida.maximo || "";
   document.getElementById("dadosVidaUsados").textContent = pontosDeVida.dadosVidaUsados ?? "";
   document.getElementById("dadosVidaMaximos").textContent = pontosDeVida.dadoVida || "";

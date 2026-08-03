@@ -613,34 +613,21 @@
   // 6. Habilidades, recursos e escolhas de classe
   // =====================================================
 
-  function obterDadosHabilidade(idHabilidade) {
-    if (window.bancoHabilidades === undefined) {
-      return undefined;
-    }
-
-    if (
-      window.bancoHabilidades.classFeatures !== undefined &&
-      window.bancoHabilidades.classFeatures[idHabilidade] !== undefined
-    ) {
-      return window.bancoHabilidades.classFeatures[idHabilidade];
-    }
-
-    if (
-      window.bancoHabilidades.feats !== undefined &&
-      window.bancoHabilidades.feats[idHabilidade] !== undefined
-    ) {
-      return window.bancoHabilidades.feats[idHabilidade];
-    }
-
-    if (
-      window.bancoHabilidades.traits !== undefined &&
-      window.bancoHabilidades.traits[idHabilidade] !== undefined
-    ) {
-      return window.bancoHabilidades.traits[idHabilidade];
-    }
-
+  function obterDadosHabilidade(
+  idHabilidade
+) {
+  if (
+    window.bancoHabilidades
+      ?.classFeatures ===
+    undefined
+  ) {
     return undefined;
   }
+
+  return window.bancoHabilidades
+    .classFeatures
+    [idHabilidade];
+}
 
   function formatarFormulaRecurso(formula) {
     if (formula === undefined || formula === "") {

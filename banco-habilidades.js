@@ -1,19 +1,4 @@
-// =====================================================
-// Banco de habilidades
-// -----------------------------------------------------
-// Guarda habilidades de classe, grupos de escolhas e
-// progressão inicial das classes. Este arquivo não aplica
-// regras sozinho: ele fornece os dados usados pelas telas de
-// criação, ficha e visualização do personagem.
-// =====================================================
-
 window.bancoHabilidades = {
-  // Reservado para traços de espécie ou características gerais.
-  traits: {},
-
-  // Reservado para talentos que possam ser integrados a este banco.
-  feats: {},
-
   // =====================================================
   // Habilidades de classe
   // -----------------------------------------------------

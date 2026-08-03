@@ -1,6 +1,6 @@
 "use strict";
 
-const bancoEfeitos = {
+window.bancoEfeitos = {
 
   atacanteSelvagem: {
     id: "atacanteSelvagem",

@@ -12,34 +12,21 @@
   // 1. Busca dos dados que podem aparecer em detalhes
   // =====================================================
 
-  function obterDetalheHabilidade(idHabilidade) {
-    if (window.bancoHabilidades === undefined) {
-      return undefined;
-    }
-
-    if (
-      window.bancoHabilidades.classFeatures !== undefined &&
-      window.bancoHabilidades.classFeatures[idHabilidade] !== undefined
-    ) {
-      return window.bancoHabilidades.classFeatures[idHabilidade];
-    }
-
-    if (
-      window.bancoHabilidades.feats !== undefined &&
-      window.bancoHabilidades.feats[idHabilidade] !== undefined
-    ) {
-      return window.bancoHabilidades.feats[idHabilidade];
-    }
-
-    if (
-      window.bancoHabilidades.traits !== undefined &&
-      window.bancoHabilidades.traits[idHabilidade] !== undefined
-    ) {
-      return window.bancoHabilidades.traits[idHabilidade];
-    }
-
+  function obterDetalheHabilidade(
+  idHabilidade
+) {
+  if (
+    window.bancoHabilidades
+      ?.classFeatures ===
+    undefined
+  ) {
     return undefined;
   }
+
+  return window.bancoHabilidades
+    .classFeatures
+    [idHabilidade];
+}
 
   function obterDetalheFicha(tipo, id) {
     if (tipo === "habilidade") {
@@ -112,29 +99,125 @@
     container.appendChild(paragrafo);
   }
 
-  function preencherMecanicaHabilidade(container, id, contexto) {
-    if (contexto === undefined || contexto.recursos === undefined) {
-      return;
+  function formatarRolagemEfeito(
+  rolagem
+) {
+  if (!rolagem) {
+    return "";
+  }
+
+  const gruposDeDados =
+    rolagem.gruposDeDados ?? [];
+
+  const partesDaFormula = [];
+
+  for (
+    const grupoDeDados of
+    gruposDeDados
+  ) {
+    partesDaFormula.push(
+      `${grupoDeDados.quantidade}` +
+      `d${grupoDeDados.numeroDeFaces}`
+    );
+  }
+
+  const modificador =
+    rolagem.modificador;
+
+  if (
+    typeof modificador ===
+    "number" &&
+    modificador !== 0
+  ) {
+    partesDaFormula.push(
+      String(modificador)
+    );
+  }
+
+  if (
+    modificador?.tipo ===
+    "nivelClasse"
+  ) {
+    partesDaFormula.push(
+      "nível da classe"
+    );
+  }
+
+  return partesDaFormula.join(
+    " + "
+  );
+}
+
+  function preencherMecanicaHabilidade(
+  container,
+  id,
+  contexto
+) {
+  const recurso =
+    contexto
+      ?.recursos
+      ?.[id];
+
+  if (recurso) {
+    adicionarParagrafoMecanica(
+      container,
+      "Usos",
+      recurso.usosAtuais +
+      " / " +
+      recurso.usosMaximos
+    );
+
+    const textoRecarga =
+      recurso.recuperaEm ===
+      "descansoLongo"
+        ? "descanso longo"
+        : recurso.recuperaEm;
+
+    adicionarParagrafoMecanica(
+      container,
+      "Recupera em",
+      textoRecarga
+    );
+  }
+
+  const habilidade =
+    obterDetalheHabilidade(
+      id
+    );
+
+  const efeitosIds =
+    habilidade?.efeitos ?? [];
+
+  for (
+    const efeitoId of
+    efeitosIds
+  ) {
+    const efeito =
+      window.bancoEfeitos
+        ?.[efeitoId];
+
+    if (!efeito) {
+      continue;
     }
 
-    const recurso = contexto.recursos[id];
+    const formula =
+      formatarRolagemEfeito(
+        efeito.operacao
+          ?.rolagem
+      );
 
-    if (recurso === undefined) {
-      return;
-    }
-
-    adicionarParagrafoMecanica(container, "Usos", recurso.usosAtuais + " / " + recurso.usosMaximos);
-
-    if (recurso.efeito === "cura") {
-      adicionarParagrafoMecanica(container, "Cura", recurso.formula);
-    }
-
-    if (recurso.recuperaEm === "descansoLongo") {
-      adicionarParagrafoMecanica(container, "Recupera em", "descanso longo");
-    } else {
-      adicionarParagrafoMecanica(container, "Recupera em", recurso.recuperaEm);
+    if (
+      efeito.tipo ===
+      "cura"
+    ) {
+      adicionarParagrafoMecanica(
+        container,
+        "Cura",
+        formula
+      );
     }
   }
+}
 
   function preencherMecanicaDetalhe(container, tipo, id, detalhe, contexto) {
     adicionarParagrafoMecanica(container, "Tipo", obterTipoLegivelDetalhe(tipo, detalhe));
