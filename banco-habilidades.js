@@ -28,7 +28,7 @@ window.bancoHabilidades = {
       categoria: "classFeature",
       classe: "guerreiro",
       nivel: 1,
-      custo: "acaoBonus",
+      efeitos: ["segundoFolego"],
       descricaoCurta: "Você pode recuperar pontos de vida usando uma reserva limitada de usos.",
       descricaoLonga:
         "Você possui uma reserva limitada de vigor que pode usar para se recuperar. No nível 1, você tem 2 usos de Segundo Fôlego. Ao usar esta habilidade, recupera 1d10 + seu nível de Guerreiro pontos de vida. Você recupera os usos gastos ao terminar um descanso longo.",

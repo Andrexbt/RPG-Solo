@@ -54,12 +54,134 @@ function efeitoEstaDisponivel(participante, efeito) {
   return estadoEfeito.usosRestantes > 0;
 }
 
-function buscarEfeitosDoParticipante(participante, gatilho) {
-  const talentos = participante.talentos ?? [];
+function buscarIdsEfeitosDasHabilidades(
+  participante
+) {
+  const classeId =
+    participante.classeId;
 
-  const efeitos = buscarEfeitosPorGatilho(talentos, gatilho);
+  if (!classeId) {
+    return [];
+  }
 
-  return efeitos.filter((efeito) => efeitoEstaDisponivel(participante, efeito));
+  const progressaoClasse =
+    window.bancoHabilidades
+      ?.progressaoClasses
+      ?.[classeId]
+      ?.nivel1;
+
+  if (!progressaoClasse) {
+    return [];
+  }
+
+  const habilidadesAutomaticas =
+    progressaoClasse
+      .classFeaturesAutomaticas ?? [];
+
+  const efeitosEncontrados = [];
+
+  for (
+    const idHabilidade of
+    habilidadesAutomaticas
+  ) {
+    const habilidade =
+      window.bancoHabilidades
+        ?.classFeatures
+        ?.[idHabilidade];
+
+    if (!habilidade) {
+      continue;
+    }
+
+    const efeitosDaHabilidade =
+      habilidade.efeitos ?? [];
+
+    for (
+      const idEfeito of
+      efeitosDaHabilidade
+    ) {
+      if (
+        efeitosEncontrados.includes(
+          idEfeito
+        )
+      ) {
+        continue;
+      }
+
+      efeitosEncontrados.push(
+        idEfeito
+      );
+    }
+  }
+
+  return efeitosEncontrados;
+}
+
+function buscarIdsEfeitosDoParticipante(
+  participante
+) {
+  const efeitosEncontrados = [];
+
+  const efeitosDosTalentos =
+    participante.talentos ?? [];
+
+  const efeitosDasHabilidades =
+    buscarIdsEfeitosDasHabilidades(
+      participante
+    );
+
+  const gruposDeEfeitos = [
+    efeitosDosTalentos,
+    efeitosDasHabilidades
+  ];
+
+  for (
+    const grupoDeEfeitos of
+    gruposDeEfeitos
+  ) {
+    for (
+      const idEfeito of
+      grupoDeEfeitos
+    ) {
+      if (
+        efeitosEncontrados.includes(
+          idEfeito
+        )
+      ) {
+        continue;
+      }
+
+      efeitosEncontrados.push(
+        idEfeito
+      );
+    }
+  }
+
+  return efeitosEncontrados;
+}
+
+function buscarEfeitosDoParticipante(
+  participante,
+  gatilho
+) {
+  const efeitosIds =
+    buscarIdsEfeitosDoParticipante(
+      participante
+    );
+
+  const efeitos =
+    buscarEfeitosPorGatilho(
+      efeitosIds,
+      gatilho
+    );
+
+  return efeitos.filter(
+    efeito =>
+      efeitoEstaDisponivel(
+        participante,
+        efeito
+      )
+  );
 }
 
 function prepararOperacaoEfeito(efeito, contexto) {

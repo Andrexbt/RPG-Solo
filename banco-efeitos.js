@@ -1,6 +1,7 @@
 "use strict";
 
 const bancoEfeitos = {
+
   atacanteSelvagem: {
     id: "atacanteSelvagem",
     nome: "Atacante Selvagem",
@@ -26,4 +27,66 @@ const bancoEfeitos = {
       recarga: "turno",
     },
   },
+
+    segundoFolego: {
+    id:
+      "segundoFolego",
+
+    nome:
+      "Segundo Fôlego",
+
+    origem: {
+      tipo:
+        "habilidade",
+
+      id:
+        "segundoFolego"
+    },
+
+    tipo:
+      "cura",
+
+    gatilho:
+      "aoAtivar",
+
+    custo:
+      "acaoBonus",
+
+    alvo:
+      "proprioPersonagem",
+
+    recurso: {
+      tipo:
+        "habilidade",
+
+      id:
+        "segundoFolego"
+    },
+
+    operacao: {
+      tipo:
+        "curar",
+
+      rolagem: {
+        gruposDeDados: [
+          {
+            quantidade:
+              1,
+
+            numeroDeFaces:
+              10
+          }
+        ],
+
+        modificador: {
+          tipo:
+            "nivelClasse",
+
+          classeId:
+            "guerreiro"
+        }
+      }
+    }
+  }
+
 };
