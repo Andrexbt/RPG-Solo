@@ -441,19 +441,54 @@ function exibirEscolhaEntreRolagens(
         ? Number(rolagem.total)
         : subtotal + modificador;
 
-    let conta;
+    const combate =
+  estadoAtualJogo.combateAtual;
 
-    if (modificador < 0) {
-      conta =
-        `${subtotal} - ` +
-        `${Math.abs(modificador)} = ` +
-        `${total}`;
-    } else {
-      conta =
-        `${subtotal} + ` +
-        `${modificador} = ` +
-        `${total}`;
-    }
+const critico =
+  Boolean(
+    combate?.danoPendente?.critico,
+  );
+
+let conta;
+
+if (critico) {
+  const subtotalDobrado =
+    subtotal * 2;
+
+  const totalCritico =
+    subtotalDobrado + modificador;
+
+  if (modificador < 0) {
+    conta =
+      `${subtotal} × 2 = ` +
+      `${subtotalDobrado} - ` +
+      `${Math.abs(modificador)} = ` +
+      `${totalCritico}`;
+  } else if (modificador > 0) {
+    conta =
+      `${subtotal} × 2 = ` +
+      `${subtotalDobrado} + ` +
+      `${modificador} = ` +
+      `${totalCritico}`;
+  } else {
+    conta =
+      `${subtotal} × 2 = ` +
+      `${subtotalDobrado}`;
+  }
+} else if (modificador < 0) {
+  conta =
+    `${subtotal} - ` +
+    `${Math.abs(modificador)} = ` +
+    `${total}`;
+} else if (modificador > 0) {
+  conta =
+    `${subtotal} + ` +
+    `${modificador} = ` +
+    `${total}`;
+} else {
+  conta =
+    String(subtotal);
+}
 
     const botao = document.createElement(
       "button",

@@ -393,62 +393,6 @@ if (typeof window.somarResultados !== "function") {
     }
   }
 
-  function instalarCorrecaoDanoCritico() {
-    if (
-      !window.SistemaCombate ||
-      typeof window.SistemaCombate.resolverDano !== "function"
-    ) {
-      window.setTimeout(instalarCorrecaoDanoCritico, 0);
-      return;
-    }
-
-    if (window.SistemaCombate.resolverDano.__criticoSimplificado) {
-      return;
-    }
-
-    const resolverDanoOriginal =
-      window.SistemaCombate.resolverDano;
-
-    function resolverDanoComCriticoSimplificado(
-      combate,
-      resultadoRolagem,
-    ) {
-      const danoPendente = combate?.danoPendente;
-      const atacante = danoPendente
-        ? obterParticipante(combate, danoPendente.atacanteId)
-        : null;
-
-      if (
-        danoPendente?.critico &&
-        atacante?.tipo === "jogador" &&
-        Number.isFinite(Number(resultadoRolagem?.subtotal))
-      ) {
-        const resultadoAjustado = structuredClone(
-          resultadoRolagem,
-        );
-
-        const formula = calcularFormulaCritica(
-          resultadoAjustado.subtotal,
-          resultadoAjustado.modificador,
-        );
-
-        resultadoAjustado.total = formula.total;
-
-        return resolverDanoOriginal(
-          combate,
-          resultadoAjustado,
-        );
-      }
-
-      return resolverDanoOriginal(combate, resultadoRolagem);
-    }
-
-    resolverDanoComCriticoSimplificado.__criticoSimplificado = true;
-
-    window.SistemaCombate.resolverDano =
-      resolverDanoComCriticoSimplificado;
-  }
-
   if (solicitacaoCombate) {
     const observador = new MutationObserver(function () {
       queueMicrotask(function () {
@@ -465,22 +409,12 @@ if (typeof window.somarResultados !== "function") {
     });
   }
 
-  if (acoesCombate) {
-    const observadorAcoes = new MutationObserver(function () {
-      queueMicrotask(corrigirBotoesEscolhaCritica);
-    });
+  
 
-    observadorAcoes.observe(acoesCombate, {
-      childList: true,
-      subtree: true,
-    });
-  }
+  document.addEventListener("rolagemConcluida", function () {
+  window.setTimeout(sincronizarSolicitacao, 0);
+});
 
-  document.addEventListener("rolagemConcluida", function (evento) {
-    atualizarResultadoVisualCritico(evento);
-    window.setTimeout(sincronizarSolicitacao, 0);
-  });
-
-  instalarCorrecaoDanoCritico();
+  
   window.setTimeout(sincronizarSolicitacao, 0);
 })();

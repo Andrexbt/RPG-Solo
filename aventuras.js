@@ -1075,6 +1075,10 @@ exibirMensagemNarrativa(
   ataque.dano.modificador,
 
   "Rolagem de dano",
+
+  1,
+
+  critico,
 );
   });
 
@@ -1259,6 +1263,11 @@ const resultadoFinal =
     resultadoFinal,
   );
 
+  console.log(
+  "RESULTADO FINAL DO DANO:",
+  resultadoDano,
+);
+
   if (!resultadoDano.sucesso) {
     console.warn(
       "Não foi possível resolver o dano:",
@@ -1277,6 +1286,11 @@ const resultadoFinal =
       ? `Seu ataque derrotou ${resultadoDano.alvo.nome}.`
       : `Seu ataque causou ${resultadoDano.dano} de dano.`,
   );
+
+  console.log(
+  "DANO QUE VAI PARA A INTERFACE:",
+  resultadoDano.dano,
+);
 
   exibirAcaoAtualCombate(
     resultadoDano.foiDerrotado

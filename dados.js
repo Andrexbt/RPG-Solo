@@ -602,19 +602,19 @@ solicitacaoCaixaDados.textContent =
   }
 
   function emitirRolagemConcluida(dadosDoLancamento) {
-    const validacao = validarDadosDaRolagem(
-      dadosDoLancamento,
-      solicitacaoRolagemAtual,
-    );
+
+    const solicitacaoResolvida = solicitacaoRolagemAtual;
+
+    const validacao = validarDadosDaRolagem(dadosDoLancamento,solicitacaoRolagemAtual,);
 
     if (!validacao.sucesso) {
   if (resultadoDado && solicitacaoRolagemAtual) {
     const quantidadeDeRolagens =
-      solicitacaoRolagemAtual
+      solicitacaoResolvida
         .quantidadeDeRolagens ?? 1;
 
     const esperado =
-      solicitacaoRolagemAtual.gruposDeDados
+      solicitacaoResolvida.gruposDeDados
         .map(function formatarGrupo(grupo) {
           const quantidadePorRolagem =
             grupo.quantidade /
@@ -655,17 +655,31 @@ solicitacaoCaixaDados.textContent =
     });
 
     const subtotal = gruposRolados.reduce((total, grupo) => total + grupo.total, 0);
-    const modificador = solicitacaoRolagemAtual?.modificador ?? 0;
+    const modificador = solicitacaoResolvida?.modificador ?? 0;
     const resultado = {
       gruposRolados: gruposRolados,
       subtotal: subtotal,
       modificador: modificador,
       total: subtotal + modificador,
+      contexto: {
+    descricao:
+      solicitacaoResolvida?.descricao ??
+      null,
+
+    quantidadeDeRolagens:
+      solicitacaoResolvida
+        ?.quantidadeDeRolagens ?? 1,
+
+    critico:
+      Boolean(
+        solicitacaoResolvida?.critico,
+      ),
+  },
     };
 
     if (resultadoDado) {
   const quantidadeDeRolagens =
-    solicitacaoRolagemAtual
+    solicitacaoResolvida
       ?.quantidadeDeRolagens ?? 1;
 
   const resultadosVisuais =
@@ -685,7 +699,7 @@ solicitacaoCaixaDados.textContent =
   resultadoVisual.modificador,
   resultadoVisual.total,
   Boolean(
-    solicitacaoRolagemAtual?.critico,
+    solicitacaoResolvida?.critico,
   ),
 );
       })
@@ -702,8 +716,14 @@ solicitacaoCaixaDados.textContent =
       }),
     );
 
-    solicitacaoRolagemAtual = null;
-    atualizarSolicitacaoCaixaDados();
+    if (
+  solicitacaoRolagemAtual ===
+  solicitacaoResolvida
+) {
+  solicitacaoRolagemAtual = null;
+}
+
+atualizarSolicitacaoCaixaDados();
   }
 
   function executarLancamentoPreparado(lancamento, x, y) {
