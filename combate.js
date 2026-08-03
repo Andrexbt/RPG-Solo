@@ -21,6 +21,17 @@ window.SistemaCombate = (function () {
 
       talentos: structuredClone(entidade.talentos ?? []),
 
+      classeId:
+  entidade.classeId ?? null,
+
+habilidades:
+  structuredClone(
+    entidade.habilidades ?? {
+      escolhas: {},
+      recursos: {}
+    }
+  ),
+
       representacao: structuredClone(configuracao.representacao ?? entidade.avatar ?? null),
     };
   }
