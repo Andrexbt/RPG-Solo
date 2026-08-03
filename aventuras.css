@@ -790,10 +790,15 @@ select {
   align-items: center;
   gap: 10px;
   max-width: min(620px, calc(100vw - 180px));
-  padding: 8px;
+  padding: 0;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
+  list-style:
+  none;
+
+margin:
+  0;
 }
 
 .fila-iniciativa-combate::-webkit-scrollbar {

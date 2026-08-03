@@ -1,12 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto RPG Solo</title>
-    <link rel="stylesheet" href="tema.css" />
-    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="tema.css">
+    <link rel="stylesheet" href="home.css">
     <script src="transicoes-paginas.js"></script>
   </head>
 
@@ -46,7 +46,11 @@
             </a>
           </div>
 
-          <div class="vitrine-controles" aria-label="Controles dos destaques">
+          <div
+          class="vitrine-controles"
+          role="group"
+          aria-label="Controles dos destaques"
+          >
             <button id="botaoDestaqueAnterior" type="button" aria-label="Mostrar destaque anterior">
               ←
             </button>
@@ -54,6 +58,7 @@
             <div
               id="indicadoresDestaque"
               class="indicadores-destaque"
+              role="group"
               aria-label="Posição do destaque"
             >
               <button

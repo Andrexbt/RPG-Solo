@@ -1,17 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>A Fuga | RPG Solo</title>
 
-    <link rel="stylesheet" href="tema.css" />
-    <link rel="stylesheet" href="aventuras.css" />
-    <link rel="stylesheet" href="janelas-flutuantes.css" />
-    <link rel="stylesheet" href="dados.css" />
-    <link rel="stylesheet" href="anotacoes.css" />
+    <link rel="stylesheet" href="tema.css">
+    <link rel="stylesheet" href="aventuras.css">
+    <link rel="stylesheet" href="janelas-flutuantes.css">
+    <link rel="stylesheet" href="dados.css">
+    <link rel="stylesheet" href="anotacoes.css">
   </head>
 
   <body>
@@ -28,8 +28,14 @@
           Ficha
         </button>
 
-        <aside id="painelFicha" class="painel-lateral painel-ficha">
-          <h2>Ficha do personagem</h2>
+        <aside
+        id="painelFicha"
+        class="painel-lateral painel-ficha"
+        aria-labelledby="tituloPainelFicha"
+        >
+          <h2 id="tituloPainelFicha">
+    Ficha do personagem
+  </h2>
 
           <div id="conteudoFicha">
             <p>A ficha será carregada aqui.</p>
@@ -97,19 +103,16 @@
 
         <div class="faixa-superior-combate">
 
-        
           <div id="painelTurnoCombate" class="painel-turno-combate" hidden>
             <p>
               Rodada
               <span id="numeroRodadaCombate"> 1 </span>
             </p>
 
-            <div
+            <ul
               id="filaIniciativaCombate"
               class="fila-iniciativa-combate"
-              role="list"
-              aria-label="Ordem dos turnos"
-            ></div>
+            ></ul>
 
             <section
               id="painelAcaoAtualCombate"
@@ -233,7 +236,6 @@
             <div
               id="tabuleiroCombate"
               class="tabuleiro-combate"
-              aria-label="Tabuleiro de combate"
             ></div>
           </div>
         </section>
@@ -252,8 +254,14 @@
           Informações
         </button>
 
-        <aside id="painelExplicativo" class="painel-lateral painel-explicativo">
-          <h2>Informações</h2>
+        <aside
+        id="painelExplicativo"
+        class="painel-lateral painel-explicativo"
+        aria-labelledby="tituloPainelExplicativo"
+        >
+          <h2 id="tituloPainelExplicativo">
+    Informações
+  </h2>
 
           <div id="conteudoExplicativo">
             <p>As regras e explicações da situação aparecerão aqui.</p>
@@ -281,8 +289,6 @@
             +
           </button>
         </header>
-
-  
 
         <div id="conteudoDados" class="conteudo-dados">
           <p
@@ -354,6 +360,7 @@
             <div
               id="bandejaDados"
               class="bandeja-dados"
+              role="group"
               aria-label="Bandeja de rolagem"
             >
               <p class="instrucao-bandeja">Arraste os dados para esta área.</p>

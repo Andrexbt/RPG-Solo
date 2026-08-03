@@ -651,11 +651,9 @@ function renderizarFilaIniciativa(combate) {
       continue;
     }
 
-    const item = document.createElement("div");
+    const item = document.createElement("li");
 
     item.classList.add("item-iniciativa");
-
-    item.setAttribute("role", "listitem");
 
     item.title = participante.nome;
 
