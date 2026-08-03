@@ -99,8 +99,8 @@
     <!-- =====================================================
          Scripts
          -----------------------------------------------------
-         A ordem importa: bancos primeiro e módulos compartilhados
-         depois. ficha-personagem.js carrega ver-personagem.js.
+         A ordem importa: bancos primeiro, componente compartilhado
+         depois e controlador da página por último.
          ===================================================== -->
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
@@ -118,6 +118,11 @@
     <script src="banco-especies.js"></script>
     <script src="detalhes-ficha.js"></script>
     <script src="ficha-personagem.js"></script>
+    <script src="renderizador-ficha.js"></script>
+    <script
+      src="inicializador-pagina-ficha.js"
+      data-controlador="ver-personagem.js"
+    ></script>
     <script src="transicoes-paginas.js"></script>
   </body>
 </html>

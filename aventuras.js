@@ -52,6 +52,21 @@ estadoAtualJogo.personagem.dados = personagemSelecionado
   ? structuredClone(personagemSelecionado)
   : null;
 
+function renderizarFichaDaAventura() {
+  const areaFicha = document.getElementById("conteudoFicha");
+
+  if (personagemSelecionado === null) {
+    areaFicha.innerHTML = "<p>Nenhum personagem foi selecionado.</p>";
+    return;
+  }
+
+  window.FichaPersonagem.renderizar(personagemSelecionado, areaFicha);
+}
+
+document.addEventListener("fichaPersonagemCarregada", renderizarFichaDaAventura, {
+  once: true,
+});
+
 const idCenaInicial = aventuraAtual.cenaInicial;
 
 estadoAtualJogo.aventuraId = aventuraAtual.id;

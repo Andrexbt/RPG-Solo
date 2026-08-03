@@ -855,8 +855,8 @@
   // 8. Preenchimento visual de habilidades na ficha
   // =====================================================
 
-  function preencherHabilidades(personagemAtual) {
-    const fichaHabilidadesElemento = document.getElementById("fichaHabilidades");
+  function preencherHabilidades(personagemAtual, raizFicha = document) {
+    const fichaHabilidadesElemento = raizFicha.querySelector("#fichaHabilidades");
 
     if (fichaHabilidadesElemento === null) {
       return;
@@ -1038,27 +1038,11 @@
 
   instalarGlobaisFichaPersonagem();
 
-  window.addEventListener("load", function () {
-    instalarGlobaisFichaPersonagem();
-
-    try {
-      if (
-        typeof personagemEncontrado !== "undefined" &&
-        personagemEncontrado !== undefined &&
-        typeof preencherFichaPersonagem === "function"
-      ) {
-        preencherFichaPersonagem(personagemEncontrado);
-      }
-    } catch (erro) {
-      console.warn("Não foi possível reaplicar a ficha compartilhada:", erro);
-    }
-  });
-
   // =====================================================
   // 10. Componente visual e interface da ficha
   // -----------------------------------------------------
-  // Carrega o fragmento HTML e só então inicia o script
-  // específico da página atual.
+  // Carrega apenas o fragmento HTML da ficha. Cada página
+  // inicia seu próprio controlador separadamente.
   // =====================================================
 
   async function carregarHtmlFichaPersonagem() {
@@ -1099,52 +1083,14 @@
     return fichasInseridas;
   }
 
-  function carregarScriptDepoisDaFicha(caminhoScript) {
-    return new Promise(function (resolve, reject) {
-      const caminhoAbsoluto = new URL(caminhoScript, document.baseURI).href;
-      const scriptExistente = Array.from(document.scripts).find(function (script) {
-        return script.src === caminhoAbsoluto;
-      });
+  let promessaInicializacaoFicha = null;
 
-      if (scriptExistente !== undefined) {
-        resolve();
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = caminhoScript;
-      script.addEventListener("load", resolve, { once: true });
-      script.addEventListener(
-        "error",
-        function () {
-          reject(new Error("Não foi possível carregar o script: " + caminhoScript));
-        },
-        { once: true },
-      );
-
-      document.head.appendChild(script);
-    });
-  }
-
-  function obterScriptDaPaginaAtual() {
-    const nomePagina = window.location.pathname.split("/").pop() || "index.html";
-    const scriptsPorPagina = {
-      "criacao-personagem.html": "criacao-personagem.js",
-      "ver-personagem.html": "ver-personagem.js",
-    };
-
-    return scriptsPorPagina[nomePagina] || null;
-  }
-
-  async function iniciarComponenteFichaPersonagem() {
-    const fichas = await carregarHtmlFichaPersonagem();
-    const scriptDaPagina = obterScriptDaPaginaAtual();
-
-    if (fichas.length > 0 && scriptDaPagina !== null) {
-      await carregarScriptDepoisDaFicha(scriptDaPagina);
+  function iniciarComponenteFichaPersonagem() {
+    if (promessaInicializacaoFicha === null) {
+      promessaInicializacaoFicha = carregarHtmlFichaPersonagem();
     }
 
-    return fichas;
+    return promessaInicializacaoFicha;
   }
 
   function iniciarQuandoDocumentoEstiverPronto() {

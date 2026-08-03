@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="janelas-flutuantes.css">
     <link rel="stylesheet" href="dados.css">
     <link rel="stylesheet" href="anotacoes.css">
+    <link rel="stylesheet" href="ficha-personagem.css">
+    <link rel="stylesheet" href="detalhes-ficha.css">
   </head>
 
   <body>
@@ -29,17 +31,11 @@
         </button>
 
         <aside
-        id="painelFicha"
-        class="painel-lateral painel-ficha"
-        aria-labelledby="tituloPainelFicha"
+          id="painelFicha"
+          class="painel-ficha"
+          aria-label="Ficha do personagem"
         >
-          <h2 id="tituloPainelFicha">
-    Ficha do personagem
-  </h2>
-
-          <div id="conteudoFicha">
-            <p>A ficha será carregada aqui.</p>
-          </div>
+          <div id="conteudoFicha" data-ficha-personagem></div>
         </aside>
       </div>
 
@@ -408,6 +404,15 @@
     ></div>
 
 
+    <script src="banco-idiomas.js" defer></script>
+    <script src="banco-talentos.js" defer></script>
+    <script src="banco-antecedentes.js" defer></script>
+    <script src="banco-classes.js" defer></script>
+    <script src="banco-equipamentos.js" defer></script>
+    <script src="banco-maestrias.js" defer></script>
+    <script src="banco-propriedades-armas.js" defer></script>
+    <script src="banco-magias.js" defer></script>
+    <script src="banco-especies.js" defer></script>
     <script src="banco-habilidades.js" defer></script>
     <script src="mensagens-narrativas.js" defer></script>
     <script src="narracao-combate.js" defer></script>
@@ -422,6 +427,9 @@
     <script src="testes.js" defer></script>
     <script src="combate.js" defer></script>
     <script src="interface-combate.js" defer></script>
+    <script src="detalhes-ficha.js" defer></script>
+    <script src="ficha-personagem.js" defer></script>
+    <script src="renderizador-ficha.js" defer></script>
     <script src="aventuras.js" defer></script>
   </body>
 </html>
