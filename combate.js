@@ -79,6 +79,9 @@ habilidades:
       iniciativaPendenteId: null,
       ataquePendente: null,
       danoPendente: null,
+
+      maestriasAtivas: {},
+      
       resultadoNotificado: false,
 
       participantes,
@@ -291,6 +294,29 @@ habilidades:
   function consumirReacao(participante) {
     return consumirRecurso(participante, "reacaoDisponivel");
   }
+
+  function participanteDominaArma(
+  participante,
+  ataque,
+) {
+  const maestriasEscolhidas =
+    participante
+      .habilidades
+      ?.escolhas
+      ?.maestriasArmas ?? [];
+
+  if (
+    !Array.isArray(
+      maestriasEscolhidas,
+    )
+  ) {
+    return false;
+  }
+
+  return maestriasEscolhidas.includes(
+    ataque.id,
+  );
+}
 
   function prepararAtaque(combate, idAtacante, idAlvo, idAtaque) {
     const atacante = combate.participantes.find((participante) => participante.id === idAtacante);
