@@ -1590,6 +1590,17 @@ function receberResultadoRolagem(evento) {
 
   const combate = estadoAtualJogo.combateAtual;
 
+  if (
+  combate &&
+  combate.efeitoPendente
+) {
+  resolverEfeitoPendente(
+    resultadoRolagem,
+  );
+
+  return;
+}
+
   if (combate && combate.iniciativaPendenteId) {
     resolverIniciativaJogador(resultadoRolagem);
 
@@ -1615,6 +1626,83 @@ function receberResultadoRolagem(evento) {
   console.log("Resultado recebido pela aventura:", resultadoRolagem);
 
   resolverTeste(resultadoRolagem);
+}
+
+function resolverEfeitoPendente(
+  resultadoRolagem,
+) {
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  const operacao =
+    combate?.efeitoPendente;
+
+  if (!combate || !operacao) {
+    return false;
+  }
+
+  if (
+    operacao.tipo !==
+    "curar"
+  ) {
+    console.warn(
+      "Operação de efeito ainda não implementada:",
+      operacao.tipo,
+    );
+
+    return false;
+  }
+
+  const participante =
+    combate.participantes.find(
+      function encontrarParticipante(
+        participanteAtual,
+      ) {
+        return (
+          participanteAtual.id ===
+          operacao.participanteId
+        );
+      },
+    );
+
+  if (!participante) {
+    console.warn(
+      "Participante do efeito não encontrado:",
+      operacao.participanteId,
+    );
+
+    combate.efeitoPendente =
+      null;
+
+    return true;
+  }
+
+  const resultadoCura =
+    SistemaCombate.aplicarCura(
+      participante,
+      resultadoRolagem.total,
+    );
+
+  if (!resultadoCura.sucesso) {
+    console.warn(
+      "Não foi possível aplicar a cura:",
+      resultadoCura.motivo,
+    );
+
+    combate.efeitoPendente =
+      null;
+
+    return true;
+  }
+
+  combate.efeitoPendente =
+    null;
+
+  atualizarInterfaceTurno(
+    combate,
+  );
+
+  return true;
 }
 
 function solicitarRolagemNaCaixa(

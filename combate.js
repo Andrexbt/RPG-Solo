@@ -852,6 +852,7 @@ habilidades:
     removerParticipanteDaOrdem,
     verificarFimCombate,
     resolverDano,
+    aplicarCura,
     iniciarTurnoAtual,
     ordenarTurnos,
     escolherAtaqueInimigo,

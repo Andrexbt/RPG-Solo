@@ -194,6 +194,40 @@ function criarTokenCombate(participante) {
     token.textContent = participante.tipo === "jogador" ? "P" : "I";
   }
 
+  if (
+  participante.tipo === "jogador"
+) {
+
+  const barraPontosDeVida =
+  document.createElement("span");
+
+barraPontosDeVida.classList.add(
+  "barra-pontos-vida-token",
+);
+
+const preenchimentoPontosDeVida =
+  document.createElement("span");
+
+preenchimentoPontosDeVida.classList.add(
+  "preenchimento-pontos-vida-token",
+);
+
+const textoPontosDeVida =
+  document.createElement("span");
+
+textoPontosDeVida.classList.add(
+  "texto-pontos-vida-token",
+);
+
+barraPontosDeVida.append(
+  preenchimentoPontosDeVida,textoPontosDeVida,
+);
+
+token.append(
+  barraPontosDeVida,
+);
+}
+
   token.setAttribute("aria-label", participante.id);
 
   return token;
@@ -823,6 +857,118 @@ function renderizarFilaIniciativa(combate) {
   }
 }
 
+function atualizarPontosDeVidaFichaCombate(
+  combate,
+) {
+  const participanteJogador =
+    combate.participantes.find(
+      function encontrarJogador(
+        participante,
+      ) {
+        return (
+          participante.tipo ===
+          "jogador"
+        );
+      },
+    );
+
+  if (
+    !participanteJogador ||
+    !estadoAtualJogo
+      .personagem
+      .dados
+  ) {
+    return;
+  }
+
+  estadoAtualJogo
+    .personagem
+    .dados
+    .combate
+    .pontosDeVida =
+    structuredClone(
+      participanteJogador
+        .pontosDeVida,
+    );
+
+  const areaFicha =
+    document.getElementById(
+      "conteudoFicha",
+    );
+
+  if (!areaFicha) {
+    return;
+  }
+
+  window.FichaPersonagem.renderizar(
+    estadoAtualJogo
+      .personagem
+      .dados,
+    areaFicha,
+    {
+      secoes: [
+        "combate",
+      ],
+    },
+  );
+}
+
+function atualizarPontosDeVidaFichaCombate(
+  combate,
+) {
+  const participanteJogador =
+    combate.participantes.find(
+      function encontrarJogador(
+        participante,
+      ) {
+        return (
+          participante.tipo ===
+          "jogador"
+        );
+      },
+    );
+
+  if (
+    !participanteJogador ||
+    !estadoAtualJogo
+      .personagem
+      .dados
+  ) {
+    return;
+  }
+
+  estadoAtualJogo
+    .personagem
+    .dados
+    .combate
+    .pontosDeVida =
+    structuredClone(
+      participanteJogador
+        .pontosDeVida,
+    );
+
+  const areaFicha =
+    document.getElementById(
+      "conteudoFicha",
+    );
+
+  if (!areaFicha) {
+    return;
+  }
+
+  window.FichaPersonagem.renderizar(
+    estadoAtualJogo
+      .personagem
+      .dados,
+    areaFicha,
+    {
+      secoes: [
+        "combate",
+      ],
+    },
+  );
+}
+
 function atualizarInterfaceTurno(combate) {
   const participanteAtivo = combate.participantes.find(
     (participante) => participante.id === combate.participanteAtivoId,
@@ -863,6 +1009,60 @@ function atualizarInterfaceTurno(combate) {
       token.style.gridColumn = participanteDoToken.posicao.coluna;
 
       token.style.gridRow = participanteDoToken.posicao.linha;
+    
+
+      if (
+  participanteDoToken &&
+  participanteDoToken.tipo === "jogador"
+) {
+      const pontosAtuais =
+    Number(
+      participanteDoToken
+        .pontosDeVida
+        ?.atuais,
+    ) || 0;
+
+  const pontosMaximos =
+    Number(
+      participanteDoToken
+        .pontosDeVida
+        ?.maximo,
+    ) || 0;
+
+    const textoPontosDeVida =
+  token.querySelector(
+    ".texto-pontos-vida-token",
+  );
+
+if (textoPontosDeVida) {
+  textoPontosDeVida.textContent =
+    `${pontosAtuais} / ${pontosMaximos}`;
+}
+
+  const porcentagemVida =
+    pontosMaximos > 0
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            (
+              pontosAtuais /
+              pontosMaximos
+            ) * 100,
+          ),
+        )
+      : 0;
+
+  const preenchimento =
+    token.querySelector(
+      ".preenchimento-pontos-vida-token",
+    );
+
+  if (preenchimento) {
+    preenchimento.style.width =
+      `${porcentagemVida}%`;
+  }
+}
     }
 
     token.classList.toggle(
@@ -877,6 +1077,10 @@ function atualizarInterfaceTurno(combate) {
 
     token.classList.toggle("token-derrotado", participanteDoToken?.estado === "derrotado");
   }
+
+  atualizarPontosDeVidaFichaCombate(
+  combate,
+);
 
   painelTurnoCombate.hidden = false;
 }
