@@ -14,7 +14,15 @@ function carregarPersonagensSalvos() {
     const dadosSalvos = localStorage.getItem(CHAVE_PERSONAGENS);
     const personagens = dadosSalvos === null ? [] : JSON.parse(dadosSalvos);
 
-    return Array.isArray(personagens) ? personagens : [];
+    if (Array.isArray(personagens) === false) {
+      return [];
+    }
+
+    return personagens.map(function (personagem) {
+      return window.PersonagemDados.normalizar(
+        personagem
+      );
+    });
   } catch (erro) {
     console.error("Não foi possível ler os personagens salvos.", erro);
     return [];
@@ -184,7 +192,14 @@ function montarTelaPersonagens() {
 
     const classe = document.createElement("p");
     classe.classList.add("resumo-personagem");
-    classe.textContent = textoOuTraco(personagem?.classe) + " 1";
+    classe.textContent =
+  textoOuTraco(
+    personagem?.classe
+  ) +
+  " " +
+  textoOuTraco(
+    personagem?.nivel
+  );
 
     cabecalho.append(nome, classe);
 

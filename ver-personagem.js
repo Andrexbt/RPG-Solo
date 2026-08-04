@@ -367,11 +367,17 @@ function pegarIdDaUrl() {
 }
 
 function buscarPersonagemPorId(idPersonagem) {
-  const personagens = carregarPersonagensSalvos();
+  const personagens =
+    carregarPersonagensSalvos();
 
-  return personagens.find(function (personagem) {
-    return personagem.id === idPersonagem;
-  });
+  const personagemSalvo =
+    personagens.find(function (personagem) {
+      return personagem.id === idPersonagem;
+    });
+
+  return window.PersonagemDados.normalizar(
+    personagemSalvo
+  );
 }
 
 // =====================================================

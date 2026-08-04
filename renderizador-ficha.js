@@ -56,7 +56,20 @@
     });
 
     definirTexto(raiz, "#fichaNome", personagem.detalhes?.nome);
-    definirTexto(raiz, "#fichaClasseNivel", personagem.classe ? personagem.classe + " 1" : "");
+
+    const classeENivel =
+  personagem.classe
+    ? personagem.classe +
+      " " +
+      personagem.nivel
+    : "";
+
+definirTexto(
+  raiz,
+  "#fichaClasseNivel",
+  classeENivel
+);
+
     definirTexto(raiz, "#fichaAntecedente", personagem.antecedente);
     definirTexto(raiz, "#fichaEspecie", personagem.especie);
     definirTexto(raiz, "#fichaIdiomas", idiomas.join(", "));

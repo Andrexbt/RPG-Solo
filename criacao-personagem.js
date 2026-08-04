@@ -465,6 +465,15 @@ const fichaFrameAvatar = document.getElementById("fichaFrameAvatar");
 // =====================================================
 
 const personagem = {
+
+  schemaVersion: 1,
+  rulesVersion: "2024",
+  nivel: 1,
+
+  niveisPorClasse:{},
+
+  xp: 0,
+
   classeId: "",
   classe: "",
 
@@ -555,8 +564,15 @@ function selecionarClasse() {
 
   personagem.classeId = classeAtualNaModal;
   personagem.classe = dados.nome;
+  personagem.niveisPorClasse = {
+  [classeAtualNaModal]:
+    1
+  };
 
-  fichaClasseNivel.textContent = dados.nome + " 1";
+  fichaClasseNivel.textContent =
+  dados.nome +
+  " " +
+  personagem.nivel;
 
   personagem.periciasClasse = [];
   atualizarPericiasPersonagem();
@@ -3234,7 +3250,10 @@ function montarTelaRevisao() {
     tituloBasico,
     avatarBasico,
     criarParagrafoRevisao("Nome", personagem.detalhes.nome),
-    criarParagrafoRevisao("Classe", personagem.classe + " 1"),
+    criarParagrafoRevisao("Classe",
+  personagem.classe +
+    " " +
+    personagem.nivel),
     criarParagrafoRevisao("Antecedente", personagem.antecedente),
     criarParagrafoRevisao("Espécie", personagem.especie),
     criarParagrafoRevisao("Idiomas", personagem.idiomas.map(obterNomeIdioma).join(", ")),
@@ -3771,7 +3790,10 @@ function salvarPersonagemLocal() {
     console.error("Não foi possível ler os personagens salvos.", erro);
   }
 
-  const personagemParaSalvar = structuredClone(personagem);
+  const personagemParaSalvar =
+  window.PersonagemDados.normalizar(
+    personagem
+  );
 
   personagemParaSalvar.id = crypto.randomUUID();
   personagemParaSalvar.criadoEm = new Date().toISOString();

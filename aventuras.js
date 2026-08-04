@@ -22,7 +22,13 @@ function buscarPersonagemSalvo(idPersonagem) {
       return personagemSalvo.id === idPersonagem;
     });
 
-    return personagem ?? null;
+    if (personagem === undefined) {
+  return null;
+}
+
+return window.PersonagemDados.normalizar(
+  personagem
+);
   } catch (erro) {
     console.error("Não foi possível carregar o personagem.", erro);
 
