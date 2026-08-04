@@ -341,6 +341,130 @@ function fecharPainelAtaquesCombate() {
   painelAtaquesCombate.hidden = true;
 }
 
+function ativarEfeitoCombate(
+  participante,
+  efeitoId
+) {
+  const combate =
+    estadoAtualJogo
+      .combateAtual;
+
+  if (!combate) {
+    return;
+  }
+
+  const resultadoAtivacao =
+    ativarEfeitoDoParticipante(
+      participante,
+      efeitoId
+    );
+
+  if (!resultadoAtivacao.sucesso) {
+    console.warn(
+      "Não foi possível ativar o efeito:",
+      resultadoAtivacao.motivo
+    );
+
+    return;
+  }
+
+  combate.efeitoPendente =
+    structuredClone(
+      resultadoAtivacao
+        .operacao
+    );
+
+  const rolagem =
+    resultadoAtivacao
+      .operacao
+      .rolagem;
+
+  solicitarRolagemNaCaixa(
+    rolagem.gruposDeDados,
+    rolagem.modificador,
+    resultadoAtivacao
+      .efeito
+      .nome
+  );
+
+  solicitacaoCombate.textContent =
+    `Role os dados para usar ` +
+    `${resultadoAtivacao.efeito.nome}.`;
+
+  solicitacaoCombate.hidden =
+    false;
+
+  atualizarInterfaceTurno(
+    combate
+  );
+}
+
+function renderizarEfeitosAtivaveisCombate(
+  participante
+) {
+  const efeitos =
+    buscarEfeitosDoParticipante(
+      participante,
+      "aoAtivar"
+    );
+
+  let quantidadeAcoesBonus =
+    0;
+
+  for (const efeito of efeitos) {
+    const botao =
+      document.createElement(
+        "button"
+      );
+
+    botao.type =
+      "button";
+
+    botao.textContent =
+      efeito.nome;
+
+    botao.dataset.efeitoId =
+      efeito.id;
+
+      botao.addEventListener(
+  "click",
+  function ativarEfeito() {
+    ativarEfeitoCombate(
+      participante,
+      efeito.id
+    );
+  }
+);
+
+    if (
+      efeito.custo ===
+      "acao"
+    ) {
+      listaAcoesTurno.append(
+        botao
+      );
+
+      continue;
+    }
+
+    if (
+      efeito.custo ===
+      "acaoBonus"
+    ) {
+      listaAcoesBonusTurno.append(
+        botao
+      );
+
+      quantidadeAcoesBonus++;
+    }
+  }
+
+  return {
+    quantidadeAcoesBonus:
+      quantidadeAcoesBonus
+  };
+}
+
 function renderizarAcoesCombate(participante) {
   listaAcoesTurno.innerHTML = "";
 
@@ -366,13 +490,31 @@ function renderizarAcoesCombate(participante) {
 
   listaAcoesTurno.append(botaoAtacar);
 
-  const mensagemAcaoBonus = document.createElement("p");
+  const resultadoEfeitos =
+  renderizarEfeitosAtivaveisCombate(
+    participante
+  );
 
-  mensagemAcaoBonus.textContent = participante.acaoBonusDisponivel
-    ? "Nenhuma opção disponível."
-    : "Ação bônus utilizada.";
+if (
+  resultadoEfeitos
+    .quantidadeAcoesBonus ===
+  0
+) {
+  const mensagemAcaoBonus =
+    document.createElement(
+      "p"
+    );
 
-  listaAcoesBonusTurno.append(mensagemAcaoBonus);
+  mensagemAcaoBonus.textContent =
+    participante
+      .acaoBonusDisponivel
+      ? "Nenhuma opção disponível."
+      : "Ação bônus utilizada.";
+
+  listaAcoesBonusTurno.append(
+    mensagemAcaoBonus
+  );
+}
 }
 
 function formatarResultadoEscolhaRolagem(

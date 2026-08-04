@@ -21,8 +21,17 @@ window.SistemaCombate = (function () {
 
       talentos: structuredClone(entidade.talentos ?? []),
 
-      classeId:
-  entidade.classeId ?? null,
+      classeId: entidade.classeId ?? null,
+
+      nivel:
+  Number(
+    entidade.nivel
+  ) || 0,
+
+niveisPorClasse:
+  structuredClone(
+    entidade.niveisPorClasse ?? {}
+  ),
 
 habilidades:
   structuredClone(
@@ -706,6 +715,49 @@ habilidades:
       pontosDeVidaRestantes: alvo.pontosDeVida.atuais,
     };
   }
+
+  function aplicarCura(
+  participante,
+  quantidade,
+) {
+  if (!participante?.pontosDeVida) {
+    return {
+      sucesso: false,
+      motivo: "pontosDeVidaInexistentes",
+    };
+  }
+
+  const pontosAtuais =
+    Number(participante.pontosDeVida.atuais) || 0;
+
+  const pontosMaximos =
+    Number(participante.pontosDeVida.maximo) || 0;
+
+  const curaSolicitada =
+    Math.max(0, Number(quantidade) || 0);
+
+  const novosPontos =
+    Math.min(
+      pontosMaximos,
+      pontosAtuais + curaSolicitada,
+    );
+
+  participante.pontosDeVida.atuais =
+    novosPontos;
+
+  return {
+    sucesso: true,
+    motivo: null,
+    participante: participante,
+    curaSolicitada: curaSolicitada,
+    curaAplicada:
+      novosPontos - pontosAtuais,
+    pontosDeVidaAtuais:
+      novosPontos,
+    pontosDeVidaMaximos:
+      pontosMaximos,
+  };
+}
 
   function iniciarTurnoAtual(combate) {
     const idParticipante = combate.ordemTurnos[combate.indiceTurno];

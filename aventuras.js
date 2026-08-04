@@ -567,11 +567,22 @@ function iniciarCombateDaAventura(configuracao) {
 
   if (jogador) {
     exibirMensagemNarrativa(
-  solicitacaoCombate,
-  mensagensNarrativas.iniciativa.pedir(
-    jogador.bonusIniciativa,
-  ),
-);
+      solicitacaoCombate,
+      mensagensNarrativas.iniciativa.pedir(
+        jogador.bonusIniciativa,
+      ),
+    );
+
+    solicitarRolagemNaCaixa(
+      [
+        {
+          quantidade: 1,
+          numeroDeFaces: 20,
+        },
+      ],
+      jogador.bonusIniciativa,
+      "Rolagem de iniciativa",
+    );
 
     solicitacaoCombate.hidden = false;
   }
@@ -1399,14 +1410,20 @@ function separarRolagensSimultaneasEfeito(
             );
 
           return {
-            quantidade: resultados.length,
-            numeroDeFaces:
-              grupo.numeroDeFaces,
-            resultados: resultados,
-            total: somarResultados(
-              resultados,
-            ),
-          };
+  quantidade: resultados.length,
+  numeroDeFaces:
+    grupo.numeroDeFaces,
+  resultados: resultados,
+  total: resultados.reduce(
+    function somarResultado(
+      total,
+      resultado,
+    ) {
+      return total + resultado;
+    },
+    0,
+  ),
+};
         },
       );
 

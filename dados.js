@@ -14,6 +14,7 @@
 
   let arrasteDadoAtual = null;
   let solicitacaoRolagemAtual = null;
+  let rolagemSolicitadaEmAndamento = false;
 
   function prepararCamadaDados() {
     if (!camadaDadosLancados || !tabuleiroDados) {
@@ -156,53 +157,21 @@
   critico = false,
 ) {
   if (critico) {
-    const subtotalDobrado =
-      subtotal * 2;
-
-    const totalCritico =
-      subtotalDobrado + modificador;
-
-    if (modificador < 0) {
-      return (
-        `${subtotal} × 2 = ` +
-        `${subtotalDobrado} - ` +
-        `${Math.abs(modificador)} = ` +
-        `${totalCritico}`
+    return mensagensNarrativas
+      .dados
+      .resultadoCritico(
+        subtotal,
+        modificador,
       );
-    }
-
-    if (modificador > 0) {
-      return (
-        `${subtotal} × 2 = ` +
-        `${subtotalDobrado} + ` +
-        `${modificador} = ` +
-        `${totalCritico}`
-      );
-    }
-
-    return (
-      `${subtotal} × 2 = ` +
-      `${subtotalDobrado}`
-    );
   }
 
-  if (modificador < 0) {
-    return (
-      `${subtotal} - ` +
-      `${Math.abs(modificador)} = ` +
-      `${total}`
+  return mensagensNarrativas
+    .dados
+    .resultadoNormal(
+      subtotal,
+      modificador,
+      total,
     );
-  }
-
-  if (modificador > 0) {
-    return (
-      `${subtotal} + ` +
-      `${modificador} = ` +
-      `${total}`
-    );
-  }
-
-  return String(subtotal);
 }
 
   function atualizarSolicitacaoCaixaDados() {
@@ -255,6 +224,8 @@ solicitacaoCaixaDados.textContent =
   }
 
   function configurarRolagemSolicitada(configuracao) {
+    rolagemSolicitadaEmAndamento = false;
+
     if (!configuracao) {
       solicitacaoRolagemAtual = null;
       atualizarSolicitacaoCaixaDados();
@@ -337,6 +308,19 @@ solicitacaoCaixaDados.textContent =
       return;
     }
 
+    if (rolagemSolicitadaEmAndamento) {
+      if (resultadoDado) {
+        resultadoDado.textContent =
+          "Aguarde o resultado da rolagem solicitada.";
+
+        resultadoDado.classList.add(
+          "resultado-rolagem-erro",
+        );
+      }
+
+      return;
+    }
+
     const elementoDado = evento.currentTarget;
     const numeroDeFaces = Number(elementoDado.dataset.faces);
 
@@ -400,22 +384,64 @@ solicitacaoCaixaDados.textContent =
     document.body.classList.remove("arrastando-dado");
   }
 
-  function concluirArrasteManualDado(evento) {
-    if (!arrasteDadoAtual || evento.button !== 0) {
+  function concluirArrasteManualDado(
+    evento
+  ) {
+    if (
+      !arrasteDadoAtual ||
+      evento.button !== 0
+    ) {
       return;
     }
 
     evento.preventDefault();
 
-    const lancamento = arrasteDadoAtual;
-    const posicao = obterPosicaoNoTabuleiro(evento.clientX, evento.clientY);
+    const lancamento =
+      arrasteDadoAtual;
 
-    arrasteDadoAtual = null;
-    lancamento.elementoOrigem.classList.remove("dado-sendo-arrastado");
-    lancamento.fantasma.remove();
-    document.body.classList.remove("arrastando-dado");
+    if (solicitacaoRolagemAtual) {
+  rolagemSolicitadaEmAndamento =
+    true;
+    }
 
-    executarLancamentoPreparado(lancamento, posicao.x, posicao.y);
+    if (resultadoDado) {
+      resultadoDado.classList.remove(
+        "resultado-rolagem-erro"
+      );
+    }
+
+    const posicao =
+      obterPosicaoNoTabuleiro(
+        evento.clientX,
+        evento.clientY
+      );
+
+    arrasteDadoAtual =
+      null;
+
+    lancamento
+      .elementoOrigem
+      .classList
+      .remove(
+        "dado-sendo-arrastado"
+      );
+
+    lancamento
+      .fantasma
+      .remove();
+
+    document
+      .body
+      .classList
+      .remove(
+        "arrastando-dado"
+      );
+
+    executarLancamentoPreparado(
+      lancamento,
+      posicao.x,
+      posicao.y
+    );
   }
 
   function calcularDeslocamentoLancamento(indice, quantidadeTotal) {
@@ -601,47 +627,35 @@ solicitacaoCaixaDados.textContent =
     return { sucesso: true };
   }
 
-  function emitirRolagemConcluida(dadosDoLancamento) {
-
-    const solicitacaoResolvida = solicitacaoRolagemAtual;
-
-    const validacao = validarDadosDaRolagem(dadosDoLancamento,solicitacaoRolagemAtual,);
+  function emitirRolagemConcluida(
+    dadosDoLancamento,
+    solicitacaoResolvida,
+  ) {
+    const validacao =
+      validarDadosDaRolagem(
+        dadosDoLancamento,
+        solicitacaoResolvida
+      );
 
     if (!validacao.sucesso) {
-  if (resultadoDado && solicitacaoRolagemAtual) {
-    const quantidadeDeRolagens =
-      solicitacaoResolvida
-        .quantidadeDeRolagens ?? 1;
+      if (resultadoDado) {
+        
 
-    const esperado =
-      solicitacaoResolvida.gruposDeDados
-        .map(function formatarGrupo(grupo) {
-          const quantidadePorRolagem =
-            grupo.quantidade /
-            quantidadeDeRolagens;
+        resultadoDado.textContent =
+          mensagensNarrativas
+    .dados
+    .erroRolagem;
 
-          return (
-            `${quantidadePorRolagem}` +
-            `d${grupo.numeroDeFaces}`
-          );
-        })
-        .join(" + ");
+        resultadoDado.classList.add(
+          "resultado-rolagem-erro",
+        );
+      }
 
-    const textoRepeticao =
-      quantidadeDeRolagens > 1
-        ? ` — ${quantidadeDeRolagens} vezes`
-        : "";
+      rolagemSolicitadaEmAndamento =
+    false;
 
-    resultadoDado.textContent =
-      `Use ${esperado}${textoRepeticao}`;
-
-    resultadoDado.classList.add(
-      "resultado-rolagem-erro",
-    );
-  }
-
-  return;
-}
+      return;
+    }
 
     const gruposRolados = Array.from(
       agruparDadosLancadosPorFaces(dadosDoLancamento).entries(),
@@ -662,53 +676,53 @@ solicitacaoCaixaDados.textContent =
       modificador: modificador,
       total: subtotal + modificador,
       contexto: {
-    descricao:
-      solicitacaoResolvida?.descricao ??
-      null,
+        descricao:
+          solicitacaoResolvida?.descricao ??
+          null,
 
-    quantidadeDeRolagens:
-      solicitacaoResolvida
-        ?.quantidadeDeRolagens ?? 1,
+        quantidadeDeRolagens:
+          solicitacaoResolvida
+            ?.quantidadeDeRolagens ?? 1,
 
-    critico:
-      Boolean(
-        solicitacaoResolvida?.critico,
-      ),
-  },
+        critico:
+          Boolean(
+            solicitacaoResolvida?.critico,
+          ),
+      },
     };
 
     if (resultadoDado) {
-  const quantidadeDeRolagens =
-    solicitacaoResolvida
-      ?.quantidadeDeRolagens ?? 1;
+      const quantidadeDeRolagens =
+        solicitacaoResolvida
+          ?.quantidadeDeRolagens ?? 1;
 
-  const resultadosVisuais =
-    separarResultadosVisuais(
-      resultado.gruposRolados,
-      quantidadeDeRolagens,
-      resultado.modificador,
-    );
+      const resultadosVisuais =
+        separarResultadosVisuais(
+          resultado.gruposRolados,
+          quantidadeDeRolagens,
+          resultado.modificador,
+        );
 
-  resultadoDado.textContent =
-    resultadosVisuais
-      .map(function formatarResultado(
-        resultadoVisual,
-      ) {
-        return formatarExpressaoResultado(
-  resultadoVisual.subtotal,
-  resultadoVisual.modificador,
-  resultadoVisual.total,
-  Boolean(
-    solicitacaoResolvida?.critico,
-  ),
-);
-      })
-      .join("\n");
+      resultadoDado.textContent =
+        resultadosVisuais
+          .map(function formatarResultado(
+            resultadoVisual,
+          ) {
+            return formatarExpressaoResultado(
+              resultadoVisual.subtotal,
+              resultadoVisual.modificador,
+              resultadoVisual.total,
+              Boolean(
+                solicitacaoResolvida?.critico,
+              ),
+            );
+          })
+          .join("\n");
 
-  resultadoDado.classList.remove(
-    "resultado-rolagem-erro",
-  );
-}
+      resultadoDado.classList.remove(
+        "resultado-rolagem-erro",
+      );
+    }
 
     document.dispatchEvent(
       new CustomEvent("rolagemConcluida", {
@@ -717,13 +731,15 @@ solicitacaoCaixaDados.textContent =
     );
 
     if (
-  solicitacaoRolagemAtual ===
-  solicitacaoResolvida
-) {
-  solicitacaoRolagemAtual = null;
-}
+      solicitacaoRolagemAtual ===
+      solicitacaoResolvida
+    ) {
+      solicitacaoRolagemAtual = null;
+    }
 
-atualizarSolicitacaoCaixaDados();
+    rolagemSolicitadaEmAndamento = false;
+
+    atualizarSolicitacaoCaixaDados();
   }
 
   function executarLancamentoPreparado(lancamento, x, y) {
@@ -764,8 +780,14 @@ atualizarSolicitacaoCaixaDados();
       }
     }
 
+    const solicitacaoDoLancamento =
+      solicitacaoRolagemAtual;
+
     window.setTimeout(function concluirLancamento() {
-      emitirRolagemConcluida(dadosDoLancamento);
+      emitirRolagemConcluida(
+        dadosDoLancamento,
+        solicitacaoDoLancamento,
+      );
     }, 560);
   }
 

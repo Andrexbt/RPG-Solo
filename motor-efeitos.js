@@ -18,6 +18,39 @@ function buscarEfeitoPorId(efeitoId) {
   };
 }
 
+function resolverModificadorEfeito(
+  modificador,
+  participante
+) {
+  if (
+    typeof modificador ===
+    "number"
+  ) {
+    return modificador;
+  }
+
+  if (
+    modificador === undefined ||
+    modificador === null
+  ) {
+    return 0;
+  }
+
+  if (
+    modificador.tipo ===
+    "nivelClasse"
+  ) {
+    return window
+      .PersonagemDados
+      .obterNivelClasse(
+        participante,
+        modificador.classeId
+      );
+  }
+
+  return 0;
+}
+
 function buscarEfeitosPorGatilho(efeitosIds, gatilho) {
   const efeitosEncontrados = [];
 
@@ -40,18 +73,188 @@ function buscarEfeitosPorGatilho(efeitosIds, gatilho) {
   return efeitosEncontrados;
 }
 
-function efeitoEstaDisponivel(participante, efeito) {
+function obterRecursoDoEfeito(
+  participante,
+  efeito
+) {
+  if (
+    efeito.recurso?.tipo ===
+    "habilidade"
+  ) {
+    return participante
+      .habilidades
+      ?.recursos
+      ?.[efeito.recurso.id] ??
+      null;
+  }
+
+  return null;
+}
+
+function efeitoEstaDisponivel(
+  participante,
+  efeito
+) {
+  const recurso =
+    obterRecursoDoEfeito(
+      participante,
+      efeito
+    );
+
+    if (
+  efeito.recurso !== undefined &&
+  recurso === null
+) {
+  return false;
+}
+
+  if (recurso !== null) {
+    return recurso.usosAtuais > 0;
+  }
+
   if (!efeito.usos) {
     return true;
   }
 
-  const estadoEfeito = participante.estadoEfeitos?.[efeito.id];
+  const estadoEfeito =
+    participante
+      .estadoEfeitos
+      ?.[efeito.id];
 
   if (!estadoEfeito) {
     return false;
   }
 
   return estadoEfeito.usosRestantes > 0;
+}
+
+function custoEfeitoEstaDisponivel(
+  participante,
+  efeito
+) {
+  if (
+    efeito.custo === undefined ||
+    efeito.custo === null
+  ) {
+    return true;
+  }
+
+  if (
+    efeito.custo ===
+    "acao"
+  ) {
+    return participante
+      .acaoDisponivel ===
+      true;
+  }
+
+  if (
+    efeito.custo ===
+    "acaoBonus"
+  ) {
+    return participante
+      .acaoBonusDisponivel ===
+      true;
+  }
+
+  if (
+    efeito.custo ===
+    "reacao"
+  ) {
+    return participante
+      .reacaoDisponivel ===
+      true;
+  }
+
+  return false;
+}
+
+function consumirCustoEfeito(
+  participante,
+  efeito
+) {
+  if (
+    efeito.custo === undefined ||
+    efeito.custo === null
+  ) {
+    return {
+      sucesso:
+        true,
+
+      custoConsumido:
+        false
+    };
+  }
+
+  if (
+    !custoEfeitoEstaDisponivel(
+      participante,
+      efeito
+    )
+  ) {
+    return {
+      sucesso:
+        false,
+
+      motivo:
+        "custoIndisponivel",
+
+      custoConsumido:
+        false
+    };
+  }
+
+  let custoConsumido =
+    false;
+
+  if (
+    efeito.custo ===
+    "acao"
+  ) {
+    custoConsumido =
+      window
+        .SistemaCombate
+        .consumirAcao(
+          participante
+        );
+  }
+
+  if (
+    efeito.custo ===
+    "acaoBonus"
+  ) {
+    custoConsumido =
+      window
+        .SistemaCombate
+        .consumirAcaoBonus(
+          participante
+        );
+  }
+
+  if (
+    efeito.custo ===
+    "reacao"
+  ) {
+    custoConsumido =
+      window
+        .SistemaCombate
+        .consumirReacao(
+          participante
+        );
+  }
+
+  return {
+    sucesso:
+      custoConsumido,
+
+    motivo:
+      custoConsumido
+        ? null
+        : "falhaAoConsumirCusto",
+
+    custoConsumido:
+      custoConsumido
+  };
 }
 
 function buscarIdsEfeitosDasHabilidades(
@@ -176,12 +379,21 @@ function buscarEfeitosDoParticipante(
     );
 
   return efeitos.filter(
-    efeito =>
+  function filtrarEfeito(
+    efeito
+  ) {
+    return (
       efeitoEstaDisponivel(
         participante,
         efeito
+      ) &&
+      custoEfeitoEstaDisponivel(
+        participante,
+        efeito
       )
-  );
+    );
+  }
+);
 }
 
 function prepararOperacaoEfeito(efeito, contexto) {
@@ -198,6 +410,50 @@ function prepararOperacaoEfeito(efeito, contexto) {
       motivo: "operacaoInexistente",
     };
   }
+
+  if (
+  efeito.operacao.tipo ===
+  "curar"
+) {
+  const rolagem =
+    structuredClone(
+      efeito.operacao.rolagem
+    );
+
+  rolagem.modificador =
+    resolverModificadorEfeito(
+      rolagem.modificador,
+      contexto.participante
+    );
+
+  return {
+    sucesso:
+      true,
+
+    tipo:
+      "curar",
+
+    efeitoId:
+      efeito.id,
+
+    participanteId:
+      contexto.participante.id,
+
+    custo:
+      efeito.custo,
+
+    alvo:
+      efeito.alvo,
+
+    recurso:
+      structuredClone(
+        efeito.recurso
+      ),
+
+    rolagem:
+      rolagem
+  };
+}
 
   if (efeito.operacao.tipo === "rolarNovamente") {
     return {
@@ -228,9 +484,14 @@ function prepararEfeitosPorGatilho(participante, gatilho) {
   const operacoesPreparadas = [];
 
   for (const efeito of efeitos) {
-    const resultado = prepararOperacaoEfeito(efeito, {
-      participanteId: participante.id,
-    });
+    const resultado =
+  prepararOperacaoEfeito(
+    efeito,
+    {
+      participante:
+        participante
+    }
+  );
 
     if (!resultado.sucesso) {
       continue;
@@ -277,6 +538,41 @@ function consumirUsoEfeito(participante, efeitoId) {
   }
 
   const efeito = resultadoBusca.efeito;
+
+  const recurso =
+  obterRecursoDoEfeito(
+    participante,
+    efeito
+  );
+
+if (recurso !== null) {
+  if (recurso.usosAtuais <= 0) {
+    return {
+      sucesso:
+        false,
+
+      motivo:
+        "recursoSemUsos"
+    };
+  }
+
+  recurso.usosAtuais -=
+    1;
+
+  return {
+    sucesso:
+      true,
+
+    motivo:
+      null,
+
+    usoConsumido:
+      true,
+
+    usosRestantes:
+      recurso.usosAtuais
+  };
+}
 
   if (!efeito.usos) {
     return {
@@ -340,6 +636,112 @@ function recarregarEfeitos(participante, tipoRecarga) {
     sucesso: true,
 
     efeitosRecarregados: efeitosRecarregados,
+  };
+}
+
+function ativarEfeitoDoParticipante(
+  participante,
+  efeitoId
+) {
+  const resultadoBusca =
+    buscarEfeitoPorId(
+      efeitoId
+    );
+
+  if (!resultadoBusca.sucesso) {
+    return resultadoBusca;
+  }
+
+  const efeito =
+    resultadoBusca.efeito;
+
+  if (
+    !efeitoEstaDisponivel(
+      participante,
+      efeito
+    )
+  ) {
+    return {
+      sucesso:
+        false,
+
+      motivo:
+        "recursoIndisponivel"
+    };
+  }
+
+  if (
+    !custoEfeitoEstaDisponivel(
+      participante,
+      efeito
+    )
+  ) {
+    return {
+      sucesso:
+        false,
+
+      motivo:
+        "custoIndisponivel"
+    };
+  }
+
+  const operacao =
+    prepararOperacaoEfeito(
+      efeito,
+      {
+        participante:
+          participante
+      }
+    );
+
+  if (!operacao.sucesso) {
+    return operacao;
+  }
+
+  const resultadoCusto =
+    consumirCustoEfeito(
+      participante,
+      efeito
+    );
+
+  if (!resultadoCusto.sucesso) {
+    return resultadoCusto;
+  }
+
+  const resultadoUso =
+    consumirUsoEfeito(
+      participante,
+      efeito.id
+    );
+
+  if (!resultadoUso.sucesso) {
+    return resultadoUso;
+  }
+
+  return {
+    sucesso:
+      true,
+
+    motivo:
+      null,
+
+    efeito:
+      efeito,
+
+    operacao:
+      operacao,
+
+    custoConsumido:
+      resultadoCusto
+        .custoConsumido,
+
+    usoConsumido:
+      resultadoUso
+        .usoConsumido,
+
+    usosRestantes:
+      resultadoUso
+        .usosRestantes
   };
 }
 
