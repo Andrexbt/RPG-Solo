@@ -7,6 +7,47 @@
 // antigos para que as páginas possam continuar usando-os.
 // =====================================================
 
+function normalizarAtaquesPersonagem(
+  personagem,
+) {
+  const ataques =
+    personagem
+      ?.combate
+      ?.ataques;
+
+  if (!Array.isArray(ataques)) {
+    return;
+  }
+
+  for (const ataque of ataques) {
+    if (!ataque) {
+      continue;
+    }
+
+    if (
+      typeof ataque.id ===
+      "string"
+    ) {
+      ataque.id =
+        ataque.id.replace(
+          /Secundaria$/,
+          "",
+        );
+    }
+
+    if (
+      typeof ataque.nome ===
+      "string"
+    ) {
+      ataque.nome =
+        ataque.nome.replace(
+          / \(secundária\)$/i,
+          "",
+        );
+    }
+  }
+}
+
 function normalizarPersonagem(personagemOriginal) {
   if (
     personagemOriginal === undefined ||
@@ -58,6 +99,10 @@ function normalizarPersonagem(personagemOriginal) {
     personagemNormalizado.niveisPorClasse[classeId] =
       personagemNormalizado.nivel;
   }
+
+  normalizarAtaquesPersonagem(
+    personagemNormalizado,
+  );
 
   return personagemNormalizado;
 }
