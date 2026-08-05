@@ -1308,24 +1308,10 @@ const resultadoFinal =
     critico,
   );
 
-  console.log(
-    "DANO ORIGINAL:",
-    resultadoRolagem,
-  );
-
-  console.log(
-    "DANO APÓS CRÍTICO:",
-    resultadoFinal,
-  );
   const resultadoDano = SistemaCombate.resolverDano(
     combate,
     resultadoFinal,
   );
-
-  console.log(
-  "RESULTADO FINAL DO DANO:",
-  resultadoDano,
-);
 
   if (!resultadoDano.sucesso) {
     console.warn(
@@ -1345,11 +1331,6 @@ const resultadoFinal =
       ? `Seu ataque derrotou ${resultadoDano.alvo.nome}.`
       : `Seu ataque causou ${resultadoDano.dano} de dano.`,
   );
-
-  console.log(
-  "DANO QUE VAI PARA A INTERFACE:",
-  resultadoDano.dano,
-);
 
   exibirAcaoAtualCombate(
     resultadoDano.foiDerrotado
@@ -1379,6 +1360,42 @@ const resultadoFinal =
       `${resultadoDano.alvo.nome} sofreu ` +
       `${resultadoDano.dano} de dano.`;
   }
+
+  const vexAplicado =
+  resultadoDano
+    .efeitosAplicados
+    ?.find(
+      function encontrarVex(
+        efeito,
+      ) {
+        return (
+          efeito.origem
+            ?.tipo ===
+            "maestria" &&
+
+          efeito.origem
+            ?.id ===
+            "vex"
+        );
+      },
+    );
+
+if (
+  vexAplicado &&
+  !resultadoDano.foiDerrotado
+) {
+  exibirMensagemNarrativa(
+    solicitacaoCombate,
+
+    mensagensNarrativas
+      .efeitos
+      .vexAplicado(
+        resultadoDano
+          .alvo
+          .nome,
+      ),
+  );
+}
 }
 
 function separarRolagensSimultaneasEfeito(

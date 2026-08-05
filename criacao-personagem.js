@@ -4334,10 +4334,6 @@ function atualizarAtaquesCombatePersonagem() {
     const ataqueSecundario = criarAtaqueCombateArma(personagem, equipamentos.armaSecundaria);
 
     if (ataqueSecundario) {
-      ataqueSecundario.id = ataqueSecundario.id;
-
-      ataqueSecundario.nome = ataqueSecundario.nome;
-
       ataques.push(ataqueSecundario);
     }
   }

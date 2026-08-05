@@ -314,7 +314,31 @@ habilidades:
   return maestriasEscolhidas.includes(
     ataque.id,
   );
-}
+  }
+
+  function resolverTipoRolagem(
+  {
+    vantagem = false,
+    desvantagem = false,
+  } = {},
+) {
+  if (
+    vantagem &&
+    desvantagem
+  ) {
+    return "normal";
+  }
+
+  if (vantagem) {
+    return "vantagem";
+  }
+
+  if (desvantagem) {
+    return "desvantagem";
+  }
+
+  return "normal";
+  }
 
   function prepararAtaque(combate, idAtacante, idAlvo, idAtaque) {
     const atacante = combate.participantes.find((participante) => participante.id === idAtacante);
@@ -390,16 +414,23 @@ habilidades:
       return resultadoSelecao;
     }
 
-    let tipoRolagem =
-  resultadoSelecao.tipoRolagem;
+    const possuiVantagemBase =
+  resultadoSelecao.tipoRolagem ===
+  "vantagem";
 
-if (
-  possuiVantagemTemporaria &&
-  tipoRolagem === "normal"
-) {
-  tipoRolagem =
-    "vantagem";
-}
+const possuiDesvantagemBase =
+  resultadoSelecao.tipoRolagem ===
+  "desvantagem";
+
+const tipoRolagem =
+  resolverTipoRolagem({
+    vantagem:
+      possuiVantagemBase ||
+      possuiVantagemTemporaria,
+
+    desvantagem:
+      possuiDesvantagemBase,
+  });
 
     combate.ataquePendente = {
 
@@ -417,7 +448,7 @@ if (
       alvo,
       ataque,
       distancia: resultadoSelecao.distancia,
-      tipoRolagem: resultadoSelecao.tipoRolagem,
+      tipoRolagem,
     };
   }
 
@@ -851,6 +882,8 @@ if (
   function resolverDano(combate, resultadoRolagem) {
     const danoPendente = combate.danoPendente;
 
+    const efeitosAplicados = [];
+
     if (!danoPendente) {
       return {
         sucesso: false,
@@ -921,10 +954,28 @@ const ataque =
       continue;
     }
 
-    aplicarVantagemTemporaria(
+    const resultadoEfeito = aplicarVantagemTemporaria(
       combate,
       operacao,
     );
+
+    if (resultadoEfeito.sucesso) {
+  efeitosAplicados.push({
+    origem:
+      structuredClone(
+        operacao.origem,
+      ),
+
+    tipo:
+      operacao.tipo,
+
+    participanteId:
+      operacao.participanteId,
+
+    alvoId:
+      operacao.alvoId,
+  });
+}
   }
 }
 
@@ -949,6 +1000,8 @@ const ataque =
       foiDerrotado,
       resultadoCombate,
       pontosDeVidaRestantes: alvo.pontosDeVida.atuais,
+
+      efeitosAplicados,
     };
   }
 

@@ -767,6 +767,11 @@ select {
   gap: 0.15rem;
 }
 
+.detalhes-ataque-combate {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
 .nome-ataque-combate {
   font-weight: 700;
 }

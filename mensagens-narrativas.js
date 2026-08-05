@@ -122,6 +122,17 @@ window.mensagensNarrativas = {
     },
 
     escolherResultado: "Escolha qual resultado de dano utilizar.",
+
+    vexAplicado: function (
+  alvoNome,
+) {
+  return (
+    "<strong>Vex foi ativado.</strong> " +
+    `Você encontrou um ponto fraco na defesa de ${alvoNome}. ` +
+    "Você terá <strong>Vantagem no próximo ataque</strong> " +
+    "contra esse alvo antes do fim do seu próximo turno."
+  );
+},
   },
 
   dados: {

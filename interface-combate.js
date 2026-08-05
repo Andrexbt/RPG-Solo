@@ -786,6 +786,51 @@ nomeAtaque.classList.add(
 nomeAtaque.textContent =
   ataque.nome;
 
+  const detalhesAtaque =
+  document.createElement(
+    "span",
+  );
+
+detalhesAtaque.classList.add(
+  "detalhes-ataque-combate",
+);
+
+const grupoDano =
+  ataque
+    ?.dano
+    ?.gruposDeDados
+    ?.[0];
+
+const textoDano =
+  grupoDano
+    ? `${grupoDano.quantidade}d${grupoDano.numeroDeFaces}`
+    : "";
+
+const modificadorDano =
+  ataque
+    ?.dano
+    ?.modificador ??
+  0;
+
+const textoModificadorDano =
+  modificadorDano >= 0
+    ? `+ ${modificadorDano}`
+    : `- ${Math.abs(modificadorDano)}`;
+
+const bonusAtaque =
+  ataque.bonusAtaque >= 0
+    ? `+${ataque.bonusAtaque}`
+    : `${ataque.bonusAtaque}`;
+
+detalhesAtaque.textContent =
+  `${bonusAtaque} para acertar • ` +
+  `${textoDano} ${textoModificadorDano} ` +
+  `${ataque.dano.tipo}`;
+
+botao.append(
+  detalhesAtaque,
+);
+
 botao.append(nomeAtaque);
 
 const dominaMaestria =
@@ -794,17 +839,6 @@ const dominaMaestria =
       participante,
       ataque,
     );
-
-    console.log(
-  "ATAQUE:",
-  ataque.nome,
-  "ID:",
-  ataque.id,
-  "MAESTRIA:",
-  ataque.maestriaId,
-  "DOMINA:",
-  dominaMaestria,
-);
 
 if (
   dominaMaestria &&
