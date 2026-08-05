@@ -795,6 +795,17 @@ const dominaMaestria =
       ataque,
     );
 
+    console.log(
+  "ATAQUE:",
+  ataque.nome,
+  "ID:",
+  ataque.id,
+  "MAESTRIA:",
+  ataque.maestriaId,
+  "DOMINA:",
+  dominaMaestria,
+);
+
 if (
   dominaMaestria &&
   ataque.maestriaId
