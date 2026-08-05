@@ -1013,13 +1013,40 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
     return false;
   }
 
-  const resultadoBusca = buscarEfeitoPorId(operacao.efeitoId);
+  const origem =
+  operacao.origem;
 
-  if (!resultadoBusca.sucesso) {
-    return false;
-  }
+if (!origem) {
+  return false;
+}
 
-  const efeito = resultadoBusca.efeito;
+let fonte = null;
+
+if (origem.tipo === "talento") {
+  fonte =
+    window.bancoTalentos
+      ?.[origem.id] ??
+    null;
+}
+
+if (origem.tipo === "habilidade") {
+  fonte =
+    window.bancoHabilidades
+      ?.classFeatures
+      ?.[origem.id] ??
+    null;
+}
+
+if (origem.tipo === "maestria") {
+  fonte =
+    window.bancoMaestrias
+      ?.[origem.id] ??
+    null;
+}
+
+if (!fonte) {
+  return false;
+}
 
   acoesCombate.innerHTML = "";
 
@@ -1027,7 +1054,7 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
 
   botaoUsar.type = "button";
 
-  botaoUsar.textContent = `Usar ${efeito.nome}`;
+  botaoUsar.textContent = `Usar ${fonte.nome}`;
 
   const botaoIgnorar = document.createElement("button");
 
@@ -1036,7 +1063,7 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
   botaoIgnorar.textContent = "Rolar dano normal";
 
   botaoUsar.addEventListener("click", function () {
-    const resultado = ativarEfeitoPendente(atacante, danoPendente, efeito.id);
+    const resultado = ativarEfeitoPendente(atacante, danoPendente, origem.id);
 
     if (!resultado.sucesso) {
       console.warn("Não foi possível ativar o efeito:", resultado.motivo);
@@ -1119,7 +1146,7 @@ exibirMensagemNarrativa(
   exibirMensagemNarrativa(
   solicitacaoCombate,
   mensagensNarrativas.efeitos.disponivel(
-    efeito.nome,
+    fonte.nome,
   ),
 );
 

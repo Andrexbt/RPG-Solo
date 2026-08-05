@@ -396,6 +396,101 @@ function buscarEfeitosDoParticipante(
 );
 }
 
+function prepararOperacaoGenerica(
+  efeito,
+  contexto = {},
+) {
+  if (!efeito) {
+    return {
+      sucesso: false,
+      motivo: "efeitoInexistente",
+    };
+  }
+
+  if (!efeito.tipo) {
+    return {
+      sucesso: false,
+      motivo: "tipoEfeitoInexistente",
+    };
+  }
+
+  if (
+    efeito.tipo ===
+    "rolarNovamente"
+  ) {
+    return {
+      sucesso: true,
+
+      tipo:
+        "rolarNovamente",
+
+      participanteId:
+        contexto
+          ?.participante
+          ?.id ??
+        contexto
+          ?.participanteId ??
+        null,
+
+      rolagemAfetada:
+        efeito.rolagemAfetada,
+
+      quantidadeDeRolagens:
+        efeito.quantidadeDeRolagens,
+
+      criterioDeEscolha:
+        efeito.criterioDeEscolha,
+    };
+  }
+
+  if (
+    efeito.tipo ===
+    "curar"
+  ) {
+    const rolagem =
+      structuredClone(
+        efeito.rolagem,
+      );
+
+    if (!rolagem) {
+      return {
+        sucesso: false,
+        motivo:
+          "rolagemInexistente",
+      };
+    }
+
+    rolagem.modificador =
+      resolverModificadorEfeito(
+        rolagem.modificador,
+        contexto.participante,
+      );
+
+    return {
+      sucesso: true,
+
+      tipo: "curar",
+
+      participanteId:
+        contexto
+          ?.participante
+          ?.id ??
+        null,
+
+      alvo:
+        efeito.alvo,
+
+      rolagem,
+    };
+  }
+
+  return {
+    sucesso: false,
+    motivo:
+      "efeitoGenericoNaoImplementado",
+  };
+}
+
 function prepararOperacaoEfeito(efeito, contexto) {
   if (!efeito) {
     return {
@@ -411,71 +506,30 @@ function prepararOperacaoEfeito(efeito, contexto) {
     };
   }
 
-  if (
-  efeito.operacao.tipo ===
-  "curar"
-) {
-  const rolagem =
-    structuredClone(
-      efeito.operacao.rolagem
-    );
+  const operacao =
+  prepararOperacaoGenerica(
+    efeito.operacao,
+    contexto,
+  );
 
-  rolagem.modificador =
-    resolverModificadorEfeito(
-      rolagem.modificador,
-      contexto.participante
-    );
-
-  return {
-    sucesso:
-      true,
-
-    tipo:
-      "curar",
-
-    efeitoId:
-      efeito.id,
-
-    participanteId:
-      contexto.participante.id,
-
-    custo:
-      efeito.custo,
-
-    alvo:
-      efeito.alvo,
-
-    recurso:
-      structuredClone(
-        efeito.recurso
-      ),
-
-    rolagem:
-      rolagem
-  };
+if (!operacao.sucesso) {
+  return operacao;
 }
 
-  if (efeito.operacao.tipo === "rolarNovamente") {
-    return {
-      sucesso: true,
-      tipo: "rolarNovamente",
+return {
+  ...operacao,
 
-      efeitoId: efeito.id,
+  efeitoId:
+    efeito.id,
 
-      participanteId: contexto.participanteId,
+  custo:
+    efeito.custo,
 
-      rolagemAfetada: efeito.operacao.rolagemAfetada,
-
-      quantidadeDeRolagens: efeito.operacao.quantidadeDeRolagens,
-
-      criterioDeEscolha: efeito.operacao.criterioDeEscolha,
-    };
-  }
-
-  return {
-    sucesso: false,
-    motivo: "operacaoNaoImplementada",
-  };
+  recurso:
+    structuredClone(
+      efeito.recurso ?? null,
+    ),
+};
 }
 
 function prepararEfeitosPorGatilho(participante, gatilho) {
@@ -745,7 +799,11 @@ function ativarEfeitoDoParticipante(
   };
 }
 
-function ativarEfeitoPendente(participante, contextoPendente, efeitoId) {
+function ativarEfeitoPendente(
+  participante,
+  contextoPendente,
+  efeitoId,
+) {
   if (!contextoPendente) {
     return {
       sucesso: false,
@@ -753,7 +811,26 @@ function ativarEfeitoPendente(participante, contextoPendente, efeitoId) {
     };
   }
 
-  const operacao = contextoPendente.efeitos?.find((efeito) => efeito.efeitoId === efeitoId);
+  const operacao =
+    contextoPendente.efeitos?.find(
+      function encontrarOperacao(
+        efeito,
+      ) {
+        if (
+          efeito.efeitoId ===
+          efeitoId
+        ) {
+          return true;
+        }
+
+        return (
+          efeito
+            ?.origem
+            ?.id ===
+          efeitoId
+        );
+      },
+    );
 
   if (!operacao) {
     return {
@@ -762,23 +839,44 @@ function ativarEfeitoPendente(participante, contextoPendente, efeitoId) {
     };
   }
 
-  const resultadoConsumo = consumirUsoEfeito(participante, efeitoId);
+  let resultadoConsumo;
+
+if (operacao.origem) {
+  resultadoConsumo =
+    window.TradutorRegras
+      .consumirUsoRegra(
+        participante,
+        operacao,
+      );
+} else {
+  resultadoConsumo =
+    consumirUsoEfeito(
+      participante,
+      efeitoId,
+    );
+}
 
   if (!resultadoConsumo.sucesso) {
     return resultadoConsumo;
   }
 
-  contextoPendente.efeitoAtivo = structuredClone(operacao);
+  contextoPendente.efeitoAtivo =
+    structuredClone(
+      operacao,
+    );
 
-  contextoPendente.rolagensEfeito = [];
+  contextoPendente.rolagensEfeito =
+    [];
 
   return {
     sucesso: true,
     motivo: null,
 
-    efeitoAtivo: contextoPendente.efeitoAtivo,
+    efeitoAtivo:
+      contextoPendente.efeitoAtivo,
 
-    usosRestantes: resultadoConsumo.usosRestantes,
+    usosRestantes:
+      resultadoConsumo.usosRestantes,
   };
 }
 
@@ -873,3 +971,7 @@ function finalizarEfeitoPendente(contextoPendente) {
     rolagensRegistradas: rolagensRegistradas,
   };
 }
+
+window.MotorEfeitos = {
+  prepararOperacaoGenerica,
+};

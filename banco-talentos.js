@@ -41,6 +41,23 @@ window.bancoTalentos = {
     id: "atacanteSelvagem",
     nome: "Atacante Selvagem",
     tipo: "origem",
+
+    regra: {
+      gatilho: "aoRolarDano",
+
+      efeito: {
+        tipo: "rolarNovamente",
+        rolagemAfetada:"danoDaArma",
+        quantidadeDeRolagens: 2,
+        criterioDeEscolha:"escolhaDoJogador",
+      },
+
+      usos: {
+        quantidade: 1,
+        recarga: "turno",
+      },
+    },
+
     descricaoCurta:
       "Você causa ataques físicos mais brutais, podendo melhorar uma rolagem de dano com arma.",
     descricaoLonga:

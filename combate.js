@@ -440,7 +440,21 @@ habilidades:
     combate.ataquePendente = null;
 
     if (acertou) {
-      const efeitosDano = prepararEfeitosPorGatilho(atacante, "aoRolarDano");
+  const efeitosDano =
+    window.TradutorRegras
+      .prepararOperacoes({
+        gatilho:
+          "aoRolarDano",
+
+        participante:
+          atacante,
+
+        ataque:
+          ataque,
+
+        alvo:
+          alvo,
+      });
 
       combate.danoPendente = {
         atacanteId: atacante.id,
