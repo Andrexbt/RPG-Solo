@@ -761,6 +761,19 @@ select {
   background: #69482f;
   color: #f4ead2;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.nome-ataque-combate {
+  font-weight: 700;
+}
+
+.maestria-ataque-combate {
+  font-size: 0.8rem;
+  opacity: 0.75;
 }
 
 .botao-ataque-combate:disabled {

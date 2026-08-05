@@ -360,15 +360,55 @@ habilidades:
 
     const resultadoSelecao = validarSelecaoAcao(atacante, alvo, ataque);
 
+    const possuiVantagemTemporaria =
+  combate
+    .efeitosTemporarios
+    ?.some(
+      function verificarVantagem(
+        efeito,
+      ) {
+        return (
+          efeito.tipo ===
+            "vantagem" &&
+
+          efeito.participanteId ===
+            atacante.id &&
+
+          efeito.alvoId ===
+            alvo.id &&
+
+          efeito.rolagemAfetada ===
+            "ataque" &&
+
+          efeito.usosRestantes > 0
+        );
+      },
+    ) ??
+  false;
+
     if (!resultadoSelecao.sucesso) {
       return resultadoSelecao;
     }
 
+    let tipoRolagem =
+  resultadoSelecao.tipoRolagem;
+
+if (
+  possuiVantagemTemporaria &&
+  tipoRolagem === "normal"
+) {
+  tipoRolagem =
+    "vantagem";
+}
+
     combate.ataquePendente = {
+
+      
       atacanteId: atacante.id,
       alvoId: alvo.id,
       ataqueId: ataque.id,
-      tipoRolagem: resultadoSelecao.tipoRolagem,
+      tipoRolagem: tipoRolagem,
+      vantagemTemporaria: possuiVantagemTemporaria,
     };
 
     return {
@@ -436,6 +476,50 @@ habilidades:
     consumirAcao(atacante);
 
     combate.ataquePendente = null;
+
+    if (
+  ataquePendente
+    .vantagemTemporaria
+) {
+  const efeito =
+    combate
+      .efeitosTemporarios
+      ?.find(
+        function encontrarVantagem(
+          efeito,
+        ) {
+          return (
+            efeito.tipo ===
+              "vantagem" &&
+
+            efeito.participanteId ===
+              atacante.id &&
+
+            efeito.alvoId ===
+              alvo.id &&
+
+            efeito.rolagemAfetada ===
+              "ataque" &&
+
+            efeito.usosRestantes > 0
+          );
+        },
+      );
+
+  if (efeito) {
+    efeito.usosRestantes -= 1;
+  }
+
+  combate.efeitosTemporarios =
+    (
+      combate
+        .efeitosTemporarios ??
+      []
+    ).filter(
+      (efeito) =>
+        efeito.usosRestantes !== 0,
+    );
+}
 
     if (acertou) {
   const efeitosDano =
@@ -703,6 +787,67 @@ habilidades:
     };
   }
 
+  function aplicarVantagemTemporaria(
+  combate,
+  operacao,
+) {
+  if (
+    !combate ||
+    !operacao
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        "dadosInvalidos",
+    };
+  }
+
+  combate.efeitosTemporarios ??=
+    [];
+
+  const efeitoTemporario = {
+    tipo:
+      "vantagem",
+
+    participanteId:
+      operacao.participanteId,
+
+    alvoId:
+      operacao.alvoId,
+
+    rolagemAfetada:
+      operacao.rolagemAfetada,
+
+    usosRestantes:
+      operacao
+        .quantidadeDeUsos ??
+      1,
+
+    expiracao:
+      operacao.expiracao ??
+      null,
+
+    turnoCriacao:
+      combate.rodada,
+
+      turnoExpiracao:
+  operacao.expiracao ===
+  "fimDoProximoTurno"
+    ? combate.rodada + 1
+    : null,
+  };
+
+  combate.efeitosTemporarios.push(
+    efeitoTemporario,
+  );
+
+  return {
+    sucesso: true,
+    efeito:
+      efeitoTemporario,
+  };
+}
+
   function resolverDano(combate, resultadoRolagem) {
     const danoPendente = combate.danoPendente;
 
@@ -728,7 +873,60 @@ habilidades:
 
     const dano = Math.max(0, resultadoRolagem.total);
 
+    const atacante =
+  combate.participantes.find(
+    (participante) =>
+      participante.id ===
+      danoPendente.atacanteId,
+  );
+
+const ataque =
+  atacante?.ataques.find(
+    (ataque) =>
+      ataque.id ===
+      danoPendente.ataqueId,
+  );
+
     alvo.pontosDeVida.atuais = Math.max(0, alvo.pontosDeVida.atuais - dano);
+
+    if (
+  dano > 0 &&
+  atacante &&
+  ataque
+) {
+  const operacoesAposDano =
+    window.TradutorRegras
+      .prepararOperacoes({
+        gatilho:
+          "aposCausarDano",
+
+        participante:
+          atacante,
+
+        ataque:
+          ataque,
+
+        alvo:
+          alvo,
+      });
+
+  for (
+    const operacao of
+    operacoesAposDano
+  ) {
+    if (
+      operacao.tipo !==
+      "concederVantagem"
+    ) {
+      continue;
+    }
+
+    aplicarVantagemTemporaria(
+      combate,
+      operacao,
+    );
+  }
+}
 
     const foiDerrotado = alvo.pontosDeVida.atuais === 0;
 
@@ -833,6 +1031,21 @@ habilidades:
       return null;
     }
 
+    const participanteAtual =
+  combate.participantes.find(
+    (participante) =>
+      participante.id ===
+      combate.participanteAtivoId,
+  );
+
+if (participanteAtual) {
+  atualizarExpiracaoEfeitosTemporarios(
+    combate,
+    participanteAtual,
+    "fimTurno",
+  );
+}
+
     combate.indiceTurno++;
 
     if (combate.indiceTurno >= combate.ordemTurnos.length) {
@@ -875,6 +1088,55 @@ habilidades:
 
     return combate.ordemTurnos;
   }
+
+  function atualizarExpiracaoEfeitosTemporarios(
+  combate,
+  participante,
+  momento,
+) {
+  const efeitos =
+    combate.efeitosTemporarios ?? [];
+
+  combate.efeitosTemporarios =
+    efeitos.filter(
+      function manterEfeito(
+        efeito,
+      ) {
+        if (
+          efeito.expiracao !==
+          "fimDoProximoTurno"
+        ) {
+          return true;
+        }
+
+        if (
+          efeito.participanteId !==
+          participante.id
+        ) {
+          return true;
+        }
+
+        if (
+          momento !==
+          "fimTurno"
+        ) {
+          return true;
+        }
+
+        if (
+          efeito.turnoExpiracao ===
+          undefined
+        ) {
+          return true;
+        }
+
+        return (
+          combate.rodada <
+          efeito.turnoExpiracao
+        );
+      },
+    );
+}
 
   return {
     criarParticipanteCombate,

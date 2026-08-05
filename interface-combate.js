@@ -776,7 +776,51 @@ function renderizarListaAtaquesCombate(combate, participante) {
 
     botao.dataset.idAtaque = ataque.id;
 
-    botao.textContent = ataque.nome;
+    const nomeAtaque =
+  document.createElement("span");
+
+nomeAtaque.classList.add(
+  "nome-ataque-combate",
+);
+
+nomeAtaque.textContent =
+  ataque.nome;
+
+botao.append(nomeAtaque);
+
+const dominaMaestria =
+  window.TradutorRegras
+    .participanteDominaArma(
+      participante,
+      ataque,
+    );
+
+if (
+  dominaMaestria &&
+  ataque.maestriaId
+) {
+  const maestria =
+    window.bancoMaestrias
+      ?.[ataque.maestriaId];
+
+  if (maestria) {
+    const textoMaestria =
+      document.createElement(
+        "span",
+      );
+
+    textoMaestria.classList.add(
+      "maestria-ataque-combate",
+    );
+
+    textoMaestria.textContent =
+      `Maestria: ${maestria.nome}`;
+
+    botao.append(
+      textoMaestria,
+    );
+  }
+}
 
     let ataqueDisponivel = false;
 

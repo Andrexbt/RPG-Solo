@@ -118,6 +118,44 @@ function prepararOperacaoGenerica(
     };
   }
 
+  if (
+  efeito.tipo ===
+  "concederVantagem"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "concederVantagem",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ??
+      null,
+
+    alvoId:
+      contexto
+        ?.alvo
+        ?.id ??
+      null,
+
+    rolagemAfetada:
+      efeito.rolagemAfetada,
+
+    alvo:
+      efeito.alvo,
+
+    quantidadeDeUsos:
+      efeito.quantidadeDeUsos ??
+      1,
+
+    expiracao:
+      efeito.expiracao ??
+      null,
+  };
+}
+
   return {
     sucesso: false,
     motivo:

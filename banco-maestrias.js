@@ -67,10 +67,22 @@ window.bancoMaestrias = {
   },
 
   vex: {
-    id: "vex",
-    nome: "Vex",
-    descricaoCurta: "Ajuda a criar vantagem contra o alvo.",
-    descricaoLonga:
-      "A maestria Vex representa um golpe que expõe uma abertura no inimigo, facilitando ataques posteriores contra ele. A automação completa desse efeito será implementada futuramente no sistema de combate.",
+  id: "vex",
+  nome: "Vex",
+
+  regra: {
+    gatilho: "aposCausarDano",
+
+    efeito: {
+      tipo: "concederVantagem",
+      rolagemAfetada: "ataque",
+      alvo: "mesmoAlvo",
+      quantidadeDeUsos: 1,
+      expiracao: "fimDoProximoTurno",
+    },
   },
+
+  descricaoCurta:
+    "Ao atingir e causar dano com esta arma, você ganha Vantagem no próximo ataque contra a mesma criatura antes do fim do seu próximo turno.",
+},
 };
