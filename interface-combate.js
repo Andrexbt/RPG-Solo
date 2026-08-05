@@ -377,26 +377,73 @@ function fecharPainelAtaquesCombate() {
 
 function ativarEfeitoCombate(
   participante,
-  efeitoId
+  operacao,
 ) {
   const combate =
     estadoAtualJogo
       .combateAtual;
 
-  if (!combate) {
+  if (
+    !combate ||
+    !operacao
+  ) {
     return;
   }
 
-  const resultadoAtivacao =
-    ativarEfeitoDoParticipante(
-      participante,
-      efeitoId
+  let custoConsumido = true;
+
+  if (
+    operacao.custo ===
+    "acao"
+  ) {
+    custoConsumido =
+      SistemaCombate
+        .consumirAcao(
+          participante,
+        );
+  }
+
+  if (
+    operacao.custo ===
+    "acaoBonus"
+  ) {
+    custoConsumido =
+      SistemaCombate
+        .consumirAcaoBonus(
+          participante,
+        );
+  }
+
+  if (
+    operacao.custo ===
+    "reacao"
+  ) {
+    custoConsumido =
+      SistemaCombate
+        .consumirReacao(
+          participante,
+        );
+  }
+
+  if (!custoConsumido) {
+    console.warn(
+      "Não foi possível consumir o custo da operação.",
     );
 
-  if (!resultadoAtivacao.sucesso) {
+    return;
+  }
+
+  const resultadoRecurso =
+    window.TradutorRegras
+      .consumirRecurso(
+        participante,
+        operacao,
+      );
+
+  if (!resultadoRecurso.sucesso) {
     console.warn(
-      "Não foi possível ativar o efeito:",
-      resultadoAtivacao.motivo
+      "Não foi possível consumir o recurso:",
+      resultadoRecurso.motivo,
     );
 
     return;
@@ -404,32 +451,38 @@ function ativarEfeitoCombate(
 
   combate.efeitoPendente =
     structuredClone(
-      resultadoAtivacao
-        .operacao
+      operacao,
     );
 
   const rolagem =
-    resultadoAtivacao
-      .operacao
-      .rolagem;
+    operacao.rolagem;
+
+  if (!rolagem) {
+    console.warn(
+      "A operação não possui rolagem.",
+    );
+
+    combate.efeitoPendente =
+      null;
+
+    return;
+  }
 
   solicitarRolagemNaCaixa(
     rolagem.gruposDeDados,
     rolagem.modificador,
-    resultadoAtivacao
-      .efeito
-      .nome
+    operacao.origem.nome,
   );
 
   solicitacaoCombate.textContent =
     `Role os dados para usar ` +
-    `${resultadoAtivacao.efeito.nome}.`;
+    `${operacao.origem.nome}.`;
 
   solicitacaoCombate.hidden =
     false;
 
   atualizarInterfaceTurno(
-    combate
+    combate,
   );
 }
 
@@ -437,10 +490,11 @@ function renderizarEfeitosAtivaveisCombate(
   participante
 ) {
   const efeitos =
-    buscarEfeitosDoParticipante(
-      participante,
-      "aoAtivar"
-    );
+  window.TradutorRegras
+    .prepararOperacoes({
+      gatilho: "aoAtivar",
+      participante: participante,
+    });
 
   let quantidadeAcoesBonus =
     0;
@@ -455,17 +509,17 @@ function renderizarEfeitosAtivaveisCombate(
       "button";
 
     botao.textContent =
-      efeito.nome;
+      efeito.origem.nome;
 
     botao.dataset.efeitoId =
-      efeito.id;
+      efeito.origem.id;
 
       botao.addEventListener(
   "click",
   function ativarEfeito() {
     ativarEfeitoCombate(
       participante,
-      efeito.id
+      efeito,
     );
   }
 );

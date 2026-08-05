@@ -14,6 +14,7 @@ window.TradutorRegras = (function () {
       origem: {
         tipo: origem.tipo,
         id: origem.id,
+        nome: entidade.nome,
       },
 
       regra:
@@ -210,6 +211,26 @@ window.TradutorRegras = (function () {
         .regra
         .gatilho,
 
+    custo:
+       regraEncontrada
+        .regra
+        .custo ??
+      null,
+
+    alvo:
+       regraEncontrada
+        .regra
+        .alvo ??
+      null,
+
+    recurso:
+        structuredClone(
+          regraEncontrada
+            .regra
+            .recurso ??
+          null,
+        ),
+
     efeito: structuredClone(
       regraEncontrada
         .regra
@@ -276,7 +297,7 @@ window.TradutorRegras = (function () {
   return ordens;
   }
 
-    function inicializarEstadoRegra(
+  function inicializarEstadoRegra(
   participante,
   ordem,
 ) {
@@ -304,6 +325,9 @@ window.TradutorRegras = (function () {
   }
 
   participante.estadoRegras[chave] = {
+    usosMaximos:
+    ordem.usos.quantidade,
+
     usosRestantes:
       ordem.usos.quantidade,
 
@@ -334,6 +358,74 @@ window.TradutorRegras = (function () {
     estado?.usosRestantes > 0
   );
   }
+
+  function recursoEstaDisponivel(
+  participante,
+  ordem,
+) {
+  if (!ordem?.recurso) {
+    return true;
+  }
+
+  if (
+    ordem.recurso.tipo ===
+    "habilidade"
+  ) {
+    const recurso =
+      participante
+        ?.habilidades
+        ?.recursos
+        ?.[ordem.recurso.id];
+
+    if (!recurso) {
+      return false;
+    }
+
+    return (
+      recurso.usosAtuais > 0
+    );
+  }
+
+  return true;
+  }
+
+  function custoEstaDisponivel(
+  participante,
+  ordem,
+) {
+  if (!ordem?.custo) {
+    return true;
+  }
+
+  if (
+    ordem.custo === "acao"
+  ) {
+    return (
+      participante
+        ?.acaoDisponivel === true
+    );
+  }
+
+  if (
+    ordem.custo === "acaoBonus"
+  ) {
+    return (
+      participante
+        ?.acaoBonusDisponivel === true
+    );
+  }
+
+  if (
+    ordem.custo === "reacao"
+  ) {
+    return (
+      participante
+        ?.reacaoDisponivel === true
+    );
+  }
+
+  return false;
+}
 
   function consumirUsoRegra(
   participante,
@@ -384,6 +476,64 @@ window.TradutorRegras = (function () {
   };
   }
 
+  function consumirRecurso(
+  participante,
+  operacao,
+) {
+  if (!operacao?.recurso) {
+    return {
+      sucesso: true,
+      recursoConsumido: false,
+    };
+  }
+
+  if (
+    operacao.recurso.tipo ===
+    "habilidade"
+  ) {
+    const recurso =
+      participante
+        ?.habilidades
+        ?.recursos
+        ?.[operacao.recurso.id];
+
+    if (!recurso) {
+      return {
+        sucesso: false,
+        motivo:
+          "recursoInexistente",
+      };
+    }
+
+    if (
+      recurso.usosAtuais <= 0
+    ) {
+      return {
+        sucesso: false,
+        motivo:
+          "recursoSemUsos",
+      };
+    }
+
+    recurso.usosAtuais -= 1;
+
+    return {
+      sucesso: true,
+
+      recursoConsumido: true,
+
+      usosRestantes:
+        recurso.usosAtuais,
+    };
+  }
+
+  return {
+    sucesso: false,
+    motivo:
+      "tipoRecursoNaoImplementado",
+  };
+}
+
   function prepararOperacoes(
   contexto,
 ) {
@@ -403,6 +553,24 @@ window.TradutorRegras = (function () {
     ) {
       continue;
     }
+
+    if (
+    !recursoEstaDisponivel(
+      contexto.participante,
+      ordem,
+    )
+  ) {
+    continue;
+  }
+
+  if (
+  !custoEstaDisponivel(
+    contexto.participante,
+    ordem,
+  )
+) {
+  continue;
+}
 
     const resultado =
   window.MotorEfeitos
@@ -437,6 +605,17 @@ window.TradutorRegras = (function () {
         structuredClone(
           ordem.origem,
         ),
+
+        custo:
+    ordem.custo,
+
+  alvo:
+    ordem.alvo,
+
+  recurso:
+    structuredClone(
+      ordem.recurso ?? null,
+    ),
 
       usos:
         structuredClone(
@@ -482,14 +661,53 @@ window.TradutorRegras = (function () {
   );
   }
 
+  function recarregarRegras(
+  participante,
+  tipoRecarga,
+) {
+  const estadoRegras =
+    participante?.estadoRegras ?? {};
+
+  const regrasRecarregadas = [];
+
+  for (const chave in estadoRegras) {
+    const estado =
+      estadoRegras[chave];
+
+    if (
+      estado.recarga !==
+      tipoRecarga
+    ) {
+      continue;
+    }
+
+    estado.usosRestantes =
+      estado.usosMaximos;
+
+    regrasRecarregadas.push(
+      chave,
+    );
+  }
+
+  return {
+    sucesso: true,
+
+    regrasRecarregadas,
+  };
+  }
+
 
 
   return {
     descobrirRegras,
-    participanteDominaArma,
     traduzirRegras,
     prepararOperacoes,
+    participanteDominaArma,
+    
     regraEstaDisponivel,
     consumirUsoRegra,
+    recarregarRegras,
+
+    consumirRecurso,
   };
 })();

@@ -51,8 +51,6 @@ habilidades:
     for (const participante of participantes) {
       participante.estado = participante.estado ?? "ativo";
 
-      participante.estadoEfeitos = criarEstadoEfeitos(participante);
-
       participante.bonusIniciativa = participante.bonusIniciativa ?? 0;
 
       participante.iniciativa = null;
@@ -813,7 +811,11 @@ habilidades:
       return null;
     }
 
-    recarregarEfeitos(participante, "turno");
+    window.TradutorRegras
+  .recarregarRegras(
+    participante,
+    "turno",
+  );
 
     combate.participanteAtivoId = participante.id;
     participante.movimentoRestante = participante.movimentoMaximo;
