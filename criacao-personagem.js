@@ -1420,7 +1420,7 @@ function selecionarEspecie(cardClicado) {
   atualizarSelectsIdiomas();
 
   atualizarPontosDeVida();
-  
+
   atualizarValoresDerivados();
   atualizarFichaPersonagem(["informacoesBasicas", "combate"]);
 }
@@ -3113,11 +3113,64 @@ for (
   atualizarFichaPersonagem(["combate"]);
 }
 
+function atualizarSentidosPersonagem() {
+  const operacoesSentidos =
+    window.TradutorRegras
+      ?.prepararOperacoes({
+        gatilho: "passivo",
+
+        participante:
+          personagem,
+      }) ?? [];
+
+  const sentidos = {};
+
+  for (
+    const operacao of
+    operacoesSentidos
+  ) {
+    if (
+      operacao.tipo !==
+      "concederSentido"
+    ) {
+      continue;
+    }
+
+    const alcanceAtual =
+      Number(
+        sentidos[
+          operacao.sentido
+        ]?.alcance,
+      ) || 0;
+
+    const novoAlcance =
+      Number(
+        operacao.alcance,
+      ) || 0;
+
+    sentidos[
+      operacao.sentido
+    ] = {
+      alcance:
+        Math.max(
+          alcanceAtual,
+          novoAlcance,
+        ),
+    };
+  }
+
+  personagem.sentidos =
+    sentidos;
+}
+
 function atualizarValoresDerivados() {
+
   atualizarMarcadoresSalvaguardas();
   atualizarIniciativa();
   atualizarVelocidadeETamanho();
   atualizarPercepcaoPassiva();
+  atualizarSentidosPersonagem();
+
   atualizarFichaPersonagem(["combate", "marcadores"]);
 }
 

@@ -194,6 +194,32 @@ if (
   };
 }
 
+if (
+  efeito.tipo ===
+  "concederSentido"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "concederSentido",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ??
+      null,
+
+    sentido:
+      efeito.sentido,
+
+    alcance:
+      Number(
+        efeito.alcance,
+      ) || 0,
+  };
+}
+
   return {
     sucesso: false,
     motivo:
