@@ -1384,16 +1384,26 @@ if (
   vexAplicado &&
   !resultadoDano.foiDerrotado
 ) {
-  exibirMensagemNarrativa(
-    solicitacaoCombate,
 
-    mensagensNarrativas
-      .efeitos
-      .vexAplicado(
-        resultadoDano
-          .alvo
-          .nome,
-      ),
+   setTimeout(
+    function exibirMensagemVex() {
+      exibirMensagemNarrativa(
+        solicitacaoCombate,
+
+        mensagensNarrativas
+          .efeitos
+          .vexAplicado(
+            resultadoDano
+              .alvo
+              .nome,
+          ),
+      );
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+
+    0,
   );
 }
 }

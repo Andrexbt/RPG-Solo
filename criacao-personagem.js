@@ -1418,6 +1418,9 @@ function selecionarEspecie(cardClicado) {
   atualizarIdiomasPersonagem();
   atualizarFichaIdiomas();
   atualizarSelectsIdiomas();
+
+  atualizarPontosDeVida();
+  
   atualizarValoresDerivados();
   atualizarFichaPersonagem(["informacoesBasicas", "combate"]);
 }
@@ -3064,7 +3067,37 @@ function atualizarPontosDeVida() {
   }
 
   const modificadorConstituicao = calcularModificador(constituicao);
-  const pontosDeVidaMaximos = dadoVida + modificadorConstituicao;
+
+  const operacoesPontosDeVida =
+  window.TradutorRegras
+    ?.prepararOperacoes({
+      gatilho:
+        "aoCalcularPontosDeVidaMaximos",
+
+      participante:
+        personagem,
+    }) ?? [];
+
+let bonusPontosDeVida = 0;
+
+for (
+  const operacao of
+  operacoesPontosDeVida
+) {
+  if (
+    operacao.tipo !==
+    "aumentarPontosDeVidaMaximos"
+  ) {
+    continue;
+  }
+
+  bonusPontosDeVida +=
+    Number(
+      operacao.quantidade,
+    ) || 0;
+}
+
+  const pontosDeVidaMaximos = dadoVida + modificadorConstituicao + bonusPontosDeVida;
 
   pvMaximo.textContent = pontosDeVidaMaximos;
   pvAtuais.textContent = pontosDeVidaMaximos;

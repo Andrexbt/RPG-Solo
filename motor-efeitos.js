@@ -30,6 +30,17 @@ function resolverModificadorEfeito(
       );
   }
 
+  if (
+  modificador.tipo ===
+  "nivelPersonagem"
+) {
+  return (
+    Number(
+      participante?.nivel,
+    ) || 0
+  );
+}
+
   return 0;
 }
 
@@ -153,6 +164,33 @@ function prepararOperacaoGenerica(
     expiracao:
       efeito.expiracao ??
       null,
+  };
+}
+
+if (
+  efeito.tipo ===
+  "aumentarPontosDeVidaMaximos"
+) {
+  const quantidade =
+    resolverModificadorEfeito(
+      efeito.quantidade,
+      contexto.participante,
+    );
+
+  return {
+    sucesso: true,
+
+    tipo:
+      "aumentarPontosDeVidaMaximos",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ??
+      null,
+
+    quantidade:
+      quantidade,
   };
 }
 

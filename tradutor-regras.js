@@ -50,6 +50,63 @@ window.TradutorRegras = (function () {
     return regrasEncontradas;
   }
 
+  function buscarRegrasDeEspecie(
+  participante,
+) {
+  const regrasEncontradas = [];
+
+  const especieId =
+    participante?.especieId;
+
+  if (!especieId) {
+    return regrasEncontradas;
+  }
+
+  const especie =
+    window.bancoEspecies
+      ?.especies
+      ?.[especieId];
+
+  const tracos =
+    especie?.tracos ?? [];
+
+  for (const tracoId of tracos) {
+    const traco =
+      window.bancoEspecies
+        ?.tracos
+        ?.[tracoId];
+
+    if (!traco) {
+      continue;
+    }
+
+    const regras =
+      traco.regras ??
+      (
+        traco.regra
+          ? [traco.regra]
+          : []
+      );
+
+    for (const regra of regras) {
+      regrasEncontradas.push({
+        origem: {
+          tipo: "tracoEspecie",
+          id: traco.id,
+          nome: traco.nome,
+        },
+
+        regra:
+          structuredClone(
+            regra,
+          ),
+      });
+    }
+  }
+
+  return regrasEncontradas;
+  }
+
   function buscarRegrasDeHabilidades(
     participante,
   ) {
@@ -160,6 +217,10 @@ window.TradutorRegras = (function () {
 
     const regrasEncontradas = [
       ...buscarRegrasDeTalentos(
+        participante,
+      ),
+
+      ...buscarRegrasDeEspecie(
         participante,
       ),
 
