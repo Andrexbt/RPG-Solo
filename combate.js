@@ -23,6 +23,8 @@ window.SistemaCombate = (function () {
 
       classeId: entidade.classeId ?? null,
 
+      especieId: entidade.especieId ?? null,
+
       nivel:
   Number(
     entidade.nivel
@@ -904,8 +906,6 @@ const tipoRolagem =
       };
     }
 
-    const dano = Math.max(0, resultadoRolagem.total);
-
     const atacante =
   combate.participantes.find(
     (participante) =>
@@ -919,6 +919,53 @@ const ataque =
       ataque.id ===
       danoPendente.ataqueId,
   );
+
+    const danoOriginal =
+  Math.max(
+    0,
+    resultadoRolagem.total,
+  );
+
+const tipoDano =
+  ataque
+    ?.dano
+    ?.tipoDano ??
+  ataque
+    ?.tipoDano ??
+  null;
+
+const operacoesDefensivas =
+  window.TradutorRegras
+    ?.prepararOperacoes({
+      gatilho: "passivo",
+
+      participante:
+        alvo,
+    }) ?? [];
+
+const possuiResistencia =
+  operacoesDefensivas.some(
+    function verificarResistencia(
+      operacao,
+    ) {
+      return (
+        operacao.tipo ===
+          "concederResistenciaDano" &&
+
+        operacao.tipoDano ===
+          tipoDano
+      );
+    },
+  );
+
+const dano =
+  possuiResistencia
+    ? Math.floor(
+        danoOriginal / 2,
+      )
+    : danoOriginal;
+
+    
 
     alvo.pontosDeVida.atuais = Math.max(0, alvo.pontosDeVida.atuais - dano);
 

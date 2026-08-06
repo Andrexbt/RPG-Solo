@@ -220,6 +220,27 @@ if (
   };
 }
 
+if (
+  efeito.tipo ===
+  "concederResistenciaDano"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "concederResistenciaDano",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ??
+      null,
+
+    tipoDano:
+      efeito.tipoDano,
+  };
+}
+
   return {
     sucesso: false,
     motivo:
