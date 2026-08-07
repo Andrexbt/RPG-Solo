@@ -366,6 +366,6 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", criarPainel, { once: true });
   } else {
-    criarPainel();
+    //criarPainel();//
   }
 })();

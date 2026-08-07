@@ -160,11 +160,33 @@ const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualComba
 carregarNpcsDaAventura(aventuraAtual.id);
 
 function alternarFicha() {
-  layoutAventura.classList.toggle("ficha-recolhida");
+  const recolhida =
+    layoutAventura
+      .classList
+      .toggle(
+        "ficha-recolhida"
+      );
+
+  botaoRecolherFicha
+    .setAttribute(
+      "aria-expanded",
+      String(!recolhida)
+    );
 }
 
 function alternarPainelExplicativo() {
-  layoutAventura.classList.toggle("painelExplicativo-recolhido");
+  const recolhido =
+    layoutAventura
+      .classList
+      .toggle(
+        "painelExplicativo-recolhido"
+      );
+
+  botaoRecolherPainelExplicativo
+    .setAttribute(
+      "aria-expanded",
+      String(!recolhido)
+    );
 }
 
 async function animarMovimentoInimigo(participante, caminho) {

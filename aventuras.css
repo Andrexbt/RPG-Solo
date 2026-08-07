@@ -11,8 +11,10 @@
 }
 
 body {
-  min-height: 100vh;
+  width: 100%;
+  height: 100dvh;
   margin: 0;
+  overflow: hidden;
   color: var(--cor-aventura-tinta);
   font-family: var(--fonte-interface);
 }
@@ -25,21 +27,30 @@ select {
 }
 
 .pagina-aventura {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  width: min(calc(100% - 120px), 1120px);
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 14px 0;
   min-width: 0;
+
   display: grid;
-  gap: 16px;
+  grid-template-rows: minmax(0, 1fr);
+
+  overflow: hidden;
 }
 
 .visualizacao-aventura {
+  min-height: 0;
+
   display: grid;
   grid-template-rows:
     auto
-    minmax(360px, 1fr)
+    minmax(0, 1fr)
     auto;
-  gap: 16px;
+
+  gap: 12px;
+
+  overflow: hidden;
 }
 
 [hidden] {
@@ -237,29 +248,41 @@ select {
 }
 
 .cabecalho-aventura {
-  margin-bottom: 24px;
+  margin: 0;
   color: var(--cor-texto);
   text-align: center;
 }
 
 .rotulo-aventura {
   margin: 0;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .cabecalho-aventura h1 {
-  margin: 6px 0 0;
+  margin: 2px 0 0;
   color: var(--cor-texto);
-  font-size: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1;
 }
 
-.cena-aventura,
-.janela-acao {
-  padding: 32px;
+.cena-aventura {
+  min-height: 0;
+  padding: 24px 28px;
+  overflow-y: auto;
+
   border: 1px solid var(--cor-aventura-borda);
-  border-radius: 16px;
+  border-radius: 14px;
+  background: var(--cor-aventura-papel);
+  box-shadow: var(--sombra-aventura);
+}
+
+.janela-acao {
+  padding: 16px 20px;
+
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 14px;
   background: var(--cor-aventura-papel);
   box-shadow: var(--sombra-aventura);
 }
@@ -289,7 +312,7 @@ select {
 }
 
 .area-escolhas {
-  margin-top: 32px;
+  margin-top: 20px;
 }
 
 .lista-escolhas {
@@ -320,16 +343,18 @@ select {
 }
 
 .layout-aventura {
-  width: min(100% - 32px, 1600px);
-  margin-inline: auto;
-  padding-block: 32px;
-  display: grid;
-  grid-template-columns:
-    max-content
-    minmax(0, 1fr)
-    minmax(240px, 280px);
-  gap: 24px;
-  align-items: start;
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.layout-aventura.ficha-recolhida .painel-ficha {
+  transform: translateX(-105%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .painel-lateral {
@@ -355,11 +380,23 @@ select {
    ===================================================== */
 
 .painel-ficha {
-  min-width: 0;
-  max-height: calc(100vh - 80px);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+  padding-left: 40px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--cor-aventura-borda) transparent;
+  pointer-events: auto;
+
+  transition:
+    transform 260ms ease,
+    opacity 200ms ease;
 }
 
 #conteudoFicha {
@@ -372,10 +409,33 @@ select {
 }
 
 .coluna-lateral {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+
+  z-index: 40;
+
+  pointer-events: none;
+}
+
+.coluna-ficha {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(420px, calc(100vw - 32px));
+  height: 100dvh;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.coluna-explicativa {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(320px, calc(100vw - 32px));
+  height: 100dvh;
+  z-index: 40;
+  pointer-events: none;
 }
 
 .layout-aventura.modo-combate {
@@ -419,15 +479,126 @@ select {
   align-self: flex-start;
 }
 
-.botao-recolher-painel {
-  min-height: 40px;
-  padding: 8px 16px;
+.aba-lateral {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 42;
+
+  width: 46px;
+  height: 180px;
+  padding: 0;
+
   border: 1px solid var(--cor-ficha-borda-forte);
-  border-radius: var(--raio-botao);
-  background: var(--cor-painel-forte);
-  color: var(--cor-texto);
+  border-radius: 18px 18px 0 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(239, 225, 192, 0.96) 0%,
+      rgba(223, 205, 167, 0.96) 100%
+    );
+
+  color: #3f2d1e;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+  pointer-events: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+.aba-lateral-esquerda {
+  left: 0;
+  border-left: none;
+  border-radius: 0 16px 16px 0;
+}
+
+.aba-lateral-direita {
+  right: 0;
+  border-right: none;
+  border-radius: 16px 0 0 16px;
+}
+
+.aba-lateral span {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.aba-lateral-esquerda span {
+  transform: rotate(-90deg);
+}
+
+.aba-lateral-direita span {
+  transform: rotate(90deg);
+}
+
+.aba-lateral:hover {
+  filter: brightness(1.03);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.aba-lateral[aria-expanded="true"] {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(249, 235, 203, 1) 0%,
+      rgba(230, 212, 176, 1) 100%
+    );
+}
+
+.aba-lateral::before,
+.aba-lateral::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 26px;
+  height: 12px;
+
+  border: 1px solid rgba(95, 67, 38, 0.45);
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #b8915a 0%,
+      #7b5a34 100%
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.aba-lateral::before {
+  top: 8px;
+}
+
+.aba-lateral::after {
+  bottom: 8px;
+}
+
+#botaoRecolherFicha {
+  left: 10px;
+}
+
+#botaoRecolherPainelExplicativo {
+  right: 10px;
 }
 
 .botao-recolher-painel:hover {
@@ -442,15 +613,47 @@ select {
     minmax(220px, 280px);
 }
 
-.layout-aventura.ficha-recolhida .painel-ficha {
-  display: none;
+.layout-aventura.ficha-recolhida
+  .painel-ficha {
+  transform: translateX(-105%);
+  opacity: 0;
+  pointer-events: none;
 }
 
-.layout-aventura.painelExplicativo-recolhido {
-  grid-template-columns:
-    max-content
-    minmax(0, 1fr)
-    max-content;
+.layout-aventura.painelExplicativo-recolhido
+  .painel-explicativo {
+  transform: translateX(105%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.painel-explicativo {
+  position: absolute;
+  top: 50%;
+  right: 22px;
+  transform: translateY(-50%);
+
+  width: calc(100% - 34px);
+  max-height: calc(100dvh - 80px);
+
+  padding: 22px;
+  overflow-y: auto;
+  pointer-events: auto;
+
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 18px;
+  background: var(--cor-aventura-papel);
+  box-shadow: var(--sombra-aventura);
+
+  transition:
+    transform 260ms ease,
+    opacity 200ms ease;
+}
+
+.layout-aventura.painelExplicativo-recolhido .painel-explicativo {
+  transform: translate(105%, -50%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .layout-aventura.painelExplicativo-recolhido .painel-explicativo {
