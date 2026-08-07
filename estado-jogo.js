@@ -26,6 +26,12 @@ function criarEstadoInicialJogo() {
 
     combateAtual: null,
 
+    tempo: {
+      segundosTotais: 0,
+    },
+
+    efeitosTemporarios: [],
+
     diario: [],
   };
 }
@@ -76,3 +82,16 @@ const scriptConfirmacaoCombate = document.createElement("script");
 scriptConfirmacaoCombate.src = "confirmacao-combate.js";
 scriptConfirmacaoCombate.async = false;
 document.head.append(scriptConfirmacaoCombate);
+
+const hostDesenvolvimento = window.location.hostname;
+const ambienteDesenvolvimento =
+  hostDesenvolvimento === "localhost" ||
+  hostDesenvolvimento === "127.0.0.1" ||
+  hostDesenvolvimento === "0.0.0.0";
+
+if (ambienteDesenvolvimento) {
+  const scriptTestesDev = document.createElement("script");
+  scriptTestesDev.src = "testes-dev.js";
+  scriptTestesDev.async = false;
+  document.head.append(scriptTestesDev);
+}
