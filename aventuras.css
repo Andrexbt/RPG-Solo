@@ -218,7 +218,7 @@ select {
 }
 
 /* =====================================================
-   Gavetas laterais molduradas
+   Gavetas laterais com frame completo
    ===================================================== */
 
 .gaveta-lateral,
@@ -234,10 +234,7 @@ select {
 .gaveta-ficha {
   left: 0;
   width: var(--largura-gaveta-ficha);
-  transform:
-    translateX(
-      calc(-100% + var(--faixa-visivel-gaveta))
-    );
+  transform: translateX(calc(-100% + var(--faixa-visivel-gaveta)));
 }
 
 .layout-aventura:not(.ficha-recolhida) .gaveta-ficha {
@@ -247,139 +244,73 @@ select {
 .gaveta-informacoes {
   right: 0;
   width: var(--largura-gaveta-informacoes);
-  transform:
-    translateX(
-      calc(100% - var(--faixa-visivel-gaveta))
-    );
+  transform: translateX(calc(100% - var(--faixa-visivel-gaveta)));
 }
 
-.layout-aventura:not(.painelExplicativo-recolhido)
-  .gaveta-informacoes {
+.layout-aventura:not(.painelExplicativo-recolhido) .gaveta-informacoes {
   transform: translateX(0);
 }
 
 .painel-ficha-gaveta,
 .corpo-gaveta-informacoes {
   position: relative;
-
   width: 100%;
   height: 100dvh;
-
   overflow: hidden;
-
-  background:
-    url("Imagens/Assets/moldura-ficha/lateral-esquerda.webp")
-      left 34px top / 20px auto repeat-y,
-
-    url("Imagens/Assets/moldura-ficha/lateral-direita.webp")
-      right 34px top / 20px auto repeat-y;
-
-  box-shadow:
-    0 0 28px rgba(0, 0, 0, 0.42);
-}
-
-.painel-ficha-gaveta::marker,
-.corpo-gaveta-informacoes::marker {
-  display: none;
+  background: url("Imagens/Assets/scroll-01.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.42));
 }
 
 .painel-ficha-gaveta::before,
 .painel-ficha-gaveta::after,
 .corpo-gaveta-informacoes::before,
 .corpo-gaveta-informacoes::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.painel-ficha-gaveta::before,
-.corpo-gaveta-informacoes::before {
-  top: 0;
-  height: 132px;
-  background:
-    url("Imagens/Assets/moldura-ficha/topo-esquerda.webp") left top / 110px auto no-repeat,
-    url("Imagens/Assets/moldura-ficha/topo-centro.webp") center top / 140px auto no-repeat,
-    url("Imagens/Assets/moldura-ficha/topo-direita.webp") right top / 110px auto no-repeat,
-    url("Imagens/Assets/moldura-ficha/faixa-horizontal.webp") center 22px / calc(100% - 74px) 43px no-repeat;
-  filter: drop-shadow(0 5px 4px rgba(31, 17, 9, 0.46));
-}
-
-.painel-ficha-gaveta::after,
-.corpo-gaveta-informacoes::after {
-  bottom: 0;
-  height: 116px;
-  background:
-    url("Imagens/Assets/moldura-ficha/base-esquerda.webp") left bottom / 110px auto no-repeat,
-    url("Imagens/Assets/moldura-ficha/base-centro.webp") center bottom / 150px auto no-repeat,
-    url("Imagens/Assets/moldura-ficha/base-direita.webp") right bottom / 110px auto no-repeat,
-    url("Imagens/Assets/moldura-ficha/faixa-horizontal.webp") center calc(100% - 25px) / calc(100% - 142px) 36px no-repeat;
-  filter: drop-shadow(0 -3px 4px rgba(31, 17, 9, 0.36));
+  content: none;
 }
 
 #conteudoFicha,
 .conteudo-gaveta {
   position: absolute;
-
-  top: 88px;
-  bottom: 96px;
-
-  left: 54px;
-  right: 54px;
-
+  top: 13%;
+  bottom: 12%;
+  left: 17%;
+  right: 17%;
   z-index: 1;
-
+  width: auto;
+  height: auto;
   overflow-y: auto;
   overflow-x: hidden;
+  background: transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
-  background:  linear-gradient(
-      rgba(255, 250, 226, 0.05),
-      rgba(102, 59, 27, 0.04)
-    ),
-    url("Imagens/Assets/moldura-ficha/papel.webp")
-      center top / 100% auto repeat-y;
-
-       background-attachment:
-    local,
-    local;
-
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-
-  scrollbar-color:
-    rgba(105, 72, 47, 0.55)
-    transparent;
+#conteudoFicha::-webkit-scrollbar,
+.conteudo-gaveta::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 #conteudoFicha {
-  padding: 18px 16px 24px;
+  padding: 12px 8px 24px;
 }
 
 .conteudo-gaveta {
-  padding: 22px 20px 24px;
+  padding: 18px 14px 24px;
 }
 
 .gaveta-ficha #conteudoFicha .ficha-componente,
 .gaveta-ficha #conteudoFicha .ficha-corpo,
 .gaveta-ficha #conteudoFicha .ficha {
-  max-width: 100%;
-}
-
-.gaveta-ficha #conteudoFicha .ficha-componente,
-.gaveta-ficha #conteudoFicha .ficha-corpo {
   width: 100%;
+  max-width: 100%;
 }
 
 .gaveta-ficha #conteudoFicha .ficha {
-  width: fit-content;
-  max-width: 100%;
   height: auto;
-
-  margin: 0 auto;
-  padding: 18px 12px 28px;
-  
+  margin: 0;
+  padding: 12px 6px 24px;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -408,27 +339,21 @@ select {
   position: absolute;
   top: 50%;
   z-index: 6;
-  width: 34px;
-  height: 150px;
+  width: var(--faixa-visivel-gaveta);
+  height: 45%;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #4b3421;
   cursor: pointer;
   transform: translateY(-50%);
 }
 
 .alca-ficha {
-  right: 8px;
+  right: 0;
 }
 
 .trilho-gaveta {
-  left: 8px;
-}
-
-.alca-ficha:hover,
-.trilho-gaveta:hover {
-  color: #7b4e28;
+  left: 0;
 }
 
 /* =====================================================
@@ -1145,11 +1070,6 @@ select {
 
   .campo-combate {
     padding: 12px;
-  }
-
-  #conteudoFicha,
-  .conteudo-gaveta {
-    padding-inline: 30px;
   }
 }
 
