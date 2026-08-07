@@ -125,7 +125,10 @@ select {
 
 .frame-ficha {
   position: absolute;
-  inset: 0;
+  
+  
+  top: 50%;
+  left: 50%;
 
   width: 100%;
   height: 100%;
@@ -135,6 +138,9 @@ select {
   z-index: 5;
 
   pointer-events: none;
+  transform:
+    translate(-50%, -50%)
+    scale(1.14);
 }
 
 .viewport-ficha {
@@ -169,7 +175,8 @@ select {
 }
 
 #conteudoFicha {
-  min-width: 100%;
+  width: 100%;
+  min-width: 0;
 }
 
 .gaveta-ficha {
@@ -178,8 +185,22 @@ select {
   transition: transform 280ms ease;
 }
 
-.layout-aventura:not(.ficha-recolhida)
-  .gaveta-ficha {
+.gaveta-ficha #conteudoFicha .ficha {
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  box-shadow: none;
+}
+
+.gaveta-ficha #conteudoFicha .ficha-moldura {
+  display: none;
+}
+
+.layout-aventura:not(.ficha-recolhida) {
   transform: translateX(0);
 }
 
