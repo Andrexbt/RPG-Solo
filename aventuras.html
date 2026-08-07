@@ -247,35 +247,60 @@
       </main>
 
       <aside
-  class="gaveta-lateral gaveta-informacoes"
-  aria-label="Informações da aventura"
->
-  <button
-    id="botaoRecolherPainelExplicativo"
-    class="trilho-gaveta trilho-gaveta-direito"
-    type="button"
-    aria-controls="painelExplicativo"
-    aria-expanded="false"
-    aria-label="Abrir informações da aventura"
-  ></button>
+        class="gaveta-informacoes"
+        aria-label="Informações da aventura">
 
-  <div
-    id="painelExplicativo"
-    class="corpo-gaveta corpo-gaveta-informacoes"
-  >
-    <div class="conteudo-gaveta">
-      <h2 id="tituloPainelExplicativo">
-        Informações
-      </h2>
+        <button
+        id="botaoRecolherPainelExplicativo"
+        class="alca-informacoes"
+        type="button"
+        aria-controls="painelExplicativo"
+        aria-expanded="false"
+        aria-label="Abrir informações da aventura"
+        ></button>
 
-      <div id="conteudoExplicativo">
-        <p>
-          As regras e explicações da situação aparecerão aqui.
-        </p>
-      </div>
-    </div>
-  </div>
-</aside>
+        <div
+        id="painelExplicativo"
+        class="painel-informacoes-componente ficha-componente">
+
+        <div class="ficha-corpo">
+          <div class="ficha">
+
+            <div class="ficha-moldura" aria-hidden="true">
+            <span class="moldura-parte moldura-faixa-topo"></span>
+            <span class="moldura-parte moldura-topo-esquerda"></span>
+            <span class="moldura-parte moldura-topo-centro"></span>
+            <span class="moldura-parte moldura-topo-direita"></span>
+            <span class="moldura-parte moldura-lateral-esquerda"></span>
+            <span class="moldura-parte moldura-lateral-direita"></span>
+            <span class="moldura-parte moldura-faixa-base"></span>
+            <span class="moldura-parte moldura-base-esquerda"></span>
+            <span class="moldura-parte moldura-base-centro"></span>
+            <span class="moldura-parte moldura-base-direita"></span>
+            </div>
+
+            <div class="ficha-conteudo-rolavel">
+              <div class="ficha-papel painel-informacoes-papel">
+
+                <h2 id="tituloPainelExplicativo">
+                  Informações
+                </h2>
+
+                 <div id="conteudoExplicativo">
+                    <p>
+                      As regras e explicações da situação aparecerão aqui.
+                    </p>
+                  </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        </div>
+
+      </aside>
+
     </div>
 
     <div class="ferramentas-aventura">

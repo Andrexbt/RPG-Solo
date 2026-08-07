@@ -135,6 +135,110 @@ select {
   margin-bottom: 0;
 }
 
+.gaveta-informacoes {
+  position: fixed;
+
+  top: 43px;
+  right: 0;
+
+  height: calc(100dvh - 86px);
+
+  z-index: 40;
+
+  transform: translateX(calc(100% - 52px));
+
+  transition: transform 280ms ease;
+}
+
+.layout-aventura:not(.painelExplicativo-recolhido)
+  .gaveta-informacoes {
+  transform: translateX(0);
+}
+
+.gaveta-informacoes {
+  position: fixed;
+
+  top: 43px;
+  right: 0;
+
+  height: calc(100dvh - 86px);
+
+  z-index: 40;
+
+  transform:
+    translateX(calc(100% - 52px));
+
+  transition:
+    transform 280ms ease;
+}
+
+.layout-aventura:not(.painelExplicativo-recolhido)
+  .gaveta-informacoes {
+  transform: translateX(0);
+}
+
+.painel-informacoes-componente,
+.painel-informacoes-componente .ficha-corpo,
+.painel-informacoes-componente .ficha {
+  height: 100%;
+}
+
+.painel-informacoes-componente {
+  width: 390px;
+}
+
+.painel-informacoes-componente .ficha {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.painel-informacoes-papel {
+  min-width: 300px;
+}
+
+.painel-informacoes-papel h2 {
+  margin: 0 0 20px;
+
+  color: var(--cor-ficha-titulo);
+
+  font-family: var(--fonte-titulos);
+
+  text-align: center;
+}
+
+#conteudoExplicativo {
+  color: var(--cor-ficha-texto);
+  line-height: 1.55;
+  font-family:
+    "Almendra",
+    Georgia,
+    serif;
+}
+
+.alca-informacoes {
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+
+  width: 52px;
+  height: 50%;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  z-index: 20;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+}
+
+.gaveta-informacoes .moldura-parte {
+  cursor: pointer;
+}
 
 
 

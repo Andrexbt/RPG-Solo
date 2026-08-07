@@ -2067,6 +2067,18 @@ document.addEventListener("click", function (evento) {
 });
 
 botaoRecolherPainelExplicativo.addEventListener("click", alternarPainelExplicativo);
+document.addEventListener("click", function (evento) {
+  const parteMolduraInformacoes =
+    evento.target.closest(
+      ".gaveta-informacoes .moldura-parte"
+    );
+
+  if (parteMolduraInformacoes === null) {
+    return;
+  }
+
+  alternarPainelExplicativo();
+});
 
 listaEscolhas.addEventListener("click", selecionarEscolha);
 

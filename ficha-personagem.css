@@ -108,7 +108,10 @@
 .ficha-papel {
   min-height: 100%;
 
-  padding: 45px 24px;
+  padding-top: 58px;
+  padding-right: 24px;
+  padding-bottom: 45px;
+  padding-left: 24px;
 
   border: 1px solid rgba(92, 55, 30, 0.34);
   border-radius: 5px;
