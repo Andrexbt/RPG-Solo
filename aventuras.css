@@ -261,14 +261,26 @@ select {
 .painel-ficha-gaveta,
 .corpo-gaveta-informacoes {
   position: relative;
+
   width: 100%;
   height: 100dvh;
+
   overflow: hidden;
+
   background:
-    url("Imagens/Assets/moldura-ficha/lateral-esquerda.webp") left 88px / 20px auto repeat-y,
-    url("Imagens/Assets/moldura-ficha/lateral-direita.webp") right 88px / 20px auto repeat-y,
-    var(--fundo-papel-aventura);
-  box-shadow: 0 0 28px rgba(0, 0, 0, 0.42);
+    url("Imagens/Assets/moldura-ficha/lateral-esquerda.webp")
+      left 34px top / 20px auto repeat-y,
+
+    url("Imagens/Assets/moldura-ficha/lateral-direita.webp")
+      right 34px top / 20px auto repeat-y;
+
+  box-shadow:
+    0 0 28px rgba(0, 0, 0, 0.42);
+}
+
+.painel-ficha-gaveta::marker,
+.corpo-gaveta-informacoes::marker {
+  display: none;
 }
 
 .painel-ficha-gaveta::before,
@@ -309,23 +321,44 @@ select {
 
 #conteudoFicha,
 .conteudo-gaveta {
-  position: relative;
+  position: absolute;
+
+  top: 88px;
+  bottom: 96px;
+
+  left: 54px;
+  right: 54px;
+
   z-index: 1;
-  width: 100%;
-  height: 100%;
+
   overflow-y: auto;
   overflow-x: hidden;
+
+  background:  linear-gradient(
+      rgba(255, 250, 226, 0.05),
+      rgba(102, 59, 27, 0.04)
+    ),
+    url("Imagens/Assets/moldura-ficha/papel.webp")
+      center top / 100% auto repeat-y;
+
+       background-attachment:
+    local,
+    local;
+
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: rgba(105, 72, 47, 0.55) transparent;
+
+  scrollbar-color:
+    rgba(105, 72, 47, 0.55)
+    transparent;
 }
 
 #conteudoFicha {
-  padding: 102px 38px 108px;
+  padding: 18px 16px 24px;
 }
 
 .conteudo-gaveta {
-  padding: 104px 38px 108px;
+  padding: 22px 20px 24px;
 }
 
 .gaveta-ficha #conteudoFicha .ficha-componente,
@@ -341,8 +374,12 @@ select {
 
 .gaveta-ficha #conteudoFicha .ficha {
   width: fit-content;
+  max-width: 100%;
+  height: auto;
+
   margin: 0 auto;
-  padding: 0 12px 24px;
+  padding: 18px 12px 28px;
+  
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -387,26 +424,6 @@ select {
 
 .trilho-gaveta {
   left: 8px;
-}
-
-.alca-ficha span,
-.trilho-gaveta span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-
-.alca-ficha span {
-  transform: translate(-50%, -50%) rotate(-90deg);
-}
-
-.trilho-gaveta span {
-  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .alca-ficha:hover,
