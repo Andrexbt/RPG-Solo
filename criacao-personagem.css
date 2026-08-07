@@ -84,33 +84,44 @@ body {
 
   grid-template-columns: max-content minmax(0, 1fr);
 
-  gap: clamp(18px, 2vw, 28px);
+  gap: clamp(8px, 1vw, 14px);
 }
 
 .coluna-ficha {
   position: sticky;
   top: 20px;
+
   align-self: start;
+
   z-index: 2;
+
   width: fit-content;
   max-width: 100%;
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
+
+  height: calc(100dvh - 40px);
+
+  margin-left: -30px;
+
+  overflow: visible;
+
   padding-right: 6px;
 }
 
-.coluna-ficha::-webkit-scrollbar,
+.coluna-ficha > [data-ficha-personagem],
+.coluna-ficha .ficha-componente,
+.coluna-ficha .ficha-corpo {
+  height: 100%;
+}
+
 .modal-textos::-webkit-scrollbar {
   width: 7px;
 }
 
-.coluna-ficha::-webkit-scrollbar-track,
 .modal-textos::-webkit-scrollbar-track {
   border-radius: 999px;
   background: rgba(255, 248, 235, 0.05);
 }
 
-.coluna-ficha::-webkit-scrollbar-thumb,
 .modal-textos::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(215, 163, 95, 0.34);
@@ -258,7 +269,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
-  gap: clamp(14px, 1.5vw, 20px);
+  gap: 0px
 }
 
 .grade-opcoes {

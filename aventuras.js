@@ -2053,6 +2053,19 @@ function verificarCombateDaCena(cena) {
 
 botaoRecolherFicha.addEventListener("click", alternarFicha);
 
+document.addEventListener("click", function (evento) {
+  const parteMoldura =
+    evento.target.closest(
+      ".gaveta-ficha .moldura-parte"
+    );
+
+  if (parteMoldura === null) {
+    return;
+  }
+
+  alternarFicha();
+});
+
 botaoRecolherPainelExplicativo.addEventListener("click", alternarPainelExplicativo);
 
 listaEscolhas.addEventListener("click", selecionarEscolha);
