@@ -241,6 +241,37 @@ if (
   };
 }
 
+if (
+  efeito.tipo ===
+  "concederSentidoTemporario"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "concederSentidoTemporario",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ??
+      null,
+
+    sentido:
+      efeito.sentido,
+
+    alcance:
+      Number(
+        efeito.alcance,
+      ) || 0,
+
+    duracao:
+      structuredClone(
+        efeito.duracao ?? null,
+      ),
+  };
+}
+
   return {
     sucesso: false,
     motivo:
@@ -458,6 +489,128 @@ function finalizarEfeitoPendente(
   };
 }
 
+function aplicarEfeitoTemporario(
+  operacao,
+) {
+  if (!operacao) {
+    return {
+      sucesso: false,
+      motivo: "operacaoInexistente",
+    };
+  }
+
+  if (!operacao.duracao) {
+    return {
+      sucesso: false,
+      motivo: "duracaoInexistente",
+    };
+  }
+
+  const janelaTempo =
+    window.MotorTempo
+      .calcularExpiracao(
+        operacao.duracao,
+      );
+
+  window.estadoJogo
+    .efeitosTemporarios ??= [];
+
+  const efeitoTemporario = {
+    origem:
+      structuredClone(
+        operacao.origem ?? null,
+      ),
+
+    participanteId:
+      operacao.participanteId ??
+      null,
+
+    tipo:
+      operacao.tipo,
+
+    inicioEm:
+      janelaTempo.inicioEm,
+
+    expiraEm:
+      janelaTempo.expiraEm,
+
+    duracaoSegundos:
+      janelaTempo.duracaoSegundos,
+  };
+
+  if (
+    operacao.tipo ===
+    "concederSentidoTemporario"
+  ) {
+    efeitoTemporario.sentido =
+      operacao.sentido;
+
+    efeitoTemporario.alcance =
+      operacao.alcance;
+  }
+
+  window.estadoJogo
+    .efeitosTemporarios
+    .push(
+      efeitoTemporario,
+    );
+
+  return {
+    sucesso: true,
+    efeito:
+      efeitoTemporario,
+  };
+}
+
+function obterEfeitosTemporariosAtivos(
+  filtro = {},
+) {
+  const efeitos =
+    window.estadoJogo
+      ?.efeitosTemporarios ?? [];
+
+  return efeitos.filter(
+    efeito => {
+      if (
+        window.MotorTempo
+          ?.efeitoExpirou?.(
+            efeito
+          )
+      ) {
+        return false;
+      }
+
+      if (
+        filtro.participanteId &&
+        efeito.participanteId !==
+          filtro.participanteId
+      ) {
+        return false;
+      }
+
+      if (
+        filtro.tipo &&
+        efeito.tipo !==
+          filtro.tipo
+      ) {
+        return false;
+      }
+
+      if (
+        filtro.sentido &&
+        efeito.sentido !==
+          filtro.sentido
+      ) {
+        return false;
+      }
+
+      return true;
+    }
+  );
+}
+
 window.MotorEfeitos = {
   prepararOperacaoGenerica,
+  aplicarEfeitoTemporario,
+  obterEfeitosTemporariosAtivos,
 };

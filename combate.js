@@ -1042,7 +1042,12 @@ const dano =
 
     return {
       sucesso: true,
+
+      danoOriginal,
       dano,
+      tipoDano,
+      resistenciaAplicada: possuiResistencia,
+      
       alvo,
       foiDerrotado,
       resultadoCombate,

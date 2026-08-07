@@ -284,6 +284,22 @@ window.TradutorRegras = (function () {
         .alvo ??
       null,
 
+      condicao:
+  structuredClone(
+    regraEncontrada
+      .regra
+      .condicao ??
+    null,
+  ),
+
+  requisito:
+  structuredClone(
+    regraEncontrada
+      .regra
+      .requisito ??
+    null,
+  ),
+
     recurso:
         structuredClone(
           regraEncontrada
@@ -328,6 +344,43 @@ window.TradutorRegras = (function () {
   };
   }
 
+  function condicaoRegraEhCompativel(
+  regra,
+  contexto,
+) {
+  const condicao =
+    regra?.condicao;
+
+  if (!condicao) {
+    return true;
+  }
+
+  if (
+    condicao.condicaoId &&
+    condicao.condicaoId !==
+      contexto?.condicaoId
+  ) {
+    return false;
+  }
+
+  if (
+    Array.isArray(
+      condicao.finalidades,
+    ) &&
+    condicao.finalidades.length > 0
+  ) {
+    if (
+      !condicao.finalidades.includes(
+        contexto?.finalidade,
+      )
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+  }
+
   function traduzirRegras(
   contexto,
 ) {
@@ -342,6 +395,14 @@ window.TradutorRegras = (function () {
     const regraEncontrada
     of regrasEncontradas
   ) {
+     if (
+    !condicaoRegraEhCompativel(
+      regraEncontrada.regra,
+      contexto,
+    )
+  ) {
+    continue;
+  }
     const ordem =
       traduzirRegra(
         regraEncontrada,
@@ -356,6 +417,48 @@ window.TradutorRegras = (function () {
   }
 
   return ordens;
+  }
+
+  function resolverQuantidade(
+  quantidade,
+  participante,
+) {
+  if (
+    typeof quantidade ===
+    "number"
+  ) {
+    return quantidade;
+  }
+
+  if (
+    !quantidade ||
+    typeof quantidade !==
+      "object"
+  ) {
+    return 0;
+  }
+
+  if (
+    quantidade.tipo ===
+    "bonusProficiencia"
+  ) {
+    const nivel =
+      Math.max(
+        1,
+        Number(
+          participante?.nivel,
+        ) || 1,
+      );
+
+    return (
+      2 +
+      Math.floor(
+        (nivel - 1) / 4,
+      )
+    );
+  }
+
+  return 0;
   }
 
   function inicializarEstadoRegra(
@@ -385,15 +488,21 @@ window.TradutorRegras = (function () {
     );
   }
 
+  const quantidadeUsos =
+  resolverQuantidade(
+    ordem.usos.quantidade,
+    participante,
+  );
+
   participante.estadoRegras[chave] = {
     usosMaximos:
-    ordem.usos.quantidade,
+    quantidadeUsos,
 
     usosRestantes:
-      ordem.usos.quantidade,
+    quantidadeUsos,
 
     recarga:
-      ordem.usos.recarga,
+    ordem.usos.recarga,
   };
 
   return (
@@ -418,6 +527,41 @@ window.TradutorRegras = (function () {
   return (
     estado?.usosRestantes > 0
   );
+  }
+
+  function requisitoEstaSatisfeito(
+  requisito,
+  contexto,
+) {
+  if (!requisito) {
+    return true;
+  }
+
+  if (
+    requisito.tipo ===
+    "contatoComSuperficie"
+  ) {
+    const superficie =
+      contexto
+        ?.ambiente
+        ?.superficieContato;
+
+    if (!superficie) {
+      return false;
+    }
+
+    if (
+      requisito.material &&
+      superficie.material !==
+        requisito.material
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
   }
 
   function recursoEstaDisponivel(
@@ -453,8 +597,15 @@ window.TradutorRegras = (function () {
   function custoEstaDisponivel(
   participante,
   ordem,
+  contexto = {}
 ) {
   if (!ordem?.custo) {
+    return true;
+  }
+
+  if (
+    contexto.modo !== "combate"
+  ) {
     return true;
   }
 
@@ -486,7 +637,7 @@ window.TradutorRegras = (function () {
   }
 
   return false;
-}
+  }
 
   function consumirUsoRegra(
   participante,
@@ -593,7 +744,112 @@ window.TradutorRegras = (function () {
     motivo:
       "tipoRecursoNaoImplementado",
   };
+  }
+
+  function consumirCusto(
+  participante,
+  operacao,
+  contexto = {}
+) {
+  if (!operacao?.custo) {
+    return {
+      sucesso: true,
+      custoConsumido: false,
+    };
+  }
+
+  if (
+  contexto.modo !== "combate"
+) {
+  return {
+    sucesso: true,
+    custoConsumido: false,
+    custo: operacao.custo,
+    motivo:
+      "custoNaoConsumidoForaDeCombate",
+  };
 }
+
+  if (
+    operacao.custo === "acao"
+  ) {
+    if (
+      participante
+        ?.acaoDisponivel !== true
+    ) {
+      return {
+        sucesso: false,
+        motivo:
+          "acaoIndisponivel",
+      };
+    }
+
+    participante.acaoDisponivel =
+      false;
+
+    return {
+      sucesso: true,
+      custoConsumido: true,
+      custo: "acao",
+    };
+  }
+
+  if (
+    operacao.custo ===
+    "acaoBonus"
+  ) {
+    if (
+      participante
+        ?.acaoBonusDisponivel !== true
+    ) {
+      return {
+        sucesso: false,
+        motivo:
+          "acaoBonusIndisponivel",
+      };
+    }
+
+    participante
+      .acaoBonusDisponivel =
+      false;
+
+    return {
+      sucesso: true,
+      custoConsumido: true,
+      custo: "acaoBonus",
+    };
+  }
+
+  if (
+    operacao.custo === "reacao"
+  ) {
+    if (
+      participante
+        ?.reacaoDisponivel !== true
+    ) {
+      return {
+        sucesso: false,
+        motivo:
+          "reacaoIndisponivel",
+      };
+    }
+
+    participante.reacaoDisponivel =
+      false;
+
+    return {
+      sucesso: true,
+      custoConsumido: true,
+      custo: "reacao",
+    };
+  }
+
+  return {
+    sucesso: false,
+    motivo:
+      "tipoCustoNaoImplementado",
+  };
+  }
 
   function prepararOperacoes(
   contexto,
@@ -616,6 +872,15 @@ window.TradutorRegras = (function () {
     }
 
     if (
+  !requisitoEstaSatisfeito(
+    ordem.requisito,
+    contexto,
+  )
+) {
+  continue;
+}
+
+    if (
     !recursoEstaDisponivel(
       contexto.participante,
       ordem,
@@ -627,7 +892,7 @@ window.TradutorRegras = (function () {
   if (
   !custoEstaDisponivel(
     contexto.participante,
-    ordem,
+    ordem, contexto,
   )
 ) {
   continue;
@@ -673,6 +938,16 @@ window.TradutorRegras = (function () {
   alvo:
     ordem.alvo,
 
+    condicao:
+  structuredClone(
+    ordem.condicao ?? null,
+  ),
+
+  requisito:
+  structuredClone(
+    ordem.requisito ?? null,
+  ),
+
   recurso:
     structuredClone(
       ordem.recurso ?? null,
@@ -686,6 +961,162 @@ window.TradutorRegras = (function () {
   }
 
   return operacoes;
+  }
+
+  function executarOperacao(
+  operacao,
+  contexto = {},
+) {
+  const participante =
+    contexto?.participante;
+
+  if (
+    !participante ||
+    !operacao
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        "dadosExecucaoInvalidos",
+    };
+  }
+
+  if (
+    !requisitoEstaSatisfeito(
+      operacao.requisito,
+      contexto,
+    )
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        "requisitoNaoSatisfeito",
+    };
+  }
+
+  if (
+    !regraEstaDisponivel(
+      participante,
+      operacao,
+    )
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        "regraIndisponivel",
+    };
+  }
+
+  if (
+    !recursoEstaDisponivel(
+      participante,
+      operacao,
+    )
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        "recursoIndisponivel",
+    };
+  }
+
+  if (
+    !custoEstaDisponivel(
+      participante,
+      operacao,
+      contexto,
+    )
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        "custoIndisponivel",
+    };
+  }
+
+  let resultadoEfeito;
+
+  if (
+    operacao.duracao
+  ) {
+    resultadoEfeito =
+      window.MotorEfeitos
+        .aplicarEfeitoTemporario(
+          operacao,
+        );
+  } else {
+    return {
+      sucesso: false,
+      motivo:
+        "execucaoEfeitoNaoImplementada",
+    };
+  }
+
+  if (
+    !resultadoEfeito?.sucesso
+  ) {
+    return {
+      sucesso: false,
+      motivo:
+        resultadoEfeito
+          ?.motivo ??
+        "falhaAoAplicarEfeito",
+    };
+  }
+
+  const resultadoCusto =
+    consumirCusto(
+      participante,
+      operacao,
+      contexto,
+    );
+
+  if (!resultadoCusto.sucesso) {
+    return resultadoCusto;
+  }
+
+  const resultadoUso =
+    consumirUsoRegra(
+      participante,
+      operacao,
+    );
+
+  if (!resultadoUso.sucesso) {
+    return resultadoUso;
+  }
+
+  const resultadoRecurso =
+    consumirRecurso(
+      participante,
+      operacao,
+    );
+
+  if (
+    !resultadoRecurso.sucesso
+  ) {
+    return resultadoRecurso;
+  }
+
+  return {
+    sucesso: true,
+
+    operacao:
+      structuredClone(
+        operacao,
+      ),
+
+    efeito:
+      resultadoEfeito.efeito,
+
+    custo:
+      resultadoCusto,
+
+    uso:
+      resultadoUso,
+
+    recurso:
+      resultadoRecurso,
+  };
   }
 
   function criarChaveEstadoRegra(
@@ -757,18 +1188,40 @@ window.TradutorRegras = (function () {
   };
   }
 
+  function obterVantagemDeContexto(
+  contexto,
+) {
+  const operacoes =
+    prepararOperacoes(
+      contexto,
+    );
 
+  return operacoes.some(
+    function verificarVantagem(
+      operacao,
+    ) {
+      return (
+        operacao.tipo ===
+          "concederVantagem" &&
+        operacao.rolagemAfetada ===
+          contexto?.tipoRolagem
+      );
+    },
+  );
+  }
 
   return {
     descobrirRegras,
     traduzirRegras,
     prepararOperacoes,
     participanteDominaArma,
+    executarOperacao,
     
     regraEstaDisponivel,
     consumirUsoRegra,
     recarregarRegras,
 
     consumirRecurso,
+    obterVantagemDeContexto,
   };
 })();
