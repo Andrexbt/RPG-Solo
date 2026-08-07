@@ -9,14 +9,14 @@
   --cor-aventura-borda-suave: rgba(105, 72, 47, 0.3);
   --sombra-aventura: 0 18px 50px rgba(0, 0, 0, 0.32);
 
-  :root {
+  
   --largura-trilho-gaveta: 52px;
 
-  --largura-corpo-ficha: 420px;
+  --largura-corpo-ficha: 462px;
+  --faixa-visivel-ficha: 58px;
   --largura-corpo-informacoes: 320px;
 
   --duracao-gaveta: 280ms;
-}
 }
 
 body {
@@ -237,30 +237,35 @@ select {
   }
 
   .gaveta-ficha {
+  position: fixed;
+  top: 0;
   left: 0;
 
-  width:
-    calc(
-      var(--largura-corpo-ficha) +
-      var(--largura-trilho-gaveta)
-    );
+  width: var(--largura-ficha-gaveta);
+  height: 100dvh;
 
-  grid-template-columns:
-    var(--largura-corpo-ficha)
-    var(--largura-trilho-gaveta);
+  z-index: 40;
 
   transform:
     translateX(
       calc(
         -100% +
-        var(--largura-trilho-gaveta)
+        var(--faixa-visivel-ficha)
       )
     );
-  }
 
-  .layout-aventura:not(.ficha-recolhida)
+  transition: transform 280ms ease;
+}
+
+.layout-aventura:not(.ficha-recolhida)
   .gaveta-ficha {
   transform: translateX(0);
+}
+
+.painel-ficha-gaveta {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .gaveta-informacoes {
@@ -425,13 +430,41 @@ select {
 
 
 #conteudoFicha {
-  width: max-content;
+  width: 100%;
   max-width: 100%;
 }
 
 #conteudoFicha .ficha-componente {
   max-width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
+
+.alca-ficha {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+
+  z-index: 3;
+
+  width: 28px;
+  height: 120px;
+
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.alca-ficha span {
+  display: block;
+  transform: rotate(-90deg);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #4b3421;
+  white-space: nowrap;
+}
+
 
 
 
