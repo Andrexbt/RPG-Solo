@@ -90,6 +90,121 @@ select {
 }
 
 /* =====================================================
+   Gaveta da ficha
+   ===================================================== */
+
+.gaveta-ficha {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  height: 100dvh;
+  width: calc(100dvh * 4419 / 6250);
+
+  z-index: 40;
+
+  transform:
+    translateX(calc(-100% + 56px));
+
+  transition: transform 280ms ease;
+}
+
+.layout-aventura:not(.ficha-recolhida)
+  .gaveta-ficha {
+  transform: translateX(0);
+}
+
+.painel-ficha-gaveta {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.frame-ficha {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: fill;
+
+  z-index: 5;
+
+  pointer-events: none;
+}
+
+.viewport-ficha {
+  position: absolute;
+
+  top: 11%;
+  bottom: 10%;
+
+  left: 13%;
+  right: 13%;
+
+  z-index: 1;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.viewport-ficha::-webkit-scrollbar {
+  display: none;
+}
+
+.papel-ficha {
+  min-height: 100%;
+  width: 100%;
+
+  background:
+    url("Imagens/Assets/scroll-01-paper.webp")
+    center top / 100% auto repeat-y;
+}
+
+#conteudoFicha {
+  min-width: 100%;
+}
+
+.gaveta-ficha {
+  transform: translateX(calc(-100% + 56px));
+
+  transition: transform 280ms ease;
+}
+
+.layout-aventura:not(.ficha-recolhida)
+  .gaveta-ficha {
+  transform: translateX(0);
+}
+
+.alca-ficha {
+  position: absolute;
+
+  top: 50%;
+  right: 0;
+
+  width: 56px;
+  height: 45%;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  z-index: 10;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+}
+
+/* =====================================================
    Cena e ações da aventura
    ===================================================== */
 
