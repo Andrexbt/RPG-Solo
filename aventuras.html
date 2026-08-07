@@ -18,26 +18,32 @@
 
   <body>
     <div class="layout-aventura ficha-recolhida painelExplicativo-recolhido">
-      <div class="coluna-lateral coluna-ficha">
-        <button
-          id="botaoRecolherFicha"
-          class="aba-lateral aba-lateral-esquerda"
-          type="button"
-          aria-controls="painelFicha"
-          aria-expanded="false"
-          aria-label="Recolher ficha do personagem"
-        >
-          <span>Ficha</span>
-        </button>
+      <aside
+  class="gaveta-lateral gaveta-ficha"
+  aria-label="Ficha do personagem"
+>
+  <div
+    id="painelFicha"
+    class="corpo-gaveta corpo-gaveta-ficha"
+  >
+    <div
+      id="conteudoFicha"
+      class="conteudo-gaveta"
+      data-ficha-personagem
+    ></div>
+  </div>
 
-        <aside
-          id="painelFicha"
-          class="painel-ficha"
-          aria-label="Ficha do personagem"
-        >
-          <div id="conteudoFicha" data-ficha-personagem></div>
-        </aside>
-      </div>
+  <button
+    id="botaoRecolherFicha"
+    class="trilho-gaveta trilho-gaveta-esquerdo"
+    type="button"
+    aria-controls="painelFicha"
+    aria-expanded="false"
+    aria-label="Abrir ficha do personagem"
+  >
+    <span>Ficha</span>
+  </button>
+</aside>
 
       <main class="pagina-aventura">
         <div id="visualizacaoAventura" class="visualizacao-aventura">
@@ -238,33 +244,38 @@
 
       </main>
 
-      <div class="coluna-lateral coluna-explicativa">
-        <button
-          id="botaoRecolherPainelExplicativo"
-          class="aba-lateral aba-lateral-direita"
-          type="button"
-          aria-controls="painelExplicativo"
-          aria-expanded="false"
-          aria-label="Recolher painel de informações"
-        >
-          <span>Informações</span>
-        </button>
+      <aside
+  class="gaveta-lateral gaveta-informacoes"
+  aria-label="Informações da aventura"
+>
+  <button
+    id="botaoRecolherPainelExplicativo"
+    class="trilho-gaveta trilho-gaveta-direito"
+    type="button"
+    aria-controls="painelExplicativo"
+    aria-expanded="false"
+    aria-label="Abrir informações da aventura"
+  >
+    <span>Informações</span>
+  </button>
 
-        <aside
-        id="painelExplicativo"
-        class="painel-lateral painel-explicativo"
-        aria-labelledby="tituloPainelExplicativo"
-        >
-          <h2 id="tituloPainelExplicativo">
-    Informações
-  </h2>
+  <div
+    id="painelExplicativo"
+    class="corpo-gaveta corpo-gaveta-informacoes"
+  >
+    <div class="conteudo-gaveta">
+      <h2 id="tituloPainelExplicativo">
+        Informações
+      </h2>
 
-          <div id="conteudoExplicativo">
-            <p>As regras e explicações da situação aparecerão aqui.</p>
-          </div>
-        </aside>
+      <div id="conteudoExplicativo">
+        <p>
+          As regras e explicações da situação aparecerão aqui.
+        </p>
       </div>
     </div>
+  </div>
+</aside>
 
     <div class="ferramentas-aventura">
       <section

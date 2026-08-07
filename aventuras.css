@@ -8,6 +8,15 @@
   --cor-aventura-borda: rgba(105, 72, 47, 0.62);
   --cor-aventura-borda-suave: rgba(105, 72, 47, 0.3);
   --sombra-aventura: 0 18px 50px rgba(0, 0, 0, 0.32);
+
+  :root {
+  --largura-trilho-gaveta: 52px;
+
+  --largura-corpo-ficha: 420px;
+  --largura-corpo-informacoes: 320px;
+
+  --duracao-gaveta: 280ms;
+}
 }
 
 body {
@@ -211,38 +220,209 @@ select {
    Gavetas laterais
    ===================================================== */
 
-.coluna-lateral {
+  .gaveta-lateral {
   position: fixed;
   top: 0;
-  bottom: 0;
-  z-index: 40;
+
   height: 100dvh;
-  pointer-events: none;
-}
 
-.coluna-ficha {
+  display: grid;
+
+  z-index: 40;
+
+  transition:
+    transform var(--duracao-gaveta) ease;
+
+  will-change: transform;
+  }
+
+  .gaveta-ficha {
   left: 0;
-  width: min(420px, calc(100vw - 32px));
+
+  width:
+    calc(
+      var(--largura-corpo-ficha) +
+      var(--largura-trilho-gaveta)
+    );
+
+  grid-template-columns:
+    var(--largura-corpo-ficha)
+    var(--largura-trilho-gaveta);
+
+  transform:
+    translateX(
+      calc(
+        -100% +
+        var(--largura-trilho-gaveta)
+      )
+    );
+  }
+
+  .layout-aventura:not(.ficha-recolhida)
+  .gaveta-ficha {
+  transform: translateX(0);
 }
 
-.coluna-explicativa {
+.gaveta-informacoes {
   right: 0;
-  width: min(320px, calc(100vw - 32px));
+
+  width:
+    calc(
+      var(--largura-trilho-gaveta) +
+      var(--largura-corpo-informacoes)
+    );
+
+  grid-template-columns:
+    var(--largura-trilho-gaveta)
+    var(--largura-corpo-informacoes);
+
+  transform:
+    translateX(
+      calc(
+        100% -
+        var(--largura-trilho-gaveta)
+      )
+    );
 }
 
-.painel-ficha {
+.layout-aventura:not(
+  .painelExplicativo-recolhido
+)
+.gaveta-informacoes {
+  transform: translateX(0);
+}
+
+.trilho-gaveta {
+  position: relative;
+
+  width: var(--largura-trilho-gaveta);
+  height: 100dvh;
+
+  padding: 0;
+
+  border: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8d683d 0%,
+      #d3b57c 30%,
+      #ead6a7 50%,
+      #b58b54 78%,
+      #6f4e2d 100%
+    );
+
+  color: #3f2d20;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0 16px rgba(0, 0, 0, 0.36);
+
+  z-index: 2;
+}
+
+.trilho-gaveta span {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+
+  display: block;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+
+  white-space: nowrap;
+}
+
+.trilho-gaveta-esquerdo span {
+  transform:
+    translate(-50%, -50%)
+    rotate(-90deg);
+}
+
+.trilho-gaveta-direito span {
+  transform:
+    translate(-50%, -50%)
+    rotate(90deg);
+}
+
+.corpo-gaveta {
+  height: 100dvh;
+
+  overflow: hidden;
+
+  background: var(--cor-aventura-papel);
+
+  box-shadow:
+    0 0 24px rgba(0, 0, 0, 0.38);
+}
+
+.conteudo-gaveta {
   width: 100%;
   height: 100%;
-  padding: 20px 10px 20px 40px;
+
   overflow-y: auto;
-  pointer-events: auto;
-  transition:
-    transform 260ms ease,
-    opacity 200ms ease;
 }
+
+.corpo-gaveta-ficha {
+  padding: 12px 8px 12px 12px;
+}
+
+.corpo-gaveta-informacoes {
+  padding: 20px;
+}
+
+.corpo-gaveta-informacoes h2 {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.trilho-gaveta::before,
+.trilho-gaveta::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+
+  width: calc(
+    var(--largura-trilho-gaveta) +
+    10px
+  );
+
+  height: 20px;
+
+  transform: translateX(-50%);
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #5d4026,
+      #b98f57,
+      #e4ca95,
+      #946a3e,
+      #51361f
+    );
+
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+.trilho-gaveta::before {
+  top: 8px;
+}
+
+.trilho-gaveta::after {
+  bottom: 8px;
+}
+
+
+
+
 
 #conteudoFicha {
   width: max-content;
@@ -253,155 +433,24 @@ select {
   max-width: 100%;
 }
 
-.painel-explicativo {
-  position: absolute;
-  top: 50%;
-  right: 22px;
-  width: calc(100% - 34px);
-  max-height: calc(100dvh - 80px);
-  padding: 22px;
-  overflow-y: auto;
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 18px;
-  background: var(--cor-aventura-papel);
-  box-shadow: var(--sombra-aventura);
-  transform: translateY(-50%);
-  pointer-events: auto;
-  transition:
-    transform 260ms ease,
-    opacity 200ms ease;
-}
 
-.painel-explicativo h2 {
-  margin: 0 0 20px;
-  font-size: 1rem;
-  text-align: center;
-}
 
-.layout-aventura.ficha-recolhida .painel-ficha {
-  transform: translateX(-105%);
-  opacity: 0;
-  pointer-events: none;
-}
 
-.layout-aventura.painelExplicativo-recolhido .painel-explicativo {
-  transform: translate(105%, -50%);
-  opacity: 0;
-  pointer-events: none;
-}
+
+
+
+
 
 /* =====================================================
    Abas laterais
    ===================================================== */
 
-.aba-lateral {
-  position: fixed;
-  top: 50%;
-  z-index: 42;
-  width: 46px;
-  height: 180px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--cor-ficha-borda-forte);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(239, 225, 192, 0.96) 0%,
-      rgba(223, 205, 167, 0.96) 100%
-    );
-  color: #3f2d1e;
-  box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  transform: translateY(-50%);
-  cursor: pointer;
-  pointer-events: auto;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    filter 180ms ease;
-}
 
-.aba-lateral-esquerda {
-  left: 0;
-  border-left: 0;
-  border-radius: 0 16px 16px 0;
-}
 
-.aba-lateral-direita {
-  right: 0;
-  border-right: 0;
-  border-radius: 16px 0 0 16px;
-}
 
-.aba-lateral span {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
 
-.aba-lateral-esquerda span {
-  transform: rotate(-90deg);
-}
 
-.aba-lateral-direita span {
-  transform: rotate(90deg);
-}
 
-.aba-lateral:hover {
-  filter: brightness(1.03);
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
-
-.aba-lateral[aria-expanded="true"] {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(249, 235, 203, 1) 0%,
-      rgba(230, 212, 176, 1) 100%
-    );
-}
-
-.aba-lateral::before,
-.aba-lateral::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 26px;
-  height: 12px;
-  border: 1px solid rgba(95, 67, 38, 0.45);
-  border-radius: 999px;
-  background:
-    linear-gradient(
-      180deg,
-      #b8915a 0%,
-      #7b5a34 100%
-    );
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: translateX(-50%);
-}
-
-.aba-lateral::before {
-  top: 8px;
-}
-
-.aba-lateral::after {
-  bottom: 8px;
-}
-
-#botaoRecolherFicha {
-  left: 10px;
-}
-
-#botaoRecolherPainelExplicativo {
-  right: 10px;
-}
 
 /* =====================================================
    Visualização de combate
