@@ -229,102 +229,37 @@ select {
 
 .pergaminho-cena {
   position: relative;
-
   width: 100%;
   height: 100%;
   min-height: 0;
-  min-height: 0;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
-
   overflow: hidden;
 }
 
 .pergaminho-completo {
   display: block;
-
-  height: 100%;
   width: auto;
-
+  height: 100%;
   max-width: none;
   max-height: 100%;
-
+  object-fit: contain;
+  pointer-events: none;
   transform: scaleX(0.97);
-
-  object-fit: contain;
-
-  pointer-events: none;
-}
-
-.pergaminho-lateral {
-  height: 100%;
-  width: auto;
-  min-width: 0;
-
-  display: block;
-
-  object-fit: contain;
-
-  pointer-events: none;
-
-  z-index: 2;
-}
-
-.pergaminho-esquerda {
-  grid-column: 1;
-  grid-row: 1;
-
-  justify-self: start;
-
-  position: relative;
-  z-index: 2;
-
-  transform: translateX(45px);
-}
-
-.pergaminho-direita {
-  grid-column: 3;
-  grid-row: 1;
-
-  justify-self: end;
-}
-
-.pergaminho-centro {
-  grid-column: 2;
-  grid-row: 1;
-
-  min-width: 0;
-  min-height: 0;
-
-  background:
-    url("Imagens/Assets/scroll-02-centro2.webp")
-    left top / auto 100%
-    repeat-x;
-
-  position: relative;
-  z-index: 1;
-  margin-left: 0px;
-  margin-right: 0px;
 }
 
 .conteudo-pergaminho-cena {
   position: absolute;
-
   top: 11%;
   right: 8%;
   bottom: 10%;
   left: 9%;
-
   z-index: 2;
-
   min-width: 0;
   min-height: 0;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-width: none;
 }
 
