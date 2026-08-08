@@ -35,14 +35,16 @@ const bancoAventuras = {
           {
             id: "telhado",
             texto:
-              "Tentar atravessar pelos telhados. Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.",
+              `Tentar atravessar pelos telhados.
+
+              Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.`,
             etapaInicial: "subirTelhado",
             etapas: {
               subirTelhado: {
                 descricao: [
                   "Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.",
                 ],
-                instrucao: "para subir no telhado.",
+                instrucao:"para subir no telhado.",
                 teste: {
                   tipo: "pericia",
                   periciaId: "acrobacia",
@@ -50,17 +52,22 @@ const bancoAventuras = {
                 },
                 resultados: {
                   sucesso: {
-                    texto: "Você consegue alcançar os telhados.",
+                    texto: `Você consegue alcançar os telhados. As caixas que você usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
+                    
+                    Do alto, você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas reais já se posiciona para impedir a passagem. O conflito parece inevitável.
+                    
+                    Talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombrar como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas reais estão distraídos.`,
                     escolhas: [
-                      { id: "esperar", texto: "Esperar.", proximaCena: "esperaNoTelhado" },
+                      { id: "esperar",
+                        texto: `Esperar. Antes de tomar qualquer decisão, o melhor é esperar o conflito de fato se iniciar, e torcer para que ele proporcione uma brecha para sua fuga.`, proximaCena: "esperaNoTelhado" },
                       {
                         id: "ir",
-                        texto: "Ir.",
+                        texto: `Esperar parece arriscado, mas se mover abertamente também. Talvez o melhor seja se mover devagar`,
                         proximaEtapa: "movimentacaoFurtiva",
                       },
                       {
                         id: "movimentacaoRapida",
-                        texto: "Movimentação rápida.",
+                        texto: `Esperar é arriscado demais. Você não sabe exatamente o quão ativamente estão procurando por você, e cada segundo de espera pode ser fatal. O melhor é se deslocar o mais rápido possível.`,
                         proximaCena: "movimentacaoTelhadoRapida",
                       },
                     ],
@@ -96,7 +103,7 @@ const bancoAventuras = {
 
           {
             id: "multidao",
-            texto: "Se misturar na multidão.",
+            texto: `Se misturar na multidão. Apesar de conhecer algumas das pessoas na multidão, talvez você consiga se misturar e passar despercebido.`,
             requerSistema: "escolhaEntrePericias",
             teste: {
               tipo: "periciaEscolha",
@@ -178,7 +185,7 @@ const bancoAventuras = {
 
           {
             id: "becos",
-            texto: "Continuar pelos becos.",
+            texto: `Continuar pelos becos. Melhor permanecer nas sombras e tentar encontrar uma saída da cidade investigando as vielas.`,
             requerSistema: "escolhaEntrePericias",
             teste: {
               tipo: "periciaEscolha",
@@ -193,7 +200,7 @@ const bancoAventuras = {
 
           {
             id: "batalha",
-            texto: "Enfrentar os guardas.",
+            texto: "Enfrentar os guardas. Você decide se aproveitar da confusão e tentar enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.",
             proximaCena: "batalha",
           },
         ],
@@ -254,7 +261,7 @@ const bancoAventuras = {
           },
           {
             id: "esperarNoite",
-            texto: "Esperar até a noite.",
+            texto: `Esperar até a noite. Pode ser arriscado, talvez até lá o conflita já tenha se dissipado e os guardas estejam ativamente buscando por você. Ainda assim, essa parece a opção mais segura.`,
             proximaCena: "telhadosNoite",
           },
         ],
