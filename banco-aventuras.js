@@ -9,88 +9,85 @@ const bancoAventuras = {
       "Fuja de uma cidade em conflito enquanto diferentes forças tentam impedir sua passagem.",
 
     disponivel: true,
-
     cenaInicial: "inicio",
+
+    metadadosImplementacao: {
+      fonte: "Aventuras RPG Solo",
+      totalCenasFonte: 20,
+      status: "estruturaCompletaConteudoParcialmenteExecutavel",
+      observacao:
+        "O banco descreve integralmente o fluxo disponível na fonte. Recursos ainda não suportados pelo motor são marcados em requerSistema ou pendenciaFonte.",
+    },
 
     cenas: {
       inicio: {
+        numeroFonte: 1,
         titulo: "O Começo",
 
         contexto: [
           "Você está fugindo da cidade onde viveu pelos últimos quatro anos.",
-
           "Nem em suas previsões mais pessimistas você imaginou que as coisas chegariam a esse ponto. Agora é tarde, e o perigo é grande demais. Depois de tudo que fez, todos que desafiou, chegou a hora de fugir.",
-
           "De um lado, os guardas do Conde Debminster, cuja autoridade você desafiou ao questionar sobre o alto valor dos impostos e, sem querer, acabou incitando a população a um pequeno levante contra as políticas autoritárias do conde. Do outro, a milícia dos Lagartos de Bronze, que se prontificou a oferecer segurança para a população durante os protestos. No entanto, aparentemente, agora haviam decidido que para tomar para si o poder que seria deixado pela inevitável queda da autoridade local, precisariam tirar você do tabuleiro político.",
-
           "Tudo aconteceu rápido demais. Lhe colocaram em uma posição que você nunca quis preencher. Agora, carregando os poucos pertences que você consegue em sua mochila, você se encontra esgueirando-se por um beco, olhado pelas sombras uma multidão raivosa. Muitos rostos os quais você conhece. Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. E em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.",
         ],
 
         escolhas: [
           {
-            id: "1",
+            id: "telhado",
             texto:
-              "Tentar atravessar pelos telhados. Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado. Com alguma sorte e habilidade, talvez ninguém o veja e você consiga andar pelhos telhado até alcançar uma pequena torre próxima à ponte.",
-            etapaInicial: "noTelhado",
-
+              "Tentar atravessar pelos telhados. Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.",
+            etapaInicial: "subirTelhado",
             etapas: {
-              noTelhado: {
+              subirTelhado: {
                 descricao: [
                   "Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.",
                 ],
-
                 instrucao: "para subir no telhado.",
-                teste: { tipo: "pericia", periciaId: "acrobacia", dificuldade: 12 },
-
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "acrobacia",
+                  dificuldade: 12,
+                },
                 resultados: {
                   sucesso: {
-                    texto: [
-                      "Você consegue subir com certa tranquilidade.",
-
-                      "Agora, do alto do telhado, é possível ver melhor a multidão. Eles marcham em direção ao castelo, onde já é possível ver uma movimentação de soldados. Em breve, haverá conflito, e talvez esse conflito seja uma boa distração para sua fuga.",
-                    ],
-
+                    texto: "Você consegue alcançar os telhados.",
                     escolhas: [
+                      { id: "esperar", texto: "Esperar.", proximaCena: "esperaNoTelhado" },
                       {
-                        id: "noTelhadoEsp",
-                        texto:
-                          "Esperar. Talvez o melhor seja esperar e tentar usar o conflito a seu favor.",
-                        proximaCena: "esperaNoTelhado",
+                        id: "ir",
+                        texto: "Ir.",
+                        proximaEtapa: "movimentacaoFurtiva",
                       },
-
                       {
-                        id: "noTelhadoIr",
-                        texto:
-                          "Continuar. Cada segundo se torna mais perigoso, e nada garante que sua fuga vá se tornar menos perigosa no meio de uma batalha.",
-                        proximaEtapa: "movimentoNoTelhado",
+                        id: "movimentacaoRapida",
+                        texto: "Movimentação rápida.",
+                        proximaCena: "movimentacaoTelhadoRapida",
                       },
                     ],
                   },
-
                   fracasso: {
-                    texto: [
-                      "As caixas não aguentam seu peso, e não parece haver nenhum outro modo de alcançar o telhado. Hora de pensar em outro plano.",
-                    ],
-
+                    texto: "As caixas não aguentam seu peso.",
                     voltarParaEscolhas: true,
                     removerEscolha: true,
                   },
                 },
               },
 
-              movimentoNoTelhado: {
-                instrucao: "para avançar sem ser visto.",
-                teste: { tipo: "pericia", periciaId: "furtividade", dificuldade: 13 },
-
+              movimentacaoFurtiva: {
+                instrucao: "para avançar pelos telhados sem ser visto.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 13,
+                },
                 resultados: {
                   sucesso: {
-                    texto: "Você avança sem ser percebido",
-                    proximaEtapa: "saltoFinal",
+                    texto: "Você avança sem ser percebido.",
+                    proximaCena: "movimentacaoTelhadoFurtiva",
                   },
-
                   fracasso: {
-                    texto: "Os guardas identificam sua posição.",
-                    proximaEtapa: "saltoFinal",
+                    texto: "Sua movimentação chama atenção.",
+                    proximaCena: "movimentacaoTelhadoRapida",
                   },
                 },
               },
@@ -98,144 +95,970 @@ const bancoAventuras = {
           },
 
           {
-            id: "2",
-            texto:
-              "Se misturar na multidão. Correndo o risco de ser reconhecido, você pode tentar seguir o fluxo do protesto e buscar uma alternativa de escapada.",
-            proximaCena: "naMultidao",
+            id: "multidao",
+            texto: "Se misturar na multidão.",
+            requerSistema: "escolhaEntrePericias",
+            teste: {
+              tipo: "periciaEscolha",
+              periciasIds: ["furtividade", "enganacao"],
+              dificuldade: 12,
+            },
+            resultados: {
+              sucesso: {
+                escolhas: [
+                  {
+                    id: "acompanharTorre",
+                    texto: "Acompanhar a multidão até a torre.",
+                    proximaCena: "torreChao",
+                  },
+                  {
+                    id: "acompanharPonte",
+                    texto: "Acompanhar a multidão até o início da ponte.",
+                    proximaCena: "margemRioPonte",
+                  },
+                  {
+                    id: "distrairGuardas",
+                    texto: "Tentar usar a população para distrair os guardas.",
+                    proximaCena: "guardasDistraidos",
+                  },
+                ],
+              },
+              fracasso: {
+                escolhas: [
+                  {
+                    id: "pedirAjuda",
+                    texto: "Pedir ajuda.",
+                    requerSistema: "testeSequencial",
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "persuasao",
+                      dificuldade: 13,
+                    },
+                    resultados: {
+                      sucesso: {
+                        escolhas: [
+                          {
+                            id: "pedirDistracao",
+                            texto: "Pedir para distrair os guardas.",
+                            proximaCena: "guardasDistraidos",
+                          },
+                          {
+                            id: "perguntarSaida",
+                            texto: "Perguntar se alguém sabe de outra saída para a cidade.",
+                            requerSistema: "testeNpc",
+                            pendenciaFonte:
+                              "A fonte indica apenas 'Teste de NPC', sem especificar NPC, atributo, perícia ou CD.",
+                            resultados: {
+                              sucesso: { proximaCena: "becosOpostos" },
+                              fracasso: { proximaCena: "becosLagartos" },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    id: "sairCorrendo",
+                    texto: "Sair correndo.",
+                    requerSistema: "testeEmEscolha",
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "atletismo",
+                      dificuldade: 13,
+                    },
+                    resultados: {
+                      sucesso: { proximaCena: "becosLagartos" },
+                      fracasso: { proximaCena: "batalha" },
+                    },
+                  },
+                ],
+              },
+            },
           },
 
           {
-            id: "3",
-            texto:
-              "Continuar se esgueirando pelos becos. Você pode continuar nas sombras, caminhando por vielas na busca de um caminho menos direto para sair da cidade, apesar de a chance de ser encontrado por um dos Lagartos de Bronze ser alta.",
-            proximaCena: "nosBecos",
+            id: "becos",
+            texto: "Continuar pelos becos.",
+            requerSistema: "escolhaEntrePericias",
+            teste: {
+              tipo: "periciaEscolha",
+              periciasIds: ["natureza", "sobrevivencia"],
+              dificuldade: 11,
+            },
+            resultados: {
+              sucesso: { proximaCena: "becosOpostos" },
+              fracasso: { proximaCena: "becosLagartos" },
+            },
           },
 
           {
-            id: "4",
-            texto:
-              "Enfrentar os guardas de frente. De um jeito ou de outro, tudo acaba aqui e agora. Talvez o seu embate honesto com os guardas o torne menos covarde aos olhos da população que você está deixando para trás. Talvez eles o ajudem, talvez o impeçam de fugir...",
+            id: "batalha",
+            texto: "Enfrentar os guardas.",
             proximaCena: "batalha",
           },
         ],
       },
 
       esperaNoTelhado: {
-        titulo: "Eespera no telhado",
-        contexto: "Você está nos telhados.",
-
+        numeroFonte: 2,
+        titulo: "Espera no Telhado",
+        contexto: [],
         escolhas: [
           {
-            id: "1",
-            texto: "Sair correndo pelos telhados o mais rápido possível.",
-
-            teste: {
-              nome: "Acrobacia",
-              dificuldade: 12,
-              instrucao:
-                "Faça um teste de Acrobacia. Role 1d20 e adicione seu modificador de Destreza.",
-              cenaSucesso: "saltoBemSucedido",
-              cenaFracasso: "saltoFracassado",
+            id: "irFurtivo",
+            texto: "Ir com movimentação furtiva.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para avançar furtivamente.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 13,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "movimentacaoTelhadoFurtiva" },
+                  fracasso: { proximaCena: "movimentacaoTelhadoRapida" },
+                },
+              },
             },
           },
-
           {
-            id: "2",
-            texto:
-              "Pular de um telhado para o outro devagar, apenas quando tiver certeza de que não está sendo observado.",
-            proximaCena: "multidao",
+            id: "irRapido",
+            texto: "Ir com movimentação rápida.",
+            proximaCena: "movimentacaoTelhadoRapida",
           },
-
           {
-            id: "3",
-            texto: "Manter vigia até a noite.",
-            proximaCena: "becos",
+            id: "aproximarConfrontoFurtivo",
+            texto: "Se aproximar do confronto com movimentação furtiva.",
+            etapaInicial: "testeFurtividadeConfronto",
+            etapas: {
+              testeFurtividadeConfronto: {
+                instrucao: "para se aproximar do confronto sem ser visto.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 14,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "confronto" },
+                  fracasso: { proximaCena: "movimentacaoTelhadoRapida" },
+                },
+              },
+            },
+          },
+          {
+            id: "aproximarConfrontoRapido",
+            texto: "Se aproximar do confronto com movimentação rápida.",
+            proximaCena: "movimentacaoTelhadoRapida",
+          },
+          {
+            id: "esperarNoite",
+            texto: "Esperar até a noite.",
+            proximaCena: "telhadosNoite",
           },
         ],
       },
 
-      saltoBemSucedido: {
-        titulo: "Salto bem-sucedido",
-        contexto:
-          "Você salta no último instante e alcança o telhado seguinte. Os perseguidores ficam para trás por alguns segundos.",
+      movimentacaoTelhadoFurtiva: {
+        numeroFonte: 3,
+        titulo: "Movimentação Telhado Furtiva",
+        contexto: [],
+        requerSistema: "testeOposto",
+        testeInicial: {
+          tipo: "oposto",
+          jogador: { tipo: "pericia", periciaId: "furtividade" },
+          oponente: {
+            npcId: "guardaConde",
+            tipo: "pericia",
+            periciaId: "percepcao",
+          },
+        },
+        resultadosTesteInicial: {
+          sucesso: {
+            escolhas: [
+              {
+                id: "pularTorre",
+                texto: "Pular para a torre.",
+                requerSistema: "testeEmEscolha",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "atletismo",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "torreTetoSemGuardas" },
+                  fracasso: {
+                    efeitos: [{ tipo: "danoQueda", requerSistema: "danoQueda" }],
+                    requerSistema: "escolhaEntrePericias",
+                    teste: {
+                      tipo: "periciaEscolha",
+                      periciasIds: ["furtividade", "enganacao"],
+                      dificuldade: 14,
+                    },
+                    resultados: {
+                      sucesso: {
+                        escolhas: [
+                          {
+                            id: "acompanharTorre",
+                            texto: "Se misturar e acompanhar até a torre.",
+                            proximaCena: "torreChao",
+                          },
+                        ],
+                      },
+                      fracasso: {
+                        escolhas: [
+                          {
+                            id: "pedirAjuda",
+                            texto: "Pedir ajuda.",
+                            requerSistema: "testeSequencial",
+                            teste: {
+                              tipo: "pericia",
+                              periciaId: "persuasao",
+                              dificuldade: 13,
+                            },
+                            resultados: {
+                              sucesso: { proximaCena: "torreChao" },
+                              fracasso: {
+                                teste: {
+                                  tipo: "pericia",
+                                  periciaId: "atletismo",
+                                  dificuldade: 13,
+                                },
+                                resultados: {
+                                  sucesso: { proximaCena: "becosOpostos" },
+                                  fracasso: { proximaCena: "batalha" },
+                                },
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                id: "descerRua",
+                texto: "Descer e ir pela rua.",
+                proximaCena: "torreChao",
+              },
+            ],
+          },
+          fracasso: { proximaCena: "movimentacaoTelhadoRapida" },
+        },
+      },
 
-        escolhas: [
-          {
-            id: "1",
-            texto: "a fazer.",
-
+      movimentacaoTelhadoRapida: {
+        numeroFonte: 4,
+        titulo: "Movimentação Telhado Rápida",
+        contexto: [],
+        requerSistema: "ataqueNarrativo",
+        sequencia: {
+          ataquesMaximos: 2,
+          atacanteNpcId: "guardaConde",
+          aoAcertar: {
+            efeito: { tipo: "danoAtaque", requerSistema: "ataqueNarrativo" },
             teste: {
-              nome: "Acrobacia",
-              dificuldade: 12,
-              instrucao:
-                "Faça um teste de Acrobacia. Role 1d20 e adicione seu modificador de Destreza.",
-              cenaSucesso: "saltoBemSucedido",
-              cenaFracasso: "saltoFracassado",
+              tipo: "salvaguarda",
+              atributoId: "constituicao",
+              dificuldade: 14,
+            },
+            resultados: {
+              sucesso: { continuarSequencia: true },
+              fracasso: {
+                teste: {
+                  tipo: "atributo",
+                  atributoId: "forca",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { continuarSequencia: true },
+                  fracasso: {
+                    efeitos: [{ tipo: "danoQueda", requerSistema: "danoQueda" }],
+                    proximaCena: "batalha",
+                  },
+                },
+              },
             },
           },
+          aoConcluirSemQueda: { proximaCena: "torreTetoComGuardas" },
+        },
+      },
 
+      guardasDistraidos: {
+        numeroFonte: 5,
+        titulo: "Guardas Distraídos",
+        contexto: [],
+        escolhas: [
           {
-            id: "2",
-            texto: "a fazer",
-            proximaCena: "multidao",
+            id: "ponteDisfarcado",
+            texto: "Tentar passar disfarçado pela ponte.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para passar disfarçado pela ponte.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
           },
-
           {
-            id: "3",
-            texto: "afazer",
-            proximaCena: "becos",
+            id: "atravessarRio",
+            texto: "Tentar atravessar o rio.",
+            etapaInicial: "testeAtletismo",
+            etapas: {
+              testeAtletismo: {
+                instrucao: "para atravessar o rio.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "atletismo",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "torreChaoMolhado" },
+                },
+              },
+            },
           },
         ],
       },
 
-      saltoFracassado: {
-        titulo: "Salto bem-sucedido",
-        contexto:
-          "Você não alcança completamente o outro telhado e se agarra à borda. Os perseguidores estão cada vez mais próximos.",
-
+      becosOpostos: {
+        numeroFonte: 6,
+        titulo: "Becos Opostos",
+        contexto: [],
         escolhas: [
           {
-            id: "1",
-            texto: "a fazer.",
-
-            teste: {
-              nome: "Acrobacia",
-              dificuldade: 12,
-              instrucao:
-                "Faça um teste de Acrobacia. Role 1d20 e adicione seu modificador de Destreza.",
-              cenaSucesso: "saltoBemSucedido",
-              cenaFracasso: "saltoFracassado",
+            id: "darVoltaCastelo",
+            texto: "Tentar dar a volta no castelo.",
+            etapaInicial: "testeSobrevivencia",
+            etapas: {
+              testeSobrevivencia: {
+                instrucao: "para dar a volta no castelo.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "sobrevivencia",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "margemRioLonge" },
+                  fracasso: { proximaCena: "becosLagartos" },
+                },
+              },
             },
           },
-
           {
-            id: "2",
-            texto: "a fazer",
-            proximaCena: "multidao",
-          },
-
-          {
-            id: "3",
-            texto: "afazer",
-            proximaCena: "becos",
+            id: "buscarOutraSaida",
+            texto: "Buscar por outra saída.",
+            requerSistema: "testeSequencial",
+            teste: {
+              tipo: "pericia",
+              periciaId: "sobrevivencia",
+              dificuldade: 17,
+            },
+            resultados: {
+              sucesso: {
+                texto: "Você encontra uma saída, mas ela está bloqueada por Lagartos de Bronze.",
+                escolhas: [
+                  {
+                    id: "passarDespercebido",
+                    texto: "Tentar passar despercebido.",
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "furtividade",
+                      dificuldade: 17,
+                    },
+                    pendenciaFonte:
+                      "A fonte não explicita o destino de sucesso/falha deste teste antes da opção 'Voltar'.",
+                  },
+                  {
+                    id: "voltar",
+                    texto: "Voltar.",
+                    proximaCena: "becosLagartos",
+                  },
+                ],
+              },
+              fracasso: { proximaCena: "batalha" },
+            },
           },
         ],
+      },
+
+      becosLagartos: {
+        numeroFonte: 7,
+        titulo: "Becos Lagartos",
+        contexto: [],
+        escolhas: [
+          {
+            id: "voltarTorre",
+            texto: "Voltar para a torre.",
+            etapaInicial: "testeSobrevivencia",
+            etapas: {
+              testeSobrevivencia: {
+                instrucao: "para voltar para a torre.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "sobrevivencia",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "torreChao" },
+                  fracasso: { proximaCena: "confronto" },
+                },
+              },
+            },
+          },
+          {
+            id: "buscarOutraSaida",
+            texto: "Buscar por outra saída.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para buscar outra saída sem ser percebido.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "margemRioLonge" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      confronto: {
+        numeroFonte: 8,
+        titulo: "Confronto",
+        contexto: [],
+        incompleta: true,
+        pendenciaFonte:
+          "A Cena 08 aparece na fonte apenas como '1.', sem conteúdo, escolhas, testes ou destinos.",
+        escolhas: [],
+      },
+
+      telhadosNoite: {
+        numeroFonte: 9,
+        titulo: "Telhados Noite",
+        contexto: [],
+        escolhas: [
+          {
+            id: "irTelhadosFurtivo",
+            texto: "Ir pelos telhados com movimentação furtiva.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para avançar furtivamente pelos telhados.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 9,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "movimentacaoTelhadoNoite" },
+                  fracasso: {
+                    efeitos: [{ tipo: "danoQueda", requerSistema: "danoQueda" }],
+                    proximaCena: "movimentacaoNoite",
+                  },
+                },
+              },
+            },
+          },
+          {
+            id: "irTelhadosRapido",
+            texto: "Ir pelos telhados com movimentação rápida.",
+            proximaCena: "movimentacaoNoite",
+          },
+          {
+            id: "irSombras",
+            texto: "Descer e ir pelas sombras.",
+            proximaCena: "movimentacaoNoiteFurtiva",
+          },
+        ],
+      },
+
+      torreChao: {
+        numeroFonte: 10,
+        titulo: "Torre Chão",
+        contexto: [],
+        escolhas: [
+          {
+            id: "atravessarRio",
+            texto: "Tentar atravessar o rio.",
+            requerSistema: "testeComPendenciaFonte",
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              dificuldade: null,
+            },
+            pendenciaFonte: "A fonte não informa a CD deste teste de Atletismo.",
+            resultados: {
+              sucesso: { proximaCena: "fim" },
+              fracasso: { proximaCena: "margemRioLongeMolhado" },
+            },
+          },
+        ],
+      },
+
+      torreTetoSemGuardas: {
+        numeroFonte: 11,
+        titulo: "Torre Teto Sem Guardas",
+        contexto: [],
+        escolhas: [
+          {
+            id: "barcos",
+            texto: "Tentar pular de barco em barco.",
+            requerSistema: "sequenciaTresSucessosComTesteOposto",
+            progresso: { sucessosNecessarios: 3 },
+            testes: [
+              {
+                tipo: "pericia",
+                periciaId: "atletismo",
+                dificuldade: 17,
+              },
+              {
+                tipo: "oposto",
+                jogador: { tipo: "pericia", periciaId: "furtividade" },
+                oponente: {
+                  npcId: "guardaConde",
+                  tipo: "pericia",
+                  periciaId: "percepcao",
+                },
+              },
+            ],
+            resultados: {
+              tresSucessos: { proximaCena: "fim" },
+              qualquerFalha: { proximaCena: "batalha" },
+            },
+          },
+          {
+            id: "passarDespercebido",
+            texto: "Tentar passar despercebido.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para passar despercebido.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      margemRioPonte: {
+        numeroFonte: 12,
+        titulo: "Margem Rio Ponte",
+        contexto: [],
+        escolhas: [
+          {
+            id: "nadar",
+            texto: "Tentar atravessar nadando.",
+            etapaInicial: "testeAtletismo",
+            etapas: {
+              testeAtletismo: {
+                instrucao: "para atravessar o rio nadando.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "atletismo",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "torreChaoMolhado" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      torreTetoComGuardas: {
+        numeroFonte: 13,
+        titulo: "Torre Teto Com Guardas",
+        contexto: [],
+        escolhas: [
+          {
+            id: "barcosSobAtaque",
+            texto: "Tentar pular de barco em barco.",
+            requerSistema: "sequenciaTresSucessosComAtaquesNarrativos",
+            progresso: { sucessosNecessarios: 3 },
+            testePrincipal: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              dificuldade: 17,
+            },
+            aposCadaSucesso: {
+              ataques: 2,
+              atacanteNpcId: "guardaConde",
+              aoAcertar: {
+                teste: {
+                  tipo: "salvaguarda",
+                  atributoId: "constituicao",
+                  dificuldade: 14,
+                },
+                falha: { proximaCena: "batalha" },
+              },
+            },
+            resultados: {
+              tresSucessosSemCair: { proximaCena: "fim" },
+              qualquerFalha: { proximaCena: "batalha" },
+            },
+          },
+          {
+            id: "passarDespercebido",
+            texto: "Tentar passar despercebido.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para passar despercebido.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 20,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      torreChaoMolhado: {
+        numeroFonte: 14,
+        titulo: "Torre Chão Molhado",
+        contexto: [],
+        escolhas: [
+          {
+            id: "passarDespercebido",
+            texto: "Tentar passar despercebido.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para passar despercebido.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
+          },
+          { id: "lutar", texto: "Lutar.", proximaCena: "batalha" },
+        ],
+      },
+
+      margemRioLonge: {
+        numeroFonte: 15,
+        titulo: "Margem Rio Longe",
+        contexto: [],
+        escolhas: [
+          {
+            id: "nadar",
+            texto: "Tentar atravessar nadando.",
+            etapaInicial: "testeAtletismo",
+            etapas: {
+              testeAtletismo: {
+                instrucao: "para atravessar o rio nadando.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "atletismo",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "margemRioLongeMolhado" },
+                },
+              },
+            },
+          },
+          {
+            id: "passarDespercebido",
+            texto: "Tentar passar despercebido.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para passar despercebido.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      margemRioLongeMolhado: {
+        numeroFonte: 16,
+        titulo: "Margem Rio Longe Molhado",
+        contexto: [],
+        escolhas: [
+          {
+            id: "passarDespercebido",
+            texto: "Tentar passar despercebido.",
+            etapaInicial: "testeFurtividade",
+            etapas: {
+              testeFurtividade: {
+                instrucao: "para passar despercebido.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "batalha" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      movimentacaoTelhadoNoite: {
+        numeroFonte: 17,
+        titulo: "Movimentação Telhado Noite",
+        contexto: [],
+        requerSistema: "testeOpostoComModificadorContextual",
+        testeInicial: {
+          tipo: "oposto",
+          jogador: {
+            tipo: "pericia",
+            periciaId: "furtividade",
+            modificadorContextual: 5,
+          },
+          oponente: {
+            npcId: "guardaConde",
+            tipo: "pericia",
+            periciaId: "percepcao",
+          },
+        },
+        resultadosTesteInicial: {
+          sucesso: {
+            escolhas: [
+              {
+                id: "pularTorre",
+                texto: "Pular para a torre.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "atletismo",
+                  dificuldade: 17,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "torreTetoSemGuardas" },
+                  fracasso: {
+                    efeitos: [{ tipo: "danoQueda", requerSistema: "danoQueda" }],
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "furtividade",
+                      dificuldade: 14,
+                    },
+                    resultados: {
+                      sucesso: { proximaCena: "movimentacaoNoiteFurtiva" },
+                      fracasso: { proximaCena: "batalha" },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          fracasso: { proximaCena: "movimentacaoNoite" },
+        },
+      },
+
+      movimentacaoNoite: {
+        numeroFonte: 18,
+        titulo: "Movimentação Noite",
+        contexto: [],
+        escolhas: [
+          {
+            id: "irTorre",
+            texto: "Ir para a torre.",
+            requerSistema: "testeOposto",
+            teste: {
+              tipo: "oposto",
+              jogador: { tipo: "pericia", periciaId: "furtividade" },
+              oponente: {
+                npcId: "guardaConde",
+                tipo: "pericia",
+                periciaId: "percepcao",
+              },
+            },
+            resultados: {
+              sucesso: {
+                escolhas: [
+                  {
+                    id: "nadar",
+                    texto: "Tentar atravessar nadando.",
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "atletismo",
+                      dificuldade: 15,
+                    },
+                    resultados: {
+                      sucesso: { proximaCena: "fim" },
+                      fracasso: { proximaCena: "margemRioLongeMolhado" },
+                    },
+                  },
+                  {
+                    id: "passarDespercebido",
+                    texto: "Tentar passar despercebido.",
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "furtividade",
+                      dificuldade: 17,
+                    },
+                    resultados: {
+                      sucesso: { proximaCena: "fim" },
+                      fracasso: { proximaCena: "batalha" },
+                    },
+                  },
+                  {
+                    id: "barcos",
+                    texto: "Tentar pular de barco em barco.",
+                    requerSistema: "sequenciaTresSucessosComTesteOposto",
+                    progresso: { sucessosNecessarios: 3 },
+                    resultados: {
+                      tresSucessos: { proximaCena: "fim" },
+                      qualquerFalha: { proximaCena: "batalha" },
+                    },
+                  },
+                ],
+              },
+              fracasso: { proximaCena: "batalha" },
+            },
+          },
+          {
+            id: "irPonte",
+            texto: "Dar a volta e tentar ir pela ponte.",
+            requerSistema: "testeOpostoComModificadorContextual",
+            teste: {
+              tipo: "oposto",
+              jogador: { tipo: "pericia", periciaId: "furtividade" },
+              oponente: {
+                npcId: "guardaConde",
+                tipo: "pericia",
+                periciaId: "percepcao",
+                modificadorContextual: 3,
+              },
+            },
+            resultados: {
+              sucesso: {
+                escolhas: [
+                  {
+                    id: "carroca",
+                    texto: "Se esconder em uma das carroças.",
+                    teste: {
+                      tipo: "atributo",
+                      atributoId: "forca",
+                      dificuldade: 15,
+                    },
+                    resultados: {
+                      sucesso: { proximaCena: "fim" },
+                      fracasso: { proximaCena: "batalha" },
+                    },
+                  },
+                ],
+              },
+              fracasso: { proximaCena: "batalha" },
+            },
+          },
+        ],
+      },
+
+      movimentacaoNoiteFurtiva: {
+        numeroFonte: 19,
+        titulo: "Movimentação Noite Furtiva",
+        contexto: [],
+        escolhas: [
+          {
+            id: "carroca",
+            texto: "Se esconder em uma das carroças.",
+            requerSistema: "testeDeAtributo",
+            teste: {
+              tipo: "atributo",
+              atributoId: "forca",
+              dificuldade: 17,
+            },
+            resultados: {
+              sucesso: { proximaCena: "fim" },
+              fracasso: { proximaCena: "batalha" },
+            },
+          },
+          {
+            id: "nadar",
+            texto: "Descer até a margem do rio e tentar atravessar nadando.",
+            etapaInicial: "testeAtletismo",
+            etapas: {
+              testeAtletismo: {
+                instrucao: "para atravessar o rio nadando.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "atletismo",
+                  dificuldade: 15,
+                },
+                resultados: {
+                  sucesso: { proximaCena: "fim" },
+                  fracasso: { proximaCena: "torreChaoMolhado" },
+                },
+              },
+            },
+          },
+        ],
+      },
+
+      fim: {
+        numeroFonte: 20,
+        titulo: "Fim",
+        contexto: [],
+        fimAventura: true,
+        pendenciaFonte:
+          "A fonte identifica a Cena 20 apenas como 'Fim' e não fornece texto narrativo adicional.",
+        escolhas: [],
       },
 
       batalha: {
-        titulo: "Confronto na ponte",
-
+        titulo: "Batalha",
+        cenaTecnica: true,
         contexto: [
-          "Você abandona qualquer tentativa de passar despercebido e caminha em direção aos guardas.",
-
-          "Ao perceberem sua aproximação, eles sacam suas armas e bloqueiam o caminho até a ponte.",
+          "Você entra em confronto com os guardas que bloqueiam sua fuga.",
         ],
-
         combate: {
           jogador: {
             posicao: { coluna: 16, linha: 15 },
           },
-
           inimigos: [
             {
               npcId: "guardaConde",
@@ -246,21 +1069,15 @@ const bancoAventuras = {
               ],
             },
           ],
-
           resultados: {
             vitoria: {
               contexto: [
-                "O último guarda cai, deixando livre o caminho até a ponte.",
-
-                "Por alguns instantes, você tem uma oportunidade para continuar sua fuga.",
+                "O último guarda cai, deixando livre o caminho para continuar sua fuga.",
               ],
             },
-
             derrota: {
               contexto: [
-                "Seus ferimentos finalmente cobram seu preço. Sem forças, você cai diante dos guardas.",
-
-                "Sua fuga termina antes que você consiga alcançar a ponte.",
+                "Seus ferimentos finalmente cobram seu preço e sua fuga é interrompida.",
               ],
             },
           },
