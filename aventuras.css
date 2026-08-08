@@ -229,42 +229,89 @@ select {
 
 .pergaminho-cena {
   position: relative;
+
+  width: 100%;
   height: 100%;
   min-height: 0;
+  min-height: 0;
+
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: stretch;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+  grid-template-rows: minmax(0, 1fr);
+
+  overflow: hidden;
 }
 
-.pergaminho-esquerda,
-.pergaminho-direita {
-  width: 180px;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+.pergaminho-lateral {
+  height: 100%;
+  width: auto;
+  min-width: 0;
+
+  display: block;
+
+  object-fit: contain;
+
+  pointer-events: none;
+
+  z-index: 2;
 }
 
 .pergaminho-esquerda {
-  background-image: url("Imagens/Assets/scroll-02-esquerda.webp");
-  background-position: left top;
-}
+  grid-column: 1;
+  grid-row: 1;
 
-.pergaminho-centro {
-  background: url("Imagens/Assets/scroll-02-centro.webp") center top / auto 100% repeat-x;
+  justify-self: start;
+
+  position: relative;
+  z-index: 2;
+
+  transform: translateX(45px);
 }
 
 .pergaminho-direita {
-  background-image: url("Imagens/Assets/scroll-02-direita.webp");
-  background-position: right top;
+  grid-column: 3;
+  grid-row: 1;
+
+  justify-self: end;
+}
+
+.pergaminho-centro {
+  grid-column: 2;
+  grid-row: 1;
+
+  min-width: 0;
+  min-height: 0;
+
+  background:
+    url("Imagens/Assets/scroll-02-centro2.webp")
+    left top / auto 100%
+    repeat-x;
+
+  position: relative;
+  z-index: 1;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .conteudo-pergaminho-cena {
-  position: absolute;
-  top: 14%;
-  right: 8%;
-  bottom: 12%;
-  left: 8%;
+  grid-column: 2;
+  grid-row: 1;
+
+  position: relative;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin: 4% -1% 4% -1%;
+
+  z-index: 3;
+
   overflow-y: auto;
   overflow-x: hidden;
+
   scrollbar-width: none;
 }
 
