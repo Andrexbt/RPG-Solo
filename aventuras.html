@@ -97,23 +97,136 @@
             </section>
 
             <aside class="adendos-aventura">
-              <section class="janela-acao" aria-labelledby="tituloAcao">
-            <h2 id="tituloAcao">O que você fará?</h2>
 
-            <form id="formularioAcao" class="formulario-acao">
-              <textarea
-                id="campoAcao"
-                name="acao"
-                rows="1"
-                aria-label="Descreva a ação do personagem"
-                placeholder=""
-                required
-              >
-              </textarea>
+              <section
+        class="janela-anotacoes janela-flutuante"
+        aria-labelledby="tituloAnotacoes"
+      >
+        <header class="cabecalho-janela-flutuante" data-alca-arraste>
+          <h2 id="tituloAnotacoes">Anotações</h2>
 
-              <button id="botaoEnviarAcao" type="submit">Enviar ação</button>
-            </form>
+          <button
+            class="botao-minimizar-janela"
+            type="button"
+            aria-controls="conteudoAnotacoes"
+            aria-expanded="true"
+            aria-label="Minimizar janela de anotações"
+            data-minimizar-janela
+          >
+            -
+          </button>
+        </header>
+
+        <div id="conteudoAnotacoes" class="conteudo-anotacoes">
+          <textarea
+            id="campoAnotacoes"
+            rows="5"
+            aria-labelledby="tituloAnotacoes"
+            placeholder="Escreva suas anotações aqui..."
+          ></textarea>
+        </div>
               </section>
+
+              <section
+        class="janela-dados janela-flutuante"
+        aria-labelledby="tituloDados"
+      >
+        <header class="cabecalho-janela-flutuante" data-alca-arraste>
+          <h2 id="tituloDados">Dados</h2>
+
+          <button
+            class="botao-minimizar-janela"
+            type="button"
+            aria-controls="conteudoDados"
+            aria-expanded="true"
+            aria-label="Minimizar janela de dados"
+            data-minimizar-janela
+          >
+            -
+          </button>
+        </header>
+
+        <div id="conteudoDados" class="conteudo-dados">
+          <p
+  id="solicitacaoCaixaDados"
+  class="solicitacao-caixa-dados"
+  hidden
+></p>
+          <div class="caixa-dados">
+            <aside
+              id="colecaoDados"
+              class="colecao-dados"
+              aria-label="Dados disponíveis"
+            >
+              <button
+                class="dado-disponivel"
+                type="button"
+                data-faces="4"
+                aria-label="Dado de quatro faces"
+              >
+                d4
+              </button>
+
+              <button
+                class="dado-disponivel"
+                type="button"
+                data-faces="6"
+                aria-label="Dado de seis faces"
+              >
+                d6
+              </button>
+
+              <button
+                class="dado-disponivel"
+                type="button"
+                data-faces="8"
+                aria-label="Dado de oito faces"
+              >
+                d8
+              </button>
+
+              <button
+                class="dado-disponivel"
+                type="button"
+                data-faces="10"
+                aria-label="Dado de dez faces"
+              >
+                d10
+              </button>
+
+              <button
+                class="dado-disponivel"
+                type="button"
+                data-faces="12"
+                aria-label="Dado de doze faces"
+              >
+                d12
+              </button>
+
+              <button
+                class="dado-disponivel"
+                type="button"
+                data-faces="20"
+                aria-label="Dado de vinte faces"
+              >
+                d20
+              </button>
+            </aside>
+
+            <div
+              id="bandejaDados"
+              class="bandeja-dados"
+              role="group"
+              aria-label="Bandeja de rolagem"
+            >
+              <p class="instrucao-bandeja">Arraste os dados para esta área.</p>
+            </div>
+          </div>
+
+          <output id="resultadoDado" aria-live="polite"></output>
+        </div>
+      </section>
+              
             </aside>
             
           </div>
@@ -321,137 +434,6 @@
 
       </aside>
 
-    </div>
-
-    <div class="ferramentas-aventura">
-      <section
-        class="janela-dados janela-flutuante janela-minimizada"
-        aria-labelledby="tituloDados"
-      >
-        <header class="cabecalho-janela-flutuante" data-alca-arraste>
-          <h2 id="tituloDados">Dados</h2>
-
-          <button
-            class="botao-minimizar-janela"
-            type="button"
-            aria-controls="conteudoDados"
-            aria-expanded="false"
-            aria-label="Minimizar janela de dados"
-            data-minimizar-janela
-          >
-            +
-          </button>
-        </header>
-
-        <div id="conteudoDados" class="conteudo-dados">
-          <p
-  id="solicitacaoCaixaDados"
-  class="solicitacao-caixa-dados"
-  hidden
-></p>
-          <div class="caixa-dados">
-            <aside
-              id="colecaoDados"
-              class="colecao-dados"
-              aria-label="Dados disponíveis"
-            >
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="4"
-                aria-label="Dado de quatro faces"
-              >
-                d4
-              </button>
-
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="6"
-                aria-label="Dado de seis faces"
-              >
-                d6
-              </button>
-
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="8"
-                aria-label="Dado de oito faces"
-              >
-                d8
-              </button>
-
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="10"
-                aria-label="Dado de dez faces"
-              >
-                d10
-              </button>
-
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="12"
-                aria-label="Dado de doze faces"
-              >
-                d12
-              </button>
-
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="20"
-                aria-label="Dado de vinte faces"
-              >
-                d20
-              </button>
-            </aside>
-
-            <div
-              id="bandejaDados"
-              class="bandeja-dados"
-              role="group"
-              aria-label="Bandeja de rolagem"
-            >
-              <p class="instrucao-bandeja">Arraste os dados para esta área.</p>
-            </div>
-          </div>
-
-          <output id="resultadoDado" aria-live="polite"></output>
-        </div>
-      </section>
-
-      <section
-        class="janela-anotacoes janela-flutuante janela-minimizada"
-        aria-labelledby="tituloAnotacoes"
-      >
-        <header class="cabecalho-janela-flutuante" data-alca-arraste>
-          <h2 id="tituloAnotacoes">Anotações</h2>
-
-          <button
-            class="botao-minimizar-janela"
-            type="button"
-            aria-controls="conteudoAnotacoes"
-            aria-expanded="false"
-            aria-label="Minimizar janela de anotações"
-            data-minimizar-janela
-          >
-            +
-          </button>
-        </header>
-
-        <div id="conteudoAnotacoes" class="conteudo-anotacoes">
-          <textarea
-            id="campoAnotacoes"
-            rows="5"
-            aria-labelledby="tituloAnotacoes"
-            placeholder="Escreva suas anotações aqui..."
-          ></textarea>
-        </div>
-      </section>
     </div>
 
     <div

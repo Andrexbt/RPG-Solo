@@ -4,7 +4,11 @@
   const resultadoDado = document.querySelector("#resultadoDado");
   const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
   const camadaDadosLancados = document.querySelector("#camadaDadosLancados");
+
   const tabuleiroDados = document.querySelector("#tabuleiroCombate");
+  const superficieAventura = document.querySelector(".layout-aventura");
+  const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
+
   const solicitacaoCaixaDados = document.querySelector("#solicitacaoCaixaDados");
 
   const estadoCaixaDados = {
@@ -16,35 +20,90 @@
   let solicitacaoRolagemAtual = null;
   let rolagemSolicitadaEmAndamento = false;
 
-  function prepararCamadaDados() {
-    if (!camadaDadosLancados || !tabuleiroDados) {
-      return false;
-    }
+  function obterSuperficieDados() {
+  const combateEstaVisivel =
+    visualizacaoCombate &&
+    !visualizacaoCombate.hidden;
 
-    if (camadaDadosLancados.parentElement !== tabuleiroDados) {
-      tabuleiroDados.append(camadaDadosLancados);
-    }
-
-    if (resultadoDado && resultadoDado.parentElement !== camadaDadosLancados) {
-      camadaDadosLancados.append(resultadoDado);
-    }
-
-    return true;
+  if (
+    combateEstaVisivel &&
+    tabuleiroDados
+  ) {
+    return tabuleiroDados;
   }
 
-  function obterPosicaoNoTabuleiro(clientX, clientY) {
-    if (!tabuleiroDados) {
-      return { x: clientX, y: clientY };
-    }
+  return superficieAventura;
+  }
 
-    const retangulo = tabuleiroDados.getBoundingClientRect();
-    const escalaX = retangulo.width / tabuleiroDados.offsetWidth || 1;
-    const escalaY = retangulo.height / tabuleiroDados.offsetHeight || 1;
+  function prepararCamadaDados() {
+  const superficieDados =
+    obterSuperficieDados();
 
+  if (
+    !camadaDadosLancados ||
+    !superficieDados
+  ) {
+    return false;
+  }
+
+  if (
+    camadaDadosLancados.parentElement !==
+    superficieDados
+  ) {
+    superficieDados.append(
+      camadaDadosLancados
+    );
+  }
+
+  if (
+    resultadoDado &&
+    resultadoDado.parentElement !==
+      camadaDadosLancados
+  ) {
+    camadaDadosLancados.append(
+      resultadoDado
+    );
+  }
+
+  return true;
+  }
+
+  function obterPosicaoNaSuperficie(
+  clientX,
+  clientY
+) {
+  const superficieDados =
+    obterSuperficieDados();
+
+  if (!superficieDados) {
     return {
-      x: (clientX - retangulo.left) / escalaX,
-      y: (clientY - retangulo.top) / escalaY,
+      x: clientX,
+      y: clientY,
     };
+  }
+
+  const retangulo =
+    superficieDados.getBoundingClientRect();
+
+  const escalaX =
+    retangulo.width /
+      superficieDados.offsetWidth ||
+    1;
+
+  const escalaY =
+    retangulo.height /
+      superficieDados.offsetHeight ||
+    1;
+
+  return {
+    x:
+      (clientX - retangulo.left) /
+      escalaX,
+
+    y:
+      (clientY - retangulo.top) /
+      escalaY,
+  };
   }
 
   function rolarDado(numeroDeFaces) {
@@ -411,7 +470,7 @@ solicitacaoCaixaDados.textContent =
     }
 
     const posicao =
-      obterPosicaoNoTabuleiro(
+      obterPosicaoNaSuperficie(
         evento.clientX,
         evento.clientY
       );

@@ -38,14 +38,70 @@
   width: 26px;
   height: 26px;
   padding: 0;
+
   display: grid;
   place-items: center;
+
   flex-shrink: 0;
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 6px;
+
+  border: 0;
+  border-radius: 0;
+
   background: transparent;
   color: inherit;
+
+  font-size: 1rem;
+
   cursor: pointer;
+}
+
+.botao-minimizar-janela:hover {
+  opacity: 0.55;
+}
+
+.janela-anotacoes,
+.janela-dados {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+
+#campoAnotacoes {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+
+.janela-anotacoes .cabecalho-janela-flutuante,
+.janela-dados .cabecalho-janela-flutuante {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.janela-anotacoes .botao-minimizar-janela,
+.janela-dados .botao-minimizar-janela {
+  position: absolute;
+  right: 0;
+}
+
+.janela-anotacoes .cabecalho-janela-flutuante h2,
+.janela-dados .cabecalho-janela-flutuante h2 {
+  width: 100%;
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
 }
 
 .janela-flutuante .conteudo-dados,
@@ -68,6 +124,21 @@
   cursor: grabbing;
 }
 
+.adendos-aventura .janela-flutuante.janela-encaixada {
+  position: relative;
+
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  flex: 0 0 auto;
+}
+
 @media (max-width: 560px) {
   .janela-flutuante {
     width: calc(100vw - 16px);
@@ -79,5 +150,9 @@
     right: 10px;
     left: auto;
     bottom: 10px;
+    font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
   }
 }

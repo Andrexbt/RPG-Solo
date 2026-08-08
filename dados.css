@@ -3,31 +3,17 @@
    ========================================================= */
 
 .janela-dados.janela-flutuante {
-  right: 16px;
-  bottom: 16px;
-  width: auto;
-  padding: 8px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  box-shadow: none;
+  width: min(300px, calc(100vw - 24px));
 }
 
 .janela-dados .cabecalho-janela-flutuante {
-  width: max-content;
-  min-width: 120px;
-  margin-left: auto;
-  padding: 7px 9px;
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 8px;
-  background: var(--cor-aventura-papel);
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.28);
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
 }
 
-.janela-dados:not(.janela-minimizada)
-  .cabecalho-janela-flutuante {
-  margin-bottom: 7px;
-}
+
 
 .janela-dados.janela-minimizada {
   min-width: 0;
@@ -40,14 +26,15 @@
 }
 
 .colecao-dados {
-  padding: 8px;
+  padding: 8px 0 0;
+
   display: grid;
-  grid-template-columns: repeat(2, 44px);
+  grid-template-columns: repeat(3, 1fr);
   gap: 7px;
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 9px;
-  background: rgba(239, 225, 189, 0.94);
-  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.3);
+
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .dado-disponivel {

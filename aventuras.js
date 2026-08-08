@@ -189,6 +189,54 @@ function alternarPainelExplicativo() {
     );
 }
 
+function encaixarFerramentasDaAventura() {
+  const janelaAcao =
+    document.querySelector(".janela-acao");
+
+  const janelaAnotacoes =
+    document.querySelector(".janela-anotacoes");
+
+  const janelaDados =
+    document.querySelector(".janela-dados");
+
+  if (
+    !janelaAcao ||
+    !janelaAnotacoes ||
+    !janelaDados
+  ) {
+    return;
+  }
+
+  const espacamento = 14;
+
+  const posicaoAcao =
+    janelaAcao.getBoundingClientRect();
+
+  janelaAnotacoes.style.left =
+    `${posicaoAcao.left}px`;
+
+  janelaAnotacoes.style.top =
+    `${posicaoAcao.bottom + espacamento}px`;
+
+  janelaAnotacoes.style.right = "auto";
+  janelaAnotacoes.style.bottom = "auto";
+
+  janelaAnotacoes.style.width =
+    `${posicaoAcao.width}px`;
+
+  const posicaoAnotacoes =
+    janelaAnotacoes.getBoundingClientRect();
+
+  janelaDados.style.left =
+    `${posicaoAcao.left}px`;
+
+  janelaDados.style.top =
+    `${posicaoAnotacoes.bottom + espacamento}px`;
+
+  janelaDados.style.right = "auto";
+  janelaDados.style.bottom = "auto";
+}
+
 async function animarMovimentoInimigo(participante, caminho) {
   if (!Array.isArray(caminho) || caminho.length === 0) {
     return;
@@ -2128,3 +2176,5 @@ window.addEventListener("resize", function () {
 botaoFecharAtaquesCombate.addEventListener("click", fecharPainelAtaquesCombate);
 
 botaoExpandirHistorico.addEventListener("click", alternarHistoricoCombate);
+
+encaixarFerramentasDaAventura();

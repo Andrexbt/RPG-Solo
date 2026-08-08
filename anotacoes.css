@@ -3,9 +3,7 @@
    ========================================================= */
 
 .janela-anotacoes.janela-flutuante {
-  left: 16px;
-  bottom: 16px;
-  width: min(280px, calc(100vw - 32px));
+  width: min(300px, calc(100vw - 32px));
 }
 
 #campoAnotacoes {

@@ -34,9 +34,14 @@ function iniciarArrasteJanela(evento) {
 
   const janela = alca.closest(".janela-flutuante");
 
+
   if (!janela) {
     return;
   }
+
+  janela.classList.remove(
+  "janela-encaixada"
+);
 
   const posicaoAtual = janela.getBoundingClientRect();
 
