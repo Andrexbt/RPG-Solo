@@ -48,7 +48,7 @@ select {
 }
 
 .pagina-aventura {
-  width: (100% - 48px);
+  width: 100%;
   height: 100dvh;
   min-width: 0;
   margin: 0 auto;
@@ -59,28 +59,20 @@ select {
 }
 
 .visualizacao-aventura {
-  min-height: 0;
   height: 100%;
+  min-height: 0;
   display: grid;
-  grid-template-rows:
-    auto
-    minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0;
   overflow: hidden;
 }
 
 .corpo-aventura {
-  min-height: 0;
   height: 100%;
-
+  min-height: 0;
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 3fr)
-    minmax(260px, 1fr);
-
+  grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
   gap: 20px;
-
   overflow: hidden;
 }
 
@@ -108,17 +100,29 @@ select {
    Gavetas laterais
    ===================================================== */
 
-.gaveta-ficha {
+.gaveta-ficha,
+.gaveta-informacoes {
   position: fixed;
-  top: 46px;
-  left: 0;
-  height: calc(100dvh - 92px);
   z-index: 40;
-  transform: translateX(calc(-100% + 56px));
   transition: transform 280ms ease;
 }
 
-.layout-aventura:not(.ficha-recolhida) .gaveta-ficha {
+.gaveta-ficha {
+  top: 46px;
+  left: 0;
+  height: calc(100dvh - 92px);
+  transform: translateX(calc(-100% + 56px));
+}
+
+.gaveta-informacoes {
+  top: 43px;
+  right: 0;
+  height: calc(100dvh - 86px);
+  transform: translateX(calc(100% - 52px));
+}
+
+.layout-aventura:not(.ficha-recolhida) .gaveta-ficha,
+.layout-aventura:not(.painelExplicativo-recolhido) .gaveta-informacoes {
   transform: translateX(0);
 }
 
@@ -149,10 +153,10 @@ select {
   margin-bottom: 0;
 }
 
-.alca-ficha {
+.alca-ficha,
+.alca-informacoes {
   position: absolute;
   top: 50%;
-  right: 0;
   width: 52px;
   height: 50%;
   padding: 0;
@@ -163,28 +167,22 @@ select {
   transform: translateY(-50%);
 }
 
-.gaveta-informacoes {
-  position: fixed;
-  top: 43px;
+.alca-ficha {
   right: 0;
-  height: calc(100dvh - 86px);
-  z-index: 40;
-  transform: translateX(calc(100% - 52px));
-  transition: transform 280ms ease;
 }
 
-.layout-aventura:not(.painelExplicativo-recolhido) .gaveta-informacoes {
-  transform: translateX(0);
-}
-
-.painel-informacoes-componente,
-.painel-informacoes-componente .ficha-corpo,
-.painel-informacoes-componente .ficha {
-  height: 100%;
+.alca-informacoes {
+  left: 0;
 }
 
 .painel-informacoes-componente {
   width: 390px;
+  height: 100%;
+}
+
+.painel-informacoes-componente .ficha-corpo,
+.painel-informacoes-componente .ficha {
+  height: 100%;
 }
 
 .painel-informacoes-componente .ficha {
@@ -209,79 +207,45 @@ select {
   line-height: 1.55;
 }
 
-.alca-informacoes {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 52px;
-  height: 50%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  z-index: 20;
-  cursor: pointer;
-  transform: translateY(-50%);
-}
-
 /* =====================================================
    Cena e ações da aventura
    ===================================================== */
 
-.janela-acao {
-  border: 1px solid var(--cor-aventura-borda);
-  background: var(--fundo-papel-aventura);
-  box-shadow: var(--sombra-aventura);
-  padding: 16px 20px;
-  border-radius: 14px;
-}
-
 .cena-aventura {
-  min-width: 0;
-  min-height: 0;
-
   width: 100%;
   height: 100%;
-
-  padding: 0;
+  min-width: 0;
+  min-height: 0;
   margin: 0;
-
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-
   overflow: hidden;
-
   border: 0;
   background: transparent;
   box-shadow: none;
 }
 
-.adendos-aventura {
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 14px;
-
-  overflow-y: auto;
-}
-
 .pergaminho-cena {
   position: relative;
-
   height: 100%;
   min-height: 0;
-
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: stretch;
 }
 
-.pergaminho-esquerda {
+.pergaminho-esquerda,
+.pergaminho-direita {
   width: 180px;
-  background: url("Imagens/Assets/scroll-02-esquerda.webp") left top / 100% 100% no-repeat;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.pergaminho-esquerda {
+  background-image: url("Imagens/Assets/scroll-02-esquerda.webp");
+  background-position: left top;
 }
 
 .pergaminho-centro {
@@ -289,21 +253,18 @@ select {
 }
 
 .pergaminho-direita {
-  width: 180px;
-  background: url("Imagens/Assets/scroll-02-direita.webp") right top / 100% 100% no-repeat;
+  background-image: url("Imagens/Assets/scroll-02-direita.webp");
+  background-position: right top;
 }
 
 .conteudo-pergaminho-cena {
   position: absolute;
-
   top: 14%;
-  left: 8%;
   right: 8%;
   bottom: 12%;
-
+  left: 8%;
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-width: none;
 }
 
@@ -311,27 +272,11 @@ select {
   display: none;
 }
 
-.cabecalho-cena {
-  margin-bottom: 24px;
-}
-
-.numero-cena {
-  margin: 0 0 5px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.cabecalho-cena h2 {
-  margin: 0;
-}
-
 .conteudo-cena {
   font-family: Georgia, "Times New Roman", serif;
   line-height: 1.6;
 }
 
-.objetivo-cena,
 .area-escolhas {
   margin-top: 20px;
 }
@@ -363,24 +308,33 @@ select {
   border-top: 1px solid var(--cor-aventura-borda-suave);
 }
 
-.formulario-acao {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px 12px;
-  align-items: end;
+.adendos-aventura {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
 }
 
-.adendos-aventura .formulario-acao {
-  grid-template-columns: 1fr;
-}
-
-.adendos-aventura #botaoEnviarAcao {
-  width: 100%;
+.janela-acao {
+  padding: 16px 20px;
+  border: 1px solid var(--cor-aventura-borda);
+  border-radius: 14px;
+  background: var(--fundo-papel-aventura);
+  box-shadow: var(--sombra-aventura);
 }
 
 .janela-acao h2 {
   margin: 0 0 16px;
   text-align: center;
+}
+
+.formulario-acao {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 12px;
+  align-items: end;
 }
 
 .formulario-acao textarea {
@@ -395,6 +349,7 @@ select {
 }
 
 #botaoEnviarAcao {
+  width: 100%;
   min-height: 48px;
   padding: 10px 18px;
   border: 1px solid #69482f;
@@ -406,12 +361,6 @@ select {
 
 #botaoEnviarAcao:hover {
   background: #4f3423;
-}
-
-.ferramentas-aventura {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
 }
 
 /* =====================================================
@@ -1099,21 +1048,8 @@ select {
 }
 
 @media (max-width: 560px) {
-  .pagina-aventura {
-    width: min(calc(100% - 24px), 1120px);
-  }
-
-  .cena-aventura,
   .janela-acao {
     padding: 20px;
-  }
-
-  .formulario-acao {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  #botaoEnviarAcao {
-    width: 100%;
   }
 
   .campo-combate {
