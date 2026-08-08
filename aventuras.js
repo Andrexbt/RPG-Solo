@@ -237,6 +237,110 @@ function encaixarFerramentasDaAventura() {
   janelaDados.style.bottom = "auto";
 }
 
+function prepararRolagemTesteAventura(teste) {
+  const personagem =
+    estadoAtualJogo.personagem.dados;
+
+  if (!personagem || !teste) {
+    return null;
+  }
+
+  let modificador = 0;
+  let descricao = "Teste";
+
+  if (teste.tipo === "pericia") {
+    modificador =
+      SistemaTestes.calcularBonusPericia(
+        personagem,
+        teste.periciaId,
+      );
+
+    const pericia =
+      window.bancoPericias?.[
+        teste.periciaId
+      ];
+
+    descricao =
+      pericia?.nome
+        ? `Teste de ${pericia.nome}`
+        : "Teste de perícia";
+  }
+
+  const tipoRolagem =
+    teste.tipoRolagem ?? "normal";
+
+  const quantidadeD20 =
+    tipoRolagem === "vantagem" ||
+    tipoRolagem === "desvantagem"
+      ? 2
+      : 1;
+
+  return {
+    gruposDeDados: [
+      {
+        quantidade: quantidadeD20,
+        numeroDeFaces: 20,
+      },
+    ],
+
+    modificador,
+    descricao,
+    quantidadeDeRolagens: 1,
+    critico: false,
+  };
+}
+
+function formatarModificadorTeste(
+  modificador
+) {
+  const valor =
+    Number(modificador) || 0;
+
+  if (valor > 0) {
+    return `+ ${valor}`;
+  }
+
+  if (valor < 0) {
+    return `- ${Math.abs(valor)}`;
+  }
+
+  return "+ 0";
+}
+
+function criarInstrucaoTesteAventura(
+  teste,
+  modificador,
+  complemento = "",
+) {
+  if (!teste) {
+    return "";
+  }
+
+  if (teste.tipo === "pericia") {
+    const pericia =
+      window.bancoPericias?.[
+        teste.periciaId
+      ];
+
+    const nomePericia =
+      pericia?.nome ??
+      teste.periciaId;
+
+    const modificadorFormatado =
+      formatarModificadorTeste(
+        modificador
+      );
+
+    return (
+      `Faça um teste de ${nomePericia} ` +
+      `(1d20 ${modificadorFormatado}) ` +
+      complemento
+    );
+  }
+
+  return complemento;
+}
+
 async function animarMovimentoInimigo(participante, caminho) {
   if (!Array.isArray(caminho) || caminho.length === 0) {
     return;
@@ -925,11 +1029,45 @@ function iniciarEtapa(idEtapa) {
 
   estadoAtualJogo.testePendente = etapa.teste;
 
+  const configuracaoRolagem =
+  prepararRolagemTesteAventura(
+    etapa.teste
+  );
+
+if (configuracaoRolagem) {
+  solicitarRolagemNaCaixa(
+    configuracaoRolagem.gruposDeDados,
+    configuracaoRolagem.modificador,
+    configuracaoRolagem.descricao,
+    configuracaoRolagem
+      .quantidadeDeRolagens,
+    configuracaoRolagem.critico,
+  );
+
+  if (configuracaoRolagem) {
+  solicitacaoTeste.textContent =
+    criarInstrucaoTesteAventura(
+      etapa.teste,
+      configuracaoRolagem.modificador,
+      etapa.instrucao,
+    );
+
+  solicitacaoTeste.hidden = false;
+
+  solicitarRolagemNaCaixa(
+    configuracaoRolagem.gruposDeDados,
+    configuracaoRolagem.modificador,
+    configuracaoRolagem.descricao,
+    configuracaoRolagem
+      .quantidadeDeRolagens,
+    configuracaoRolagem.critico,
+  );
+}
+}
+
   ocultarEscolhas();
 
   const avisoTipoRolagem = obterAvisoTipoRolagem(etapa.teste);
-
-  solicitacaoTeste.textContent = etapa.instrucao + avisoTipoRolagem;
 
   solicitacaoTeste.hidden = false;
 
@@ -1573,8 +1711,6 @@ function separarRolagensSimultaneasEfeito(
 
   return rolagensSeparadas;
 }
-
-
 
 function resolverDanoJogador(resultadoRolagem) {
   const combate =

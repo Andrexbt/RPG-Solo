@@ -39,8 +39,8 @@ const bancoAventuras = {
                   "Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.",
                 ],
 
-                instrucao: "Faça um teste de Acrobacia para subir no telhado.",
-                teste: { nome: "Acrobacia", dificuldade: 12 },
+                instrucao: "para subir no telhado.",
+                teste: { tipo: "pericia", periciaId: "acrobacia", dificuldade: 12 },
 
                 resultados: {
                   sucesso: {
@@ -79,8 +79,8 @@ const bancoAventuras = {
               },
 
               movimentoNoTelhado: {
-                instrucao: "Faça um teste de Furtividade para avançar sem ser visto.",
-                teste: { nome: "Furtividade", dificuldade: 13 },
+                instrucao: "para avançar sem ser visto.",
+                teste: { tipo: "pericia", periciaId: "furtividade", dificuldade: 13 },
 
                 resultados: {
                   sucesso: {
