@@ -5,14 +5,22 @@
     testeAtivo: null,
     desafioAtivo: null,
     inicializado: false,
+    tentativasInicializacao: 0,
   };
 
   function aguardarAventura() {
+    estadoMotor.tentativasInicializacao += 1;
+
     if (
       typeof window.exibirCena !== "function" ||
       typeof window.SistemaTestes !== "object" ||
       typeof window.realizarRolagemComposta !== "function"
     ) {
+      if (estadoMotor.tentativasInicializacao > 250) {
+        console.warn("O motor avançado da aventura não encontrou as dependências necessárias.");
+        return;
+      }
+
       setTimeout(aguardarAventura, 40);
       return;
     }
@@ -92,28 +100,48 @@
     return bonus + (Number(descritor.modificadorContextual) || 0);
   }
 
-  function obterNomeTeste(teste) {
+  function obterRotuloTeste(teste) {
     if (!teste) {
-      return "Teste";
+      return "um teste";
     }
 
     if (teste.tipo === "pericia") {
+      const pericia = window.bancoPericias?.[teste.periciaId];
+
+      return pericia?.nome
+        ? `um teste de ${pericia.nome}`
+        : "um teste de perícia";
+    }
+
+    if (teste.tipo === "salvaguarda") {
+      return `uma salvaguarda de ${obterNomeAtributo(teste.atributoId)}`;
+    }
+
+    if (teste.tipo === "atributo") {
+      return `um teste de ${obterNomeAtributo(teste.atributoId)}`;
+    }
+
+    return "um teste";
+  }
+
+  function obterDescricaoRolagem(teste) {
+    if (teste?.tipo === "oposto") {
+      return obterDescricaoRolagem(teste.jogador);
+    }
+
+    if (teste?.tipo === "pericia") {
       const pericia = window.bancoPericias?.[teste.periciaId];
       return pericia?.nome
         ? `Teste de ${pericia.nome}`
         : "Teste de perícia";
     }
 
-    if (teste.tipo === "salvaguarda") {
+    if (teste?.tipo === "salvaguarda") {
       return `Salvaguarda de ${obterNomeAtributo(teste.atributoId)}`;
     }
 
-    if (teste.tipo === "atributo") {
+    if (teste?.tipo === "atributo") {
       return `Teste de ${obterNomeAtributo(teste.atributoId)}`;
-    }
-
-    if (teste.tipo === "oposto") {
-      return "Teste oposto";
     }
 
     return "Teste";
@@ -130,29 +158,32 @@
   }
 
   function criarInstrucaoTeste(teste, modificador, complemento = "") {
+    const descritorJogador =
+      teste.tipo === "oposto"
+        ? teste.jogador
+        : teste;
+
+    const tipoRolagem = descritorJogador.tipoRolagem ?? teste.tipoRolagem ?? "normal";
+
     const quantidadeD20 =
-      teste.tipoRolagem === "vantagem" ||
-      teste.tipoRolagem === "desvantagem"
+      tipoRolagem === "vantagem" ||
+      tipoRolagem === "desvantagem"
         ? 2
         : 1;
 
-    let descricao = obterNomeTeste(teste);
-
-    if (teste.tipo === "oposto") {
-      const descritorJogador = teste.jogador;
-      descricao = obterNomeTeste(descritorJogador);
-    }
-
     const avisoRolagem =
-      teste.tipoRolagem === "vantagem"
+      tipoRolagem === "vantagem"
         ? ", use o maior"
-        : teste.tipoRolagem === "desvantagem"
+        : tipoRolagem === "desvantagem"
           ? ", use o menor"
           : "";
 
+    const rotulo = obterRotuloTeste(descritorJogador);
+
     return (
-      `${descricao} (${quantidadeD20}d20 ${formatarModificador(modificador)}` +
-      `${avisoRolagem}) ${complemento}`
+      `Faça ${rotulo} ` +
+      `(${quantidadeD20}d20 ${formatarModificador(modificador)}${avisoRolagem}) ` +
+      complemento
     ).trim();
   }
 
@@ -189,7 +220,7 @@
         },
       ],
       modificador,
-      descricao: obterNomeTeste(teste),
+      descricao: obterDescricaoRolagem(teste),
       quantidadeDeRolagens: 1,
       critico: false,
     };
@@ -405,11 +436,7 @@
     }
 
     if (Array.isArray(consequencia.efeitos) && consequencia.efeitos.length > 0) {
-      const efeitosAplicados = aplicarEfeitosNarrativos(consequencia.efeitos);
-
-      if (!efeitosAplicados) {
-        return;
-      }
+      aplicarEfeitosNarrativos(consequencia.efeitos);
     }
 
     if (consequencia.teste) {
@@ -508,6 +535,7 @@
       escolha.teste ||
       escolha.testes ||
       escolha.testePrincipal ||
+      escolha.pendenciaFonte ||
       escolha.requerSistema === "sequenciaTresSucessosComTesteOposto" ||
       escolha.requerSistema === "sequenciaTresSucessosComAtaquesNarrativos"
     ) {
@@ -518,7 +546,14 @@
   }
 
   function processarEscolhaAvancada(escolha) {
-    if (escolha.pendenciaFonte && escolha.teste?.dificuldade == null) {
+    if (
+      escolha.pendenciaFonte &&
+      (
+        !escolha.teste ||
+        escolha.teste.dificuldade == null ||
+        !escolha.resultados
+      )
+    ) {
       mostrarPendenciaFonte(escolha);
       return;
     }
@@ -542,7 +577,7 @@
       return;
     }
 
-    console.warn("Escolha avançada ainda não interpretada:", escolha);
+    mostrarPendenciaFonte(escolha);
   }
 
   function substituirIniciarEtapa() {
@@ -599,7 +634,10 @@
       return;
     }
 
-    if (cena.incompleta || cena.pendenciaFonte && cena.escolhas?.length === 0) {
+    if (
+      cena.incompleta ||
+      (cena.pendenciaFonte && cena.escolhas?.length === 0)
+    ) {
       if (cena.pendenciaFonte) {
         solicitacaoTeste.textContent = cena.pendenciaFonte;
         solicitacaoTeste.hidden = false;
@@ -621,8 +659,38 @@
     }
   }
 
+  function obterTestesDesafio(escolha) {
+    if (Array.isArray(escolha.testes) && escolha.testes.length > 0) {
+      return escolha.testes;
+    }
+
+    if (escolha.requerSistema === "sequenciaTresSucessosComTesteOposto") {
+      return [
+        {
+          tipo: "pericia",
+          periciaId: "atletismo",
+          dificuldade: 17,
+        },
+        {
+          tipo: "oposto",
+          jogador: {
+            tipo: "pericia",
+            periciaId: "furtividade",
+          },
+          oponente: {
+            npcId: "guardaConde",
+            tipo: "pericia",
+            periciaId: "percepcao",
+          },
+        },
+      ];
+    }
+
+    return [];
+  }
+
   function iniciarDesafioTresSucessosComTestes(escolha) {
-    const testes = escolha.testes ?? [];
+    const testes = obterTestesDesafio(escolha);
 
     if (testes.length === 0) {
       console.warn("Desafio sem testes definidos:", escolha);
@@ -632,6 +700,7 @@
     estadoMotor.desafioAtivo = {
       tipo: "testes",
       escolha,
+      testes,
       sucessos: 0,
       necessarios: Number(escolha.progresso?.sucessosNecessarios) || 3,
       indiceTeste: 0,
@@ -647,8 +716,7 @@
       return;
     }
 
-    const testes = desafio.escolha.testes ?? [];
-    const teste = testes[desafio.indiceTeste];
+    const teste = desafio.testes[desafio.indiceTeste];
 
     if (!teste) {
       desafio.sucessos += 1;
@@ -854,8 +922,15 @@
       modificador: ataque.bonusAtaque,
     });
 
+    const resultadoNatural =
+      resultadoAtaque.gruposRolados?.[0]?.resultados?.[0] ?? null;
+
     const classeArmadura = Number(personagem.combate?.classeArmadura) || 10;
-    const acertou = resultadoAtaque.total >= classeArmadura;
+    const acertoCritico = resultadoNatural === 20;
+    const falhaAutomatica = resultadoNatural === 1;
+    const acertou =
+      !falhaAutomatica &&
+      (acertoCritico || resultadoAtaque.total >= classeArmadura);
 
     solicitacaoTeste.textContent = acertou
       ? `${npc.nome} acerta você com ${ataque.nome}.`
@@ -867,8 +942,16 @@
       return;
     }
 
+    const gruposDano = structuredClone(ataque.dano?.gruposDeDados ?? []);
+
+    if (acertoCritico) {
+      for (const grupo of gruposDano) {
+        grupo.quantidade *= 2;
+      }
+    }
+
     const dano = realizarRolagemComposta({
-      gruposDeDados: ataque.dano?.gruposDeDados ?? [],
+      gruposDeDados: gruposDano,
       modificador: ataque.dano?.modificador ?? 0,
     });
 
@@ -903,7 +986,7 @@
                 return;
               }
 
-              const efeitosOk = aplicarEfeitosNarrativos(
+              aplicarEfeitosNarrativos(
                 consequenciaSecundaria?.efeitos ?? [],
               );
 
@@ -911,7 +994,7 @@
                 mudarCena(consequenciaSecundaria.proximaCena);
               }
 
-              aoConcluir(false && efeitosOk);
+              aoConcluir(false);
             },
           });
           return;
@@ -971,11 +1054,15 @@
 
       if (efeito.tipo === "danoQueda") {
         if (!Array.isArray(efeito.gruposDeDados) || efeito.gruposDeDados.length === 0) {
-          solicitacaoTeste.textContent =
-            "A aventura indica dano de queda, mas a fonte não informa altura nem dados de dano. O efeito ficou pendente sem inventar um valor.";
-          solicitacaoTeste.hidden = false;
-          console.warn("Dano de queda sem dados definidos na fonte:", efeito);
-          return false;
+          estadoAtualJogo.progresso.flags.danoQuedaPendente = true;
+
+          console.warn(
+            "A fonte determina dano de queda, mas não informa altura ou dados. " +
+            "O caminho continua sem atribuir um valor inventado.",
+            efeito,
+          );
+
+          continue;
         }
 
         const resultado = realizarRolagemComposta({
@@ -999,6 +1086,7 @@
     aplicarConsequencia,
     aplicarEfeitosNarrativos,
     executarAtaqueNarrativo,
+    aplicarDanoAoPersonagem,
     estado: estadoMotor,
   };
 
