@@ -55,19 +55,21 @@ const bancoAventuras = {
                     texto: `Você consegue alcançar os telhados. As caixas que você usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
                     
                     Do alto, você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas reais já se posiciona para impedir a passagem. O conflito parece inevitável.
-                    
-                    Talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombrar como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas reais estão distraídos.`,
+
+                    Agora no alto, a torre de embarcações próxima da ponte chama sua atenção, e chegar nela pulando pelos telhados parece perfeitamente possível.
+
+                    Porém, talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombrar como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas reais estão distraídos.`,
                     escolhas: [
                       { id: "esperar",
                         texto: `Esperar. Antes de tomar qualquer decisão, o melhor é esperar o conflito de fato se iniciar, e torcer para que ele proporcione uma brecha para sua fuga.`, proximaCena: "esperaNoTelhado" },
                       {
                         id: "ir",
-                        texto: `Esperar parece arriscado, mas se mover abertamente também. Talvez o melhor seja se mover devagar`,
+                        texto: `Esperar parece arriscado, mas se mover abertamente também. Talvez o melhor seja uma aparoximação mais lenta e sorrateira, escolhendo com cuidado o caminho até a torre.`,
                         proximaEtapa: "movimentacaoFurtiva",
                       },
                       {
                         id: "movimentacaoRapida",
-                        texto: `Esperar é arriscado demais. Você não sabe exatamente o quão ativamente estão procurando por você, e cada segundo de espera pode ser fatal. O melhor é se deslocar o mais rápido possível.`,
+                        texto: `Esperar é arriscado demais. Você não sabe exatamente o quão ativamente estão procurando por você, e cada segundo de espera pode ser fatal. O melhor é se deslocar pulando de telhado em telhado o mais rápido possível.`,
                         proximaCena: "movimentacaoTelhadoRapida",
                       },
                     ],
