@@ -48,6 +48,7 @@
       
 
       <main class="pagina-aventura">
+
         <div id="visualizacaoAventura" class="visualizacao-aventura">
           <header class="cabecalho-aventura">
             <p class="rotulo-aventura">RPG Solo</p>
@@ -55,31 +56,48 @@
             <h1 id="tituloAventura">A Fuga</h1>
           </header>
 
-          <section class="cena-aventura" aria-label="Cena da aventura">
-            <div class="conteudo-cena">
+          <div class="corpo-aventura">
+
+            <section class="cena-aventura" aria-label="Cena da aventura">
+
+            <div class="pergaminho-cena">
+
+              <img
+  class="imagem-pergaminho-cena"
+  src="Imagens/Assets/scroll-02.webp"
+  alt=""
+  aria-hidden="true"
+              >
+
+               <div class="conteudo-pergaminho-cena">
+                  <div class="conteudo-cena">
               <div id="contextoCena" class="contexto-cena">
                 Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
               </div>
 
               <p id="solicitacaoTeste" class="solicitacao-teste" aria-live="polite" hidden></p>
-            </div>
+                  </div>
 
-            <div class="area-escolhas">
+                  <div class="area-escolhas">
               <h3 id="tituloEscolhas">O que você fará?</h3>
 
               <div id="listaEscolhas" class="lista-escolhas">
                 <!-- As escolhas serão inseridas pelo JavaScript. -->
               </div>
-            </div>
+                  </div>
 
-            <div id="areaResultado" class="area-resultado" aria-live="polite" hidden>
+                  <div id="areaResultado" class="area-resultado" aria-live="polite" hidden>
               <p id="resultadoTeste"></p>
 
               <p id="consequenciaCena"></p>
+                  </div>
+               </div>
             </div>
-          </section>
 
-          <section class="janela-acao" aria-labelledby="tituloAcao">
+            </section>
+
+            <aside class="adendos-aventura">
+              <section class="janela-acao" aria-labelledby="tituloAcao">
             <h2 id="tituloAcao">O que você fará?</h2>
 
             <form id="formularioAcao" class="formulario-acao">
@@ -95,8 +113,10 @@
 
               <button id="botaoEnviarAcao" type="submit">Enviar ação</button>
             </form>
-          </section>
-        </div>
+              </section>
+            </aside>
+            
+          </div>
 
         <section
           id="visualizacaoCombate"

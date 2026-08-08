@@ -48,7 +48,7 @@ select {
 }
 
 .pagina-aventura {
-  width: min(calc(100% - 48px), 1120px);
+  width: (100% - 48px);
   height: 100dvh;
   min-width: 0;
   margin: 0 auto;
@@ -63,9 +63,22 @@ select {
   display: grid;
   grid-template-rows:
     auto
-    minmax(0, 1fr)
-    auto;
+    minmax(0, 1fr);
   gap: 12px;
+  overflow: hidden;
+}
+
+.corpo-aventura {
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 3fr)
+    minmax(260px, 1fr);
+
+  gap: 20px;
+
   overflow: hidden;
 }
 
@@ -212,23 +225,69 @@ select {
    Cena e ações da aventura
    ===================================================== */
 
-.cena-aventura,
 .janela-acao {
   border: 1px solid var(--cor-aventura-borda);
   background: var(--fundo-papel-aventura);
   box-shadow: var(--sombra-aventura);
+  padding: 16px 20px;
+  border-radius: 14px;
 }
 
 .cena-aventura {
+
   min-height: 0;
-  padding: 24px 28px;
+  min-width: 0;
+
+  height: 100%;
+
   overflow-y: auto;
-  border-radius: 14px;
+  overflow-x: hidden;
+
+  border: 0;
+
+  background:transparent;
+
+  box-shadow: none;
 }
 
-.janela-acao {
-  padding: 16px 20px;
-  border-radius: 14px;
+.adendos-aventura {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  overflow-y: auto;
+}
+
+.pergaminho-cena {
+  position: relative;
+
+  width: 100%;
+
+  min-height: max-content;
+}
+
+.imagem-pergaminho-cena {
+  width: 100%;
+  height: auto;
+
+  display: block;
+
+  pointer-events: none;
+}
+
+.conteudo-pergaminho-cena {
+  position: absolute;
+
+  top: 18%;
+  left: 7%;
+  right: 7%;
+  bottom: 16%;
+
+  overflow: hidden;
 }
 
 .cabecalho-cena {
@@ -288,6 +347,14 @@ select {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px 12px;
   align-items: end;
+}
+
+.adendos-aventura .formulario-acao {
+  grid-template-columns: 1fr;
+}
+
+.adendos-aventura #botaoEnviarAcao {
+  width: 100%;
 }
 
 .janela-acao h2 {
