@@ -251,7 +251,7 @@ select {
   max-width: none;
   max-height: 100%;
 
-  
+  transform: scaleX(0.97);
 
   object-fit: contain;
 
@@ -315,7 +315,7 @@ select {
   top: 11%;
   right: 8%;
   bottom: 10%;
-  left: 8%;
+  left: 9%;
 
   z-index: 2;
 
