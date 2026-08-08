@@ -83,6 +83,11 @@ scriptConfirmacaoCombate.src = "confirmacao-combate.js";
 scriptConfirmacaoCombate.async = false;
 document.head.append(scriptConfirmacaoCombate);
 
+const scriptMotorAventura = document.createElement("script");
+scriptMotorAventura.src = "motor-aventura.js";
+scriptMotorAventura.async = false;
+document.head.append(scriptMotorAventura);
+
 const hostDesenvolvimento = window.location.hostname;
 const ambienteDesenvolvimento =
   hostDesenvolvimento === "localhost" ||
