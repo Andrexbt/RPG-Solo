@@ -90,32 +90,26 @@ select {
 }
 
 /* =====================================================
-   Gaveta da ficha
+   Gavetas laterais
    ===================================================== */
 
 .gaveta-ficha {
   position: fixed;
-
   top: 46px;
   left: 0;
-
   height: calc(100dvh - 92px);
-
   z-index: 40;
-
-  transform:
-    translateX(calc(-100% + 52px));
-
+  transform: translateX(calc(-100% + 56px));
   transition: transform 280ms ease;
 }
 
-.gaveta-ficha .moldura-parte {
-  cursor: pointer;
+.layout-aventura:not(.ficha-recolhida) .gaveta-ficha {
+  transform: translateX(0);
 }
 
-.layout-aventura:not(.ficha-recolhida)
-  .gaveta-ficha {
-  transform: translateX(0);
+.gaveta-ficha .moldura-parte,
+.gaveta-informacoes .moldura-parte {
+  cursor: pointer;
 }
 
 .painel-ficha-gaveta,
@@ -129,51 +123,42 @@ select {
   width: fit-content;
 }
 
+#conteudoFicha {
+  width: 100%;
+  min-width: 0;
+}
+
 .gaveta-ficha #conteudoFicha .ficha {
   height: 100%;
   margin-top: 0;
   margin-bottom: 0;
 }
 
+.alca-ficha {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 52px;
+  height: 50%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  z-index: 20;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
 .gaveta-informacoes {
   position: fixed;
-
   top: 43px;
   right: 0;
-
   height: calc(100dvh - 86px);
-
   z-index: 40;
-
   transform: translateX(calc(100% - 52px));
-
   transition: transform 280ms ease;
 }
 
-.layout-aventura:not(.painelExplicativo-recolhido)
-  .gaveta-informacoes {
-  transform: translateX(0);
-}
-
-.gaveta-informacoes {
-  position: fixed;
-
-  top: 43px;
-  right: 0;
-
-  height: calc(100dvh - 86px);
-
-  z-index: 40;
-
-  transform:
-    translateX(calc(100% - 52px));
-
-  transition:
-    transform 280ms ease;
-}
-
-.layout-aventura:not(.painelExplicativo-recolhido)
-  .gaveta-informacoes {
+.layout-aventura:not(.painelExplicativo-recolhido) .gaveta-informacoes {
   transform: translateX(0);
 }
 
@@ -198,87 +183,28 @@ select {
 
 .painel-informacoes-papel h2 {
   margin: 0 0 20px;
-
   color: var(--cor-ficha-titulo);
-
   font-family: var(--fonte-titulos);
-
   text-align: center;
 }
 
 #conteudoExplicativo {
   color: var(--cor-ficha-texto);
+  font-family: "Almendra", Georgia, serif;
   line-height: 1.55;
-  font-family:
-    "Almendra",
-    Georgia,
-    serif;
 }
 
 .alca-informacoes {
   position: absolute;
-
   top: 50%;
   left: 0;
-
   width: 52px;
   height: 50%;
-
   padding: 0;
-
   border: 0;
   background: transparent;
-
   z-index: 20;
-
   cursor: pointer;
-
-  transform: translateY(-50%);
-}
-
-.gaveta-informacoes .moldura-parte {
-  cursor: pointer;
-}
-
-
-
-
-
-
-
-#conteudoFicha {
-  width: 100%;
-  min-width: 0;
-}
-
-.gaveta-ficha {
-  transform: translateX(calc(-100% + 56px));
-
-  transition: transform 280ms ease;
-}
-
-.layout-aventura:not(.ficha-recolhida) {
-  transform: translateX(0);
-}
-
-.alca-ficha {
-  position: absolute;
-
-  top: 50%;
-  right: 0;
-
-  width: 52px;
-  height: 50%;
-
-  padding: 0;
-
-  border: 0;
-  background: transparent;
-
-  z-index: 20;
-
-  cursor: pointer;
-
   transform: translateY(-50%);
 }
 
@@ -325,10 +251,7 @@ select {
   line-height: 1.6;
 }
 
-.objetivo-cena {
-  margin-top: 20px;
-}
-
+.objetivo-cena,
 .area-escolhas {
   margin-top: 20px;
 }
@@ -362,9 +285,7 @@ select {
 
 .formulario-acao {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px 12px;
   align-items: end;
 }
