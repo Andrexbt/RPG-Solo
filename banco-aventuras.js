@@ -1,7 +1,9 @@
 "use strict";
 
 const bancoAventuras = {
+
   aFuga: {
+
     id: "aFuga",
     titulo: "A Fuga",
 
@@ -20,6 +22,7 @@ const bancoAventuras = {
     },
 
     cenas: {
+
       inicio: {
         numeroFonte: 1,
         titulo: "O Começo",
@@ -35,9 +38,7 @@ const bancoAventuras = {
           {
             id: "telhado",
             texto:
-              `Tentar atravessar pelos telhados.
-
-              Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.`,
+              `Tentar atravessar pelos telhados.\nUma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.`,
             etapaInicial: "subirTelhado",
             etapas: {
               subirTelhado: {
@@ -52,13 +53,7 @@ const bancoAventuras = {
                 },
                 resultados: {
                   sucesso: {
-                    texto: `Você consegue alcançar os telhados. As caixas que você usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
-                    
-                    Do alto, você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas reais já se posiciona para impedir a passagem. O conflito parece inevitável.
-
-                    Agora no alto, a torre de embarcações próxima da ponte chama sua atenção, e chegar nela pulando pelos telhados parece perfeitamente possível.
-
-                    Porém, talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombrar como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas reais estão distraídos.`,
+                    texto: `Você consegue alcançar os telhados. As caixas que você usou como suporte cedem debaixo dos seus pés, e rapidamente se abaixa para não chamar a atenção.\nDo alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas reais já se posiciona para impedir a passagem. O conflito parece inevitável.\nVocê vê também a torre de embarcações próxima, lhe concedendo acesso fácil a um pequeno cais por onde você pode buscar uma saída. Chegar na torre pulando pelos telhados parece perfeitamente possível.\nPorém, talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombras como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
                     escolhas: [
                       { id: "esperar",
                         texto: `Esperar. Antes de tomar qualquer decisão, o melhor é esperar o conflito de fato se iniciar, e torcer para que ele proporcione uma brecha para sua fuga.`, proximaCena: "esperaNoTelhado" },
@@ -75,7 +70,7 @@ const bancoAventuras = {
                     ],
                   },
                   fracasso: {
-                    texto: "As caixas não aguentam seu peso.",
+                    texto: `As caixas não aguentam seu peso a tempo de alcançar o telhado.\nHora de pensar em um plano B.`,
                     voltarParaEscolhas: true,
                     removerEscolha: true,
                   },
@@ -206,16 +201,17 @@ const bancoAventuras = {
             proximaCena: "batalha",
           },
         ],
+
       },
 
       esperaNoTelhado: {
         numeroFonte: 2,
         titulo: "Espera no Telhado",
-        contexto: [],
+        contexto: [`Após alguns minutos nervosos de espera, um alvoroço repentino na multidão chama sua atenção, pontuado pelo som metálico de espadas se chocando. O confronto finalmente começou.`],
         escolhas: [
           {
             id: "irFurtivo",
-            texto: "Ir com movimentação furtiva.",
+            texto: `Essa é a sua chance. Com todo o tumulto, ninguém vai o perceber `,
             etapaInicial: "testeFurtividade",
             etapas: {
               testeFurtividade: {
@@ -1092,6 +1088,9 @@ const bancoAventuras = {
           },
         },
       },
+
     },
+
   },
+
 };

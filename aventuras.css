@@ -291,6 +291,7 @@ select {
   font-family: Georgia, "Times New Roman", serif;
   text-align: left;
   cursor: pointer;
+  white-space: pre-line;
 }
 
 .botao-escolha:hover {
