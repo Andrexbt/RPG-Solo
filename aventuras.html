@@ -66,31 +66,62 @@
                 class="pergaminho-completo"
                 src="Imagens/Assets/scroll-02-completo.webp"
                 alt=""
-                aria-hidden="true"
-              >
+                aria-hidden="true">
+
+                <div
+  class="controles-rolagem-pergaminho"
+  aria-label="Controles de rolagem"
+>
+  <button
+    id="rolarPergaminhoCima"
+    type="button"
+    aria-label="Rolar texto para cima"
+  >
+    ▲
+  </button>
+
+  <button
+    id="rolarPergaminhoBaixo"
+    type="button"
+    aria-label="Rolar texto para baixo"
+  >
+    ▼
+  </button>
+</div>
 
                <div class="conteudo-pergaminho-cena">
-                  <div class="conteudo-cena">
-              <div id="contextoCena" class="contexto-cena">
-                Por algum motivo, você está fugindo da cidade onde viveu pelos últimos 4 anos.
-              </div>
 
-              <p id="solicitacaoTeste" class="solicitacao-teste" aria-live="polite" hidden></p>
-                  </div>
+                <div
+                  id="fluxoNarrativo"
+                  class="fluxo-narrativo"
+                  aria-live="polite">
+                </div>
 
-                  <div class="area-escolhas">
-              <h3 id="tituloEscolhas">O que você fará?</h3>
+                <div class="interface-aventura-legada" hidden>
+  <div id="contextoCena"></div>
 
-              <div id="listaEscolhas" class="lista-escolhas">
-                <!-- As escolhas serão inseridas pelo JavaScript. -->
-              </div>
-                  </div>
+  <p
+    id="solicitacaoTeste"
+    hidden
+  ></p>
 
-                  <div id="areaResultado" class="area-resultado" aria-live="polite" hidden>
-              <p id="resultadoTeste"></p>
+  <div class="area-escolhas">
+    <h3 id="tituloEscolhas">
+      O que você fará?
+    </h3>
 
-              <p id="consequenciaCena"></p>
-                  </div>
+    <div id="listaEscolhas"></div>
+  </div>
+
+  <div
+    id="areaResultado"
+    hidden
+  >
+    <p id="resultadoTeste"></p>
+    <p id="consequenciaCena"></p>
+  </div>
+                </div>
+                  
                </div>
             </div>
 
@@ -125,6 +156,37 @@
             placeholder="Escreva suas anotações aqui..."
           ></textarea>
         </div>
+              </section>
+
+              <section
+  class="janela-velocidade-texto"
+  aria-labelledby="tituloVelocidadeTexto"
+>
+  <h2 id="tituloVelocidadeTexto">
+    Texto
+  </h2>
+
+  <label for="velocidadeTexto">
+    Velocidade
+  </label>
+
+  <select id="velocidadeTexto">
+    <option value="instantaneo">
+      Instantâneo
+    </option>
+
+    <option value="rapido">
+      Rápido
+    </option>
+
+    <option value="normal">
+      Normal
+    </option>
+
+    <option value="lento">
+      Lento
+    </option>
+  </select>
               </section>
 
               <section
@@ -225,7 +287,7 @@
 
           <output id="resultadoDado" aria-live="polite"></output>
         </div>
-      </section>
+              </section>
               
             </aside>
             
@@ -474,6 +536,7 @@
     <script src="detalhes-ficha.js" defer></script>
     <script src="ficha-personagem.js" defer></script>
     <script src="renderizador-ficha.js" defer></script>
+    <script src="narrador-aventura.js" defer></script>
     <script src="aventuras.js" defer></script>
   </body>
 </html>

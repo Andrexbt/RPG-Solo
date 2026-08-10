@@ -44,6 +44,26 @@ const idPersonagemSelecionado = parametrosAventura.get("personagem");
 
 const aventuraAtual = bancoAventuras[idAventuraSelecionada];
 
+const conteudoPergaminho =
+  document.querySelector(
+    ".conteudo-pergaminho-cena"
+  );
+
+const botaoRolarCima =
+  document.querySelector(
+    "#rolarPergaminhoCima"
+  );
+
+const botaoRolarBaixo =
+  document.querySelector(
+    "#rolarPergaminhoBaixo"
+  );
+
+const seletorVelocidadeTexto =
+  document.querySelector(
+    "#velocidadeTexto"
+  );
+
 if (!aventuraAtual) {
   throw new Error(`Aventura não encontrada: ${idAventuraSelecionada}`);
 }
@@ -953,18 +973,20 @@ function exibirEscolhas(escolhas) {
   }
 }
 
-function exibirContexto(contexto) {
-  contextoCena.replaceChildren();
-
-  const paragrafos = Array.isArray(contexto) ? contexto : [contexto];
-
-  for (const texto of paragrafos) {
-    const paragrafo = document.createElement("p");
-
-    paragrafo.textContent = texto;
-
-    contextoCena.append(paragrafo);
+async function exibirContexto(
+  contexto
+) {
+  if (
+    contexto === undefined ||
+    contexto === null
+  ) {
+    return;
   }
+
+  await NarradorAventura
+    .adicionarNarracao(
+      contexto
+    );
 }
 
 function exibirCena(aventura, cena) {
@@ -984,6 +1006,13 @@ function exibirCena(aventura, cena) {
   );
 
   exibirEscolhas(escolhasDisponiveis);
+
+  NarradorAventura.limpar();
+
+exibirCena(
+  aventuraAtual,
+  cenaAtual
+);
 }
 
 function ocultarEscolhas() {
@@ -2312,5 +2341,42 @@ window.addEventListener("resize", function () {
 botaoFecharAtaquesCombate.addEventListener("click", fecharPainelAtaquesCombate);
 
 botaoExpandirHistorico.addEventListener("click", alternarHistoricoCombate);
+
+if (
+  seletorVelocidadeTexto &&
+  window.NarradorAventura
+) {
+  seletorVelocidadeTexto.value =
+    NarradorAventura.obterVelocidade();
+
+  seletorVelocidadeTexto.addEventListener(
+    "change",
+    function () {
+      NarradorAventura.definirVelocidade(
+        seletorVelocidadeTexto.value
+      );
+    }
+  );
+}
+
+botaoRolarCima?.addEventListener(
+  "click",
+  function () {
+    conteudoPergaminho?.scrollBy({
+      top: -220,
+      behavior: "smooth",
+    });
+  }
+);
+
+botaoRolarBaixo?.addEventListener(
+  "click",
+  function () {
+    conteudoPergaminho?.scrollBy({
+      top: 220,
+      behavior: "smooth",
+    });
+  }
+);
 
 encaixarFerramentasDaAventura();

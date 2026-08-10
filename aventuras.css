@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+.contexto-cena {
+  white-space: pre-line;
+}
+
 :root {
   --cor-aventura-papel: #efe1bd;
   --cor-aventura-tinta: #3f2d20;
@@ -1038,6 +1042,149 @@ select {
 .painel-historico-combate:not(.historico-expandido)
   .evento-historico-combate:nth-last-child(n + 4) {
   display: none;
+}
+
+/* =====================================================
+   Fluxo narrativo contínuo
+   ===================================================== */
+
+.fluxo-narrativo {
+  padding-bottom: 30px;
+
+  color: var(--cor-aventura-tinta);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.bloco-narrativo {
+  margin: 0 0 18px;
+}
+
+.bloco-narrativo p {
+  margin: 0 0 14px;
+}
+
+.linha-teste-narrativo {
+  margin: 18px 0;
+
+  font-style: italic;
+}
+
+.escolha-realizada {
+  margin: 16px 0;
+
+  font-weight: 600;
+}
+
+.escolha-realizada::before {
+  content: "› ";
+}
+
+.controles-rolagem-pergaminho {
+  position: absolute;
+
+  top: 16%;
+  right: 5.5%;
+  bottom: 15%;
+
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  pointer-events: none;
+}
+
+.controles-rolagem-pergaminho button {
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color:
+    rgba(74, 46, 27, 0.72);
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 0.85rem;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.controles-rolagem-pergaminho button:hover {
+  opacity: 0.55;
+  transform: scale(1.12);
+}
+
+.janela-velocidade-texto {
+  width: 100%;
+  padding: 12px 14px;
+
+  border:
+    1px solid
+    var(--cor-aventura-borda);
+
+  border-radius: 11px;
+
+  background:
+    var(--cor-aventura-papel);
+
+  color:
+    var(--cor-aventura-tinta);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  box-shadow:
+    0 8px 22px
+    rgba(0, 0, 0, 0.25);
+}
+
+.janela-velocidade-texto h2 {
+  margin: 0 0 8px;
+
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+.janela-velocidade-texto label {
+  margin-right: 8px;
+}
+
+#velocidadeTexto {
+  padding: 4px 6px;
+
+  border:
+    1px solid
+    var(--cor-aventura-borda);
+
+  border-radius: 5px;
+
+  background:
+    transparent;
+
+  color: inherit;
 }
 
 /* =====================================================

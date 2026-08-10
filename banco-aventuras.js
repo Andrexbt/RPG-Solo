@@ -1,9 +1,7 @@
 "use strict";
 
 const bancoAventuras = {
-
   aFuga: {
-
     id: "aFuga",
     titulo: "A Fuga",
 
@@ -22,30 +20,36 @@ const bancoAventuras = {
     },
 
     cenas: {
-
       inicio: {
         numeroFonte: 1,
         titulo: "O Começo",
 
         contexto: [
-          "Você está fugindo da cidade onde viveu pelos últimos quatro anos.",
-          "Nem em suas previsões mais pessimistas você imaginou que as coisas chegariam a esse ponto. Agora é tarde, e o perigo é grande demais. Depois de tudo que fez, todos que desafiou, chegou a hora de fugir.",
-          "De um lado, os guardas do Conde Debminster, cuja autoridade você desafiou ao questionar sobre o alto valor dos impostos e, sem querer, acabou incitando a população a um pequeno levante contra as políticas autoritárias do conde. Do outro, a milícia dos Lagartos de Bronze, que se prontificou a oferecer segurança para a população durante os protestos. No entanto, aparentemente, agora haviam decidido que para tomar para si o poder que seria deixado pela inevitável queda da autoridade local, precisariam tirar você do tabuleiro político.",
-          "Tudo aconteceu rápido demais. Lhe colocaram em uma posição que você nunca quis preencher. Agora, carregando os poucos pertences que você consegue em sua mochila, você se encontra esgueirando-se por um beco, olhado pelas sombras uma multidão raivosa. Muitos rostos os quais você conhece. Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. E em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.",
+          `Você está fugindo da cidade onde viveu pelos últimos quatro anos.
+
+          Nem em suas previsões mais pessimistas você imaginou que as coisas chegariam a esse ponto. Agora é tarde, e o perigo é grande demais. Depois de tudo que fez, todos que desafiou, chegou a hora de fugir.
+          
+          De um lado, os guardas do Conde Debminster, cuja autoridade você desafiou ao questionar sobre o alto valor dos impostos, incitando a população a um pequeno levante contra as políticas autoritárias do conde. Rapidamente, tanto a população quanto o Conde passaram a ver em você uma figura de liderança que você nunca pretendeu ser.
+          
+          Do outro, a milícia dos Lagartos de Bronze. Inicialmente, eles haviam se unido à causa e se prontificado a oferecer segurança para a população durante os protestos. Agora, haviam decidido que, para tomar para si o poder que seria deixado pela inevitável queda da autoridade local, precisariam tirar você do tabuleiro político.
+          
+          Tudo aconteceu rápido demais. Agora, carregando os poucos pertences que consegue em sua mochila, você se encontra esgueirando-se por um beco, olhando pelas sombras uma multidão raivosa, se preparando para o confronto derradeiro contra a guarda real.
+          
+          Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. Em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.`,
         ],
 
         escolhas: [
           {
             id: "telhado",
-            texto:
-              `Tentar atravessar pelos telhados.\nUma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.`,
+            texto: `Tentar atravessar pelos telhados.
+            Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado.`,
             etapaInicial: "subirTelhado",
             etapas: {
               subirTelhado: {
                 descricao: [
-                  "Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.",
+                  `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,
                 ],
-                instrucao:"para subir no telhado.",
+                instrucao: "para subir no telhado.",
                 teste: {
                   tipo: "pericia",
                   periciaId: "acrobacia",
@@ -53,37 +57,41 @@ const bancoAventuras = {
                 },
                 resultados: {
                   sucesso: {
-                    texto: `Você consegue alcançar os telhados. As caixas que você usou como suporte cedem debaixo dos seus pés, e rapidamente se abaixa para não chamar a atenção.\nDo alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas reais já se posiciona para impedir a passagem. O conflito parece inevitável.\nVocê vê também a torre de embarcações próxima, lhe concedendo acesso fácil a um pequeno cais por onde você pode buscar uma saída. Chegar na torre pulando pelos telhados parece perfeitamente possível.\nPorém, talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombras como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
+                    texto: `Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
+
+                    Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
+                    Você vê também a torre de embarcações próxima à margem do rio. Em teoria, ela lhe concederia acesso fácil a um pequeno cais por onde você poderia buscar uma saída. Chegar à torre pulando pelos telhados parece perfeitamente possível.
+                    
+                    Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém o/a procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
                     escolhas: [
                       {
-    id: "esperar",
-    texto: "Esperar.",
-    proximaCena: "esperaNoTelhado",
+                        id: "esperar",
+                        texto: `Esperar parece ser a opção mais segura.`,
+                        proximaCena: "esperaNoTelhado",
                       },
 
                       {
-    id: "ir",
-    texto: "Ir.",
+                        id: "ir",
+                        texto: `Cada segundo de espera é um risco em potencial. Melhor se mover agora em direção à torre.`,
 
-    escolhas: [
-      {
-        id: "irFurtivo",
-        texto: "Movimentação Furtiva.",
-        proximaEtapa: "movimentacaoFurtiva",
-      },
+                        escolhas: [
+                          {
+                            id: "irFurtivo",
+                            texto: "Movimentação Furtiva.",
+                            proximaEtapa: "movimentacaoFurtiva",
+                          },
 
-      {
-        id: "irRapido",
-        texto: "Movimentação Rápida.",
-        proximaCena:
-          "movimentacaoTelhadoRapida",
-      },
-    ],
+                          {
+                            id: "irRapido",
+                            texto: "Movimentação Rápida.",
+                            proximaCena: "movimentacaoTelhadoRapida",
+                          },
+                        ],
                       },
                     ],
                   },
                   fracasso: {
-                    texto: `As caixas não aguentam seu peso a tempo de alcançar o telhado.\nHora de pensar em um plano B.`,
+                    texto: `As caixas não aguentam seu peso a tempo de alcançar o telhado. Hora de pensar em um plano B.`,
                     voltarParaEscolhas: true,
                     removerEscolha: true,
                   },
@@ -113,7 +121,8 @@ const bancoAventuras = {
 
           {
             id: "multidao",
-            texto: `Se misturar na multidão. Apesar de conhecer algumas das pessoas na multidão, talvez você consiga se misturar e passar despercebido.`,
+            texto: `Se misturar na multidão.
+            Apesar de conhecer muitos dos rostos na multidão, talvez você consiga se misturar e passar despercebido.`,
             requerSistema: "escolhaEntrePericias",
             teste: {
               tipo: "periciaEscolha",
@@ -195,7 +204,8 @@ const bancoAventuras = {
 
           {
             id: "becos",
-            texto: `Continuar pelos becos. Melhor permanecer nas sombras e tentar encontrar uma saída da cidade investigando as vielas.`,
+            texto: `Continuar pelos becos.
+            Melhor permanecer nas sombras e tentar encontrar uma saída da cidade investigando as vielas.`,
             requerSistema: "escolhaEntrePericias",
             teste: {
               tipo: "periciaEscolha",
@@ -210,118 +220,113 @@ const bancoAventuras = {
 
           {
             id: "batalha",
-            texto: "Enfrentar os guardas. Você decide se aproveitar da confusão e tentar enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.",
+            texto:
+              `Enfrentar os guardas.
+              Você decide se aproveitar da confusão e tentar enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
             proximaCena: "batalha",
           },
         ],
-
       },
 
       esperaNoTelhado: {
         numeroFonte: 2,
         titulo: "Espera no Telhado",
-        contexto: [`Após alguns minutos nervosos de espera, um alvoroço repentino na multidão chama sua atenção, pontuado pelo som metálico de espadas se chocando. O confronto finalmente começou.`],
+        contexto: [
+          `Após alguns minutos nervosos de espera, um alvoroço repentino na multidão chama sua atenção, pontuado pelo som metálico de espadas se chocando. O confronto finalmente começou.`,
+        ],
         escolhas: [
-  {
-    id: "ir",
-    texto: "Ir até a torre.",
+          {
+            id: "ir",
+            texto: "Ir até a torre.",
 
-    escolhas: [
-      {
-        id: "irFurtivo",
-        texto: "Movimentação Furtiva.",
+            escolhas: [
+              {
+                id: "irFurtivo",
+                texto: "Movimentação Furtiva.",
 
-        etapaInicial: "testeFurtividade",
+                etapaInicial: "testeFurtividade",
 
-        etapas: {
-          testeFurtividade: {
-            instrucao:
-              "para avançar furtivamente.",
+                etapas: {
+                  testeFurtividade: {
+                    instrucao: "para avançar furtivamente.",
 
-            teste: {
-              tipo: "pericia",
-              periciaId: "furtividade",
-              dificuldade: 13,
-            },
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "furtividade",
+                      dificuldade: 13,
+                    },
 
-            resultados: {
-              sucesso: {
-                proximaCena:
-                  "movimentacaoTelhadoFurtiva",
+                    resultados: {
+                      sucesso: {
+                        proximaCena: "movimentacaoTelhadoFurtiva",
+                      },
+
+                      fracasso: {
+                        proximaCena: "movimentacaoTelhadoRapida",
+                      },
+                    },
+                  },
+                },
               },
 
-              fracasso: {
-                proximaCena:
-                  "movimentacaoTelhadoRapida",
+              {
+                id: "irRapido",
+                texto: "Movimentação Rápida.",
+                proximaCena: "movimentacaoTelhadoRapida",
               },
-            },
+            ],
           },
-        },
-      },
 
-      {
-        id: "irRapido",
-        texto: "Movimentação Rápida.",
-        proximaCena:
-          "movimentacaoTelhadoRapida",
-      },
-    ],
-  },
+          {
+            id: "aproximarConfronto",
+            texto: "Se aproximar do confronto.",
 
-  {
-    id: "aproximarConfronto",
-    texto: "Se aproximar do confronto.",
+            escolhas: [
+              {
+                id: "aproximarConfrontoFurtivo",
+                texto: "Movimentação Furtiva.",
 
-    escolhas: [
-      {
-        id: "aproximarConfrontoFurtivo",
-        texto: "Movimentação Furtiva.",
+                etapaInicial: "testeFurtividadeConfronto",
 
-        etapaInicial:
-          "testeFurtividadeConfronto",
+                etapas: {
+                  testeFurtividadeConfronto: {
+                    instrucao: "para se aproximar do confronto sem ser visto.",
 
-        etapas: {
-          testeFurtividadeConfronto: {
-            instrucao:
-              "para se aproximar do confronto sem ser visto.",
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "furtividade",
+                      dificuldade: 14,
+                    },
 
-            teste: {
-              tipo: "pericia",
-              periciaId: "furtividade",
-              dificuldade: 14,
-            },
+                    resultados: {
+                      sucesso: {
+                        proximaCena: "confronto",
+                      },
 
-            resultados: {
-              sucesso: {
-                proximaCena: "confronto",
+                      fracasso: {
+                        proximaCena: "movimentacaoTelhadoRapida",
+                      },
+                    },
+                  },
+                },
               },
 
-              fracasso: {
-                proximaCena:
-                  "movimentacaoTelhadoRapida",
+              {
+                id: "aproximarConfrontoRapido",
+                texto: "Movimentação Rápida.",
+                proximaCena: "movimentacaoTelhadoRapida",
               },
-            },
+            ],
           },
-        },
-      },
 
-      {
-        id: "aproximarConfrontoRapido",
-        texto: "Movimentação Rápida.",
-        proximaCena:
-          "movimentacaoTelhadoRapida",
-      },
-    ],
-  },
+          {
+            id: "esperarNoite",
+            texto:
+              "Esperar até a noite. Pode ser arriscado, talvez até lá o conflito já tenha se dissipado e os guardas estejam ativamente buscando por você. Ainda assim, essa parece a opção mais segura.",
 
-  {
-    id: "esperarNoite",
-    texto:
-      "Esperar até a noite. Pode ser arriscado, talvez até lá o conflito já tenha se dissipado e os guardas estejam ativamente buscando por você. Ainda assim, essa parece a opção mais segura.",
-
-    proximaCena: "telhadosNoite",
-  },
-],
+            proximaCena: "telhadosNoite",
+          },
+        ],
       },
 
       movimentacaoTelhadoFurtiva: {
@@ -618,69 +623,62 @@ const bancoAventuras = {
         titulo: "Telhados Noite",
         contexto: [],
         escolhas: [
-  {
-    id: "irTelhados",
-    texto: "Ir pelos telhados.",
+          {
+            id: "irTelhados",
+            texto: "Ir pelos telhados.",
 
-    escolhas: [
-      {
-        id: "irTelhadosFurtivo",
-        texto: "Movimentação Furtiva.",
+            escolhas: [
+              {
+                id: "irTelhadosFurtivo",
+                texto: "Movimentação Furtiva.",
 
-        etapaInicial: "testeFurtividade",
+                etapaInicial: "testeFurtividade",
 
-        etapas: {
-          testeFurtividade: {
-            instrucao:
-              "para avançar furtivamente pelos telhados.",
+                etapas: {
+                  testeFurtividade: {
+                    instrucao: "para avançar furtivamente pelos telhados.",
 
-            teste: {
-              tipo: "pericia",
-              periciaId: "furtividade",
-              dificuldade: 9,
-            },
+                    teste: {
+                      tipo: "pericia",
+                      periciaId: "furtividade",
+                      dificuldade: 9,
+                    },
 
-            resultados: {
-              sucesso: {
-                proximaCena:
-                  "movimentacaoTelhadoNoite",
-              },
+                    resultados: {
+                      sucesso: {
+                        proximaCena: "movimentacaoTelhadoNoite",
+                      },
 
-              fracasso: {
-                efeitos: [
-                  {
-                    tipo: "danoQueda",
-                    requerSistema:
-                      "danoQueda",
+                      fracasso: {
+                        efeitos: [
+                          {
+                            tipo: "danoQueda",
+                            requerSistema: "danoQueda",
+                          },
+                        ],
+
+                        proximaCena: "movimentacaoNoite",
+                      },
+                    },
                   },
-                ],
-
-                proximaCena:
-                  "movimentacaoNoite",
+                },
               },
-            },
+
+              {
+                id: "irTelhadosRapido",
+                texto: "Movimentação Rápida.",
+                proximaCena: "movimentacaoNoite",
+              },
+            ],
           },
-        },
-      },
 
-      {
-        id: "irTelhadosRapido",
-        texto: "Movimentação Rápida.",
-        proximaCena:
-          "movimentacaoNoite",
-      },
-    ],
-  },
+          {
+            id: "irSombras",
+            texto: "Descer e ir pelas sombras.",
 
-  {
-    id: "irSombras",
-    texto:
-      "Descer e ir pelas sombras.",
-
-    proximaCena:
-      "movimentacaoNoiteFurtiva",
-  },
-],
+            proximaCena: "movimentacaoNoiteFurtiva",
+          },
+        ],
       },
 
       torreChao: {
@@ -1146,9 +1144,7 @@ const bancoAventuras = {
       batalha: {
         titulo: "Batalha",
         cenaTecnica: true,
-        contexto: [
-          "Você entra em confronto com os guardas que bloqueiam sua fuga.",
-        ],
+        contexto: ["Você entra em confronto com os guardas que bloqueiam sua fuga."],
         combate: {
           jogador: {
             posicao: { coluna: 16, linha: 15 },
@@ -1165,21 +1161,14 @@ const bancoAventuras = {
           ],
           resultados: {
             vitoria: {
-              contexto: [
-                "O último guarda cai, deixando livre o caminho para continuar sua fuga.",
-              ],
+              contexto: ["O último guarda cai, deixando livre o caminho para continuar sua fuga."],
             },
             derrota: {
-              contexto: [
-                "Seus ferimentos finalmente cobram seu preço e sua fuga é interrompida.",
-              ],
+              contexto: ["Seus ferimentos finalmente cobram seu preço e sua fuga é interrompida."],
             },
           },
         },
       },
-
     },
-
   },
-
 };
