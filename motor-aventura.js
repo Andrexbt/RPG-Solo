@@ -532,6 +532,21 @@
     }
 
     if (
+  Array.isArray(escolha.escolhas) &&
+  escolha.escolhas.length > 0
+) {
+  evento.preventDefault();
+  evento.stopImmediatePropagation();
+
+  solicitacaoTeste.textContent = "";
+  solicitacaoTeste.hidden = true;
+
+  exibirEscolhas(escolha.escolhas);
+
+  return;
+}
+
+    if (
       escolha.teste ||
       escolha.testes ||
       escolha.testePrincipal ||

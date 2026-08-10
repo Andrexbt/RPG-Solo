@@ -55,17 +55,30 @@ const bancoAventuras = {
                   sucesso: {
                     texto: `Você consegue alcançar os telhados. As caixas que você usou como suporte cedem debaixo dos seus pés, e rapidamente se abaixa para não chamar a atenção.\nDo alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas reais já se posiciona para impedir a passagem. O conflito parece inevitável.\nVocê vê também a torre de embarcações próxima, lhe concedendo acesso fácil a um pequeno cais por onde você pode buscar uma saída. Chegar na torre pulando pelos telhados parece perfeitamente possível.\nPorém, talvez sua melhor escolha seja esperar até a noite, onde você vai ter as sombras como vantagem. Por outro lado, talvez seja melhor se aproveitar do conflito eminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
                     escolhas: [
-                      { id: "esperar",
-                        texto: `Esperar. Antes de tomar qualquer decisão, o melhor é esperar o conflito de fato se iniciar, e torcer para que ele proporcione uma brecha para sua fuga.`, proximaCena: "esperaNoTelhado" },
                       {
-                        id: "ir",
-                        texto: `Esperar parece arriscado, mas se mover abertamente também. Talvez o melhor seja uma aparoximação mais lenta e sorrateira, escolhendo com cuidado o caminho até a torre.`,
-                        proximaEtapa: "movimentacaoFurtiva",
+    id: "esperar",
+    texto: "Esperar.",
+    proximaCena: "esperaNoTelhado",
                       },
+
                       {
-                        id: "movimentacaoRapida",
-                        texto: `Esperar é arriscado demais. Você não sabe exatamente o quão ativamente estão procurando por você, e cada segundo de espera pode ser fatal. O melhor é se deslocar pulando de telhado em telhado o mais rápido possível.`,
-                        proximaCena: "movimentacaoTelhadoRapida",
+    id: "ir",
+    texto: "Ir.",
+
+    escolhas: [
+      {
+        id: "irFurtivo",
+        texto: "Movimentação Furtiva.",
+        proximaEtapa: "movimentacaoFurtiva",
+      },
+
+      {
+        id: "irRapido",
+        texto: "Movimentação Rápida.",
+        proximaCena:
+          "movimentacaoTelhadoRapida",
+      },
+    ],
                       },
                     ],
                   },
@@ -209,60 +222,106 @@ const bancoAventuras = {
         titulo: "Espera no Telhado",
         contexto: [`Após alguns minutos nervosos de espera, um alvoroço repentino na multidão chama sua atenção, pontuado pelo som metálico de espadas se chocando. O confronto finalmente começou.`],
         escolhas: [
-          {
-            id: "irFurtivo",
-            texto: `Essa é a sua chance. Com todo o tumulto, ninguém vai o perceber `,
-            etapaInicial: "testeFurtividade",
-            etapas: {
-              testeFurtividade: {
-                instrucao: "para avançar furtivamente.",
-                teste: {
-                  tipo: "pericia",
-                  periciaId: "furtividade",
-                  dificuldade: 13,
-                },
-                resultados: {
-                  sucesso: { proximaCena: "movimentacaoTelhadoFurtiva" },
-                  fracasso: { proximaCena: "movimentacaoTelhadoRapida" },
-                },
+  {
+    id: "ir",
+    texto: "Ir até a torre.",
+
+    escolhas: [
+      {
+        id: "irFurtivo",
+        texto: "Movimentação Furtiva.",
+
+        etapaInicial: "testeFurtividade",
+
+        etapas: {
+          testeFurtividade: {
+            instrucao:
+              "para avançar furtivamente.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 13,
+            },
+
+            resultados: {
+              sucesso: {
+                proximaCena:
+                  "movimentacaoTelhadoFurtiva",
+              },
+
+              fracasso: {
+                proximaCena:
+                  "movimentacaoTelhadoRapida",
               },
             },
           },
-          {
-            id: "irRapido",
-            texto: "Ir com movimentação rápida.",
-            proximaCena: "movimentacaoTelhadoRapida",
-          },
-          {
-            id: "aproximarConfrontoFurtivo",
-            texto: "Se aproximar do confronto com movimentação furtiva.",
-            etapaInicial: "testeFurtividadeConfronto",
-            etapas: {
-              testeFurtividadeConfronto: {
-                instrucao: "para se aproximar do confronto sem ser visto.",
-                teste: {
-                  tipo: "pericia",
-                  periciaId: "furtividade",
-                  dificuldade: 14,
-                },
-                resultados: {
-                  sucesso: { proximaCena: "confronto" },
-                  fracasso: { proximaCena: "movimentacaoTelhadoRapida" },
-                },
+        },
+      },
+
+      {
+        id: "irRapido",
+        texto: "Movimentação Rápida.",
+        proximaCena:
+          "movimentacaoTelhadoRapida",
+      },
+    ],
+  },
+
+  {
+    id: "aproximarConfronto",
+    texto: "Se aproximar do confronto.",
+
+    escolhas: [
+      {
+        id: "aproximarConfrontoFurtivo",
+        texto: "Movimentação Furtiva.",
+
+        etapaInicial:
+          "testeFurtividadeConfronto",
+
+        etapas: {
+          testeFurtividadeConfronto: {
+            instrucao:
+              "para se aproximar do confronto sem ser visto.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 14,
+            },
+
+            resultados: {
+              sucesso: {
+                proximaCena: "confronto",
+              },
+
+              fracasso: {
+                proximaCena:
+                  "movimentacaoTelhadoRapida",
               },
             },
           },
-          {
-            id: "aproximarConfrontoRapido",
-            texto: "Se aproximar do confronto com movimentação rápida.",
-            proximaCena: "movimentacaoTelhadoRapida",
-          },
-          {
-            id: "esperarNoite",
-            texto: `Esperar até a noite. Pode ser arriscado, talvez até lá o conflita já tenha se dissipado e os guardas estejam ativamente buscando por você. Ainda assim, essa parece a opção mais segura.`,
-            proximaCena: "telhadosNoite",
-          },
-        ],
+        },
+      },
+
+      {
+        id: "aproximarConfrontoRapido",
+        texto: "Movimentação Rápida.",
+        proximaCena:
+          "movimentacaoTelhadoRapida",
+      },
+    ],
+  },
+
+  {
+    id: "esperarNoite",
+    texto:
+      "Esperar até a noite. Pode ser arriscado, talvez até lá o conflito já tenha se dissipado e os guardas estejam ativamente buscando por você. Ainda assim, essa parece a opção mais segura.",
+
+    proximaCena: "telhadosNoite",
+  },
+],
       },
 
       movimentacaoTelhadoFurtiva: {
@@ -559,39 +618,69 @@ const bancoAventuras = {
         titulo: "Telhados Noite",
         contexto: [],
         escolhas: [
-          {
-            id: "irTelhadosFurtivo",
-            texto: "Ir pelos telhados com movimentação furtiva.",
-            etapaInicial: "testeFurtividade",
-            etapas: {
-              testeFurtividade: {
-                instrucao: "para avançar furtivamente pelos telhados.",
-                teste: {
-                  tipo: "pericia",
-                  periciaId: "furtividade",
-                  dificuldade: 9,
-                },
-                resultados: {
-                  sucesso: { proximaCena: "movimentacaoTelhadoNoite" },
-                  fracasso: {
-                    efeitos: [{ tipo: "danoQueda", requerSistema: "danoQueda" }],
-                    proximaCena: "movimentacaoNoite",
+  {
+    id: "irTelhados",
+    texto: "Ir pelos telhados.",
+
+    escolhas: [
+      {
+        id: "irTelhadosFurtivo",
+        texto: "Movimentação Furtiva.",
+
+        etapaInicial: "testeFurtividade",
+
+        etapas: {
+          testeFurtividade: {
+            instrucao:
+              "para avançar furtivamente pelos telhados.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 9,
+            },
+
+            resultados: {
+              sucesso: {
+                proximaCena:
+                  "movimentacaoTelhadoNoite",
+              },
+
+              fracasso: {
+                efeitos: [
+                  {
+                    tipo: "danoQueda",
+                    requerSistema:
+                      "danoQueda",
                   },
-                },
+                ],
+
+                proximaCena:
+                  "movimentacaoNoite",
               },
             },
           },
-          {
-            id: "irTelhadosRapido",
-            texto: "Ir pelos telhados com movimentação rápida.",
-            proximaCena: "movimentacaoNoite",
-          },
-          {
-            id: "irSombras",
-            texto: "Descer e ir pelas sombras.",
-            proximaCena: "movimentacaoNoiteFurtiva",
-          },
-        ],
+        },
+      },
+
+      {
+        id: "irTelhadosRapido",
+        texto: "Movimentação Rápida.",
+        proximaCena:
+          "movimentacaoNoite",
+      },
+    ],
+  },
+
+  {
+    id: "irSombras",
+    texto:
+      "Descer e ir pelas sombras.",
+
+    proximaCena:
+      "movimentacaoNoiteFurtiva",
+  },
+],
       },
 
       torreChao: {
