@@ -34,6 +34,7 @@ const bancoAventuras = {
         escolhas: [
 
           {
+
             id: "telhado",
 
             texto: `Subir para o telhado.
@@ -70,21 +71,21 @@ const bancoAventuras = {
 
                       escolhas: [
 
-                      {
+                        {
                         id: "esperar",
 
                         texto: `Esperar parece ser a opção mais segura.`,
 
                         proximaCena: "esperaNoTelhado",
 
-                      },
+                        },
 
-                      {
+                        {
                         id: "ir",
 
                         texto: `Cada segundo de espera é um risco em potencial. Melhor se mover agora em direção à torre.`,
 
-                          escolhas: [
+                          escolhas: [{
 
                             id: "movimentacaoTelhado",
 
@@ -96,31 +97,37 @@ const bancoAventuras = {
 
                             Qual rota você vai escolher?`,
 
-                            {
+                              escolhas: [
+                                
+                                {
 
-                            id: "irFurtivo",
+                                  id: "irFurtivo",
 
-                            texto: "A rota mais segura.",
+                                  texto: "A rota mais segura.",
 
-                            proximaEtapa: "movimentacaoFurtiva",
+                                  proximaEtapa: "movimentacaoFurtiva",
 
-                            },
+                                },
 
-                            {
+                                {
 
-                            id: "irRapido",
+                                  id: "irRapido",
 
-                            texto: "A rota mais rápida.",
+                                  texto: "A rota mais rápida.",
 
-                            proximaCena: "movimentacaoTelhadoRapida",
+                                  proximaCena: "movimentacaoTelhadoRapida",
 
-                            },
+                                },
 
-                          ],
+                              ],
 
-                      },
+                          }],
 
-                    ],
+                        
+
+                        },
+
+                      ],
 
                   },
 
@@ -137,24 +144,6 @@ const bancoAventuras = {
 
               },
 
-              movimentacaoFurtiva: {
-                instrucao: "para avançar pelos telhados sem ser visto.",
-                teste: {
-                  tipo: "pericia",
-                  periciaId: "furtividade",
-                  dificuldade: 13,
-                },
-                resultados: {
-                  sucesso: {
-                    texto: "Você avança sem ser percebido.",
-                    proximaCena: "movimentacaoTelhadoFurtiva",
-                  },
-                  fracasso: {
-                    texto: "Sua movimentação chama atenção.",
-                    proximaCena: "movimentacaoTelhadoRapida",
-                  },
-                },
-              },
             },
 
           },
