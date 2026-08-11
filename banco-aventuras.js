@@ -372,27 +372,3 @@ const bancoAventuras = {
     },
   },
 };
-
-/*
- * Compatibilidade com o motor atual:
- *
- * O conteúdo das etapas existe somente em `cena.etapas`.
- * O motor legado ainda procura as etapas a partir do caminho inicial,
- * então cada escolha que inicia um caminho recebe apenas uma referência
- * ao MESMO objeto de etapas da cena. Nenhuma etapa é duplicada.
- *
- * Quando o motor for migrado definitivamente para `cenaAtual.etapas`,
- * este bloco poderá ser removido sem alterar os dados da aventura.
- */
-
-for (const cena of Object.values(bancoAventuras.aFuga.cenas)) {
-  if (!cena.etapas || !Array.isArray(cena.escolhas)) {
-    continue;
-  }
-
-  for (const escolha of cena.escolhas) {
-    if (escolha.etapaInicial) {
-      escolha.etapas = cena.etapas;
-    }
-  }
-}
