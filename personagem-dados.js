@@ -100,6 +100,24 @@ function normalizarPersonagem(personagemOriginal) {
       personagemNormalizado.nivel;
   }
 
+  if (
+  personagemNormalizado.avatar &&
+  !personagemNormalizado.avatar.generoGramatical
+) {
+  const caminhoAvatar =
+    personagemNormalizado.avatar.imagem ?? "";
+
+  if (caminhoAvatar.includes("/Female/")) {
+    personagemNormalizado.avatar.generoGramatical =
+      "feminino";
+  } else if (
+    caminhoAvatar.includes("/Male/")
+  ) {
+    personagemNormalizado.avatar.generoGramatical =
+      "masculino";
+  }
+}
+
   normalizarAtaquesPersonagem(
     personagemNormalizado,
   );

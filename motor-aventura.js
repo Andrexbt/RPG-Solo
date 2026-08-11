@@ -369,7 +369,7 @@
     exibirEscolhas(escolhasPericia);
   }
 
-  function resolverResultadoTeste(resultadoRolagem) {
+  async function resolverResultadoTeste(resultadoRolagem) {
     const ativo = estadoMotor.testeAtivo;
 
     if (!ativo) {
@@ -398,6 +398,40 @@
 
     const consequencia = ativo.resultados?.[chaveResultado] ?? null;
     const aoResolver = ativo.aoResolver;
+
+    const descritorTeste =
+  teste.tipo === "oposto"
+    ? teste.jogador
+    : teste;
+
+let nomeTeste =
+  obterNomeAtributo(
+    descritorTeste.atributoId
+  );
+
+if (descritorTeste.tipo === "pericia") {
+  nomeTeste =
+    window.bancoPericias?.[
+      descritorTeste.periciaId
+    ]?.nome ??
+    descritorTeste.periciaId;
+}
+
+let acao =
+  ativo.instrucao
+    ?.replace(/^para\s+/i, "")
+    .replace(/\.$/, "");
+
+if (!acao) {
+  acao = "realizar a ação";
+}
+
+await NarradorAventura
+  .adicionarResultadoTeste({
+    sucesso: resultadoTeste.sucesso,
+    nomeTeste,
+    acao,
+  });
 
     limparTesteAtivo();
 
@@ -538,6 +572,11 @@
   evento.preventDefault();
   evento.stopImmediatePropagation();
 
+  NarradorAventura
+    .adicionarEscolhaRealizada(
+      escolha.texto
+    );
+
   solicitacaoTeste.textContent = "";
   solicitacaoTeste.hidden = true;
 
@@ -556,6 +595,12 @@
     ) {
       evento.preventDefault();
       evento.stopImmediatePropagation();
+
+      NarradorAventura
+    .adicionarEscolhaRealizada(
+      escolha.texto
+    );
+    
       processarEscolhaAvancada(escolha);
     }
   }

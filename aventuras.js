@@ -1684,17 +1684,16 @@ function selecionarEscolha(evento) {
     return escolha.id === idEscolha;
   });
 
-  NarradorAventura.adicionarEscolhaRealizada(
-  escolhaSelecionada.texto
-);
-
   if (!escolhaSelecionada) {
     console.warn("Escolha não encontrada:", idEscolha);
 
     return;
   }
 
-  console.log("Escolha selecionada:", escolhaSelecionada);
+  NarradorAventura
+  .adicionarEscolhaRealizada(
+    escolhaSelecionada
+  );
 
   if (escolhaSelecionada.etapaInicial) {
     iniciarCaminho(escolhaSelecionada);

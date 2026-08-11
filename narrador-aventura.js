@@ -123,7 +123,39 @@ window.NarradorAventura = (function () {
   }
 
   escrevendo = false;
-}
+  }
+
+  function obterGeneroGramatical() {
+  return (
+    window.estadoJogo
+      ?.personagem
+      ?.dados
+      ?.avatar
+      ?.generoGramatical ?? null
+  );
+  }
+
+  function adaptarGenero(texto) {
+  if (typeof texto !== "string") {
+    return texto;
+  }
+
+  const genero =
+    obterGeneroGramatical();
+
+  return texto.replace(
+    /\{([^|{}]+)\|([^{}]+)\}/g,
+    function (
+      correspondencia,
+      masculino,
+      feminino
+    ) {
+      return genero === "feminino"
+        ? feminino
+        : masculino;
+    }
+  );
+  }
 
   async function adicionarNarracao(texto) {
     if (
@@ -161,7 +193,7 @@ window.NarradorAventura = (function () {
 
       await escreverNoElemento(
         paragrafo,
-        trecho
+        adaptarGenero(trecho)
       );
     }
   }
@@ -183,35 +215,98 @@ window.NarradorAventura = (function () {
 
     await escreverNoElemento(
       paragrafo,
-      texto
+      adaptarGenero(texto)
     );
   }
 
-  function adicionarEscolhaRealizada(texto) {
-    if (!texto) {
-      return;
-    }
+  function criarOrigemEscolha() {
+  return {
+    cenaId:
+      window.estadoJogo
+        ?.progresso
+        ?.cenaId ??
+      null,
 
-    const fluxo = obterFluxo();
+    caminhoId:
+      window.estadoJogo
+        ?.progresso
+        ?.caminhoId ??
+      null,
 
-     if (!fluxo) {
+    etapaId:
+      window.estadoJogo
+        ?.progresso
+        ?.etapaId ??
+      null,
+  };
+  }
+
+  function criarTextoEscolha(
+  escolha,
+  origem
+) {
+  const texto =
+    escolha.texto ?? "";
+
+  if (origem.etapaId) {
+    return (
+      `Diante da situação, você decidiu: ` +
+      `${texto}`
+    );
+  }
+
+  if (origem.caminhoId) {
+    return (
+      `Você decidiu continuar sua ação: ` +
+      `${texto}`
+    );
+  }
+
+  return `Você escolheu: ${texto}`;
+  }
+
+  function adicionarEscolhaRealizada(
+  escolha
+) {
+  if (!escolha) {
     return;
   }
 
-    const bloco =
-      document.createElement("p");
+  const fluxo = obterFluxo();
 
-    bloco.className =
-      "escolha-realizada";
+  if (!fluxo) {
+    return;
+  }
 
-    bloco.textContent = texto;
+  const origem =
+    criarOrigemEscolha();
 
-    bloco.textContent =
-    `Você escolheu ${texto}`
+  const bloco =
+    document.createElement("p");
 
-    fluxo.append(bloco);
+  bloco.className =
+    "escolha-realizada";
 
-    rolarParaFim();
+  bloco.dataset.cenaOrigem =
+    origem.cenaId ?? "";
+
+  bloco.dataset.caminhoOrigem =
+    origem.caminhoId ?? "";
+
+  bloco.dataset.etapaOrigem =
+    origem.etapaId ?? "";
+
+  bloco.textContent =
+    adaptarGenero(
+      criarTextoEscolha(
+        escolha,
+        origem
+      )
+    );
+
+  fluxo.append(bloco);
+
+  adicionarDivisor();
   }
 
   function limpar() {
@@ -258,9 +353,9 @@ window.NarradorAventura = (function () {
   );
 
   adicionarDivisor();
-}
+  }
 
-function adicionarDivisor() {
+  function adicionarDivisor() {
   const fluxo = obterFluxo();
 
   if (!fluxo) {
@@ -276,7 +371,9 @@ function adicionarDivisor() {
   fluxo.append(divisor);
 
   rolarParaFim();
-}
+  }
+
+  
 
   return {
     adicionarNarracao,
@@ -284,6 +381,10 @@ function adicionarDivisor() {
     adicionarResultadoTeste,
     adicionarDivisor,
     adicionarEscolhaRealizada,
+
+    adaptarGenero,
+    obterGeneroGramatical,
+
     definirVelocidade,
     obterVelocidade,
     rolarParaFim,

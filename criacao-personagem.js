@@ -64,8 +64,8 @@ const prefixosAvatarPorEspecie = {
 
 let avatarTemporario = {
   imagem: "",
-
   frame: "",
+  generoGramatical: null,
 };
 
 let generoAvatarAtivo = "All";
@@ -2688,6 +2688,11 @@ function selecionarImagemAvatar(botaoClicado) {
 
   avatarTemporario.imagem = botaoClicado.dataset.caminhoAvatar;
 
+  avatarTemporario.generoGramatical =
+  botaoClicado.dataset.generoAvatar === "Female"
+    ? "feminino"
+    : "masculino";
+
   atualizarBotaoConfirmarAvatar();
 
   atualizarAvatarNaFicha(avatarTemporario);
@@ -2817,8 +2822,10 @@ for (const filtroAvatar of filtrosAvatar) {
 function abrirModalAvatar() {
   avatarTemporario = {
     imagem: personagem.avatar.imagem,
-
     frame: personagem.avatar.frame,
+    generoGramatical:
+    personagem.avatar.generoGramatical ??
+    null,
   };
 
   const avataresDisponiveis = criarListaAvataresDisponiveis();
@@ -2844,8 +2851,8 @@ function confirmarAvatar() {
   }
 
   personagem.avatar.imagem = avatarTemporario.imagem;
-
   personagem.avatar.frame = avatarTemporario.frame;
+  personagem.avatar.generoGramatical = avatarTemporario.generoGramatical;
 
   fecharModalAvatar();
   atualizarFichaPersonagem(["informacoesBasicas"]);
