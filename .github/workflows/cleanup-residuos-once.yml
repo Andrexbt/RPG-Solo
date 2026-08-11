@@ -1,0 +1,55 @@
+name: Limpeza final de resíduos
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - tools/cleanup-residuos-once.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Remover resíduos confirmados
+        run: node tools/cleanup-residuos-once.mjs
+
+      - name: Verificar sintaxe JavaScript
+        shell: bash
+        run: |
+          while IFS= read -r -d '' arquivo; do
+            node --check "$arquivo"
+          done < <(find . -type f -name "*.js" -not -path "./.git/*" -print0)
+
+      - name: Validar HTML
+        run: npx --yes html-validate@10.4.0 "*.html" "prototipos/**/*.html"
+
+      - name: Confirmar remoção dos resíduos
+        shell: bash
+        run: |
+          ! grep -R "integracao-rolagens.js" --include='*.js' --include='*.html' .
+          test ! -e testes-dev.js
+          test "$(grep -c '^function atualizarPontosDeVidaFichaCombate' interface-combate.js)" -eq 1
+
+      - name: Registrar limpeza
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Remove resíduos técnicos restantes"
+          git push origin HEAD:main
