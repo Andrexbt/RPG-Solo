@@ -1,8 +1,7 @@
 "use strict";
 
 window.NarradorAventura = (function () {
-  const CHAVE_VELOCIDADE =
-    "rpgSoloVelocidadeTexto";
+  const CHAVE_VELOCIDADE = "rpgSoloVelocidadeTexto";
 
   const velocidades = {
     instantaneo: 0,
@@ -12,21 +11,16 @@ window.NarradorAventura = (function () {
   };
 
   let velocidadeAtual =
-    localStorage.getItem(CHAVE_VELOCIDADE) ??
-    "normal";
+    localStorage.getItem(CHAVE_VELOCIDADE) ?? "normal";
 
   let escrevendo = false;
 
   function obterFluxo() {
-    return document.querySelector(
-      "#fluxoNarrativo"
-    );
+    return document.querySelector("#fluxoNarrativo");
   }
 
   function obterAreaRolagem() {
-    return document.querySelector(
-      ".conteudo-pergaminho-cena"
-    );
+    return document.querySelector(".conteudo-pergaminho-cena");
   }
 
   function obterIntervalo() {
@@ -39,11 +33,7 @@ window.NarradorAventura = (function () {
     }
 
     velocidadeAtual = valor;
-
-    localStorage.setItem(
-      CHAVE_VELOCIDADE,
-      valor
-    );
+    localStorage.setItem(CHAVE_VELOCIDADE, valor);
   }
 
   function obterVelocidade() {
@@ -58,9 +48,7 @@ window.NarradorAventura = (function () {
     }
 
     const distanciaDoFim =
-      area.scrollHeight -
-      area.scrollTop -
-      area.clientHeight;
+      area.scrollHeight - area.scrollTop - area.clientHeight;
 
     return distanciaDoFim < 80;
   }
@@ -72,8 +60,7 @@ window.NarradorAventura = (function () {
       return;
     }
 
-    area.scrollTop =
-      area.scrollHeight;
+    area.scrollTop = area.scrollHeight;
   }
 
   function esperar(ms) {
@@ -82,87 +69,80 @@ window.NarradorAventura = (function () {
     });
   }
 
-  async function escreverNoElemento(
-  elemento,
-  texto
-) {
-  escrevendo = true;
+  async function escreverNoElemento(elemento, texto) {
+    escrevendo = true;
+    elemento.textContent = "";
 
-  elemento.textContent = "";
+    const acompanharFim = usuarioEstaNoFim();
 
-  const acompanharFim =
-    usuarioEstaNoFim();
+    for (let indice = 0; indice < texto.length; indice += 1) {
+      const intervalo = obterIntervalo();
 
-  for (
-    let indice = 0;
-    indice < texto.length;
-    indice += 1
-  ) {
-    const intervalo =
-      obterIntervalo();
+      if (intervalo === 0) {
+        elemento.textContent += texto.slice(indice);
 
-    if (intervalo === 0) {
-      elemento.textContent +=
-        texto.slice(indice);
+        if (acompanharFim) {
+          rolarParaFim();
+        }
+
+        break;
+      }
+
+      elemento.textContent += texto[indice];
 
       if (acompanharFim) {
         rolarParaFim();
       }
 
-      break;
+      await esperar(intervalo);
     }
 
-    elemento.textContent +=
-      texto[indice];
-
-    if (acompanharFim) {
-      rolarParaFim();
-    }
-
-    await esperar(intervalo);
-  }
-
-  escrevendo = false;
+    escrevendo = false;
   }
 
   function obterGeneroGramatical() {
-  return (
-    window.estadoJogo
-      ?.personagem
-      ?.dados
-      ?.avatar
-      ?.generoGramatical ?? null
-  );
+    return (
+      window.estadoJogo?.personagem?.dados?.avatar?.generoGramatical ??
+      null
+    );
+  }
+
+  function normalizarEspacamentoTexto(texto) {
+    if (typeof texto !== "string") {
+      return texto;
+    }
+
+    return texto
+      .replace(/\r\n?/g, "\n")
+      .replace(/[ \t]+\n/g, "\n")
+      .replace(/\n[ \t]*\n+/g, "\n")
+      .split("\n")
+      .map(function (linha) {
+        return linha.trim();
+      })
+      .join("\n")
+      .trim();
   }
 
   function adaptarGenero(texto) {
-  if (typeof texto !== "string") {
-    return texto;
-  }
-
-  const genero =
-    obterGeneroGramatical();
-
-  return texto.replace(
-    /\{([^|{}]+)\|([^{}]+)\}/g,
-    function (
-      correspondencia,
-      masculino,
-      feminino
-    ) {
-      return genero === "feminino"
-        ? feminino
-        : masculino;
+    if (typeof texto !== "string") {
+      return texto;
     }
-  );
+
+    const genero = obterGeneroGramatical();
+
+    const textoAdaptado = texto.replace(
+      /\{([^|{}]+)\|([^{}]+)\}/g,
+      function (correspondencia, masculino, feminino) {
+        return genero === "feminino" ? feminino : masculino;
+      },
+    );
+
+    return normalizarEspacamentoTexto(textoAdaptado);
   }
 
   async function adicionarNarracao(texto) {
-    if (
-      texto === undefined ||
-      texto === null ||
-      texto === ""
-    ) {
+    if (texto === undefined || texto === null || texto === "") {
       return;
     }
 
@@ -172,29 +152,17 @@ window.NarradorAventura = (function () {
       return;
     }
 
-    const textos =
-      Array.isArray(texto)
-        ? texto
-        : [texto];
+    const textos = Array.isArray(texto) ? texto : [texto];
 
-    const bloco =
-      document.createElement("div");
-
-    bloco.className =
-      "bloco-narrativo";
-
+    const bloco = document.createElement("div");
+    bloco.className = "bloco-narrativo";
     fluxo.append(bloco);
 
     for (const trecho of textos) {
-      const paragrafo =
-        document.createElement("p");
-
+      const paragrafo = document.createElement("p");
       bloco.append(paragrafo);
 
-      await escreverNoElemento(
-        paragrafo,
-        adaptarGenero(trecho)
-      );
+      await escreverNoElemento(paragrafo, adaptarGenero(trecho));
     }
   }
 
@@ -205,67 +173,32 @@ window.NarradorAventura = (function () {
 
     const fluxo = obterFluxo();
 
-    const paragrafo =
-      document.createElement("p");
-
-    paragrafo.className =
-      "linha-teste-narrativo";
-
+    const paragrafo = document.createElement("p");
+    paragrafo.className = "linha-teste-narrativo";
     fluxo.append(paragrafo);
 
-    await escreverNoElemento(
-      paragrafo,
-      adaptarGenero(texto)
-    );
-  }
-
-  function criarOrigemEscolha() {
-  return {
-    cenaId:
-      window.estadoJogo
-        ?.progresso
-        ?.cenaId ??
-      null,
-
-    caminhoId:
-      window.estadoJogo
-        ?.progresso
-        ?.caminhoId ??
-      null,
-
-    etapaId:
-      window.estadoJogo
-        ?.progresso
-        ?.etapaId ??
-      null,
-  };
+    await escreverNoElemento(paragrafo, adaptarGenero(texto));
   }
 
   function adicionarEscolhaRealizada(escolha) {
-  if (!escolha?.texto) {
-    return;
-  }
+    if (!escolha?.texto) {
+      return;
+    }
 
-  const fluxo = obterFluxo();
+    const fluxo = obterFluxo();
 
-  if (!fluxo) {
-    return;
-  }
+    if (!fluxo) {
+      return;
+    }
 
-  adicionarDivisor();
+    adicionarDivisor();
 
-  const bloco =
-    document.createElement("p");
+    const bloco = document.createElement("p");
+    bloco.className = "escolha-realizada";
+    bloco.textContent = adaptarGenero(escolha.texto);
+    fluxo.append(bloco);
 
-  bloco.className =
-    "escolha-realizada";
-
-  bloco.textContent =
-    adaptarGenero(escolha.texto);
-
-  fluxo.append(bloco);
-
-  rolarParaEscolha(bloco);
+    rolarParaEscolha(bloco);
   }
 
   function limpar() {
@@ -281,83 +214,63 @@ window.NarradorAventura = (function () {
   }
 
   async function adicionarResultadoTeste({
-  sucesso,
-  nomeTeste,
-  acao,
-}) {
-  const fluxo = obterFluxo();
+    sucesso,
+    nomeTeste,
+    acao,
+  }) {
+    const fluxo = obterFluxo();
 
-  if (!fluxo) {
-    return;
-  }
+    if (!fluxo) {
+      return;
+    }
 
-  const paragrafo =
-    document.createElement("p");
-
-  paragrafo.className =
-    sucesso
+    const paragrafo = document.createElement("p");
+    paragrafo.className = sucesso
       ? "resultado-teste sucesso"
       : "resultado-teste falha";
+    fluxo.append(paragrafo);
 
-  fluxo.append(paragrafo);
-
-  const texto =
-    sucesso
+    const texto = sucesso
       ? `Sucesso no teste de ${nomeTeste}. Você conseguiu ${acao}.`
       : `Falha no teste de ${nomeTeste}. Você não conseguiu ${acao}.`;
 
-  await escreverNoElemento(
-    paragrafo,
-    texto
-  );
+    await escreverNoElemento(paragrafo, adaptarGenero(texto));
 
-  adicionarDivisor();
+    adicionarDivisor();
   }
 
   function adicionarDivisor() {
-  const fluxo = obterFluxo();
+    const fluxo = obterFluxo();
 
-  if (!fluxo) {
-    return;
-  }
+    if (!fluxo) {
+      return;
+    }
 
-  const divisor =
-    document.createElement("hr");
+    const divisor = document.createElement("hr");
+    divisor.className = "divisor-narrativo";
+    fluxo.append(divisor);
 
-  divisor.className =
-    "divisor-narrativo";
-
-  fluxo.append(divisor);
-
-  rolarParaFim();
+    rolarParaFim();
   }
 
   function rolarParaEscolha(elemento) {
-  const area =
-    obterAreaRolagem();
+    const area = obterAreaRolagem();
 
-  if (!area || !elemento) {
-    return;
+    if (!area || !elemento) {
+      return;
+    }
+
+    const areaRect = area.getBoundingClientRect();
+    const elementoRect = elemento.getBoundingClientRect();
+
+    const destino =
+      area.scrollTop + elementoRect.top - areaRect.top;
+
+    area.scrollTo({
+      top: destino,
+      behavior: "smooth",
+    });
   }
-
-  const areaRect =
-    area.getBoundingClientRect();
-
-  const elementoRect =
-    elemento.getBoundingClientRect();
-
-  const destino =
-    area.scrollTop +
-    elementoRect.top -
-    areaRect.top;
-
-  area.scrollTo({
-    top: destino,
-    behavior: "smooth",
-  });
-  }
-
-  
 
   return {
     adicionarNarracao,
@@ -368,6 +281,7 @@ window.NarradorAventura = (function () {
 
     adaptarGenero,
     obterGeneroGramatical,
+    normalizarEspacamentoTexto,
 
     definirVelocidade,
     obterVelocidade,
