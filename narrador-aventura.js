@@ -2,6 +2,7 @@
 
 window.NarradorAventura = (function () {
   const CHAVE_VELOCIDADE = "rpgSoloVelocidadeTexto";
+  const VAR_ESPACO_PARAGRAFOS = "--espaco-paragrafos-aventura";
 
   const velocidades = {
     instantaneo: 0,
@@ -38,6 +39,53 @@ window.NarradorAventura = (function () {
 
   function obterVelocidade() {
     return velocidadeAtual;
+  }
+
+  function definirEspacoParagrafos(valor) {
+    const valorCss =
+      typeof valor === "number"
+        ? `${valor}px`
+        : String(valor || "8px");
+
+    document.documentElement.style.setProperty(
+      VAR_ESPACO_PARAGRAFOS,
+      valorCss,
+    );
+  }
+
+  function garantirEstilosParagrafos() {
+    if (document.querySelector("#estilosParagrafosAventura")) {
+      return;
+    }
+
+    const estilo = document.createElement("style");
+    estilo.id = "estilosParagrafosAventura";
+    estilo.textContent = `
+      :root {
+        ${VAR_ESPACO_PARAGRAFOS}: 8px;
+      }
+
+      .bloco-narrativo p {
+        margin: 0 0 var(${VAR_ESPACO_PARAGRAFOS});
+      }
+
+      .bloco-narrativo p:last-child {
+        margin-bottom: 0;
+      }
+
+      .botao-escolha .paragrafo-escolha,
+      .escolha-realizada .paragrafo-escolha {
+        display: block;
+        margin: 0 0 var(${VAR_ESPACO_PARAGRAFOS});
+      }
+
+      .botao-escolha .paragrafo-escolha:last-child,
+      .escolha-realizada .paragrafo-escolha:last-child {
+        margin-bottom: 0;
+      }
+    `;
+
+    document.head.append(estilo);
   }
 
   function usuarioEstaNoFim() {
@@ -107,20 +155,19 @@ window.NarradorAventura = (function () {
     );
   }
 
-  function normalizarEspacamentoTexto(texto) {
+  function normalizarTexto(texto) {
     if (typeof texto !== "string") {
       return texto;
     }
 
     return texto
       .replace(/\r\n?/g, "\n")
-      .replace(/[ \t]+\n/g, "\n")
-      .replace(/\n[ \t]*\n+/g, "\n")
       .split("\n")
       .map(function (linha) {
         return linha.trim();
       })
       .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
       .trim();
   }
 
@@ -138,7 +185,88 @@ window.NarradorAventura = (function () {
       },
     );
 
-    return normalizarEspacamentoTexto(textoAdaptado);
+    return normalizarTexto(textoAdaptado);
+  }
+
+  function separarParagrafos(texto) {
+    if (typeof texto !== "string") {
+      return [];
+    }
+
+    return normalizarTexto(texto)
+      .split(/\n\s*\n/)
+      .map(function (paragrafo) {
+        return paragrafo
+          .replace(/\s*\n\s*/g, " ")
+          .trim();
+      })
+      .filter(Boolean);
+  }
+
+  function preencherElementoComParagrafos(
+    elemento,
+    texto,
+    classeParagrafo = "paragrafo-escolha",
+  ) {
+    const paragrafos = separarParagrafos(adaptarGenero(texto));
+
+    elemento.replaceChildren();
+
+    for (const textoParagrafo of paragrafos) {
+      const paragrafo = document.createElement("span");
+      paragrafo.className = classeParagrafo;
+      paragrafo.textContent = textoParagrafo;
+      elemento.append(paragrafo);
+    }
+  }
+
+  function formatarBotaoEscolha(botao) {
+    if (!botao || botao.dataset.paragrafosFormatados === "true") {
+      return;
+    }
+
+    const texto = botao.textContent ?? "";
+    botao.dataset.paragrafosFormatados = "true";
+    preencherElementoComParagrafos(botao, texto);
+  }
+
+  function observarBotoesEscolha() {
+    const lista = document.querySelector("#listaEscolhas");
+
+    if (!lista || lista.dataset.observadorParagrafos === "true") {
+      return;
+    }
+
+    lista.dataset.observadorParagrafos = "true";
+
+    const observador = new MutationObserver(function (mutacoes) {
+      for (const mutacao of mutacoes) {
+        for (const no of mutacao.addedNodes) {
+          if (!(no instanceof Element)) {
+            continue;
+          }
+
+          if (no.matches?.(".botao-escolha")) {
+            formatarBotaoEscolha(no);
+          }
+
+          const botoesInternos = no.querySelectorAll?.(".botao-escolha") ?? [];
+
+          for (const botao of botoesInternos) {
+            formatarBotaoEscolha(botao);
+          }
+        }
+      }
+    });
+
+    observador.observe(lista, {
+      childList: true,
+      subtree: true,
+    });
+
+    for (const botao of lista.querySelectorAll(".botao-escolha")) {
+      formatarBotaoEscolha(botao);
+    }
   }
 
   async function adicionarNarracao(texto) {
@@ -159,10 +287,14 @@ window.NarradorAventura = (function () {
     fluxo.append(bloco);
 
     for (const trecho of textos) {
-      const paragrafo = document.createElement("p");
-      bloco.append(paragrafo);
+      const paragrafos = separarParagrafos(adaptarGenero(trecho));
 
-      await escreverNoElemento(paragrafo, adaptarGenero(trecho));
+      for (const textoParagrafo of paragrafos) {
+        const paragrafo = document.createElement("p");
+        bloco.append(paragrafo);
+
+        await escreverNoElemento(paragrafo, textoParagrafo);
+      }
     }
   }
 
@@ -172,6 +304,10 @@ window.NarradorAventura = (function () {
     }
 
     const fluxo = obterFluxo();
+
+    if (!fluxo) {
+      return;
+    }
 
     const paragrafo = document.createElement("p");
     paragrafo.className = "linha-teste-narrativo";
@@ -193,9 +329,9 @@ window.NarradorAventura = (function () {
 
     adicionarDivisor();
 
-    const bloco = document.createElement("p");
+    const bloco = document.createElement("div");
     bloco.className = "escolha-realizada";
-    bloco.textContent = adaptarGenero(escolha.texto);
+    preencherElementoComParagrafos(bloco, escolha.texto);
     fluxo.append(bloco);
 
     rolarParaEscolha(bloco);
@@ -263,14 +399,16 @@ window.NarradorAventura = (function () {
     const areaRect = area.getBoundingClientRect();
     const elementoRect = elemento.getBoundingClientRect();
 
-    const destino =
-      area.scrollTop + elementoRect.top - areaRect.top;
+    const destino = area.scrollTop + elementoRect.top - areaRect.top;
 
     area.scrollTo({
       top: destino,
       behavior: "smooth",
     });
   }
+
+  garantirEstilosParagrafos();
+  observarBotoesEscolha();
 
   return {
     adicionarNarracao,
@@ -281,8 +419,11 @@ window.NarradorAventura = (function () {
 
     adaptarGenero,
     obterGeneroGramatical,
-    normalizarEspacamentoTexto,
+    normalizarTexto,
+    separarParagrafos,
+    preencherElementoComParagrafos,
 
+    definirEspacoParagrafos,
     definirVelocidade,
     obterVelocidade,
     rolarParaFim,
