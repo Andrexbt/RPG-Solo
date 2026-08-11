@@ -302,6 +302,36 @@ select {
   background: rgba(105, 72, 47, 0.1);
 }
 
+.botao-escolha {
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.botao-escolha.escolha-confirmada {
+  background: rgba(105, 72, 47, 0.14);
+  border-color: rgba(105, 72, 47, 0.9);
+  transform: scale(0.99);
+}
+
+.botao-escolha.escolha-descartada {
+  opacity: 0.28;
+  transform: scale(0.985);
+}
+
+.area-escolhas {
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.area-escolhas.area-escolhas-saindo {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
 .area-resultado {
   margin-top: 24px;
   padding-top: 20px;

@@ -121,26 +121,16 @@ window.NarradorAventura = (function () {
     escrevendo = true;
     elemento.textContent = "";
 
-    const acompanharFim = usuarioEstaNoFim();
-
     for (let indice = 0; indice < texto.length; indice += 1) {
       const intervalo = obterIntervalo();
 
       if (intervalo === 0) {
         elemento.textContent += texto.slice(indice);
 
-        if (acompanharFim) {
-          rolarParaFim();
-        }
-
         break;
       }
 
       elemento.textContent += texto[indice];
-
-      if (acompanharFim) {
-        rolarParaFim();
-      }
 
       await esperar(intervalo);
     }
@@ -385,8 +375,6 @@ window.NarradorAventura = (function () {
     const divisor = document.createElement("hr");
     divisor.className = "divisor-narrativo";
     fluxo.append(divisor);
-
-    rolarParaFim();
   }
 
   function rolarParaEscolha(elemento) {

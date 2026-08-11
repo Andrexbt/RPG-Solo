@@ -1667,53 +1667,125 @@ function solicitarRolagemNaCaixa(
   });
 }
 
-function selecionarEscolha(evento) {
+async function confirmarEscolhaVisualmente(botaoEscolha) {
+  const botoes = listaEscolhas.querySelectorAll(".botao-escolha");
+
+  for (const botao of botoes) {
+    if (botao === botaoEscolha) {
+      botao.classList.add("escolha-confirmada");
+    } else {
+      botao.classList.add("escolha-descartada");
+    }
+
+    botao.disabled = true;
+  }
+
+  await esperar(300);
+
+  areaEscolhas.classList.add("area-escolhas-saindo");
+
+  await esperar(220);
+
+  ocultarEscolhas();
+
+  areaEscolhas.classList.remove("area-escolhas-saindo");
+
+  for (const botao of botoes) {
+    botao.classList.remove(
+      "escolha-confirmada",
+      "escolha-descartada",
+    );
+  }
+}
+
+async function selecionarEscolha(evento) {
   if (testePendente) {
     return;
   }
 
-  const botaoEscolha = evento.target.closest(".botao-escolha");
+  const botaoEscolha =
+    evento.target.closest(".botao-escolha");
 
   if (!botaoEscolha) {
     return;
   }
 
-  const idEscolha = botaoEscolha.dataset.idEscolha;
+  const idEscolha =
+    botaoEscolha.dataset.idEscolha;
 
-  const escolhaSelecionada = escolhasAtuais.find(function (escolha) {
-    return escolha.id === idEscolha;
-  });
+  const escolhaSelecionada =
+    escolhasAtuais.find(function (escolha) {
+      return escolha.id === idEscolha;
+    });
 
   if (!escolhaSelecionada) {
-    console.warn("Escolha não encontrada:", idEscolha);
+    console.warn(
+      "Escolha não encontrada:",
+      idEscolha
+    );
 
     return;
   }
 
-  NarradorAventura
-  .adicionarEscolhaRealizada(
-    escolhaSelecionada
+  /*
+   * Primeiro damos o feedback visual.
+   */
+  await confirmarEscolhaVisualmente(
+    botaoEscolha
   );
 
+  /*
+   * Depois registramos a decisão
+   * no pergaminho.
+   */
+  NarradorAventura
+    .adicionarEscolhaRealizada(
+      escolhaSelecionada
+    );
+
+  /*
+   * Pequena pausa antes da
+   * continuação da narrativa.
+   */
+  await esperar(250);
+
+  /*
+   * Agora resolvemos o destino.
+   */
+
   if (escolhaSelecionada.etapaInicial) {
-    iniciarCaminho(escolhaSelecionada);
+    caminhoAtual = escolhaSelecionada;
+
+    estadoAtualJogo.progresso.caminhoId =
+      escolhaSelecionada.id;
+
+    iniciarEtapa(
+      escolhaSelecionada.etapaInicial
+    );
 
     return;
   }
 
   if (escolhaSelecionada.proximaEtapa) {
-    iniciarEtapa(escolhaSelecionada.proximaEtapa);
+    iniciarEtapa(
+      escolhaSelecionada.proximaEtapa
+    );
 
     return;
   }
 
-  if (!escolhaSelecionada.proximaCena) {
-    console.log("Esta escolha ainda não possui uma próxima cena.");
+  if (escolhaSelecionada.proximaCena) {
+    mudarCena(
+      escolhaSelecionada.proximaCena
+    );
 
     return;
   }
 
-  mudarCena(escolhaSelecionada.proximaCena);
+  console.warn(
+    "A escolha não possui destino:",
+    escolhaSelecionada
+  );
 }
 
 function mudarCena(idProximaCena) {
