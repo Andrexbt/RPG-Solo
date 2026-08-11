@@ -277,7 +277,7 @@ select {
 }
 
 .area-escolhas {
-  margin-top: 20px;
+  margin-top: 6px;
 }
 
 .lista-escolhas {
@@ -1063,27 +1063,17 @@ select {
 }
 
 .bloco-narrativo {
-  margin: 0 0 18px;
+  margin: 0 0 -40px;
 }
 
 .bloco-narrativo p {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
 }
 
 .linha-teste-narrativo {
   margin: 18px 0;
 
   font-style: italic;
-}
-
-.escolha-realizada {
-  margin: 16px 0;
-
-  font-weight: 600;
-}
-
-.escolha-realizada::before {
-  content: "› ";
 }
 
 .controles-rolagem-pergaminho {
@@ -1210,12 +1200,6 @@ select {
     serif;
 
   font-style: italic;
-}
-
-.escolha-realizada {
-  margin: 16px 0;
-
-  font-weight: 600;
 }
 
 /* =====================================================

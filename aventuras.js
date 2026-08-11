@@ -141,7 +141,6 @@ const acoesCombate = document.querySelector("#acoesCombate");
 const tituloAventura = document.querySelector("#tituloAventura");
 const contextoCena = document.querySelector("#contextoCena");
 const listaEscolhas = document.querySelector("#listaEscolhas");
-const tituloEscolhas = document.querySelector("#tituloEscolhas");
 
 const painelFicha = document.querySelector("#painelFicha");
 const painelExplicativo = document.querySelector("#painelExplicativo");
@@ -855,8 +854,6 @@ function exibirEscolhas(escolhas) {
 
   areaEscolhas.hidden = !possuiEscolhas;
 
-  tituloEscolhas.hidden = !possuiEscolhas;
-
   listaEscolhas.hidden = !possuiEscolhas;
 
   listaEscolhas.innerHTML = "";
@@ -870,7 +867,10 @@ function exibirEscolhas(escolhas) {
 
     botaoEscolha.dataset.idEscolha = escolha.id;
 
-    botaoEscolha.textContent = escolha.texto;
+    botaoEscolha.textContent =
+  NarradorAventura.adaptarGenero(
+    escolha.texto
+  );
 
     listaEscolhas.append(botaoEscolha);
   }

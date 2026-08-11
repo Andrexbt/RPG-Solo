@@ -241,34 +241,8 @@ window.NarradorAventura = (function () {
   };
   }
 
-  function criarTextoEscolha(
-  escolha,
-  origem
-) {
-  const texto =
-    escolha.texto ?? "";
-
-  if (origem.etapaId) {
-    return (
-      `Diante da situação, você decidiu: ` +
-      `${texto}`
-    );
-  }
-
-  if (origem.caminhoId) {
-    return (
-      `Você decidiu continuar sua ação: ` +
-      `${texto}`
-    );
-  }
-
-  return `Você escolheu: ${texto}`;
-  }
-
-  function adicionarEscolhaRealizada(
-  escolha
-) {
-  if (!escolha) {
+  function adicionarEscolhaRealizada(escolha) {
+  if (!escolha?.texto) {
     return;
   }
 
@@ -278,8 +252,7 @@ window.NarradorAventura = (function () {
     return;
   }
 
-  const origem =
-    criarOrigemEscolha();
+  adicionarDivisor();
 
   const bloco =
     document.createElement("p");
@@ -287,26 +260,12 @@ window.NarradorAventura = (function () {
   bloco.className =
     "escolha-realizada";
 
-  bloco.dataset.cenaOrigem =
-    origem.cenaId ?? "";
-
-  bloco.dataset.caminhoOrigem =
-    origem.caminhoId ?? "";
-
-  bloco.dataset.etapaOrigem =
-    origem.etapaId ?? "";
-
   bloco.textContent =
-    adaptarGenero(
-      criarTextoEscolha(
-        escolha,
-        origem
-      )
-    );
+    adaptarGenero(escolha.texto);
 
   fluxo.append(bloco);
 
-  adicionarDivisor();
+  rolarParaEscolha(bloco);
   }
 
   function limpar() {
@@ -371,6 +330,31 @@ window.NarradorAventura = (function () {
   fluxo.append(divisor);
 
   rolarParaFim();
+  }
+
+  function rolarParaEscolha(elemento) {
+  const area =
+    obterAreaRolagem();
+
+  if (!area || !elemento) {
+    return;
+  }
+
+  const areaRect =
+    area.getBoundingClientRect();
+
+  const elementoRect =
+    elemento.getBoundingClientRect();
+
+  const destino =
+    area.scrollTop +
+    elementoRect.top -
+    areaRect.top;
+
+  area.scrollTo({
+    top: destino,
+    behavior: "smooth",
+  });
   }
 
   

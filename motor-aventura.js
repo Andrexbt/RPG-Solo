@@ -310,13 +310,19 @@
 
     ocultarEscolhas();
 
-    solicitacaoTeste.textContent = criarInstrucaoTeste(
-      teste,
-      configuracaoRolagem.modificador,
-      configuracao.instrucao ?? "",
-    );
+    const instrucaoTeste =
+  criarInstrucaoTeste(
+    teste,
+    configuracaoRolagem.modificador,
+    configuracao.instrucao ?? "",
+  );
 
-    solicitacaoTeste.hidden = false;
+NarradorAventura.adicionarTeste(
+  instrucaoTeste
+);
+
+solicitacaoTeste.textContent = "";
+solicitacaoTeste.hidden = true;
 
     solicitarRolagemNaCaixa(
       configuracaoRolagem.gruposDeDados,

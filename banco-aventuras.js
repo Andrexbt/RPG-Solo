@@ -15,30 +15,35 @@ const bancoAventuras = {
       inicio: {
         numeroFonte: 1,
 
-        descricao: [
-          `Você está fugindo da cidade onde viveu pelos últimos dois anos.
+        contexto: [
+          `Você está fugindo da cidade onde viveu pelos últimos dois anos.`,
 
-          Nem em suas previsões mais pessimistas você imaginou que as coisas chegariam a esse ponto. Agora é tarde, e o perigo é grande demais. Depois de tudo que fez, todos que desafiou, chegou a hora de fugir.
+          `Nem em suas previsões mais pessimistas você imaginou que as coisas chegariam a esse ponto. Agora é tarde, e o perigo é grande demais. Depois de tudo que fez, todos que desafiou, chegou a hora de fugir.`,
           
-          De um lado, os guardas do Conde Debminster, cuja autoridade você desafiou ao questionar sobre o alto valor dos impostos, incitando a população a um pequeno levante contra as políticas autoritárias do conde. Rapidamente, tanto a população quanto o Conde passaram a ver em você uma figura de liderança que você nunca pretendeu ser.
+          `De um lado, os guardas do Conde Debminster, cuja autoridade você desafiou ao questionar sobre o alto valor dos impostos, incitando a população a um pequeno levante contra as políticas autoritárias do conde. Rapidamente, tanto a população quanto o Conde passaram a ver em você uma figura de liderança que você nunca pretendeu ser.`,
           
-          Do outro, a milícia dos Lagartos de Bronze. Inicialmente, a milícia havia se unido à causa e se prontificado a oferecer segurança para a população durante os protestos. Agora, havia decidido que, para tomar para si o poder que seria deixado pela inevitável queda da autoridade local, precisariam tirar você do tabuleiro político.
+          `Do outro, a milícia dos Lagartos de Bronze. Inicialmente, a milícia havia se unido à causa e se prontificado a oferecer segurança para a população durante os protestos. Agora, havia decidido que, para tomar para si o poder que seria deixado pela inevitável queda da autoridade local, precisariam tirar você do tabuleiro político.`,
           
-          Tudo aconteceu rápido demais. Agora, carregando os poucos pertences que consegue em sua mochila, você se encontra esgueirando-se por um beco, olhando pelas sombras uma multidão raivosa, se preparando para o confronto derradeiro contra a guarda real.
+          `Tudo aconteceu rápido demais. Agora, carregando os poucos pertences que consegue em sua mochila, você se encontra esgueirando-se por um beco, olhando pelas sombras uma multidão raivosa, se preparando para o confronto derradeiro contra a guarda real.`,
           
-          Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. Em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.`,
+          `Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. Em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.`
+          
+          `O que você fará?`,
         ],
 
         escolhas: [
+
           {
             id: "telhado",
 
-            texto: `Subir para o telhado.
-            Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado de um casebre próximo.`,
+            texto:[ `Uma pilha de caixas empilhadas próximas à parede chama a sua atenção, parecendo oferecer um caminho até o telhado de um casebre próximo.`,
+            
+            `Esconder-se ali em cima parece uma ótima opção. Além de lhe conceder um melhor ponto de observação, dificilmente alguém {o|a} procurará no alto das casas.`,],
 
             etapaInicial: "subirTelhado",
 
             etapas: {
+
               subirTelhado: {
                 descricao: [
                   `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,
@@ -135,13 +140,15 @@ const bancoAventuras = {
                 },
               },
             },
+
           },
 
           {
             id: "multidao",
 
-            texto: `Se misturar na multidão.
-            Apesar de conhecer muitos dos rostos na multidão, talvez você consiga se misturar e passar despercebido.`,
+            texto: `Apesar de conhecer muitos dos rostos na multidão, talvez você consiga se misturar e passar {despercebido|despercebida}.
+            
+            Uma vez {escondido|escondida} na multidão, talvez seja possível observar melhor seus arredores e formular um plano.`,
 
             requerSistema: "escolhaEntrePericias",
             teste: {
@@ -245,8 +252,13 @@ const bancoAventuras = {
               Você decide se aproveitar da confusão e tentar enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
             proximaCena: "batalha",
           },
+
         ],
+
       },
+
     },
+
   },
+
 };
