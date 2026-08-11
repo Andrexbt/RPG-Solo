@@ -1,7 +1,6 @@
 "use strict";
 
 const bancoAventuras = {
-
   aFuga: {
     id: "aFuga",
     titulo: "A Fuga",
@@ -13,7 +12,6 @@ const bancoAventuras = {
     cenaInicial: "inicio",
 
     cenas: {
-
       inicio: {
         numeroFonte: 1,
 
@@ -32,9 +30,7 @@ const bancoAventuras = {
         ],
 
         escolhas: [
-
           {
-
             id: "telhado",
 
             texto: `Subir para o telhado.
@@ -43,10 +39,8 @@ const bancoAventuras = {
             etapaInicial: "subirTelhado",
 
             etapas: {
-
               subirTelhado: {
-
-                texto: [
+                descricao: [
                   `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,
                 ],
 
@@ -59,9 +53,7 @@ const bancoAventuras = {
                 },
 
                 resultados: {
-
                   sucesso: {
-
                     texto: `Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
 
                     Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
@@ -69,83 +61,80 @@ const bancoAventuras = {
                     
                     Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém {o|a} procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
 
-                      escolhas: [
-
-                        {
+                    escolhas: [
+                      {
                         id: "esperar",
 
                         texto: `Esperar parece ser a opção mais segura.`,
 
                         proximaCena: "esperaNoTelhado",
+                      },
 
-                        },
-
-                        {
+                      {
                         id: "ir",
 
                         texto: `Cada segundo de espera é um risco em potencial. Melhor se mover agora em direção à torre.`,
 
-                          escolhas: [{
+                        descricao: [
+                          `Você decide se mover e considera suas opções de caminho até a torre.
 
-                            id: "movimentacaoTelhado",
+                          Uma das rotas parece ser muito mais rápida, mas também mais perigosa. Sem muita cobertura disponível, você precisaria contar com a sorte para não ser {visto|vista}.
 
-                            texto: `Você decide se mover e considera suas opções de caminho até a torre.
+                          A outra rota dá a volta nos casebres e chega em um ponto um pouco mais baixo por trás da torre. Pode demorar mais e ser mais difícil, mas, com um pouco de habilidade e paciência, é possível, e potencialmente mais seguro.
 
-                            Uma das rotas parece ser muito mais rápida, mas também mais perigosa. Sem muita cobertura disponível, você precisaria contar com a sorte para não ser visto/a.
+                          Qual rota você vai escolher?`,
+                        ],
 
-                            A outra rota dá a volta nos casebres e chega em um ponto um pouco mais baixo por trás da torre. Pode demorar mais e ser mais difícil, mas, com um pouco de habilidade e paciência, é possível, e potencialmente mais seguro.
+                        escolhas: [
+                          {
+                            id: "irFurtivo",
 
-                            Qual rota você vai escolher?`,
+                            texto: "A rota mais segura.",
 
-                              escolhas: [
-                                
-                                {
+                            proximaEtapa: "movimentacaoFurtiva",
+                          },
 
-                                  id: "irFurtivo",
+                          {
+                            id: "irRapido",
 
-                                  texto: "A rota mais segura.",
+                            texto: "A rota mais rápida.",
 
-                                  proximaEtapa: "movimentacaoFurtiva",
-
-                                },
-
-                                {
-
-                                  id: "irRapido",
-
-                                  texto: "A rota mais rápida.",
-
-                                  proximaCena: "movimentacaoTelhadoRapida",
-
-                                },
-
-                              ],
-
-                          }],
-
-                        
-
-                        },
-
-                      ],
-
+                            proximaCena: "movimentacaoTelhadoRapida",
+                          },
+                        ],
+                      },
+                    ],
                   },
 
                   fracasso: {
-
                     texto: `As caixas não aguentam seu peso a tempo de alcançar o telhado. Hora de pensar em um plano B.`,
 
                     voltarParaEscolhas: true,
 
                     removerEscolha: true,
                   },
-
                 },
-
               },
 
+              movimentacaoFurtiva: {
+                instrucao: "para avançar pelos telhados sem ser visto.",
+                teste: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                  dificuldade: 13,
+                },
+                resultados: {
+                  sucesso: {
+                    texto: "Você avança sem ser percebido.",
+                    proximaCena: "movimentacaoTelhadoFurtiva",
+                  },
+                  fracasso: {
+                    texto: "Sua movimentação chama atenção.",
+                    proximaCena: "movimentacaoTelhadoRapida",
+                  },
+                },
+              },
             },
-
           },
 
           {
@@ -256,13 +245,8 @@ const bancoAventuras = {
               Você decide se aproveitar da confusão e tentar enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
             proximaCena: "batalha",
           },
-
         ],
-
       },
-      
     },
-
   },
-
 };
