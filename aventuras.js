@@ -23,12 +23,10 @@ function buscarPersonagemSalvo(idPersonagem) {
     });
 
     if (personagem === undefined) {
-  return null;
-}
+      return null;
+    }
 
-return window.PersonagemDados.normalizar(
-  personagem
-);
+    return window.PersonagemDados.normalizar(personagem);
   } catch (erro) {
     console.error("Não foi possível carregar o personagem.", erro);
 
@@ -44,25 +42,13 @@ const idPersonagemSelecionado = parametrosAventura.get("personagem");
 
 const aventuraAtual = bancoAventuras[idAventuraSelecionada];
 
-const conteudoPergaminho =
-  document.querySelector(
-    ".conteudo-pergaminho-cena"
-  );
+const conteudoPergaminho = document.querySelector(".conteudo-pergaminho-cena");
 
-const botaoRolarCima =
-  document.querySelector(
-    "#rolarPergaminhoCima"
-  );
+const botaoRolarCima = document.querySelector("#rolarPergaminhoCima");
 
-const botaoRolarBaixo =
-  document.querySelector(
-    "#rolarPergaminhoBaixo"
-  );
+const botaoRolarBaixo = document.querySelector("#rolarPergaminhoBaixo");
 
-const seletorVelocidadeTexto =
-  document.querySelector(
-    "#velocidadeTexto"
-  );
+const seletorVelocidadeTexto = document.querySelector("#velocidadeTexto");
 
 if (!aventuraAtual) {
   throw new Error(`Aventura não encontrada: ${idAventuraSelecionada}`);
@@ -180,86 +166,53 @@ const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualComba
 carregarNpcsDaAventura(aventuraAtual.id);
 
 function alternarFicha() {
-  const recolhida =
-    layoutAventura
-      .classList
-      .toggle(
-        "ficha-recolhida"
-      );
+  const recolhida = layoutAventura.classList.toggle("ficha-recolhida");
 
-  botaoRecolherFicha
-    .setAttribute(
-      "aria-expanded",
-      String(!recolhida)
-    );
+  botaoRecolherFicha.setAttribute("aria-expanded", String(!recolhida));
 }
 
 function alternarPainelExplicativo() {
-  const recolhido =
-    layoutAventura
-      .classList
-      .toggle(
-        "painelExplicativo-recolhido"
-      );
+  const recolhido = layoutAventura.classList.toggle("painelExplicativo-recolhido");
 
-  botaoRecolherPainelExplicativo
-    .setAttribute(
-      "aria-expanded",
-      String(!recolhido)
-    );
+  botaoRecolherPainelExplicativo.setAttribute("aria-expanded", String(!recolhido));
 }
 
 function encaixarFerramentasDaAventura() {
-  const janelaAcao =
-    document.querySelector(".janela-acao");
+  const janelaAcao = document.querySelector(".janela-acao");
 
-  const janelaAnotacoes =
-    document.querySelector(".janela-anotacoes");
+  const janelaAnotacoes = document.querySelector(".janela-anotacoes");
 
-  const janelaDados =
-    document.querySelector(".janela-dados");
+  const janelaDados = document.querySelector(".janela-dados");
 
-  if (
-    !janelaAcao ||
-    !janelaAnotacoes ||
-    !janelaDados
-  ) {
+  if (!janelaAcao || !janelaAnotacoes || !janelaDados) {
     return;
   }
 
   const espacamento = 14;
 
-  const posicaoAcao =
-    janelaAcao.getBoundingClientRect();
+  const posicaoAcao = janelaAcao.getBoundingClientRect();
 
-  janelaAnotacoes.style.left =
-    `${posicaoAcao.left}px`;
+  janelaAnotacoes.style.left = `${posicaoAcao.left}px`;
 
-  janelaAnotacoes.style.top =
-    `${posicaoAcao.bottom + espacamento}px`;
+  janelaAnotacoes.style.top = `${posicaoAcao.bottom + espacamento}px`;
 
   janelaAnotacoes.style.right = "auto";
   janelaAnotacoes.style.bottom = "auto";
 
-  janelaAnotacoes.style.width =
-    `${posicaoAcao.width}px`;
+  janelaAnotacoes.style.width = `${posicaoAcao.width}px`;
 
-  const posicaoAnotacoes =
-    janelaAnotacoes.getBoundingClientRect();
+  const posicaoAnotacoes = janelaAnotacoes.getBoundingClientRect();
 
-  janelaDados.style.left =
-    `${posicaoAcao.left}px`;
+  janelaDados.style.left = `${posicaoAcao.left}px`;
 
-  janelaDados.style.top =
-    `${posicaoAnotacoes.bottom + espacamento}px`;
+  janelaDados.style.top = `${posicaoAnotacoes.bottom + espacamento}px`;
 
   janelaDados.style.right = "auto";
   janelaDados.style.bottom = "auto";
 }
 
 function prepararRolagemTesteAventura(teste) {
-  const personagem =
-    estadoAtualJogo.personagem.dados;
+  const personagem = estadoAtualJogo.personagem.dados;
 
   if (!personagem || !teste) {
     return null;
@@ -269,31 +222,16 @@ function prepararRolagemTesteAventura(teste) {
   let descricao = "Teste";
 
   if (teste.tipo === "pericia") {
-    modificador =
-      SistemaTestes.calcularBonusPericia(
-        personagem,
-        teste.periciaId,
-      );
+    modificador = SistemaTestes.calcularBonusPericia(personagem, teste.periciaId);
 
-    const pericia =
-      window.bancoPericias?.[
-        teste.periciaId
-      ];
+    const pericia = window.bancoPericias?.[teste.periciaId];
 
-    descricao =
-      pericia?.nome
-        ? `Teste de ${pericia.nome}`
-        : "Teste de perícia";
+    descricao = pericia?.nome ? `Teste de ${pericia.nome}` : "Teste de perícia";
   }
 
-  const tipoRolagem =
-    teste.tipoRolagem ?? "normal";
+  const tipoRolagem = teste.tipoRolagem ?? "normal";
 
-  const quantidadeD20 =
-    tipoRolagem === "vantagem" ||
-    tipoRolagem === "desvantagem"
-      ? 2
-      : 1;
+  const quantidadeD20 = tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
 
   return {
     gruposDeDados: [
@@ -310,11 +248,8 @@ function prepararRolagemTesteAventura(teste) {
   };
 }
 
-function formatarModificadorTeste(
-  modificador
-) {
-  const valor =
-    Number(modificador) || 0;
+function formatarModificadorTeste(modificador) {
+  const valor = Number(modificador) || 0;
 
   if (valor > 0) {
     return `+ ${valor}`;
@@ -327,35 +262,19 @@ function formatarModificadorTeste(
   return "+ 0";
 }
 
-function criarInstrucaoTesteAventura(
-  teste,
-  modificador,
-  complemento = "",
-) {
+function criarInstrucaoTesteAventura(teste, modificador, complemento = "") {
   if (!teste) {
     return "";
   }
 
   if (teste.tipo === "pericia") {
-    const pericia =
-      window.bancoPericias?.[
-        teste.periciaId
-      ];
+    const pericia = window.bancoPericias?.[teste.periciaId];
 
-    const nomePericia =
-      pericia?.nome ??
-      teste.periciaId;
+    const nomePericia = pericia?.nome ?? teste.periciaId;
 
-    const modificadorFormatado =
-      formatarModificadorTeste(
-        modificador
-      );
+    const modificadorFormatado = formatarModificadorTeste(modificador);
 
-    return (
-      `Faça um teste de ${nomePericia} ` +
-      `(1d20 ${modificadorFormatado}) ` +
-      complemento
-    );
+    return `Faça um teste de ${nomePericia} ` + `(1d20 ${modificadorFormatado}) ` + complemento;
   }
 
   return complemento;
@@ -583,10 +502,7 @@ function selecionarAtaqueCombate(evento) {
   }
 
   if (!combate.alvoSelecionadoId) {
-    exibirMensagemNarrativa(
-  solicitacaoCombate,
-  mensagensNarrativas.ataque.selecionarAlvo,
-);
+    exibirMensagemNarrativa(solicitacaoCombate, mensagensNarrativas.ataque.selecionarAlvo);
 
     solicitacaoCombate.hidden = false;
 
@@ -610,54 +526,43 @@ function selecionarAtaqueCombate(evento) {
 
   let quantidadeD20 = 1;
 
-if (
-  resultado.tipoRolagem === "vantagem" ||
-  resultado.tipoRolagem === "desvantagem"
-) {
-  quantidadeD20 = 2;
-}
+  if (resultado.tipoRolagem === "vantagem" || resultado.tipoRolagem === "desvantagem") {
+    quantidadeD20 = 2;
+  }
 
-let mensagemAtaque;
+  let mensagemAtaque;
 
-if (resultado.tipoRolagem === "vantagem") {
-  mensagemAtaque =
-    mensagensNarrativas.ataque.pedirVantagem(
+  if (resultado.tipoRolagem === "vantagem") {
+    mensagemAtaque = mensagensNarrativas.ataque.pedirVantagem(
       resultado.ataque.bonusAtaque,
       resultado.alvo.nome,
     );
-} else if (
-  resultado.tipoRolagem === "desvantagem"
-) {
-  mensagemAtaque =
-    mensagensNarrativas.ataque.pedirDesvantagem(
+  } else if (resultado.tipoRolagem === "desvantagem") {
+    mensagemAtaque = mensagensNarrativas.ataque.pedirDesvantagem(
       resultado.ataque.bonusAtaque,
       resultado.alvo.nome,
     );
-} else {
-  mensagemAtaque =
-    mensagensNarrativas.ataque.pedirNormal(
+  } else {
+    mensagemAtaque = mensagensNarrativas.ataque.pedirNormal(
       resultado.ataque.bonusAtaque,
       resultado.alvo.nome,
     );
-}
+  }
 
-exibirMensagemNarrativa(
-  solicitacaoCombate,
-  mensagemAtaque,
-);
+  exibirMensagemNarrativa(solicitacaoCombate, mensagemAtaque);
 
-    solicitarRolagemNaCaixa(
-  [
-    {
-      quantidade: quantidadeD20,
-      numeroDeFaces: 20,
-    },
-  ],
-  resultado.ataque.bonusAtaque,
-  "Rolagem de ataque",
-  1,
-  false,
-);
+  solicitarRolagemNaCaixa(
+    [
+      {
+        quantidade: quantidadeD20,
+        numeroDeFaces: 20,
+      },
+    ],
+    resultado.ataque.bonusAtaque,
+    "Rolagem de ataque",
+    1,
+    false,
+  );
 
   solicitacaoCombate.hidden = false;
 
@@ -762,9 +667,7 @@ function iniciarCombateDaAventura(configuracao) {
   if (jogador) {
     exibirMensagemNarrativa(
       solicitacaoCombate,
-      mensagensNarrativas.iniciativa.pedir(
-        jogador.bonusIniciativa,
-      ),
+      mensagensNarrativas.iniciativa.pedir(jogador.bonusIniciativa),
     );
 
     solicitarRolagemNaCaixa(
@@ -973,26 +876,18 @@ function exibirEscolhas(escolhas) {
   }
 }
 
-async function exibirContexto(
-  contexto
-) {
-  if (
-    contexto === undefined ||
-    contexto === null
-  ) {
+async function exibirContexto(contexto) {
+  if (contexto === undefined || contexto === null) {
     return;
   }
 
-  await NarradorAventura
-    .adicionarNarracao(
-      contexto
-    );
+  await NarradorAventura.adicionarNarracao(contexto);
 }
 
-function exibirCena(aventura, cena) {
+async function exibirCena(aventura, cena) {
   tituloAventura.textContent = aventura.titulo;
 
-  exibirContexto(cena.contexto);
+  await exibirContexto(cena.contexto);
 
   verificarCombateDaCena(cena);
 
@@ -1006,13 +901,6 @@ function exibirCena(aventura, cena) {
   );
 
   exibirEscolhas(escolhasDisponiveis);
-
-  NarradorAventura.limpar();
-
-exibirCena(
-  aventuraAtual,
-  cenaAtual
-);
 }
 
 function ocultarEscolhas() {
@@ -1058,41 +946,35 @@ function iniciarEtapa(idEtapa) {
 
   estadoAtualJogo.testePendente = etapa.teste;
 
-  const configuracaoRolagem =
-  prepararRolagemTesteAventura(
-    etapa.teste
-  );
-
-if (configuracaoRolagem) {
-  solicitarRolagemNaCaixa(
-    configuracaoRolagem.gruposDeDados,
-    configuracaoRolagem.modificador,
-    configuracaoRolagem.descricao,
-    configuracaoRolagem
-      .quantidadeDeRolagens,
-    configuracaoRolagem.critico,
-  );
+  const configuracaoRolagem = prepararRolagemTesteAventura(etapa.teste);
 
   if (configuracaoRolagem) {
-  solicitacaoTeste.textContent =
-    criarInstrucaoTesteAventura(
-      etapa.teste,
+    solicitarRolagemNaCaixa(
+      configuracaoRolagem.gruposDeDados,
       configuracaoRolagem.modificador,
-      etapa.instrucao,
+      configuracaoRolagem.descricao,
+      configuracaoRolagem.quantidadeDeRolagens,
+      configuracaoRolagem.critico,
     );
 
-  solicitacaoTeste.hidden = false;
+    if (configuracaoRolagem) {
+      solicitacaoTeste.textContent = criarInstrucaoTesteAventura(
+        etapa.teste,
+        configuracaoRolagem.modificador,
+        etapa.instrucao,
+      );
 
-  solicitarRolagemNaCaixa(
-    configuracaoRolagem.gruposDeDados,
-    configuracaoRolagem.modificador,
-    configuracaoRolagem.descricao,
-    configuracaoRolagem
-      .quantidadeDeRolagens,
-    configuracaoRolagem.critico,
-  );
-}
-}
+      solicitacaoTeste.hidden = false;
+
+      solicitarRolagemNaCaixa(
+        configuracaoRolagem.gruposDeDados,
+        configuracaoRolagem.modificador,
+        configuracaoRolagem.descricao,
+        configuracaoRolagem.quantidadeDeRolagens,
+        configuracaoRolagem.critico,
+      );
+    }
+  }
 
   ocultarEscolhas();
 
@@ -1214,13 +1096,10 @@ function formatarRolagemDano(ataque) {
   const partes = [];
 
   for (const grupo of ataque.dano.gruposDeDados) {
-    partes.push(
-      `${grupo.quantidade}d${grupo.numeroDeFaces}`,
-    );
+    partes.push(`${grupo.quantidade}d${grupo.numeroDeFaces}`);
   }
 
-  const modificador =
-    Number(ataque.dano.modificador) || 0;
+  const modificador = Number(ataque.dano.modificador) || 0;
 
   if (modificador > 0) {
     partes.push(`+ ${modificador}`);
@@ -1250,40 +1129,29 @@ function oferecerEfeitoDano(combate, textoDano, ataque, critico) {
     return false;
   }
 
-  const origem =
-  operacao.origem;
+  const origem = operacao.origem;
 
-if (!origem) {
-  return false;
-}
+  if (!origem) {
+    return false;
+  }
 
-let fonte = null;
+  let fonte = null;
 
-if (origem.tipo === "talento") {
-  fonte =
-    window.bancoTalentos
-      ?.[origem.id] ??
-    null;
-}
+  if (origem.tipo === "talento") {
+    fonte = window.bancoTalentos?.[origem.id] ?? null;
+  }
 
-if (origem.tipo === "habilidade") {
-  fonte =
-    window.bancoHabilidades
-      ?.classFeatures
-      ?.[origem.id] ??
-    null;
-}
+  if (origem.tipo === "habilidade") {
+    fonte = window.bancoHabilidades?.classFeatures?.[origem.id] ?? null;
+  }
 
-if (origem.tipo === "maestria") {
-  fonte =
-    window.bancoMaestrias
-      ?.[origem.id] ??
-    null;
-}
+  if (origem.tipo === "maestria") {
+    fonte = window.bancoMaestrias?.[origem.id] ?? null;
+  }
 
-if (!fonte) {
-  return false;
-}
+  if (!fonte) {
+    return false;
+  }
 
   acoesCombate.innerHTML = "";
 
@@ -1310,47 +1178,28 @@ if (!fonte) {
 
     acoesCombate.innerHTML = "";
 
-    const gruposDuasRolagens =
-      obterGruposDanoParaRolagem(
-        ataque,
-        critico,
-        2,
-      );
+    const gruposDuasRolagens = obterGruposDanoParaRolagem(ataque, critico, 2);
 
     solicitarRolagemNaCaixa(
-  gruposDuasRolagens,
-  ataque.dano.modificador,
-  "Duas rolagens de dano do Atacante Selvagem",
-  2,
-  critico,
-);
+      gruposDuasRolagens,
+      ataque.dano.modificador,
+      "Duas rolagens de dano do Atacante Selvagem",
+      2,
+      critico,
+    );
 
-    const dadosDaArma =
-  ataque.dano.gruposDeDados
-    .map(function (grupo) {
-      return (
-        `${grupo.quantidade}` +
-        `d${grupo.numeroDeFaces}`
-      );
-    })
-    .join(" + ");
+    const dadosDaArma = ataque.dano.gruposDeDados
+      .map(function (grupo) {
+        return `${grupo.quantidade}` + `d${grupo.numeroDeFaces}`;
+      })
+      .join(" + ");
 
-exibirMensagemNarrativa(
-  solicitacaoCombate,
-  critico
-    ? mensagensNarrativas
-        .efeitos
-        .atacanteSelvagemCritico(
-          dadosDaArma,
-          ataque.dano.modificador,
-        )
-    : mensagensNarrativas
-        .efeitos
-        .atacanteSelvagemNormal(
-          dadosDaArma,
-          ataque.dano.modificador,
-        ),
-);
+    exibirMensagemNarrativa(
+      solicitacaoCombate,
+      critico
+        ? mensagensNarrativas.efeitos.atacanteSelvagemCritico(dadosDaArma, ataque.dano.modificador)
+        : mensagensNarrativas.efeitos.atacanteSelvagemNormal(dadosDaArma, ataque.dano.modificador),
+    );
 
     solicitacaoCombate.hidden = false;
   });
@@ -1363,52 +1212,35 @@ exibirMensagemNarrativa(
     solicitacaoCombate.hidden = false;
 
     solicitarRolagemNaCaixa(
-  obterGruposDanoParaRolagem(
-    ataque,
-    critico,
-  ),
+      obterGruposDanoParaRolagem(ataque, critico),
 
-  ataque.dano.modificador,
+      ataque.dano.modificador,
 
-  "Rolagem de dano",
+      "Rolagem de dano",
 
-  1,
+      1,
 
-  critico,
-);
+      critico,
+    );
   });
 
   acoesCombate.append(botaoUsar, botaoIgnorar);
 
-  exibirMensagemNarrativa(
-  solicitacaoCombate,
-  mensagensNarrativas.efeitos.disponivel(
-    fonte.nome,
-  ),
-);
+  exibirMensagemNarrativa(solicitacaoCombate, mensagensNarrativas.efeitos.disponivel(fonte.nome));
 
   solicitacaoCombate.hidden = false;
 
   return true;
 }
 
-function obterGruposDanoParaRolagem(
-  ataque,
-  critico,
-  multiplicador = 1,
-) {
-  return ataque.dano.gruposDeDados.map(
-    function prepararGrupo(grupo) {
-      return {
-        quantidade:
-          grupo.quantidade *
-          multiplicador,
+function obterGruposDanoParaRolagem(ataque, critico, multiplicador = 1) {
+  return ataque.dano.gruposDeDados.map(function prepararGrupo(grupo) {
+    return {
+      quantidade: grupo.quantidade * multiplicador,
 
-        numeroDeFaces:
-          grupo.numeroDeFaces,
-      };
-    },
-  );
+      numeroDeFaces: grupo.numeroDeFaces,
+    };
+  });
 }
 
 function resolverAtaqueJogador(resultadoRolagem) {
@@ -1453,19 +1285,14 @@ function resolverAtaqueJogador(resultadoRolagem) {
     resultadoAtaque.acertoCritico ? "Você conseguiu um acerto crítico." : "Você acertou o ataque.",
   );
 
-  const textoDano =
-  formatarRolagemDano(
-    resultadoAtaque.ataque,
-  );
+  const textoDano = formatarRolagemDano(resultadoAtaque.ataque);
 
-  const gruposDano =
-  obterGruposDanoParaRolagem(
+  const gruposDano = obterGruposDanoParaRolagem(
     resultadoAtaque.ataque,
     resultadoAtaque.acertoCritico,
   );
 
-  const efeitoFoiOferecido =
-  oferecerEfeitoDano(
+  const efeitoFoiOferecido = oferecerEfeitoDano(
     combate,
     textoDano,
     resultadoAtaque.ataque,
@@ -1477,84 +1304,58 @@ function resolverAtaqueJogador(resultadoRolagem) {
   }
 
   solicitarRolagemNaCaixa(
-  gruposDano,
-  resultadoAtaque.ataque.dano.modificador,
-  "Rolagem de dano",
-  1,
-  resultadoAtaque.acertoCritico,
-);
+    gruposDano,
+    resultadoAtaque.ataque.dano.modificador,
+    "Rolagem de dano",
+    1,
+    resultadoAtaque.acertoCritico,
+  );
 
   exibirMensagemNarrativa(
-  solicitacaoCombate,
-  resultadoAtaque.acertoCritico
-    ? mensagensNarrativas.dano
-        .acertoCritico()
-    : mensagensNarrativas.dano
-        .acertoNormal(textoDano),
-);
+    solicitacaoCombate,
+    resultadoAtaque.acertoCritico
+      ? mensagensNarrativas.dano.acertoCritico()
+      : mensagensNarrativas.dano.acertoNormal(textoDano),
+  );
 
   solicitacaoCombate.hidden = false;
 }
 
-function aplicarCriticoNaRolagem(
-  resultadoRolagem,
-  critico,
-) {
+function aplicarCriticoNaRolagem(resultadoRolagem, critico) {
   if (!critico) {
     return resultadoRolagem;
   }
 
-  const subtotal =
-    Number(resultadoRolagem.subtotal) || 0;
+  const subtotal = Number(resultadoRolagem.subtotal) || 0;
 
-  const modificador =
-    Number(resultadoRolagem.modificador) || 0;
+  const modificador = Number(resultadoRolagem.modificador) || 0;
 
-  const subtotalCritico =
-    subtotal * 2;
+  const subtotalCritico = subtotal * 2;
 
   return {
     ...resultadoRolagem,
 
-    subtotalOriginal:
-      subtotal,
+    subtotalOriginal: subtotal,
 
-    subtotal:
-      subtotalCritico,
+    subtotal: subtotalCritico,
 
-    modificador:
-      modificador,
+    modificador: modificador,
 
-    total:
-      subtotalCritico + modificador,
+    total: subtotalCritico + modificador,
 
-    critico:
-      true,
+    critico: true,
   };
 }
 
 function concluirDanoJogador(combate, resultadoRolagem) {
-  const critico =
-  Boolean(
-    combate.danoPendente?.critico,
-  );
+  const critico = Boolean(combate.danoPendente?.critico);
 
-const resultadoFinal =
-  aplicarCriticoNaRolagem(
-    resultadoRolagem,
-    critico,
-  );
+  const resultadoFinal = aplicarCriticoNaRolagem(resultadoRolagem, critico);
 
-  const resultadoDano = SistemaCombate.resolverDano(
-    combate,
-    resultadoFinal,
-  );
+  const resultadoDano = SistemaCombate.resolverDano(combate, resultadoFinal);
 
   if (!resultadoDano.sucesso) {
-    console.warn(
-      "Não foi possível resolver o dano:",
-      resultadoDano.motivo,
-    );
+    console.warn("Não foi possível resolver o dano:", resultadoDano.motivo);
 
     return;
   }
@@ -1584,71 +1385,38 @@ const resultadoFinal =
   }
 
   if (resultadoDano.resultadoCombate === "vitoria") {
-    solicitacaoCombate.textContent =
-      "O inimigo foi derrotado. Vitória!";
+    solicitacaoCombate.textContent = "O inimigo foi derrotado. Vitória!";
   } else if (resultadoDano.resultadoCombate === "derrota") {
-    solicitacaoCombate.textContent =
-      "O personagem foi derrotado.";
+    solicitacaoCombate.textContent = "O personagem foi derrotado.";
   } else if (resultadoDano.foiDerrotado) {
-    solicitacaoCombate.textContent =
-      `${resultadoDano.alvo.nome} foi derrotado.`;
+    solicitacaoCombate.textContent = `${resultadoDano.alvo.nome} foi derrotado.`;
   } else {
     solicitacaoCombate.textContent =
-      `${resultadoDano.alvo.nome} sofreu ` +
-      `${resultadoDano.dano} de dano.`;
+      `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
   }
 
-  const vexAplicado =
-  resultadoDano
-    .efeitosAplicados
-    ?.find(
-      function encontrarVex(
-        efeito,
-      ) {
-        return (
-          efeito.origem
-            ?.tipo ===
-            "maestria" &&
+  const vexAplicado = resultadoDano.efeitosAplicados?.find(function encontrarVex(efeito) {
+    return efeito.origem?.tipo === "maestria" && efeito.origem?.id === "vex";
+  });
 
-          efeito.origem
-            ?.id ===
-            "vex"
+  if (vexAplicado && !resultadoDano.foiDerrotado) {
+    setTimeout(
+      function exibirMensagemVex() {
+        exibirMensagemNarrativa(
+          solicitacaoCombate,
+
+          mensagensNarrativas.efeitos.vexAplicado(resultadoDano.alvo.nome),
         );
+
+        solicitacaoCombate.hidden = false;
       },
+
+      0,
     );
-
-if (
-  vexAplicado &&
-  !resultadoDano.foiDerrotado
-) {
-
-   setTimeout(
-    function exibirMensagemVex() {
-      exibirMensagemNarrativa(
-        solicitacaoCombate,
-
-        mensagensNarrativas
-          .efeitos
-          .vexAplicado(
-            resultadoDano
-              .alvo
-              .nome,
-          ),
-      );
-
-      solicitacaoCombate.hidden =
-        false;
-    },
-
-    0,
-  );
-}
+  }
 }
 
-function separarRolagensSimultaneasEfeito(
-  resultadoRolagem,
-  quantidadeDeRolagens,
-) {
+function separarRolagensSimultaneasEfeito(resultadoRolagem, quantidadeDeRolagens) {
   if (
     !resultadoRolagem ||
     !Array.isArray(resultadoRolagem.gruposRolados) ||
@@ -1657,17 +1425,13 @@ function separarRolagensSimultaneasEfeito(
     return [resultadoRolagem];
   }
 
-  const gruposPodemSerDivididos =
-    resultadoRolagem.gruposRolados.every(
-      function verificarGrupo(grupo) {
-        return (
-          Array.isArray(grupo.resultados) &&
-          grupo.resultados.length %
-            quantidadeDeRolagens ===
-            0
-        );
-      },
-    );
+  const gruposPodemSerDivididos = resultadoRolagem.gruposRolados.every(
+    function verificarGrupo(grupo) {
+      return (
+        Array.isArray(grupo.resultados) && grupo.resultados.length % quantidadeDeRolagens === 0
+      );
+    },
+  );
 
   if (!gruposPodemSerDivididos) {
     return [resultadoRolagem];
@@ -1675,60 +1439,31 @@ function separarRolagensSimultaneasEfeito(
 
   const rolagensSeparadas = [];
 
-  for (
-    let indiceRolagem = 0;
-    indiceRolagem < quantidadeDeRolagens;
-    indiceRolagem += 1
-  ) {
-    const gruposRolados =
-      resultadoRolagem.gruposRolados.map(
-        function separarGrupo(grupo) {
-          const quantidadePorRolagem =
-            grupo.resultados.length /
-            quantidadeDeRolagens;
+  for (let indiceRolagem = 0; indiceRolagem < quantidadeDeRolagens; indiceRolagem += 1) {
+    const gruposRolados = resultadoRolagem.gruposRolados.map(function separarGrupo(grupo) {
+      const quantidadePorRolagem = grupo.resultados.length / quantidadeDeRolagens;
 
-          const inicio =
-            indiceRolagem *
-            quantidadePorRolagem;
+      const inicio = indiceRolagem * quantidadePorRolagem;
 
-          const fim =
-            inicio + quantidadePorRolagem;
+      const fim = inicio + quantidadePorRolagem;
 
-          const resultados =
-            grupo.resultados.slice(
-              inicio,
-              fim,
-            );
+      const resultados = grupo.resultados.slice(inicio, fim);
 
-          return {
-  quantidade: resultados.length,
-  numeroDeFaces:
-    grupo.numeroDeFaces,
-  resultados: resultados,
-  total: resultados.reduce(
-    function somarResultado(
-      total,
-      resultado,
-    ) {
-      return total + resultado;
-    },
-    0,
-  ),
-};
-        },
-      );
+      return {
+        quantidade: resultados.length,
+        numeroDeFaces: grupo.numeroDeFaces,
+        resultados: resultados,
+        total: resultados.reduce(function somarResultado(total, resultado) {
+          return total + resultado;
+        }, 0),
+      };
+    });
 
-    const subtotal = gruposRolados.reduce(
-      function somarGrupos(total, grupo) {
-        return total + grupo.total;
-      },
-      0,
-    );
+    const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
+      return total + grupo.total;
+    }, 0);
 
-    const modificador =
-      Number(
-        resultadoRolagem.modificador,
-      ) || 0;
+    const modificador = Number(resultadoRolagem.modificador) || 0;
 
     rolagensSeparadas.push({
       gruposRolados: gruposRolados,
@@ -1742,48 +1477,29 @@ function separarRolagensSimultaneasEfeito(
 }
 
 function resolverDanoJogador(resultadoRolagem) {
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-  const danoPendente =
-    combate.danoPendente;
+  const danoPendente = combate.danoPendente;
 
   if (danoPendente?.efeitoAtivo) {
-    const quantidadeNecessaria =
-      danoPendente.efeitoAtivo
-        .quantidadeDeRolagens;
+    const quantidadeNecessaria = danoPendente.efeitoAtivo.quantidadeDeRolagens;
 
-    const quantidadeRegistrada =
-      danoPendente.rolagensEfeito
-        ?.length ?? 0;
+    const quantidadeRegistrada = danoPendente.rolagensEfeito?.length ?? 0;
 
-    const quantidadeRestante =
-      quantidadeNecessaria -
-      quantidadeRegistrada;
+    const quantidadeRestante = quantidadeNecessaria - quantidadeRegistrada;
 
-    const rolagensRecebidas =
-      separarRolagensSimultaneasEfeito(
-        resultadoRolagem,
-        quantidadeRestante,
-      );
+    const rolagensRecebidas = separarRolagensSimultaneasEfeito(
+      resultadoRolagem,
+      quantidadeRestante,
+    );
 
     let ultimoRegistro = null;
 
-    for (
-      const rolagemRecebida
-      of rolagensRecebidas
-    ) {
-      ultimoRegistro =
-        registrarRolagemEfeito(
-          danoPendente,
-          rolagemRecebida,
-        );
+    for (const rolagemRecebida of rolagensRecebidas) {
+      ultimoRegistro = registrarRolagemEfeito(danoPendente, rolagemRecebida);
 
       if (!ultimoRegistro.sucesso) {
-        console.warn(
-          "Não foi possível registrar a rolagem do efeito:",
-          ultimoRegistro.motivo,
-        );
+        console.warn("Não foi possível registrar a rolagem do efeito:", ultimoRegistro.motivo);
 
         return;
       }
@@ -1795,29 +1511,21 @@ function resolverDanoJogador(resultadoRolagem) {
 
     if (!ultimoRegistro.concluida) {
       const quantidadeAindaNecessaria =
-        ultimoRegistro
-          .quantidadeNecessaria -
-        ultimoRegistro
-          .quantidadeRegistrada;
+        ultimoRegistro.quantidadeNecessaria - ultimoRegistro.quantidadeRegistrada;
 
       solicitacaoCombate.textContent =
         quantidadeAindaNecessaria === 1
           ? "Primeira rolagem registrada. Role novamente o dano."
-          : (
-              `${ultimoRegistro.quantidadeRegistrada} ` +
-              "rolagens registradas. " +
-              `Ainda faltam ${quantidadeAindaNecessaria}.`
-            );
+          : `${ultimoRegistro.quantidadeRegistrada} ` +
+            "rolagens registradas. " +
+            `Ainda faltam ${quantidadeAindaNecessaria}.`;
 
       solicitacaoCombate.hidden = false;
 
       return;
     }
 
-    if (
-      !ultimoRegistro
-        .exigeEscolhaDoJogador
-    ) {
+    if (!ultimoRegistro.exigeEscolhaDoJogador) {
       console.warn(
         "O critério de escolha do efeito ainda não foi implementado:",
         ultimoRegistro.criterioDeEscolha,
@@ -1826,52 +1534,28 @@ function resolverDanoJogador(resultadoRolagem) {
       return;
     }
 
-    const rolagens =
-      ultimoRegistro.rolagens;
+    const rolagens = ultimoRegistro.rolagens;
 
-    exibirEscolhaEntreRolagens(
-      rolagens,
-      function concluirEscolhaRolagem(
-        rolagemEscolhida,
-      ) {
-        solicitacaoCombate.textContent =
-          `Resultado escolhido: ${rolagemEscolhida.total}.`;
+    exibirEscolhaEntreRolagens(rolagens, function concluirEscolhaRolagem(rolagemEscolhida) {
+      solicitacaoCombate.textContent = `Resultado escolhido: ${rolagemEscolhida.total}.`;
 
-        const resultadoFinalizacao =
-          finalizarEfeitoPendente(
-            danoPendente,
-          );
+      const resultadoFinalizacao = finalizarEfeitoPendente(danoPendente);
 
-        if (
-          !resultadoFinalizacao.sucesso
-        ) {
-          console.warn(
-            "Não foi possível finalizar o efeito:",
-            resultadoFinalizacao.motivo,
-          );
+      if (!resultadoFinalizacao.sucesso) {
+        console.warn("Não foi possível finalizar o efeito:", resultadoFinalizacao.motivo);
 
-          return;
-        }
+        return;
+      }
 
-        concluirDanoJogador(
-          combate,
-          rolagemEscolhida,
-        );
-      },
-    );
+      concluirDanoJogador(combate, rolagemEscolhida);
+    });
 
-    console.log(
-      "Rolagens do efeito:",
-      rolagens,
-    );
+    console.log("Rolagens do efeito:", rolagens);
 
     return;
   }
 
-  concluirDanoJogador(
-    combate,
-    resultadoRolagem,
-  );
+  concluirDanoJogador(combate, resultadoRolagem);
 }
 
 function receberResultadoRolagem(evento) {
@@ -1879,16 +1563,11 @@ function receberResultadoRolagem(evento) {
 
   const combate = estadoAtualJogo.combateAtual;
 
-  if (
-  combate &&
-  combate.efeitoPendente
-) {
-  resolverEfeitoPendente(
-    resultadoRolagem,
-  );
+  if (combate && combate.efeitoPendente) {
+    resolverEfeitoPendente(resultadoRolagem);
 
-  return;
-}
+    return;
+  }
 
   if (combate && combate.iniciativaPendenteId) {
     resolverIniciativaJogador(resultadoRolagem);
@@ -1917,79 +1596,48 @@ function receberResultadoRolagem(evento) {
   resolverTeste(resultadoRolagem);
 }
 
-function resolverEfeitoPendente(
-  resultadoRolagem,
-) {
-  const combate =
-    estadoAtualJogo.combateAtual;
+function resolverEfeitoPendente(resultadoRolagem) {
+  const combate = estadoAtualJogo.combateAtual;
 
-  const operacao =
-    combate?.efeitoPendente;
+  const operacao = combate?.efeitoPendente;
 
   if (!combate || !operacao) {
     return false;
   }
 
-  if (
-    operacao.tipo !==
-    "curar"
-  ) {
-    console.warn(
-      "Operação de efeito ainda não implementada:",
-      operacao.tipo,
-    );
+  if (operacao.tipo !== "curar") {
+    console.warn("Operação de efeito ainda não implementada:", operacao.tipo);
 
     return false;
   }
 
-  const participante =
-    combate.participantes.find(
-      function encontrarParticipante(
-        participanteAtual,
-      ) {
-        return (
-          participanteAtual.id ===
-          operacao.participanteId
-        );
-      },
-    );
+  const participante = combate.participantes.find(
+    function encontrarParticipante(participanteAtual) {
+      return participanteAtual.id === operacao.participanteId;
+    },
+  );
 
   if (!participante) {
-    console.warn(
-      "Participante do efeito não encontrado:",
-      operacao.participanteId,
-    );
+    console.warn("Participante do efeito não encontrado:", operacao.participanteId);
 
-    combate.efeitoPendente =
-      null;
+    combate.efeitoPendente = null;
 
     return true;
   }
 
-  const resultadoCura =
-    SistemaCombate.aplicarCura(
-      participante,
-      resultadoRolagem.total,
-    );
+  const resultadoCura = SistemaCombate.aplicarCura(participante, resultadoRolagem.total);
 
   if (!resultadoCura.sucesso) {
-    console.warn(
-      "Não foi possível aplicar a cura:",
-      resultadoCura.motivo,
-    );
+    console.warn("Não foi possível aplicar a cura:", resultadoCura.motivo);
 
-    combate.efeitoPendente =
-      null;
+    combate.efeitoPendente = null;
 
     return true;
   }
 
-  combate.efeitoPendente =
-    null;
+  combate.efeitoPendente = null;
 
-  atualizarInterfaceTurno(
-    combate,
-  );
+  atualizarInterfaceTurno(combate);
 
   return true;
 }
@@ -2001,30 +1649,21 @@ function solicitarRolagemNaCaixa(
   quantidadeDeRolagens = 1,
   critico = false,
 ) {
-  if (
-    typeof window
-      .configurarRolagemSolicitada !==
-    "function"
-  ) {
-    console.warn(
-      "A caixa de dados não está disponível.",
-    );
+  if (typeof window.configurarRolagemSolicitada !== "function") {
+    console.warn("A caixa de dados não está disponível.");
 
     return;
   }
 
   window.configurarRolagemSolicitada({
-    gruposDeDados:
-      gruposDeDados,
+    gruposDeDados: gruposDeDados,
 
-    modificador:
-      modificador,
+    modificador: modificador,
 
-    descricao:
-      descricao,
+    descricao: descricao,
 
-      quantidadeDeRolagens: quantidadeDeRolagens,
-      critico: critico,
+    quantidadeDeRolagens: quantidadeDeRolagens,
+    critico: critico,
   });
 }
 
@@ -2044,6 +1683,10 @@ function selecionarEscolha(evento) {
   const escolhaSelecionada = escolhasAtuais.find(function (escolha) {
     return escolha.id === idEscolha;
   });
+
+  NarradorAventura.adicionarEscolhaRealizada(
+  escolhaSelecionada.texto
+);
 
   if (!escolhaSelecionada) {
     console.warn("Escolha não encontrada:", idEscolha);
@@ -2115,9 +1758,7 @@ function processarTurnoAtual(combate) {
   }
 
   if (participanteAtivo.tipo === "jogador") {
-    exibirAcaoAtualCombate(
-  mensagensNarrativas.turno.jogador,
-);
+    exibirAcaoAtualCombate(mensagensNarrativas.turno.jogador);
 
     return;
   }
@@ -2138,11 +1779,7 @@ function processarTurnoAtual(combate) {
 
       atualizarInterfaceTurno(combate);
     } catch (erro) {
-      exibirAcaoAtualCombate(
-  mensagensNarrativas.turno.erroInimigo(
-    participanteAtivo.nome,
-  ),
-);
+      exibirAcaoAtualCombate(mensagensNarrativas.turno.erroInimigo(participanteAtivo.nome));
 
       await esperar(1200);
     }
@@ -2267,10 +1904,7 @@ function verificarCombateDaCena(cena) {
 botaoRecolherFicha.addEventListener("click", alternarFicha);
 
 document.addEventListener("click", function (evento) {
-  const parteMoldura =
-    evento.target.closest(
-      ".gaveta-ficha .moldura-parte"
-    );
+  const parteMoldura = evento.target.closest(".gaveta-ficha .moldura-parte");
 
   if (parteMoldura === null) {
     return;
@@ -2281,10 +1915,7 @@ document.addEventListener("click", function (evento) {
 
 botaoRecolherPainelExplicativo.addEventListener("click", alternarPainelExplicativo);
 document.addEventListener("click", function (evento) {
-  const parteMolduraInformacoes =
-    evento.target.closest(
-      ".gaveta-informacoes .moldura-parte"
-    );
+  const parteMolduraInformacoes = evento.target.closest(".gaveta-informacoes .moldura-parte");
 
   if (parteMolduraInformacoes === null) {
     return;
@@ -2312,6 +1943,8 @@ tabuleiroCombate.addEventListener("click", selecionarAlvoCombate);
 listaAtaquesCombate.addEventListener("click", selecionarAtaqueCombate);
 
 botaoEncerrarTurno.addEventListener("click", encerrarTurnoAtual);
+
+NarradorAventura.limpar();
 
 exibirCena(aventuraAtual, cenaAtual);
 
@@ -2342,41 +1975,26 @@ botaoFecharAtaquesCombate.addEventListener("click", fecharPainelAtaquesCombate);
 
 botaoExpandirHistorico.addEventListener("click", alternarHistoricoCombate);
 
-if (
-  seletorVelocidadeTexto &&
-  window.NarradorAventura
-) {
-  seletorVelocidadeTexto.value =
-    NarradorAventura.obterVelocidade();
+if (seletorVelocidadeTexto && window.NarradorAventura) {
+  seletorVelocidadeTexto.value = NarradorAventura.obterVelocidade();
 
-  seletorVelocidadeTexto.addEventListener(
-    "change",
-    function () {
-      NarradorAventura.definirVelocidade(
-        seletorVelocidadeTexto.value
-      );
-    }
-  );
+  seletorVelocidadeTexto.addEventListener("change", function () {
+    NarradorAventura.definirVelocidade(seletorVelocidadeTexto.value);
+  });
 }
 
-botaoRolarCima?.addEventListener(
-  "click",
-  function () {
-    conteudoPergaminho?.scrollBy({
-      top: -220,
-      behavior: "smooth",
-    });
-  }
-);
+botaoRolarCima?.addEventListener("click", function () {
+  conteudoPergaminho?.scrollBy({
+    top: -220,
+    behavior: "smooth",
+  });
+});
 
-botaoRolarBaixo?.addEventListener(
-  "click",
-  function () {
-    conteudoPergaminho?.scrollBy({
-      top: 220,
-      behavior: "smooth",
-    });
-  }
-);
+botaoRolarBaixo?.addEventListener("click", function () {
+  conteudoPergaminho?.scrollBy({
+    top: 220,
+    behavior: "smooth",
+  });
+});
 
 encaixarFerramentasDaAventura();

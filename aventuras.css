@@ -1187,6 +1187,37 @@ select {
   color: inherit;
 }
 
+.bloco-narrativo p {
+  white-space: pre-line;
+}
+
+.divisor-narrativo {
+  width: 100%;
+  margin: 18px 0;
+
+  border: 0;
+  border-top:
+    1px solid
+    rgba(105, 72, 47, 0.28);
+}
+
+.resultado-teste {
+  margin: 16px 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-style: italic;
+}
+
+.escolha-realizada {
+  margin: 16px 0;
+
+  font-weight: 600;
+}
+
 /* =====================================================
    Responsividade
    ===================================================== */

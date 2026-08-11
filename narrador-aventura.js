@@ -6,9 +6,9 @@ window.NarradorAventura = (function () {
 
   const velocidades = {
     instantaneo: 0,
-    rapido: 8,
-    normal: 18,
-    lento: 35,
+    rapido: 10,
+    normal: 25,
+    lento: 40,
   };
 
   let velocidadeAtual =
@@ -83,37 +83,47 @@ window.NarradorAventura = (function () {
   }
 
   async function escreverNoElemento(
-    elemento,
-    texto
+  elemento,
+  texto
+) {
+  escrevendo = true;
+
+  elemento.textContent = "";
+
+  const acompanharFim =
+    usuarioEstaNoFim();
+
+  for (
+    let indice = 0;
+    indice < texto.length;
+    indice += 1
   ) {
     const intervalo =
       obterIntervalo();
 
     if (intervalo === 0) {
-      elemento.textContent = texto;
-      rolarParaFim();
-      return;
-    }
-
-    escrevendo = true;
-
-    elemento.textContent = "";
-
-    let acompanharFim =
-      usuarioEstaNoFim();
-
-    for (const caractere of texto) {
-      elemento.textContent += caractere;
+      elemento.textContent +=
+        texto.slice(indice);
 
       if (acompanharFim) {
         rolarParaFim();
       }
 
-      await esperar(intervalo);
+      break;
     }
 
-    escrevendo = false;
+    elemento.textContent +=
+      texto[indice];
+
+    if (acompanharFim) {
+      rolarParaFim();
+    }
+
+    await esperar(intervalo);
   }
+
+  escrevendo = false;
+}
 
   async function adicionarNarracao(texto) {
     if (
@@ -184,6 +194,10 @@ window.NarradorAventura = (function () {
 
     const fluxo = obterFluxo();
 
+     if (!fluxo) {
+    return;
+  }
+
     const bloco =
       document.createElement("p");
 
@@ -191,6 +205,9 @@ window.NarradorAventura = (function () {
       "escolha-realizada";
 
     bloco.textContent = texto;
+
+    bloco.textContent =
+    `Você escolheu ${texto}`
 
     fluxo.append(bloco);
 
@@ -209,9 +226,63 @@ window.NarradorAventura = (function () {
     return escrevendo;
   }
 
+  async function adicionarResultadoTeste({
+  sucesso,
+  nomeTeste,
+  acao,
+}) {
+  const fluxo = obterFluxo();
+
+  if (!fluxo) {
+    return;
+  }
+
+  const paragrafo =
+    document.createElement("p");
+
+  paragrafo.className =
+    sucesso
+      ? "resultado-teste sucesso"
+      : "resultado-teste falha";
+
+  fluxo.append(paragrafo);
+
+  const texto =
+    sucesso
+      ? `Sucesso no teste de ${nomeTeste}. Você conseguiu ${acao}.`
+      : `Falha no teste de ${nomeTeste}. Você não conseguiu ${acao}.`;
+
+  await escreverNoElemento(
+    paragrafo,
+    texto
+  );
+
+  adicionarDivisor();
+}
+
+function adicionarDivisor() {
+  const fluxo = obterFluxo();
+
+  if (!fluxo) {
+    return;
+  }
+
+  const divisor =
+    document.createElement("hr");
+
+  divisor.className =
+    "divisor-narrativo";
+
+  fluxo.append(divisor);
+
+  rolarParaFim();
+}
+
   return {
     adicionarNarracao,
     adicionarTeste,
+    adicionarResultadoTeste,
+    adicionarDivisor,
     adicionarEscolhaRealizada,
     definirVelocidade,
     obterVelocidade,
