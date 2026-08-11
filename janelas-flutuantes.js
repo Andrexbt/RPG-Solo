@@ -124,10 +124,3 @@ for (const alca of alcasArraste) {
 
   alca.addEventListener("pointercancel", finalizarArrasteJanela);
 }
-
-const scriptIntegracaoRolagens = document.createElement("script");
-
-scriptIntegracaoRolagens.src = "integracao-rolagens.js";
-scriptIntegracaoRolagens.defer = true;
-
-document.head.append(scriptIntegracaoRolagens);

@@ -1056,62 +1056,6 @@ function atualizarPontosDeVidaFichaCombate(
   );
 }
 
-function atualizarPontosDeVidaFichaCombate(
-  combate,
-) {
-  const participanteJogador =
-    combate.participantes.find(
-      function encontrarJogador(
-        participante,
-      ) {
-        return (
-          participante.tipo ===
-          "jogador"
-        );
-      },
-    );
-
-  if (
-    !participanteJogador ||
-    !estadoAtualJogo
-      .personagem
-      .dados
-  ) {
-    return;
-  }
-
-  estadoAtualJogo
-    .personagem
-    .dados
-    .combate
-    .pontosDeVida =
-    structuredClone(
-      participanteJogador
-        .pontosDeVida,
-    );
-
-  const areaFicha =
-    document.getElementById(
-      "conteudoFicha",
-    );
-
-  if (!areaFicha) {
-    return;
-  }
-
-  window.FichaPersonagem.renderizar(
-    estadoAtualJogo
-      .personagem
-      .dados,
-    areaFicha,
-    {
-      secoes: [
-        "combate",
-      ],
-    },
-  );
-}
-
 function atualizarInterfaceTurno(combate) {
   const participanteAtivo = combate.participantes.find(
     (participante) => participante.id === combate.participanteAtivoId,
