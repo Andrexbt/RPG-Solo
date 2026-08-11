@@ -81,7 +81,7 @@ habilidades:
       danoPendente: null,
 
       maestriasAtivas: {},
-      
+
       resultadoNotificado: false,
 
       participantes,
@@ -436,7 +436,7 @@ const tipoRolagem =
 
     combate.ataquePendente = {
 
-      
+
       atacanteId: atacante.id,
       alvoId: alvo.id,
       ataqueId: ataque.id,
@@ -965,7 +965,7 @@ const dano =
       )
     : danoOriginal;
 
-    
+
 
     alvo.pontosDeVida.atuais = Math.max(0, alvo.pontosDeVida.atuais - dano);
 
@@ -1047,7 +1047,7 @@ const dano =
       dano,
       tipoDano,
       resistenciaAplicada: possuiResistencia,
-      
+
       alvo,
       foiDerrotado,
       resultadoCombate,

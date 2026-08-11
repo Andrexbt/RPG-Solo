@@ -1216,7 +1216,7 @@ window.TradutorRegras = (function () {
     prepararOperacoes,
     participanteDominaArma,
     executarOperacao,
-    
+
     regraEstaDisponivel,
     consumirUsoRegra,
     recarregarRegras,

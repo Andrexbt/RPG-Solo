@@ -2,10 +2,6 @@
   box-sizing: border-box;
 }
 
-.contexto-cena {
-  white-space: pre-line;
-}
-
 :root {
   --cor-aventura-papel: #efe1bd;
   --cor-aventura-tinta: #3f2d20;
@@ -271,13 +267,11 @@ select {
   display: none;
 }
 
-.conteudo-cena {
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.6;
-}
-
 .area-escolhas {
   margin-top: 6px;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 
 .lista-escolhas {
@@ -295,20 +289,18 @@ select {
   font-family: Georgia, "Times New Roman", serif;
   text-align: left;
   cursor: pointer;
-  white-space: pre-line;
-}
-
-.botao-escolha:hover {
-  background: rgba(105, 72, 47, 0.1);
-}
-
-.botao-escolha {
+  white-space: normal;
   transition:
     opacity 180ms ease,
     transform 180ms ease,
     background-color 180ms ease,
     border-color 180ms ease;
 }
+
+.botao-escolha:hover {
+  background: rgba(105, 72, 47, 0.1);
+}
+
 
 .botao-escolha.escolha-confirmada {
   background: rgba(105, 72, 47, 0.14);
@@ -321,21 +313,10 @@ select {
   transform: scale(0.985);
 }
 
-.area-escolhas {
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease;
-}
 
 .area-escolhas.area-escolhas-saindo {
   opacity: 0;
   transform: translateY(-4px);
-}
-
-.area-resultado {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--cor-aventura-borda-suave);
 }
 
 .adendos-aventura {
@@ -1093,11 +1074,30 @@ select {
 }
 
 .bloco-narrativo {
-  margin: 0 0 -20px;
+  margin: 0 0 14px;
 }
 
 .bloco-narrativo p {
   margin: 0 0 8px;
+}
+
+.bloco-narrativo p:last-child {
+  margin-bottom: 0;
+}
+
+.escolha-realizada {
+  margin: 0 0 10px;
+}
+
+.escolha-realizada .paragrafo-escolha,
+.botao-escolha .paragrafo-escolha {
+  display: block;
+  margin: 0 0 8px;
+}
+
+.escolha-realizada .paragrafo-escolha:last-child,
+.botao-escolha .paragrafo-escolha:last-child {
+  margin-bottom: 0;
 }
 
 .linha-teste-narrativo {
@@ -1207,9 +1207,6 @@ select {
   color: inherit;
 }
 
-.bloco-narrativo p {
-  white-space: pre-line;
-}
 
 .divisor-narrativo {
   width: 100%;

@@ -698,7 +698,7 @@ solicitacaoCaixaDados.textContent =
 
     if (!validacao.sucesso) {
       if (resultadoDado) {
-        
+
 
         resultadoDado.textContent =
           mensagensNarrativas

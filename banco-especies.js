@@ -127,7 +127,7 @@ conhecimentoDaPedra: {
   },
 
   especies: {
-    
+
     humano: {
       id: "humano",
       nome: "Humano",

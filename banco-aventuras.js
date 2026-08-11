@@ -27,7 +27,7 @@ const bancoAventuras = {
           Tudo aconteceu rápido demais. Agora, carregando os poucos pertences que consegue em sua mochila, você se encontra esgueirando-se por um beco, olhando pelas sombras uma multidão raivosa, se preparando para o confronto derradeiro contra a guarda real.
 
           Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. Em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.
-          
+
           O que você fará?`,
         ],
 
@@ -72,7 +72,7 @@ const bancoAventuras = {
         ],
 
         etapas: {
-          
+
           subirTelhado: {
             descricao: [
               `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,

@@ -1152,7 +1152,7 @@ function atualizarInterfaceTurno(combate) {
       token.style.gridColumn = participanteDoToken.posicao.coluna;
 
       token.style.gridRow = participanteDoToken.posicao.linha;
-    
+
 
       if (
   participanteDoToken &&

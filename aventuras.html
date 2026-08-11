@@ -25,7 +25,7 @@
      class="gaveta-ficha"
      aria-label="Ficha do personagem"
     >
-  
+
 
   <button
     id="botaoRecolherFicha"
@@ -41,11 +41,11 @@
     class="painel-ficha-gaveta"
   >
 
-  
+
     <div id="conteudoFicha" data-ficha-personagem></div>
   </div>
       </aside>
-      
+
 
       <main class="pagina-aventura">
 
@@ -70,6 +70,7 @@
 
                 <div
   class="controles-rolagem-pergaminho"
+  role="group"
   aria-label="Controles de rolagem"
 >
   <button
@@ -97,35 +98,16 @@
                   aria-live="polite">
                 </div>
 
-                <div class="interface-aventura-legada">
-  <div id="contextoCena"></div>
-
-  <p
-    id="solicitacaoTeste"
-    hidden
-  ></p>
-
-  <div class="area-escolhas">
-
-    <div id="listaEscolhas"
-    class="lista-escolhas"></div>
-  </div>
-
-  <div
-    id="areaResultado"
-    hidden
-  >
-    <p id="resultadoTeste"></p>
-    <p id="consequenciaCena"></p>
-  </div>
+                <div class="area-escolhas">
+                  <div id="listaEscolhas" class="lista-escolhas"></div>
                 </div>
-                  
+
                </div>
             </div>
 
             </section>
 
-            <aside class="adendos-aventura">
+            <aside class="adendos-aventura" aria-label="Ferramentas da aventura">
 
               <section
         class="janela-anotacoes janela-flutuante janela-encaixada"
@@ -286,10 +268,11 @@
           <output id="resultadoDado" aria-live="polite"></output>
         </div>
               </section>
-              
+
             </aside>
-            
+
           </div>
+        </div>
 
         <section
           id="visualizacaoCombate"
@@ -521,8 +504,8 @@
     <script src="banco-npcs.js" defer></script>
     <script src="banco-aventuras.js" defer></script>
     <script src="personagem-dados.js" defer></script>
-    
-    
+
+
     <script src="estado-jogo.js" defer></script>
     <script src="motor-tempo.js"></script>
     <script src="motor-efeitos.js" defer></script>
@@ -535,8 +518,7 @@
     <script src="ficha-personagem.js" defer></script>
     <script src="renderizador-ficha.js" defer></script>
     <script src="narrador-aventura.js" defer></script>
-    <script src="aventuras.js" defer></script>
     <script src="motor-aventura.js" defer></script>
-    <script src="motor-fluxo-cena.js" defer></script>
+    <script src="aventuras.js" defer></script>
   </body>
 </html>
