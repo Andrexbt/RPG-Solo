@@ -26,18 +26,10 @@ const bancoAventuras = {
 
           Tudo aconteceu rápido demais. Agora, carregando os poucos pertences que consegue em sua mochila, você se encontra esgueirando-se por um beco, olhando pelas sombras uma multidão raivosa, se preparando para o confronto derradeiro contra a guarda real.
 
-          Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. Em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.`,
+          Do outro lado da multidão, a ponte pela qual você precisa passar para escapar da cidade. Em suas duas cabeceiras, grupos de soldados atentos, impedindo qualquer entrada ou saída da cidade.
+          
+          O que você fará?`,
         ],
-
-        /*
-         * REGRA ESTRUTURAL DA CENA
-         *
-         * - escolhas nunca contêm outras escolhas;
-         * - escolhas apontam para uma etapa ou para outra cena;
-         * - todas as etapas pertencem diretamente à cena;
-         * - a ordem física das etapas abaixo não determina o fluxo;
-         * - o fluxo é determinado exclusivamente pelos IDs.
-         */
 
         escolhas: [
           {
@@ -63,9 +55,9 @@ const bancoAventuras = {
           {
             id: "becos",
 
-            texto: `Continuar pelos becos.
+            texto: `Expor-se é arriscado demais. A melhor alternativa é permanecer nas sombras e tentar encontrar uma saída da cidade investigando as vielas.
 
-            Melhor permanecer nas sombras e tentar encontrar uma saída da cidade investigando as vielas.`,
+            Rumores dizem que os Lagartos de Bronze têm diversas saídas escondidas em seus territórios, pelos becos que passam pela parte de trás do castelo.`,
 
             etapaInicial: "investigarBecos",
           },
@@ -73,19 +65,14 @@ const bancoAventuras = {
           {
             id: "batalha",
 
-            texto: `Enfrentar os guardas.
+            texto: `Você decide não se esconder e se aproveitar da confusão para enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
 
-            Você decide se aproveitar da confusão e tentar enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
-
-            proximaCena: "batalha",
+            proximaCena: "batalha1",
           },
         ],
 
         etapas: {
-          /* =========================================================
-             RAMO: TELHADOS
-             ========================================================= */
-
+          
           subirTelhado: {
             descricao: [
               `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,
@@ -101,13 +88,7 @@ const bancoAventuras = {
 
             resultados: {
               sucesso: {
-                texto: `Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
-
-                Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
-
-                Você vê também a torre de embarcações próxima à margem do rio. Em teoria, ela lhe concederia acesso fácil a um pequeno cais por onde você poderia buscar uma saída. Chegar à torre pulando pelos telhados parece perfeitamente possível.
-
-                Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém {o|a} procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
+                texto: ``,
 
                 proximaEtapa: "decidirNoTelhado",
               },
@@ -122,7 +103,13 @@ const bancoAventuras = {
           },
 
           decidirNoTelhado: {
-            descricao: [],
+            descricao: [`Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
+
+                Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
+
+                Você vê também a torre de embarcações próxima à margem do rio. Em teoria, ela lhe concederia acesso fácil a um pequeno cais por onde você poderia buscar uma saída. Chegar à torre pulando pelos telhados parece perfeitamente possível.
+
+                Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém {o|a} procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`],
 
             escolhas: [
               {
