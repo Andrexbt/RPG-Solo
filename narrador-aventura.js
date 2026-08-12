@@ -67,6 +67,16 @@ window.NarradorAventura = (function () {
     return window.estadoJogo?.personagem?.dados?.avatar?.generoGramatical ?? null;
   }
 
+  function obterNomePersonagem() {
+  return (
+    window.estadoJogo
+      ?.personagem
+      ?.dados
+      ?.nome
+    ?? "Personagem"
+  );
+}
+
   function normalizarTexto(texto) {
     if (typeof texto !== "string") {
       return texto;
@@ -89,15 +99,27 @@ window.NarradorAventura = (function () {
     }
 
     const genero = obterGeneroGramatical();
+    const nomePersonagem = obterNomePersonagem();
 
-    return normalizarTexto(
-      texto.replace(
-        /\{([^|{}]+)\|([^{}]+)\}/g,
-        function (_correspondencia, masculino, feminino) {
-          return genero === "feminino" ? feminino : masculino;
-        },
-      ),
+     const textoAdaptado = texto
+    .replace(
+      /\{([^|{}]+)\|([^{}]+)\}/g,
+      function (
+        _correspondencia,
+        masculino,
+        feminino,
+      ) {
+        return genero === "feminino"
+          ? feminino
+          : masculino;
+      },
+    )
+    .replace(
+      /\{personagem\}/gi,
+      nomePersonagem,
     );
+
+  return normalizarTexto(textoAdaptado);
   }
 
   function separarParagrafos(texto) {
@@ -175,32 +197,122 @@ window.NarradorAventura = (function () {
   }
 
   function adicionarDivisor() {
-    const fluxo = obterFluxo();
+  const fluxo = obterFluxo();
 
-    if (!fluxo) {
-      return;
-    }
-
-    const divisor = document.createElement("hr");
-    divisor.className = "divisor-narrativo";
-    fluxo.append(divisor);
+  if (!fluxo) {
+    return null;
   }
 
-  function rolarParaEscolha(elemento) {
+  const divisor = document.createElement("hr");
+  divisor.className = "divisor-narrativo";
+  fluxo.append(divisor);
+
+  return divisor;
+  }
+
+  function garantirRespiroNarrativo() {
+  const fluxo = obterFluxo();
+  const area = obterAreaRolagem();
+
+  if (!fluxo || !area) {
+    return;
+  }
+
+  const alturaRespiro =
+    Math.max(0, area.clientHeight - 50);
+
+  fluxo.style.setProperty(
+    "--altura-respiro-narrativo",
+    `${alturaRespiro}px`,
+  );
+  }
+
+  function removerRespiroNarrativo() {
+  const fluxo = obterFluxo();
+
+  if (!fluxo) {
+    return;
+  }
+
+  fluxo.style.setProperty(
+    "--altura-respiro-narrativo",
+    "0px",
+  );
+  }
+
+  function rolarParaElemento(
+  elemento,
+  duracao = 700,
+) {
+  return new Promise(function (resolver) {
     const area = obterAreaRolagem();
 
     if (!area || !elemento) {
+      resolver();
       return;
     }
 
-    const areaRect = area.getBoundingClientRect();
-    const elementoRect = elemento.getBoundingClientRect();
-    const destino = area.scrollTop + elementoRect.top - areaRect.top;
+    const areaRect =
+      area.getBoundingClientRect();
 
-    area.scrollTo({
-      top: destino,
-      behavior: "smooth",
-    });
+    const elementoRect =
+      elemento.getBoundingClientRect();
+
+    const inicio =
+      area.scrollTop;
+
+    const destino =
+      inicio +
+      elementoRect.top -
+      areaRect.top;
+
+    const distancia =
+      destino - inicio;
+
+    if (Math.abs(distancia) < 1) {
+      resolver();
+      return;
+    }
+
+    const inicioAnimacao =
+      performance.now();
+
+    function animar(tempoAtual) {
+      const progresso = Math.min(
+        1,
+        (
+          tempoAtual -
+          inicioAnimacao
+        ) / duracao,
+      );
+
+      const suavizado =
+        progresso < 0.5
+          ? 4 *
+            progresso *
+            progresso *
+            progresso
+          : 1 -
+            Math.pow(
+              -2 * progresso + 2,
+              3,
+            ) / 2;
+
+      area.scrollTop =
+        inicio +
+        distancia *
+          suavizado;
+
+      if (progresso < 1) {
+        requestAnimationFrame(animar);
+        return;
+      }
+
+      resolver();
+    }
+
+    requestAnimationFrame(animar);
+  });
   }
 
   function adicionarEscolhaRealizada(escolha) {
@@ -214,35 +326,77 @@ window.NarradorAventura = (function () {
       return;
     }
 
-    adicionarDivisor();
+    const divisor = adicionarDivisor();
 
     const bloco = document.createElement("div");
     bloco.className = "escolha-realizada";
+
     preencherElementoComParagrafos(bloco, escolha.texto);
     fluxo.append(bloco);
 
-    rolarParaEscolha(bloco);
+    garantirRespiroNarrativo();
+
+    if (divisor) {
+    rolarParaElemento(divisor, 700);
+  }
   }
 
-  async function adicionarResultadoTeste({ sucesso, nomeTeste, acao }) {
-    const fluxo = obterFluxo();
+  async function adicionarResultadoTeste({
+  sucesso,
+  nomeTeste,
+  acao,
+}) {
+  const fluxo = obterFluxo();
 
-    if (!fluxo) {
-      return;
-    }
+  if (!fluxo) {
+    return;
+  }
 
-    const paragrafo = document.createElement("p");
-    paragrafo.className = sucesso
+  /*
+   * O divisor marca o início de um novo
+   * momento narrativo após a rolagem.
+   */
+  const divisor = adicionarDivisor();
+
+  /*
+   * Mantém espaço de rolagem abaixo,
+   * permitindo que o divisor chegue
+   * ao topo do pergaminho.
+   */
+  garantirRespiroNarrativo();
+
+  /*
+   * Primeiro fazemos a transição.
+   */
+  if (divisor) {
+    await rolarParaElemento(divisor, 700);
+  }
+
+  /*
+   * Pequena pausa para o jogador perceber
+   * que a resolução da ação começou.
+   */
+  await esperar(180);
+
+  const paragrafo =
+    document.createElement("p");
+
+  paragrafo.className =
+    sucesso
       ? "resultado-teste sucesso"
       : "resultado-teste falha";
-    fluxo.append(paragrafo);
 
-    const texto = sucesso
+  fluxo.append(paragrafo);
+
+  const texto =
+    sucesso
       ? `Sucesso no teste de ${nomeTeste}. Você conseguiu ${acao}.`
       : `Falha no teste de ${nomeTeste}. Você não conseguiu ${acao}.`;
 
-    await escreverNoElemento(paragrafo, adaptarGenero(texto));
-    adicionarDivisor();
+  await escreverNoElemento(
+    paragrafo,
+    adaptarGenero(texto),
+  );
   }
 
   function limpar() {
@@ -263,6 +417,7 @@ window.NarradorAventura = (function () {
     adicionarEscolhaRealizada,
     definirVelocidade,
     obterVelocidade,
+    removerRespiroNarrativo,
     limpar,
     estaEscrevendo,
   };

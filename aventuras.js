@@ -774,6 +774,9 @@ function moverTokenSelecionado(evento) {
 }
 
 function exibirEscolhas(escolhas = []) {
+
+  NarradorAventura.removerRespiroNarrativo();
+  
   escolhasAtuais = Array.isArray(escolhas) ? escolhas : [];
 
   listaEscolhas.replaceChildren();

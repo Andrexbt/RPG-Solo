@@ -165,12 +165,12 @@ const bancoAventuras = {
 
             resultados: {
               sucesso: {
-                texto: "Você avança sem ser {percebido|percebida}.",
+                texto: ``,
                 proximaCena: "movimentacaoTelhadoFurtiva",
               },
 
               fracasso: {
-                texto: "Sua movimentação chama atenção.",
+                texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
               },
             },
@@ -181,7 +181,7 @@ const bancoAventuras = {
              ========================================================= */
 
           misturarMultidao: {
-            descricao: [],
+            descricao: [`Você sai do beco escuro, cobrindo seu rosto e tomando o máximo de cuidado para esconder suas armas e roupas por baixo de um longo manto preto.`],
 
             teste: {
               tipo: "periciaEscolha",
@@ -203,7 +203,11 @@ const bancoAventuras = {
           },
 
           decidirNaMultidao: {
-            descricao: [],
+            descricao: [`Caminhando ao lado da multidão, você divide sua atenção entre observar os guardas e procurar por pequenas brechas para conseguir se inserir na massa de pessoas.
+
+            Finalmente, depois de forçar alguns passos, você consegue se misturar e agora se encontra no centro da massa de pessoas.
+
+            O barulho dos gritos e o esmagamento da aglomeração o deixam desnorteado por um momento, mas logo você consegue se recompor, se localizar em meio à balbúrdia e ponderar suas opções.`],
 
             escolhas: [
               {
@@ -227,27 +231,51 @@ const bancoAventuras = {
           },
 
           reagirNaMultidao: {
-            descricao: [],
+            descricao: [
+              `Você se força para dentro da multidão, sendo obrigado a empurrar as pessoas para abrir caminho.
+
+              Agora que você está de fato {inserido|inserida} no coração do levante, a fúria da população é quase palpável. Muitos estão mais armados do que você imaginava inicialmente. Armas essas, muito provavelmente, ofertadas pelos Lagartos.
+
+              Você sente uma mão em seu ombro, puxando-o para trás. {Aterrorizado|Aterrorizada}, você se vira.
+
+              "{personagem}?" Diz um rosto que o susto {o|a} impede inicialmente de reconhecer. "Por que está {vestido|vestida} assim?" Ele pergunta com certo divertimento na voz.
+
+              Uma torrente de alívio {o|a} percorre ao reconhecer o dono da voz. É Ned, um velho conhecido que, após se unir às revoltas, se tornou um grande aliado.
+
+              Você sorri, mas percebe que ele não está sorrindo de volta. {Olhando-o|Olhando-a} dos pés à cabeça, ele parece lentamente perceber o que está acontecendo. Ao encontrar seu olhar, você vê incredulidade e uma pontada de decepção.
+
+              "Você está fugindo?"
+
+              O que você faz?`
+            ],
 
             escolhas: [
               {
                 id: "pedirAjuda",
-                texto: "Pedir ajuda.",
+                texto: `Pedir a ajuda de Ned.
+
+                Ele sempre soube que você nunca se viu como liderança e nunca quis um conflito aberto. Se você se explicar, ele vai entender os motivos da sua fuga.`,
                 proximaEtapa: "pedirAjudaMultidao",
               },
 
               {
                 id: "sairCorrendo",
-                texto: "Sair correndo.",
+                texto: `Desvencilha-se de Ned e foge.
+
+                Não há tempo para explicações. Só lhe resta agora tentar despistar Ned pela multidão e se esconder em algum beco próximo.`,
                 proximaEtapa: "sairCorrendoMultidao",
               },
             ],
           },
 
           pedirAjudaMultidao: {
-            descricao: [],
+            descricao: [
+              `Você puxa Ned pelo colarinho e o aproxima de si. Ele força os pés no chão e oferece resistência ao seu puxão, tentando fazer com que você o solte.
+              
+              Você segura firme e sussurra suas explicações desesperadamente. Algumas pessoas ao redor estão começando a olhar, intrigadas.`
+            ],
 
-            instrucao: "para conseguir ajuda.",
+            instrucao: "para convencer Ned.",
 
             teste: {
               tipo: "pericia",
@@ -272,18 +300,28 @@ const bancoAventuras = {
           },
 
           decidirPedidoAjuda: {
-            descricao: [],
+            descricao: [
+              `Conforme você se explica, sente a resistência de Ned diminuir. Por fim, ele repousa a mão em seu ombro e começa a caminhar devagar, forçando você a fazer o mesmo, para que não chamem a atenção.
+              
+              Ao fim do seu discurso, ele se aproxima e pergunta, com urgência na voz.
+              
+              "Do que você precisa?"`
+            ],
 
             escolhas: [
               {
                 id: "pedirDistracao",
-                texto: "Pedir para distrair os guardas.",
-                proximaCena: "guardasDistraidos",
+                texto: `"Me ajude a distrair os guardas da ponte."
+                
+                Uma distração pode ser tudo que você precisa para conseguir passar pela ponte sem ser {visto|vista}.`,
+                proximaEtapa: "preGuardasDistraidos",
               },
 
               {
                 id: "perguntarSaida",
-                texto: "Perguntar se alguém sabe de outra saída para a cidade.",
+                texto: `"Você conhece alguma outra saída da cidade?"
+                
+                Tentar atravessar a ponte é arriscado demais. Talvez Ned conheça uma saída menos exposta.`,
                 proximaEtapa: "perguntarOutraSaida",
               },
             ],
@@ -303,6 +341,19 @@ const bancoAventuras = {
              * sucesso -> becosOpostos
              * fracasso -> becosLagartos
              */
+          },
+
+          preGuardasDistraidos: {
+            descricao: [
+              `"Pode contar comigo." Ele responde incisivo.
+              
+              "Vá para perto da ponte e me espere. Eu vou chamar alguns amigos para ajudar."
+              
+              Rapidamente ele se afasta, caminhando em outra direção. Você segue a multidão e, ao se aproximar da ponte, força sua saída e se esconde em uma esquina próxima, entre caixas e barris.`
+            ],
+
+            proximaCena: "guardasDistraidos"
+
           },
 
           sairCorrendoMultidao: {
