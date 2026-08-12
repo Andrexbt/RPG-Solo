@@ -67,7 +67,7 @@ const bancoAventuras = {
 
             texto: `Você decide não se esconder e se aproveitar da confusão para enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
 
-            proximaCena: "batalha1",
+            proximaCena: "batalha1ruas",
           },
         ],
 
@@ -78,7 +78,7 @@ const bancoAventuras = {
               `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,
             ],
 
-            instrucao: "para subir no telhado.",
+            instrucao: "subir no telhado.",
 
             teste: {
               tipo: "pericia",
@@ -155,7 +155,7 @@ const bancoAventuras = {
           movimentacaoFurtiva: {
             descricao: [],
 
-            instrucao: "para avançar pelos telhados sem ser {visto|vista}.",
+            instrucao: "avançar pelos telhados sem ser {visto|vista}.",
 
             teste: {
               tipo: "pericia",
@@ -181,7 +181,11 @@ const bancoAventuras = {
              ========================================================= */
 
           misturarMultidao: {
-            descricao: [`Você sai do beco escuro, cobrindo seu rosto e tomando o máximo de cuidado para esconder suas armas e roupas por baixo de um longo manto preto.`],
+            descricao: [
+              `Você sai do beco escuro, cobrindo seu rosto e tomando o máximo de cuidado para esconder suas armas e roupas por baixo de um longo manto preto.`
+            ],
+
+            instrucao: "entrar {escondido|escondida} na multidão.",
 
             teste: {
               tipo: "periciaEscolha",
@@ -203,28 +207,61 @@ const bancoAventuras = {
           },
 
           decidirNaMultidao: {
-            descricao: [`Caminhando ao lado da multidão, você divide sua atenção entre observar os guardas e procurar por pequenas brechas para conseguir se inserir na massa de pessoas.
+            descricao: [
+              `Caminhando ao lado da multidão, você divide sua atenção entre observar os guardas e procurar por pequenas brechas para conseguir se inserir na massa de pessoas.
 
-            Finalmente, depois de forçar alguns passos, você consegue se misturar e agora se encontra no centro da massa de pessoas.
+              Finalmente, depois de forçar alguns passos, você consegue se misturar e agora se encontra no centro da massa de pessoas.
 
-            O barulho dos gritos e o esmagamento da aglomeração o deixam desnorteado por um momento, mas logo você consegue se recompor, se localizar em meio à balbúrdia e ponderar suas opções.`],
+              O barulho dos gritos e o esmagamento da aglomeração o deixam desnorteado por um momento, mas logo você consegue se recompor, se localizar em meio à balbúrdia e ponderar suas opções.`
+          ],
 
             escolhas: [
               {
-                id: "acompanharTorre",
-                texto: "Acompanhar a multidão até a torre.",
-                proximaCena: "torreChao",
-              },
-
-              {
                 id: "acompanharPonte",
-                texto: "Acompanhar a multidão até o início da ponte.",
+
+                texto: `Seguindo o fluxo da multidão, você conseguiria chegar até próximo da cabeceira da ponte pela qual precisa atravessar, apesar de ela estar fortemente vigiada por um grupo de guardas.`,
+
+                descricao:
+                `Sentindo que a multidão começa a se mover mais rapidamente, você consegue forçar sua passagem para o outro lado e rapidamente se joga em direção ao pequeno declive na margem do rio.
+                
+                Correndo imediatamente para baixo da ponte, você prende a respiração ao tentar ouvir se alguém se aproxima atrás de você.
+                
+                Nada. Você passou {despercebido|despercebida}.`,
+
                 proximaCena: "margemRioPonte",
               },
 
               {
+                id: "acompanharTorre",
+
+                texto: `Também parece possível acompanhar a multidão até a torre de embarcações próxima à margem do rio. Em dias comuns, ela estaria pouco vigiada e ofereceria acesso a um pequeno cais por onde você poderia buscar uma saída.`,
+
+                descricao: `Você segue o ritmo da multidão por um tempo e percebe que os ânimos começam a se acirrar.
+                
+                Aqueles que estão melhor armados estão agora tomando a dianteira, e uma certa resistência começa a vir das linhas de frente, indicando que a população finalmente chegou à linha defensiva de guardas.
+                
+                Você consegue forçar sua passagem pelos últimos metros e então rapidamente se move em direção à torre, cuja base fica em um pequeno declive na margem do rio.`,
+
+                proximaCena: "torreChao",
+              },             
+
+              {
                 id: "distrairGuardas",
-                texto: "Tentar usar a população para distrair os guardas.",
+
+                texto: `Agora, no meio da multidão, uma outra ideia surge. Talvez seja possível causar alguma confusão dentro da própria multidão e usá-la de alguma forma para distrair os guardas.`,
+
+                descricao: `Além dos guardas formando a linha defensiva, outros começam a aparecer pelas pequenas ruas laterais, em uma clara tentativa de cercar o motim. Alguns, inclusive, caminham, com olhar apreensivo, do lado da multidão.
+                
+                Isso lhe dá uma ideia.
+                
+                Forçando sua passagem para as laterais, você espera um momento oportuno e empurra uma pessoa na direção de um dos guardas, que prontamente empurra a pessoa de volta.
+                
+                O caos se instaura rapidamente. Guardas avançam pelas laterais enquanto você corre na direção oposta.
+                
+                Com eles distraídos, agora você tem uma chance.`,
+
+                memorias: {origemGuardasDistraidos: "multidao"},
+
                 proximaCena: "guardasDistraidos",
               },
             ],
@@ -236,7 +273,7 @@ const bancoAventuras = {
 
               Agora que você está de fato {inserido|inserida} no coração do levante, a fúria da população é quase palpável. Muitos estão mais armados do que você imaginava inicialmente. Armas essas, muito provavelmente, ofertadas pelos Lagartos.
 
-              Você sente uma mão em seu ombro, puxando-o para trás. {Aterrorizado|Aterrorizada}, você se vira.
+              Você sente uma mão em seu ombro, {puxando-o|puxando-a} para trás. {Aterrorizado|Aterrorizada}, você se vira.
 
               "{personagem}?" Diz um rosto que o susto {o|a} impede inicialmente de reconhecer. "Por que está {vestido|vestida} assim?" Ele pergunta com certo divertimento na voz.
 
@@ -275,7 +312,7 @@ const bancoAventuras = {
               Você segura firme e sussurra suas explicações desesperadamente. Algumas pessoas ao redor estão começando a olhar, intrigadas.`
             ],
 
-            instrucao: "para convencer Ned.",
+            instrucao: "convencer Ned.",
 
             teste: {
               tipo: "pericia",
@@ -314,7 +351,16 @@ const bancoAventuras = {
                 texto: `"Me ajude a distrair os guardas da ponte."
                 
                 Uma distração pode ser tudo que você precisa para conseguir passar pela ponte sem ser {visto|vista}.`,
-                proximaEtapa: "preGuardasDistraidos",
+
+                descricao: `"Pode contar comigo." Ele responde incisivo.
+                
+                "Vá para perto da ponte e me espere. Eu vou chamar alguns amigos para ajudar."
+                
+                Rapidamente ele se afasta, caminhando em outra direção. Você segue a multidão e, ao se aproximar da ponte, força sua saída e se esconde em uma esquina próxima, entre caixas e barris.`,
+
+                memorias: { origemGuardasDistraidos: "ned"},
+
+                proximaCena: "guardasDistraidos",
               },
 
               {
@@ -328,32 +374,49 @@ const bancoAventuras = {
           },
 
           perguntarOutraSaida: {
-            descricao: [],
-
-            pendenciaFonte:
-              "A fonte indica apenas 'Teste de NPC', sem especificar NPC, atributo, perícia ou CD.",
-
-            /*
-             * TODO: quando a informação do teste estiver definida,
-             * adicionar aqui `teste` e `resultados`.
-             *
-             * Destinos existentes no banco anterior:
-             * sucesso -> becosOpostos
-             * fracasso -> becosLagartos
-             */
-          },
-
-          preGuardasDistraidos: {
             descricao: [
-              `"Pode contar comigo." Ele responde incisivo.
+              `Ainda caminhando ao seu lado, o olhar de Ned lentamente se desvia ao chão enquanto ele pensa.
               
-              "Vá para perto da ponte e me espere. Eu vou chamar alguns amigos para ajudar."
+              Após alguns segundos, ele volta a olhar para cima e muda repentinamente de direção, novamente forçando você a caminhar com ele.
               
-              Rapidamente ele se afasta, caminhando em outra direção. Você segue a multidão e, ao se aproximar da ponte, força sua saída e se esconde em uma esquina próxima, entre caixas e barris.`
+              "Não tenho certeza, mas sei onde pode ter uma possível saída." Ele responde em voz baixa, olhando ao redor.
+              
+              Você o acompanha até a entrada de uma pequena viela escura, pela qual vocês entram rapidamente.
+              
+              "No final dessa rua e seguindo pela esquerda..." Ele fala, indicando com uma das mãos. "Você vai chegar em território dos Lagartos, onde eu já ouvi dizer várias vezes que tem uma saída semi-escondida."
+              
+              Você se vira na direção para a qual Ned aponta, já pensando em como seguir em frente.
+              
+              "Tome cuidado." Ele continua, fazendo você se virar para ele. "Você sabe que eles estão atrás de você."
+              
+              "Procure um jeito de dar notícias. Vamos deixar a cidade segura para a sua volta" Ele diz sorrindo.
+              
+              Você sorri de volta, e, com uma pontada de culpa, dispara na direção indicada por ele.`,
             ],
 
-            proximaCena: "guardasDistraidos"
+  teste: {
+    tipo: "npc",
+    npcId: "ned",
 
+    teste: {
+      tipo: "pericia",
+      periciaId: "historia",
+    },
+
+    dificuldade: 12,
+  },
+
+  resultados: {
+    sucesso: {
+      texto: ``,
+      proximaCena: "becosOpostos",
+    },
+
+    fracasso: {
+      texto: ``,
+      proximaCena: "becosLagartos",
+    },
+  },
           },
 
           sairCorrendoMultidao: {
@@ -375,7 +438,7 @@ const bancoAventuras = {
 
               fracasso: {
                 texto: "",
-                proximaCena: "batalha",
+                proximaCena: "batalha1ruas",
               },
             },
           },

@@ -812,11 +812,56 @@ async function exibirContexto(contexto) {
   await NarradorAventura.adicionarNarracao(contexto);
 }
 
+function condicaoNarrativaAtendida(condicao) {
+  if (!condicao) {
+    return true;
+  }
+
+  if (condicao.flag) {
+    return (
+      estadoAtualJogo
+        .progresso
+        .flags[condicao.flag]
+      === condicao.igualA
+    );
+  }
+
+  return false;
+}
+
+function obterContextoCena(cena) {
+  const contexto = [];
+
+  for (const variacao of cena.variacoes ?? []) {
+    if (
+      condicaoNarrativaAtendida(
+        variacao.se
+      )
+    ) {
+      if (Array.isArray(variacao.contexto)) {
+        contexto.push(...variacao.contexto);
+      } else if (variacao.contexto) {
+        contexto.push(variacao.contexto);
+      }
+    }
+  }
+
+  if (Array.isArray(cena.contexto)) {
+    contexto.push(...cena.contexto);
+  } else if (cena.contexto) {
+    contexto.push(cena.contexto);
+  }
+
+  return contexto;
+}
+
 async function exibirCena(aventura, cena) {
   tituloAventura.textContent = aventura.titulo;
   ocultarEscolhas();
 
-  await exibirContexto(cena.contexto);
+  await exibirContexto(
+  obterContextoCena(cena)
+);
 
   if (cena.combate) {
     verificarCombateDaCena(cena);
@@ -1530,6 +1575,20 @@ async function selecionarEscolha(evento) {
   if (escolhaSelecionada.registrarNarrativa !== false) {
     NarradorAventura.adicionarEscolhaRealizada(escolhaSelecionada);
     await esperar(250);
+  }
+
+  if (
+  escolhaSelecionada.descricao !== undefined &&
+  escolhaSelecionada.descricao !== null &&
+  escolhaSelecionada.descricao !== ""
+) {
+  await exibirContexto(escolhaSelecionada.descricao);
+}
+
+  if (escolhaSelecionada.memorias) {
+  registrarMemorias(
+    escolhaSelecionada.memorias
+  );
   }
 
   if (escolhaSelecionada.etapaInicial) {

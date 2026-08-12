@@ -9,6 +9,19 @@ window.MotorAventura = (function () {
     return window.estadoJogo?.personagem?.dados ?? null;
   }
 
+  function obterEntidadeDoTeste(teste) {
+  if (teste?.tipo === "npc") {
+    return (
+      window.estadoJogo
+        ?.npcs
+        ?.[teste.npcId]
+      ?? null
+    );
+  }
+
+  return obterPersonagem();
+}
+
   function obterNomeAtributo(idAtributo) {
     const nomes = {
       forca: "Força",
@@ -62,7 +75,12 @@ window.MotorAventura = (function () {
   }
 
   function obterNomeTeste(teste) {
-    const descritor = teste.tipo === "oposto" ? teste.jogador : teste;
+    const descritor =
+  teste.tipo === "oposto"
+    ? teste.jogador
+    : teste.tipo === "npc"
+      ? teste.teste
+      : teste;
 
     if (descritor.tipo === "pericia") {
       return window.bancoPericias?.[descritor.periciaId]?.nome ?? descritor.periciaId;
@@ -77,14 +95,19 @@ window.MotorAventura = (function () {
   }
 
   function prepararRolagem(teste) {
-    const personagem = obterPersonagem();
+    const entidade = obterEntidadeDoTeste(teste);
 
-    if (!personagem || !teste) {
-      return null;
-    }
+if (!entidade || !teste) {
+  return null;
+}
 
-    const descritor = teste.tipo === "oposto" ? teste.jogador : teste;
-    const modificador = calcularBonusDescritor(personagem, descritor);
+    const descritor =
+  teste.tipo === "oposto"
+    ? teste.jogador
+    : teste.tipo === "npc"
+      ? teste.teste
+      : teste;
+    const modificador = calcularBonusDescritor(entidade, descritor);
     const tipoRolagem = descritor.tipoRolagem ?? teste.tipoRolagem ?? "normal";
     const quantidadeD20 =
       tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
@@ -118,7 +141,7 @@ window.MotorAventura = (function () {
     return (
       `Faça ${obterRotuloTeste(descritor)} ` +
       `(${quantidadeD20}d20 ${formatarModificador(modificador)}${aviso}) ` +
-      complemento
+      `para ${complemento}`
     ).trim();
   }
 
@@ -188,6 +211,12 @@ window.MotorAventura = (function () {
       return false;
     }
 
+    if (teste.tipo === "npc") {
+  return resolverTesteNpc(
+    configuracao
+  );
+}
+
     if (teste.tipo === "periciaEscolha") {
       return oferecerEscolhaDePericia(configuracao);
     }
@@ -254,6 +283,68 @@ window.MotorAventura = (function () {
     window.configurarRolagemSolicitada(rolagem);
     return true;
   }
+
+  async function resolverTesteNpc(configuracao) {
+  const teste = configuracao?.teste;
+
+  if (!teste || teste.tipo !== "npc") {
+    return false;
+  }
+
+  const npc =
+    window.estadoJogo
+      ?.npcs
+      ?.[teste.npcId];
+
+  if (!npc) {
+    console.warn(
+      "NPC do teste não encontrado:",
+      teste.npcId,
+    );
+    return false;
+  }
+
+  const rolagem = prepararRolagem(teste);
+
+  if (!rolagem) {
+    console.warn(
+      "Não foi possível preparar o teste do NPC:",
+      teste,
+    );
+    return false;
+  }
+
+  const resultadoRolagem =
+    realizarRolagemComposta(rolagem);
+
+  const descritor =
+    teste.teste;
+
+  const tipoRolagem =
+    descritor?.tipoRolagem ??
+    teste.tipoRolagem ??
+    "normal";
+
+  const resultadoTeste =
+    SistemaTestes.resolverTesteContraCd(
+      resultadoRolagem,
+      teste.dificuldade,
+      tipoRolagem,
+    );
+
+  const consequencia =
+    configuracao.resultados?.[
+      resultadoTeste.sucesso
+        ? "sucesso"
+        : "fracasso"
+    ];
+
+  await aplicarConsequencia(
+    consequencia
+  );
+
+  return true;
+}
 
   async function aplicarConsequencia(consequencia) {
     if (!consequencia) {

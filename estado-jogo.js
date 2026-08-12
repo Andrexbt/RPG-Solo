@@ -53,6 +53,21 @@ function obterEscolhasDisponiveis(cenaId, escolhas = []) {
   });
 }
 
+function registrarMemorias(memorias) {
+  if (
+    !memorias ||
+    typeof memorias !== "object" ||
+    Array.isArray(memorias)
+  ) {
+    return;
+  }
+
+  Object.assign(
+    window.estadoJogo.progresso.flags,
+    memorias,
+  );
+}
+
 function carregarNpcsDaAventura(aventuraId) {
   const npcsDaAventura = window.bancoNpcs?.[aventuraId];
 
@@ -70,3 +85,4 @@ window.criarEstadoInicialJogo = criarEstadoInicialJogo;
 window.registrarEscolhaRemovida = registrarEscolhaRemovida;
 window.obterEscolhasDisponiveis = obterEscolhasDisponiveis;
 window.carregarNpcsDaAventura = carregarNpcsDaAventura;
+window.registrarMemorias = registrarMemorias;
