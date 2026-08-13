@@ -13,6 +13,7 @@ const bancoAventuras = {
     cenaInicial: "inicio",
 
     cenas: {
+
       inicio: {
         numeroFonte: 1,
 
@@ -352,7 +353,7 @@ const bancoAventuras = {
                 Você ouve seu nome sendo sussurrado vindo de outra direção e encontra um olhar de reconhecimento de um aldeão que passa próximo de Ned.
                 
                 Logo você vai chamar a atenção da multidão. Sua única saída agora é sair dali o mais rápido possível.`,
-                proximaEtapa: sairCorrendoMultidao
+                proximaEtapa: "sairCorrendoMultidao"
               },
             },
           },
@@ -579,13 +580,13 @@ const bancoAventuras = {
               {
                 id: "irConflitoFurtivo",
                 texto:`A mais escondida.`,
-                proximaEtapa: irConflitoFurtivoTeste,
+                proximaEtapa: "irConflitoFurtivoTeste",
               },
 
               {
                 id: "irConflitoRapido",
                 texto:`A mais direta.`,
-                proximaEtapa:ver,
+                proximaCena:"movimentacaoTelhadoRapida",
                 memorias: { origemMovimentacaoTelhadoRapida: "irConflitoRapido"},
               }
 
@@ -710,6 +711,7 @@ const bancoAventuras = {
             texto:`Descer e buscar uma rota pelo chão.`,
 
             proximaCena: "torreChao",
+            memorias: {origemTorreChao: "chaoSemDano"},
           }
         ],
 
@@ -728,7 +730,7 @@ const bancoAventuras = {
 
             teste: {
               tipo:"pericia",
-              periciaId: "atletismo",
+              periciaId: ["furtividade", "sobrevivencia"],
               dificuldade: 16,
             },
 
@@ -739,38 +741,48 @@ const bancoAventuras = {
               },
 
               fracasso: {
-                texto: ``,
+                texto: `Ainda no alto, você percebe com desespero que não vai alcançar a torre. Você não calculou bem a distância e precisou diminuir a velocidade, perdendo potência no pulo.
+                
+                Você estica os braços em uma tentativa pífia de se agarrar a alguma parte da torre, mas sem sucesso. O choque com a torre tira completamente o seu fôlego enquanto você vai ao chão, caindo entre caixas e ferramentas.`,
                 proximaEtapa: "fracassoPulo",
+                queda: {
+                  distanciaMetros: 3,
+                },
+            
               },
             },
           },
 
           fracassoPulo:{
             descricao: [
-              `Pode ser arriscado tentar o pulo, mas ainda assim é menos arriscado do que se expor pelas ruas tão próximo do conflito.
+              `{Dolorido|Dolorida}, você começa a se levanta em meio aos escombros e congela ao ouvir uma voz próxima.
               
-              Você dá alguns passos para trás, aproveitando ao máximo o pequeno espaço que o telhado oferece.
+              "Eu acho que o barulho veio daqui. Rápido!"
               
-              Então respira fundo e parte em disparada à torre, usando toda sua força para realizar o salto no último momento possível.`
+              Para sua sorte, a base da torre está agora a uma pequena distância e, entre você e ela, uma carruagem coberta, que pode ser um bom esconderijo.
+              
+              Movendo-se o mais rápido possível, mas tomando cuidado para não fazer muito barulho, você se levanta e corre em direção à carruagem.`
             ],
 
-            instrucao: "pular para a torre.",
+            instrucao: "se esconder na carruagem.",
 
             teste: {
               tipo:"pericia",
               periciaId: "atletismo",
-              dificuldade: 16,
+              dificuldade: 14,
             },
 
             resultados: {
               sucesso: {
                 texto: ``,
-                proximaCena: "torreTetoSemGuardas",
+                proximaCena: "torreChao",
+                memorias: {origemTorreChao: "chaoComDano"},
               },
 
               fracasso: {
                 texto: ``,
-                proximaEtapa: "fracassoPulo",
+                proximaCena: "becosOpostos",
+                memorias: {origemBecosOpostos: "chaoComDano"},
               },
           },
         }
@@ -815,8 +827,10 @@ const bancoAventuras = {
       }
 
 
+      },
+
     },
+
   },
-  },
-  
+
 }

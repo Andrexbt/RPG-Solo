@@ -37,10 +37,48 @@ window.SistemaQueda = (function () {
 
     modificador: 0,
   });
-}
+  }
+
+  function aplicarDanoQueda(alvo, distanciaMetros) {
+  if (
+    !alvo ||
+    !alvo.combate ||
+    !alvo.combate.pontosDeVida
+  ) {
+    console.warn(
+      "Alvo inválido para dano de queda:",
+      alvo,
+    );
+
+    return null;
+  }
+
+  const resultadoRolagem =
+    rolarDanoQueda(distanciaMetros);
+
+  const dano =
+    Number(resultadoRolagem?.total) || 0;
+
+  const pontosDeVida =
+    alvo.combate.pontosDeVida;
+
+  pontosDeVida.atuais = Math.max(
+    0,
+    pontosDeVida.atuais - dano,
+  );
+
+  return {
+    dano,
+    distanciaMetros,
+    pontosDeVidaAtuais:
+      pontosDeVida.atuais,
+    resultadoRolagem,
+  };
+  }
 
   return {
     calcularDadosDanoQueda,
     rolarDanoQueda,
+    aplicarDanoQueda,
   };
 })();

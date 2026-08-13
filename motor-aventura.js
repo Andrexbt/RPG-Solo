@@ -381,6 +381,20 @@ if (!entidade || !teste) {
       await exibirContexto(consequencia.contexto);
     }
 
+    if (consequencia.queda) {
+  const resultadoQueda =
+    SistemaQueda.aplicarDanoQueda(
+      window.estadoJogo.personagem.dados,
+      consequencia.queda.distanciaMetros,
+    );
+
+  if (resultadoQueda?.dano > 0) {
+    await exibirContexto(
+      `Você sofreu ${resultadoQueda.dano} pontos de dano.`,
+    );
+  }
+}
+
     if (consequencia.pendenciaFonte) {
       await mostrarPendenciaFonte(consequencia);
       return;
