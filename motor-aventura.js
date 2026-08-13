@@ -212,10 +212,10 @@ if (!entidade || !teste) {
     }
 
     if (teste.tipo === "npc") {
-  return resolverTesteNpc(
-    configuracao
-  );
-}
+      return resolverTesteNpc(
+      configuracao
+      );
+    }
 
     if (teste.tipo === "periciaEscolha") {
       return oferecerEscolhaDePericia(configuracao);
@@ -246,15 +246,36 @@ if (!entidade || !teste) {
         return false;
       }
 
+      const tipoRolagemOponente =
+    teste.oponente.tipoRolagem ?? "normal";
+
+  const quantidadeD20Oponente =
+    tipoRolagemOponente === "vantagem" ||
+    tipoRolagemOponente === "desvantagem"
+      ? 2
+      : 1;
+
       resultadoOponente = realizarRolagemComposta({
         gruposDeDados: [
           {
-            quantidade: 1,
+            quantidade: quantidadeD20Oponente,
             numeroDeFaces: 20,
           },
         ],
         modificador: calcularBonusDescritor(npc, teste.oponente),
       });
+
+      if (tipoRolagemOponente !== "normal") {
+    resultadoOponente = {
+      ...resultadoOponente,
+
+      total:
+        SistemaTestes.calcularTotalTesteD20(
+          resultadoOponente,
+          tipoRolagemOponente,
+        ),
+    };
+  }
     }
 
     estado.testeAtivo = {

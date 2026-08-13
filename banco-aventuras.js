@@ -1,6 +1,7 @@
 "use strict";
 
 const bancoAventuras = {
+
   aFuga: {
     id: "aFuga",
     titulo: "A Fuga",
@@ -167,9 +168,18 @@ const bancoAventuras = {
             instrucao: "avançar pelos telhados sem ser {visto|vista}.",
 
             teste: {
-              tipo: "pericia",
-              periciaId: "furtividade",
-              dificuldade: 13,
+              tipo: "oposto",
+
+              jogador: {
+                tipo: "pericia",
+                periciaId: "furtividade",
+              },
+
+              oponente: {
+                npcId: "guardaConde",
+                tipo: "pericia",
+                periciaId: "percepcao",
+              }
             },
 
             resultados: {
@@ -505,7 +515,7 @@ const bancoAventuras = {
               },
             },
           },
-        },
+        }
       },
 
       esperaNoTelhado: {
@@ -524,7 +534,7 @@ const bancoAventuras = {
         escolhas :[
 
           {
-            id: telhadoAteNoite,
+            id: "telhadoAteNoite",
 
             texto:`Apesar do risco de ser {encontrado|encontrada}, talvez a melhor opção seja permanecer {escondido|escondida} até a noite, em que você terá as sombras como proteção.`,
 
@@ -532,7 +542,7 @@ const bancoAventuras = {
           },
 
           {
-            id: irConflito,
+            id: "irConflito",
 
             texto:`Agora que o conflito de fato se iniciou, quem sabe se aproximar dele possa revelar alguma outra oportunidade de sair da cidade.
             
@@ -542,7 +552,7 @@ const bancoAventuras = {
           },
 
           {
-            id: irTorre,
+            id: "irTorre",
 
             texto:`Você já esperou o suficiente. Melhor se mover agora em direção à torre.`,
 
@@ -559,7 +569,7 @@ const bancoAventuras = {
               
               Uma mais direta, porém mais exposta, seguindo por telhados que estão quase paralelos às ruas.
               
-              A outra dá a volta pelas ruas, fazendo com que você chegasse ao conflito pela parte de trás, mais próximo dos guardas, e bem mais {escondido}escondida}.
+              A outra dá a volta pelas ruas, fazendo com que você chegasse ao conflito pela parte de trás, mais próximo dos guardas, e bem mais {escondido|escondida}.
               
               Qual rota você escolhe?`
             ],
@@ -567,13 +577,13 @@ const bancoAventuras = {
             escolhas:[
 
               {
-                id: irConflitoFurtivo,
+                id: "irConflitoFurtivo",
                 texto:`A mais escondida.`,
                 proximaEtapa: irConflitoFurtivoTeste,
               },
 
               {
-                id: irConflitoRapido,
+                id: "irConflitoRapido",
                 texto:`A mais direta.`,
                 proximaEtapa:ver,
                 memorias: { origemMovimentacaoTelhadoRapida: "irConflitoRapido"},
@@ -583,7 +593,7 @@ const bancoAventuras = {
 
           },
 
-          irConflitoFurtivoTeste {
+          irConflitoFurtivoTeste: {
 
             instrucao: "se aproximar do conflito sem ser {visto|vista}.",
 
@@ -607,7 +617,7 @@ const bancoAventuras = {
               },
             },
 
-          }
+          },
 
           escolherRotaTelhado: {
             descricao: [
@@ -642,9 +652,18 @@ const bancoAventuras = {
             instrucao: "avançar pelos telhados sem ser {visto|vista}.",
 
             teste: {
-              tipo: "pericia",
-              periciaId: "furtividade",
-              dificuldade: 13,
+              tipo: "oposto",
+
+              jogador: {
+                tipo: "pericia",
+                periciaId: "furtividade",
+              },
+
+              oponente: {
+                npcId: "guardaConde",
+                tipo: "pericia",
+                periciaId: "percepcao",
+              }
             },
 
             resultados: {
@@ -663,9 +682,141 @@ const bancoAventuras = {
 
         }
 
+      },
+
+      movimentacaoTelhadoFurtiva:{
+        numeroFonte: 3,
+        contexto:[`Você pula de telhado em telhado, sempre buscando uma linha de cobertura antes de qualquer movimento.
+          
+          Guardas se aproximam por todos os lados, atraídos pelo conflito central que, pelo som de espadas se chocando e pela nuvem de poeira que agora se ergue ao longe, havia finalmente começado.
+          
+          Alcançando o telhado mais próximo possível da torre, você sente um calafrio ao perceber que a distância é muito maior do que você imaginava inicialmente. O pulo ainda parece possível, mas bem mais perigoso.
+          
+          Você tenta o pulo ou desce dos telhados e tenta buscar por uma rota até a torre pelo chão?`
+        ],
+
+        escolhas:[
+          {
+            id: "pularTorre",
+
+            texto:`Tentar pular até a torre.`,
+
+            proximaEtapa: "pularAteTorre",
+          },
+
+          {
+            id: "irChao",
+
+            texto:`Descer e buscar uma rota pelo chão.`,
+
+            proximaCena: "torreChao",
+          }
+        ],
+
+        etapas:{
+          pularAteTorre:{
+
+            descricao: [
+              `Pode ser arriscado tentar o pulo, mas ainda assim é menos arriscado do que se expor pelas ruas tão próximo do conflito.
+              
+              Você dá alguns passos para trás, aproveitando ao máximo o pequeno espaço que o telhado oferece.
+              
+              Então respira fundo e parte em disparada à torre, usando toda sua força para realizar o salto no último momento possível.`
+            ],
+
+            instrucao: "pular para a torre.",
+
+            teste: {
+              tipo:"pericia",
+              periciaId: "atletismo",
+              dificuldade: 16,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "torreTetoSemGuardas",
+              },
+
+              fracasso: {
+                texto: ``,
+                proximaEtapa: "fracassoPulo",
+              },
+            },
+          },
+
+          fracassoPulo:{
+            descricao: [
+              `Pode ser arriscado tentar o pulo, mas ainda assim é menos arriscado do que se expor pelas ruas tão próximo do conflito.
+              
+              Você dá alguns passos para trás, aproveitando ao máximo o pequeno espaço que o telhado oferece.
+              
+              Então respira fundo e parte em disparada à torre, usando toda sua força para realizar o salto no último momento possível.`
+            ],
+
+            instrucao: "pular para a torre.",
+
+            teste: {
+              tipo:"pericia",
+              periciaId: "atletismo",
+              dificuldade: 16,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "torreTetoSemGuardas",
+              },
+
+              fracasso: {
+                texto: ``,
+                proximaEtapa: "fracassoPulo",
+              },
+          },
+        }
+      },
+
+      movimentacaoTelhadoRapida:{
+
+        numeroFonte: 4,
+
+        variacoes: [
+    {
+      se: {
+        flag: "origemMovimentacaoTelhadoFurtiva",
+        igualA: "telhadosTorreFalhaFurtiva",
+      },
+
+      contexto: [
+        `Você chega até a região da ponte depois de provocar a confusão na multidão.`,
+      ],
+    },
+
+    {
+      se: {
+        flag: "origemMovimentacaoTelhadoFurtiva",
+        igualA: "esperaTorreFalhaFurtiva",
+      },
+
+      contexto: [
+        `Ao longe, você percebe Ned colocando a distração em prática.`,
+      ],
+    },
+        ],
+
+        contexto: [
+          `Os guardas estão ocupados demais para prestar atenção em você.`,
+        ],
+
+        escolhas:[],
+
+        etapas:{}
+
       }
 
 
     },
   },
-};
+  },
+  
+}
