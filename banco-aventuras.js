@@ -67,6 +67,14 @@ const bancoAventuras = {
 
             texto: `Você decide não se esconder e se aproveitar da confusão para enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
 
+            descricao:`Saindo das sombras, você atravessa a multidão, caminhando em direção aos guardas na cabeceira da ponte.
+            
+            "{personagem}!" Você ouve alguém clamando na multidão.
+            
+            Muitos se voltam para você, enquanto você continua abrindo caminho.
+            
+            Da cabeceira da ponte, os guardas percebem a comoção, rapidamente sacam suas armas, e correm em sua direção.`,
+
             proximaCena: "batalha1ruas",
           },
         ],
@@ -148,6 +156,7 @@ const bancoAventuras = {
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
+                memorias: { origemMovimentacaoTelhadoRapida: "telhadosTorre"},
               },
             ],
           },
@@ -172,6 +181,7 @@ const bancoAventuras = {
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
+                memorias: { origemMovimentacaoTelhadoRapida: "telhadosTorreFalhaFurtiva"},
               },
             },
           },
@@ -326,12 +336,13 @@ const bancoAventuras = {
                 proximaEtapa: "decidirPedidoAjuda",
               },
 
-              /*
-               * TODO: preencher o resultado de fracasso.
-               * O banco anterior não definia o destino desse resultado.
-               */
               fracasso: {
-                texto: "[PREENCHER: consequência da falha ao pedir ajuda.]",
+                texto: `Ele finalmente consegue se soltar e se afasta alguns passos, seu olhar se tornando cada vez mais frio.
+                
+                Você ouve seu nome sendo sussurrado vindo de outra direção e encontra um olhar de reconhecimento de um aldeão que passa próximo de Ned.
+                
+                Logo você vai chamar a atenção da multidão. Sua única saída agora é sair dali o mais rápido possível.`,
+                proximaEtapa: sairCorrendoMultidao
               },
             },
           },
@@ -420,9 +431,13 @@ const bancoAventuras = {
           },
 
           sairCorrendoMultidao: {
-            descricao: [],
+            descricao: `Você se esforça para correr pela multidão, forçando a passagem e esbarrando pelas pessoas no seu caminho, causando um pequeno alvoroço no processo.
+            
+            Além de ser difícil manter a velocidade enquanto esbarra nas pessoas, você percebe que está chamando a atenção de alguns dos guardas.
+            
+            O nervosismo se prova maior do que seu foco, fazendo você tropeçar e perder completamente o equilíbrio.`,
 
-            instrucao: "para sair correndo sem ser impedido.",
+            instrucao: "manter o equilíbrio e continuar correndo.",
 
             teste: {
               tipo: "pericia",
@@ -432,12 +447,30 @@ const bancoAventuras = {
 
             resultados: {
               sucesso: {
-                texto: "",
+                texto: `Você consegue se recompor em meio ao caos e recuperar seu equilíbrio.
+                
+                Abrindo caminho entre a multidão, você se dirige rapidamente a uma rua próxima.
+                
+                Para seu espanto, um grupo de guardas vem correndo do outro lado do beco. Antes que eles {o|a} percebam, você entra em um pequeno beco à sua direita.
+                
+                Das sombras, você vê os guardas passarem por você, correndo em direção à multidão, e agora recalcula sua rota de como escapar da cidade.
+                
+                Sua melhor opção no momento, apesar de perigosa, é buscar a saída pelos becos atrás do castelo, como você havia cogitado antes.`,
+
                 proximaCena: "becosLagartos",
               },
 
               fracasso: {
-                texto: "",
+                texto: `Incapaz de se localizar em meio ao caos e reencontrar seu equilíbrio, você vai ao chão.
+                
+                Enquanto se levanta, um círculo de pessoas se afastando se forma ao seu redor.
+                
+                "É {personagem}!" Você ouve alguém gritando.
+
+                Antes que pudesse pensar em voltar a correr, dois guardas já caminham em sua direção. Um deles com uma flecha já armada no arco, apontando para você; outro desembainhando a espada.
+                
+                Não há escapatória, você precisa lutar.`,
+
                 proximaCena: "batalha1ruas",
               },
             },
@@ -448,11 +481,15 @@ const bancoAventuras = {
              ========================================================= */
 
           investigarBecos: {
-            descricao: [],
+            descricao: `Você vira as costas para a multidão e começa a caminhar pelos becos.
+            
+            Manter-se {escondido|escondida} nas vielas é sua prioridade, atravessando as ruas maiores apenas quando estritamente necessário e com a certeza de que ninguém está próximo.
+            
+            Enquanto caminha, você tenta se lembrar de mais detalhes dos rumores para ter certeza de qual caminho seguir.`,
 
             teste: {
               tipo: "periciaEscolha",
-              periciasIds: ["natureza", "sobrevivencia"],
+              periciasIds: ["historia", "sobrevivencia"],
               dificuldade: 11,
             },
 
@@ -470,6 +507,165 @@ const bancoAventuras = {
           },
         },
       },
+
+      esperaNoTelhado: {
+        numeroFonte: 2,
+
+        contexto :[
+          `Deitado de bruços no telhado, você observa a movimentação por um tempo.
+          
+          A multidão finalmente entra em choque com a linha de guardas, que a impede de seguir em direção ao castelo. A cada segundo os ânimos se acirram mais, e já é possível ouvir o choque de espadas e ver a poeira levantada pela luta.
+          
+          O conflito começou, mas, para sua decepção, os guardas da ponte se mantêm firmes em suas posições.
+          
+          A torre permanece sendo uma opção viável, mas, agora que o conflito de fato começou, talvez se aproveitar do caos e se aproximar dele ofereça outra oportunidade de passar {despercebido|despercebida}.`
+        ],
+
+        escolhas :[
+
+          {
+            id: telhadoAteNoite,
+
+            texto:`Apesar do risco de ser {encontrado|encontrada}, talvez a melhor opção seja permanecer {escondido|escondida} até a noite, em que você terá as sombras como proteção.`,
+
+            proximaCena: "telhadosNoite",
+          },
+
+          {
+            id: irConflito,
+
+            texto:`Agora que o conflito de fato se iniciou, quem sabe se aproximar dele possa revelar alguma outra oportunidade de sair da cidade.
+            
+            Talvez se aproximar mais seja uma boa ideia.`,
+
+            proximaEtapa: "decidirIrConflito",
+          },
+
+          {
+            id: irTorre,
+
+            texto:`Você já esperou o suficiente. Melhor se mover agora em direção à torre.`,
+
+            proximaEtapa: "escolherRotaTelhado",
+          }
+
+        ],
+
+        etapas:{
+
+          decidirIrConflito:{
+
+            descricao: [`Há duas rotas possíveis até o conflito.
+              
+              Uma mais direta, porém mais exposta, seguindo por telhados que estão quase paralelos às ruas.
+              
+              A outra dá a volta pelas ruas, fazendo com que você chegasse ao conflito pela parte de trás, mais próximo dos guardas, e bem mais {escondido}escondida}.
+              
+              Qual rota você escolhe?`
+            ],
+
+            escolhas:[
+
+              {
+                id: irConflitoFurtivo,
+                texto:`A mais escondida.`,
+                proximaEtapa: irConflitoFurtivoTeste,
+              },
+
+              {
+                id: irConflitoRapido,
+                texto:`A mais direta.`,
+                proximaEtapa:ver,
+                memorias: { origemMovimentacaoTelhadoRapida: "irConflitoRapido"},
+              }
+
+            ]
+
+          },
+
+          irConflitoFurtivoTeste {
+
+            instrucao: "se aproximar do conflito sem ser {visto|vista}.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 14,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "movimentacaoTelhadoFurtiva",
+                memorias: { origemMovimentacaoFurtiva: "conflitoFurtivo"},
+              },
+
+              fracasso: {
+                texto: ``,
+                proximaCena: "movimentacaoTelhadoRapida",
+                memorias: { origemMovimentacaoTelhadoRapida: "conflitoFalhaFurtiva"},
+              },
+            },
+
+          }
+
+          escolherRotaTelhado: {
+            descricao: [
+              `Você decide se mover e considera suas opções de caminho até a torre.
+
+              Uma das rotas parece ser muito mais rápida, mas também mais perigosa. Sem muita cobertura disponível, você precisaria contar com a sorte para não ser {visto|vista}.
+
+              A outra rota dá a volta nos casebres e chega em um ponto um pouco mais baixo por trás da torre. Pode demorar mais e ser mais difícil, mas, com um pouco de habilidade e paciência, é possível, e potencialmente mais seguro.
+
+              Qual rota você vai escolher?`,
+            ],
+
+            escolhas: [
+              {
+                id: "rotaSegura",
+                texto: "A rota mais segura.",
+                proximaEtapa: "movimentacaoFurtiva",
+              },
+
+              {
+                id: "rotaRapida",
+                texto: "A rota mais rápida.",
+                proximaCena: "movimentacaoTelhadoRapida",
+                memorias: { origemMovimentacaoTelhadoRapida: "esperaTorre"},
+              },
+            ],
+          },
+
+          movimentacaoFurtiva: {
+            descricao: [],
+
+            instrucao: "avançar pelos telhados sem ser {visto|vista}.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 13,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "movimentacaoTelhadoFurtiva",
+              },
+
+              fracasso: {
+                texto: ``,
+                proximaCena: "movimentacaoTelhadoRapida",
+                memorias: { origemMovimentacaoTelhadoRapida: "esperaTorreFalhaFurtiva"},
+              },
+            },
+          },
+
+        }
+
+      }
+
+
     },
   },
 };
