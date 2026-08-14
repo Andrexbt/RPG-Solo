@@ -444,17 +444,31 @@ async function resolverAtaqueNpc(configuracao) {
     let dano = 0;
 
 if (acertou) {
+  const modificadorDano =
+    configuracao.dano
+      ?.substituirModificador
+    ?? ataque.dano?.modificador
+    ?? 0;
+
   const resultadoDano =
     realizarRolagemComposta({
       gruposDeDados:
         ataque.dano?.gruposDeDados ?? [],
 
       modificador:
-        ataque.dano?.modificador ?? 0,
+        modificadorDano,
     });
 
   dano =
     Number(resultadoDano.total) || 0;
+
+  const danoMinimo =
+    configuracao.dano?.minimo ?? 0;
+
+  dano = Math.max(
+    danoMinimo,
+    dano,
+  );
 
   if (acertoCritico) {
     dano *= 2;

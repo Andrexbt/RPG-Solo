@@ -868,6 +868,13 @@ async function exibirCena(aventura, cena) {
     return;
   }
 
+  if (cena.etapaInicial) {
+  await iniciarEtapa(
+    cena.etapaInicial
+  );
+  return;
+}
+
   exibirEscolhas(
     obterEscolhasDisponiveis(
       estadoAtualJogo.progresso.cenaId,
@@ -893,6 +900,14 @@ async function iniciarEtapa(idEtapa) {
     await MotorAventura.mostrarPendenciaFonte(etapa);
     return;
   }
+
+  if (etapa.ataqueNpc) {
+  await MotorAventura.aplicarConsequencia({
+    ataqueNpc: etapa.ataqueNpc,
+  });
+
+  return;
+}
 
   if (etapa.teste) {
     await MotorAventura.iniciarTeste({

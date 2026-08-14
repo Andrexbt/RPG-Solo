@@ -868,7 +868,7 @@ const bancoAventuras = {
 
         escolhas: [],
 
-        etapaInicial: "primeiroAtaque",
+        etapaInicial: "primeiroDisparo",
 
         etapas: {
           primeiroDisparo: {
@@ -936,7 +936,7 @@ const bancoAventuras = {
                   texto: `Outra flecha passa voando acima da sua cabeça. Ao longe, os guardas que o perseguiam agora correm em sua direção.
                   
                   Se você se mover agora, ainda tem tempo de descer do telhado e tentar despistar os guardas pelas ruas.`,
-                  proximaEtapa: "pularAteTorreFlecha",
+                  proximaEtapa: "pularAteTorreFlechaEscolha",
                 },
 
                 acerto: {
@@ -944,7 +944,7 @@ const bancoAventuras = {
                   Outra flecha o atinge de raspão na coxa. Você contém um grito de dor, e, olhando na direção de onde veio a flecha, vê os guardas correndo em sua direção.
                   
                   Se você se mover agora, ainda tem tempo de descer do telhado e tentar despistar os guardas pelas ruas.`,
-                  proximaEtapa: "pularAteTorreFlecha",
+                  proximaEtapa: "pularAteTorreFlechaEscolha",
                 },
               },
             },
@@ -1004,34 +1004,9 @@ const bancoAventuras = {
                 memorias: { origemTorreChao: "flechada" },
               },
             ],
-
-            instrucao: "pular para a torre.",
-
-            teste: {
-              tipo: "pericia",
-              periciaId: "atletismo",
-              dificuldade: 16,
-            },
-
-            resultados: {
-              sucesso: {
-                texto: `VER SE PRECISA`,
-                proximaCena: "torreTetoSemGuardas",
-              },
-
-              fracasso: {
-                texto: `Ainda no alto, você percebe com desespero que não vai alcançar a torre. Você não calculou bem a distância e precisou diminuir a velocidade, perdendo potência no pulo.
-                
-                Você estica os braços em uma tentativa pífia de se agarrar a alguma parte da torre, mas sem sucesso. O choque com a torre tira completamente o seu fôlego enquanto você vai ao chão, caindo entre caixas e ferramentas.`,
-                proximaCena: "batalha2torre",
-                queda: {
-                  distanciaMetros: 3,
-                },
-        
-              },
-            },
+          
           },
-
+          
           pularAteTorreFlechada: {
             descricao: [
             ],
