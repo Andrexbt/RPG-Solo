@@ -926,6 +926,10 @@ const bancoAventuras = {
             ataqueNpc: {
               npcId: "guardaConde",
               ataqueId: "arcoCurto",
+              dano: {
+                substituirModificador: -3,
+                minimo: 1,
+              },
 
               resultados: {
                 erro: {
