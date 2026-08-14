@@ -158,7 +158,7 @@ const bancoAventuras = {
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "telhadosTorre"},
+                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaTelhado"},
               },
             ],
           },
@@ -642,7 +642,7 @@ const bancoAventuras = {
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "esperaTorre"},
+                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaEspera"},
               },
             ],
           },
@@ -730,7 +730,7 @@ const bancoAventuras = {
 
             teste: {
               tipo:"pericia",
-              periciaId: ["furtividade", "sobrevivencia"],
+              periciaId: "atletismo",
               dificuldade: 16,
             },
 
@@ -767,8 +767,8 @@ const bancoAventuras = {
             instrucao: "se esconder na carruagem.",
 
             teste: {
-              tipo:"pericia",
-              periciaId: "atletismo",
+              tipo:"periciaEscolha",
+              periciasIds: ["furtividade", "sobrevivencia"],
               dificuldade: 14,
             },
 
@@ -783,9 +783,10 @@ const bancoAventuras = {
                 texto: ``,
                 proximaCena: "becosOpostos",
                 memorias: {origemBecosOpostos: "chaoComDano"},
-              },
-          },
+              }
+          }
         }
+      }
       },
 
       movimentacaoTelhadoRapida:{
@@ -793,31 +794,94 @@ const bancoAventuras = {
         numeroFonte: 4,
 
         variacoes: [
-    {
-      se: {
-        flag: "origemMovimentacaoTelhadoFurtiva",
-        igualA: "telhadosTorreFalhaFurtiva",
-      },
+          {
+            se: {
+              flag: "origemMovimentacaoTelhadoRapida",
+              igualA: "telhadosTorreFalhaFurtiva",
+            },
 
-      contexto: [
-        `Você chega até a região da ponte depois de provocar a confusão na multidão.`,
-      ],
-    },
+            contexto: [
+              `Você se desloca pelos telhados com paciência, esperando a oportunidade certa, e sempre tendo a certeza de qual será sua próxima cobertura.
+              
+              Mas você comete um erro, calculando mal a distância de um dos pulos e sendo {obrigado|obrigada} a se apoiar em um pequeno andaime de madeira contendo alguns materiais de construção. Uma pequena pilha de tijolos desaba, e alguns vão ao chão.
+              
+              O barulho que se segue indica que os tijolos caíram em algum tipo de vaso de cerâmica. E, antes que você pudesse reagir, um grupo de três guardas, passando pela entrada da rua, se volta para trás, um deles percebendo você imediatamente.
+              
+              Durante dois segundos, vocês se encaram.
+              
+              "Ei!" Ele finalmente grita, puxando uma besta.
+              
+              Você dispara pelos telhados. Correndo o mais rápido possível em direção à torre.`,
+            ],
+          },
 
-    {
-      se: {
-        flag: "origemMovimentacaoTelhadoFurtiva",
-        igualA: "esperaTorreFalhaFurtiva",
-      },
+          {
+            se: {
+              flag: "origemMovimentacaoTelhadoRapida",
+              igualA: "esperaTorreFalhaFurtiva",
+            },
 
-      contexto: [
-        `Ao longe, você percebe Ned colocando a distração em prática.`,
-      ],
-    },
+            contexto: [
+              `Você se desloca pelos telhados com paciência, esperando a oportunidade certa, e sempre tendo a certeza de qual será sua próxima cobertura.
+              
+              Mas você comete um erro, calculando mal a distância de um dos pulos e sendo {obrigado|obrigada} a se apoiar em um pequeno andaime de madeira contendo alguns materiais de construção. Uma pequena pilha de tijolos desaba, e alguns vão ao chão.
+              
+              O barulho que se segue indica que os tijolos caíram em algum tipo de vaso de cerâmica. E, antes que você pudesse reagir, um grupo de três guardas, passando pela entrada da rua, se volta para trás, um deles percebendo você imediatamente.
+              
+              Durante dois segundos, vocês se encaram.
+              
+              "Ei!" Ele finalmente grita, puxando uma besta.
+              
+              Você dispara pelos telhados. Continuar em direção ao conflito agora é perigoso demais, e você parte o mais rápido possível em direção à torre.`,
+            ],
+          },
+
+          {
+            se: {
+              flag: "origemMovimentacaoTelhadoRapida",
+              igualA: "rotaRapidaEspera",
+            },
+
+            contexto: [
+              `Você pula entre os telhados assim que encontra uma abertura, contando que a atenção dos guardas vai estar voltada para a multidão, em vez de para o alto.
+              
+              Mas então, o pior acontece.
+              
+              "Ei!" Você ouve uma voz gritando conforme você pula de um telhado para outro. "Pare já!"
+              
+              Você olha para trás a tempo de desviar de uma flecha atirada em sua direção.
+              
+              Do chão, um grupo de três guardas agora o observa e corre em sua direção, dois deles já armando outras duas flechas.
+              
+              Continuar em direção ao conflito agora se tornou perigoso demais. Você parte em disparada para a torre o mais rápido possível.`,
+            ],
+          },
+
+          {
+            se: {
+              flag: "origemMovimentacaoTelhadoRapida",
+              igualA: "rotaRapidaTelhado",
+            },
+
+            contexto: [
+              `Você pula entre os telhados assim que encontra uma abertura, contando que a atenção dos guardas vai estar voltada para a multidão, em vez de para o alto.
+              
+              Mas então, o pior acontece.
+              
+              "Ei!" Você ouve uma voz gritando conforme você pula de um telhado para outro. "Pare já!"
+              
+              Você olha para trás a tempo de desviar de uma flecha atirada em sua direção.
+              
+              Do chão, um grupo de três guardas agora o observa e corre em sua direção, dois deles já armando outras duas flechas.
+              
+              Você parte em disparada para a torre o mais rápido possível.`,
+            ],
+          },
+
         ],
 
         contexto: [
-          `Os guardas estão ocupados demais para prestar atenção em você.`,
+          ``,
         ],
 
         escolhas:[],
@@ -826,11 +890,8 @@ const bancoAventuras = {
 
       }
 
+    }
 
-      },
-
-    },
-
-  },
+  }
 
 }
