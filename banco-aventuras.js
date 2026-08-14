@@ -794,7 +794,7 @@ const bancoAventuras = {
               
               Durante dois segundos, vocês se encaram.
               
-              "Ei!" Ele finalmente grita, puxando uma besta.
+              "Ei!" Ele finalmente grita, puxando um arco.
               
               Você dispara pelos telhados. Correndo o mais rápido possível em direção à torre.`,
             ],
@@ -815,7 +815,7 @@ const bancoAventuras = {
               
               Durante dois segundos, vocês se encaram.
               
-              "Ei!" Ele finalmente grita, puxando uma besta.
+              "Ei!" Ele finalmente grita, puxando um arco.
               
               Você dispara pelos telhados. Continuar em direção ao conflito agora é perigoso demais, e você parte o mais rápido possível em direção à torre.`,
             ],

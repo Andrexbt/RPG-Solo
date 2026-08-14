@@ -459,20 +459,24 @@ if (acertou) {
         modificadorDano,
     });
 
-  dano =
-    Number(resultadoDano.total) || 0;
+  const subtotal =
+  Number(resultadoDano.subtotal) || 0;
 
-  const danoMinimo =
-    configuracao.dano?.minimo ?? 0;
+const modificador =
+  Number(resultadoDano.modificador) || 0;
 
-  dano = Math.max(
-    danoMinimo,
-    dano,
-  );
+dano =
+  acertoCritico
+    ? subtotal * 2 + modificador
+    : subtotal + modificador;
 
-  if (acertoCritico) {
-    dano *= 2;
-  }
+const danoMinimo =
+  configuracao.dano?.minimo ?? 0;
+
+dano = Math.max(
+  danoMinimo,
+  dano,
+);
 
   const pontosDeVida =
     personagem.combate
