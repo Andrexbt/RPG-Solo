@@ -367,6 +367,131 @@ if (!entidade || !teste) {
   return true;
 }
 
+async function resolverAtaqueNpc(configuracao) {
+  const npc =
+    window.estadoJogo
+      ?.npcs
+      ?.[configuracao.npcId];
+
+  const personagem =
+    window.estadoJogo
+      ?.personagem
+      ?.dados;
+
+  if (!npc || !personagem) {
+    console.warn(
+      "NPC ou personagem não encontrado para ataque narrativo.",
+    );
+
+    return false;
+  }
+
+  const ataque =
+    npc.ataques?.find(
+      (ataque) =>
+        ataque.id === configuracao.ataqueId,
+    );
+
+  if (!ataque) {
+    console.warn(
+      "Ataque do NPC não encontrado:",
+      configuracao.ataqueId,
+    );
+
+    return false;
+  }
+
+  const resultadoRolagem =
+    realizarRolagemComposta({
+      gruposDeDados: [
+        {
+          quantidade: 1,
+          numeroDeFaces: 20,
+        },
+      ],
+
+      modificador:
+        ataque.bonusAtaque ?? 0,
+    });
+
+  const grupoD20 =
+    resultadoRolagem.gruposRolados.find(
+      (grupo) =>
+        grupo.numeroDeFaces === 20,
+    );
+
+  const resultadoNatural =
+    grupoD20?.resultados?.[0] ?? null;
+
+  const classeArmadura =
+    personagem.combate
+      ?.classeArmadura ?? 10;
+
+  const acertoCritico =
+    resultadoNatural === 20;
+
+  const falhaAutomatica =
+    resultadoNatural === 1;
+
+  const acertou =
+    !falhaAutomatica &&
+    (
+      acertoCritico ||
+      resultadoRolagem.total >=
+        classeArmadura
+    );
+
+    let dano = 0;
+
+if (acertou) {
+  const resultadoDano =
+    realizarRolagemComposta({
+      gruposDeDados:
+        ataque.dano?.gruposDeDados ?? [],
+
+      modificador:
+        ataque.dano?.modificador ?? 0,
+    });
+
+  dano =
+    Number(resultadoDano.total) || 0;
+
+  if (acertoCritico) {
+    dano *= 2;
+  }
+
+  const pontosDeVida =
+    personagem.combate
+      ?.pontosDeVida;
+
+  if (pontosDeVida) {
+    pontosDeVida.atuais = Math.max(
+      0,
+      pontosDeVida.atuais - dano,
+    );
+  }
+
+  if (dano > 0) {
+    await exibirContexto(
+      `Você sofreu ${dano} pontos de dano.`,
+    );
+  }
+}
+
+  const consequencia =
+    configuracao.resultados?.[
+      acertou
+        ? "acerto"
+        : "erro"
+    ];
+
+  await aplicarConsequencia(
+    consequencia,
+  );
+
+  return true;
+}
+
   async function aplicarConsequencia(consequencia) {
     if (!consequencia) {
       console.warn("Consequência da aventura não encontrada.");
@@ -395,10 +520,24 @@ if (!entidade || !teste) {
   }
 }
 
+if (consequencia.memorias) {
+  registrarMemorias(
+    consequencia.memorias
+  );
+}
+
     if (consequencia.pendenciaFonte) {
       await mostrarPendenciaFonte(consequencia);
       return;
     }
+
+    if (consequencia.ataqueNpc) {
+  await resolverAtaqueNpc(
+    consequencia.ataqueNpc,
+  );
+
+  return;
+}
 
     if (consequencia.teste) {
       await iniciarTeste({

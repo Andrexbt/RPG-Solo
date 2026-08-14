@@ -1,19 +1,16 @@
 "use strict";
 
 const bancoAventuras = {
-
   aFuga: {
     id: "aFuga",
     titulo: "A Fuga",
 
-    descricao:
-      `Fuja de uma cidade em conflito enquanto diferentes forças buscam a sua eliminação.`,
+    descricao: `Fuja de uma cidade em conflito enquanto diferentes forças buscam a sua eliminação.`,
 
     disponivel: true,
     cenaInicial: "inicio",
 
     cenas: {
-
       inicio: {
         numeroFonte: 1,
 
@@ -69,7 +66,7 @@ const bancoAventuras = {
 
             texto: `Você decide não se esconder e se aproveitar da confusão para enfrentar os guardas de frente. De um jeito ou de outro, isso acaba agora.`,
 
-            descricao:`Saindo das sombras, você atravessa a multidão, caminhando em direção aos guardas na cabeceira da ponte.
+            descricao: `Saindo das sombras, você atravessa a multidão, caminhando em direção aos guardas na cabeceira da ponte.
             
             "{personagem}!" Você ouve alguém clamando na multidão.
             
@@ -82,7 +79,6 @@ const bancoAventuras = {
         ],
 
         etapas: {
-
           subirTelhado: {
             descricao: [
               `Apesar de mal empilhadas e sem uma base muito sólida, você calcula que as caixas devem ser fortes o suficiente para conter o seu peso.`,
@@ -113,13 +109,15 @@ const bancoAventuras = {
           },
 
           decidirNoTelhado: {
-            descricao: [`Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
+            descricao: [
+              `Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
 
                 Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
 
                 Você vê também a torre de embarcações próxima à margem do rio. Em teoria, ela lhe concederia acesso fácil a um pequeno cais por onde você poderia buscar uma saída. Chegar à torre pulando pelos telhados parece perfeitamente possível.
 
-                Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém {o|a} procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`],
+                Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém {o|a} procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
+            ],
 
             escolhas: [
               {
@@ -158,7 +156,7 @@ const bancoAventuras = {
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaTelhado"},
+                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaTelhado" },
               },
             ],
           },
@@ -180,7 +178,7 @@ const bancoAventuras = {
                 npcId: "guardaConde",
                 tipo: "pericia",
                 periciaId: "percepcao",
-              }
+              },
             },
 
             resultados: {
@@ -192,7 +190,7 @@ const bancoAventuras = {
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "telhadosTorreFalhaFurtiva"},
+                memorias: { origemMovimentacaoTelhadoRapida: "telhadosTorreFalhaFurtiva" },
               },
             },
           },
@@ -203,7 +201,7 @@ const bancoAventuras = {
 
           misturarMultidao: {
             descricao: [
-              `Você sai do beco escuro, cobrindo seu rosto e tomando o máximo de cuidado para esconder suas armas e roupas por baixo de um longo manto preto.`
+              `Você sai do beco escuro, cobrindo seu rosto e tomando o máximo de cuidado para esconder suas armas e roupas por baixo de um longo manto preto.`,
             ],
 
             instrucao: "entrar {escondido|escondida} na multidão.",
@@ -233,8 +231,8 @@ const bancoAventuras = {
 
               Finalmente, depois de forçar alguns passos, você consegue se misturar e agora se encontra no centro da massa de pessoas.
 
-              O barulho dos gritos e o esmagamento da aglomeração o deixam desnorteado por um momento, mas logo você consegue se recompor, se localizar em meio à balbúrdia e ponderar suas opções.`
-          ],
+              O barulho dos gritos e o esmagamento da aglomeração o deixam desnorteado por um momento, mas logo você consegue se recompor, se localizar em meio à balbúrdia e ponderar suas opções.`,
+            ],
 
             escolhas: [
               {
@@ -242,8 +240,7 @@ const bancoAventuras = {
 
                 texto: `Seguindo o fluxo da multidão, você conseguiria chegar até próximo da cabeceira da ponte pela qual precisa atravessar, apesar de ela estar fortemente vigiada por um grupo de guardas.`,
 
-                descricao:
-                `Sentindo que a multidão começa a se mover mais rapidamente, você consegue forçar sua passagem para o outro lado e rapidamente se joga em direção ao pequeno declive na margem do rio.
+                descricao: `Sentindo que a multidão começa a se mover mais rapidamente, você consegue forçar sua passagem para o outro lado e rapidamente se joga em direção ao pequeno declive na margem do rio.
                 
                 Correndo imediatamente para baixo da ponte, você prende a respiração ao tentar ouvir se alguém se aproxima atrás de você.
                 
@@ -264,7 +261,7 @@ const bancoAventuras = {
                 Você consegue forçar sua passagem pelos últimos metros e então rapidamente se move em direção à torre, cuja base fica em um pequeno declive na margem do rio.`,
 
                 proximaCena: "torreChao",
-              },             
+              },
 
               {
                 id: "distrairGuardas",
@@ -281,7 +278,7 @@ const bancoAventuras = {
                 
                 Com eles distraídos, agora você tem uma chance.`,
 
-                memorias: {origemGuardasDistraidos: "multidao"},
+                memorias: { origemGuardasDistraidos: "multidao" },
 
                 proximaCena: "guardasDistraidos",
               },
@@ -304,7 +301,7 @@ const bancoAventuras = {
 
               "Você está fugindo?"
 
-              O que você faz?`
+              O que você faz?`,
             ],
 
             escolhas: [
@@ -330,7 +327,7 @@ const bancoAventuras = {
             descricao: [
               `Você puxa Ned pelo colarinho e o aproxima de si. Ele força os pés no chão e oferece resistência ao seu puxão, tentando fazer com que você o solte.
               
-              Você segura firme e sussurra suas explicações desesperadamente. Algumas pessoas ao redor estão começando a olhar, intrigadas.`
+              Você segura firme e sussurra suas explicações desesperadamente. Algumas pessoas ao redor estão começando a olhar, intrigadas.`,
             ],
 
             instrucao: "convencer Ned.",
@@ -353,7 +350,7 @@ const bancoAventuras = {
                 Você ouve seu nome sendo sussurrado vindo de outra direção e encontra um olhar de reconhecimento de um aldeão que passa próximo de Ned.
                 
                 Logo você vai chamar a atenção da multidão. Sua única saída agora é sair dali o mais rápido possível.`,
-                proximaEtapa: "sairCorrendoMultidao"
+                proximaEtapa: "sairCorrendoMultidao",
               },
             },
           },
@@ -364,7 +361,7 @@ const bancoAventuras = {
               
               Ao fim do seu discurso, ele se aproxima e pergunta, com urgência na voz.
               
-              "Do que você precisa?"`
+              "Do que você precisa?"`,
             ],
 
             escolhas: [
@@ -380,7 +377,7 @@ const bancoAventuras = {
                 
                 Rapidamente ele se afasta, caminhando em outra direção. Você segue a multidão e, ao se aproximar da ponte, força sua saída e se esconde em uma esquina próxima, entre caixas e barris.`,
 
-                memorias: { origemGuardasDistraidos: "ned"},
+                memorias: { origemGuardasDistraidos: "ned" },
 
                 proximaCena: "guardasDistraidos",
               },
@@ -416,29 +413,29 @@ const bancoAventuras = {
               Você sorri de volta, e, com uma pontada de culpa, dispara na direção indicada por ele.`,
             ],
 
-  teste: {
-    tipo: "npc",
-    npcId: "ned",
+            teste: {
+              tipo: "npc",
+              npcId: "ned",
 
-    teste: {
-      tipo: "pericia",
-      periciaId: "historia",
-    },
+              teste: {
+                tipo: "pericia",
+                periciaId: "historia",
+              },
 
-    dificuldade: 12,
-  },
+              dificuldade: 12,
+            },
 
-  resultados: {
-    sucesso: {
-      texto: ``,
-      proximaCena: "becosOpostos",
-    },
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "becosOpostos",
+              },
 
-    fracasso: {
-      texto: ``,
-      proximaCena: "becosLagartos",
-    },
-  },
+              fracasso: {
+                texto: ``,
+                proximaCena: "becosLagartos",
+              },
+            },
           },
 
           sairCorrendoMultidao: {
@@ -516,28 +513,27 @@ const bancoAventuras = {
               },
             },
           },
-        }
+        },
       },
 
       esperaNoTelhado: {
         numeroFonte: 2,
 
-        contexto :[
+        contexto: [
           `Deitado de bruços no telhado, você observa a movimentação por um tempo.
           
           A multidão finalmente entra em choque com a linha de guardas, que a impede de seguir em direção ao castelo. A cada segundo os ânimos se acirram mais, e já é possível ouvir o choque de espadas e ver a poeira levantada pela luta.
           
           O conflito começou, mas, para sua decepção, os guardas da ponte se mantêm firmes em suas posições.
           
-          A torre permanece sendo uma opção viável, mas, agora que o conflito de fato começou, talvez se aproveitar do caos e se aproximar dele ofereça outra oportunidade de passar {despercebido|despercebida}.`
+          A torre permanece sendo uma opção viável, mas, agora que o conflito de fato começou, talvez se aproveitar do caos e se aproximar dele ofereça outra oportunidade de passar {despercebido|despercebida}.`,
         ],
 
-        escolhas :[
-
+        escolhas: [
           {
             id: "telhadoAteNoite",
 
-            texto:`Apesar do risco de ser {encontrado|encontrada}, talvez a melhor opção seja permanecer {escondido|escondida} até a noite, em que você terá as sombras como proteção.`,
+            texto: `Apesar do risco de ser {encontrado|encontrada}, talvez a melhor opção seja permanecer {escondido|escondida} até a noite, em que você terá as sombras como proteção.`,
 
             proximaCena: "telhadosNoite",
           },
@@ -545,7 +541,7 @@ const bancoAventuras = {
           {
             id: "irConflito",
 
-            texto:`Agora que o conflito de fato se iniciou, quem sabe se aproximar dele possa revelar alguma outra oportunidade de sair da cidade.
+            texto: `Agora que o conflito de fato se iniciou, quem sabe se aproximar dele possa revelar alguma outra oportunidade de sair da cidade.
             
             Talvez se aproximar mais seja uma boa ideia.`,
 
@@ -555,47 +551,41 @@ const bancoAventuras = {
           {
             id: "irTorre",
 
-            texto:`Você já esperou o suficiente. Melhor se mover agora em direção à torre.`,
+            texto: `Você já esperou o suficiente. Melhor se mover agora em direção à torre.`,
 
             proximaEtapa: "escolherRotaTelhado",
-          }
-
+          },
         ],
 
-        etapas:{
-
-          decidirIrConflito:{
-
-            descricao: [`Há duas rotas possíveis até o conflito.
+        etapas: {
+          decidirIrConflito: {
+            descricao: [
+              `Há duas rotas possíveis até o conflito.
               
               Uma mais direta, porém mais exposta, seguindo por telhados que estão quase paralelos às ruas.
               
               A outra dá a volta pelas ruas, fazendo com que você chegasse ao conflito pela parte de trás, mais próximo dos guardas, e bem mais {escondido|escondida}.
               
-              Qual rota você escolhe?`
+              Qual rota você escolhe?`,
             ],
 
-            escolhas:[
-
+            escolhas: [
               {
                 id: "irConflitoFurtivo",
-                texto:`A mais escondida.`,
+                texto: `A mais escondida.`,
                 proximaEtapa: "irConflitoFurtivoTeste",
               },
 
               {
                 id: "irConflitoRapido",
-                texto:`A mais direta.`,
-                proximaCena:"movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "irConflitoRapido"},
-              }
-
-            ]
-
+                texto: `A mais direta.`,
+                proximaCena: "movimentacaoTelhadoRapida",
+                memorias: { origemMovimentacaoTelhadoRapida: "irConflitoRapido" },
+              },
+            ],
           },
 
           irConflitoFurtivoTeste: {
-
             instrucao: "se aproximar do conflito sem ser {visto|vista}.",
 
             teste: {
@@ -608,16 +598,15 @@ const bancoAventuras = {
               sucesso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoFurtiva",
-                memorias: { origemMovimentacaoFurtiva: "conflitoFurtivo"},
+                memorias: { origemMovimentacaoFurtiva: "conflitoFurtivo" },
               },
 
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "conflitoFalhaFurtiva"},
+                memorias: { origemMovimentacaoTelhadoRapida: "conflitoFalhaFurtiva" },
               },
             },
-
           },
 
           escolherRotaTelhado: {
@@ -642,7 +631,7 @@ const bancoAventuras = {
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaEspera"},
+                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaEspera" },
               },
             ],
           },
@@ -664,7 +653,7 @@ const bancoAventuras = {
                 npcId: "guardaConde",
                 tipo: "pericia",
                 periciaId: "percepcao",
-              }
+              },
             },
 
             resultados: {
@@ -676,31 +665,30 @@ const bancoAventuras = {
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "esperaTorreFalhaFurtiva"},
+                memorias: { origemMovimentacaoTelhadoRapida: "esperaTorreFalhaFurtiva" },
               },
             },
           },
-
-        }
-
+        },
       },
 
-      movimentacaoTelhadoFurtiva:{
+      movimentacaoTelhadoFurtiva: {
         numeroFonte: 3,
-        contexto:[`Você pula de telhado em telhado, sempre buscando uma linha de cobertura antes de qualquer movimento.
+        contexto: [
+          `Você pula de telhado em telhado, sempre buscando uma linha de cobertura antes de qualquer movimento.
           
           Guardas se aproximam por todos os lados, atraídos pelo conflito central que, pelo som de espadas se chocando e pela nuvem de poeira que agora se ergue ao longe, havia finalmente começado.
           
           Alcançando o telhado mais próximo possível da torre, você sente um calafrio ao perceber que a distância é muito maior do que você imaginava inicialmente. O pulo ainda parece possível, mas bem mais perigoso.
           
-          Você tenta o pulo ou desce dos telhados e tenta buscar por uma rota até a torre pelo chão?`
+          Você tenta o pulo ou desce dos telhados e tenta buscar por uma rota até a torre pelo chão?`,
         ],
 
-        escolhas:[
+        escolhas: [
           {
             id: "pularTorre",
 
-            texto:`Tentar pular até a torre.`,
+            texto: `Tentar pular até a torre.`,
 
             proximaEtapa: "pularAteTorre",
           },
@@ -708,35 +696,34 @@ const bancoAventuras = {
           {
             id: "irChao",
 
-            texto:`Descer e buscar uma rota pelo chão.`,
+            texto: `Descer e buscar uma rota pelo chão.`,
 
             proximaCena: "torreChao",
-            memorias: {origemTorreChao: "chaoSemDano"},
-          }
+            memorias: { origemTorreChao: "chaoSemDano" },
+          },
         ],
 
-        etapas:{
-          pularAteTorre:{
-
+        etapas: {
+          pularAteTorre: {
             descricao: [
               `Pode ser arriscado tentar o pulo, mas ainda assim é menos arriscado do que se expor pelas ruas tão próximo do conflito.
               
               Você dá alguns passos para trás, aproveitando ao máximo o pequeno espaço que o telhado oferece.
               
-              Então respira fundo e parte em disparada à torre, usando toda sua força para realizar o salto no último momento possível.`
+              Então respira fundo e parte em disparada à torre, usando toda sua força para realizar o salto no último momento possível.`,
             ],
 
             instrucao: "pular para a torre.",
 
             teste: {
-              tipo:"pericia",
+              tipo: "pericia",
               periciaId: "atletismo",
               dificuldade: 16,
             },
 
             resultados: {
               sucesso: {
-                texto: ``,
+                texto: `VER SE PRECISA`,
                 proximaCena: "torreTetoSemGuardas",
               },
 
@@ -748,26 +735,25 @@ const bancoAventuras = {
                 queda: {
                   distanciaMetros: 3,
                 },
-            
               },
             },
           },
 
-          fracassoPulo:{
+          fracassoPulo: {
             descricao: [
-              `{Dolorido|Dolorida}, você começa a se levanta em meio aos escombros e congela ao ouvir uma voz próxima.
+              `{Dolorido|Dolorida}, você começa a se levantar em meio aos escombros e congela ao ouvir uma voz próxima.
               
               "Eu acho que o barulho veio daqui. Rápido!"
               
               Para sua sorte, a base da torre está agora a uma pequena distância e, entre você e ela, uma carruagem coberta, que pode ser um bom esconderijo.
               
-              Movendo-se o mais rápido possível, mas tomando cuidado para não fazer muito barulho, você se levanta e corre em direção à carruagem.`
+              Movendo-se o mais rápido possível, mas tomando cuidado para não fazer muito barulho, você se levanta e corre em direção à carruagem.`,
             ],
 
             instrucao: "se esconder na carruagem.",
 
             teste: {
-              tipo:"periciaEscolha",
+              tipo: "periciaEscolha",
               periciasIds: ["furtividade", "sobrevivencia"],
               dificuldade: 14,
             },
@@ -776,21 +762,20 @@ const bancoAventuras = {
               sucesso: {
                 texto: ``,
                 proximaCena: "torreChao",
-                memorias: {origemTorreChao: "chaoComDano"},
+                memorias: { origemTorreChao: "chaoComDano" },
               },
 
               fracasso: {
                 texto: ``,
                 proximaCena: "becosOpostos",
-                memorias: {origemBecosOpostos: "chaoComDano"},
-              }
-          }
-        }
-      }
+                memorias: { origemBecosOpostos: "chaoComDano" },
+              },
+            },
+          },
+        },
       },
 
-      movimentacaoTelhadoRapida:{
-
+      movimentacaoTelhadoRapida: {
         numeroFonte: 4,
 
         variacoes: [
@@ -877,21 +862,205 @@ const bancoAventuras = {
               Você parte em disparada para a torre o mais rápido possível.`,
             ],
           },
-
         ],
 
-        contexto: [
-          ``,
-        ],
+        contexto: [``],
 
-        escolhas:[],
+        escolhas: [],
 
-        etapas:{}
+        etapaInicial: "primeiroAtaque",
 
-      }
+        etapas: {
+          primeiroDisparo: {
+            descricao: [
+              `Às suas costas, você continua ouvindo os guardas e os aterrorizadores silvos das flechas sendo lançadas em sua direção.`,
+            ],
 
-    }
+            ataqueNpc: {
+              npcId: "guardaConde",
+              ataqueId: "arcoCurto",
 
-  }
+              resultados: {
+                erro: {
+                  texto: `Uma delas passa a centímetros do seu corpo conforme você faz uma repentina mudança de rota para a direita.`,
+                  proximaEtapa: "segundoDisparo",
+                },
 
-}
+                acerto: {
+                  texto: `Basta um momento de hesitação entre um pulo particularmente difícil entre telhados para que uma delas atinja diretamente seu ombro esquerdo.`,
+                  proximaEtapa: "impactoPrimeiroDisparo",
+                },
+              },
+            },
+          },
+
+          impactoPrimeiroDisparo: {
+            descricao: [`O impacto da flecha {o|a} pega {desprevenido|desprevenida} e joga você para frente.`],
+
+            instrucao: "se manter de pé após o impacto.",
+
+            teste: {
+              tipo: "salvaguarda",
+              atributoId: "constituicao",
+              dificuldade: 12,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Apesar da dor e do impacto, você consegue manter o foco e continuar correndo, mesmo se vendo {forçado|forçada} a mudar de rota para evitar os guardas.`,
+                proximaEtapa: "segundoDisparo",
+              },
+
+              fracasso: {
+                texto: `Você perde completamente o equilíbrio e cai, mas consegue se virar e se segurar no telhado no último momento.`,
+                proximaEtapa: "testeQueda",
+              },
+            },
+          },
+
+          segundoDisparo: {
+            descricao: [`A sua mudança de rota parece ter despistado os guardas momentaneamente, e você finalmente consegue chegar à torre.
+              
+              Porém, um calafrio sobe pela sua espinha ao perceber que a distância do pulo é muito maior do que você imaginava inicialmente. O pulo ainda parece possível, mas bem mais perigoso.`],
+
+            ataqueNpc: {
+              npcId: "guardaConde",
+              ataqueId: "arcoCurto",
+
+              resultados: {
+                erro: {
+                  texto: `Outra flecha passa voando acima da sua cabeça. Ao longe, os guardas que o perseguiam agora correm em sua direção.
+                  
+                  Se você se mover agora, ainda tem tempo de descer do telhado e tentar despistar os guardas pelas ruas.`,
+                  proximaEtapa: "pularAteTorreFlecha",
+                },
+
+                acerto: {
+                  texto: `
+                  Outra flecha o atinge de raspão na coxa. Você contém um grito de dor, e, olhando na direção de onde veio a flecha, vê os guardas correndo em sua direção.
+                  
+                  Se você se mover agora, ainda tem tempo de descer do telhado e tentar despistar os guardas pelas ruas.`,
+                  proximaEtapa: "pularAteTorreFlecha",
+                },
+              },
+            },
+          },
+
+          testeQueda:{
+
+            descricao: `Com os guardas agora perigosamente próximos, você junta toda a sua força para tentar se puxar de volta para o telhado.`,
+
+            instrucao: "voltar para o telhado.",
+
+            teste: {
+              tipo: "atributo",
+              atributoId: "forca",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Você consegue se erguer de volta ao telhado, os músculos do seu braço tremendo com o esforço.
+                
+                Outra flecha quase o atinge, fazendo você perceber que não há tempo nem para recuperar o fôlego.
+                
+                Você sai em disparada novamente, mudando a rota para tentar despistar os guardas.`,
+                proximaEtapa: "segundoDisparo",
+              },
+
+              fracasso: {
+                texto: `Os músculos do seu braço tremem enquanto você se força para cima, mas sua força não é suficiente.
+                
+                Você vai ao chão e se prepara para a inevitável batalha contra os guardas que {o|a} perseguem.`,
+                proximaCena: "batalha1ruas",
+              },
+            },
+          },
+
+          pularAteTorreFlechaEscolha: {
+            descricao: [
+              `Você tenta o pulo ou desce dos telhados e tenta buscar por uma rota até a torre pelo chão?`,
+            ],
+
+            escolhas:[
+              {
+                id: "pularTorre",
+
+                texto: `Tentar pular até a torre.`,
+
+                proximaEtapa: "pularAteTorreFlechada",
+              },
+
+              {
+                id: "irChao",
+
+                texto: `Descer e buscar uma rota pelo chão.`,
+
+                proximaCena: "torreChao",
+                memorias: { origemTorreChao: "flechada" },
+              },
+            ],
+
+            instrucao: "pular para a torre.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              dificuldade: 16,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `VER SE PRECISA`,
+                proximaCena: "torreTetoSemGuardas",
+              },
+
+              fracasso: {
+                texto: `Ainda no alto, você percebe com desespero que não vai alcançar a torre. Você não calculou bem a distância e precisou diminuir a velocidade, perdendo potência no pulo.
+                
+                Você estica os braços em uma tentativa pífia de se agarrar a alguma parte da torre, mas sem sucesso. O choque com a torre tira completamente o seu fôlego enquanto você vai ao chão, caindo entre caixas e ferramentas.`,
+                proximaCena: "batalha2torre",
+                queda: {
+                  distanciaMetros: 3,
+                },
+        
+              },
+            },
+          },
+
+          pularAteTorreFlechada: {
+            descricao: [
+            ],
+
+            instrucao: "pular para a torre.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              dificuldade: 16,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `VER SE PRECISA`,
+                proximaCena: "torreTetoComGuardas",
+              },
+
+              fracasso: {
+                texto: `Ainda no alto, você percebe com desespero que não vai alcançar a torre. Você não calculou bem a distância e precisou diminuir a velocidade, perdendo potência no pulo.
+                
+                Você estica os braços em uma tentativa pífia de se agarrar a alguma parte da torre, mas sem sucesso. O choque com a torre tira completamente o seu fôlego enquanto você vai ao chão, caindo entre caixas e ferramentas.`,
+                proximaCena: "batalha2torre",
+                queda: {
+                  distanciaMetros: 3,
+                },
+        
+              },
+            },
+          },
+
+        },
+      },
+    },
+  },
+};
