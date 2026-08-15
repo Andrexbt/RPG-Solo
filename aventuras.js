@@ -568,7 +568,26 @@ function criarParticipantesNpcsCombate(configuracoes) {
   return participantes;
 }
 
+function aplicarMapaCombate(caminhoImagem) {
+  if (!caminhoImagem) {
+    tabuleiroCombate.style.removeProperty(
+      "--imagem-mapa-combate"
+    );
+
+    return;
+  }
+
+  tabuleiroCombate.style.setProperty(
+    "--imagem-mapa-combate",
+    `url("${caminhoImagem}")`,
+  );
+}
+
 function iniciarCombateDaAventura(configuracao) {
+
+  aplicarMapaCombate(
+    configuracao.mapa
+  );
   const configuracaoCombate = structuredClone(configuracao);
 
   const participanteJogador = configuracaoCombate.participantes.find(
@@ -1793,6 +1812,8 @@ function verificarCombateDaCena(cena) {
     id: `${aventuraAtual.id}-` + `${estadoAtualJogo.progresso.cenaId}`,
 
     participantes: participantes,
+
+    mapa: cena.combate.mapa,
   };
 
   iniciarCombateDaAventura(configuracaoCombate);

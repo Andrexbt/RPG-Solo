@@ -46,17 +46,29 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 2560px;
-  height: 1920px;
+  width: 3072px;
+  height: 2304px;
   display: grid;
-  grid-template-columns: repeat(40, 64px);
-  grid-template-rows: repeat(30, 64px);
+  grid-template-columns: repeat(48, 64px);
+  grid-template-rows: repeat(36, 64px);
   border: 0;
   background-color: #65553c;
   background-image:
     linear-gradient(to right, rgba(244, 234, 210, 0.25) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(244, 234, 210, 0.25) 1px, transparent 1px);
-  background-size: 64px 64px;
+    linear-gradient(to bottom, rgba(244, 234, 210, 0.25) 1px, transparent 1px),
+    var(--imagem-mapa-combate, none);
+  background-size:
+    64px 64px,
+    64px 64px,
+    100% 100%;
+  background-position:
+  0 0,
+  0 0,
+  center;
+  background-repeat:
+  repeat,
+  repeat,
+  no-repeat; 
   box-shadow: none;
   transform:
     translate(
