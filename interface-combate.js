@@ -46,11 +46,20 @@ function limitarCameraCombate() {
 }
 
 function atualizarCameraCombate() {
-  tabuleiroCombate.style.setProperty("--camera-x", `${cameraCombate.deslocamentoX}px`);
+  cameraCombateElemento.style.setProperty(
+    "--camera-x",
+    `${cameraCombate.deslocamentoX}px`,
+  );
 
-  tabuleiroCombate.style.setProperty("--camera-y", `${cameraCombate.deslocamentoY}px`);
+  cameraCombateElemento.style.setProperty(
+    "--camera-y",
+    `${cameraCombate.deslocamentoY}px`,
+  );
 
-  tabuleiroCombate.style.setProperty("--camera-zoom", cameraCombate.zoom);
+  cameraCombateElemento.style.setProperty(
+    "--camera-zoom",
+    cameraCombate.zoom,
+  );
 }
 
 function controlarZoomCombate(evento) {

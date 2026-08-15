@@ -598,11 +598,6 @@ function criarParticipantesNpcsCombate(configuracoes) {
 function aplicarMapaCombate(caminhoImagem) {
   imagemMapaCombate.src =
     caminhoImagem ?? "";
-
-  tabuleiroCombate.style.setProperty(
-    "--imagem-mapa-combate",
-    `url("${caminhoImagem}")`,
-  );
 }
 
 function iniciarCombateDaAventura(configuracao) {
@@ -1918,10 +1913,10 @@ window.addEventListener("resize", function () {
     obterZoomMinimoVisivel();
 
   cameraCombate.zoom =
-    Math.min(
-  larguraViewport / 3072,
-  alturaViewport / 1728,
-)
+    Math.max(
+      cameraCombate.zoomMinimo,
+      cameraCombate.zoom,
+    );
 
   limitarCameraCombate();
   atualizarCameraCombate();
