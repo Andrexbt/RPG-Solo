@@ -895,7 +895,9 @@ const bancoAventuras = {
           },
 
           impactoPrimeiroDisparo: {
-            descricao: [`O impacto da flecha {o|a} pega {desprevenido|desprevenida} e joga você para frente.`],
+            descricao: [
+              `O impacto da flecha {o|a} pega {desprevenido|desprevenida} e joga você para frente.`,
+            ],
 
             instrucao: "se manter de pé após o impacto.",
 
@@ -919,9 +921,11 @@ const bancoAventuras = {
           },
 
           segundoDisparo: {
-            descricao: [`A sua mudança de rota parece ter despistado os guardas momentaneamente, e você finalmente consegue chegar à torre.
+            descricao: [
+              `A sua mudança de rota parece ter despistado os guardas momentaneamente, e você finalmente consegue chegar à torre.
               
-              Porém, um calafrio sobe pela sua espinha ao perceber que a distância do pulo é muito maior do que você imaginava inicialmente. O pulo ainda parece possível, mas bem mais perigoso.`],
+              Porém, um calafrio sobe pela sua espinha ao perceber que a distância do pulo é muito maior do que você imaginava inicialmente. O pulo ainda parece possível, mas bem mais perigoso.`,
+            ],
 
             ataqueNpc: {
               npcId: "guardaConde",
@@ -950,8 +954,7 @@ const bancoAventuras = {
             },
           },
 
-          testeQueda:{
-
+          testeQueda: {
             descricao: `Com os guardas agora perigosamente próximos, você junta toda a sua força para tentar se puxar de volta para o telhado.`,
 
             instrucao: "voltar para o telhado.",
@@ -986,7 +989,7 @@ const bancoAventuras = {
               `Você tenta o pulo ou desce dos telhados e tenta buscar por uma rota até a torre pelo chão?`,
             ],
 
-            escolhas:[
+            escolhas: [
               {
                 id: "pularTorre",
 
@@ -1004,12 +1007,10 @@ const bancoAventuras = {
                 memorias: { origemTorreChao: "flechada" },
               },
             ],
-          
           },
-          
+
           pularAteTorreFlechada: {
-            descricao: [
-            ],
+            descricao: [],
 
             instrucao: "pular para a torre.",
 
@@ -1033,11 +1034,60 @@ const bancoAventuras = {
                 queda: {
                   distanciaMetros: 3,
                 },
-        
               },
             },
           },
+        },
+      },
 
+      batalha1ruas: {
+        contexto: [
+          `Os guardas avançam sobre você pelas ruas próximas à ponte. Não há mais como evitar o confronto.`,
+        ],
+
+        combate: {
+          mapa: "Imagens/Mapas/A Fuga/batalha1ruasn.wepb",
+
+          jogador: {
+            posicao: {
+              coluna: 24,
+              linha: 28,
+            },
+
+            movimentoMaximo: 6,
+          },
+
+          inimigos: [
+            {
+              npcId: "guardaConde",
+
+              quantidade: 2,
+
+              posicoes: [
+                {
+                  coluna: 22,
+                  linha: 10,
+                },
+
+                {
+                  coluna: 27,
+                  linha: 10,
+                },
+              ],
+
+              movimentoMaximo: 6,
+            },
+          ],
+
+          resultados: {
+            vitoria: {
+              contexto: [`Os guardas caem, e por alguns instantes a rua volta a ficar livre.`],
+            },
+
+            derrota: {
+              contexto: [`Você não consegue continuar lutando.`],
+            },
+          },
         },
       },
     },

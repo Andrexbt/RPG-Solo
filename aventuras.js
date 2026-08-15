@@ -1920,7 +1920,11 @@ window.addEventListener("resize", function () {
   cameraCombate.zoomMinimo =
     obterZoomMinimoVisivel();
 
-  cameraCombate.zoom = Math.max(obterZoomMinimo(), cameraCombate.zoom);
+  cameraCombate.zoom =
+    Math.max(
+      cameraCombate.zoomMinimo,
+      cameraCombate.zoom,
+    );
 
   limitarCameraCombate();
   atualizarCameraCombate();
