@@ -88,7 +88,7 @@ habilidades:
 
       tabuleiro: {
         colunas: 48,
-        linhas: 36,
+        linhas: 27,
       },
     };
   }

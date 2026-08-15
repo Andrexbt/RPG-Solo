@@ -75,7 +75,8 @@ function renderizarFichaDaAventura() {
   window.FichaPersonagem.renderizar(personagemSelecionado, areaFicha);
 }
 
-window.fichaPersonagemPronta
+window.FichaPersonagem
+  .iniciarComponente()
   .then(function () {
     renderizarFichaDaAventura();
   })
@@ -110,6 +111,11 @@ const cameraCombate = {
 let arrasteCamera = null;
 
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
+const cameraCombateElemento =
+  document.querySelector("#cameraCombate");
+
+const imagemMapaCombate =
+  document.querySelector("#imagemMapaCombate");
 const painelTurnoCombate = document.querySelector("#painelTurnoCombate");
 const painelComandosCombate = document.querySelector("#painelComandosCombate");
 
@@ -590,13 +596,8 @@ function criarParticipantesNpcsCombate(configuracoes) {
 }
 
 function aplicarMapaCombate(caminhoImagem) {
-  if (!caminhoImagem) {
-    tabuleiroCombate.style.removeProperty(
-      "--imagem-mapa-combate"
-    );
-
-    return;
-  }
+  imagemMapaCombate.src =
+    caminhoImagem ?? "";
 
   tabuleiroCombate.style.setProperty(
     "--imagem-mapa-combate",
@@ -1917,10 +1918,10 @@ window.addEventListener("resize", function () {
     obterZoomMinimoVisivel();
 
   cameraCombate.zoom =
-    Math.max(
-      cameraCombate.zoomMinimo,
-      cameraCombate.zoom,
-    );
+    Math.min(
+  larguraViewport / 3072,
+  alturaViewport / 1728,
+)
 
   limitarCameraCombate();
   atualizarCameraCombate();

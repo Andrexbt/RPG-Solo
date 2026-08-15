@@ -47,10 +47,10 @@
   top: 50%;
   left: 50%;
   width: 3072px;
-  height: 2304px;
+  height: 1728px;
   display: grid;
   grid-template-columns: repeat(48, 64px);
-  grid-template-rows: repeat(36, 64px);
+  grid-template-rows: repeat(27, 64px);
   border: 0;
   background-color: #65553c;
   background-image:
@@ -70,15 +70,25 @@
   repeat,
   no-repeat; 
   box-shadow: none;
+  touch-action: none;
+  user-select: none;
+}
+
+.camera-combate {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3072px;
+  height: 1728px;
+
   transform:
     translate(
       calc(-50% + var(--camera-x, 0px)),
       calc(-50% + var(--camera-y, 0px))
     )
     scale(var(--camera-zoom, 1));
+
   transform-origin: center;
-  touch-action: none;
-  user-select: none;
 }
 
 .celula-combate {
