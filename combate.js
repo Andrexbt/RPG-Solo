@@ -87,8 +87,8 @@ habilidades:
       participantes,
 
       tabuleiro: {
-        colunas: 40,
-        linhas: 30,
+        colunas: 48,
+        linhas: 36,
       },
     };
   }

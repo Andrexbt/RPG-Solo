@@ -75,9 +75,16 @@ function renderizarFichaDaAventura() {
   window.FichaPersonagem.renderizar(personagemSelecionado, areaFicha);
 }
 
-document.addEventListener("fichaPersonagemCarregada", renderizarFichaDaAventura, {
-  once: true,
-});
+window.fichaPersonagemPronta
+  .then(function () {
+    renderizarFichaDaAventura();
+  })
+  .catch(function (erro) {
+    console.error(
+      "Não foi possível carregar a ficha do personagem.",
+      erro,
+    );
+  });
 
 const idCenaInicial = aventuraAtual.cenaInicial;
 
@@ -149,6 +156,20 @@ const visualizacaoAventura = document.querySelector("#visualizacaoAventura");
 
 const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
 
+const janelaDados =
+  document.querySelector(".janela-dados");
+
+const adendosAventura =
+  document.querySelector(".adendos-aventura");
+
+const marcadorOriginalJanelaDados =
+  document.createComment("janela-dados-original");
+
+janelaDados.parentNode.insertBefore(
+  marcadorOriginalJanelaDados,
+  janelaDados,
+);
+
 const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 
 const areaEscolhas = document.querySelector(".area-escolhas");
@@ -158,31 +179,6 @@ const painelAcaoAtualCombate = document.querySelector("#painelAcaoAtualCombate")
 const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualCombate");
 
 carregarNpcsDaAventura(aventuraAtual.id);
-
-function obterZoomMinimoVisivel() {
-  const larguraViewport =
-    visualizacaoCombate.clientWidth;
-
-  const alturaViewport =
-    visualizacaoCombate.clientHeight;
-
-  const larguraTabuleiro =
-    3072;
-
-  const alturaTabuleiro =
-    2304;
-
-  const zoomLargura =
-    larguraViewport / larguraTabuleiro;
-
-  const zoomAltura =
-    alturaViewport / alturaTabuleiro;
-
-  return Math.min(
-    zoomLargura,
-    zoomAltura,
-  );
-}
 
 function alternarFicha() {
   const recolhida = layoutAventura.classList.toggle("ficha-recolhida");

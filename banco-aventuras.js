@@ -1046,7 +1046,7 @@ const bancoAventuras = {
         ],
 
         combate: {
-          mapa: "Imagens/Mapas/A Fuga/batalha1ruasn.wepb",
+          mapa: "Imagens/Mapas/A Fuga/batalha1ruasn.webp",
 
           jogador: {
             posicao: {

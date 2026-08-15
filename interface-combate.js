@@ -10,13 +10,18 @@ function obterZoomMinimoVisivel() {
     return cameraCombate.zoomMinimo;
   }
 
-  const zoomMinimoHorizontal = visualizacaoCombate.clientWidth / tabuleiroCombate.offsetWidth;
+  const zoomHorizontal =
+    visualizacaoCombate.clientWidth /
+    tabuleiroCombate.offsetWidth;
 
-  const zoomMinimoVertical = visualizacaoCombate.clientHeight / tabuleiroCombate.offsetHeight;
+  const zoomVertical =
+    visualizacaoCombate.clientHeight /
+    tabuleiroCombate.offsetHeight;
 
   return Math.min(
+    zoomHorizontal,
+    zoomVertical,
     cameraCombate.zoomMaximo,
-    Math.max(cameraCombate.zoomMinimo, zoomMinimoHorizontal, zoomMinimoVertical),
   );
 }
 
@@ -119,15 +124,7 @@ function finalizarArrasteCamera(evento) {
   arrasteCamera = null;
 }
 
-function exibirTelaCombate() {
-  visualizacaoAventura.hidden = true;
 
-  painelComandosCombate.hidden = false;
-
-  visualizacaoCombate.hidden = false;
-
-  layoutAventura.classList.add("modo-combate");
-}
 
 function exibirTelaAventura() {
   visualizacaoCombate.hidden = true;
@@ -137,6 +134,60 @@ function exibirTelaAventura() {
   painelComandosCombate.hidden = true;
 
   layoutAventura.classList.remove("modo-combate");
+
+   devolverCaixaDadosParaAventura();
+}
+
+function moverCaixaDadosParaCombate() {
+  if (!janelaDados) {
+    return;
+  }
+
+  document.body.append(janelaDados);
+
+  janelaDados.classList.remove(
+    "janela-encaixada",
+  );
+
+  janelaDados.style.left = "24px";
+  janelaDados.style.right = "auto";
+  janelaDados.style.bottom = "24px";
+  janelaDados.style.top = "auto";
+}
+
+function exibirTelaCombate() {
+  visualizacaoAventura.hidden = true;
+
+  painelComandosCombate.hidden = false;
+
+  visualizacaoCombate.hidden = false;
+
+  layoutAventura.classList.add("modo-combate");
+
+  moverCaixaDadosParaCombate();
+}
+
+function devolverCaixaDadosParaAventura() {
+  if (
+    !janelaDados ||
+    !marcadorOriginalJanelaDados.parentNode
+  ) {
+    return;
+  }
+
+  marcadorOriginalJanelaDados.parentNode.insertBefore(
+    janelaDados,
+    marcadorOriginalJanelaDados.nextSibling,
+  );
+
+  janelaDados.classList.add(
+    "janela-encaixada",
+  );
+
+  janelaDados.style.left = "";
+  janelaDados.style.right = "";
+  janelaDados.style.bottom = "";
+  janelaDados.style.top = "";
 }
 
 function criarTokenCombate(participante) {
