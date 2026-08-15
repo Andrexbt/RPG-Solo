@@ -95,7 +95,7 @@ const cameraCombate = {
 
   zoom: 1,
 
-  zoomMinimo: 0.5,
+  zoomMinimo: 0,
 
   zoomMaximo: 1.6,
 };
@@ -158,6 +158,31 @@ const painelAcaoAtualCombate = document.querySelector("#painelAcaoAtualCombate")
 const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualCombate");
 
 carregarNpcsDaAventura(aventuraAtual.id);
+
+function obterZoomMinimoVisivel() {
+  const larguraViewport =
+    visualizacaoCombate.clientWidth;
+
+  const alturaViewport =
+    visualizacaoCombate.clientHeight;
+
+  const larguraTabuleiro =
+    3072;
+
+  const alturaTabuleiro =
+    2304;
+
+  const zoomLargura =
+    larguraViewport / larguraTabuleiro;
+
+  const zoomAltura =
+    alturaViewport / alturaTabuleiro;
+
+  return Math.min(
+    zoomLargura,
+    zoomAltura,
+  );
+}
 
 function alternarFicha() {
   const recolhida = layoutAventura.classList.toggle("ficha-recolhida");
@@ -632,7 +657,16 @@ function iniciarCombateDaAventura(configuracao) {
 
   exibirTelaCombate();
 
-  console.log("Combate iniciado:", combate);
+  cameraCombate.zoomMinimo =
+  obterZoomMinimoVisivel();
+
+  cameraCombate.zoom =
+  cameraCombate.zoomMinimo;
+
+  cameraCombate.deslocamentoX = 0;
+  cameraCombate.deslocamentoY = 0;
+
+  atualizarCameraCombate();
 }
 
 function moverParticipante(participante, coluna, linha) {
@@ -1883,7 +1917,10 @@ visualizacaoCombate.addEventListener("pointerup", finalizarArrasteCamera);
 visualizacaoCombate.addEventListener("pointercancel", finalizarArrasteCamera);
 
 window.addEventListener("resize", function () {
-  cameraCombate.zoom = Math.max(obterZoomMinimoVisivel(), cameraCombate.zoom);
+  cameraCombate.zoomMinimo =
+    obterZoomMinimoVisivel();
+
+  cameraCombate.zoom = Math.max(obterZoomMinimo(), cameraCombate.zoom);
 
   limitarCameraCombate();
   atualizarCameraCombate();
