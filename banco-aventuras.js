@@ -1046,12 +1046,12 @@ const bancoAventuras = {
         ],
 
         combate: {
-          mapa: "Imagens/Mapas/A Fuga/batalha1ruasn.webp",
+          mapa: "Imagens/Mapas/A Fuga/batalha1ruas.webp",
 
           jogador: {
             posicao: {
-              coluna: 24,
-              linha: 28,
+              coluna: 22,
+              linha: 14,
             },
 
             movimentoMaximo: 6,

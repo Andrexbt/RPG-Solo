@@ -19,10 +19,12 @@ function obterZoomMinimoVisivel() {
     tabuleiroCombate.offsetHeight;
 
   return Math.min(
+  Math.max(
     zoomHorizontal,
     zoomVertical,
-    cameraCombate.zoomMaximo,
-  );
+  ),
+  cameraCombate.zoomMaximo,
+);
 }
 
 function limitarCameraCombate() {
@@ -60,6 +62,14 @@ function atualizarCameraCombate() {
     "--camera-zoom",
     cameraCombate.zoom,
   );
+
+  const espessuraLinhaGrid =
+  1.25 / cameraCombate.zoom;
+
+cameraCombateElemento.style.setProperty(
+  "--espessura-linha-grid",
+  `${espessuraLinhaGrid}px`,
+);
 }
 
 function controlarZoomCombate(evento) {

@@ -105,7 +105,7 @@ const cameraCombate = {
 
   zoomMinimo: 0,
 
-  zoomMaximo: 1.6,
+  zoomMaximo: 1,
 };
 
 let arrasteCamera = null;
@@ -1913,9 +1913,12 @@ window.addEventListener("resize", function () {
     obterZoomMinimoVisivel();
 
   cameraCombate.zoom =
-    Math.max(
-      cameraCombate.zoomMinimo,
-      cameraCombate.zoom,
+    Math.min(
+      cameraCombate.zoomMaximo,
+      Math.max(
+        cameraCombate.zoomMinimo,
+        cameraCombate.zoom,
+      ),
     );
 
   limitarCameraCombate();
