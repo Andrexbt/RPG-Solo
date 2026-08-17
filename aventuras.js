@@ -1000,10 +1000,6 @@ function resolverIniciativaJogador(resultadoRolagem) {
   solicitacaoCombate.textContent = "";
 
   solicitacaoCombate.hidden = true;
-
-  console.log("Ordem dos turnos:", ordemTurnos);
-
-  console.log("Participante ativo:", combate.participanteAtivoId);
 }
 
 function formatarRolagemDano(ataque) {
@@ -1463,8 +1459,6 @@ function resolverDanoJogador(resultadoRolagem) {
 
       concluirDanoJogador(combate, rolagemEscolhida);
     });
-
-    console.log("Rolagens do efeito:", rolagens);
 
     return;
   }
