@@ -1,28 +1,41 @@
 /* =========================================================
-   JANELAS FLUTUANTES — ESTRUTURA COMPARTILHADA
+   JANELAS FLUTUANTES — ESTRUTURA E TEMA COMPARTILHADOS
    ========================================================= */
+
+:root {
+  --janela-fundo: rgba(24, 21, 18, 0.92);
+  --janela-fundo-secundario: rgba(48, 40, 32, 0.78);
+  --janela-texto: #eadfc9;
+  --janela-texto-suave: #b9aa91;
+  --janela-destaque: #c39a58;
+  --janela-borda: rgba(195, 154, 88, 0.58);
+  --janela-borda-suave: rgba(195, 154, 88, 0.25);
+  --janela-sombra: 0 12px 28px rgba(0, 0, 0, 0.48);
+}
 
 .janela-flutuante {
   position: fixed;
   z-index: 20;
-
   width: min(300px, calc(100vw - 24px));
   min-width: 0;
-  padding: 14px;
-
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 11px;
-
-  background: var(--cor-aventura-papel);
-  color: var(--cor-aventura-tinta);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
+  padding: 16px;
+  border: 1px solid var(--janela-borda);
+  border-radius: 4px;
+  background: var(--janela-fundo);
+  color: var(--janela-texto);
+  box-shadow: var(--janela-sombra);
+  backdrop-filter: blur(5px);
 }
 
 .cabecalho-janela-flutuante {
+  min-height: 32px;
+  margin: 0 0 12px;
+  padding: 0 0 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  border-bottom: 1px solid var(--janela-borda-suave);
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -30,57 +43,42 @@
 
 .janela-flutuante .cabecalho-janela-flutuante h2 {
   margin: 0;
-  font-size: 0.9rem;
-  text-align: center;
+  color: var(--janela-texto);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .botao-minimizar-janela {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-
   display: grid;
   place-items: center;
-
   flex-shrink: 0;
-
-  border: 0;
-  border-radius: 0;
-
-  background: transparent;
-  color: inherit;
-
+  border: 1px solid var(--janela-borda-suave);
+  border-radius: 2px;
+  background: rgba(195, 154, 88, 0.08);
+  color: var(--janela-texto);
   font-size: 1rem;
-
   cursor: pointer;
 }
 
 .botao-minimizar-janela:hover {
-  opacity: 0.55;
+  border-color: var(--janela-destaque);
+  background: rgba(195, 154, 88, 0.18);
 }
 
 .janela-anotacoes,
-.janela-dados {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-}
-
+.janela-dados,
 #campoAnotacoes {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .janela-anotacoes .cabecalho-janela-flutuante,
 .janela-dados .cabecalho-janela-flutuante {
   position: relative;
-
-  display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .janela-anotacoes .botao-minimizar-janela,
@@ -92,15 +90,6 @@
 .janela-anotacoes .cabecalho-janela-flutuante h2,
 .janela-dados .cabecalho-janela-flutuante h2 {
   width: 100%;
-  margin: 0;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 1rem;
-  font-weight: 400;
   text-align: center;
 }
 
@@ -110,33 +99,41 @@
 }
 
 .janela-flutuante.janela-minimizada .conteudo-dados,
-.janela-flutuante.janela-minimizada .conteudo-anotacoes {
+.janela-flutuante.janela-minimizada .conteudo-anotacoes,
+.janela-flutuante.janela-minimizada .conteudo-comandos-combate {
   display: none;
 }
 
 .janela-flutuante.janela-minimizada {
   width: auto;
-  min-width: 130px;
-  padding: 3px 11px;
+  min-width: 150px;
+  min-height: 0;
+  padding: 9px 12px;
 }
 
-.janela-arrastando .cabecalho-janela-flutuante {
-  cursor: grabbing;
+.janela-flutuante.janela-minimizada .cabecalho-janela-flutuante {
+  margin: 0;
+  padding: 0;
+  border-bottom: 0;
 }
 
-.adendos-aventura .janela-flutuante.janela-encaixada {
+/* Uma janela encaixada nunca pode ultrapassar a coluna lateral. */
+.adendos-aventura .janela-flutuante.janela-encaixada,
+.adendos-aventura .janela-flutuante.janela-encaixada.janela-minimizada {
   position: relative;
-
   top: auto;
   right: auto;
   bottom: auto;
   left: auto;
-
   width: 100%;
-  max-width: none;
-
+  min-width: 0;
+  max-width: 100%;
   margin: 0;
   flex: 0 0 auto;
+}
+
+.janela-arrastando .cabecalho-janela-flutuante {
+  cursor: grabbing;
 }
 
 @media (max-width: 560px) {
@@ -147,12 +144,8 @@
 
   .janela-dados.janela-flutuante,
   .janela-anotacoes.janela-flutuante {
-    right: 10px;
+    right: 8px;
     left: auto;
-    bottom: 10px;
-    font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+    bottom: 8px;
   }
 }

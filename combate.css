@@ -159,9 +159,9 @@
 }
 
 .imagem-token-combate {
-  inset: 12%;
-  width: 76%;
-  height: 76%;
+  inset: 13.5%;
+  width: 73%;
+  height: 73%;
   z-index: 1;
   border-radius: 50%;
   object-fit: cover;
@@ -275,47 +275,36 @@
 #botaoEncerrarTurno {
   min-height: 42px;
   padding: 8px 14px;
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 8px;
-  background: #69482f;
-  color: #f4ead2;
+  border: 1px solid var(--janela-destaque);
+  border-radius: 3px;
+  background: #79552f;
+  color: #fff2d6;
   cursor: pointer;
 }
 
-.painel-comandos-combate.janela-minimizada .painel-ataques-combate,
-.janela-flutuante.janela-minimizada .conteudo-comandos-combate {
+.painel-comandos-combate.janela-minimizada .painel-ataques-combate {
   display: none;
 }
 
 .painel-comandos-combate .solicitacao-combate {
   margin: 0;
   padding: 10px;
-  border-radius: 7px;
-  background: rgba(105, 72, 47, 0.08);
+  border-radius: 3px;
+  background: rgba(195, 154, 88, 0.1);
   font-weight: 700;
   line-height: 1.4;
   text-align: left;
 }
 
-.painel-comandos-combate.janela-flutuante,
-.painel-ataques-combate,
-.painel-turno-combate,
-.painel-historico-combate {
-  border: 1px solid var(--cor-aventura-borda);
-  background: var(--fundo-papel-aventura);
-  color: var(--cor-aventura-tinta);
-}
-
 .painel-comandos-combate.janela-flutuante {
-  left: calc(50% - 160px);
+  top: 28px;
+  left: 64px;
   right: auto;
-  bottom: 24px;
+  bottom: auto;
   width: min(320px, calc(100vw - 32px));
   max-height: calc(100vh - 48px);
   padding: 16px;
   overflow: visible;
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   transform: none;
 }
 
@@ -339,8 +328,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  border: 1px solid rgba(105, 72, 47, 0.35);
-  border-radius: 7px;
+  border: 1px solid var(--janela-borda-suave);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .economia-acoes-combate strong {
@@ -349,17 +339,17 @@
 }
 
 .economia-acoes-combate [data-disponivel="true"] {
-  color: #386641;
+  color: #91b879;
 }
 
 .economia-acoes-combate [data-disponivel="false"] {
-  color: #9b3d32;
+  color: #c77a68;
 }
 
 .grupo-acoes-turno {
   overflow: hidden;
-  border: 1px solid rgba(105, 72, 47, 0.35);
-  border-radius: 8px;
+  border: 1px solid var(--janela-borda-suave);
+  border-radius: 3px;
 }
 
 .titulo-grupo-acoes {
@@ -368,7 +358,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  background: rgba(105, 72, 47, 0.1);
+  background: rgba(195, 154, 88, 0.08);
 }
 
 .titulo-grupo-acoes h3 {
@@ -395,7 +385,7 @@
   width: 100%;
   padding: 8px 10px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 2px;
   background: transparent;
   color: inherit;
   text-align: left;
@@ -403,7 +393,7 @@
 }
 
 .lista-acoes-turno button:hover:not(:disabled) {
-  background: rgba(105, 72, 47, 0.12);
+  background: rgba(195, 154, 88, 0.14);
 }
 
 .lista-acoes-turno button:disabled {
@@ -444,8 +434,12 @@
   max-height: min(440px, calc(100vh - 80px));
   padding: 14px;
   overflow: auto;
-  border-radius: 10px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--janela-borda);
+  border-radius: 4px;
+  background: var(--janela-fundo);
+  color: var(--janela-texto);
+  box-shadow: var(--janela-sombra);
+  backdrop-filter: blur(5px);
 }
 
 .cabecalho-painel-ataques {
@@ -497,10 +491,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 0.15rem;
-  border: 1px solid #69482f;
-  border-radius: 6px;
-  background: #69482f;
-  color: #f4ead2;
+  border: 1px solid var(--janela-borda);
+  border-radius: 3px;
+  background: rgba(121, 85, 47, 0.82);
+  color: #fff2d6;
   cursor: pointer;
 }
 
@@ -532,6 +526,7 @@
   top: 12px;
   left: 50%;
   z-index: 5;
+  width: auto;
   max-width: calc(100vw - 32px);
   display: flex;
   align-items: flex-start;
@@ -542,14 +537,23 @@
 
 .painel-turno-combate {
   position: relative;
+  width: min(
+    var(--largura-painel-turno, 300px),
+    calc(100vw - 460px)
+  );
   min-width: 260px;
   padding: 8px 12px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 6px 16px;
-  border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  flex: 0 0 auto;
+  border: 1px solid var(--janela-borda);
+  border-radius: 4px;
+  background: var(--janela-fundo);
+  color: var(--janela-texto);
+  box-shadow: var(--janela-sombra);
+  backdrop-filter: blur(5px);
 }
 
 .painel-turno-combate p {
@@ -559,7 +563,7 @@
 .painel-acao-atual-combate {
   grid-column: 1 / -1;
   padding: 7px 10px;
-  border-top: 1px solid rgba(105, 72, 47, 0.3);
+  border-top: 1px solid var(--janela-borda-suave);
 }
 
 .painel-acao-atual-combate strong {
@@ -571,17 +575,18 @@
 
 .painel-acao-atual-combate p {
   margin: 0;
+  white-space: normal;
 }
 
 .fila-iniciativa-combate {
+  width: max-content;
   max-width: min(620px, calc(100vw - 180px));
   margin: 0;
-  padding: 0;
+  padding: 6px;
   display: flex;
   align-items: center;
   gap: 10px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-x: visible;
   scrollbar-width: none;
   list-style: none;
 }
@@ -600,36 +605,67 @@
 
 .avatar-iniciativa {
   position: relative;
-  width: 46px;
-  height: 46px;
+
+  width: 66px;
+  height: 66px;
+
+  flex: 0 0 66px;
+
   display: grid;
   place-items: center;
+
   overflow: visible;
-  border: 2px solid rgba(105, 72, 47, 0.55);
+
+  border: 0;
   border-radius: 50%;
-  background: #3f2d20;
+
+  background: transparent;
   color: #f4ead2;
+
   font-weight: 700;
 }
 
-.imagem-avatar-iniciativa,
-.frame-avatar-iniciativa {
+.imagem-avatar-iniciativa {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+
+  top: 11px;
+  left: 11px;
+
+  width: 44px;
+  height: 44px;
+
+  z-index: 1;
+
   border-radius: 50%;
   object-fit: cover;
 }
 
 .frame-avatar-iniciativa {
+  position: absolute;
+
+  inset: 0;
+
+  width: 66px;
+  height: 66px;
+
+  z-index: 2;
+
+  border-radius: 0;
+  object-fit: contain;
+
   pointer-events: none;
+}
+
+.avatar-iniciativa .identificador-participante {
+  right: 1px;
+  bottom: 1px;
+  z-index: 4;
 }
 
 .item-iniciativa.turno-ativo .avatar-iniciativa::after {
   content: "";
   position: absolute;
-  inset: -6px;
+  inset: -3px;
   border: 3px solid transparent;
   border-top-color: #f0c66c;
   border-right-color: rgba(240, 198, 108, 0.35);
@@ -649,8 +685,13 @@
   max-height: none;
   padding: 8px;
   overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  flex: 0 0 210px;
+  border: 1px solid var(--janela-borda);
+  border-radius: 4px;
+  background: var(--janela-fundo);
+  color: var(--janela-texto);
+  box-shadow: var(--janela-sombra);
+  backdrop-filter: blur(5px);
 }
 
 .painel-historico-combate.historico-expandido {
@@ -685,8 +726,9 @@
 
 .evento-historico-combate {
   padding: 6px;
-  border: 1px solid currentColor;
-  border-radius: 6px;
+  border: 1px solid var(--janela-borda-suave);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.025);
   font-size: 0.8rem;
 }
 

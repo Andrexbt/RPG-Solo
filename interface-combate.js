@@ -114,6 +114,10 @@ function iniciarArrasteCamera(evento) {
   evento.preventDefault();
 }
 
+function impedirMenuContextoCombate(evento) {
+  evento.preventDefault();
+}
+
 function continuarArrasteCamera(evento) {
   if (!arrasteCamera || evento.pointerId !== arrasteCamera.ponteiroId) {
     return;
@@ -1030,6 +1034,18 @@ function criarAvatarIniciativa(participante) {
 
 function renderizarFilaIniciativa(combate) {
   filaIniciativaCombate.innerHTML = "";
+
+  const quantidadeParticipantes = Math.max(1, combate.ordemTurnos.length);
+
+  const larguraPainelTurno = Math.max(
+    260,
+    Math.min(692, 116 + quantidadeParticipantes * 76),
+  );
+
+  painelTurnoCombate.style.setProperty(
+    "--largura-painel-turno",
+    `${larguraPainelTurno}px`,
+  );
 
   for (const participanteId of combate.ordemTurnos) {
     const participante = combate.participantes.find(

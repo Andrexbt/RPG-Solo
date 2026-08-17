@@ -17,7 +17,6 @@
 
 .janela-dados.janela-minimizada {
   min-width: 0;
-  padding: 0;
 }
 
 .caixa-dados {
@@ -43,10 +42,10 @@
   height: 38px;
   min-height: 0;
   padding: 4px;
-  border: 1px solid var(--cor-aventura-borda);
-  border-radius: 7px;
-  background: var(--cor-aventura-papel);
-  color: var(--cor-aventura-tinta);
+  border: 1px solid var(--janela-borda);
+  border-radius: 3px;
+  background: var(--janela-fundo-secundario);
+  color: var(--janela-texto);
   font-size: 0.82rem;
   font-weight: 800;
   cursor: grab;
@@ -55,7 +54,7 @@
 }
 
 .dado-disponivel:hover {
-  background: rgba(105, 72, 47, 0.12);
+  background: rgba(195, 154, 88, 0.18);
   transform: translateY(-1px);
 }
 

@@ -8,21 +8,22 @@
 
 #campoAnotacoes {
   box-sizing: border-box;
-
   width: 100%;
-  min-height: 100px;
-  padding: 9px 10px;
+  min-height: 120px;
+  padding: 10px;
 
-  display: block;
+  border: 1px solid var(--janela-borda-suave);
+  border-radius: 3px;
 
-  border: 1px solid #69482f;
-  border-radius: 7px;
-
-  background: rgba(255, 255, 255, 0.24);
-  color: inherit;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--janela-texto);
 
   line-height: 1.4;
   resize: vertical;
+}
+
+#campoAnotacoes::placeholder {
+  color: var(--janela-texto-suave);
 }
 
 @media (max-width: 560px) {

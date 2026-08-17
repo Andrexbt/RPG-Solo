@@ -199,37 +199,21 @@ function alternarPainelExplicativo() {
 }
 
 function encaixarFerramentasDaAventura() {
-  const janelaAcao = document.querySelector(".janela-acao");
-
   const janelaAnotacoes = document.querySelector(".janela-anotacoes");
-
   const janelaDados = document.querySelector(".janela-dados");
 
-  if (!janelaAcao || !janelaAnotacoes || !janelaDados) {
-    return;
+  for (const janela of [janelaAnotacoes, janelaDados]) {
+    if (!janela) {
+      continue;
+    }
+
+    janela.classList.add("janela-encaixada");
+    janela.style.left = "";
+    janela.style.top = "";
+    janela.style.right = "";
+    janela.style.bottom = "";
+    janela.style.width = "";
   }
-
-  const espacamento = 14;
-
-  const posicaoAcao = janelaAcao.getBoundingClientRect();
-
-  janelaAnotacoes.style.left = `${posicaoAcao.left}px`;
-
-  janelaAnotacoes.style.top = `${posicaoAcao.bottom + espacamento}px`;
-
-  janelaAnotacoes.style.right = "auto";
-  janelaAnotacoes.style.bottom = "auto";
-
-  janelaAnotacoes.style.width = `${posicaoAcao.width}px`;
-
-  const posicaoAnotacoes = janelaAnotacoes.getBoundingClientRect();
-
-  janelaDados.style.left = `${posicaoAcao.left}px`;
-
-  janelaDados.style.top = `${posicaoAnotacoes.bottom + espacamento}px`;
-
-  janelaDados.style.right = "auto";
-  janelaDados.style.bottom = "auto";
 }
 
 async function animarMovimentoInimigo(participante, caminho) {
@@ -1895,6 +1879,17 @@ visualizacaoCombate.addEventListener("wheel", controlarZoomCombate, {
 });
 
 visualizacaoCombate.addEventListener("pointerdown", iniciarArrasteCamera);
+
+visualizacaoCombate.addEventListener(
+  "contextmenu",
+  function bloquearMenuContexto(evento) {
+    evento.preventDefault();
+    evento.stopPropagation();
+  },
+  {
+    capture: true,
+  },
+);
 
 visualizacaoCombate.addEventListener("pointermove", continuarArrasteCamera);
 
