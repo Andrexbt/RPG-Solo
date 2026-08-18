@@ -637,17 +637,37 @@ if (consequencia.memorias) {
   }
 
   document.addEventListener(
-    "rolagemConcluida",
-    function (evento) {
-      if (!estado.testeAtivo) {
-        return;
-      }
+  "rolagemConcluida",
+  function (evento) {
+    const combate =
+      window.estadoJogo?.combateAtual;
 
-      evento.stopImmediatePropagation();
-      void resolverResultadoTeste(evento.detail);
-    },
-    true,
-  );
+    const rolagemPertenceAoCombate =
+      Boolean(
+        combate &&
+          (
+            combate.efeitoPendente ||
+            combate.iniciativaPendenteId ||
+            combate.ataquePendente ||
+            combate.danoPendente
+          ),
+      );
+
+    if (
+      !estado.testeAtivo ||
+      rolagemPertenceAoCombate
+    ) {
+      return;
+    }
+
+    evento.stopImmediatePropagation();
+
+    void resolverResultadoTeste(
+      evento.detail,
+    );
+  },
+  true,
+);
 
   return {
     iniciarTeste,
