@@ -6,31 +6,11 @@
 // cards de resumo e permite abrir ou excluir uma ficha.
 // =====================================================
 
-const CHAVE_PERSONAGENS = "personagensRpgSolo";
+
 const listaPersonagens = document.getElementById("listaPersonagens");
 
 function carregarPersonagensSalvos() {
-  try {
-    const dadosSalvos = localStorage.getItem(CHAVE_PERSONAGENS);
-    const personagens = dadosSalvos === null ? [] : JSON.parse(dadosSalvos);
-
-    if (Array.isArray(personagens) === false) {
-      return [];
-    }
-
-    return personagens.map(function (personagem) {
-      return window.PersonagemDados.normalizar(
-        personagem
-      );
-    });
-  } catch (erro) {
-    console.error("Não foi possível ler os personagens salvos.", erro);
-    return [];
-  }
-}
-
-function salvarListaPersonagens(personagens) {
-  localStorage.setItem(CHAVE_PERSONAGENS, JSON.stringify(personagens));
+  return window.PersonagemDados.listarSalvos();
 }
 
 function textoOuTraco(valor) {
@@ -240,11 +220,19 @@ function montarTelaPersonagens() {
 }
 
 function excluirPersonagem(idPersonagem) {
-  const personagensAtualizados = carregarPersonagensSalvos().filter(function (personagem) {
-    return personagem.id !== idPersonagem;
-  });
+  const personagemExcluido =
+    window.PersonagemDados.excluirSalvoPorId(
+      idPersonagem,
+    );
 
-  salvarListaPersonagens(personagensAtualizados);
+  if (!personagemExcluido) {
+    console.error(
+      "O personagem não pôde ser excluído.",
+    );
+
+    return;
+  }
+
   montarTelaPersonagens();
 }
 

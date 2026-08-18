@@ -1,6 +1,21 @@
 "use strict";
 
 (function iniciarSistemaDados() {
+
+  const {
+  rolarDado,
+  
+  validarRolagem:
+    validarDadosDaRolagem,
+
+    separarResultados:
+    separarResultadosVisuais,
+
+    criarResultado:
+    criarResultadoRolagem,
+    
+} = window.MotorDados;
+
   const resultadoDado = document.querySelector("#resultadoDado");
   const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
   const camadaDadosLancados = document.querySelector("#camadaDadosLancados");
@@ -105,109 +120,6 @@
       escalaY,
   };
   }
-
-  function rolarDado(numeroDeFaces) {
-    return Math.floor(Math.random() * numeroDeFaces) + 1;
-  }
-
-  function somarResultados(resultados) {
-    return resultados.reduce(function somar(total, resultado) {
-      return total + resultado;
-    }, 0);
-  }
-
-  function separarResultadosVisuais(
-  gruposRolados,
-  quantidadeDeRolagens,
-  modificador,
-) {
-  if (quantidadeDeRolagens <= 1) {
-    const subtotal = gruposRolados.reduce(
-      function somarGrupos(total, grupo) {
-        return total + grupo.total;
-      },
-      0,
-    );
-
-    return [
-      {
-        subtotal: subtotal,
-        modificador: modificador,
-        total: subtotal + modificador,
-      },
-    ];
-  }
-
-  const divisaoValida = gruposRolados.every(
-    function verificarGrupo(grupo) {
-      return (
-        Array.isArray(grupo.resultados) &&
-        grupo.resultados.length %
-          quantidadeDeRolagens ===
-          0
-      );
-    },
-  );
-
-  if (!divisaoValida) {
-    const subtotal = gruposRolados.reduce(
-      function somarGrupos(total, grupo) {
-        return total + grupo.total;
-      },
-      0,
-    );
-
-    return [
-      {
-        subtotal: subtotal,
-        modificador: modificador,
-        total: subtotal + modificador,
-      },
-    ];
-  }
-
-  const resultadosSeparados = [];
-
-  for (
-    let indiceRolagem = 0;
-    indiceRolagem < quantidadeDeRolagens;
-    indiceRolagem += 1
-  ) {
-    let subtotal = 0;
-
-    for (const grupo of gruposRolados) {
-      const quantidadePorRolagem =
-        grupo.resultados.length /
-        quantidadeDeRolagens;
-
-      const inicio =
-        indiceRolagem *
-        quantidadePorRolagem;
-
-      const fim =
-        inicio +
-        quantidadePorRolagem;
-
-      const resultadosDestaRolagem =
-        grupo.resultados.slice(
-          inicio,
-          fim,
-        );
-
-      subtotal += somarResultados(
-        resultadosDestaRolagem,
-      );
-    }
-
-    resultadosSeparados.push({
-      subtotal: subtotal,
-      modificador: modificador,
-      total: subtotal + modificador,
-    });
-  }
-
-  return resultadosSeparados;
-}
 
   function formatarExpressaoResultado(
   subtotal,
@@ -638,53 +550,9 @@ solicitacaoCaixaDados.textContent =
 }
   }
 
-  function agruparDadosLancadosPorFaces(dadosDoLancamento) {
-    const grupos = new Map();
+  
 
-    for (const dado of dadosDoLancamento) {
-      const resultados = grupos.get(dado.numeroDeFaces) ?? [];
-      resultados.push(dado.resultado);
-      grupos.set(dado.numeroDeFaces, resultados);
-    }
-
-    return grupos;
-  }
-
-  function validarDadosDaRolagem(dadosDoLancamento, solicitacao) {
-    if (!solicitacao) {
-      return { sucesso: true };
-    }
-
-    const gruposLancados = agruparDadosLancadosPorFaces(dadosDoLancamento);
-    const quantidadeEsperada = solicitacao.gruposDeDados.reduce(
-      (total, grupo) => total + grupo.quantidade,
-      0,
-    );
-
-    if (dadosDoLancamento.length !== quantidadeEsperada) {
-      return { sucesso: false };
-    }
-
-    for (const grupoEsperado of solicitacao.gruposDeDados) {
-      const resultados = gruposLancados.get(grupoEsperado.numeroDeFaces) ?? [];
-
-      if (resultados.length !== grupoEsperado.quantidade) {
-        return { sucesso: false };
-      }
-    }
-
-    const facesEsperadas = new Set(
-      solicitacao.gruposDeDados.map((grupo) => grupo.numeroDeFaces),
-    );
-
-    for (const numeroDeFaces of gruposLancados.keys()) {
-      if (!facesEsperadas.has(numeroDeFaces)) {
-        return { sucesso: false };
-      }
-    }
-
-    return { sucesso: true };
-  }
+  
 
   function emitirRolagemConcluida(
     dadosDoLancamento,
@@ -716,39 +584,11 @@ solicitacaoCaixaDados.textContent =
       return;
     }
 
-    const gruposRolados = Array.from(
-      agruparDadosLancadosPorFaces(dadosDoLancamento).entries(),
-    ).map(function criarGrupo([numeroDeFaces, resultados]) {
-      return {
-        quantidade: resultados.length,
-        numeroDeFaces: numeroDeFaces,
-        resultados: resultados,
-        total: somarResultados(resultados),
-      };
-    });
-
-    const subtotal = gruposRolados.reduce((total, grupo) => total + grupo.total, 0);
-    const modificador = solicitacaoResolvida?.modificador ?? 0;
-    const resultado = {
-      gruposRolados: gruposRolados,
-      subtotal: subtotal,
-      modificador: modificador,
-      total: subtotal + modificador,
-      contexto: {
-        descricao:
-          solicitacaoResolvida?.descricao ??
-          null,
-
-        quantidadeDeRolagens:
-          solicitacaoResolvida
-            ?.quantidadeDeRolagens ?? 1,
-
-        critico:
-          Boolean(
-            solicitacaoResolvida?.critico,
-          ),
-      },
-    };
+    const resultado =
+  criarResultadoRolagem(
+    dadosDoLancamento,
+    solicitacaoResolvida,
+  );
 
     if (resultadoDado) {
       const quantidadeDeRolagens =

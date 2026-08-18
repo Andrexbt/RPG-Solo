@@ -1,39 +1,5 @@
 "use strict";
 
-function buscarPersonagemSalvo(idPersonagem) {
-  if (!idPersonagem) {
-    return null;
-  }
-
-  try {
-    const dadosSalvos = localStorage.getItem("personagensRpgSolo");
-
-    if (!dadosSalvos) {
-      return null;
-    }
-
-    const personagens = JSON.parse(dadosSalvos);
-
-    if (!Array.isArray(personagens)) {
-      return null;
-    }
-
-    const personagem = personagens.find(function (personagemSalvo) {
-      return personagemSalvo.id === idPersonagem;
-    });
-
-    if (personagem === undefined) {
-      return null;
-    }
-
-    return window.PersonagemDados.normalizar(personagem);
-  } catch (erro) {
-    console.error("Não foi possível carregar o personagem.", erro);
-
-    return null;
-  }
-}
-
 const parametrosAventura = new URLSearchParams(window.location.search);
 
 const idAventuraSelecionada = parametrosAventura.get("aventura") ?? "aFuga";
@@ -54,7 +20,10 @@ if (!aventuraAtual) {
   throw new Error(`Aventura não encontrada: ${idAventuraSelecionada}`);
 }
 
-const personagemSelecionado = buscarPersonagemSalvo(idPersonagemSelecionado);
+const personagemSelecionado =
+  window.PersonagemDados.buscarSalvoPorId(
+    idPersonagemSelecionado,
+  );
 
 const estadoAtualJogo = window.estadoJogo;
 
@@ -95,20 +64,6 @@ let cenaAtual = aventuraAtual.cenas[idCenaInicial];
 let tokenArrastado = null;
 let inicioArraste = null;
 let escolhasAtuais = [];
-
-const cameraCombate = {
-  deslocamentoX: 0,
-
-  deslocamentoY: 0,
-
-  zoom: 1,
-
-  zoomMinimo: 0,
-
-  zoomMaximo: 1,
-};
-
-let arrasteCamera = null;
 
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
 const cameraCombateElemento =
@@ -1884,10 +1839,6 @@ visualizacaoCombate.addEventListener(
   "contextmenu",
   function bloquearMenuContexto(evento) {
     evento.preventDefault();
-    evento.stopPropagation();
-  },
-  {
-    capture: true,
   },
 );
 

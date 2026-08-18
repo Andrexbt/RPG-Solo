@@ -84,21 +84,7 @@ function selecionarAventura(evento) {
 }
 
 function carregarPersonagensSalvos() {
-  try {
-    const dadosSalvos = localStorage.getItem("personagensRpgSolo");
-
-    if (!dadosSalvos) {
-      return [];
-    }
-
-    const personagens = JSON.parse(dadosSalvos);
-
-    return Array.isArray(personagens) ? personagens : [];
-  } catch (erro) {
-    console.error("Não foi possível carregar os personagens.", erro);
-
-    return [];
-  }
+  return window.PersonagemDados.listarSalvos();
 }
 
 function criarCardPersonagem(personagem) {

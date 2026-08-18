@@ -1,51 +1,12 @@
 "use strict";
 
-function realizarRolagemComposta(configuracao) {
-  const gruposDeDados = Array.isArray(configuracao?.gruposDeDados)
-    ? configuracao.gruposDeDados
-    : [];
-
-  const gruposRolados = gruposDeDados.map(function rolarGrupo(grupo) {
-    const quantidade = Number(grupo.quantidade) || 0;
-    const numeroDeFaces = Number(grupo.numeroDeFaces) || 0;
-    const resultados = [];
-
-    for (let indice = 0; indice < quantidade; indice += 1) {
-      resultados.push(
-        Math.floor(Math.random() * numeroDeFaces) + 1,
-      );
-    }
-
-    const total = resultados.reduce(
-      function somarResultados(soma, resultado) {
-        return soma + resultado;
-      },
-      0,
+function realizarRolagemComposta(
+  configuracao,
+) {
+  return window.MotorDados
+    .realizarRolagemComposta(
+      configuracao,
     );
-
-    return {
-      quantidade,
-      numeroDeFaces,
-      resultados,
-      total,
-    };
-  });
-
-  const subtotal = gruposRolados.reduce(
-    function somarGrupos(soma, grupo) {
-      return soma + grupo.total;
-    },
-    0,
-  );
-
-  const modificador = Number(configuracao?.modificador) || 0;
-
-  return {
-    gruposRolados,
-    subtotal,
-    modificador,
-    total: subtotal + modificador,
-  };
 }
 
 function formatarResultadoRolagem(rolagem) {

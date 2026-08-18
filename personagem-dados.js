@@ -174,6 +174,177 @@ function obterNivelClasse(
   return 0;
 }
 
+const CHAVE_PERSONAGENS_SALVOS = "personagensRpgSolo";
+
+function listarPersonagensSalvos() {
+  try {
+    const dadosSalvos =
+      localStorage.getItem(CHAVE_PERSONAGENS_SALVOS);
+
+    if (dadosSalvos === null) {
+      return [];
+    }
+
+    const personagens =
+      JSON.parse(dadosSalvos);
+
+    if (!Array.isArray(personagens)) {
+      console.error(
+        "Os personagens salvos não possuem o formato esperado.",
+      );
+
+      return [];
+    }
+
+    return personagens.map(function (personagem) {
+      return normalizarPersonagem(personagem);
+    });
+  } catch (erro) {
+    console.error(
+      "Não foi possível ler os personagens salvos.",
+      erro,
+    );
+
+    return [];
+  }
+}
+
+function buscarPersonagemSalvoPorId(idPersonagem) {
+  if (!idPersonagem) {
+    return null;
+  }
+
+  const personagens =
+    listarPersonagensSalvos();
+
+  const personagemEncontrado =
+    personagens.find(function (personagem) {
+      return personagem.id === idPersonagem;
+    });
+
+  return personagemEncontrado ?? null;
+}
+
+function salvarPersonagensSalvos(personagens) {
+  if (!Array.isArray(personagens)) {
+    console.error(
+      "A lista de personagens possui um formato inválido.",
+    );
+
+    return false;
+  }
+
+  try {
+    const personagensNormalizados =
+      personagens.map(function (personagem) {
+        return normalizarPersonagem(personagem);
+      });
+
+    localStorage.setItem(
+      CHAVE_PERSONAGENS_SALVOS,
+      JSON.stringify(personagensNormalizados),
+    );
+
+    return true;
+  } catch (erro) {
+    console.error(
+      "Não foi possível salvar os personagens.",
+      erro,
+    );
+
+    return false;
+  }
+}
+
+function adicionarPersonagemSalvo(
+  personagemOriginal,
+) {
+  if (
+    personagemOriginal === null ||
+    typeof personagemOriginal !== "object"
+  ) {
+    console.error(
+      "O personagem informado é inválido.",
+    );
+
+    return null;
+  }
+
+  const personagemParaSalvar =
+    normalizarPersonagem(
+      personagemOriginal,
+    );
+
+  if (!personagemParaSalvar.id) {
+    personagemParaSalvar.id =
+      crypto.randomUUID();
+  }
+
+  if (!personagemParaSalvar.criadoEm) {
+    personagemParaSalvar.criadoEm =
+      new Date().toISOString();
+  }
+
+  const personagens =
+    listarPersonagensSalvos();
+
+  const idJaExiste =
+    personagens.some(function (personagem) {
+      return (
+        personagem.id ===
+        personagemParaSalvar.id
+      );
+    });
+
+  if (idJaExiste) {
+    console.error(
+      "Já existe um personagem com esse identificador.",
+    );
+
+    return null;
+  }
+
+  personagens.push(
+    personagemParaSalvar,
+  );
+
+  const personagemFoiSalvo =
+    salvarPersonagensSalvos(
+      personagens,
+    );
+
+  if (!personagemFoiSalvo) {
+    return null;
+  }
+
+  return personagemParaSalvar;
+}
+
+function excluirPersonagemSalvoPorId(idPersonagem) {
+  if (!idPersonagem) {
+    return false;
+  }
+
+  const personagens =
+    listarPersonagensSalvos();
+
+  const personagensRestantes =
+    personagens.filter(function (personagem) {
+      return personagem.id !== idPersonagem;
+    });
+
+  if (
+    personagensRestantes.length ===
+    personagens.length
+  ) {
+    return false;
+  }
+
+  return salvarPersonagensSalvos(
+    personagensRestantes,
+  );
+}
+
 function migrarPersonagensSalvos() {
   const chavePersonagens =
     "personagensRpgSolo";
@@ -277,9 +448,24 @@ window.PersonagemDados = {
   normalizar:
     normalizarPersonagem,
 
-    obterNivelClasse:
+  obterNivelClasse:
     obterNivelClasse,
 
-    migrarSalvos:
-    migrarPersonagensSalvos
+  listarSalvos:
+    listarPersonagensSalvos,
+
+  buscarSalvoPorId:
+    buscarPersonagemSalvoPorId,
+
+    salvarLista:
+    salvarPersonagensSalvos,
+
+    adicionarSalvo:
+  adicionarPersonagemSalvo,
+
+    excluirSalvoPorId:
+    excluirPersonagemSalvoPorId,
+
+  migrarSalvos:
+    migrarPersonagensSalvos,
 };

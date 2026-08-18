@@ -3870,32 +3870,9 @@ function salvarPersonagemLocal() {
   atualizarPericiasPersonagem();
   atualizarIdiomasPersonagem();
 
-  let personagensSalvos = [];
-
-  try {
-    const dadosSalvos = localStorage.getItem("personagensRpgSolo");
-    const dadosConvertidos = dadosSalvos === null ? [] : JSON.parse(dadosSalvos);
-
-    if (Array.isArray(dadosConvertidos)) {
-      personagensSalvos = dadosConvertidos;
-    }
-  } catch (erro) {
-    console.error("Não foi possível ler os personagens salvos.", erro);
-  }
-
-  const personagemParaSalvar =
-  window.PersonagemDados.normalizar(
-    personagem
+  return window.PersonagemDados.adicionarSalvo(
+    personagem,
   );
-
-  personagemParaSalvar.id = crypto.randomUUID();
-  personagemParaSalvar.criadoEm = new Date().toISOString();
-
-  personagensSalvos.push(personagemParaSalvar);
-
-  localStorage.setItem("personagensRpgSolo", JSON.stringify(personagensSalvos));
-
-  return personagemParaSalvar;
 }
 
 botaoFinalizarPersonagem.addEventListener("click", function () {
@@ -3904,6 +3881,20 @@ botaoFinalizarPersonagem.addEventListener("click", function () {
   }
 
   const personagemSalvo = salvarPersonagemLocal();
+
+  if (!personagemSalvo) {
+  const mensagem =
+    document.getElementById(
+      "mensagemRevisao",
+    );
+
+  if (mensagem !== null) {
+    mensagem.textContent =
+      "Não foi possível salvar o personagem.";
+  }
+
+  return;
+}
 
   personagemJaFoiSalvo = true;
 
