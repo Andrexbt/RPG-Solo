@@ -33,16 +33,31 @@ estadoAtualJogo.personagem.dados = personagemSelecionado
   ? structuredClone(personagemSelecionado)
   : null;
 
-function renderizarFichaDaAventura() {
-  const areaFicha = document.getElementById("conteudoFicha");
 
-  if (personagemSelecionado === null) {
-    areaFicha.innerHTML = "<p>Nenhum personagem foi selecionado.</p>";
+function renderizarFichaDaAventura() {
+  const areaFicha =
+    document.getElementById("conteudoFicha");
+
+  const personagemAtual =
+    estadoAtualJogo.personagem.dados;
+
+  if (!personagemAtual) {
+    areaFicha.innerHTML =
+      "<p>Nenhum personagem foi selecionado.</p>";
+
     return;
   }
 
-  window.FichaPersonagem.renderizar(personagemSelecionado, areaFicha);
+  window.FichaPersonagem.renderizar(
+    personagemAtual,
+    areaFicha
+  );
 }
+
+document.addEventListener(
+  "personagemAtualizado",
+  renderizarFichaDaAventura
+);
 
 window.FichaPersonagem
   .iniciarComponente()

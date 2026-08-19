@@ -18,6 +18,18 @@
         return window.estadoJogo?.personagem?.dados ?? null;
     }
 
+    function atualizarPersonagemEmJogo(personagem) {
+    window.estadoJogo.personagem.dados = personagem;
+
+    document.dispatchEvent(
+        new CustomEvent("personagemAtualizado", {
+            detail: {
+                personagem
+            }
+        })
+    );
+}
+
     function obterTempoAtual() {
         return window.MotorTempo?.obterTempoAtual?.() ?? 0;
     }
@@ -214,7 +226,7 @@
             };
         }
 
-        window.estadoJogo.personagem.dados = personagemSalvo;
+        atualizarPersonagemEmJogo(personagemSalvo);
 
         window.MotorTempo.avancar(preparacao.duracao);
 
@@ -327,7 +339,7 @@ function iniciarDescansoCurto() {
 
     const tempoInicio = obterTempoAtual();
 
-    window.estadoJogo.personagem.dados = personagemSalvo;
+    atualizarPersonagemEmJogo(personagemSalvo);
 
     window.MotorTempo.avancar(DURACAO_DESCANSO_CURTO);
 
@@ -350,7 +362,7 @@ function iniciarDescansoCurto() {
     };
 }
 
-function gastarDadoVida() {
+function prepararGastoDadoVida() {
     const registroDescansos = obterRegistroDescansos();
     const descanso = registroDescansos.descansoCurtoAtual;
 
@@ -362,8 +374,7 @@ function gastarDadoVida() {
     }
 
     const personagem = obterPersonagemAtual();
-    const personagemAtualizado = copiar(personagem);
-    const pontosDeVida = obterPontosDeVida(personagemAtualizado);
+    const pontosDeVida = obterPontosDeVida(personagem);
 
     if (!pontosDeVida) {
         return {
@@ -373,7 +384,9 @@ function gastarDadoVida() {
     }
 
     const vidaAtual = Number(pontosDeVida.atuais ?? 0);
-    const vidaMaxima = Number(pontosDeVida.maximo ?? vidaAtual);
+    const vidaMaxima = Number(
+        pontosDeVida.maximo ?? vidaAtual
+    );
 
     if (vidaAtual >= vidaMaxima) {
         return {
@@ -384,7 +397,7 @@ function gastarDadoVida() {
 
     const nivel = Math.max(
         1,
-        Number(personagemAtualizado.nivel) || 1
+        Number(personagem.nivel) || 1
     );
 
     const dadosVidaUsados = Number(
@@ -407,18 +420,75 @@ function gastarDadoVida() {
         };
     }
 
-    const resultadoDado = window.MotorDados.rolarDado(faces);
-
     const constituicao = Number(
-        personagemAtualizado.atributos?.constituicao ?? 10
+        personagem.atributos?.constituicao ?? 10
     );
 
     const modificadorConstituicao =
         calcularModificadorAtributo(constituicao);
 
+    return {
+        sucesso: true,
+        dado: `d${faces}`,
+        faces,
+        modificadorConstituicao,
+
+        solicitacao: {
+            gruposDeDados: [
+                {
+                    quantidade: 1,
+                    numeroDeFaces: faces
+                }
+            ],
+            modificador: modificadorConstituicao,
+            descricao: "Dado de Vida",
+            quantidadeDeRolagens: 1
+        }
+    };
+}
+
+function aplicarResultadoDadoVida(resultadoRolagem) {
+    const preparacao = prepararGastoDadoVida();
+
+    if (!preparacao.sucesso) {
+        return preparacao;
+    }
+
+    const resultadoDado = Number(
+        resultadoRolagem?.subtotal
+    );
+
+    if (!Number.isInteger(resultadoDado)) {
+        return {
+            sucesso: false,
+            motivo: "resultadoDadoInvalido"
+        };
+    }
+
+    const personagemAtualizado = copiar(
+        obterPersonagemAtual()
+    );
+
+    const pontosDeVida = obterPontosDeVida(
+        personagemAtualizado
+    );
+
+    const vidaAtual = Number(
+        pontosDeVida.atuais ?? 0
+    );
+
+    const vidaMaxima = Number(
+        pontosDeVida.maximo ?? vidaAtual
+    );
+
+    const dadosVidaUsados = Number(
+        pontosDeVida.dadosVidaUsados ?? 0
+    );
+
     const curaCalculada = Math.max(
         0,
-        resultadoDado + modificadorConstituicao
+        resultadoDado
+            + preparacao.modificadorConstituicao
     );
 
     const novaVida = Math.min(
@@ -429,7 +499,8 @@ function gastarDadoVida() {
     const curaAplicada = novaVida - vidaAtual;
 
     pontosDeVida.atuais = novaVida;
-    pontosDeVida.dadosVidaUsados = dadosVidaUsados + 1;
+    pontosDeVida.dadosVidaUsados =
+        dadosVidaUsados + 1;
 
     const personagemSalvo =
         window.PersonagemDados?.atualizarSalvo?.(
@@ -443,22 +514,33 @@ function gastarDadoVida() {
         };
     }
 
-    window.estadoJogo.personagem.dados = personagemSalvo;
+    atualizarPersonagemEmJogo(personagemSalvo);
 
     const resultado = {
-        dado: `d${faces}`,
+        dado: preparacao.dado,
         resultadoDado,
-        modificadorConstituicao,
+        modificadorConstituicao:
+            preparacao.modificadorConstituicao,
         curaCalculada,
         curaAplicada,
         vidaAnterior: vidaAtual,
         vidaAtual: novaVida,
         vidaMaxima,
         dadosVidaUsados: dadosVidaUsados + 1,
-        dadosVidaMaximos: nivel
+        dadosVidaMaximos:
+            Math.max(
+                1,
+                Number(personagemSalvo.nivel) || 1
+            )
     };
 
-    descanso.dadosVidaGastos.push(resultado);
+    const registroDescansos =
+        obterRegistroDescansos();
+
+    registroDescansos
+        .descansoCurtoAtual
+        .dadosVidaGastos
+        .push(resultado);
 
     return {
         sucesso: true,
@@ -489,7 +571,8 @@ function encerrarDescansoCurto() {
     window.SistemaDescansos = {
         validarDescansoCurto,
     iniciarDescansoCurto,
-    gastarDadoVida,
+    prepararGastoDadoVida,
+aplicarResultadoDadoVida,
     encerrarDescansoCurto,
     validarDescansoLongo,
     prepararDescansoLongo,

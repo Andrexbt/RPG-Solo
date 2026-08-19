@@ -3,6 +3,7 @@
 window.MotorAventura = (function () {
   const estado = {
     testeAtivo: null,
+    descansoCurtoPendente: null,
   };
 
   function obterPersonagem() {
@@ -510,6 +511,257 @@ dano = Math.max(
   return true;
 }
 
+async function resolverDescansoCurto(configuracao = {}) {
+    const resultadoInicial =
+        window.SistemaDescansos?.iniciarDescansoCurto?.();
+
+    if (!resultadoInicial?.sucesso) {
+        console.warn(
+            "Não foi possível iniciar o descanso curto:",
+            resultadoInicial
+        );
+
+        await exibirContexto(
+            "Você não pode realizar um descanso curto neste momento."
+        );
+
+        return;
+    }
+
+    await exibirContexto(
+        "Após uma hora de repouso, você conclui um descanso curto."
+    );
+
+    async function mostrarDecisoesDoDescanso() {
+        const personagem =
+            window.estadoJogo?.personagem?.dados;
+
+        const pontosDeVida =
+            personagem?.combate?.pontosDeVida;
+
+        const vidaAtual =
+            Number(pontosDeVida?.atuais ?? 0);
+
+        const vidaMaxima =
+            Number(pontosDeVida?.maximo ?? vidaAtual);
+
+        const dadosUsados =
+            Number(pontosDeVida?.dadosVidaUsados ?? 0);
+
+        const dadosMaximos =
+            Math.max(1, Number(personagem?.nivel) || 1);
+
+        const escolhas = [];
+
+        if (
+            vidaAtual < vidaMaxima
+            && dadosUsados < dadosMaximos
+        ) {
+            escolhas.push({
+                id: "descanso-curto-gastar-dado-vida",
+                texto: `Gastar um Dado de Vida (${dadosUsados}/${dadosMaximos} usados)`,
+                registrarNarrativa: false,
+
+                __acaoMotor: async function gastarDadoVidaNoDescanso() {
+    const preparacao =
+        window.SistemaDescansos
+            .prepararGastoDadoVida();
+
+    if (!preparacao?.sucesso) {
+        console.warn(
+            "Não foi possível preparar o Dado de Vida:",
+            preparacao
+        );
+
+        await exibirContexto(
+            "Você não pode gastar outro Dado de Vida."
+        );
+
+        await mostrarDecisoesDoDescanso();
+        return;
+    }
+
+    if (
+        typeof window.configurarRolagemSolicitada
+        !== "function"
+    ) {
+        console.warn(
+            "A caixa de dados não está disponível."
+        );
+
+        return;
+    }
+
+    exibirEscolhas([]);
+
+    await NarradorAventura.adicionarTeste(
+        `Lance ${preparacao.dado} para recuperar pontos de vida.`
+    );
+
+    estado.descansoCurtoPendente = {
+        resolver: async function resolverDadoVida(
+            resultadoRolagem
+        ) {
+            const resultado =
+                window.SistemaDescansos
+                    .aplicarResultadoDadoVida(
+                        resultadoRolagem
+                    );
+
+            if (!resultado?.sucesso) {
+                console.warn(
+                    "Não foi possível aplicar o Dado de Vida:",
+                    resultado
+                );
+
+                await exibirContexto(
+                    "Não foi possível aplicar o resultado do Dado de Vida."
+                );
+
+                await mostrarDecisoesDoDescanso();
+                return;
+            }
+
+            const dados = resultado.resultado;
+
+            const sinalModificador =
+                dados.modificadorConstituicao >= 0
+                    ? "+"
+                    : "";
+
+            await exibirContexto(
+                `Você rolou ${dados.dado}: `
+                + `${dados.resultadoDado} `
+                + `${sinalModificador}`
+                + `${dados.modificadorConstituicao} `
+                + `de Constituição e recuperou `
+                + `${dados.curaAplicada} pontos de vida. `
+                + `Seus PV agora são `
+                + `${dados.vidaAtual}/${dados.vidaMaxima}.`
+            );
+
+            await mostrarDecisoesDoDescanso();
+        }
+    };
+
+    window.configurarRolagemSolicitada(
+        preparacao.solicitacao
+    );
+}
+            });
+        }
+
+        escolhas.push({
+            id: "descanso-curto-encerrar",
+            texto: "Continuar a aventura",
+            registrarNarrativa: false,
+
+            __acaoMotor: async function encerrarDescansoCurtoNarrativo() {
+                const resultado =
+                    window.SistemaDescansos.encerrarDescansoCurto();
+
+                if (!resultado?.sucesso) {
+                    console.warn(
+                        "Não foi possível encerrar o descanso curto:",
+                        resultado
+                    );
+
+                    return;
+                }
+
+                exibirEscolhas([]);
+
+                if (configuracao.aoConcluir) {
+                    await aplicarConsequencia(
+                        configuracao.aoConcluir
+                    );
+                }
+            }
+        });
+
+        exibirEscolhas(escolhas);
+    }
+
+    await mostrarDecisoesDoDescanso();
+}
+
+async function resolverDescansoLongo(configuracao = {}) {
+    const resultado =
+        window.SistemaDescansos
+            ?.realizarDescansoLongo?.();
+
+    if (!resultado?.sucesso) {
+        const mensagensPorMotivo = {
+            personagemAusente:
+                "Nenhum personagem está disponível para descansar.",
+
+            combateAtivo:
+                "Você não pode realizar um descanso longo durante um combate.",
+
+            personagemSemPontosDeVida:
+                "Você precisa ter pelo menos 1 ponto de vida para iniciar um descanso longo.",
+
+            intervaloDescansoLongo:
+                "Ainda não passou tempo suficiente desde seu último descanso longo.",
+
+            erroAoSalvarPersonagem:
+                "Não foi possível salvar os efeitos do descanso longo."
+        };
+
+        await exibirContexto(
+            mensagensPorMotivo[resultado?.motivo]
+            ?? "Você não pode realizar um descanso longo neste momento."
+        );
+
+        console.warn(
+            "Não foi possível realizar o descanso longo:",
+            resultado
+        );
+
+        return;
+    }
+
+    const recuperacao = resultado.recuperacao;
+
+    const partesMensagem = [
+        "Após oito horas de repouso, você conclui um descanso longo.",
+        `Seus pontos de vida foram restaurados para ${
+            recuperacao.pontosDeVida.atual
+        }.`
+    ];
+
+    if (recuperacao.dadosVidaRecuperados > 0) {
+        partesMensagem.push(
+            `Você recuperou ${
+                recuperacao.dadosVidaRecuperados
+            } Dado(s) de Vida.`
+        );
+    }
+
+    if (recuperacao.recursos.length > 0) {
+        const nomesRecursos =
+            recuperacao.recursos
+                .map(function (recurso) {
+                    return recurso.nome;
+                })
+                .join(", ");
+
+        partesMensagem.push(
+            `Recursos recuperados: ${nomesRecursos}.`
+        );
+    }
+
+    await exibirContexto(
+        partesMensagem.join(" ")
+    );
+
+    if (configuracao.aoConcluir) {
+        await aplicarConsequencia(
+            configuracao.aoConcluir
+        );
+    }
+}
+
   async function aplicarConsequencia(consequencia) {
     if (!consequencia) {
       console.warn("Consequência da aventura não encontrada.");
@@ -555,6 +807,27 @@ if (consequencia.memorias) {
   );
 
   return;
+}
+
+if (consequencia.descanso) {
+    const descanso = consequencia.descanso;
+
+    if (descanso.tipo === "curto") {
+        await resolverDescansoCurto(descanso);
+        return;
+    }
+
+    if (descanso.tipo === "longo") {
+    await resolverDescansoLongo(descanso);
+    return;
+}
+
+    console.warn(
+        "Tipo de descanso desconhecido.",
+        descanso.tipo
+    );
+
+    return;
 }
 
     if (consequencia.teste) {
@@ -652,6 +925,24 @@ if (consequencia.memorias) {
             combate.danoPendente
           ),
       );
+
+      if (
+  estado.descansoCurtoPendente
+  && !rolagemPertenceAoCombate
+) {
+  evento.stopImmediatePropagation();
+
+  const pendencia =
+    estado.descansoCurtoPendente;
+
+  estado.descansoCurtoPendente = null;
+
+  void pendencia.resolver(
+    evento.detail
+  );
+
+  return;
+}
 
     if (
       !estado.testeAtivo ||
