@@ -878,7 +878,7 @@ const bancoAventuras = {
 
             ataqueNpc: {
               npcId: "guardaConde",
-              ataqueId: "arcoCurto",
+              ataqueId: "bestaLeve",
 
               resultados: {
                 erro: {
@@ -929,7 +929,7 @@ const bancoAventuras = {
 
             ataqueNpc: {
               npcId: "guardaConde",
-              ataqueId: "arcoCurto",
+              ataqueId: "bestaLeve",
               dano: {
                 substituirModificador: -3,
                 minimo: 1,
@@ -1046,6 +1046,7 @@ const bancoAventuras = {
         ],
 
         combate: {
+          dificuldadePretendida: "baixa",
           mapa: "Imagens/Mapas/A Fuga/batalha1ruas.webp",
 
           jogador: {

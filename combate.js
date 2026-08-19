@@ -69,6 +69,8 @@ habilidades:
     return {
       id: configuracao.id,
       status: "ativo",
+      encontro: structuredClone(
+        configuracao.encontro ?? null,),
 
       rodada: 1,
       indiceTurno: 0,

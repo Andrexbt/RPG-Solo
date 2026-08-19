@@ -27,6 +27,11 @@ function criarEstadoInicialJogo() {
       segundosTotais: 0,
     },
 
+    descansos: {
+    ultimoDescansoLongoConcluidoEm: null,
+    descansoCurtoAtual: null
+},
+
     efeitosTemporarios: [],
     diario: [],
   };
@@ -69,15 +74,45 @@ function registrarMemorias(memorias) {
 }
 
 function carregarNpcsDaAventura(aventuraId) {
-  const npcsDaAventura = window.bancoNpcs?.[aventuraId];
+  const npcsDaAventura =
+    window.bancoNpcs?.[aventuraId];
 
   if (!npcsDaAventura) {
-    console.warn("NPCs não encontrados para a aventura:", aventuraId);
+    console.warn(
+      "NPCs não encontrados para a aventura:",
+      aventuraId,
+    );
+
     window.estadoJogo.npcs = {};
+
     return;
   }
 
-  window.estadoJogo.npcs = structuredClone(npcsDaAventura);
+  const npcsCarregados = {};
+
+  for (
+    const [npcId, configuracaoNpc]
+    of Object.entries(npcsDaAventura)
+  ) {
+    const npc =
+      window.CriaturaDados
+        ?.criarNpcAPartirDoBloco(
+          configuracaoNpc,
+        );
+
+    if (!npc) {
+      console.warn(
+        "Não foi possível carregar o NPC:",
+        npcId,
+      );
+
+      continue;
+    }
+
+    npcsCarregados[npcId] = npc;
+  }
+
+  window.estadoJogo.npcs = npcsCarregados;
 }
 
 window.estadoJogo = criarEstadoInicialJogo();

@@ -3961,7 +3961,12 @@ function atualizarRecursosHabilidadesPersonagem() {
       nome: recurso.nome,
       usosAtuais: recurso.usosMaximos,
       usosMaximos: recurso.usosMaximos,
-      recuperaEm: recurso.recuperaEm,
+
+      recuperacao:
+        structuredClone(
+          recurso.recuperacao ?? null,
+        ),
+
       efeito: recurso.efeito,
       formula: formatarFormulaRecurso(recurso.formula),
     };

@@ -86,6 +86,21 @@ window.narracaoCombate = {
       ],
     },
 
+    cimitarra: {
+      acertou: [
+        "{atacante} atinge {alvo} com a cimitarra, causando {dano} de dano.",
+        "{atacante} desfere um corte com a cimitarra contra {alvo}, causando {dano} de dano.",
+      ],
+
+      critico: [
+        "{atacante} encontra uma abertura e desfere um golpe preciso com a cimitarra contra {alvo}, causando {dano} de dano.",
+      ],
+
+      derrotou: [
+        "{atacante} atinge {alvo} com a cimitarra, causando {dano} de dano. {alvo} cai sem conseguir continuar lutando.",
+      ],
+    },
+
     bestaLeve: {
       acertou: [
         "O virote disparado por {atacante} atinge {alvo}, causando {dano} de dano.",

@@ -124,96 +124,13 @@ window.bancoNpcs = {
       nome: "Guarda",
       tipo: "inimigo",
 
+      blocoCriaturaId: "bandido",
+
       avatar: {
         imagem: "Imagens/Avatares/npcs/guardaConde.webp",
 
         frame: "Imagens/Avatares/frame/frame-07.webp",
       },
-
-      atributos: {
-        forca: 13,
-        destreza: 12,
-        constituicao: 12,
-        inteligencia: 10,
-        sabedoria: 11,
-        carisma: 10,
-      },
-
-      bonusProficiencia: 2,
-      pericias: ["atletismo", "percepcao"],
-      salvaguardas: [],
-
-      combate: {
-        classeArmadura: 14,
-
-        pontosDeVida: {
-          atuais: 11,
-          maximo: 11,
-        },
-      },
-
-      ataques: [
-        {
-          id: "espadaCurta",
-          nome: "Espada curta",
-          categoria: "corpoACorpo",
-
-          selecao: {
-            tipo: "criatura",
-
-            alcance: {
-              normal: 1,
-            },
-
-            area: null,
-          },
-
-          bonusAtaque: 3,
-
-          dano: {
-            gruposDeDados: [
-              {
-                quantidade: 1,
-                numeroDeFaces: 6,
-              },
-            ],
-
-            modificador: 1,
-            tipo: "perfurante",
-          },
-        },
-
-        {
-          id: "arcoCurto",
-          nome: "Arco curto",
-          categoria: "distancia",
-
-          selecao: {
-            tipo: "criatura",
-
-            alcance: {
-              normal: 16,
-              longo: 64,
-            },
-
-            area: null,
-          },
-
-          bonusAtaque: 3,
-
-          dano: {
-            gruposDeDados: [
-              {
-                quantidade: 1,
-                numeroDeFaces: 6,
-              },
-            ],
-
-            modificador: 1,
-            tipo: "perfurante",
-          },
-        },
-      ],
 
       narracao: {
         categoria: "humanoide",
@@ -223,12 +140,12 @@ window.bancoNpcs = {
         },
 
         ataques: {
-          espadaCurta: {
-            tipoNarrativo: "espadaCurta",
+          cimitarra: {
+            tipoNarrativo: "cimitarra",
           },
 
-          arcoCurto: {
-            tipoNarrativo: "arcoCurto",
+          bestaLeve: {
+            tipoNarrativo: "bestaLeve",
           },
         },
       },

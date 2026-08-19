@@ -164,4 +164,33 @@ window.mensagensNarrativas = {
       return `${nome} não conseguiu concluir o turno.`;
     },
   },
+
+  progressao: {
+    xpRecebido: function (
+      quantidade,
+      xpTotal,
+    ) {
+      return (
+        `Você recebeu <strong>${quantidade} XP</strong>. ` +
+        `Seu total agora é <strong>${xpTotal} XP</strong>.`
+      );
+    },
+
+    novoNivelDisponivel: function (
+      nivel,
+    ) {
+      return (
+        `Você alcançou XP suficiente para o ` +
+        `<strong>nível ${nivel}</strong>. ` +
+        "A evolução do personagem estará disponível após a aventura."
+      );
+    },
+
+    erroAoConcederXp:
+      "Não foi possível registrar a recompensa de experiência.",
+
+      erroAoSalvarCombate:
+      "Não foi possível salvar todas as alterações causadas pelo combate.",
+  },
+
 };

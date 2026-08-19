@@ -185,25 +185,441 @@ function notificarFimCombate(combate) {
   );
 }
 
-function processarResultadoCombate(evento) {
-  const idResultado = evento.detail?.resultado;
-  const resultado = cenaAtual.combate?.resultados?.[idResultado];
+function persistirPersonagemAposCombate(
+  combate,
+) {
+  const personagemAtual =
+    estadoAtualJogo
+      .personagem
+      .dados;
+
+  if (!personagemAtual?.id) {
+    return {
+      sucesso: false,
+      motivo: "personagemInvalido",
+    };
+  }
+
+  const participanteJogador =
+    combate
+      ?.participantes
+      ?.find(
+        function (participante) {
+          return (
+            participante.tipo ===
+            "jogador"
+          );
+        },
+      );
+
+  if (!participanteJogador) {
+    return {
+      sucesso: false,
+      motivo:
+        "participanteJogadorNaoEncontrado",
+    };
+  }
+
+  const personagemAtualizado =
+    structuredClone(
+      personagemAtual,
+    );
+
+  if (
+    !personagemAtualizado.combate ||
+    typeof personagemAtualizado.combate !==
+      "object"
+  ) {
+    personagemAtualizado.combate = {};
+  }
+
+  personagemAtualizado
+    .combate
+    .pontosDeVida =
+      structuredClone(
+        participanteJogador
+          .pontosDeVida,
+      );
+
+  if (
+    participanteJogador
+      .habilidades
+      ?.recursos
+  ) {
+    if (
+      !personagemAtualizado
+        .habilidades ||
+      typeof personagemAtualizado
+        .habilidades !== "object"
+    ) {
+      personagemAtualizado
+        .habilidades = {};
+    }
+
+    personagemAtualizado
+      .habilidades
+      .recursos =
+        structuredClone(
+          participanteJogador
+            .habilidades
+            .recursos,
+        );
+  }
+
+  const personagemSalvo =
+    window.PersonagemDados
+      .atualizarSalvo(
+        personagemAtualizado,
+      );
+
+  if (!personagemSalvo) {
+    return {
+      sucesso: false,
+      motivo: "falhaAoPersistir",
+    };
+  }
+
+  estadoAtualJogo
+    .personagem
+    .dados =
+      personagemSalvo;
+
+  const resultado = {
+    sucesso: true,
+    motivo: null,
+
+    personagem:
+      personagemSalvo,
+
+    pontosDeVida:
+      structuredClone(
+        personagemSalvo
+          .combate
+          .pontosDeVida,
+      ),
+
+    recursos:
+      structuredClone(
+        personagemSalvo
+          .habilidades
+          ?.recursos
+          ?? {},
+      ),
+  };
+
+  combate.persistenciaPersonagem =
+    {
+      sucesso: true,
+
+      pontosDeVida:
+        structuredClone(
+          resultado.pontosDeVida,
+        ),
+
+      recursos:
+        structuredClone(
+          resultado.recursos,
+        ),
+    };
+
+  return resultado;
+}
+
+function concederXpDaVitoria(
+  combate,
+) {
+  const personagem =
+    estadoAtualJogo
+      .personagem
+      .dados;
+
+  const xpEncontro =
+    Number(
+      combate
+        ?.encontro
+        ?.avaliacao
+        ?.xpTotal,
+    );
+
+  if (!personagem?.id) {
+    return {
+      sucesso: false,
+      concedida: false,
+      motivo: "personagemInvalido",
+    };
+  }
+
+  if (
+    !Number.isInteger(xpEncontro) ||
+    xpEncontro <= 0
+  ) {
+    return {
+      sucesso: false,
+      concedida: false,
+      motivo: "xpEncontroInvalido",
+    };
+  }
+
+  const recompensaId =
+    `combate:${combate.id}:vitoria:xp`;
+
+  const resultadoXp =
+    window.SistemaProgressao
+      .concederXp(
+        personagem,
+        {
+          id: recompensaId,
+          tipo: "xp",
+          quantidade: xpEncontro,
+
+          origem: {
+            tipo: "combate",
+            aventuraId:
+              aventuraAtual.id,
+
+            cenaId:
+              estadoAtualJogo
+                .progresso
+                .cenaId,
+
+            combateId:
+              combate.id,
+
+            resultado:
+              "vitoria",
+          },
+        },
+      );
+
+  if (
+    resultadoXp.sucesso &&
+    resultadoXp.personagem
+  ) {
+    estadoAtualJogo
+      .personagem
+      .dados =
+        resultadoXp.personagem;
+  }
+
+  combate.recompensaXp = {
+    id: recompensaId,
+    sucesso:
+      resultadoXp.sucesso,
+
+    concedida:
+      resultadoXp.concedida,
+
+    motivo:
+      resultadoXp.motivo,
+
+    quantidade:
+      xpEncontro,
+
+    xpAnterior:
+      resultadoXp.xpAnterior,
+
+    xpAtual:
+      resultadoXp.xpAtual,
+
+    novoNivelDisponivel:
+      resultadoXp
+        .novoNivelDisponivel
+        ?? false,
+
+    nivelAtualPorXp:
+      resultadoXp
+        .nivelAtualPorXp
+        ?? null,
+  };
+
+  return resultadoXp;
+}
+
+function processarResultadoCombate(
+  evento,
+) {
+  const idResultado =
+    evento.detail?.resultado;
+
+  const combate =
+    evento.detail?.combate;
+
+  const resultado =
+    cenaAtual
+      .combate
+      ?.resultados
+      ?.[idResultado];
 
   if (!resultado) {
-    console.warn("Consequência de combate não encontrada:", idResultado);
+    console.warn(
+      "Consequência de combate não encontrada:",
+      idResultado,
+    );
+
     return;
   }
 
-  setTimeout(function exibirResultadoCombate() {
-    exibirTelaAventura();
-    exibirContexto(resultado.contexto);
-    ocultarEscolhas();
-  }, 1200);
+  const contextoResultado =
+    Array.isArray(resultado.contexto)
+      ? [...resultado.contexto]
+      : [resultado.contexto];
+
+        if (combate) {
+    const persistencia =
+      persistirPersonagemAposCombate(
+        combate,
+      );
+
+    if (!persistencia.sucesso) {
+      console.error(
+        "Não foi possível persistir o personagem após o combate:",
+        persistencia.motivo,
+      );
+
+      contextoResultado.push(
+        mensagensNarrativas
+          .progressao
+          .erroAoSalvarCombate,
+      );
+    }
+  }
+
+  if (
+    idResultado === "vitoria" &&
+    combate
+  ) {
+    const resultadoXp =
+      concederXpDaVitoria(
+        combate,
+      );
+
+    if (!resultadoXp.sucesso) {
+      contextoResultado.push(
+        mensagensNarrativas
+          .progressao
+          .erroAoConcederXp,
+      );
+    } else if (
+      resultadoXp.concedida
+    ) {
+      contextoResultado.push(
+        mensagensNarrativas
+          .progressao
+          .xpRecebido(
+            resultadoXp
+              .recompensa
+              .quantidade,
+
+            resultadoXp.xpAtual,
+          ),
+      );
+
+      if (
+        resultadoXp
+          .novoNivelDisponivel
+      ) {
+        contextoResultado.push(
+          mensagensNarrativas
+            .progressao
+            .novoNivelDisponivel(
+              resultadoXp
+                .nivelAtualPorXp,
+            ),
+        );
+      }
+    }
+  }
+
+  setTimeout(
+    function exibirResultadoCombate() {
+      exibirTelaAventura();
+
+      exibirContexto(
+        contextoResultado,
+      );
+
+      ocultarEscolhas();
+    },
+    1200,
+  );
 }
 
 function verificarCombateDaCena(cena) {
   if (!cena.combate || estadoAtualJogo.combateAtual?.status === "ativo") {
     return;
+  }
+
+    const nivelPersonagem =
+    Number(
+      estadoAtualJogo
+        .personagem
+        .dados
+        ?.nivel,
+    ) || 1;
+
+  const avaliacaoEncontro =
+    window.SistemaEncontros
+      ?.avaliarEncontro({
+        inimigos:
+          cena.combate.inimigos,
+
+        catalogoNpcs:
+          estadoAtualJogo.npcs,
+
+        nivelPersonagem,
+
+        quantidadePersonagens: 1,
+      });
+
+  if (!avaliacaoEncontro) {
+    console.error(
+      "Não foi possível avaliar o encontro.",
+    );
+
+    return;
+  }
+
+  if (avaliacaoEncontro.erros.length > 0) {
+    console.error(
+      "A configuração do encontro possui erros:",
+      avaliacaoEncontro.erros,
+    );
+
+    return;
+  }
+
+  const dificuldadePretendida =
+    cena.combate
+      .dificuldadePretendida
+      ?? null;
+
+  const dificuldadeCalculada =
+    avaliacaoEncontro
+      .dificuldade
+      ?.categoria
+      ?? null;
+
+  if (!dificuldadePretendida) {
+    console.warn(
+      "A batalha não declara uma dificuldade pretendida.",
+    );
+  } else if (
+    dificuldadePretendida !==
+    dificuldadeCalculada
+  ) {
+    console.warn(
+      "A dificuldade calculada não corresponde à pretendida:",
+      {
+        pretendida:
+          dificuldadePretendida,
+
+        calculada:
+          dificuldadeCalculada,
+
+        xpTotal:
+          avaliacaoEncontro.xpTotal,
+      },
+    );
   }
 
   const participanteJogador = criarParticipanteJogadorCombate(
@@ -222,5 +638,10 @@ function verificarCombateDaCena(cena) {
     id: `${aventuraAtual.id}-${estadoAtualJogo.progresso.cenaId}`,
     participantes: [participanteJogador, ...participantesInimigos],
     mapa: cena.combate.mapa,
+
+    encontro: {
+      dificuldadePretendida,
+      avaliacao: avaliacaoEncontro,
+    },
   });
 }

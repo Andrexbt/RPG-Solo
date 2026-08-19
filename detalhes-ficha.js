@@ -167,16 +167,63 @@
       recurso.usosMaximos
     );
 
-    const textoRecarga =
-      recurso.recuperaEm ===
-      "descansoLongo"
-        ? "descanso longo"
-        : recurso.recuperaEm;
+        const textosRecuperacao = [];
+
+    const recuperacaoCurta =
+      recurso
+        .recuperacao
+        ?.descansoCurto;
+
+    const recuperacaoLonga =
+      recurso
+        .recuperacao
+        ?.descansoLongo;
+
+    if (
+      recuperacaoCurta
+        ?.restaurarTodos
+    ) {
+      textosRecuperacao.push(
+        "todos os usos no descanso curto",
+      );
+    } else if (
+      Number.isInteger(
+        recuperacaoCurta
+          ?.quantidade,
+      )
+    ) {
+      textosRecuperacao.push(
+        recuperacaoCurta.quantidade === 1
+          ? "1 uso no descanso curto"
+          : `${recuperacaoCurta.quantidade} usos no descanso curto`,
+      );
+    }
+
+    if (
+      recuperacaoLonga
+        ?.restaurarTodos
+    ) {
+      textosRecuperacao.push(
+        "todos os usos no descanso longo",
+      );
+    } else if (
+      Number.isInteger(
+        recuperacaoLonga
+          ?.quantidade,
+      )
+    ) {
+      textosRecuperacao.push(
+        recuperacaoLonga.quantidade === 1
+          ? "1 uso no descanso longo"
+          : `${recuperacaoLonga.quantidade} usos no descanso longo`,
+      );
+    }
 
     adicionarParagrafoMecanica(
       container,
-      "Recupera em",
-      textoRecarga
+      "Recuperação",
+      textosRecuperacao.join("; ") ||
+        "não definida",
     );
   }
 

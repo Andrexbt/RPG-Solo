@@ -7,13 +7,8 @@
 // antigos para que as páginas possam continuar usando-os.
 // =====================================================
 
-function normalizarAtaquesPersonagem(
-  personagem,
-) {
-  const ataques =
-    personagem
-      ?.combate
-      ?.ataques;
+function normalizarAtaquesPersonagem(personagem) {
+  const ataques = personagem?.combate?.ataques;
 
   if (!Array.isArray(ataques)) {
     return;
@@ -24,59 +19,122 @@ function normalizarAtaquesPersonagem(
       continue;
     }
 
-    if (
-      typeof ataque.id ===
-      "string"
-    ) {
-      ataque.id =
-        ataque.id.replace(
-          /Secundaria$/,
-          "",
-        );
+    if (typeof ataque.id === "string") {
+      ataque.id = ataque.id.replace(/Secundaria$/, "");
     }
 
-    if (
-      typeof ataque.nome ===
-      "string"
-    ) {
-      ataque.nome =
-        ataque.nome.replace(
-          / \(secundária\)$/i,
-          "",
-        );
+    if (typeof ataque.nome === "string") {
+      ataque.nome = ataque.nome.replace(/ \(secundária\)$/i, "");
     }
   }
 }
 
-function normalizarPersonagem(personagemOriginal) {
+function normalizarRecursosPersonagem(
+  personagem,
+) {
+  const recursos =
+    personagem
+      ?.habilidades
+      ?.recursos;
+
   if (
-    personagemOriginal === undefined ||
-    personagemOriginal === null
+    !recursos ||
+    typeof recursos !== "object" ||
+    Array.isArray(recursos)
   ) {
+    return;
+  }
+
+  for (
+    const recurso
+    of Object.values(recursos)
+  ) {
+    if (
+      !recurso ||
+      typeof recurso !== "object"
+    ) {
+      continue;
+    }
+
+    if (
+      recurso.id ===
+      "segundoFolego"
+    ) {
+      recurso.recuperacao = {
+        descansoCurto: {
+          quantidade: 1,
+        },
+
+        descansoLongo: {
+          restaurarTodos: true,
+        },
+      };
+
+      delete recurso.recuperaEm;
+
+      continue;
+    }
+
+    if (
+      recurso.recuperacao ||
+      !recurso.recuperaEm
+    ) {
+      continue;
+    }
+
+    if (
+      recurso.recuperaEm ===
+      "descansoLongo"
+    ) {
+      recurso.recuperacao = {
+        descansoLongo: {
+          restaurarTodos: true,
+        },
+      };
+    } else if (
+      recurso.recuperaEm ===
+      "descansoCurto"
+    ) {
+      recurso.recuperacao = {
+        descansoCurto: {
+          restaurarTodos: true,
+        },
+
+        descansoLongo: {
+          restaurarTodos: true,
+        },
+      };
+    }
+
+    delete recurso.recuperaEm;
+  }
+}
+
+function normalizarPersonagem(personagemOriginal) {
+  if (personagemOriginal === undefined || personagemOriginal === null) {
     return personagemOriginal;
   }
 
-  const personagemNormalizado =
-    structuredClone(personagemOriginal);
+  const personagemNormalizado = structuredClone(personagemOriginal);
 
   if (personagemNormalizado.schemaVersion === undefined) {
-    personagemNormalizado.schemaVersion =
-      1;
+    personagemNormalizado.schemaVersion = 1;
   }
 
   if (personagemNormalizado.rulesVersion === undefined) {
-    personagemNormalizado.rulesVersion =
-      "2024";
+    personagemNormalizado.rulesVersion = "2024";
   }
 
   if (personagemNormalizado.nivel === undefined) {
-    personagemNormalizado.nivel =
-      1;
+    personagemNormalizado.nivel = 1;
   }
 
   if (personagemNormalizado.xp === undefined) {
-    personagemNormalizado.xp =
-      0;
+    personagemNormalizado.xp = 0;
+  }
+
+  if (!Array.isArray(personagemNormalizado.recompensasRecebidas)) {
+    personagemNormalizado.recompensasRecebidas = [];
   }
 
   if (
@@ -84,91 +142,57 @@ function normalizarPersonagem(personagemOriginal) {
     personagemNormalizado.niveisPorClasse === null ||
     Array.isArray(personagemNormalizado.niveisPorClasse)
   ) {
-    personagemNormalizado.niveisPorClasse =
-      {};
+    personagemNormalizado.niveisPorClasse = {};
   }
 
-  const classeId =
-    personagemNormalizado.classeId;
+  const classeId = personagemNormalizado.classeId;
 
   if (
     classeId !== undefined &&
     classeId !== "" &&
     personagemNormalizado.niveisPorClasse[classeId] === undefined
   ) {
-    personagemNormalizado.niveisPorClasse[classeId] =
-      personagemNormalizado.nivel;
+    personagemNormalizado.niveisPorClasse[classeId] = personagemNormalizado.nivel;
   }
 
-  if (
-  personagemNormalizado.avatar &&
-  !personagemNormalizado.avatar.generoGramatical
-) {
-  const caminhoAvatar =
-    personagemNormalizado.avatar.imagem ?? "";
+  if (personagemNormalizado.avatar && !personagemNormalizado.avatar.generoGramatical) {
+    const caminhoAvatar = personagemNormalizado.avatar.imagem ?? "";
 
-  if (caminhoAvatar.includes("/Female/")) {
-    personagemNormalizado.avatar.generoGramatical =
-      "feminino";
-  } else if (
-    caminhoAvatar.includes("/Male/")
-  ) {
-    personagemNormalizado.avatar.generoGramatical =
-      "masculino";
+    if (caminhoAvatar.includes("/Female/")) {
+      personagemNormalizado.avatar.generoGramatical = "feminino";
+    } else if (caminhoAvatar.includes("/Male/")) {
+      personagemNormalizado.avatar.generoGramatical = "masculino";
+    }
   }
-}
 
-  normalizarAtaquesPersonagem(
+  normalizarRecursosPersonagem(
     personagemNormalizado,
   );
+
+  normalizarAtaquesPersonagem(personagemNormalizado);
 
   return personagemNormalizado;
 }
 
-function obterNivelClasse(
-  personagem,
-  classeId
-) {
-  if (
-    personagem === undefined ||
-    personagem === null
-  ) {
+function obterNivelClasse(personagem, classeId) {
+  if (personagem === undefined || personagem === null) {
     return 0;
   }
 
-  const classeProcurada =
-    classeId ??
-    personagem.classeId;
+  const classeProcurada = classeId ?? personagem.classeId;
 
-  if (
-    classeProcurada === undefined ||
-    classeProcurada === ""
-  ) {
+  if (classeProcurada === undefined || classeProcurada === "") {
     return 0;
   }
 
-  const nivelSalvo =
-    personagem
-      .niveisPorClasse
-      ?.[classeProcurada];
+  const nivelSalvo = personagem.niveisPorClasse?.[classeProcurada];
 
-  if (
-    Number.isFinite(
-      Number(nivelSalvo)
-    )
-  ) {
-    return Number(
-      nivelSalvo
-    );
+  if (Number.isFinite(Number(nivelSalvo))) {
+    return Number(nivelSalvo);
   }
 
-  if (
-    classeProcurada ===
-    personagem.classeId
-  ) {
-    return Number(
-      personagem.nivel
-    ) || 0;
+  if (classeProcurada === personagem.classeId) {
+    return Number(personagem.nivel) || 0;
   }
 
   return 0;
@@ -178,20 +202,16 @@ const CHAVE_PERSONAGENS_SALVOS = "personagensRpgSolo";
 
 function listarPersonagensSalvos() {
   try {
-    const dadosSalvos =
-      localStorage.getItem(CHAVE_PERSONAGENS_SALVOS);
+    const dadosSalvos = localStorage.getItem(CHAVE_PERSONAGENS_SALVOS);
 
     if (dadosSalvos === null) {
       return [];
     }
 
-    const personagens =
-      JSON.parse(dadosSalvos);
+    const personagens = JSON.parse(dadosSalvos);
 
     if (!Array.isArray(personagens)) {
-      console.error(
-        "Os personagens salvos não possuem o formato esperado.",
-      );
+      console.error("Os personagens salvos não possuem o formato esperado.");
 
       return [];
     }
@@ -200,10 +220,7 @@ function listarPersonagensSalvos() {
       return normalizarPersonagem(personagem);
     });
   } catch (erro) {
-    console.error(
-      "Não foi possível ler os personagens salvos.",
-      erro,
-    );
+    console.error("Não foi possível ler os personagens salvos.", erro);
 
     return [];
   }
@@ -214,104 +231,114 @@ function buscarPersonagemSalvoPorId(idPersonagem) {
     return null;
   }
 
-  const personagens =
-    listarPersonagensSalvos();
+  const personagens = listarPersonagensSalvos();
 
-  const personagemEncontrado =
-    personagens.find(function (personagem) {
-      return personagem.id === idPersonagem;
-    });
+  const personagemEncontrado = personagens.find(function (personagem) {
+    return personagem.id === idPersonagem;
+  });
 
   return personagemEncontrado ?? null;
 }
 
 function salvarPersonagensSalvos(personagens) {
   if (!Array.isArray(personagens)) {
-    console.error(
-      "A lista de personagens possui um formato inválido.",
-    );
+    console.error("A lista de personagens possui um formato inválido.");
 
     return false;
   }
 
   try {
-    const personagensNormalizados =
-      personagens.map(function (personagem) {
-        return normalizarPersonagem(personagem);
-      });
+    const personagensNormalizados = personagens.map(function (personagem) {
+      return normalizarPersonagem(personagem);
+    });
 
-    localStorage.setItem(
-      CHAVE_PERSONAGENS_SALVOS,
-      JSON.stringify(personagensNormalizados),
-    );
+    localStorage.setItem(CHAVE_PERSONAGENS_SALVOS, JSON.stringify(personagensNormalizados));
 
     return true;
   } catch (erro) {
-    console.error(
-      "Não foi possível salvar os personagens.",
-      erro,
-    );
+    console.error("Não foi possível salvar os personagens.", erro);
 
     return false;
   }
 }
 
-function adicionarPersonagemSalvo(
-  personagemOriginal,
-) {
-  if (
-    personagemOriginal === null ||
-    typeof personagemOriginal !== "object"
-  ) {
-    console.error(
-      "O personagem informado é inválido.",
-    );
+function adicionarPersonagemSalvo(personagemOriginal) {
+  if (personagemOriginal === null || typeof personagemOriginal !== "object") {
+    console.error("O personagem informado é inválido.");
 
     return null;
   }
 
-  const personagemParaSalvar =
-    normalizarPersonagem(
-      personagemOriginal,
-    );
+  const personagemParaSalvar = normalizarPersonagem(personagemOriginal);
 
   if (!personagemParaSalvar.id) {
-    personagemParaSalvar.id =
-      crypto.randomUUID();
+    personagemParaSalvar.id = crypto.randomUUID();
   }
 
   if (!personagemParaSalvar.criadoEm) {
-    personagemParaSalvar.criadoEm =
-      new Date().toISOString();
+    personagemParaSalvar.criadoEm = new Date().toISOString();
   }
 
-  const personagens =
-    listarPersonagensSalvos();
+  const personagens = listarPersonagensSalvos();
 
-  const idJaExiste =
-    personagens.some(function (personagem) {
-      return (
-        personagem.id ===
-        personagemParaSalvar.id
-      );
-    });
+  const idJaExiste = personagens.some(function (personagem) {
+    return personagem.id === personagemParaSalvar.id;
+  });
 
   if (idJaExiste) {
-    console.error(
-      "Já existe um personagem com esse identificador.",
-    );
+    console.error("Já existe um personagem com esse identificador.");
 
     return null;
   }
 
-  personagens.push(
-    personagemParaSalvar,
-  );
+  personagens.push(personagemParaSalvar);
 
-  const personagemFoiSalvo =
-    salvarPersonagensSalvos(
-      personagens,
-    );
+  const personagemFoiSalvo = salvarPersonagensSalvos(personagens);
+
+  if (!personagemFoiSalvo) {
+    return null;
+  }
+
+  return personagemParaSalvar;
+}
+
+function atualizarPersonagemSalvo(personagemOriginal) {
+  if (personagemOriginal === null || typeof personagemOriginal !== "object") {
+    console.error("O personagem informado para atualização é inválido.");
+
+    return null;
+  }
+
+  const personagemParaSalvar = normalizarPersonagem(personagemOriginal);
+
+  if (!personagemParaSalvar.id) {
+    console.error("Não é possível atualizar um personagem sem identificador.");
+
+    return null;
+  }
+
+  const personagens = listarPersonagensSalvos();
+
+  const indicePersonagem = personagens.findIndex(function (personagem) {
+    return personagem.id === personagemParaSalvar.id;
+  });
+
+  if (indicePersonagem < 0) {
+    console.error("Personagem não encontrado para atualização:", personagemParaSalvar.id);
+
+    return null;
+  }
+
+  const personagemAnterior = personagens[indicePersonagem];
+
+  personagemParaSalvar.criadoEm =
+    personagemParaSalvar.criadoEm ?? personagemAnterior.criadoEm ?? new Date().toISOString();
+
+  personagemParaSalvar.atualizadoEm = new Date().toISOString();
+
+  personagens[indicePersonagem] = personagemParaSalvar;
+
+  const personagemFoiSalvo = salvarPersonagensSalvos(personagens);
 
   if (!personagemFoiSalvo) {
     return null;
@@ -325,147 +352,99 @@ function excluirPersonagemSalvoPorId(idPersonagem) {
     return false;
   }
 
-  const personagens =
-    listarPersonagensSalvos();
+  const personagens = listarPersonagensSalvos();
 
-  const personagensRestantes =
-    personagens.filter(function (personagem) {
-      return personagem.id !== idPersonagem;
-    });
+  const personagensRestantes = personagens.filter(function (personagem) {
+    return personagem.id !== idPersonagem;
+  });
 
-  if (
-    personagensRestantes.length ===
-    personagens.length
-  ) {
+  if (personagensRestantes.length === personagens.length) {
     return false;
   }
 
-  return salvarPersonagensSalvos(
-    personagensRestantes,
-  );
+  return salvarPersonagensSalvos(personagensRestantes);
 }
 
 function migrarPersonagensSalvos() {
-  const chavePersonagens =
-    "personagensRpgSolo";
+  const chavePersonagens = "personagensRpgSolo";
 
-  const dadosOriginais =
-    localStorage.getItem(
-      chavePersonagens
-    );
+  const dadosOriginais = localStorage.getItem(chavePersonagens);
 
   if (dadosOriginais === null) {
     return {
-      sucesso:
-        true,
+      sucesso: true,
 
-      quantidade:
-        0,
+      quantidade: 0,
 
-      mensagem:
-        "Nenhum personagem precisava ser migrado."
+      mensagem: "Nenhum personagem precisava ser migrado.",
     };
   }
 
   let personagens;
 
   try {
-    personagens =
-      JSON.parse(dadosOriginais);
+    personagens = JSON.parse(dadosOriginais);
   } catch (erro) {
     return {
-      sucesso:
-        false,
+      sucesso: false,
 
-      quantidade:
-        0,
+      quantidade: 0,
 
-      mensagem:
-        "Os personagens salvos não puderam ser interpretados.",
+      mensagem: "Os personagens salvos não puderam ser interpretados.",
 
-      erro:
-        erro
+      erro: erro,
     };
   }
 
   if (Array.isArray(personagens) === false) {
     return {
-      sucesso:
-        false,
+      sucesso: false,
 
-      quantidade:
-        0,
+      quantidade: 0,
 
-      mensagem:
-        "Os dados salvos não possuem o formato esperado."
+      mensagem: "Os dados salvos não possuem o formato esperado.",
     };
   }
 
-  const personagensNormalizados =
-    personagens.map(function (personagem) {
-      return normalizarPersonagem(
-        personagem
-      );
-    });
+  const personagensNormalizados = personagens.map(function (personagem) {
+    return normalizarPersonagem(personagem);
+  });
 
-  const dataBackup =
-    new Date()
-      .toISOString()
-      .replaceAll(":", "-");
+  const dataBackup = new Date().toISOString().replaceAll(":", "-");
 
-  const chaveBackup =
-    "personagensRpgSoloBackup-" +
-    dataBackup;
+  const chaveBackup = "personagensRpgSoloBackup-" + dataBackup;
 
-  localStorage.setItem(
-    chaveBackup,
-    dadosOriginais
-  );
+  localStorage.setItem(chaveBackup, dadosOriginais);
 
-  localStorage.setItem(
-    chavePersonagens,
-    JSON.stringify(
-      personagensNormalizados
-    )
-  );
+  localStorage.setItem(chavePersonagens, JSON.stringify(personagensNormalizados));
 
   return {
-    sucesso:
-      true,
+    sucesso: true,
 
-    quantidade:
-      personagensNormalizados.length,
+    quantidade: personagensNormalizados.length,
 
-    chaveBackup:
-      chaveBackup,
+    chaveBackup: chaveBackup,
 
-    mensagem:
-      "Personagens migrados com sucesso."
+    mensagem: "Personagens migrados com sucesso.",
   };
 }
 
 window.PersonagemDados = {
-  normalizar:
-    normalizarPersonagem,
+  normalizar: normalizarPersonagem,
 
-  obterNivelClasse:
-    obterNivelClasse,
+  obterNivelClasse: obterNivelClasse,
 
-  listarSalvos:
-    listarPersonagensSalvos,
+  listarSalvos: listarPersonagensSalvos,
 
-  buscarSalvoPorId:
-    buscarPersonagemSalvoPorId,
+  buscarSalvoPorId: buscarPersonagemSalvoPorId,
 
-    salvarLista:
-    salvarPersonagensSalvos,
+  salvarLista: salvarPersonagensSalvos,
 
-    adicionarSalvo:
-  adicionarPersonagemSalvo,
+  adicionarSalvo: adicionarPersonagemSalvo,
 
-    excluirSalvoPorId:
-    excluirPersonagemSalvoPorId,
+  atualizarSalvo: atualizarPersonagemSalvo,
 
-  migrarSalvos:
-    migrarPersonagensSalvos,
+  excluirSalvoPorId: excluirPersonagemSalvoPorId,
+
+  migrarSalvos: migrarPersonagensSalvos,
 };
