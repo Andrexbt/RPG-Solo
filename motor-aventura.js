@@ -870,7 +870,17 @@ if (consequencia.descanso) {
       return;
     }
 
-    console.warn("Consequência sem destino executável:", consequencia);
+    if (
+  consequencia.texto !== undefined
+  || consequencia.contexto !== undefined
+) {
+  return;
+}
+
+console.warn(
+  "Consequência sem destino executável:",
+  consequencia
+);
   }
 
   async function resolverResultadoTeste(resultadoRolagem) {

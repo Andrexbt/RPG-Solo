@@ -435,74 +435,102 @@ function concederXpDaVitoria(
   return resultadoXp;
 }
 
-function processarResultadoCombate(
-  evento,
-) {
-  const idResultado =
-    evento.detail?.resultado;
+function consolidarResultadoCombate({
+  combate,
+  resultadoId,
+  consequencia,
+}) {
+  if (!combate || !resultadoId || !consequencia) {
+    return {
+      sucesso: false,
+      motivo: "dadosResultadoInvalidos",
+      deveAplicarConsequencia: false,
+    };
+  }
 
-  const combate =
-    evento.detail?.combate;
+  const consolidacaoExistente =
+    combate.consolidacaoResultado;
 
-  const resultado =
-    cenaAtual
-      .combate
-      ?.resultados
-      ?.[idResultado];
+  if (consolidacaoExistente?.concluida) {
+    return {
+      sucesso: true,
+      motivo: "resultadoJaConsolidado",
+      repetida: true,
+      deveAplicarConsequencia: false,
+      consolidacao:
+        structuredClone(
+          consolidacaoExistente
+        ),
+    };
+  }
 
-  if (!resultado) {
-    console.warn(
-      "Consequência de combate não encontrada:",
-      idResultado,
+  if (consolidacaoExistente?.emAndamento) {
+    return {
+      sucesso: false,
+      motivo: "resultadoEmAndamento",
+      repetida: true,
+      deveAplicarConsequencia: false,
+    };
+  }
+
+  combate.consolidacaoResultado = {
+    emAndamento: true,
+    concluida: false,
+    resultadoId,
+  };
+
+  const contexto = Array.isArray(
+    consequencia.contexto
+  )
+    ? [...consequencia.contexto]
+    : consequencia.contexto
+      ? [consequencia.contexto]
+      : [];
+
+  const persistencia =
+    persistirPersonagemAposCombate(
+      combate
     );
 
-    return;
+  if (!persistencia.sucesso) {
+    contexto.push(
+      mensagensNarrativas
+        .progressao
+        .erroAoSalvarCombate
+    );
+
+    combate.consolidacaoResultado = {
+      emAndamento: false,
+      concluida: false,
+      resultadoId,
+      sucesso: false,
+      motivo: persistencia.motivo,
+    };
+
+    return {
+      sucesso: false,
+      motivo: persistencia.motivo,
+      deveAplicarConsequencia: false,
+      contexto,
+    };
   }
 
-  const contextoResultado =
-    Array.isArray(resultado.contexto)
-      ? [...resultado.contexto]
-      : [resultado.contexto];
+  let resultadoXp = null;
 
-        if (combate) {
-    const persistencia =
-      persistirPersonagemAposCombate(
-        combate,
-      );
-
-    if (!persistencia.sucesso) {
-      console.error(
-        "Não foi possível persistir o personagem após o combate:",
-        persistencia.motivo,
-      );
-
-      contextoResultado.push(
-        mensagensNarrativas
-          .progressao
-          .erroAoSalvarCombate,
-      );
-    }
-  }
-
-  if (
-    idResultado === "vitoria" &&
-    combate
-  ) {
-    const resultadoXp =
+  if (resultadoId === "vitoria") {
+    resultadoXp =
       concederXpDaVitoria(
-        combate,
+        combate
       );
 
     if (!resultadoXp.sucesso) {
-      contextoResultado.push(
+      contexto.push(
         mensagensNarrativas
           .progressao
-          .erroAoConcederXp,
+          .erroAoConcederXp
       );
-    } else if (
-      resultadoXp.concedida
-    ) {
-      contextoResultado.push(
+    } else if (resultadoXp.concedida) {
+      contexto.push(
         mensagensNarrativas
           .progressao
           .xpRecebido(
@@ -510,37 +538,164 @@ function processarResultadoCombate(
               .recompensa
               .quantidade,
 
-            resultadoXp.xpAtual,
-          ),
+            resultadoXp.xpAtual
+          )
       );
 
       if (
-        resultadoXp
-          .novoNivelDisponivel
+        resultadoXp.novoNivelDisponivel
       ) {
-        contextoResultado.push(
+        contexto.push(
           mensagensNarrativas
             .progressao
             .novoNivelDisponivel(
               resultadoXp
-                .nivelAtualPorXp,
-            ),
+                .nivelAtualPorXp
+            )
         );
       }
     }
   }
 
-  setTimeout(
-    function exibirResultadoCombate() {
-      exibirTelaAventura();
+  document.dispatchEvent(
+    new CustomEvent(
+      "personagemAtualizado",
+      {
+        detail: {
+          personagem:
+            estadoAtualJogo
+              .personagem
+              .dados,
+        },
+      }
+    )
+  );
 
-      exibirContexto(
-        contextoResultado,
-      );
+  const consequenciaFinal = {
+    ...consequencia,
+    contexto,
+  };
 
-      ocultarEscolhas();
+  combate.consolidacaoResultado = {
+    emAndamento: false,
+    concluida: true,
+    sucesso: true,
+    resultadoId,
+
+    persistencia: {
+      sucesso:
+        persistencia.sucesso,
+
+      pontosDeVida:
+        structuredClone(
+          persistencia.pontosDeVida
+        ),
+
+      recursos:
+        structuredClone(
+          persistencia.recursos
+        ),
     },
-    1200,
+
+    xp: resultadoXp
+      ? {
+          sucesso:
+            resultadoXp.sucesso,
+
+          concedida:
+            resultadoXp.concedida,
+
+          quantidade:
+            resultadoXp
+              .recompensa
+              ?.quantidade
+              ?? 0,
+
+          xpAtual:
+            resultadoXp.xpAtual
+              ?? null,
+        }
+      : null,
+  };
+
+  return {
+    sucesso: true,
+    motivo: null,
+    repetida: false,
+    deveAplicarConsequencia: true,
+    consequencia: consequenciaFinal,
+
+    consolidacao:
+      structuredClone(
+        combate.consolidacaoResultado
+      ),
+  };
+}
+
+function processarResultadoCombate(
+  evento
+) {
+  const resultadoId =
+    evento.detail?.resultado;
+
+  const combate =
+    evento.detail?.combate;
+
+  const consequencia =
+    cenaAtual
+      .combate
+      ?.resultados
+      ?.[resultadoId];
+
+  if (!consequencia) {
+    console.warn(
+      "Consequência de combate não encontrada:",
+      resultadoId
+    );
+
+    return;
+  }
+
+  const resultado =
+    consolidarResultadoCombate({
+      combate,
+      resultadoId,
+      consequencia,
+    });
+
+  if (!resultado.sucesso) {
+    if (
+      resultado.motivo !==
+      "resultadoEmAndamento"
+    ) {
+      console.error(
+        "Não foi possível consolidar o resultado do combate:",
+        resultado
+      );
+    }
+
+    return;
+  }
+
+  if (
+    !resultado.deveAplicarConsequencia
+  ) {
+    return;
+  }
+
+  setTimeout(
+    async function aplicarResultadoCombate() {
+      exibirTelaAventura();
+      ocultarEscolhas();
+
+      await window.MotorAventura
+        .aplicarConsequencia(
+          resultado.consequencia
+        );
+
+      combate.resultadoProcessado = true;
+    },
+    1200
   );
 }
 
