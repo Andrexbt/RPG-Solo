@@ -109,7 +109,12 @@ if (!entidade || !teste) {
       ? teste.teste
       : teste;
     const modificador = calcularBonusDescritor(entidade, descritor);
-    const tipoRolagem = descritor.tipoRolagem ?? teste.tipoRolagem ?? "normal";
+    const tipoRolagem =
+  SistemaTestes.determinarTipoRolagem(
+    entidade,
+    descritor,
+    teste,
+  );
     const quantidadeD20 =
       tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
 
@@ -124,12 +129,20 @@ if (!entidade || !teste) {
       descricao: obterNomeTeste(teste),
       quantidadeDeRolagens: 1,
       critico: false,
+      tipoRolagem,
     };
   }
 
   function criarInstrucaoTeste(teste, modificador, complemento = "") {
     const descritor = teste.tipo === "oposto" ? teste.jogador : teste;
-    const tipoRolagem = descritor.tipoRolagem ?? teste.tipoRolagem ?? "normal";
+    const entidade = obterEntidadeDoTeste(teste);
+
+const tipoRolagem =
+  SistemaTestes.determinarTipoRolagem(
+    entidade,
+    descritor,
+    teste,
+  );
     const quantidadeD20 =
       tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
     const aviso =
@@ -237,6 +250,21 @@ if (!entidade || !teste) {
       return false;
     }
 
+    const descritorJogador =
+  teste.tipo === "oposto"
+    ? teste.jogador
+    : teste;
+
+const entidadeJogador =
+  obterEntidadeDoTeste(teste);
+
+const tipoRolagemJogador =
+  SistemaTestes.determinarTipoRolagem(
+    entidadeJogador,
+    descritorJogador,
+    teste,
+  );
+
     let resultadoOponente = null;
 
     if (teste.tipo === "oposto") {
@@ -284,6 +312,7 @@ if (!entidade || !teste) {
       resultados: configuracao.resultados ?? {},
       instrucao: configuracao.instrucao ?? teste.acao ?? "",
       resultadoOponente,
+      tipoRolagemJogador,
     };
 
     window.estadoJogo.testePendente = teste;
@@ -796,6 +825,14 @@ if (consequencia.memorias) {
   );
 }
 
+    if (consequencia.fimAventura) {
+      exibirTelaFimAventura(
+        consequencia.fimAventura
+      );
+
+      return;
+    }
+
     if (consequencia.pendenciaFonte) {
       await mostrarPendenciaFonte(consequencia);
       return;
@@ -891,14 +928,33 @@ console.warn(
     }
 
     const teste = ativo.teste;
-    const resultadoTeste =
-      teste.tipo === "oposto"
-        ? SistemaTestes.resolverTesteOposto(resultadoRolagem, ativo.resultadoOponente)
-        : SistemaTestes.resolverTesteContraCd(
+
+const tipoRolagem =
+  ativo.tipoRolagemJogador ?? "normal";
+
+const resultadoRolagemAjustado =
+  tipoRolagem === "normal"
+    ? resultadoRolagem
+    : {
+        ...resultadoRolagem,
+        total:
+          SistemaTestes.calcularTotalTesteD20(
             resultadoRolagem,
-            teste.dificuldade,
-            teste.tipoRolagem ?? "normal",
-          );
+            tipoRolagem,
+          ),
+      };
+
+const resultadoTeste =
+  teste.tipo === "oposto"
+    ? SistemaTestes.resolverTesteOposto(
+        resultadoRolagemAjustado,
+        ativo.resultadoOponente,
+      )
+    : SistemaTestes.resolverTesteContraCd(
+        resultadoRolagem,
+        teste.dificuldade,
+        tipoRolagem,
+      );
 
     const consequencia = ativo.resultados[
       resultadoTeste.sucesso ? "sucesso" : "fracasso"

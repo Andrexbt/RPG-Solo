@@ -33,11 +33,24 @@ function ocultarEscolhas() {
 }
 
 async function exibirContexto(contexto) {
-  if (contexto === undefined || contexto === null || contexto === "") {
+  if (
+    contexto === undefined ||
+    contexto === null ||
+    contexto === ""
+  ) {
     return;
   }
 
-  await NarradorAventura.adicionarNarracao(contexto);
+  const trechos =
+    resolverTrechosNarrativos(contexto);
+
+  if (trechos.length === 0) {
+    return;
+  }
+
+  await NarradorAventura.adicionarNarracao(
+    trechos,
+  );
 }
 
 function condicaoNarrativaAtendida(condicao) {
@@ -45,11 +58,86 @@ function condicaoNarrativaAtendida(condicao) {
     return true;
   }
 
+  let possuiCondicaoReconhecida = false;
+
   if (condicao.flag) {
-    return estadoAtualJogo.progresso.flags[condicao.flag] === condicao.igualA;
+    possuiCondicaoReconhecida = true;
+
+    const valorFlag =
+      estadoAtualJogo
+        ?.progresso
+        ?.flags
+        ?.[condicao.flag];
+
+    if (valorFlag !== condicao.igualA) {
+      return false;
+    }
   }
 
-  return false;
+  if (
+    Object.hasOwn(
+      condicao,
+      "desvantagemNadoAguasRevoltas",
+    )
+  ) {
+    possuiCondicaoReconhecida = true;
+
+    const personagem =
+      window.estadoJogo
+        ?.personagem
+        ?.dados;
+
+    const possuiDesvantagem =
+      SistemaTestes
+        .armaduraCausaDesvantagemNado(
+          personagem,
+        );
+
+    if (
+      possuiDesvantagem !==
+      condicao.desvantagemNadoAguasRevoltas
+    ) {
+      return false;
+    }
+  }
+
+  return possuiCondicaoReconhecida;
+}
+
+function resolverTrechosNarrativos(contexto) {
+  const trechos =
+    Array.isArray(contexto)
+      ? contexto
+      : [contexto];
+
+  const trechosResolvidos = [];
+
+  for (const trecho of trechos) {
+    if (typeof trecho === "string") {
+      trechosResolvidos.push(trecho);
+      continue;
+    }
+
+    if (
+      !trecho ||
+      typeof trecho !== "object" ||
+      !Object.hasOwn(trecho, "texto")
+    ) {
+      continue;
+    }
+
+    if (!condicaoNarrativaAtendida(trecho.se)) {
+      continue;
+    }
+
+    if (Array.isArray(trecho.texto)) {
+      trechosResolvidos.push(...trecho.texto);
+    } else if (trecho.texto) {
+      trechosResolvidos.push(trecho.texto);
+    }
+  }
+
+  return trechosResolvidos;
 }
 
 function obterContextoCena(cena) {
@@ -188,6 +276,184 @@ async function confirmarEscolhaVisualmente(botaoEscolha) {
   }
 }
 
+function obterXpDoUltimoCombate() {
+  const xp =
+    estadoAtualJogo
+      .combateAtual
+      ?.consolidacaoResultado
+      ?.xp;
+
+  if (
+    !xp?.sucesso ||
+    !xp?.concedida
+  ) {
+    return 0;
+  }
+
+  return Number(xp.quantidade) || 0;
+}
+
+function recuperarEFinalizarPersonagem(
+  configuracao
+) {
+  const recuperacao =
+    window.SistemaDescansos
+      .recuperarPersonagemFimAventura();
+
+  if (!recuperacao.sucesso) {
+    return {
+      sucesso: false,
+      motivo:
+        recuperacao.motivo,
+    };
+  }
+
+  let personagemFinal =
+    recuperacao.personagem;
+
+  if (
+    configuracao.resultadoId ===
+    "vitoria"
+  ) {
+    const registro =
+      window.PersonagemDados
+        .registrarVitoriaAventura(
+          personagemFinal,
+          aventuraAtual.id
+        );
+
+    if (!registro.sucesso) {
+      return {
+        sucesso: false,
+        motivo:
+          registro.motivo,
+      };
+    }
+
+    personagemFinal =
+      registro.personagem;
+  }
+
+  estadoAtualJogo
+    .personagem
+    .dados =
+      personagemFinal;
+
+  return {
+    sucesso: true,
+    personagem:
+      personagemFinal,
+
+    recuperacao:
+      recuperacao.recuperacao,
+  };
+}
+
+function limparEstadoTemporarioAventura() {
+  const estadoInicial =
+    criarEstadoInicialJogo();
+
+  MotorAventura.cancelarTeste();
+
+  MotorAventura.estado
+    .descansoCurtoPendente = null;
+
+  estadoAtualJogo.aventuraId = null;
+
+  estadoAtualJogo.progresso =
+    estadoInicial.progresso;
+
+  estadoAtualJogo.npcs = {};
+
+  estadoAtualJogo.testePendente =
+    null;
+
+  estadoAtualJogo.combateAtual =
+    null;
+
+  estadoAtualJogo.tempo =
+    estadoInicial.tempo;
+
+  estadoAtualJogo.descansos =
+    estadoInicial.descansos;
+
+  estadoAtualJogo
+    .efeitosTemporarios = [];
+
+  estadoAtualJogo.diario = [];
+
+  estadoAtualJogo
+    .personagem
+    .condicoes = [];
+}
+
+function exibirTelaFimAventura(
+  configuracao = {}
+) {
+  const xpRecebido =
+    Number.isFinite(
+      Number(configuracao.xpRecebido)
+    )
+      ? Number(configuracao.xpRecebido)
+      : obterXpDoUltimoCombate();
+
+  const finalizacao =
+    recuperarEFinalizarPersonagem(
+      configuracao
+    );
+
+  if (!finalizacao.sucesso) {
+    console.error(
+      "Não foi possível finalizar a aventura:",
+      finalizacao.motivo
+    );
+
+    return;
+  }
+
+  const personagemId =
+    finalizacao.personagem?.id;
+
+  rotuloFimAventura.textContent =
+    configuracao.rotulo ??
+    "Aventura concluída";
+
+  tituloFimAventura.textContent =
+    configuracao.titulo ??
+    "Fim da aventura";
+
+  textoFimAventura.textContent =
+    configuracao.texto ??
+    "Sua jornada chegou ao fim.";
+
+  resultadoFimAventura.textContent =
+    configuracao.resultado ??
+    "Concluída";
+
+  xpFimAventura.textContent =
+    `${xpRecebido} XP`;
+
+  resumoFimAventura.hidden = false;
+
+  if (personagemId) {
+    const parametros =
+      new URLSearchParams({
+        id: personagemId,
+      });
+
+    linkFichaFimAventura.href =
+      `ver-personagem.html?${parametros.toString()}`;
+  } else {
+    linkFichaFimAventura.href =
+      "meus-personagens.html";
+  }
+
+  limparEstadoTemporarioAventura();
+
+  telaFimAventura.hidden = false;
+  linkFichaFimAventura.focus();
+}
+
 async function selecionarEscolha(evento) {
   if (MotorAventura.temTesteAtivo()) {
     return;
@@ -245,6 +511,17 @@ async function selecionarEscolha(evento) {
 
   if (escolhaSelecionada.proximaCena) {
     mudarCena(escolhaSelecionada.proximaCena);
+    return;
+  }
+
+    if (escolhaSelecionada.fimAventura) {
+    await MotorAventura
+      .aplicarConsequencia({
+        fimAventura:
+          escolhaSelecionada
+            .fimAventura,
+      });
+
     return;
   }
 

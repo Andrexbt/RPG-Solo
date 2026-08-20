@@ -74,7 +74,7 @@ const bancoAventuras = {
             
             Da cabeceira da ponte, os guardas percebem a comoção, rapidamente sacam suas armas, e correm em sua direção.`,
 
-            proximaCena: "batalha1ruas",
+            proximaCena: "batalhaRuasD",
           },
         ],
 
@@ -479,7 +479,7 @@ const bancoAventuras = {
                 
                 Não há escapatória, você precisa lutar.`,
 
-                proximaCena: "batalha1ruas",
+                proximaCena: "batalhaRuasF",
               },
             },
           },
@@ -666,6 +666,124 @@ const bancoAventuras = {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
                 memorias: { origemMovimentacaoTelhadoRapida: "esperaTorreFalhaFurtiva" },
+              },
+            },
+          },
+        },
+      },
+
+      guardasDistraidos: {
+        numeroFonte: 5,
+
+        variacoes: [
+          {
+            se: {
+              flag: "origemGuardasDistraidos",
+              igualA: "multidao",
+            },
+
+            contexto: [
+              `Vendo a comoção, os dois guardas na ponte saem do posto e correm em direção ao conflito.
+
+              Essa é a sua chance.`,
+            ],
+          },
+
+          {
+            se: {
+              flag: "origemGuardasDistraidos",
+              igualA: "ned",
+            },
+
+            contexto: [
+              `Você observa os arredores com nervosismo, esperando algum sinal de Ned. Poucos minutos depois, ele surge do meio da multidão, acompanhado por outros três homens armados.
+
+              Eles se aproximam dos dois guardas na ponte e começam alguma discussão, a qual você não consegue ouvir direito. Mais guardas se aproximam, os ânimos se exaltam, e uma pequena confusão começa.
+
+              Essa é a sua oportunidade.`,
+            ],
+          },
+        ],
+
+        contexto: [
+          `Com os guardas agora distraídos, você identifica duas possíveis rotas.
+
+          A primeira delas envolve tentar passar {despercebido|despercebida} pela ponte. Você ainda vai precisar lidar com os outros dois guardas do outro lado da ponte, mas talvez você tenha tempo o suficiente antes que eles recebam reforços.
+
+          A outra possibilidade é tentar atravessar pelo rio. Isso lhe daria uma chance de tentar passar {despercebido|despercebida} pelos guardas do outro lado.`,
+
+          {
+            se: {
+              desvantagemNadoAguasRevoltas: true,
+            },
+
+            texto: `Nadar nas águas revoltas do rio com sua armadura vai ser um desafio, mas ainda assim menos perigoso do que atravessar a ponte.`,
+          },
+
+          `Qual você considera a melhor opção?`,
+        ],
+
+        escolhas: [
+          {
+            id: "atravessarPonteFurtivo",
+            texto: `Passar {escondido|escondida} pela ponte.`,
+            etapaInicial: "atravessarPonteFurtivo",
+          },
+
+          {
+            id: "atravessarRio",
+            texto: `Atravessar o rio.`,
+            etapaInicial: "atravessarRio",
+          },
+        ],
+
+        etapas: {
+          atravessarPonteFurtivo: {
+            descricao: [],
+            instrucao: "passar {escondido|escondida} pela ponte.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "batalhaPonteF",
+              },
+
+              fracasso: {
+                texto: ``,
+                proximaCena: "batalhaPonteD",
+              },
+            },
+          },
+
+          atravessarRio: {
+            descricao: [],
+            instrucao: "atravessar o rio em águas revoltas.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              situacao: "nadarAguasRevoltas",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "torreChaoMolhado",
+              },
+
+              fracasso: {
+                texto: ``,
+                memorias: {
+                  origemTorreChaoMolhado: "guardasDistraidos",
+                },
+                proximaCena: "torreChaoMolhado",
               },
             },
           },
@@ -979,7 +1097,7 @@ const bancoAventuras = {
                 texto: `Os músculos do seu braço tremem enquanto você se força para cima, mas sua força não é suficiente.
                 
                 Você vai ao chão e se prepara para a inevitável batalha contra os guardas que {o|a} perseguem.`,
-                proximaCena: "batalha1ruas",
+                proximaCena: "batalhaRuasM",
               },
             },
           },
@@ -1040,13 +1158,13 @@ const bancoAventuras = {
         },
       },
 
-      batalha1ruas: {
+      batalhaRuasD: {
         contexto: [
           `Os guardas avançam sobre você pelas ruas próximas à ponte. Não há mais como evitar o confronto.`,
         ],
 
         combate: {
-          dificuldadePretendida: "baixa",
+          dificuldadePretendida: "alta",
           mapa: "Imagens/Mapas/A Fuga/batalha1ruas.webp",
 
           jogador: {
@@ -1062,9 +1180,13 @@ const bancoAventuras = {
             {
               npcId: "guardaConde",
 
-              quantidade: 2,
+              quantidade: 4,
 
               posicoes: [
+                {
+                  coluna: 23,
+                  linha: 5,
+                },
                 {
                   coluna: 22,
                   linha: 10,
@@ -1074,22 +1196,112 @@ const bancoAventuras = {
                   coluna: 27,
                   linha: 10,
                 },
+                {
+                  coluna: 25,
+                  linha: 3,
+                },
               ],
 
               movimentoMaximo: 6,
             },
           ],
 
-          resultados: {
+                    resultados: {
             vitoria: {
-              contexto: [`Os guardas caem, e por alguns instantes a rua volta a ficar livre.`],
+              tela: {
+                titulo: "Vitória",
+
+                texto: `Os guardas tombam diante de você. Por alguns instantes, a rua está livre e a multidão observa em silêncio.`,
+              },
+
+              proximaCena:
+                "batalhaRuasDVitoria",
             },
 
             derrota: {
-              contexto: [`Você não consegue continuar lutando.`],
+              tela: {
+                titulo: "Derrota",
+
+                texto: `Suas forças chegam ao fim. Cercado pelos guardas, você já não consegue continuar lutando.`,
+              },
+
+              proximaCena:
+                "batalhaRuasDDerrota",
             },
           },
         },
+      },
+
+      batalhaRuasDVitoria: {
+        numeroFonte: null,
+
+        contexto: [
+          `Por alguns instantes, ninguém se move.
+
+          Os guardas estão caídos na rua, e os olhares da multidão se voltam para você. O choque inicial logo dá lugar a murmúrios, gritos e uma agitação crescente.
+
+          Permanecer ali seria perigoso. Outros soldados certamente virão quando souberem o que aconteceu.
+
+          Você precisa aproveitar os poucos instantes conquistados pela vitória e decidir como continuará sua fuga.`,
+        ],
+
+                escolhas: [
+          {
+            id: "concluirAventuraVitoriaRuas",
+
+            texto: `Concluir A Fuga.`,
+
+            registrarNarrativa: false,
+
+            fimAventura: {
+              resultadoId: "vitoria",
+              rotulo: "A Fuga",
+
+              titulo:
+                "A liberdade tem um preço",
+
+              texto:
+                `Você conquistou sua liberdade pela força. Os guardas foram derrotados, mas os acontecimentos nas ruas certamente não serão esquecidos.`,
+
+              resultado: "Vitória",
+            },
+          },
+        ],
+      },
+
+      batalhaRuasDDerrota: {
+        numeroFonte: null,
+
+        contexto: [
+          `Sua visão se torna turva enquanto suas forças abandonam seu corpo.
+
+          As vozes dos guardas parecem cada vez mais distantes. Você sente suas armas sendo retiradas e seus braços sendo presos antes de perder completamente a consciência.
+
+          Quando voltar a despertar, sua fuga terá tomado um rumo muito diferente.`,
+        ],
+
+                escolhas: [
+          {
+            id: "concluirAventuraDerrotaRuas",
+
+            texto: `Concluir A Fuga.`,
+
+            registrarNarrativa: false,
+
+            fimAventura: {
+              resultadoId: "derrota",
+              rotulo: "A Fuga",
+
+              titulo:
+                "A fuga chega ao fim",
+
+              texto:
+                `Sua tentativa de escapar termina nas ruas da cidade. Desarmado e capturado pelos guardas, seu destino volta a estar nas mãos do conde.`,
+
+              resultado: "Derrota",
+            },
+          },
+        ],
       },
     },
   },

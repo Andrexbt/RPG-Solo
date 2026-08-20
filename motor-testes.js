@@ -25,6 +25,87 @@ window.realizarRolagemComposta = realizarRolagemComposta;
 window.formatarResultadoRolagem = formatarResultadoRolagem;
 
 window.SistemaTestes = (function () {
+
+  function obterArmaduraEquipada(entidade) {
+  const idArmadura =
+    entidade?.detalhes?.equipamentos?.armadura;
+
+  if (!idArmadura) {
+    return null;
+  }
+
+  return window.bancoEquipamentos
+    ?.armaduras
+    ?.[idArmadura] ?? null;
+}
+
+function armaduraCausaDesvantagemFurtividade(entidade) {
+  const armadura = obterArmaduraEquipada(entidade);
+
+  return armadura?.desvantagemFurtividade === true;
+}
+
+function armaduraCausaDesvantagemNado(entidade) {
+  const armadura = obterArmaduraEquipada(entidade);
+
+  if (!armadura) {
+    return false;
+  }
+
+  return Number(armadura.caBase) >= 14;
+}
+
+function possuiDesvantagemSituacional(entidade, descritor) {
+  if (
+    descritor?.tipo === "pericia" &&
+    descritor.periciaId === "furtividade"
+  ) {
+    return armaduraCausaDesvantagemFurtividade(entidade);
+  }
+
+  if (descritor?.situacao === "nadarAguasRevoltas") {
+    return armaduraCausaDesvantagemNado(entidade);
+  }
+
+  return false;
+}
+
+function combinarTipoRolagem(
+  tipoOriginal = "normal",
+  desvantagemAdicional = false,
+) {
+  if (!desvantagemAdicional) {
+    return tipoOriginal;
+  }
+
+  if (tipoOriginal === "vantagem") {
+    return "normal";
+  }
+
+  return "desvantagem";
+}
+
+function determinarTipoRolagem(
+  entidade,
+  descritor,
+  teste = descritor,
+) {
+  const tipoOriginal =
+    descritor?.tipoRolagem ??
+    teste?.tipoRolagem ??
+    "normal";
+
+  const desvantagemSituacional =
+    possuiDesvantagemSituacional(
+      entidade,
+      descritor,
+    );
+
+  return combinarTipoRolagem(
+    tipoOriginal,
+    desvantagemSituacional,
+  );
+}
   function calcularModificadorAtributo(valor) {
     return Math.floor((Number(valor) - 10) / 2);
   }
@@ -138,6 +219,12 @@ window.SistemaTestes = (function () {
   }
 
   return {
+    obterArmaduraEquipada,
+  armaduraCausaDesvantagemFurtividade,
+  armaduraCausaDesvantagemNado,
+  possuiDesvantagemSituacional,
+  combinarTipoRolagem,
+  determinarTipoRolagem,
     calcularModificadorAtributo,
     calcularBonusPericia,
     calcularBonusSalvaguarda,

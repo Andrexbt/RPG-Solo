@@ -1,54 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>A Fuga | RPG Solo</title>
 
-    <link rel="stylesheet" href="tema.css">
-    <link rel="stylesheet" href="aventuras.css">
-    <link rel="stylesheet" href="janelas-flutuantes.css">
-    <link rel="stylesheet" href="dados.css">
-    <link rel="stylesheet" href="anotacoes.css">
-    <link rel="stylesheet" href="ficha-personagem.css">
-    <link rel="stylesheet" href="detalhes-ficha.css">
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="aventuras.css" />
+    <link rel="stylesheet" href="janelas-flutuantes.css" />
+    <link rel="stylesheet" href="dados.css" />
+    <link rel="stylesheet" href="anotacoes.css" />
+    <link rel="stylesheet" href="ficha-personagem.css" />
+    <link rel="stylesheet" href="detalhes-ficha.css" />
   </head>
 
   <body>
-
     <div class="layout-aventura ficha-recolhida painelExplicativo-recolhido">
+      <aside id="gavetaFicha" class="gaveta-ficha" aria-label="Ficha do personagem">
+        <button
+          id="botaoRecolherFicha"
+          class="alca-ficha"
+          type="button"
+          aria-controls="painelFicha"
+          aria-expanded="false"
+          aria-label="Abrir ficha do personagem"
+        ></button>
 
-      <aside
-     id="gavetaFicha"
-     class="gaveta-ficha"
-     aria-label="Ficha do personagem"
-    >
-
-
-  <button
-    id="botaoRecolherFicha"
-    class="alca-ficha"
-    type="button"
-    aria-controls="painelFicha"
-    aria-expanded="false"
-    aria-label="Abrir ficha do personagem"
-  ></button>
-
-  <div
-    id="painelFicha"
-    class="painel-ficha-gaveta"
-  >
-
-
-    <div id="conteudoFicha" data-ficha-personagem></div>
-  </div>
+        <div id="painelFicha" class="painel-ficha-gaveta">
+          <div id="conteudoFicha" data-ficha-personagem></div>
+        </div>
       </aside>
 
-
       <main class="pagina-aventura">
-
         <div id="visualizacaoAventura" class="visualizacao-aventura">
           <header class="cabecalho-aventura">
             <p class="rotulo-aventura">RPG Solo</p>
@@ -57,222 +42,247 @@
           </header>
 
           <div class="corpo-aventura">
-
             <section class="cena-aventura" aria-label="Cena da aventura">
-
-            <div class="pergaminho-cena">
-
-              <img
-                class="pergaminho-completo"
-                src="Imagens/Assets/scroll-02-completo.webp"
-                alt=""
-                aria-hidden="true">
-
-                <div
-  class="controles-rolagem-pergaminho"
-  role="group"
-  aria-label="Controles de rolagem"
->
-  <button
-    id="rolarPergaminhoCima"
-    type="button"
-    aria-label="Rolar texto para cima"
-  >
-    ▲
-  </button>
-
-  <button
-    id="rolarPergaminhoBaixo"
-    type="button"
-    aria-label="Rolar texto para baixo"
-  >
-    ▼
-  </button>
-</div>
-
-               <div class="conteudo-pergaminho-cena">
+              <div class="pergaminho-cena">
+                <img
+                  class="pergaminho-completo"
+                  src="Imagens/Assets/scroll-02-completo.webp"
+                  alt=""
+                  aria-hidden="true"
+                />
 
                 <div
-                  id="fluxoNarrativo"
-                  class="fluxo-narrativo"
-                  aria-live="polite">
+                  class="controles-rolagem-pergaminho"
+                  role="group"
+                  aria-label="Controles de rolagem"
+                >
+                  <button id="rolarPergaminhoCima" type="button" aria-label="Rolar texto para cima">
+                    ▲
+                  </button>
+
+                  <button
+                    id="rolarPergaminhoBaixo"
+                    type="button"
+                    aria-label="Rolar texto para baixo"
+                  >
+                    ▼
+                  </button>
                 </div>
 
-                <div class="area-escolhas">
-                  <div id="listaEscolhas" class="lista-escolhas"></div>
+                <div class="conteudo-pergaminho-cena">
+                  <div id="fluxoNarrativo" class="fluxo-narrativo" aria-live="polite"></div>
+
+                  <div class="area-escolhas">
+                    <div id="listaEscolhas" class="lista-escolhas"></div>
+                  </div>
                 </div>
-
-               </div>
-            </div>
-
+              </div>
             </section>
 
             <aside class="adendos-aventura" aria-label="Ferramentas da aventura">
-
               <section
-        class="janela-anotacoes janela-flutuante janela-encaixada"
-        aria-labelledby="tituloAnotacoes"
-      >
-        <header class="cabecalho-janela-flutuante" data-alca-arraste>
-          <h2 id="tituloAnotacoes">Anotações</h2>
+                class="janela-anotacoes janela-flutuante janela-encaixada"
+                aria-labelledby="tituloAnotacoes"
+              >
+                <header class="cabecalho-janela-flutuante" data-alca-arraste>
+                  <h2 id="tituloAnotacoes">Anotações</h2>
 
-          <button
-            class="botao-minimizar-janela"
-            type="button"
-            aria-controls="conteudoAnotacoes"
-            aria-expanded="true"
-            aria-label="Minimizar janela de anotações"
-            data-minimizar-janela
-          >
-            -
-          </button>
-        </header>
+                  <button
+                    class="botao-minimizar-janela"
+                    type="button"
+                    aria-controls="conteudoAnotacoes"
+                    aria-expanded="true"
+                    aria-label="Minimizar janela de anotações"
+                    data-minimizar-janela
+                  >
+                    -
+                  </button>
+                </header>
 
-        <div id="conteudoAnotacoes" class="conteudo-anotacoes">
-          <textarea
-            id="campoAnotacoes"
-            rows="5"
-            aria-labelledby="tituloAnotacoes"
-            placeholder="Escreva suas anotações aqui..."
-          ></textarea>
-        </div>
+                <div id="conteudoAnotacoes" class="conteudo-anotacoes">
+                  <textarea
+                    id="campoAnotacoes"
+                    rows="5"
+                    aria-labelledby="tituloAnotacoes"
+                    placeholder="Escreva suas anotações aqui..."
+                  ></textarea>
+                </div>
               </section>
 
               <section
-  class="janela-velocidade-texto janela-flutuante janela-encaixada"
-  aria-labelledby="tituloVelocidadeTexto"
->
-  <h2 id="tituloVelocidadeTexto">
-    Texto
-  </h2>
+                class="janela-velocidade-texto janela-flutuante janela-encaixada"
+                aria-labelledby="tituloVelocidadeTexto"
+              >
+                <h2 id="tituloVelocidadeTexto">Texto</h2>
 
-  <label for="velocidadeTexto">
-    Velocidade
-  </label>
+                <label for="velocidadeTexto"> Velocidade </label>
 
-  <select id="velocidadeTexto">
-    <option value="instantaneo">
-      Instantâneo
-    </option>
+                <select id="velocidadeTexto">
+                  <option value="instantaneo">Instantâneo</option>
 
-    <option value="rapido">
-      Rápido
-    </option>
+                  <option value="rapido">Rápido</option>
 
-    <option value="normal">
-      Normal
-    </option>
+                  <option value="normal">Normal</option>
 
-    <option value="lento">
-      Lento
-    </option>
-  </select>
+                  <option value="lento">Lento</option>
+                </select>
               </section>
 
               <section
-        class="janela-dados janela-flutuante janela-encaixada"
-        aria-labelledby="tituloDados"
-      >
-        <header class="cabecalho-janela-flutuante" data-alca-arraste>
-          <h2 id="tituloDados">Dados</h2>
-
-          <button
-            class="botao-minimizar-janela"
-            type="button"
-            aria-controls="conteudoDados"
-            aria-expanded="true"
-            aria-label="Minimizar janela de dados"
-            data-minimizar-janela
-          >
-            -
-          </button>
-        </header>
-
-        <div id="conteudoDados" class="conteudo-dados">
-          <p
-  id="solicitacaoCaixaDados"
-  class="solicitacao-caixa-dados"
-  hidden
-></p>
-          <div class="caixa-dados">
-            <aside
-              id="colecaoDados"
-              class="colecao-dados"
-              aria-label="Dados disponíveis"
-            >
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="4"
-                aria-label="Dado de quatro faces"
+                class="janela-dados janela-flutuante janela-encaixada"
+                aria-labelledby="tituloDados"
               >
-                d4
-              </button>
+                <header class="cabecalho-janela-flutuante" data-alca-arraste>
+                  <h2 id="tituloDados">Dados</h2>
 
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="6"
-                aria-label="Dado de seis faces"
-              >
-                d6
-              </button>
+                  <button
+                    class="botao-minimizar-janela"
+                    type="button"
+                    aria-controls="conteudoDados"
+                    aria-expanded="true"
+                    aria-label="Minimizar janela de dados"
+                    data-minimizar-janela
+                  >
+                    -
+                  </button>
+                </header>
 
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="8"
-                aria-label="Dado de oito faces"
-              >
-                d8
-              </button>
+                <div id="conteudoDados" class="conteudo-dados">
+                  <p id="solicitacaoCaixaDados" class="solicitacao-caixa-dados" hidden></p>
+                  <div class="caixa-dados">
+                    <aside id="colecaoDados" class="colecao-dados" aria-label="Dados disponíveis">
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="4"
+                        aria-label="Dado de quatro faces"
+                      >
+                        d4
+                      </button>
 
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="10"
-                aria-label="Dado de dez faces"
-              >
-                d10
-              </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="6"
+                        aria-label="Dado de seis faces"
+                      >
+                        d6
+                      </button>
 
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="12"
-                aria-label="Dado de doze faces"
-              >
-                d12
-              </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="8"
+                        aria-label="Dado de oito faces"
+                      >
+                        d8
+                      </button>
 
-              <button
-                class="dado-disponivel"
-                type="button"
-                data-faces="20"
-                aria-label="Dado de vinte faces"
-              >
-                d20
-              </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="10"
+                        aria-label="Dado de dez faces"
+                      >
+                        d10
+                      </button>
+
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="12"
+                        aria-label="Dado de doze faces"
+                      >
+                        d12
+                      </button>
+
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="20"
+                        aria-label="Dado de vinte faces"
+                      >
+                        d20
+                      </button>
+                    </aside>
+
+                    <div
+                      id="bandejaDados"
+                      class="bandeja-dados"
+                      role="group"
+                      aria-label="Bandeja de rolagem"
+                    >
+                      <p class="instrucao-bandeja">Arraste os dados para esta área.</p>
+                    </div>
+                  </div>
+
+                  <output id="resultadoDado" aria-live="polite"></output>
+                </div>
+              </section>
             </aside>
+          </div>
+        </div>
 
-            <div
-              id="bandejaDados"
-              class="bandeja-dados"
-              role="group"
-              aria-label="Bandeja de rolagem"
-            >
-              <p class="instrucao-bandeja">Arraste os dados para esta área.</p>
+                  <section
+            id="telaFimAventura"
+            class="tela-fim-aventura"
+            aria-labelledby="tituloFimAventura"
+            hidden
+          >
+            <div class="cartao-fim-aventura">
+              <p
+                id="rotuloFimAventura"
+                class="rotulo-fim-aventura"
+              >
+                Aventura concluída
+              </p>
+
+              <h2 id="tituloFimAventura">
+                Fim
+              </h2>
+
+              <p
+                id="textoFimAventura"
+                class="texto-fim-aventura"
+              ></p>
+
+              <div
+                id="resumoFimAventura"
+                class="resumo-fim-aventura"
+                hidden
+              >
+                <p>
+                  Resultado
+                  <strong id="resultadoFimAventura"></strong>
+                </p>
+
+                <p id="linhaXpFimAventura">
+                  Experiência recebida
+                  <strong id="xpFimAventura"></strong>
+                </p>
+              </div>
+
+              <nav
+                class="acoes-fim-aventura"
+                aria-label="Ações após a aventura"
+              >
+                <a
+                  id="linkFichaFimAventura"
+                  class="botao-fim-aventura botao-fim-aventura-principal"
+                  href="meus-personagens.html"
+                >
+                  Ver ficha do personagem
+                </a>
+
+                <a
+                  class="botao-fim-aventura"
+                  href="aventuras-disponiveis.html"
+                >
+                  Voltar para aventuras
+                </a>
+              </nav>
             </div>
-          </div>
-
-          <output id="resultadoDado" aria-live="polite"></output>
-        </div>
-              </section>
-
-            </aside>
-
-          </div>
-        </div>
+          </section>
 
         <section
           id="visualizacaoCombate"
@@ -280,54 +290,48 @@
           aria-label="Campo de combate"
           hidden
         >
+          <div class="faixa-superior-combate">
+            <div id="painelTurnoCombate" class="painel-turno-combate" hidden>
+              <p>
+                Rodada
+                <span id="numeroRodadaCombate"> 1 </span>
+              </p>
 
-        <div class="faixa-superior-combate">
+              <ul id="filaIniciativaCombate" class="fila-iniciativa-combate"></ul>
 
-          <div id="painelTurnoCombate" class="painel-turno-combate" hidden>
-            <p>
-              Rodada
-              <span id="numeroRodadaCombate"> 1 </span>
-            </p>
-
-            <ul
-              id="filaIniciativaCombate"
-              class="fila-iniciativa-combate"
-            ></ul>
-
-            <section
-              id="painelAcaoAtualCombate"
-              class="painel-acao-atual-combate"
-              aria-live="polite"
-              hidden
-            >
-              <strong> Ação atual </strong>
-
-              <p id="mensagemAcaoAtualCombate">Aguardando o início do turno.</p>
-            </section>
-          </div>
-
-          <section id="painelHistoricoCombate" class="painel-historico-combate" hidden>
-            <header class="cabecalho-historico-combate">
-              <h2>Histórico</h2>
-
-              <button
-                id="botaoExpandirHistorico"
-                type="button"
-                aria-expanded="false"
-                aria-label="Expandir histórico"
-                title="Expandir histórico"
+              <section
+                id="painelAcaoAtualCombate"
+                class="painel-acao-atual-combate"
+                aria-live="polite"
+                hidden
               >
-                +
-              </button>
-            </header>
+                <strong> Ação atual </strong>
 
-            <div
-              id="listaHistoricoCombate"
-              class="lista-historico-combate"
-              aria-live="polite"
-            ></div>
-          </section>
+                <p id="mensagemAcaoAtualCombate">Aguardando o início do turno.</p>
+              </section>
+            </div>
 
+            <section id="painelHistoricoCombate" class="painel-historico-combate" hidden>
+              <header class="cabecalho-historico-combate">
+                <h2>Histórico</h2>
+
+                <button
+                  id="botaoExpandirHistorico"
+                  type="button"
+                  aria-expanded="false"
+                  aria-label="Expandir histórico"
+                  title="Expandir histórico"
+                >
+                  +
+                </button>
+              </header>
+
+              <div
+                id="listaHistoricoCombate"
+                class="lista-historico-combate"
+                aria-live="polite"
+              ></div>
+            </section>
           </div>
 
           <section
@@ -413,90 +417,106 @@
           </section>
 
           <div class="campo-combate">
-
             <div id="cameraCombate" class="camera-combate">
-    <img
-      id="imagemMapaCombate"
-      class="imagem-mapa-combate"
-      alt=""
-    >
+              <img id="imagemMapaCombate" class="imagem-mapa-combate" alt="" />
 
+              <div id="tabuleiroCombate" class="tabuleiro-combate"></div>
+            </div>
+          </div>
 
-            <div
-              id="tabuleiroCombate"
-              class="tabuleiro-combate"
-            ></div>
-          </div>
-          </div>
+          <section
+            id="telaResultadoCombate"
+            class="tela-resultado-combate"
+            aria-labelledby="tituloResultadoCombate"
+            hidden
+          >
+            <div class="cartao-resultado-combate">
+              <p
+                id="rotuloResultadoCombate"
+                class="rotulo-resultado-combate"
+              >
+                Combate encerrado
+              </p>
+
+              <h2 id="tituloResultadoCombate">
+                Vitória
+              </h2>
+
+              <p
+                id="textoResultadoCombate"
+                class="texto-resultado-combate"
+              ></p>
+
+              <div
+                id="recompensasResultadoCombate"
+                class="recompensas-resultado-combate"
+                hidden
+              >
+                <span>Experiência recebida</span>
+
+                <strong id="xpRecebidoResultadoCombate">
+                  +0 XP
+                </strong>
+
+                <small id="xpAtualResultadoCombate"></small>
+              </div>
+
+              <button
+                id="botaoContinuarResultadoCombate"
+                class="botao-continuar-resultado-combate"
+                type="button"
+              >
+                Continuar a aventura
+              </button>
+            </div>
+          </section>
 
 
         </section>
-
       </main>
 
-      <aside
-        class="gaveta-informacoes"
-        aria-label="Informações da aventura">
-
+      <aside class="gaveta-informacoes" aria-label="Informações da aventura">
         <button
-        id="botaoRecolherPainelExplicativo"
-        class="alca-informacoes"
-        type="button"
-        aria-controls="painelExplicativo"
-        aria-expanded="false"
-        aria-label="Abrir informações da aventura"
+          id="botaoRecolherPainelExplicativo"
+          class="alca-informacoes"
+          type="button"
+          aria-controls="painelExplicativo"
+          aria-expanded="false"
+          aria-label="Abrir informações da aventura"
         ></button>
 
-        <div
-        id="painelExplicativo"
-        class="painel-informacoes-componente ficha-componente">
+        <div id="painelExplicativo" class="painel-informacoes-componente ficha-componente">
+          <div class="ficha-corpo">
+            <div class="ficha">
+              <div class="ficha-moldura" aria-hidden="true">
+                <span class="moldura-parte moldura-faixa-topo"></span>
+                <span class="moldura-parte moldura-topo-esquerda"></span>
+                <span class="moldura-parte moldura-topo-centro"></span>
+                <span class="moldura-parte moldura-topo-direita"></span>
+                <span class="moldura-parte moldura-lateral-esquerda"></span>
+                <span class="moldura-parte moldura-lateral-direita"></span>
+                <span class="moldura-parte moldura-faixa-base"></span>
+                <span class="moldura-parte moldura-base-esquerda"></span>
+                <span class="moldura-parte moldura-base-centro"></span>
+                <span class="moldura-parte moldura-base-direita"></span>
+              </div>
 
-        <div class="ficha-corpo">
-          <div class="ficha">
+              <div class="ficha-conteudo-rolavel">
+                <div class="ficha-papel painel-informacoes-papel">
+                  <h2 id="tituloPainelExplicativo">Informações</h2>
 
-            <div class="ficha-moldura" aria-hidden="true">
-            <span class="moldura-parte moldura-faixa-topo"></span>
-            <span class="moldura-parte moldura-topo-esquerda"></span>
-            <span class="moldura-parte moldura-topo-centro"></span>
-            <span class="moldura-parte moldura-topo-direita"></span>
-            <span class="moldura-parte moldura-lateral-esquerda"></span>
-            <span class="moldura-parte moldura-lateral-direita"></span>
-            <span class="moldura-parte moldura-faixa-base"></span>
-            <span class="moldura-parte moldura-base-esquerda"></span>
-            <span class="moldura-parte moldura-base-centro"></span>
-            <span class="moldura-parte moldura-base-direita"></span>
-            </div>
-
-            <div class="ficha-conteudo-rolavel">
-              <div class="ficha-papel painel-informacoes-papel">
-
-                <h2 id="tituloPainelExplicativo">
-                  Informações
-                </h2>
-
-                 <div id="conteudoExplicativo">
-                    <p>
-                      As regras e explicações da situação aparecerão aqui.
-                    </p>
+                  <div id="conteudoExplicativo">
+                    <p>As regras e explicações da situação aparecerão aqui.</p>
                   </div>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
-
-        </div>
-
       </aside>
-
     </div>
 
-    <div
-      id="camadaDadosLancados"
-      class="camada-dados-lancados"
-      aria-live="polite"
-    ></div>
-
+    <div id="camadaDadosLancados" class="camada-dados-lancados" aria-live="polite"></div>
 
     <script src="banco-idiomas.js" defer></script>
     <script src="banco-talentos.js" defer></script>

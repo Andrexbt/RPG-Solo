@@ -199,6 +199,204 @@
         };
     }
 
+        function prepararRecuperacaoFimAventura(
+        personagem
+    ) {
+        if (!personagem) {
+            return {
+                sucesso: false,
+                motivo: "personagemAusente"
+            };
+        }
+
+        const personagemAtualizado =
+            copiar(personagem);
+
+        const pontosDeVida =
+            obterPontosDeVida(
+                personagemAtualizado
+            );
+
+        if (!pontosDeVida) {
+            return {
+                sucesso: false,
+                motivo:
+                    "pontosDeVidaAusentes"
+            };
+        }
+
+        const vidaAnterior =
+            Number(
+                pontosDeVida.atuais ?? 0
+            );
+
+        const vidaMaxima =
+            Number(
+                pontosDeVida.maximo ??
+                vidaAnterior
+            );
+
+        const vidaTemporariaAnterior =
+            Number(
+                pontosDeVida
+                    .temporarios ?? 0
+            );
+
+        const dadosVidaUsadosAnterior =
+            Number(
+                pontosDeVida
+                    .dadosVidaUsados ?? 0
+            );
+
+        pontosDeVida.atuais =
+            vidaMaxima;
+
+        pontosDeVida.temporarios = 0;
+
+        pontosDeVida.dadosVidaUsados = 0;
+
+        const recursos =
+            personagemAtualizado
+                .habilidades
+                ?.recursos ?? {};
+
+        const recursosRecuperados = [];
+
+        for (
+            const [recursoId, recurso]
+            of Object.entries(recursos)
+        ) {
+            if (
+                !recurso ||
+                typeof recurso !== "object"
+            ) {
+                continue;
+            }
+
+            const anterior =
+                Number(
+                    recurso.usosAtuais ?? 0
+                );
+
+            const maximo =
+                Number(
+                    recurso.usosMaximos ??
+                    anterior
+                );
+
+            recurso.usosAtuais = maximo;
+
+            if (anterior !== maximo) {
+                recursosRecuperados.push({
+                    id: recursoId,
+
+                    nome:
+                        recurso.nome ??
+                        recursoId,
+
+                    anterior,
+                    atual: maximo,
+                    recuperado:
+                        maximo - anterior
+                });
+            }
+        }
+
+        if (
+            Array.isArray(
+                personagemAtualizado
+                    .condicoes
+            )
+        ) {
+            personagemAtualizado
+                .condicoes = [];
+        }
+
+        return {
+            sucesso: true,
+
+            personagem:
+                personagemAtualizado,
+
+            recuperacao: {
+                pontosDeVida: {
+                    anterior:
+                        vidaAnterior,
+
+                    atual:
+                        vidaMaxima,
+
+                    recuperados:
+                        Math.max(
+                            0,
+                            vidaMaxima -
+                            vidaAnterior
+                        )
+                },
+
+                pontosDeVidaTemporariosRemovidos:
+                    vidaTemporariaAnterior,
+
+                dadosVidaRecuperados:
+                    dadosVidaUsadosAnterior,
+
+                recursos:
+                    recursosRecuperados
+            }
+        };
+    }
+
+        function recuperarPersonagemFimAventura() {
+        const personagem =
+            obterPersonagemAtual();
+
+        const preparacao =
+            prepararRecuperacaoFimAventura(
+                personagem
+            );
+
+        if (!preparacao.sucesso) {
+            return preparacao;
+        }
+
+        const personagemSalvo =
+            window.PersonagemDados
+                ?.atualizarSalvo?.(
+                    preparacao.personagem
+                );
+
+        if (!personagemSalvo) {
+            return {
+                sucesso: false,
+                motivo:
+                    "erroAoSalvarPersonagem"
+            };
+        }
+
+        atualizarPersonagemEmJogo(
+            personagemSalvo
+        );
+
+        if (
+            window.estadoJogo
+                ?.personagem
+        ) {
+            window.estadoJogo
+                .personagem
+                .condicoes = [];
+        }
+
+        return {
+            sucesso: true,
+
+            personagem:
+                personagemSalvo,
+
+            recuperacao:
+                preparacao.recuperacao
+        };
+    }
+
     function realizarDescansoLongo() {
         const personagem = obterPersonagemAtual();
         const registroDescansos = obterRegistroDescansos();
@@ -576,6 +774,8 @@ aplicarResultadoDadoVida,
     encerrarDescansoCurto,
     validarDescansoLongo,
     prepararDescansoLongo,
-    realizarDescansoLongo
+    realizarDescansoLongo,
+    prepararRecuperacaoFimAventura,
+        recuperarPersonagemFimAventura
     };
 })();

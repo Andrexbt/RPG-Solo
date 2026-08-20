@@ -21,6 +21,7 @@ window.bancoEquipamentos = {
       caBase: 10,
       usaDestreza: true,
       limiteDestreza: null,
+      desvantagemFurtividade: false,
     },
 
     couro: {
@@ -28,6 +29,7 @@ window.bancoEquipamentos = {
       caBase: 11,
       usaDestreza: true,
       limiteDestreza: null,
+      desvantagemFurtividade: false,
     },
 
     cotaDeMalha: {
@@ -35,6 +37,7 @@ window.bancoEquipamentos = {
       caBase: 16,
       usaDestreza: false,
       limiteDestreza: 0,
+      desvantagemFurtividade: true,
     },
   },
 

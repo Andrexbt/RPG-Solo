@@ -159,6 +159,32 @@ function normalizarPersonagem(personagemOriginal) {
     personagemNormalizado.recompensasRecebidas = [];
   }
 
+    if (
+    !Array.isArray(
+      personagemNormalizado
+        .aventurasConcluidas
+    )
+  ) {
+    personagemNormalizado
+      .aventurasConcluidas = [];
+  }
+
+  personagemNormalizado
+    .aventurasConcluidas =
+      personagemNormalizado
+        .aventurasConcluidas
+        .filter(
+          function (registro) {
+            return (
+              registro &&
+              typeof registro === "object" &&
+              typeof registro.aventuraId ===
+                "string" &&
+              registro.aventuraId.trim() !== ""
+            );
+          }
+        );
+
   if (
     personagemNormalizado.niveisPorClasse === undefined ||
     personagemNormalizado.niveisPorClasse === null ||
@@ -218,6 +244,104 @@ function obterNivelClasse(personagem, classeId) {
   }
 
   return 0;
+}
+
+function personagemVenceuAventura(
+  personagemOriginal,
+  aventuraId
+) {
+  if (
+    !personagemOriginal ||
+    typeof aventuraId !== "string" ||
+    aventuraId.trim() === ""
+  ) {
+    return false;
+  }
+
+  const personagem =
+    normalizarPersonagem(
+      personagemOriginal
+    );
+
+  return personagem
+    .aventurasConcluidas
+    .some(
+      function (registro) {
+        return (
+          registro.aventuraId ===
+            aventuraId &&
+          registro.resultado ===
+            "vitoria"
+        );
+      }
+    );
+}
+
+function registrarVitoriaAventura(
+  personagemOriginal,
+  aventuraId
+) {
+  if (
+    !personagemOriginal?.id ||
+    typeof aventuraId !== "string" ||
+    aventuraId.trim() === ""
+  ) {
+    return {
+      sucesso: false,
+      registrada: false,
+      motivo: "dadosInvalidos",
+    };
+  }
+
+  const personagem =
+    normalizarPersonagem(
+      personagemOriginal
+    );
+
+  if (
+    personagemVenceuAventura(
+      personagem,
+      aventuraId
+    )
+  ) {
+    return {
+      sucesso: true,
+      registrada: false,
+      motivo:
+        "aventuraJaConcluida",
+      personagem,
+    };
+  }
+
+  personagem
+    .aventurasConcluidas
+    .push({
+      aventuraId,
+      resultado: "vitoria",
+      concluidaEm:
+        new Date().toISOString(),
+    });
+
+  const personagemSalvo =
+    atualizarPersonagemSalvo(
+      personagem
+    );
+
+  if (!personagemSalvo) {
+    return {
+      sucesso: false,
+      registrada: false,
+      motivo: "falhaAoPersistir",
+    };
+  }
+
+  return {
+    sucesso: true,
+    registrada: true,
+    motivo: null,
+    personagem:
+      personagemSalvo,
+  };
 }
 
 const CHAVE_PERSONAGENS_SALVOS = "personagensRpgSolo";
@@ -455,6 +579,12 @@ window.PersonagemDados = {
   normalizar: normalizarPersonagem,
 
   obterNivelClasse: obterNivelClasse,
+
+    venceuAventura:
+    personagemVenceuAventura,
+
+  registrarVitoriaAventura:
+    registrarVitoriaAventura,
 
   listarSalvos: listarPersonagensSalvos,
 

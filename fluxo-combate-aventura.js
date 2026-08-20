@@ -614,6 +614,16 @@ function consolidarResultadoCombate({
           xpAtual:
             resultadoXp.xpAtual
               ?? null,
+
+                        novoNivelDisponivel:
+            resultadoXp
+              .novoNivelDisponivel
+              ?? false,
+
+          nivelAtualPorXp:
+            resultadoXp
+              .nivelAtualPorXp
+              ?? null,
         }
       : null,
   };
@@ -630,6 +640,113 @@ function consolidarResultadoCombate({
         combate.consolidacaoResultado
       ),
   };
+}
+
+let resultadoCombatePendente = null;
+
+function obterTextoTelaResultado(
+  resultadoId,
+  consequencia
+) {
+  const textoConfigurado =
+    consequencia.tela?.texto;
+
+  if (
+    typeof textoConfigurado === "string" &&
+    textoConfigurado.trim() !== ""
+  ) {
+    return textoConfigurado;
+  }
+
+  if (resultadoId === "vitoria") {
+    return "Seus adversários foram derrotados. O caminho está livre para continuar.";
+  }
+
+  return "Você não conseguiu superar seus adversários. Sua história, porém, ainda não terminou.";
+}
+
+function exibirTelaResultadoCombate({
+  resultadoId,
+  resultado,
+  consequencia,
+  combate,
+}) {
+  const vitoria =
+    resultadoId === "vitoria";
+
+  const configuracaoTela =
+    consequencia.tela ?? {};
+
+  rotuloResultadoCombate.textContent =
+    configuracaoTela.rotulo ??
+    "Combate encerrado";
+
+  tituloResultadoCombate.textContent =
+    configuracaoTela.titulo ??
+    (vitoria ? "Vitória" : "Derrota");
+
+  textoResultadoCombate.textContent =
+    obterTextoTelaResultado(
+      resultadoId,
+      consequencia
+    );
+
+  telaResultadoCombate.dataset.resultado =
+    resultadoId;
+
+  const xp =
+    resultado.consolidacao?.xp;
+
+  const recebeuXp =
+    vitoria &&
+    xp?.sucesso &&
+    xp?.concedida;
+
+  recompensasResultadoCombate.hidden =
+    !recebeuXp;
+
+  if (recebeuXp) {
+    xpRecebidoResultadoCombate.textContent =
+      `+${xp.quantidade} XP`;
+
+    xpAtualResultadoCombate.textContent =
+      xp.novoNivelDisponivel
+        ? `Total: ${xp.xpAtual} XP — novo nível disponível`
+        : `Total: ${xp.xpAtual} XP`;
+  }
+
+  resultadoCombatePendente = {
+    combate,
+    consequencia:
+      resultado.consequencia,
+  };
+
+  telaResultadoCombate.hidden = false;
+  botaoContinuarResultadoCombate.focus();
+}
+
+async function continuarAposResultadoCombate() {
+  if (!resultadoCombatePendente) {
+    return;
+  }
+
+  const {
+    combate,
+    consequencia,
+  } = resultadoCombatePendente;
+
+  resultadoCombatePendente = null;
+  telaResultadoCombate.hidden = true;
+
+  exibirTelaAventura();
+  ocultarEscolhas();
+
+  await window.MotorAventura
+    .aplicarConsequencia(
+      consequencia
+    );
+
+  combate.resultadoProcessado = true;
 }
 
 function processarResultadoCombate(
@@ -683,20 +800,12 @@ function processarResultadoCombate(
     return;
   }
 
-  setTimeout(
-    async function aplicarResultadoCombate() {
-      exibirTelaAventura();
-      ocultarEscolhas();
-
-      await window.MotorAventura
-        .aplicarConsequencia(
-          resultado.consequencia
-        );
-
-      combate.resultadoProcessado = true;
-    },
-    1200
-  );
+    exibirTelaResultadoCombate({
+    resultadoId,
+    resultado,
+    consequencia,
+    combate,
+  });
 }
 
 function verificarCombateDaCena(cena) {

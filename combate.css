@@ -747,6 +747,131 @@
 }
 
 /* =====================================================
+   Resultado do combate
+   ===================================================== */
+
+.tela-resultado-combate {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+
+  display: grid;
+  place-items: center;
+
+  padding: 24px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(18, 16, 13, 0.38),
+      rgba(7, 6, 5, 0.88)
+    );
+
+  backdrop-filter: blur(3px);
+}
+
+.tela-resultado-combate[hidden] {
+  display: none;
+}
+
+.cartao-resultado-combate {
+  width: min(520px, calc(100vw - 48px));
+  padding: 34px 38px;
+
+  color: #eee4d2;
+  text-align: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(40, 34, 27, 0.97),
+      rgba(20, 18, 15, 0.98)
+    );
+
+  border: 1px solid #806538;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.65),
+    inset 0 0 30px rgba(186, 139, 62, 0.07);
+}
+
+.rotulo-resultado-combate {
+  margin: 0 0 10px;
+
+  color: #bda478;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cartao-resultado-combate h2 {
+  margin: 0;
+
+  color: #f0d394;
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 500;
+}
+
+.texto-resultado-combate {
+  margin: 22px 0;
+
+  color: #ded4c3;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.recompensas-resultado-combate {
+  display: grid;
+  gap: 5px;
+
+  margin: 24px 0;
+  padding: 16px;
+
+  background: rgba(7, 6, 5, 0.42);
+  border-block: 1px solid rgba(189, 164, 120, 0.35);
+}
+
+.recompensas-resultado-combate[hidden] {
+  display: none;
+}
+
+.recompensas-resultado-combate span {
+  color: #b9ab96;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.recompensas-resultado-combate strong {
+  color: #e5bd67;
+  font-size: 1.4rem;
+}
+
+.recompensas-resultado-combate small {
+  color: #b9ab96;
+}
+
+.botao-continuar-resultado-combate {
+  min-width: 220px;
+  margin-top: 8px;
+  padding: 12px 20px;
+
+  color: #f5ead8;
+  font: inherit;
+  font-weight: 700;
+
+  background: #755126;
+  border: 1px solid #a27a3e;
+  border-radius: 2px;
+
+  cursor: pointer;
+}
+
+.botao-continuar-resultado-combate:hover {
+  background: #8a622e;
+}
+
+/* =====================================================
    Responsividade de combate
    ===================================================== */
 

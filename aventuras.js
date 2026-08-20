@@ -132,6 +132,57 @@ const visualizacaoAventura = document.querySelector("#visualizacaoAventura");
 
 const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
 
+const telaResultadoCombate =
+  document.querySelector("#telaResultadoCombate");
+
+const rotuloResultadoCombate =
+  document.querySelector("#rotuloResultadoCombate");
+
+const tituloResultadoCombate =
+  document.querySelector("#tituloResultadoCombate");
+
+const textoResultadoCombate =
+  document.querySelector("#textoResultadoCombate");
+
+const recompensasResultadoCombate =
+  document.querySelector("#recompensasResultadoCombate");
+
+const xpRecebidoResultadoCombate =
+  document.querySelector("#xpRecebidoResultadoCombate");
+
+const xpAtualResultadoCombate =
+  document.querySelector("#xpAtualResultadoCombate");
+
+const botaoContinuarResultadoCombate =
+  document.querySelector("#botaoContinuarResultadoCombate");
+
+  const telaFimAventura =
+  document.querySelector("#telaFimAventura");
+
+const rotuloFimAventura =
+  document.querySelector("#rotuloFimAventura");
+
+const tituloFimAventura =
+  document.querySelector("#tituloFimAventura");
+
+const textoFimAventura =
+  document.querySelector("#textoFimAventura");
+
+const resumoFimAventura =
+  document.querySelector("#resumoFimAventura");
+
+const resultadoFimAventura =
+  document.querySelector("#resultadoFimAventura");
+
+const linhaXpFimAventura =
+  document.querySelector("#linhaXpFimAventura");
+
+const xpFimAventura =
+  document.querySelector("#xpFimAventura");
+
+const linkFichaFimAventura =
+  document.querySelector("#linkFichaFimAventura");
+
 const janelaDados =
   document.querySelector(".janela-dados");
 
@@ -1915,6 +1966,11 @@ NarradorAventura.limpar();
 void exibirCena(aventuraAtual, cenaAtual);
 
 document.addEventListener("rolagemConcluida", receberResultadoRolagem);
+
+botaoContinuarResultadoCombate.addEventListener(
+  "click",
+  continuarAposResultadoCombate
+);
 
 document.addEventListener("combateEncerrado", processarResultadoCombate);
 

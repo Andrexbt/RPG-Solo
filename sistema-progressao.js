@@ -133,6 +133,47 @@
       };
     }
 
+        const aventuraId =
+      recompensa
+        .origem
+        ?.aventuraId;
+
+    const aventuraJaVencida =
+      typeof aventuraId === "string" &&
+      window.PersonagemDados
+        ?.venceuAventura?.(
+          personagem,
+          aventuraId
+        );
+
+    if (aventuraJaVencida) {
+      const xpAtual =
+        Number(personagem.xp) || 0;
+
+      const nivelAtualPorXp =
+        obterNivelPorXp(xpAtual);
+
+      return {
+        sucesso: true,
+        concedida: false,
+        motivo:
+          "aventuraJaConcluida",
+
+        personagem,
+
+        xpAnterior: xpAtual,
+        xpAtual,
+
+        nivelAnteriorPorXp:
+          nivelAtualPorXp,
+
+        nivelAtualPorXp,
+
+        novoNivelDisponivel:
+          false,
+      };
+    }
+
     const recompensaJaRecebida =
       personagem
         .recompensasRecebidas

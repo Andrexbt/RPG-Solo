@@ -204,15 +204,33 @@ solicitacaoCaixaDados.textContent =
     }
 
     solicitacaoRolagemAtual = {
-      gruposDeDados: structuredClone(configuracao.gruposDeDados ?? []),
-      modificador: Number(configuracao.modificador) || 0,
-      descricao: configuracao.descricao ?? "Rolagem solicitada",
-      quantidadeDeRolagens: Math.max(1,
-    Number(configuracao.quantidadeDeRolagens) || 1,
-  ),
+  gruposDeDados:
+    structuredClone(
+      configuracao.gruposDeDados ?? [],
+    ),
 
-  critico: Boolean(configuracao.critico),
-    };
+  modificador:
+    Number(configuracao.modificador) || 0,
+
+  descricao:
+    configuracao.descricao ??
+    "Rolagem solicitada",
+
+  quantidadeDeRolagens:
+    Math.max(
+      1,
+      Number(
+        configuracao.quantidadeDeRolagens,
+      ) || 1,
+    ),
+
+  critico:
+    Boolean(configuracao.critico),
+
+  tipoRolagem:
+    configuracao.tipoRolagem ??
+    "normal",
+};
 
     atualizarSolicitacaoCaixaDados();
   }
@@ -602,21 +620,62 @@ solicitacaoCaixaDados.textContent =
           resultado.modificador,
         );
 
-      resultadoDado.textContent =
-        resultadosVisuais
-          .map(function formatarResultado(
-            resultadoVisual,
-          ) {
-            return formatarExpressaoResultado(
-              resultadoVisual.subtotal,
-              resultadoVisual.modificador,
-              resultadoVisual.total,
-              Boolean(
-                solicitacaoResolvida?.critico,
-              ),
-            );
-          })
-          .join("\n");
+      const tipoRolagem =
+  solicitacaoResolvida?.tipoRolagem ??
+  "normal";
+
+const grupoD20 =
+  resultado.gruposRolados.find(
+    function encontrarD20(grupo) {
+      return grupo.numeroDeFaces === 20;
+    },
+  );
+
+if (
+  (tipoRolagem === "vantagem" ||
+    tipoRolagem === "desvantagem") &&
+  grupoD20?.resultados?.length === 2
+) {
+  const resultadosD20 =
+    grupoD20.resultados;
+
+  const resultadoEscolhido =
+    tipoRolagem === "vantagem"
+      ? Math.max(...resultadosD20)
+      : Math.min(...resultadosD20);
+
+  const totalEscolhido =
+    resultadoEscolhido +
+    resultado.modificador;
+
+  const nomeTipo =
+    tipoRolagem === "vantagem"
+      ? "vantagem"
+      : "desvantagem";
+
+  resultadoDado.textContent =
+    `${resultadosD20.join(" e ")} → ` +
+    `${resultadoEscolhido} ` +
+    `${resultado.modificador >= 0 ? "+" : "-"} ` +
+    `${Math.abs(resultado.modificador)} = ` +
+    `${totalEscolhido} (${nomeTipo})`;
+} else {
+  resultadoDado.textContent =
+    resultadosVisuais
+      .map(function formatarResultado(
+        resultadoVisual,
+      ) {
+        return formatarExpressaoResultado(
+          resultadoVisual.subtotal,
+          resultadoVisual.modificador,
+          resultadoVisual.total,
+          Boolean(
+            solicitacaoResolvida?.critico,
+          ),
+        );
+      })
+      .join("\n");
+}
 
       resultadoDado.classList.remove(
         "resultado-rolagem-erro",
