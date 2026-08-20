@@ -8,3 +8,7 @@ npm-debug.log*
 
 # Configurações pessoais do editor
 .vscode/
+
+# Arquivos temporários de geração e verificação
+tmp/
+*.inspect.ndjson
