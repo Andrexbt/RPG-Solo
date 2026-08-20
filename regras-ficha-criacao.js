@@ -125,17 +125,20 @@ function calcularBonusAtaqueArma(personagemAtual, idArma) {
     bonusAtaque = bonusAtaque + calcularBonusProficiencia();
   }
 
-  if (
-    personagemAtual.habilidades.escolhas.estilosDeLuta === "arquearia" &&
-    arma.categoria === "distancia"
-  ) {
-    bonusAtaque = bonusAtaque + 2;
-  }
+  bonusAtaque +=
+  window.TradutorRegras
+    .calcularModificadorPassivo(
+      {
+        participante: personagemAtual,
+        arma,
+      },
+      "modificarAtaqueArma"
+    );
 
   return bonusAtaque;
 }
 
-function calcularBonusDanoArma(personagemAtual, idArma) {
+function calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento = null) {
   const arma = obterDadosArma(idArma);
 
   if (arma === undefined) {
@@ -152,27 +155,51 @@ function calcularBonusDanoArma(personagemAtual, idArma) {
   const modificadorAtributo = calcularModificador(valorAtributo);
   const equipamentos = personagemAtual.detalhes.equipamentos;
 
-  const ehArmaSecundaria = armaEhSecundaria(personagemAtual, idArma);
+  const ehArmaSecundaria =
+    origemEquipamento !== null
+      ? origemEquipamento === "armaSecundaria"
+      : armaEhSecundaria(personagemAtual, idArma);
 
   let bonusDano = modificadorAtributo;
 
-  if (
-    ehArmaSecundaria &&
-    personagemAtual.habilidades.escolhas.estilosDeLuta !== "combateDuasArmas"
-  ) {
-    bonusDano = 0;
-  }
+const armaEmpunhadaEmUmaMao =
+  !arma.propriedades?.includes(
+    "duasMaos"
+  );
 
-  const usaDuelismo =
-    personagemAtual.habilidades.escolhas.estilosDeLuta === "duelismo" &&
-    equipamentos !== undefined &&
-    equipamentos.armaPrincipal === idArma &&
-    arma.categoria === "corpo-a-corpo" &&
-    equipamentos.itemSecundario !== "armaSecundaria";
+const nenhumaOutraArmaEmpunhada =
+  equipamentos?.itemSecundario
+    !== "armaSecundaria";
 
-  if (usaDuelismo) {
-    bonusDano = bonusDano + 2;
-  }
+const contextoEstilo = {
+  participante: personagemAtual,
+  arma,
+  ataqueComArmaSecundaria:
+    ehArmaSecundaria,
+  armaEmpunhadaEmUmaMao,
+  nenhumaOutraArmaEmpunhada,
+};
+
+const incluiModificadorNaArmaSecundaria =
+  window.TradutorRegras
+    .possuiEfeitoPassivo(
+      contextoEstilo,
+      "incluirModificadorAtributoNoDano"
+    );
+
+if (
+  ehArmaSecundaria
+  && !incluiModificadorNaArmaSecundaria
+) {
+  bonusDano = 0;
+}
+
+bonusDano +=
+  window.TradutorRegras
+    .calcularModificadorPassivo(
+      contextoEstilo,
+      "modificarDanoArma"
+    );
 
   return bonusDano;
 }
@@ -275,7 +302,11 @@ function converterDanoArma(dano) {
   };
 }
 
-function criarAtaqueCombateArma(personagemAtual, idArma) {
+function criarAtaqueCombateArma(
+  personagemAtual,
+  idArma,
+  origemEquipamento = "armaPrincipal",
+) {
   const arma = obterDadosArma(idArma);
 
   if (!arma) {
@@ -290,14 +321,33 @@ function criarAtaqueCombateArma(personagemAtual, idArma) {
 
   const bonusAtaque = calcularBonusAtaqueArma(personagemAtual, idArma);
 
-  const bonusDano = calcularBonusDanoArma(personagemAtual, idArma);
+  const bonusDano = calcularBonusDanoArma(
+    personagemAtual,
+    idArma,
+    origemEquipamento,
+  );
+
+  const atributoAtaque = obterAtributoAtaqueDaArma(
+  personagemAtual,
+  idArma,
+);
 
   const ataqueDistancia = arma.categoria === "distancia";
 
   return {
     id: idArma,
 
+    instanciaId: `${idArma}:${origemEquipamento}`,
+
+    armaId: idArma,
+
     nome: arma.nome,
+
+    atributoId: atributoAtaque,
+
+    origemEquipamento,
+
+    custoPadrao: "acao",
 
     categoria: ataqueDistancia ? "distancia" : "corpoACorpo",
 
@@ -344,7 +394,11 @@ function atualizarAtaquesCombatePersonagem() {
   }
 
   if (equipamentos.armaPrincipal) {
-    const ataquePrincipal = criarAtaqueCombateArma(personagem, equipamentos.armaPrincipal);
+    const ataquePrincipal = criarAtaqueCombateArma(
+      personagem,
+      equipamentos.armaPrincipal,
+      "armaPrincipal",
+    );
 
     if (ataquePrincipal) {
       ataques.push(ataquePrincipal);
@@ -352,7 +406,11 @@ function atualizarAtaquesCombatePersonagem() {
   }
 
   if (equipamentos.itemSecundario === "armaSecundaria" && equipamentos.armaSecundaria) {
-    const ataqueSecundario = criarAtaqueCombateArma(personagem, equipamentos.armaSecundaria);
+    const ataqueSecundario = criarAtaqueCombateArma(
+      personagem,
+      equipamentos.armaSecundaria,
+      "armaSecundaria",
+    );
 
     if (ataqueSecundario) {
       ataques.push(ataqueSecundario);
@@ -612,4 +670,3 @@ function atualizarAvisosEquipamentos() {
     avisoEquipamentos.appendChild(linha);
   });
 }
-

@@ -438,7 +438,7 @@ function renderizarListaAtaquesCombate(combate, participante) {
 
     botao.classList.add("botao-ataque-combate");
 
-    botao.dataset.idAtaque = ataque.id;
+    botao.dataset.idAtaque = ataque.instanciaId ?? ataque.id;
 
     const nomeAtaque =
   document.createElement("span");
@@ -533,7 +533,15 @@ if (
 
     let ataqueDisponivel = false;
 
-    if (alvo && participante.acaoDisponivel) {
+    const custoAtaque =
+      SistemaCombate.obterCustoAtaque(participante, ataque);
+
+    const recursoDisponivel =
+      custoAtaque === "nenhum" ||
+      (custoAtaque === "acao" && participante.acaoDisponivel) ||
+      (custoAtaque === "acaoBonus" && participante.acaoBonusDisponivel);
+
+    if (alvo && recursoDisponivel) {
       const validacao = SistemaCombate.validarSelecaoAcao(participante, alvo, ataque);
 
       ataqueDisponivel = validacao.sucesso;
@@ -548,8 +556,18 @@ if (
     listaAtaquesCombate.append(botao);
   }
 
-  if (!participante.acaoDisponivel) {
-    mensagemAtaquesCombate.textContent = "Sua ação já foi utilizada.";
+  const possuiAlgumRecursoDeAtaque = ataques.some((ataque) => {
+    const custo = SistemaCombate.obterCustoAtaque(participante, ataque);
+
+    return (
+      custo === "nenhum" ||
+      (custo === "acao" && participante.acaoDisponivel) ||
+      (custo === "acaoBonus" && participante.acaoBonusDisponivel)
+    );
+  });
+
+  if (!possuiAlgumRecursoDeAtaque) {
+    mensagemAtaquesCombate.textContent = "Seus ataques disponíveis já foram utilizados.";
 
     return;
   }

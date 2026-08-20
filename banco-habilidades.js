@@ -136,27 +136,93 @@ window.bancoHabilidades = {
       quantidadeEscolhas: 1,
 
       opcoes: [
-        {
-          id: "arquearia",
-          nome: "Arquearia",
-          descricaoCurta: "Estilo voltado para ataques com armas à distância.",
-        },
-        {
-          id: "defesa",
-          nome: "Defesa",
-          descricaoCurta: "Estilo voltado para proteção ao usar armadura.",
-        },
-        {
-          id: "duelismo",
-          nome: "Duelismo",
-          descricaoCurta: "Estilo voltado para lutar com uma arma em uma mão.",
-        },
-        {
-          id: "combateDuasArmas",
-          nome: "Combate com Duas Armas",
-          descricaoCurta: "Estilo voltado para lutar com uma arma em cada mão.",
-        },
-      ],
+  {
+    id: "arquearia",
+    nome: "Arquearia",
+
+    regra: {
+      tipo: "modificadorPassivo",
+
+      efeito: {
+        tipo: "modificarAtaqueArma",
+        valor: 2,
+      },
+
+      condicao: {
+        categoriaArma: "distancia",
+      },
+    },
+
+    descricaoCurta:
+      "Você recebe +2 nas jogadas de ataque feitas com armas à distância.",
+  },
+
+  {
+    id: "defesa",
+    nome: "Defesa",
+
+    regra: {
+      tipo: "modificadorPassivo",
+
+      efeito: {
+        tipo: "modificarClasseArmadura",
+        valor: 1,
+      },
+
+      condicao: {
+        usandoArmadura: true,
+      },
+    },
+
+    descricaoCurta:
+      "Enquanto estiver usando armadura, você recebe +1 na Classe de Armadura.",
+  },
+
+  {
+    id: "duelismo",
+    nome: "Duelismo",
+
+    regra: {
+      tipo: "modificadorPassivo",
+
+      efeito: {
+        tipo: "modificarDanoArma",
+        valor: 2,
+      },
+
+      condicao: {
+        categoriaArma: "corpo-a-corpo",
+        armaEmpunhadaEmUmaMao: true,
+        nenhumaOutraArmaEmpunhada: true,
+      },
+    },
+
+    descricaoCurta:
+      "Ao empunhar uma arma corpo a corpo em uma mão e nenhuma outra arma, você recebe +2 no dano dessa arma.",
+  },
+
+  {
+    id: "combateDuasArmas",
+    nome: "Combate com Duas Armas",
+
+    regra: {
+      tipo: "modificadorPassivo",
+
+      efeito: {
+        tipo:
+          "incluirModificadorAtributoNoDano",
+      },
+
+      condicao: {
+        ataqueComArmaSecundaria: true,
+      },
+    },
+
+    descricaoCurta:
+      "Ao realizar o ataque adicional com uma arma leve, você pode acrescentar o modificador do atributo ao dano.",
+  },
+],
+
     },
 
     maestriasArmas: {

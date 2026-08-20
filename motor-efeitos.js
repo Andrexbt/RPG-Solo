@@ -272,6 +272,324 @@ if (
   };
 }
 
+if (
+  efeito.tipo ===
+  "alterarCustoAtaqueAdicional"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "alterarCustoAtaqueAdicional",
+
+    participanteId:
+      contexto?.participante?.id ?? null,
+
+    ataqueId:
+      contexto?.ataque?.instanciaId ??
+      contexto?.ataque?.id ??
+      null,
+
+    custoOriginal:
+      efeito.custoOriginal,
+
+    novoCusto:
+      efeito.novoCusto,
+  };
+}
+
+if (
+  efeito.tipo ===
+  "permitirAtaqueAdicional"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "permitirAtaqueAdicional",
+
+    participanteId:
+      contexto?.participante?.id ?? null,
+
+    alvoId:
+      contexto?.alvo?.id ?? null,
+
+    ataqueId:
+      contexto?.ataque?.instanciaId ??
+      contexto?.ataque?.id ??
+      null,
+
+    alvo:
+      efeito.alvo,
+
+    dano:
+      structuredClone(efeito.dano ?? null),
+  };
+}
+
+if (
+  efeito.tipo ===
+  "causarDanoSemAcerto"
+) {
+  const atributoId =
+    contexto?.ataque?.atributoId;
+
+  const valorAtributo =
+    contexto
+      ?.participante
+      ?.atributos
+      ?.[atributoId];
+
+  const modificadorAtributo =
+    atributoId &&
+    valorAtributo !== undefined
+      ? window.SistemaTestes
+          .calcularModificadorAtributo(
+            valorAtributo,
+          )
+      : 0;
+
+  const minimo =
+    Number(
+      efeito
+        ?.quantidade
+        ?.minimo,
+    ) || 0;
+
+  const quantidade =
+    Math.max(
+      minimo,
+      modificadorAtributo,
+    );
+
+  const tipoDano =
+    efeito.tipoDano ===
+      "mesmoDaArma"
+      ? contexto
+          ?.ataque
+          ?.dano
+          ?.tipo ?? null
+      : efeito.tipoDano ?? null;
+
+  return {
+    sucesso: true,
+
+    tipo:
+      "causarDanoSemAcerto",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ?? null,
+
+    alvoId:
+      contexto
+        ?.alvo
+        ?.id ?? null,
+
+    ataqueId:
+      contexto
+        ?.ataque
+        ?.instanciaId ??
+      contexto
+        ?.ataque
+        ?.id ?? null,
+
+    quantidade,
+
+    tipoDano,
+
+    permiteOutrosBonus:
+      Boolean(
+        efeito.permiteOutrosBonus,
+      ),
+  };
+}
+
+if (
+  efeito.tipo ===
+  "concederDesvantagem"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "concederDesvantagem",
+
+    participanteId:
+      contexto
+        ?.alvo
+        ?.id ?? null,
+
+    origemParticipanteId:
+      contexto
+        ?.participante
+        ?.id ?? null,
+
+    rolagemAfetada:
+      efeito.rolagemAfetada,
+
+    quantidadeDeUsos:
+      efeito.quantidadeDeUsos ?? 1,
+
+    expiracao:
+      efeito.expiracao ?? null,
+  };
+}
+
+if (
+  efeito.tipo ===
+  "modificarDeslocamento"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "modificarDeslocamento",
+
+    participanteId:
+      contexto
+        ?.alvo
+        ?.id ?? null,
+
+    origemParticipanteId:
+      contexto
+        ?.participante
+        ?.id ?? null,
+
+    valorCelulas:
+      Number(
+        efeito.valorCelulas,
+      ) || 0,
+
+    acumulacao:
+      structuredClone(
+        efeito.acumulacao ?? null,
+      ),
+
+    expiracao:
+      efeito.expiracao ?? null,
+  };
+}
+
+if (
+  efeito.tipo ===
+  "deslocarAlvo"
+) {
+  return {
+    sucesso: true,
+
+    tipo:
+      "deslocarAlvo",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ?? null,
+
+    alvoId:
+      contexto
+        ?.alvo
+        ?.id ?? null,
+
+    distanciaCelulas:
+      Math.max(
+        0,
+        Number(
+          efeito.distanciaCelulas,
+        ) || 0,
+      ),
+
+    direcao:
+      efeito.direcao ?? null,
+  };
+}
+
+if (
+  efeito.tipo ===
+  "solicitarSalvaguarda"
+) {
+  let dificuldade =
+    Number(
+      efeito
+        .dificuldade
+        ?.base,
+    ) || 0;
+
+  const adicionais =
+    efeito
+      .dificuldade
+      ?.adicionar ?? [];
+
+  for (
+    const adicional of
+    adicionais
+  ) {
+    if (
+      adicional.tipo ===
+        "modificadorAtributoAtaque"
+    ) {
+      const atributoId =
+        contexto
+          ?.ataque
+          ?.atributoId;
+
+      const valorAtributo =
+        contexto
+          ?.participante
+          ?.atributos
+          ?.[atributoId];
+
+      dificuldade +=
+        window.SistemaTestes
+          .calcularModificadorAtributo(
+            valorAtributo,
+          );
+
+      continue;
+    }
+
+    if (
+      adicional.tipo ===
+        "bonusProficiencia"
+    ) {
+      dificuldade +=
+        Number(
+          contexto
+            ?.participante
+            ?.bonusProficiencia,
+        ) || 0;
+    }
+  }
+
+  return {
+    sucesso: true,
+
+    tipo:
+      "solicitarSalvaguarda",
+
+    participanteId:
+      contexto
+        ?.participante
+        ?.id ?? null,
+
+    alvoId:
+      contexto
+        ?.alvo
+        ?.id ?? null,
+
+    atributoId:
+      efeito.atributoId,
+
+    dificuldade,
+
+    resultados:
+      structuredClone(
+        efeito.resultados ?? {},
+      ),
+  };
+}
+
   return {
     sucesso: false,
     motivo:

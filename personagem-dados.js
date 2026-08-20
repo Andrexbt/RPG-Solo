@@ -14,7 +14,7 @@ function normalizarAtaquesPersonagem(personagem) {
     return;
   }
 
-  for (const ataque of ataques) {
+  for (const [indice, ataque] of ataques.entries()) {
     if (!ataque) {
       continue;
     }
@@ -26,6 +26,28 @@ function normalizarAtaquesPersonagem(personagem) {
     if (typeof ataque.nome === "string") {
       ataque.nome = ataque.nome.replace(/ \(secundária\)$/i, "");
     }
+
+    if (
+  !ataque.atributoId &&
+  typeof window.obterAtributoAtaqueDaArma === "function"
+) {
+  ataque.atributoId = window.obterAtributoAtaqueDaArma(
+    personagem,
+    ataque.id,
+  );
+}
+
+    ataque.armaId ??= ataque.id;
+
+    ataque.origemEquipamento ??=
+      indice === 0
+        ? "armaPrincipal"
+        : "armaSecundaria";
+
+    ataque.instanciaId ??=
+      `${ataque.armaId}:${ataque.origemEquipamento}`;
+
+    ataque.custoPadrao ??= "acao";
   }
 }
 

@@ -339,10 +339,17 @@
       bonusAtaque = bonusAtaque + calcularBonusProficiencia();
     }
 
-    if (personagemTemEstiloDeLuta(personagemAtual, "arquearia") && arma.categoria === "distancia") {
-      bonusAtaque = bonusAtaque + 2;
-    }
+    const modificadorEstilo =
+  window.TradutorRegras
+    .calcularModificadorPassivo(
+      {
+        participante: personagemAtual,
+        arma,
+      },
+      "modificarAtaqueArma"
+    );
 
+bonusAtaque += modificadorEstilo;
     return bonusAtaque;
   }
 
@@ -378,23 +385,44 @@
 
     let bonusDano = modificadorAtributo;
 
-    if (
-      ehArmaSecundaria &&
-      personagemTemEstiloDeLuta(personagemAtual, "combateDuasArmas") === false
-    ) {
-      bonusDano = 0;
-    }
+const armaEmpunhadaEmUmaMao =
+  !arma.propriedades?.includes(
+    "duasMaos"
+  );
 
-    const usaDuelismo =
-      personagemTemEstiloDeLuta(personagemAtual, "duelismo") &&
-      equipamentos !== undefined &&
-      equipamentos.armaPrincipal === idArma &&
-      arma.categoria === "corpo-a-corpo" &&
-      equipamentos.itemSecundario !== "armaSecundaria";
+const nenhumaOutraArmaEmpunhada =
+  equipamentos?.itemSecundario
+    !== "armaSecundaria";
 
-    if (usaDuelismo) {
-      bonusDano = bonusDano + 2;
-    }
+const contextoEstilo = {
+  participante: personagemAtual,
+  arma,
+  ataqueComArmaSecundaria:
+    ehArmaSecundaria,
+  armaEmpunhadaEmUmaMao,
+  nenhumaOutraArmaEmpunhada,
+};
+
+const incluiModificadorNaArmaSecundaria =
+  window.TradutorRegras
+    .possuiEfeitoPassivo(
+      contextoEstilo,
+      "incluirModificadorAtributoNoDano"
+    );
+
+if (
+  ehArmaSecundaria
+  && !incluiModificadorNaArmaSecundaria
+) {
+  bonusDano = 0;
+}
+
+bonusDano +=
+  window.TradutorRegras
+    .calcularModificadorPassivo(
+      contextoEstilo,
+      "modificarDanoArma"
+    );
 
     return bonusDano;
   }
@@ -602,9 +630,17 @@
       }
     }
 
-    if (personagemTemEstiloDeLuta(personagemAtual, "defesa") && idArmadura !== "semArmadura") {
-      classeArmadura += 1;
-    }
+    classeArmadura +=
+  window.TradutorRegras
+    .calcularModificadorPassivo(
+      {
+        participante: personagemAtual,
+        usandoArmadura:
+          idArmadura !== "semArmadura",
+      },
+      "modificarClasseArmadura"
+    );
+    
 
     return classeArmadura;
   }

@@ -2608,9 +2608,16 @@ function calcularClasseArmaduraCriacao() {
     classeArmadura = classeArmadura + itemSecundario.bonusCA;
   }
 
-  if (personagemTemEstiloDeLuta("defesa") && idArmadura !== "semArmadura") {
-    classeArmadura = classeArmadura + 1;
-  }
+  classeArmadura +=
+  window.TradutorRegras
+    .calcularModificadorPassivo(
+      {
+        participante: personagem,
+        usandoArmadura:
+          idArmadura !== "semArmadura",
+      },
+      "modificarClasseArmadura"
+    );
 
   return classeArmadura;
 }

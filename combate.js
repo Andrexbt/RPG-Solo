@@ -7,6 +7,32 @@ window.SistemaCombate = (function () {
       nome: configuracao.nome ?? entidade.nome,
       tipo: configuracao.tipo ?? entidade.tipo,
 
+      tamanho:
+        (Array.isArray(entidade.tamanho) ? entidade.tamanho[0] : entidade.tamanho) ?? "medio",
+
+      atributos: structuredClone(entidade.atributos ?? {}),
+
+      salvaguardas:
+  structuredClone(
+    entidade.salvaguardas ?? [],
+  ),
+
+bonusProficiencia:
+  Number(
+    entidade.bonusProficiencia,
+  ) ||
+  (
+    2 +
+    Math.floor(
+      (
+        Math.max(
+          1,
+          Number(entidade.nivel) || 1,
+        ) - 1
+      ) / 4,
+    )
+  ),
+
       bonusIniciativa: SistemaTestes.calcularModificadorAtributo(entidade.atributos.destreza),
 
       movimentoMaximo: configuracao.movimentoMaximo ?? 6,
@@ -25,23 +51,16 @@ window.SistemaCombate = (function () {
 
       especieId: entidade.especieId ?? null,
 
-      nivel:
-  Number(
-    entidade.nivel
-  ) || 0,
+      nivel: Number(entidade.nivel) || 0,
 
-niveisPorClasse:
-  structuredClone(
-    entidade.niveisPorClasse ?? {}
-  ),
+      niveisPorClasse: structuredClone(entidade.niveisPorClasse ?? {}),
 
-habilidades:
-  structuredClone(
-    entidade.habilidades ?? {
-      escolhas: {},
-      recursos: {}
-    }
-  ),
+      habilidades: structuredClone(
+        entidade.habilidades ?? {
+          escolhas: {},
+          recursos: {},
+        },
+      ),
 
       representacao: structuredClone(configuracao.representacao ?? entidade.avatar ?? null),
     };
@@ -69,8 +88,7 @@ habilidades:
     return {
       id: configuracao.id,
       status: "ativo",
-      encontro: structuredClone(
-        configuracao.encontro ?? null,),
+      encontro: structuredClone(configuracao.encontro ?? null),
 
       rodada: 1,
       indiceTurno: 0,
@@ -297,54 +315,68 @@ habilidades:
     return consumirRecurso(participante, "reacaoDisponivel");
   }
 
-  function participanteDominaArma(
-  participante,
-  ataque,
-) {
-  const maestriasEscolhidas =
-    participante
-      .habilidades
-      ?.escolhas
-      ?.maestriasArmas ?? [];
+  function participanteDominaArma(participante, ataque) {
+    const maestriasEscolhidas = participante.habilidades?.escolhas?.maestriasArmas ?? [];
 
-  if (
-    !Array.isArray(
-      maestriasEscolhidas,
-    )
-  ) {
-    return false;
+    if (!Array.isArray(maestriasEscolhidas)) {
+      return false;
+    }
+
+    return maestriasEscolhidas.includes(ataque.armaId ?? ataque.id);
   }
 
-  return maestriasEscolhidas.includes(
-    ataque.id,
-  );
-  }
+  function resolverTipoRolagem({ vantagem = false, desvantagem = false } = {}) {
+    if (vantagem && desvantagem) {
+      return "normal";
+    }
 
-  function resolverTipoRolagem(
-  {
-    vantagem = false,
-    desvantagem = false,
-  } = {},
-) {
-  if (
-    vantagem &&
-    desvantagem
-  ) {
+    if (vantagem) {
+      return "vantagem";
+    }
+
+    if (desvantagem) {
+      return "desvantagem";
+    }
+
     return "normal";
   }
 
-  if (vantagem) {
-    return "vantagem";
+  function obterIdentificadorAtaque(ataque) {
+    return ataque?.instanciaId ?? ataque?.id ?? null;
   }
 
-  if (desvantagem) {
-    return "desvantagem";
+  function encontrarAtaque(participante, identificadorAtaque) {
+    return participante?.ataques?.find(
+      (ataque) => obterIdentificadorAtaque(ataque) === identificadorAtaque,
+    );
   }
 
-  return "normal";
+  function obterCustoAtaque(participante, ataque) {
+    const ataqueHabilitador = participante?.ataqueAdicionalLeve;
+    const identificadorAtaque = obterIdentificadorAtaque(ataque);
+    const ataqueEhLeve = ataque?.propriedades?.includes("leve") ?? false;
+
+    const ehAtaqueAdicionalLeve =
+      ataqueEhLeve &&
+      ataqueHabilitador &&
+      ataqueHabilitador.ataqueId !== identificadorAtaque;
+
+    if (!ehAtaqueAdicionalLeve) {
+      return ataque?.custoPadrao ?? "acao";
+    }
+
+    const operacaoNick = window.TradutorRegras
+      .prepararOperacoes({
+        gatilho: "aoPrepararAtaqueAdicionalArmaLeve",
+        participante,
+        ataque,
+      })
+      .find((operacao) => operacao.tipo === "alterarCustoAtaqueAdicional");
+
+    return operacaoNick ? "nenhum" : "acaoBonus";
   }
 
-  function prepararAtaque(combate, idAtacante, idAlvo, idAtaque) {
+  function prepararAtaque(combate, idAtacante, idAlvo, idAtaque, opcoes = {}) {
     const atacante = combate.participantes.find((participante) => participante.id === idAtacante);
 
     if (!atacante) {
@@ -361,13 +393,6 @@ habilidades:
       };
     }
 
-    if (!atacante.acaoDisponivel) {
-      return {
-        sucesso: false,
-        motivo: "acaoIndisponivel",
-      };
-    }
-
     const alvo = combate.participantes.find((participante) => participante.id === idAlvo);
 
     if (!alvo) {
@@ -377,7 +402,7 @@ habilidades:
       };
     }
 
-    const ataque = atacante.ataques.find((ataque) => ataque.id === idAtaque);
+    const ataque = encontrarAtaque(atacante, idAtaque);
 
     if (!ataque) {
       return {
@@ -386,64 +411,127 @@ habilidades:
       };
     }
 
-    const resultadoSelecao = validarSelecaoAcao(atacante, alvo, ataque);
+    const custoAtaque = opcoes.custo ?? obterCustoAtaque(atacante, ataque);
 
-    const possuiVantagemTemporaria =
-  combate
-    .efeitosTemporarios
-    ?.some(
-      function verificarVantagem(
-        efeito,
-      ) {
-        return (
-          efeito.tipo ===
-            "vantagem" &&
-
-          efeito.participanteId ===
-            atacante.id &&
-
-          efeito.alvoId ===
-            alvo.id &&
-
-          efeito.rolagemAfetada ===
-            "ataque" &&
-
-          efeito.usosRestantes > 0
-        );
-      },
-    ) ??
-  false;
-
-    if (!resultadoSelecao.sucesso) {
-      return resultadoSelecao;
+    if (custoAtaque === "acao" && !atacante.acaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "acaoIndisponivel",
+      };
     }
 
-    const possuiVantagemBase =
+    if (custoAtaque === "acaoBonus" && !atacante.acaoBonusDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "acaoBonusIndisponivel",
+      };
+    }
+
+    const resultadoSelecao =
+  validarSelecaoAcao(
+    atacante,
+    alvo,
+    ataque,
+  );
+
+if (!resultadoSelecao.sucesso) {
+  return resultadoSelecao;
+}
+
+const atacanteEstaCaido =
+  atacante.condicoes?.some(
+    condicao =>
+      condicao.id === "caido",
+  ) ?? false;
+
+const alvoEstaCaido =
+  alvo.condicoes?.some(
+    condicao =>
+      condicao.id === "caido",
+  ) ?? false;
+
+const ataqueProximoContraCaido =
+  alvoEstaCaido &&
+  resultadoSelecao.distancia <= 1;
+
+const ataqueDistanteContraCaido =
+  alvoEstaCaido &&
+  resultadoSelecao.distancia > 1;
+
+const possuiVantagemTemporaria =
+  combate.efeitosTemporarios?.some(
+    function verificarVantagem(
+      efeito,
+    ) {
+      return (
+        efeito.tipo ===
+          "vantagem" &&
+
+        efeito.participanteId ===
+          atacante.id &&
+
+        efeito.alvoId ===
+          alvo.id &&
+
+        efeito.rolagemAfetada ===
+          "ataque" &&
+
+        efeito.usosRestantes > 0
+      );
+    },
+  ) ?? false;
+
+const possuiDesvantagemTemporaria =
+  combate.efeitosTemporarios?.some(
+    function verificarDesvantagem(
+      efeito,
+    ) {
+      return (
+        efeito.tipo ===
+          "desvantagem" &&
+
+        efeito.participanteId ===
+          atacante.id &&
+
+        efeito.rolagemAfetada ===
+          "ataque" &&
+
+        efeito.usosRestantes > 0
+      );
+    },
+  ) ?? false;
+
+const possuiVantagemBase =
   resultadoSelecao.tipoRolagem ===
-  "vantagem";
+    "vantagem";
 
 const possuiDesvantagemBase =
   resultadoSelecao.tipoRolagem ===
-  "desvantagem";
+    "desvantagem";
 
 const tipoRolagem =
   resolverTipoRolagem({
     vantagem:
       possuiVantagemBase ||
-      possuiVantagemTemporaria,
+      possuiVantagemTemporaria ||
+      ataqueProximoContraCaido,
 
     desvantagem:
-      possuiDesvantagemBase,
+      possuiDesvantagemBase ||
+      possuiDesvantagemTemporaria ||
+      atacanteEstaCaido ||
+      ataqueDistanteContraCaido,
   });
 
     combate.ataquePendente = {
-
-
       atacanteId: atacante.id,
       alvoId: alvo.id,
-      ataqueId: ataque.id,
+      ataqueId: obterIdentificadorAtaque(ataque),
+      custo: custoAtaque,
+      tipoEspecial: opcoes.tipoEspecial ?? null,
       tipoRolagem: tipoRolagem,
       vantagemTemporaria: possuiVantagemTemporaria,
+      desvantagemTemporaria: possuiDesvantagemTemporaria,
     };
 
     return {
@@ -453,6 +541,7 @@ const tipoRolagem =
       ataque,
       distancia: resultadoSelecao.distancia,
       tipoRolagem,
+      custo: custoAtaque,
     };
   }
 
@@ -474,7 +563,7 @@ const tipoRolagem =
       (participante) => participante.id === ataquePendente.alvoId,
     );
 
-    const ataque = atacante?.ataques.find((ataque) => ataque.id === ataquePendente.ataqueId);
+    const ataque = encontrarAtaque(atacante, ataquePendente.ataqueId);
 
     if (!atacante || !alvo || !ataque) {
       combate.ataquePendente = null;
@@ -508,77 +597,139 @@ const tipoRolagem =
 
     const acertou = !falhaAutomatica && (acertoCritico || total >= alvo.classeArmadura);
 
-    consumirAcao(atacante);
+    if (ataquePendente.custo === "acaoBonus") {
+      consumirAcaoBonus(atacante);
+    } else if (ataquePendente.custo !== "nenhum") {
+      consumirAcao(atacante);
+    }
+
+    const identificadorAtaque = obterIdentificadorAtaque(ataque);
+    const ataqueEhLeve = ataque.propriedades?.includes("leve") ?? false;
+
+    if (ataquePendente.tipoEspecial === "cleave") {
+      atacante.maestriasUsadasTurno ??= [];
+
+      if (!atacante.maestriasUsadasTurno.includes("cleave")) {
+        atacante.maestriasUsadasTurno.push("cleave");
+      }
+    } else if (ataquePendente.custo === "acao" && ataqueEhLeve) {
+      atacante.ataqueAdicionalLeve = {
+        ataqueId: identificadorAtaque,
+      };
+    } else if (
+      (ataquePendente.custo === "acaoBonus" || ataquePendente.custo === "nenhum") &&
+      atacante.ataqueAdicionalLeve
+    ) {
+      atacante.ataqueAdicionalLeve = null;
+    }
 
     combate.ataquePendente = null;
 
-    if (
-  ataquePendente
-    .vantagemTemporaria
-) {
-  const efeito =
-    combate
-      .efeitosTemporarios
-      ?.find(
-        function encontrarVantagem(
-          efeito,
-        ) {
-          return (
-            efeito.tipo ===
-              "vantagem" &&
+    if (ataquePendente.vantagemTemporaria) {
+      const efeito = combate.efeitosTemporarios?.find(function encontrarVantagem(efeito) {
+        return (
+          efeito.tipo === "vantagem" &&
+          efeito.participanteId === atacante.id &&
+          efeito.alvoId === alvo.id &&
+          efeito.rolagemAfetada === "ataque" &&
+          efeito.usosRestantes > 0
+        );
+      });
 
-            efeito.participanteId ===
-              atacante.id &&
+      if (efeito) {
+        efeito.usosRestantes -= 1;
+      }
 
-            efeito.alvoId ===
-              alvo.id &&
-
-            efeito.rolagemAfetada ===
-              "ataque" &&
-
-            efeito.usosRestantes > 0
-          );
-        },
+      combate.efeitosTemporarios = (combate.efeitosTemporarios ?? []).filter(
+        (efeito) => efeito.usosRestantes !== 0,
       );
+    }
 
-  if (efeito) {
-    efeito.usosRestantes -= 1;
-  }
+    if (ataquePendente.desvantagemTemporaria) {
+      const efeito = combate.efeitosTemporarios?.find(function encontrarDesvantagem(efeito) {
+        return (
+          efeito.tipo === "desvantagem" &&
+          efeito.participanteId === atacante.id &&
+          efeito.rolagemAfetada === "ataque" &&
+          efeito.usosRestantes > 0
+        );
+      });
 
-  combate.efeitosTemporarios =
-    (
-      combate
-        .efeitosTemporarios ??
-      []
-    ).filter(
-      (efeito) =>
-        efeito.usosRestantes !== 0,
-    );
-}
+      if (efeito) {
+        efeito.usosRestantes -= 1;
+      }
+
+      combate.efeitosTemporarios = (combate.efeitosTemporarios ?? []).filter(
+        (efeito) => efeito.usosRestantes !== 0,
+      );
+    }
+
+    let efeitosAposErro = [];
+
+    if (!acertou) {
+      efeitosAposErro = window.TradutorRegras.prepararOperacoes({
+        gatilho: "aposErrarAtaque",
+
+        participante: atacante,
+
+        ataque,
+
+        alvo,
+      });
+    }
 
     if (acertou) {
-  const efeitosDano =
-    window.TradutorRegras
-      .prepararOperacoes({
-        gatilho:
-          "aoRolarDano",
+      const operacoesAposAcerto = window.TradutorRegras.prepararOperacoes({
+        gatilho: "aposAcertarAtaque",
 
-        participante:
-          atacante,
+        participante: atacante,
 
-        ataque:
-          ataque,
+        ataque,
 
-        alvo:
-          alvo,
+        alvo,
       });
+
+      for (const operacao of operacoesAposAcerto) {
+        if (operacao.tipo !== "concederDesvantagem") {
+          continue;
+        }
+
+        aplicarDesvantagemTemporaria(combate, operacao);
+      }
+      const efeitosDano = window.TradutorRegras.prepararOperacoes({
+        gatilho: "aoRolarDano",
+
+        participante: atacante,
+
+        ataque: ataque,
+
+        alvo: alvo,
+      });
+
+      const efeitosOpcionaisAposAcerto =
+  operacoesAposAcerto.filter(
+    operacao =>
+      operacao.tipo ===
+        "deslocarAlvo" ||
+
+      operacao.tipo ===
+        "solicitarSalvaguarda" ||
+
+      (
+        operacao.tipo === "permitirAtaqueAdicional" &&
+        !(atacante.maestriasUsadasTurno ?? []).includes("cleave")
+      ),
+  );
 
       combate.danoPendente = {
         atacanteId: atacante.id,
         alvoId: alvo.id,
-        ataqueId: ataque.id,
+        ataqueId: identificadorAtaque,
         critico: acertoCritico,
-        efeitos: efeitosDano,
+        efeitos: [
+  ...efeitosDano,
+  ...efeitosOpcionaisAposAcerto,
+],
       };
     }
 
@@ -592,8 +743,92 @@ const tipoRolagem =
       classeArmadura: alvo.classeArmadura,
       atacante,
       alvo,
-      ataque,
+      ataque:
+        ataquePendente.tipoEspecial === "cleave"
+          ? (() => {
+              const ataqueCleave = structuredClone(ataque);
+              const modificadorAtributo = SistemaTestes.calcularModificadorAtributo(
+                atacante.atributos?.[ataque.atributoId],
+              );
+
+              ataqueCleave.dano.modificador = Math.min(0, modificadorAtributo);
+
+              return ataqueCleave;
+            })()
+          : ataque,
+      efeitosAposErro,
     };
+  }
+
+  function listarAlvosCleave(combate, atacanteId, primeiroAlvoId, ataqueId) {
+    const atacante = combate?.participantes?.find(
+      (participante) => participante.id === atacanteId,
+    );
+    const primeiroAlvo = combate?.participantes?.find(
+      (participante) => participante.id === primeiroAlvoId,
+    );
+    const ataque = encontrarAtaque(atacante, ataqueId);
+
+    if (!atacante || !primeiroAlvo || !ataque) {
+      return [];
+    }
+
+    return combate.participantes.filter((candidato) => {
+      if (
+        candidato.id === primeiroAlvo.id ||
+        candidato.id === atacante.id ||
+        candidato.estado === "derrotado" ||
+        candidato.tipo === atacante.tipo
+      ) {
+        return false;
+      }
+
+      const proximoDoPrimeiroAlvo =
+        calcularDistancia(primeiroAlvo.posicao, candidato.posicao) <= 1;
+
+      return (
+        proximoDoPrimeiroAlvo &&
+        validarSelecaoAcao(atacante, candidato, ataque).sucesso
+      );
+    });
+  }
+
+  function prepararAtaqueCleave(combate, atacanteId, primeiroAlvoId, novoAlvoId, ataqueId) {
+    const atacante = combate?.participantes?.find(
+      (participante) => participante.id === atacanteId,
+    );
+
+    if ((atacante?.maestriasUsadasTurno ?? []).includes("cleave")) {
+      return {
+        sucesso: false,
+        motivo: "cleaveJaUtilizado",
+      };
+    }
+
+    const alvoValido = listarAlvosCleave(
+      combate,
+      atacanteId,
+      primeiroAlvoId,
+      ataqueId,
+    ).some((alvo) => alvo.id === novoAlvoId);
+
+    if (!alvoValido) {
+      return {
+        sucesso: false,
+        motivo: "alvoCleaveInvalido",
+      };
+    }
+
+    return prepararAtaque(
+      combate,
+      atacanteId,
+      novoAlvoId,
+      ataqueId,
+      {
+        custo: "nenhum",
+        tipoEspecial: "cleave",
+      },
+    );
   }
 
   function removerParticipanteDaOrdem(combate, idParticipante) {
@@ -770,7 +1005,12 @@ const tipoRolagem =
       };
     }
 
-    const ataquePreparado = prepararAtaque(combate, inimigo.id, alvo.id, ataque.id);
+    const ataquePreparado = prepararAtaque(
+      combate,
+      inimigo.id,
+      alvo.id,
+      obterIdentificadorAtaque(ataque),
+    );
 
     if (!ataquePreparado.sucesso) {
       return ataquePreparado;
@@ -822,71 +1062,445 @@ const tipoRolagem =
     };
   }
 
-  function aplicarVantagemTemporaria(
-  combate,
-  operacao,
+  function aplicarCondicaoCombate(
+  participante,
+  condicaoId,
+  dados = {},
 ) {
-  if (
-    !combate ||
-    !operacao
-  ) {
+  if (!participante || !condicaoId) {
     return {
       sucesso: false,
-      motivo:
-        "dadosInvalidos",
+      motivo: "dadosInvalidos",
     };
   }
 
-  combate.efeitosTemporarios ??=
-    [];
+  participante.condicoes ??= [];
 
-  const efeitoTemporario = {
-    tipo:
-      "vantagem",
+  const condicaoExistente =
+    participante.condicoes.find(
+      condicao =>
+        condicao.id === condicaoId,
+    );
 
-    participanteId:
-      operacao.participanteId,
+  if (condicaoExistente) {
+    return {
+      sucesso: true,
+      aplicada: false,
+      motivo: "condicaoJaExistente",
+      condicao: condicaoExistente,
+    };
+  }
 
-    alvoId:
-      operacao.alvoId,
+  const condicao = {
+    id: condicaoId,
 
-    rolagemAfetada:
-      operacao.rolagemAfetada,
+    origem:
+      structuredClone(
+        dados.origem ?? null,
+      ),
 
-    usosRestantes:
-      operacao
-        .quantidadeDeUsos ??
-      1,
+    aplicadoPorId:
+      dados.aplicadoPorId ?? null,
 
-    expiracao:
-      operacao.expiracao ??
-      null,
-
-    turnoCriacao:
-      combate.rodada,
-
-      turnoExpiracao:
-  operacao.expiracao ===
-  "fimDoProximoTurno"
-    ? combate.rodada + 1
-    : null,
+    rodadaAplicacao:
+      dados.rodadaAplicacao ?? null,
   };
 
-  combate.efeitosTemporarios.push(
-    efeitoTemporario,
+  participante.condicoes.push(
+    condicao,
   );
 
   return {
     sucesso: true,
-    efeito:
-      efeitoTemporario,
+    aplicada: true,
+    condicao,
   };
 }
+
+function resolverSalvaguardaCombate(
+  combate,
+  operacao,
+  resultadoRolagem = null,
+) {
+  if (
+    !combate ||
+    operacao?.tipo !==
+      "solicitarSalvaguarda"
+  ) {
+    return {
+      sucesso: false,
+      motivo: "operacaoInvalida",
+    };
+  }
+
+  const alvo =
+    combate.participantes.find(
+      participante =>
+        participante.id ===
+        operacao.alvoId,
+    );
+
+  if (!alvo) {
+    return {
+      sucesso: false,
+      motivo: "alvoInexistente",
+    };
+  }
+
+  const bonusSalvaguarda =
+    window.SistemaTestes
+      .calcularBonusSalvaguarda(
+        alvo,
+        operacao.atributoId,
+      );
+
+  const rolagem =
+    resultadoRolagem ??
+    realizarRolagemComposta({
+      gruposDeDados: [
+        {
+          quantidade: 1,
+          numeroDeFaces: 20,
+        },
+      ],
+
+      modificador:
+        bonusSalvaguarda,
+    });
+
+  const resultadoTeste =
+    window.SistemaTestes
+      .resolverTesteContraCd(
+        rolagem,
+        operacao.dificuldade,
+      );
+
+  let resultadoCondicao = null;
+
+  const efeitoDoResultado =
+    resultadoTeste.sucesso
+      ? operacao
+          .resultados
+          ?.sucesso
+      : operacao
+          .resultados
+          ?.fracasso;
+
+  if (
+    efeitoDoResultado?.tipo ===
+      "aplicarCondicao"
+  ) {
+    resultadoCondicao =
+      aplicarCondicaoCombate(
+        alvo,
+        efeitoDoResultado.condicaoId,
+        {
+          origem:
+            operacao.origem,
+
+          aplicadoPorId:
+            operacao.participanteId,
+
+          rodadaAplicacao:
+            combate.rodada,
+        },
+      );
+  }
+
+  return {
+    sucesso: true,
+
+    alvo,
+
+    atributoId:
+      operacao.atributoId,
+
+    dificuldade:
+      operacao.dificuldade,
+
+    bonusSalvaguarda,
+
+    rolagem,
+
+    resultadoTeste,
+
+    passou:
+      resultadoTeste.sucesso,
+
+    resultadoCondicao,
+  };
+}
+
+  function aplicarDeslocamentoForcado(combate, operacao) {
+    if (!combate || operacao?.tipo !== "deslocarAlvo") {
+      return {
+        sucesso: false,
+        motivo: "operacaoInvalida",
+      };
+    }
+
+    const atacante = combate.participantes.find(
+      (participante) => participante.id === operacao.participanteId,
+    );
+
+    const alvo = combate.participantes.find((participante) => participante.id === operacao.alvoId);
+
+    if (!atacante || !alvo) {
+      return {
+        sucesso: false,
+        motivo: "participanteInexistente",
+      };
+    }
+
+    const direcaoColuna = Math.sign(alvo.posicao.coluna - atacante.posicao.coluna);
+
+    const direcaoLinha = Math.sign(alvo.posicao.linha - atacante.posicao.linha);
+
+    if (direcaoColuna === 0 && direcaoLinha === 0) {
+      return {
+        sucesso: false,
+        motivo: "participantesNaMesmaCelula",
+      };
+    }
+
+    const distanciaMaxima = Math.max(0, Number(operacao.distanciaCelulas) || 0);
+
+    let distanciaPercorrida = 0;
+
+    for (let passo = 1; passo <= distanciaMaxima; passo++) {
+      const proximaColuna = alvo.posicao.coluna + direcaoColuna;
+
+      const proximaLinha = alvo.posicao.linha + direcaoLinha;
+
+      const foraDoTabuleiro =
+        proximaColuna < 1 ||
+        proximaColuna > combate.tabuleiro.colunas ||
+        proximaLinha < 1 ||
+        proximaLinha > combate.tabuleiro.linhas;
+
+      if (foraDoTabuleiro) {
+        break;
+      }
+
+      const celulaOcupada = combate.participantes.some(
+        (participante) =>
+          participante.id !== alvo.id &&
+          participante.estado !== "derrotado" &&
+          participante.posicao.coluna === proximaColuna &&
+          participante.posicao.linha === proximaLinha,
+      );
+
+      if (celulaOcupada) {
+        break;
+      }
+
+      alvo.posicao.coluna = proximaColuna;
+
+      alvo.posicao.linha = proximaLinha;
+
+      distanciaPercorrida++;
+    }
+
+    return {
+      sucesso: true,
+
+      aplicado: distanciaPercorrida > 0,
+
+      distanciaPercorrida,
+
+      alvo,
+
+      posicaoFinal: structuredClone(alvo.posicao),
+    };
+  }
+
+  function aplicarDesvantagemTemporaria(combate, operacao) {
+    if (!combate || operacao?.tipo !== "concederDesvantagem") {
+      return {
+        sucesso: false,
+        motivo: "operacaoInvalida",
+      };
+    }
+
+    combate.efeitosTemporarios ??= [];
+
+    const efeitoTemporario = {
+      tipo: "desvantagem",
+
+      participanteId: operacao.participanteId,
+
+      origemParticipanteId: operacao.origemParticipanteId,
+
+      rolagemAfetada: operacao.rolagemAfetada,
+
+      usosRestantes: operacao.quantidadeDeUsos ?? 1,
+
+      expiracao: operacao.expiracao ?? null,
+
+      origem: structuredClone(operacao.origem ?? null),
+    };
+
+    combate.efeitosTemporarios.push(efeitoTemporario);
+
+    return {
+      sucesso: true,
+      efeito: efeitoTemporario,
+    };
+  }
+
+  function aplicarModificadorDeslocamentoTemporario(combate, operacao) {
+    if (!combate || operacao?.tipo !== "modificarDeslocamento") {
+      return {
+        sucesso: false,
+        motivo: "operacaoInvalida",
+      };
+    }
+
+    const participante = combate.participantes.find(
+      (participante) => participante.id === operacao.participanteId,
+    );
+
+    if (!participante) {
+      return {
+        sucesso: false,
+        motivo: "participanteInexistente",
+      };
+    }
+
+    combate.efeitosTemporarios ??= [];
+
+    const chaveAcumulacao = operacao.acumulacao?.chave ?? null;
+
+    const efeitoExistente = combate.efeitosTemporarios.find(
+      (efeito) =>
+        efeito.tipo === "modificadorDeslocamento" &&
+        efeito.participanteId === participante.id &&
+        chaveAcumulacao !== null &&
+        efeito.chaveAcumulacao === chaveAcumulacao,
+    );
+
+    if (efeitoExistente) {
+      return {
+        sucesso: true,
+        efeito: efeitoExistente,
+        aplicado: false,
+        motivo: "efeitoNaoAcumula",
+      };
+    }
+
+    const valorCelulas = Number(operacao.valorCelulas) || 0;
+
+    const efeitoTemporario = {
+      tipo: "modificadorDeslocamento",
+
+      participanteId: participante.id,
+
+      origemParticipanteId: operacao.origemParticipanteId,
+
+      valorCelulas,
+
+      chaveAcumulacao,
+
+      limiteTotalCelulas: operacao.acumulacao?.limiteTotalCelulas ?? null,
+
+      expiracao: operacao.expiracao ?? null,
+
+      origem: structuredClone(operacao.origem ?? null),
+    };
+
+    combate.efeitosTemporarios.push(efeitoTemporario);
+
+    participante.movimentoRestante = Math.max(0, participante.movimentoRestante + valorCelulas);
+
+    return {
+      sucesso: true,
+      efeito: efeitoTemporario,
+      aplicado: true,
+    };
+  }
+
+  function aplicarVantagemTemporaria(combate, operacao) {
+    if (!combate || !operacao) {
+      return {
+        sucesso: false,
+        motivo: "dadosInvalidos",
+      };
+    }
+
+    combate.efeitosTemporarios ??= [];
+
+    const efeitoTemporario = {
+      tipo: "vantagem",
+
+      participanteId: operacao.participanteId,
+
+      alvoId: operacao.alvoId,
+
+      rolagemAfetada: operacao.rolagemAfetada,
+
+      usosRestantes: operacao.quantidadeDeUsos ?? 1,
+
+      expiracao: operacao.expiracao ?? null,
+
+      turnoCriacao: combate.rodada,
+
+      turnoExpiracao:
+        operacao.expiracao === "fimDoProximoTurno" ||
+        operacao.expiracao === "fimDoProximoTurnoDoAtacante"
+          ? combate.rodada + 1
+          : null,
+    };
+
+    combate.efeitosTemporarios.push(efeitoTemporario);
+
+    return {
+      sucesso: true,
+      efeito: efeitoTemporario,
+    };
+  }
+
+  function aplicarDanoSemAcerto(combate, operacao) {
+    if (!combate || operacao?.tipo !== "causarDanoSemAcerto") {
+      return {
+        sucesso: false,
+        motivo: "operacaoInvalida",
+      };
+    }
+
+    const atacante = combate.participantes.find(
+      (participante) => participante.id === operacao.participanteId,
+    );
+
+    const alvo = combate.participantes.find((participante) => participante.id === operacao.alvoId);
+
+    const ataque = encontrarAtaque(atacante, operacao.ataqueId);
+
+    if (!atacante || !alvo || !ataque) {
+      return {
+        sucesso: false,
+        motivo: "participantesOuAtaqueInexistentes",
+      };
+    }
+
+    combate.danoPendente = {
+      atacanteId: atacante.id,
+      alvoId: alvo.id,
+      ataqueId: obterIdentificadorAtaque(ataque),
+      critico: false,
+      efeitos: [],
+    };
+
+    return resolverDano(combate, {
+      total: Math.max(0, Number(operacao.quantidade) || 0),
+    });
+  }
 
   function resolverDano(combate, resultadoRolagem) {
     const danoPendente = combate.danoPendente;
 
     const efeitosAplicados = [];
+
+    const efeitosDisponiveis = [];
 
     if (!danoPendente) {
       return {
@@ -894,6 +1508,28 @@ const tipoRolagem =
         motivo: "nenhumDanoPendente",
       };
     }
+
+    for (
+  const efeito of
+  danoPendente.efeitos ?? []
+) {
+  if (
+  efeito.tipo ===
+    "deslocarAlvo" ||
+
+  efeito.tipo ===
+    "solicitarSalvaguarda" ||
+
+  efeito.tipo ===
+    "permitirAtaqueAdicional"
+) {
+    efeitosDisponiveis.push(
+      structuredClone(
+        efeito,
+      ),
+    );
+  }
+}
 
     const alvo = combate.participantes.find(
       (participante) => participante.id === danoPendente.alvoId,
@@ -908,125 +1544,66 @@ const tipoRolagem =
       };
     }
 
-    const atacante =
-  combate.participantes.find(
-    (participante) =>
-      participante.id ===
-      danoPendente.atacanteId,
-  );
+    const atacante = combate.participantes.find(
+      (participante) => participante.id === danoPendente.atacanteId,
+    );
 
-const ataque =
-  atacante?.ataques.find(
-    (ataque) =>
-      ataque.id ===
-      danoPendente.ataqueId,
-  );
+    const ataque = encontrarAtaque(atacante, danoPendente.ataqueId);
 
-    const danoOriginal =
-  Math.max(
-    0,
-    resultadoRolagem.total,
-  );
+    const danoOriginal = Math.max(0, resultadoRolagem.total);
 
-const tipoDano =
-  ataque
-    ?.dano
-    ?.tipoDano ??
-  ataque
-    ?.tipoDano ??
-  null;
+    const tipoDano = ataque?.dano?.tipo ?? ataque?.dano?.tipoDano ?? ataque?.tipoDano ?? null;
 
-const operacoesDefensivas =
-  window.TradutorRegras
-    ?.prepararOperacoes({
-      gatilho: "passivo",
+    const operacoesDefensivas =
+      window.TradutorRegras?.prepararOperacoes({
+        gatilho: "passivo",
 
-      participante:
-        alvo,
-    }) ?? [];
+        participante: alvo,
+      }) ?? [];
 
-const possuiResistencia =
-  operacoesDefensivas.some(
-    function verificarResistencia(
-      operacao,
-    ) {
-      return (
-        operacao.tipo ===
-          "concederResistenciaDano" &&
+    const possuiResistencia = operacoesDefensivas.some(function verificarResistencia(operacao) {
+      return operacao.tipo === "concederResistenciaDano" && operacao.tipoDano === tipoDano;
+    });
 
-        operacao.tipoDano ===
-          tipoDano
-      );
-    },
-  );
-
-const dano =
-  possuiResistencia
-    ? Math.floor(
-        danoOriginal / 2,
-      )
-    : danoOriginal;
-
-
+    const dano = possuiResistencia ? Math.floor(danoOriginal / 2) : danoOriginal;
 
     alvo.pontosDeVida.atuais = Math.max(0, alvo.pontosDeVida.atuais - dano);
 
-    if (
-  dano > 0 &&
-  atacante &&
-  ataque
-) {
-  const operacoesAposDano =
-    window.TradutorRegras
-      .prepararOperacoes({
-        gatilho:
-          "aposCausarDano",
+    if (dano > 0 && atacante && ataque) {
+      const operacoesAposDano = window.TradutorRegras.prepararOperacoes({
+        gatilho: "aposCausarDano",
 
-        participante:
-          atacante,
+        participante: atacante,
 
-        ataque:
-          ataque,
+        ataque: ataque,
 
-        alvo:
-          alvo,
+        alvo: alvo,
       });
 
-  for (
-    const operacao of
-    operacoesAposDano
-  ) {
-    if (
-      operacao.tipo !==
-      "concederVantagem"
-    ) {
-      continue;
+      for (const operacao of operacoesAposDano) {
+        if (operacao.tipo === "concederVantagem") {
+          const resultadoEfeito = aplicarVantagemTemporaria(combate, operacao);
+
+          if (resultadoEfeito.sucesso) {
+            efeitosAplicados.push({
+              origem: structuredClone(operacao.origem),
+
+              tipo: operacao.tipo,
+
+              participanteId: operacao.participanteId,
+
+              alvoId: operacao.alvoId,
+            });
+          }
+
+          continue;
+        }
+
+        if (operacao.tipo === "modificarDeslocamento") {
+          efeitosDisponiveis.push(structuredClone(operacao));
+        }
+      }
     }
-
-    const resultadoEfeito = aplicarVantagemTemporaria(
-      combate,
-      operacao,
-    );
-
-    if (resultadoEfeito.sucesso) {
-  efeitosAplicados.push({
-    origem:
-      structuredClone(
-        operacao.origem,
-      ),
-
-    tipo:
-      operacao.tipo,
-
-    participanteId:
-      operacao.participanteId,
-
-    alvoId:
-      operacao.alvoId,
-  });
-}
-  }
-}
 
     const foiDerrotado = alvo.pontosDeVida.atuais === 0;
 
@@ -1056,51 +1633,38 @@ const dano =
       pontosDeVidaRestantes: alvo.pontosDeVida.atuais,
 
       efeitosAplicados,
+      efeitosDisponiveis,
     };
   }
 
-  function aplicarCura(
-  participante,
-  quantidade,
-) {
-  if (!participante?.pontosDeVida) {
+  function aplicarCura(participante, quantidade) {
+    if (!participante?.pontosDeVida) {
+      return {
+        sucesso: false,
+        motivo: "pontosDeVidaInexistentes",
+      };
+    }
+
+    const pontosAtuais = Number(participante.pontosDeVida.atuais) || 0;
+
+    const pontosMaximos = Number(participante.pontosDeVida.maximo) || 0;
+
+    const curaSolicitada = Math.max(0, Number(quantidade) || 0);
+
+    const novosPontos = Math.min(pontosMaximos, pontosAtuais + curaSolicitada);
+
+    participante.pontosDeVida.atuais = novosPontos;
+
     return {
-      sucesso: false,
-      motivo: "pontosDeVidaInexistentes",
+      sucesso: true,
+      motivo: null,
+      participante: participante,
+      curaSolicitada: curaSolicitada,
+      curaAplicada: novosPontos - pontosAtuais,
+      pontosDeVidaAtuais: novosPontos,
+      pontosDeVidaMaximos: pontosMaximos,
     };
   }
-
-  const pontosAtuais =
-    Number(participante.pontosDeVida.atuais) || 0;
-
-  const pontosMaximos =
-    Number(participante.pontosDeVida.maximo) || 0;
-
-  const curaSolicitada =
-    Math.max(0, Number(quantidade) || 0);
-
-  const novosPontos =
-    Math.min(
-      pontosMaximos,
-      pontosAtuais + curaSolicitada,
-    );
-
-  participante.pontosDeVida.atuais =
-    novosPontos;
-
-  return {
-    sucesso: true,
-    motivo: null,
-    participante: participante,
-    curaSolicitada: curaSolicitada,
-    curaAplicada:
-      novosPontos - pontosAtuais,
-    pontosDeVidaAtuais:
-      novosPontos,
-    pontosDeVidaMaximos:
-      pontosMaximos,
-  };
-}
 
   function iniciarTurnoAtual(combate) {
     const idParticipante = combate.ordemTurnos[combate.indiceTurno];
@@ -1116,17 +1680,56 @@ const dano =
       return null;
     }
 
-    window.TradutorRegras
-  .recarregarRegras(
-    participante,
-    "turno",
-  );
+    atualizarExpiracaoEfeitosTemporarios(combate, participante, "inicioTurno");
+
+    window.TradutorRegras.recarregarRegras(participante, "turno");
 
     combate.participanteAtivoId = participante.id;
-    participante.movimentoRestante = participante.movimentoMaximo;
+    const modificadorDeslocamento = (combate.efeitosTemporarios ?? [])
+      .filter(
+        (efeito) =>
+          efeito.tipo === "modificadorDeslocamento" && efeito.participanteId === participante.id,
+      )
+      .reduce(
+        (total, efeito) => total + (Number(efeito.valorCelulas) || 0),
+
+        0,
+      );
+
+    participante.movimentoRestante = Math.max(
+      0,
+      participante.movimentoMaximo + modificadorDeslocamento,
+    );
+
+    const indiceCondicaoCaido =
+  participante.condicoes?.findIndex(
+    condicao =>
+      condicao.id === "caido",
+  ) ?? -1;
+
+if (indiceCondicaoCaido >= 0) {
+  const custoParaLevantar =
+    Math.ceil(
+      participante.movimentoMaximo / 2,
+    );
+
+  participante.movimentoRestante =
+    Math.max(
+      0,
+      participante.movimentoRestante -
+        custoParaLevantar,
+    );
+
+  participante.condicoes.splice(
+    indiceCondicaoCaido,
+    1,
+  );
+}
     participante.acaoDisponivel = true;
     participante.acaoBonusDisponivel = true;
     participante.reacaoDisponivel = true;
+    participante.ataqueAdicionalLeve = null;
+    participante.maestriasUsadasTurno = [];
 
     return participante;
   }
@@ -1138,20 +1741,13 @@ const dano =
       return null;
     }
 
-    const participanteAtual =
-  combate.participantes.find(
-    (participante) =>
-      participante.id ===
-      combate.participanteAtivoId,
-  );
+    const participanteAtual = combate.participantes.find(
+      (participante) => participante.id === combate.participanteAtivoId,
+    );
 
-if (participanteAtual) {
-  atualizarExpiracaoEfeitosTemporarios(
-    combate,
-    participanteAtual,
-    "fimTurno",
-  );
-}
+    if (participanteAtual) {
+      atualizarExpiracaoEfeitosTemporarios(combate, participanteAtual, "fimTurno");
+    }
 
     combate.indiceTurno++;
 
@@ -1196,54 +1792,42 @@ if (participanteAtual) {
     return combate.ordemTurnos;
   }
 
-  function atualizarExpiracaoEfeitosTemporarios(
-  combate,
-  participante,
-  momento,
-) {
-  const efeitos =
-    combate.efeitosTemporarios ?? [];
+  function atualizarExpiracaoEfeitosTemporarios(combate, participante, momento) {
+    const efeitos = combate.efeitosTemporarios ?? [];
 
-  combate.efeitosTemporarios =
-    efeitos.filter(
-      function manterEfeito(
-        efeito,
-      ) {
-        if (
-          efeito.expiracao !==
-          "fimDoProximoTurno"
-        ) {
+    combate.efeitosTemporarios = efeitos.filter(function manterEfeito(efeito) {
+      const expiraNoFimDoProximoTurno =
+        efeito.expiracao === "fimDoProximoTurno" ||
+        efeito.expiracao === "fimDoProximoTurnoDoAtacante";
+
+      const expiraNoInicioDoTurno = efeito.expiracao === "inicioDoProximoTurnoDoAtacante";
+
+      if (expiraNoInicioDoTurno) {
+        if (momento !== "inicioTurno" || efeito.origemParticipanteId !== participante.id) {
           return true;
         }
 
-        if (
-          efeito.participanteId !==
-          participante.id
-        ) {
-          return true;
-        }
+        return false;
+      }
 
-        if (
-          momento !==
-          "fimTurno"
-        ) {
-          return true;
-        }
+      if (!expiraNoFimDoProximoTurno) {
+        return true;
+      }
+      if (efeito.participanteId !== participante.id) {
+        return true;
+      }
 
-        if (
-          efeito.turnoExpiracao ===
-          undefined
-        ) {
-          return true;
-        }
+      if (momento !== "fimTurno") {
+        return true;
+      }
 
-        return (
-          combate.rodada <
-          efeito.turnoExpiracao
-        );
-      },
-    );
-}
+      if (efeito.turnoExpiracao === undefined) {
+        return true;
+      }
+
+      return combate.rodada < efeito.turnoExpiracao;
+    });
+  }
 
   return {
     criarParticipanteCombate,
@@ -1254,13 +1838,24 @@ if (participanteAtual) {
     calcularDistancia,
     validarSelecaoCriatura,
     validarSelecaoAcao,
+    obterCustoAtaque,
+    listarAlvosCleave,
+    prepararAtaqueCleave,
     movimentarParticipante,
     consumirAcao,
     consumirAcaoBonus,
     consumirReacao,
     prepararAtaque,
+
     resolverAtaque,
+    aplicarDanoSemAcerto,
+    aplicarCondicaoCombate,
+    resolverSalvaguardaCombate,
+    aplicarDeslocamentoForcado,
+    aplicarDesvantagemTemporaria,
+    aplicarModificadorDeslocamentoTemporario,
     removerParticipanteDaOrdem,
+
     verificarFimCombate,
     resolverDano,
     aplicarCura,

@@ -394,42 +394,7 @@ function selecionarAlvoCombate(evento) {
   atualizarInterfaceTurno(combate);
 }
 
-function selecionarAtaqueCombate(evento) {
-  const botao = evento.target.closest(".botao-ataque-combate");
-
-  if (!botao || botao.disabled) {
-    return;
-  }
-
-  const combate = estadoAtualJogo.combateAtual;
-
-  if (!combate) {
-    return;
-  }
-
-  if (!combate.alvoSelecionadoId) {
-    exibirMensagemNarrativa(solicitacaoCombate, mensagensNarrativas.ataque.selecionarAlvo);
-
-    solicitacaoCombate.hidden = false;
-
-    return;
-  }
-
-  const resultado = SistemaCombate.prepararAtaque(
-    combate,
-    combate.participanteAtivoId,
-    combate.alvoSelecionadoId,
-    botao.dataset.idAtaque,
-  );
-
-  if (!resultado.sucesso) {
-    console.warn("Ataque recusado:", resultado.motivo);
-
-    atualizarInterfaceTurno(combate);
-
-    return;
-  }
-
+function iniciarRolagemAtaquePreparado(resultado) {
   let quantidadeD20 = 1;
 
   if (resultado.tipoRolagem === "vantagem" || resultado.tipoRolagem === "desvantagem") {
@@ -473,6 +438,41 @@ function selecionarAtaqueCombate(evento) {
   solicitacaoCombate.hidden = false;
 
   fecharPainelAtaquesCombate();
+}
+
+function selecionarAtaqueCombate(evento) {
+  const botao = evento.target.closest(".botao-ataque-combate");
+
+  if (!botao || botao.disabled) {
+    return;
+  }
+
+  const combate = estadoAtualJogo.combateAtual;
+
+  if (!combate) {
+    return;
+  }
+
+  if (!combate.alvoSelecionadoId) {
+    exibirMensagemNarrativa(solicitacaoCombate, mensagensNarrativas.ataque.selecionarAlvo);
+    solicitacaoCombate.hidden = false;
+    return;
+  }
+
+  const resultado = SistemaCombate.prepararAtaque(
+    combate,
+    combate.participanteAtivoId,
+    combate.alvoSelecionadoId,
+    botao.dataset.idAtaque,
+  );
+
+  if (!resultado.sucesso) {
+    console.warn("Ataque recusado:", resultado.motivo);
+    atualizarInterfaceTurno(combate);
+    return;
+  }
+
+  iniciarRolagemAtaquePreparado(resultado);
 }
 
 function criarParticipanteJogadorCombate(configuracao) {
@@ -943,6 +943,120 @@ function obterGruposDanoParaRolagem(ataque, critico, multiplicador = 1) {
   });
 }
 
+function oferecerGrazeAposErro(
+  combate,
+  resultadoAtaque,
+) {
+  const operacao =
+    resultadoAtaque
+      .efeitosAposErro
+      ?.find(
+        efeito =>
+          efeito.tipo ===
+            "causarDanoSemAcerto" &&
+          efeito.origem?.tipo ===
+            "maestria" &&
+          efeito.origem?.id ===
+            "graze",
+      );
+
+  if (!operacao) {
+    return false;
+  }
+
+  acoesCombate.innerHTML = "";
+
+  const botaoUsar =
+    document.createElement("button");
+
+  botaoUsar.type = "button";
+  botaoUsar.textContent =
+    "Usar Graze";
+
+  const botaoIgnorar =
+    document.createElement("button");
+
+  botaoIgnorar.type = "button";
+  botaoIgnorar.textContent =
+    "Ignorar";
+
+  botaoUsar.addEventListener(
+    "click",
+    function usarGraze() {
+      const resultadoDano =
+        SistemaCombate
+          .aplicarDanoSemAcerto(
+            combate,
+            operacao,
+          );
+
+      if (!resultadoDano.sucesso) {
+        console.warn(
+          "Não foi possível aplicar Graze:",
+          resultadoDano.motivo,
+        );
+
+        return;
+      }
+
+      acoesCombate.innerHTML = "";
+
+      adicionarEventoHistoricoCombate(
+        resultadoDano.foiDerrotado
+          ? `${resultadoDano.alvo.nome} foi derrotado`
+          : `${resultadoDano.alvo.nome} sofreu dano de Graze`,
+
+        resultadoDano.foiDerrotado
+          ? `Graze derrotou ${resultadoDano.alvo.nome}.`
+          : `Graze causou ${resultadoDano.dano} de dano.`,
+      );
+
+      exibirAcaoAtualCombate(
+        resultadoDano.foiDerrotado
+          ? `Graze derrotou ${resultadoDano.alvo.nome}.`
+          : `Graze causou ${resultadoDano.dano} de dano.`,
+      );
+
+      atualizarInterfaceTurno(combate);
+
+      if (resultadoDano.resultadoCombate) {
+        notificarFimCombate(combate);
+      }
+
+      solicitacaoCombate.textContent =
+        resultadoDano.foiDerrotado
+          ? `${resultadoDano.alvo.nome} foi derrotado.`
+          : `${resultadoDano.alvo.nome} sofreu ${resultadoDano.dano} de dano de Graze.`;
+
+      solicitacaoCombate.hidden = false;
+    },
+  );
+
+  botaoIgnorar.addEventListener(
+    "click",
+    function ignorarGraze() {
+      acoesCombate.innerHTML = "";
+
+      solicitacaoCombate.textContent =
+        "O ataque errou e Graze não foi utilizado.";
+
+      solicitacaoCombate.hidden = false;
+    },
+  );
+
+  acoesCombate.append(
+    botaoUsar,
+    botaoIgnorar,
+  );
+
+  solicitacaoCombate.textContent =
+    `O ataque errou. Usar Graze para causar ${operacao.quantidade} de dano?`;
+
+  solicitacaoCombate.hidden = false;
+
+  return true;
+}
+
 function resolverAtaqueJogador(resultadoRolagem) {
   const combate = estadoAtualJogo.combateAtual;
 
@@ -965,6 +1079,16 @@ function resolverAtaqueJogador(resultadoRolagem) {
     );
 
     exibirAcaoAtualCombate("Você errou o ataque.");
+
+    const grazeFoiOferecido =
+  oferecerGrazeAposErro(
+    combate,
+    resultadoAtaque,
+  );
+
+if (grazeFoiOferecido) {
+  return;
+}
 
     solicitacaoCombate.textContent = "O ataque errou.";
 
@@ -1047,6 +1171,454 @@ function aplicarCriticoNaRolagem(resultadoRolagem, critico) {
   };
 }
 
+function oferecerCleaveAposDano(
+  combate,
+  resultadoDano,
+) {
+  const operacao = resultadoDano.efeitosDisponiveis?.find(
+    (efeito) =>
+      efeito.tipo === "permitirAtaqueAdicional" &&
+      efeito.origem?.tipo === "maestria" &&
+      efeito.origem?.id === "cleave",
+  );
+
+  if (!operacao) {
+    return false;
+  }
+
+  const alvos = SistemaCombate.listarAlvosCleave(
+    combate,
+    operacao.participanteId,
+    operacao.alvoId,
+    operacao.ataqueId,
+  );
+
+  if (alvos.length === 0) {
+    return false;
+  }
+
+  acoesCombate.innerHTML = "";
+
+  for (const alvo of alvos) {
+    const botaoAlvo = document.createElement("button");
+
+    botaoAlvo.type = "button";
+    botaoAlvo.textContent = `Usar Cleave contra ${alvo.nome}`;
+
+    botaoAlvo.addEventListener("click", function usarCleave() {
+      const resultadoAtaque = SistemaCombate.prepararAtaqueCleave(
+        combate,
+        operacao.participanteId,
+        operacao.alvoId,
+        alvo.id,
+        operacao.ataqueId,
+      );
+
+      if (!resultadoAtaque.sucesso) {
+        console.warn("Não foi possível usar Cleave:", resultadoAtaque.motivo);
+        return;
+      }
+
+      acoesCombate.innerHTML = "";
+      combate.alvoSelecionadoId = alvo.id;
+      atualizarInterfaceTurno(combate);
+      iniciarRolagemAtaquePreparado(resultadoAtaque);
+    });
+
+    acoesCombate.append(botaoAlvo);
+  }
+
+  const botaoIgnorar = document.createElement("button");
+
+  botaoIgnorar.type = "button";
+  botaoIgnorar.textContent = "Ignorar";
+  botaoIgnorar.addEventListener("click", function ignorarCleave() {
+    acoesCombate.innerHTML = "";
+    solicitacaoCombate.textContent = "Cleave não foi utilizado.";
+    solicitacaoCombate.hidden = false;
+  });
+
+  acoesCombate.append(botaoIgnorar);
+  solicitacaoCombate.textContent =
+    "Cleave permite atacar outra criatura próxima ao primeiro alvo.";
+  solicitacaoCombate.hidden = false;
+
+  return true;
+}
+
+function oferecerToppleAposDano(
+  combate,
+  resultadoDano,
+) {
+  if (resultadoDano.foiDerrotado) {
+    return false;
+  }
+
+  const operacao =
+    resultadoDano
+      .efeitosDisponiveis
+      ?.find(
+        efeito =>
+          efeito.tipo ===
+            "solicitarSalvaguarda" &&
+
+          efeito.origem?.tipo ===
+            "maestria" &&
+
+          efeito.origem?.id ===
+            "topple",
+      );
+
+  if (!operacao) {
+    return false;
+  }
+
+  acoesCombate.innerHTML = "";
+
+  const botaoUsar =
+    document.createElement("button");
+
+  botaoUsar.type = "button";
+  botaoUsar.textContent =
+    "Usar Topple";
+
+  const botaoIgnorar =
+    document.createElement("button");
+
+  botaoIgnorar.type = "button";
+  botaoIgnorar.textContent =
+    "Ignorar";
+
+  botaoUsar.addEventListener(
+    "click",
+    function usarTopple() {
+      const resultado =
+        SistemaCombate
+          .resolverSalvaguardaCombate(
+            combate,
+            operacao,
+          );
+
+      if (!resultado.sucesso) {
+        console.warn(
+          "Não foi possível resolver Topple:",
+          resultado.motivo,
+        );
+
+        return;
+      }
+
+      acoesCombate.innerHTML = "";
+
+      const total =
+        resultado
+          .resultadoTeste
+          .total;
+
+      if (resultado.passou) {
+        adicionarEventoHistoricoCombate(
+          `${resultadoDano.alvo.nome} resistiu a Topple`,
+
+          `${resultadoDano.alvo.nome} obteve ${total} contra CD ${resultado.dificuldade} e permaneceu de pé.`,
+        );
+
+        exibirAcaoAtualCombate(
+          `${resultadoDano.alvo.nome} resistiu a Topple.`,
+        );
+
+        solicitacaoCombate.textContent =
+          `Salvaguarda: ${total} contra CD ${resultado.dificuldade}. Sucesso.`;
+      } else {
+        adicionarEventoHistoricoCombate(
+          `${resultadoDano.alvo.nome} caiu`,
+
+          `${resultadoDano.alvo.nome} obteve ${total} contra CD ${resultado.dificuldade} e ficou Caído.`,
+        );
+
+        exibirAcaoAtualCombate(
+          `${resultadoDano.alvo.nome} ficou Caído.`,
+        );
+
+        solicitacaoCombate.textContent =
+          `Salvaguarda: ${total} contra CD ${resultado.dificuldade}. O alvo ficou Caído.`;
+      }
+
+      atualizarInterfaceTurno(
+        combate,
+      );
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+  );
+
+  botaoIgnorar.addEventListener(
+    "click",
+    function ignorarTopple() {
+      acoesCombate.innerHTML = "";
+
+      solicitacaoCombate.textContent =
+        "Topple não foi utilizado.";
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+  );
+
+  acoesCombate.append(
+    botaoUsar,
+    botaoIgnorar,
+  );
+
+  solicitacaoCombate.textContent =
+    `Usar Topple? O alvo fará uma salvaguarda de Constituição contra CD ${operacao.dificuldade}.`;
+
+  solicitacaoCombate.hidden = false;
+
+  return true;
+}
+
+function oferecerPushAposDano(
+  combate,
+  resultadoDano,
+) {
+  if (resultadoDano.foiDerrotado) {
+    return false;
+  }
+
+  const operacao =
+    resultadoDano
+      .efeitosDisponiveis
+      ?.find(
+        efeito =>
+          efeito.tipo ===
+            "deslocarAlvo" &&
+
+          efeito.origem?.tipo ===
+            "maestria" &&
+
+          efeito.origem?.id ===
+            "push",
+      );
+
+  if (!operacao) {
+    return false;
+  }
+
+  acoesCombate.innerHTML = "";
+
+  const botaoUsar =
+    document.createElement("button");
+
+  botaoUsar.type = "button";
+  botaoUsar.textContent =
+    "Usar Push";
+
+  const botaoIgnorar =
+    document.createElement("button");
+
+  botaoIgnorar.type = "button";
+  botaoIgnorar.textContent =
+    "Ignorar";
+
+  botaoUsar.addEventListener(
+    "click",
+    function usarPush() {
+      const resultado =
+        SistemaCombate
+          .aplicarDeslocamentoForcado(
+            combate,
+            operacao,
+          );
+
+      if (!resultado.sucesso) {
+        console.warn(
+          "Não foi possível aplicar Push:",
+          resultado.motivo,
+        );
+
+        return;
+      }
+
+      acoesCombate.innerHTML = "";
+
+      atualizarInterfaceTurno(
+        combate,
+      );
+
+      if (resultado.aplicado) {
+        adicionarEventoHistoricoCombate(
+          `${resultadoDano.alvo.nome} foi empurrado`,
+
+          `${resultadoDano.alvo.nome} foi afastado em ${resultado.distanciaPercorrida} célula(s).`,
+        );
+
+        exibirAcaoAtualCombate(
+          `${resultadoDano.alvo.nome} foi empurrado em ${resultado.distanciaPercorrida} célula(s).`,
+        );
+
+        solicitacaoCombate.textContent =
+          `Push deslocou o alvo em ${resultado.distanciaPercorrida} célula(s).`;
+      } else {
+        exibirAcaoAtualCombate(
+          `${resultadoDano.alvo.nome} não pôde ser empurrado.`,
+        );
+
+        solicitacaoCombate.textContent =
+          "O caminho estava bloqueado e Push não deslocou o alvo.";
+      }
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+  );
+
+  botaoIgnorar.addEventListener(
+    "click",
+    function ignorarPush() {
+      acoesCombate.innerHTML = "";
+
+      solicitacaoCombate.textContent =
+        "Push não foi utilizado.";
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+  );
+
+  acoesCombate.append(
+    botaoUsar,
+    botaoIgnorar,
+  );
+
+  solicitacaoCombate.textContent =
+    "Usar Push para afastar o alvo em até 2 células?";
+
+  solicitacaoCombate.hidden = false;
+
+  return true;
+}
+
+function oferecerSlowAposDano(
+  combate,
+  resultadoDano,
+) {
+  if (resultadoDano.foiDerrotado) {
+    return false;
+  }
+
+  const operacao =
+    resultadoDano
+      .efeitosDisponiveis
+      ?.find(
+        efeito =>
+          efeito.tipo ===
+            "modificarDeslocamento" &&
+
+          efeito.origem?.tipo ===
+            "maestria" &&
+
+          efeito.origem?.id ===
+            "slow",
+      );
+
+  if (!operacao) {
+    return false;
+  }
+
+  acoesCombate.innerHTML = "";
+
+  const botaoUsar =
+    document.createElement("button");
+
+  botaoUsar.type = "button";
+  botaoUsar.textContent =
+    "Usar Slow";
+
+  const botaoIgnorar =
+    document.createElement("button");
+
+  botaoIgnorar.type = "button";
+  botaoIgnorar.textContent =
+    "Ignorar";
+
+  botaoUsar.addEventListener(
+    "click",
+    function usarSlow() {
+      const resultado =
+        SistemaCombate
+          .aplicarModificadorDeslocamentoTemporario(
+            combate,
+            operacao,
+          );
+
+      if (!resultado.sucesso) {
+        console.warn(
+          "Não foi possível aplicar Slow:",
+          resultado.motivo,
+        );
+
+        return;
+      }
+
+      acoesCombate.innerHTML = "";
+
+      if (resultado.aplicado) {
+        adicionarEventoHistoricoCombate(
+          `Slow afetou ${resultadoDano.alvo.nome}`,
+
+          `${resultadoDano.alvo.nome} teve seu deslocamento reduzido em 2 células.`,
+        );
+
+        exibirAcaoAtualCombate(
+          `${resultadoDano.alvo.nome} teve seu deslocamento reduzido.`,
+        );
+      } else {
+        exibirAcaoAtualCombate(
+          "Slow já estava afetando esse alvo.",
+        );
+      }
+
+      atualizarInterfaceTurno(
+        combate,
+      );
+
+      solicitacaoCombate.textContent =
+        resultado.aplicado
+          ? "Slow foi aplicado."
+          : "Slow não se acumula.";
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+  );
+
+  botaoIgnorar.addEventListener(
+    "click",
+    function ignorarSlow() {
+      acoesCombate.innerHTML = "";
+
+      solicitacaoCombate.textContent =
+        "Slow não foi utilizado.";
+
+      solicitacaoCombate.hidden =
+        false;
+    },
+  );
+
+  acoesCombate.append(
+    botaoUsar,
+    botaoIgnorar,
+  );
+
+  solicitacaoCombate.textContent =
+    "Usar Slow para reduzir o deslocamento do alvo em 2 células?";
+
+  solicitacaoCombate.hidden = false;
+
+  return true;
+}
+
 function concluirDanoJogador(combate, resultadoRolagem) {
   const critico = Boolean(combate.danoPendente?.critico);
 
@@ -1094,6 +1666,45 @@ function concluirDanoJogador(combate, resultadoRolagem) {
     solicitacaoCombate.textContent =
       `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
   }
+
+  const cleaveFoiOferecido = oferecerCleaveAposDano(
+    combate,
+    resultadoDano,
+  );
+
+  if (cleaveFoiOferecido) {
+    return;
+  }
+
+  const toppleFoiOferecido =
+  oferecerToppleAposDano(
+    combate,
+    resultadoDano,
+  );
+
+if (toppleFoiOferecido) {
+  return;
+}
+
+  const pushFoiOferecido =
+  oferecerPushAposDano(
+    combate,
+    resultadoDano,
+  );
+
+if (pushFoiOferecido) {
+  return;
+}
+
+  const slowFoiOferecido =
+  oferecerSlowAposDano(
+    combate,
+    resultadoDano,
+  );
+
+if (slowFoiOferecido) {
+  return;
+}
 
   const vexAplicado = resultadoDano.efeitosAplicados?.find(function encontrarVex(efeito) {
     return efeito.origem?.tipo === "maestria" && efeito.origem?.id === "vex";
