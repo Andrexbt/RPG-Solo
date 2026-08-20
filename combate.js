@@ -458,6 +458,27 @@ const ataqueDistanteContraCaido =
   alvoEstaCaido &&
   resultadoSelecao.distancia > 1;
 
+  const ataqueEhPesado =
+  ataque.propriedades?.includes(
+    "pesada",
+  ) ?? false;
+
+const atributoExigidoPelaArmaPesada =
+  ataque.categoria === "distancia"
+    ? "destreza"
+    : "forca";
+
+const valorAtributoArmaPesada =
+  Number(
+    atacante
+      .atributos
+      ?.[atributoExigidoPelaArmaPesada],
+  ) || 0;
+
+const naoAtendeRequisitoArmaPesada =
+  ataqueEhPesado &&
+  valorAtributoArmaPesada < 13;
+
 const possuiVantagemTemporaria =
   combate.efeitosTemporarios?.some(
     function verificarVantagem(
@@ -520,7 +541,8 @@ const tipoRolagem =
       possuiDesvantagemBase ||
       possuiDesvantagemTemporaria ||
       atacanteEstaCaido ||
-      ataqueDistanteContraCaido,
+      ataqueDistanteContraCaido ||
+  naoAtendeRequisitoArmaPesada,
   });
 
     combate.ataquePendente = {

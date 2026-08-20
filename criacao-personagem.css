@@ -995,6 +995,14 @@ label,
   font-weight: 750;
 }
 
+#passo-detalhes .erro-equipamento {
+  color: #c95f54;
+}
+
+#passo-detalhes .orientacao-equipamento {
+  color: var(--cor-ambar);
+}
+
 .campo-narrativo {
   display: flex;
   flex-direction: column;

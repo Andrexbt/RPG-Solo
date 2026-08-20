@@ -542,7 +542,7 @@ function atualizarFichaPersonagem(secoes) {
   });
 }
 
-preencherSelectArmaSecundaria();
+preencherSelectArmas();
 atualizarVisibilidadeArmaSecundaria();
 
 // =====================================================
@@ -1900,6 +1900,19 @@ function podeAvancarDoPassoAtual() {
       return false;
     }
 
+    const validacaoEquipamentos =
+  validarCombinacaoEquipamentos();
+
+if (!validacaoEquipamentos.valido) {
+  if (mensagem !== null) {
+    mensagem.textContent =
+      validacaoEquipamentos
+        .erros[0];
+  }
+
+  return false;
+}
+
     if (detalhesEstaoCompletos() === false) {
       if (mensagem !== null) {
         mensagem.textContent = "Faça todas as escolhas antes de continuar.";
@@ -2855,8 +2868,13 @@ function detalhesEstaoCompletos() {
     equipamentos.itemSecundario !== "armaSecundaria" ||
     (equipamentos.armaSecundaria !== undefined && equipamentos.armaSecundaria !== "");
 
+    const equipamentosValidos =
+  validarCombinacaoEquipamentos()
+    .valido;
+
   return (
-    nomePreenchido && idiomasPreenchidos && equipamentosPreenchidos && armaSecundariaPreenchida
+    nomePreenchido && idiomasPreenchidos && equipamentosPreenchidos && armaSecundariaPreenchida &&
+  equipamentosValidos
   );
 }
 

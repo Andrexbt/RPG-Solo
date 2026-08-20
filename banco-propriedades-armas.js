@@ -26,6 +26,18 @@ window.bancoPropriedadesArmas = {
       "Uma arma com Arremesso pode ser usada para atacar à distância, além de ataques corpo a corpo. O sistema calcula automaticamente o alcance da arma e aplica penalidades de distância quando necessário.",
   },
 
+  pesada: {
+  id: "pesada",
+
+  nome: "Pesada",
+
+   descricaoCurta:
+    "Exige Força 13 em armas corpo a corpo ou Destreza 13 em armas à distância.",
+
+  descricaoLonga:
+    "Uma arma Pesada impõe Desvantagem nas jogadas de ataque se o personagem tiver Força menor que 13 para uma arma corpo a corpo ou Destreza menor que 13 para uma arma à distância.",
+},
+
   duasMaos: {
     id: "duasMaos",
     nome: "Duas mãos",

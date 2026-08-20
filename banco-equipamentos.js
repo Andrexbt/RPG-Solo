@@ -88,7 +88,7 @@ window.bancoEquipamentos = {
       dano: "1d8",
       tipoDano: "perfurante",
       maestria: "slow",
-      propriedades: ["duasMaos", "municao"],
+      propriedades: ["pesada", "duasMaos", "municao"],
     },
 
     espadaCurta: {
@@ -134,6 +134,68 @@ window.bancoEquipamentos = {
       maestria: "vex",
       propriedades: ["duasMaos", "municao"],
     },
+
+    machadoGrande: {
+  nome: "Machado grande",
+
+  tipo: "marcial",
+
+  categoria: "corpo-a-corpo",
+
+  atributoAtaque: "forca",
+
+  dano: "1d12",
+
+  tipoDano: "cortante",
+
+  maestria: "cleave",
+
+  propriedades: [
+    "pesada",
+    "duasMaos",
+  ],
+},
+
+espadaGrande: {
+  nome: "Espada grande",
+
+  tipo: "marcial",
+
+  categoria: "corpo-a-corpo",
+
+  atributoAtaque: "forca",
+
+  dano: "2d6",
+
+  tipoDano: "cortante",
+
+  maestria: "graze",
+
+  propriedades: [
+    "pesada",
+    "duasMaos",
+  ],
+},
+
+marteloDeGuerra: {
+  nome: "Martelo de guerra",
+
+  tipo: "marcial",
+
+  categoria: "corpo-a-corpo",
+
+  atributoAtaque: "forca",
+
+  dano: "1d8",
+
+  tipoDano: "contundente",
+
+  maestria: "push",
+
+  propriedades: [
+    "versatil",
+  ],
+},
   },
 
   // =====================================================

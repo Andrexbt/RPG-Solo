@@ -439,32 +439,71 @@ function obterNomeArma(idArma) {
   return arma.nome;
 }
 
-function preencherSelectArmaSecundaria() {
-  if (armaSecundaria === null) {
+function preencherSelectArmas() {
+  preencherSelectArma(
+    armaPrincipal,
+    "Escolha uma arma",
+  );
+
+  preencherSelectArma(
+    armaSecundaria,
+    "Escolha uma arma secundária",
+  );
+}
+
+function preencherSelectArma(
+  elementoSelect,
+  textoInicial,
+) {
+  if (!elementoSelect) {
     return;
   }
 
-  armaSecundaria.innerHTML = "";
+  const valorAnterior =
+    elementoSelect.value;
 
-  const opcaoInicial = document.createElement("option");
+  elementoSelect.innerHTML = "";
+
+  const opcaoInicial =
+    document.createElement("option");
+
   opcaoInicial.value = "";
-  opcaoInicial.textContent = "Escolha uma arma";
-  armaSecundaria.appendChild(opcaoInicial);
+  opcaoInicial.textContent =
+    textoInicial;
 
-  Object.keys(bancoEquipamentos.armas).forEach(function (idArma) {
-    const arma = bancoEquipamentos.armas[idArma];
+  elementoSelect.appendChild(
+    opcaoInicial,
+  );
 
-    const opcao = document.createElement("option");
+  for (
+    const [idArma, arma]
+    of Object.entries(
+      window.bancoEquipamentos.armas,
+    )
+  ) {
+    const opcao =
+      document.createElement("option");
+
     opcao.value = idArma;
 
-    if (typeof arma === "string") {
-      opcao.textContent = arma;
-    } else {
-      opcao.textContent = arma.nome;
-    }
+    opcao.textContent =
+      typeof arma === "string"
+        ? arma
+        : arma.nome;
 
-    armaSecundaria.appendChild(opcao);
-  });
+    elementoSelect.appendChild(
+      opcao,
+    );
+  }
+
+  if (
+    valorAnterior &&
+    window.bancoEquipamentos
+      .armas[valorAnterior]
+  ) {
+    elementoSelect.value =
+      valorAnterior;
+  }
 }
 
 function atualizarVisibilidadeArmaSecundaria() {
@@ -578,95 +617,173 @@ function armaTemPropriedade(idArma, propriedade) {
   return propriedades.includes(propriedade);
 }
 
-function obterAvisosEquipamentos() {
-  const equipamentos = personagem.detalhes.equipamentos;
-  const avisos = [];
+function validarCombinacaoEquipamentos() {
+  const equipamentos =
+    personagem
+      ?.detalhes
+      ?.equipamentos;
 
-  if (equipamentos === undefined) {
-    return avisos;
+  const resultado = {
+    valido: true,
+    erros: [],
+    avisos: [],
+  };
+
+  if (!equipamentos) {
+    return resultado;
   }
 
-  const armaPrincipalId = equipamentos.armaPrincipal;
-  const armaSecundariaId = equipamentos.armaSecundaria;
-  const itemSecundarioId = equipamentos.itemSecundario;
+  const armaPrincipalId =
+    equipamentos.armaPrincipal;
 
-  const armaPrincipal = obterDadosArma(armaPrincipalId);
+  const armaSecundariaId =
+    equipamentos.armaSecundaria;
+
+  const itemSecundarioId =
+    equipamentos.itemSecundario;
+
+  const armaPrincipal =
+    obterDadosArma(
+      armaPrincipalId,
+    );
+
+  const possuiItemNaOutraMao =
+    itemSecundarioId === "escudo" ||
+    (
+      itemSecundarioId ===
+        "armaSecundaria" &&
+      Boolean(armaSecundariaId)
+    );
 
   if (
-    armaPrincipalId !== undefined &&
-    armaPrincipalId !== "" &&
-    armaTemPropriedade(armaPrincipalId, "duasMaos") &&
-    itemSecundarioId === "escudo"
+    armaPrincipalId &&
+    armaTemPropriedade(
+      armaPrincipalId,
+      "duasMaos",
+    ) &&
+    possuiItemNaOutraMao
   ) {
-    avisos.push(
-      "A arma principal parece exigir duas mãos, então ela pode não combinar com escudo.",
+    resultado.erros.push(
+      "Uma arma com a propriedade Duas mãos não pode ser combinada com escudo ou arma secundária.",
     );
   }
 
   if (
-    armaPrincipalId !== undefined &&
-    armaPrincipalId !== "" &&
-    armaTemPropriedade(armaPrincipalId, "duasMaos") &&
-    itemSecundarioId === "armaSecundaria"
+    itemSecundarioId ===
+      "armaSecundaria" &&
+    armaSecundariaId
   ) {
-    avisos.push(
-      "A arma principal parece exigir duas mãos, então ela pode não combinar com uma arma secundária.",
+    const armaPrincipalEhLeve =
+      armaTemPropriedade(
+        armaPrincipalId,
+        "leve",
+      );
+
+    const armaSecundariaEhLeve =
+      armaTemPropriedade(
+        armaSecundariaId,
+        "leve",
+      );
+
+    if (
+      !armaPrincipalEhLeve ||
+      !armaSecundariaEhLeve
+    ) {
+      resultado.avisos.push(
+        "Esta combinação pode ser equipada, mas o ataque adicional da propriedade Leve exige duas armas Leves diferentes.",
+      );
+    }
+  }
+
+  const estiloDeLuta =
+    personagem
+      ?.habilidades
+      ?.escolhas
+      ?.estilosDeLuta;
+
+  if (
+    estiloDeLuta ===
+      "combateDuasArmas" &&
+    itemSecundarioId !==
+      "armaSecundaria"
+  ) {
+    resultado.avisos.push(
+      "Combate com Duas Armas só terá efeito quando o personagem estiver usando duas armas.",
     );
   }
 
   if (
-    itemSecundarioId === "armaSecundaria" &&
-    armaSecundariaId !== undefined &&
-    armaSecundariaId !== "" &&
-    armaTemPropriedade(armaSecundariaId, "leve") === false
+    estiloDeLuta === "duelismo" &&
+    itemSecundarioId ===
+      "armaSecundaria"
   ) {
-    avisos.push(
-      "Para lutar com duas armas, a arma secundária normalmente deveria ter a propriedade leve.",
+    resultado.avisos.push(
+      "Duelismo não concede seu bônus enquanto outra arma estiver sendo empunhada.",
     );
   }
 
   if (
-    personagem.habilidades.escolhas.estilosDeLuta === "combateDuasArmas" &&
-    itemSecundarioId !== "armaSecundaria"
+    estiloDeLuta === "duelismo" &&
+    armaPrincipal &&
+    armaPrincipal.categoria !==
+      "corpo-a-corpo"
   ) {
-    avisos.push("Você escolheu Combate com Duas Armas, mas não escolheu uma arma secundária.");
+    resultado.avisos.push(
+      "Duelismo se aplica somente a armas corpo a corpo.",
+    );
   }
 
-  if (
-    personagem.habilidades.escolhas.estilosDeLuta === "duelismo" &&
-    itemSecundarioId === "armaSecundaria"
-  ) {
-    avisos.push("Duelismo normalmente não se aplica quando você está usando uma arma secundária.");
-  }
+  resultado.valido =
+    resultado.erros.length === 0;
 
-  if (
-    personagem.habilidades.escolhas.estilosDeLuta === "duelismo" &&
-    armaPrincipal !== undefined &&
-    armaPrincipal.categoria !== "corpo-a-corpo"
-  ) {
-    avisos.push("Duelismo normalmente se aplica a armas corpo a corpo.");
-  }
-
-  return avisos;
+  return resultado;
 }
 
 function atualizarAvisosEquipamentos() {
-  if (avisoEquipamentos === null) {
+  if (!avisoEquipamentos) {
     return;
   }
 
-  const avisos = obterAvisosEquipamentos();
+  const validacao =
+    validarCombinacaoEquipamentos();
 
   avisoEquipamentos.innerHTML = "";
 
-  if (avisos.length === 0) {
-    avisoEquipamentos.textContent = "";
-    return;
+  for (
+    const mensagem of
+    validacao.erros
+  ) {
+    const linha =
+      document.createElement("div");
+
+    linha.classList.add(
+      "erro-equipamento",
+    );
+
+    linha.textContent =
+      "✖ " + mensagem;
+
+    avisoEquipamentos.appendChild(
+      linha,
+    );
   }
 
-  avisos.forEach(function (textoAviso) {
-    const linha = document.createElement("div");
-    linha.textContent = "⚠ " + textoAviso;
-    avisoEquipamentos.appendChild(linha);
-  });
+  for (
+    const mensagem of
+    validacao.avisos
+  ) {
+    const linha =
+      document.createElement("div");
+
+    linha.classList.add(
+      "orientacao-equipamento",
+    );
+
+    linha.textContent =
+      "⚠ " + mensagem;
+
+    avisoEquipamentos.appendChild(
+      linha,
+    );
+  }
 }
