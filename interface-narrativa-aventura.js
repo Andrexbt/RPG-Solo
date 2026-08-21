@@ -164,6 +164,39 @@ function obterContextoCena(cena) {
   return contexto;
 }
 
+function exibirConfirmacaoInicioCombate(
+  cena
+) {
+  const textoBotao =
+    cena.combate
+      ?.textoBotaoInicio ??
+    "Iniciar combate";
+
+  exibirEscolhas([
+    {
+      id:
+        `iniciarCombate:${
+          estadoAtualJogo
+            .progresso
+            .cenaId
+        }`,
+
+      texto: textoBotao,
+
+      registrarNarrativa: false,
+
+      __acaoMotor:
+        async function iniciarCombateConfirmado() {
+          ocultarEscolhas();
+
+          verificarCombateDaCena(
+            cena
+          );
+        },
+    },
+  ]);
+}
+
 async function exibirCena(aventura, cena) {
   tituloAventura.textContent = aventura.titulo;
 
@@ -171,8 +204,11 @@ async function exibirCena(aventura, cena) {
 
   await exibirContexto(obterContextoCena(cena));
 
-  if (cena.combate) {
-    verificarCombateDaCena(cena);
+    if (cena.combate) {
+    exibirConfirmacaoInicioCombate(
+      cena
+    );
+
     return;
   }
 
@@ -414,21 +450,33 @@ function exibirTelaFimAventura(
   const personagemId =
     finalizacao.personagem?.id;
 
-  rotuloFimAventura.textContent =
-    configuracao.rotulo ??
-    "Aventura concluída";
+    rotuloFimAventura.textContent =
+    NarradorAventura.adaptarGenero(
+      configuracao.rotulo ??
+      "Aventura concluída"
+    );
 
   tituloFimAventura.textContent =
-    configuracao.titulo ??
-    "Fim da aventura";
+    NarradorAventura.adaptarGenero(
+      configuracao.titulo ??
+      "Fim da aventura"
+    );
 
-  textoFimAventura.textContent =
-    configuracao.texto ??
-    "Sua jornada chegou ao fim.";
+  NarradorAventura
+    .preencherElementoComParagrafos(
+      textoFimAventura,
 
-  resultadoFimAventura.textContent =
-    configuracao.resultado ??
-    "Concluída";
+      configuracao.texto ??
+      "Sua jornada chegou ao fim.",
+
+      "paragrafo-fim-aventura"
+    );
+
+    resultadoFimAventura.textContent =
+    NarradorAventura.adaptarGenero(
+      configuracao.resultado ??
+      "Concluída"
+    );
 
   xpFimAventura.textContent =
     `${xpRecebido} XP`;

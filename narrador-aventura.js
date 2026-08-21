@@ -399,6 +399,22 @@ window.NarradorAventura = (function () {
   );
   }
 
+    async function iniciarNovoMomentoNarrativo() {
+    const divisor =
+      adicionarDivisor();
+
+    garantirRespiroNarrativo();
+
+    if (divisor) {
+      await rolarParaElemento(
+        divisor,
+        700
+      );
+    }
+
+    await esperar(180);
+  }
+
   function limpar() {
     obterFluxo()?.replaceChildren();
   }
@@ -414,7 +430,10 @@ window.NarradorAventura = (function () {
     adicionarNarracao,
     adicionarTeste,
     adicionarResultadoTeste,
+
     adicionarEscolhaRealizada,
+    iniciarNovoMomentoNarrativo,
+    
     definirVelocidade,
     obterVelocidade,
     removerRespiroNarrativo,

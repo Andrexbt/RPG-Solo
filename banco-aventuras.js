@@ -427,12 +427,45 @@ const bancoAventuras = {
 
             resultados: {
               sucesso: {
-                texto: ``,
+                texto: `Ainda caminhando ao seu lado, o olhar de Ned lentamente se desvia ao chão enquanto ele pensa.
+
+Após alguns segundos, ele volta a olhar para cima e muda repentinamente de direção, novamente forçando você a caminhar com ele.
+
+"Não tenho certeza, mas sei onde pode ter uma possível saída." Ele responde em voz baixa, olhando ao redor.
+
+Você o acompanha até a entrada de uma pequena viela escura, pela qual vocês entram rapidamente.
+
+"No final dessa rua e seguindo pela esquerda..." Ele fala, indicando com uma das mãos. "Você vai chegar em território dos Lagartos, onde eu já ouvi dizer várias vezes que tem uma saída semi-escondida."
+
+Você se vira na direção para a qual Ned aponta, já pensando em como seguir em frente.
+
+"Tome cuidado." Ele continua, fazendo você se virar para ele. "Você sabe que eles estão atrás de você."
+
+"Procure um jeito de dar notícias. Vamos deixar a cidade segura para a sua volta" Ele diz sorrindo.
+
+Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direção indicada por ele.`,
                 proximaCena: "becosOpostos",
+                memorias: { origemBecosOpostos: "testeNed" },
               },
 
               fracasso: {
-                texto: ``,
+                texto: `Ainda caminhando ao seu lado, o olhar de Ned lentamente se desvia ao chão enquanto ele pensa.
+
+Após alguns segundos, ele volta a olhar para cima e muda repentinamente de direção, novamente forçando você a caminhar com ele.
+
+"Não tenho certeza, mas sei onde pode ter uma possível saída." Ele responde em voz baixa, olhando ao redor.
+
+Você o acompanha até a entrada de uma pequena viela escura, pela qual vocês entram rapidamente.
+
+"No final dessa rua e seguindo pela esquerda..." Ele fala, indicando com uma das mãos. "Você vai chegar em território dos Lagartos, onde eu já ouvi dizer várias vezes que tem uma saída semi-escondida."
+
+Você se vira na direção para a qual Ned aponta, já pensando em como seguir em frente.
+
+"Tome cuidado." Ele continua, fazendo você se virar para ele. "Você sabe que eles estão atrás de você."
+
+"Procure um jeito de dar notícias. Vamos deixar a cidade segura para a sua volta" Ele diz sorrindo.
+
+Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direção indicada por ele.`,
                 proximaCena: "becosLagartos",
               },
             },
@@ -505,6 +538,7 @@ const bancoAventuras = {
               sucesso: {
                 texto: "",
                 proximaCena: "becosOpostos",
+                memorias: { origemBecosOpostos: "testePessoal" },
               },
 
               fracasso: {
@@ -666,124 +700,6 @@ const bancoAventuras = {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
                 memorias: { origemMovimentacaoTelhadoRapida: "esperaTorreFalhaFurtiva" },
-              },
-            },
-          },
-        },
-      },
-
-      guardasDistraidos: {
-        numeroFonte: 5,
-
-        variacoes: [
-          {
-            se: {
-              flag: "origemGuardasDistraidos",
-              igualA: "multidao",
-            },
-
-            contexto: [
-              `Vendo a comoção, os dois guardas na ponte saem do posto e correm em direção ao conflito.
-
-              Essa é a sua chance.`,
-            ],
-          },
-
-          {
-            se: {
-              flag: "origemGuardasDistraidos",
-              igualA: "ned",
-            },
-
-            contexto: [
-              `Você observa os arredores com nervosismo, esperando algum sinal de Ned. Poucos minutos depois, ele surge do meio da multidão, acompanhado por outros três homens armados.
-
-              Eles se aproximam dos dois guardas na ponte e começam alguma discussão, a qual você não consegue ouvir direito. Mais guardas se aproximam, os ânimos se exaltam, e uma pequena confusão começa.
-
-              Essa é a sua oportunidade.`,
-            ],
-          },
-        ],
-
-        contexto: [
-          `Com os guardas agora distraídos, você identifica duas possíveis rotas.
-
-          A primeira delas envolve tentar passar {despercebido|despercebida} pela ponte. Você ainda vai precisar lidar com os outros dois guardas do outro lado da ponte, mas talvez você tenha tempo o suficiente antes que eles recebam reforços.
-
-          A outra possibilidade é tentar atravessar pelo rio. Isso lhe daria uma chance de tentar passar {despercebido|despercebida} pelos guardas do outro lado.`,
-
-          {
-            se: {
-              desvantagemNadoAguasRevoltas: true,
-            },
-
-            texto: `Nadar nas águas revoltas do rio com sua armadura vai ser um desafio, mas ainda assim menos perigoso do que atravessar a ponte.`,
-          },
-
-          `Qual você considera a melhor opção?`,
-        ],
-
-        escolhas: [
-          {
-            id: "atravessarPonteFurtivo",
-            texto: `Passar {escondido|escondida} pela ponte.`,
-            etapaInicial: "atravessarPonteFurtivo",
-          },
-
-          {
-            id: "atravessarRio",
-            texto: `Atravessar o rio.`,
-            etapaInicial: "atravessarRio",
-          },
-        ],
-
-        etapas: {
-          atravessarPonteFurtivo: {
-            descricao: [],
-            instrucao: "passar {escondido|escondida} pela ponte.",
-
-            teste: {
-              tipo: "pericia",
-              periciaId: "furtividade",
-              dificuldade: 15,
-            },
-
-            resultados: {
-              sucesso: {
-                texto: ``,
-                proximaCena: "batalhaPonteF",
-              },
-
-              fracasso: {
-                texto: ``,
-                proximaCena: "batalhaPonteD",
-              },
-            },
-          },
-
-          atravessarRio: {
-            descricao: [],
-            instrucao: "atravessar o rio em águas revoltas.",
-
-            teste: {
-              tipo: "pericia",
-              periciaId: "atletismo",
-              situacao: "nadarAguasRevoltas",
-              dificuldade: 15,
-            },
-
-            resultados: {
-              sucesso: {
-                texto: ``,
-                proximaCena: "torreChaoMolhado",
-              },
-
-              fracasso: {
-                texto: ``,
-                memorias: {
-                  origemTorreChaoMolhado: "guardasDistraidos",
-                },
-                proximaCena: "torreChaoMolhado",
               },
             },
           },
@@ -1097,7 +1013,7 @@ const bancoAventuras = {
                 texto: `Os músculos do seu braço tremem enquanto você se força para cima, mas sua força não é suficiente.
                 
                 Você vai ao chão e se prepara para a inevitável batalha contra os guardas que {o|a} perseguem.`,
-                proximaCena: "batalhaRuasM",
+                proximaCena: "batalhaTorreM",
               },
             },
           },
@@ -1158,14 +1074,346 @@ const bancoAventuras = {
         },
       },
 
+      guardasDistraidos: {
+        numeroFonte: 5,
+
+        variacoes: [
+          {
+            se: {
+              flag: "origemGuardasDistraidos",
+              igualA: "multidao",
+            },
+
+            contexto: [
+              `Vendo a comoção, os dois guardas na ponte saem do posto e correm em direção ao conflito.
+
+              Essa é a sua chance.`,
+            ],
+          },
+
+          {
+            se: {
+              flag: "origemGuardasDistraidos",
+              igualA: "ned",
+            },
+
+            contexto: [
+              `Você observa os arredores com nervosismo, esperando algum sinal de Ned. Poucos minutos depois, ele surge do meio da multidão, acompanhado por outros três homens armados.
+
+              Eles se aproximam dos dois guardas na ponte e começam alguma discussão, a qual você não consegue ouvir direito. Mais guardas se aproximam, os ânimos se exaltam, e uma pequena confusão começa.
+
+              Essa é a sua oportunidade.`,
+            ],
+          },
+        ],
+
+        contexto: [
+          `Com os guardas agora distraídos, você identifica duas possíveis rotas.
+
+          A primeira delas envolve tentar passar {despercebido|despercebida} pela ponte. Você ainda vai precisar lidar com os outros dois guardas do outro lado da ponte, mas talvez você tenha tempo o suficiente antes que eles recebam reforços.
+
+          A outra possibilidade é tentar atravessar pelo rio. Isso lhe daria uma chance de tentar passar {despercebido|despercebida} pelos guardas do outro lado.`,
+
+          {
+            se: {
+              desvantagemNadoAguasRevoltas: true,
+            },
+
+            texto: `Nadar nas águas revoltas do rio com sua armadura vai ser um desafio, mas ainda assim menos perigoso do que atravessar a ponte.`,
+          },
+
+          `Qual você considera a melhor opção?`,
+        ],
+
+        escolhas: [
+          {
+            id: "atravessarPonteFurtivo",
+            texto: `Passar {escondido|escondida} pela ponte.`,
+            etapaInicial: "atravessarPonteFurtivo",
+          },
+
+          {
+            id: "atravessarRio",
+            texto: `Atravessar o rio.`,
+            etapaInicial: "atravessarRio",
+          },
+        ],
+
+        etapas: {
+          atravessarPonteFurtivo: {
+            descricao: [],
+            instrucao: "passar {escondido|escondida} pela ponte.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "batalhaPonteF",
+              },
+
+              fracasso: {
+                texto: ``,
+                proximaCena: "batalhaPonteD",
+              },
+            },
+          },
+
+          atravessarRio: {
+            descricao: [],
+            instrucao: "atravessar o rio em águas revoltas.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              situacao: "nadarAguasRevoltas",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+                proximaCena: "torreChaoMolhado",
+              },
+
+              fracasso: {
+                texto: ``,
+                memorias: {
+                  origemTorreChaoMolhado: "guardasDistraidos",
+                },
+                proximaCena: "torreChaoMolhado",
+              },
+            },
+          },
+        },
+      },
+
+      becosOpostos: {
+        // Numero correspondente ao mapa da aventura no Miro/documento-fonte.
+        numeroFonte: 6,
+
+        // Trechos exibidos antes do contexto geral quando a condicao e atendida.
+        variacoes: [
+          {
+            se: {
+              flag: "origemBecosOpostos",
+              igualA: "chaoComDano",
+            },
+
+            contexto: [
+              `Um passo em falso faz você esbarrar em uma pilha de madeira próxima. Os guardas se voltam imediatamente para a sua direção.
+
+            "Ali!" Um deles grita, apontando para a sua direção.
+
+            Rapidamente você vai para trás da carruagem e, para despistar os guardas, volta para o lado de onde veio, embrenhando-se em um dos becos atrás da torre.`,
+            ],
+          },
+
+          {
+            se: {
+              flag: "origemBecosOpostos",
+              igualA: "testePessoal",
+            },
+
+            contexto: [
+              `Sua memória {o|a} manda seguir por um caminho específico, no qual você sabe que dificilmente encontrará a presença de guardas.
+
+            Passando pelas vielas mais apertadas que vão em direção ao castelo, com o som da multidão se tornando cada vez mais distante.`,
+            ],
+          },
+
+          {
+            se: {
+              flag: "origemBecosOpostos",
+              igualA: "testeNed",
+            },
+
+            contexto: [
+              `Seguindo as indicações de Ned, você se embrenha por vielas apertadas que vão em direção ao castelo; o som da multidão se tornando cada vez mais distante.`,
+            ],
+          },
+        ],
+
+        // Texto principal. Pode ser uma string ou uma lista de trechos.
+        contexto: [
+          `Você caminha por alguns minutos, sem identificar a presença de guardas. Agora, mal consegue ouvir o som da multidão.
+
+          Ao alcançar uma pequena rua, um pouco maior do que os becos que usou para chegar até esse ponto, é possível ver o castelo do conde. Você está no local certo; a questão agora é como prosseguir.
+
+          Você pode tentar passar para o outro lado do castelo, saindo próximo ao rio, onde talvez uma saída se apresente. Porém, o risco de encontrar guardas patrulhando é grande.
+
+          Outra possibilidade é ir para o lado oposto, entrando no território dos Lagartos de Bronze e procurando pelas supostas saídas que eles possuem. Nesse caso, o perigo deixa de ser os guardas e se torna os próprios Lagartos.
+
+          Qual rota você vai seguir?`,
+        ],
+
+        escolhas: [
+              {
+                id: "voltaCastelo",
+                texto: `Dar a volta no castelo.`,
+                descricao: ``,
+                proximaEtapa: "testeCastelo",
+              },
+
+              {
+                id: "procurarTerritorio",
+                texto: `Ir para o território dos Lagartos de Bronze.`,
+                descricao: ``,
+                proximaEtapa: "testeTerritorio",
+              },
+        ],
+
+        etapas: {
+          testeCastelo: {
+            descricao: `Apesar do risco de encontrar guardas, você decide dar a volta no castelo, e planeja a possível rota que vai tomar em sua mente.`,
+            instrucao: "planejar sua rota.",
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: "sobrevivencia",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Sua rota se prova bem-sucedida. Você até viu algumas patrulhas passarem, mas conseguiu evitá-las sem problema.`,
+
+                // Memorias alteram textos e caminhos futuros.
+                memorias: {
+                  origemMargemRioLonge: "vindoOpostos",
+                },
+
+                proximaCena: "margemRioLonge",
+              },
+
+              fracasso: {
+                texto: `Ao ver uma patrulha de guardas passar muito próxima, você acaba se vendo {obrigado|obrigada} a desviar da rota e acaba se perdendo.`,
+
+                // Opcional: aplica dano conforme a distancia da queda.
+                memorias: {
+                  origemBecosLagartos: "vindoOpostos",
+                },
+
+                proximaCena: "becosLagartos",
+              },
+            },
+          },
+
+          testeTerritorio: {
+            descricao: `Apesar do risco, você decide procurar uma saída pelo território dos Lagartos, e planeja a possível rota que vai tomar em sua mente.`,
+            instrucao: "planejar sua rota.",
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: "sobrevivencia",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `A rota que você planejou se mostra segura, especialmente quando você olha por uma fresta antes de fazer a próxima curva e se depara com um grupo de Lagartos.
+
+                Para além deles, uma grande abertura nos muros da cidade. Ali está a sua saída.
+
+                Os Lagartos parecem distraídos e passar {despercebido|despercebida} por eles parece possível.
+
+                Mas talvez o risco seja grande demais e o melhor seja voltar e procurar outra rota.
+
+                O que você faz?`,
+
+                escolhas: [
+              {
+                id: "tentarPassarLagartos",
+                texto: `Passar {despercebido|despercebida}.`,
+                descricao: ``,
+                proximaEtapa: "testePassarLagartos",
+              },
+
+              {
+                id: "voltarLagartos",
+                texto: `Voltar e buscar uma rota mais segura.`,
+                descricao: ``,
+                proximaCena: "becosLagartos",
+                memorias: {
+                  origemBecosLagartos: "voltarOpostos",
+                },
+              },
+            ],
+              },
+
+              fracasso: {
+                texto: `Durante um momento de distração, você acaba virando uma curva sem antes verificar o caminho.
+                
+                Esse erro se prova fatal conforme você se expõe bem em frente a um grupo de Lagartos.
+                
+                Por um segundo, vocês apenas se encaram, e então eles partem em sua direção.`,
+
+                memoria: {origemBatalhaBecos: "falhaSobrevivencia",},
+
+                proximaCena: "batalhaBecosM",
+              },
+            },
+          },
+
+          testePassarLagartos:{
+            descricao: ``,
+            instrucao: "passar {despercebido|despercebida}.",
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Quase prendendo a respiração, você segue calmamente por entre os becos em direção à abertura, cuidando ao máximo onde pisa.
+                
+                Você atravessa uma pequena rua principal, movendo-se apenas quando tem a certeza de que não será {visto|vista}, e continua em direção aos muros da cidade.
+
+                Se espremendo por um pequeno espaço entre as casas, você consegue sair do outro lado e passar pela abertura.`,
+
+                // Memorias alteram textos e caminhos futuros.
+                memorias: {
+                  origemFimVitoria: "becosOpostos",
+                },
+
+                proximaCena: "fimVitoria",
+              },
+
+              fracasso: {
+                texto: `Você segue calmamente pelas pequenas vielas até chegar a um ponto em que precisa atravessar uma pequena rua principal.
+
+                O nervosismo faz você se mover rápido demais, derrubando um amontoado de latas e madeiras no caminho. Imediatamente o grupo de Lagartos se vira em sua direção.
+
+                Sua tentativa de passar {despercebido|despercebida} falhou, e agora o confronto direto é a única coisa entre você e sua fuga.`,
+
+                memoria: {origemBatalhaBecos: "falhaFurtividade",},
+
+                proximaCena: "batalhaBecosM",
+              },
+
+          }
+          }
+        }
+      },
+
       batalhaRuasD: {
         contexto: [
           `Os guardas avançam sobre você pelas ruas próximas à ponte. Não há mais como evitar o confronto.`,
         ],
 
         combate: {
+          textoBotaoInicio: "Enfrentar os guardas",
           dificuldadePretendida: "alta",
-          mapa: "Imagens/Mapas/A Fuga/batalha1ruas.webp",
+          mapa: "Imagens/Mapas/A Fuga/batalhaRuas.webp",
 
           jogador: {
             posicao: {
@@ -1206,29 +1454,219 @@ const bancoAventuras = {
             },
           ],
 
-                    resultados: {
+          resultados: {
             vitoria: {
               tela: {
                 titulo: "Vitória",
 
-                texto: `Os guardas tombam diante de você. Por alguns instantes, a rua está livre e a multidão observa em silêncio.`,
+                texto: `O último dos guardas tomba diante de você. Por alguns instantes, a ponte está livre e a multidão {o|a} observa em silêncio.
+                
+                Sentindo os ferimentos ardendo, você sai em disparada.`,
               },
 
-              proximaCena:
-                "batalhaRuasDVitoria",
+              proximaCena: "batalhaRuasDVitoria",
             },
 
             derrota: {
               tela: {
                 titulo: "Derrota",
 
-                texto: `Suas forças chegam ao fim. Cercado pelos guardas, você já não consegue continuar lutando.`,
+                texto: `Suas forças chegam ao fim.
+                
+                {Cercado|Cercada} pelos guardas, você já não consegue continuar lutando.`,
               },
 
-              proximaCena:
-                "batalhaRuasDDerrota",
+              proximaCena: "batalhaRuaseTorreDerrota",
             },
           },
+        },
+      },
+
+      torreChao: {
+        numeroFonte: 10,
+
+        contexto: [],
+
+        etapaInicial: "conteudoTorreChaoPendente",
+
+        etapas: {
+          conteudoTorreChaoPendente: {
+            descricao: ``,
+
+            pendenciaFonte: {
+              tipo: "destinoNarrativo",
+              descricao: "Transferir do Miro ou escrever o conteúdo da cena 10: Torre Chão.",
+            },
+          },
+        },
+      },
+
+      batalhaTorreM: {
+        contexto: [``],
+
+        combate: {
+          textoBotaoInicio: "Enfrentar os guardas",
+          dificuldadePretendida: "moderada",
+          mapa: "Imagens/Mapas/A Fuga/batalhaTorre.webp",
+
+          jogador: {
+            posicao: {
+              coluna: 22,
+              linha: 14,
+            },
+
+            movimentoMaximo: 6,
+          },
+
+          inimigos: [
+            {
+              npcId: "guardaConde",
+
+              quantidade: 3,
+
+              posicoes: [
+                {
+                  coluna: 22,
+                  linha: 10,
+                },
+
+                {
+                  coluna: 27,
+                  linha: 10,
+                },
+                {
+                  coluna: 25,
+                  linha: 3,
+                },
+              ],
+
+              movimentoMaximo: 6,
+            },
+          ],
+          resultados: {
+            vitoria: {
+              tela: {
+                titulo: "Vitória",
+
+                texto: `Você derrota o último dos guardas.
+
+                Ainda ofegante, você olha ao redor {apreensivo|apreensiva}, na espera de encontrar mais guardas indo em sua direção.
+
+                Surpreendentemente, você não vê ninguém, e parte em direção à torre.`,
+              },
+
+              proximaCena: "torreChao",
+            },
+
+            derrota: {
+              tela: {
+                titulo: "Derrota",
+
+                texto: `Suas forças chegam ao fim.
+                
+                {Cercado|Cercada} pelos guardas, você já não consegue continuar lutando.`,
+              },
+
+              proximaCena: "batalhaRuaseTorreDerrota",
+            },
+          },
+        },
+      },
+
+      batalhaBecosM:{
+        variacoes: [
+    {
+      se: {
+        flag: "origemBatalhaBecos",
+        igualA: "falhaSobrevivencia",
+      },
+
+      contexto: [
+        `Três mercenários do grupo {o|a} cercam e bloqueiam sua passagem. Para além deles, uma abertura nos muros da cidade que levará à sua liberdade.`,
+      ],
+    },
+
+    {
+      se: {
+        flag: "origemBatalhaBecos",
+        igualA: "falhaFurtividade",
+      },
+
+      contexto: [
+        ``,
+      ],
+    },
+        ],
+
+        contexto: [
+          `Sem uma rota segura para recuar, você se prepara para o confronto.`,
+        ],
+
+        combate: {
+          textoBotaoInicio: "Enfrentar os Lagartos",
+          dificuldadePretendida: "moderada",
+          mapa: "Imagens/Mapas/A Fuga/batalhaBecos.webp",
+
+          jogador: {
+      posicao: {
+        coluna: 22,
+        linha: 14,
+      },
+
+      movimentoMaximo: 6,
+    },
+
+    inimigos: [
+      {
+        npcId: "lagartoBronze",
+        quantidade: 3,
+
+        posicoes: [
+          {
+            coluna: 22,
+            linha: 10,
+          },
+
+          {
+            coluna: 27,
+            linha: 10,
+          },
+
+          {
+            coluna: 25,
+            linha: 6,
+          },
+        ],
+
+        movimentoMaximo: 6,
+      },
+    ],
+
+    resultados: {
+      vitoria: {
+        tela: {
+          titulo: "Vitória",
+
+          texto: `O último dos Lagartos de Bronze cai diante de você.
+
+          O caminho pelos becos está novamente livre.`,
+        },
+
+        proximaCena: "fimVitoria",
+      },
+
+      derrota: {
+        tela: {
+          titulo: "Derrota",
+
+          texto: `Suas forças chegam ao fim.
+
+          {Cercado|Cercada} pelos Lagartos de Bronze, você já não consegue continuar lutando.`,
+        },
+
+        proximaCena: "batalhaBecosDerrota",
+      },
+    },
         },
       },
 
@@ -1236,20 +1674,16 @@ const bancoAventuras = {
         numeroFonte: null,
 
         contexto: [
-          `Por alguns instantes, ninguém se move.
+          `Às suas costas, você deixa a cidade em caos. À sua frente, a segurança da floresta de Rawriaq, onde você irá se esconder pelos próximos dias.
 
-          Os guardas estão caídos na rua, e os olhares da multidão se voltam para você. O choque inicial logo dá lugar a murmúrios, gritos e uma agitação crescente.
-
-          Permanecer ali seria perigoso. Outros soldados certamente virão quando souberem o que aconteceu.
-
-          Você precisa aproveitar os poucos instantes conquistados pela vitória e decidir como continuará sua fuga.`,
+          Seu destino é incerto, mas ele está em suas mãos.`,
         ],
 
-                escolhas: [
+        escolhas: [
           {
             id: "concluirAventuraVitoriaRuas",
 
-            texto: `Concluir A Fuga.`,
+            texto: `Concluir Aventura.`,
 
             registrarNarrativa: false,
 
@@ -1257,11 +1691,9 @@ const bancoAventuras = {
               resultadoId: "vitoria",
               rotulo: "A Fuga",
 
-              titulo:
-                "A liberdade tem um preço",
+              titulo: "Você escapou",
 
-              texto:
-                `Você conquistou sua liberdade pela força. Os guardas foram derrotados, mas os acontecimentos nas ruas certamente não serão esquecidos.`,
+              texto: `Você venceu a sua batalha, mas a batalha na cidade está apenas começando.`,
 
               resultado: "Vitória",
             },
@@ -1269,22 +1701,20 @@ const bancoAventuras = {
         ],
       },
 
-      batalhaRuasDDerrota: {
+      batalhaRuaseTorreDerrota: {
         numeroFonte: null,
 
         contexto: [
-          `Sua visão se torna turva enquanto suas forças abandonam seu corpo.
-
-          As vozes dos guardas parecem cada vez mais distantes. Você sente suas armas sendo retiradas e seus braços sendo presos antes de perder completamente a consciência.
-
-          Quando voltar a despertar, sua fuga terá tomado um rumo muito diferente.`,
+          `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
+          
+          Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
         ],
 
-                escolhas: [
+        escolhas: [
           {
             id: "concluirAventuraDerrotaRuas",
 
-            texto: `Concluir A Fuga.`,
+            texto: `Concluir Aventura.`,
 
             registrarNarrativa: false,
 
@@ -1292,17 +1722,284 @@ const bancoAventuras = {
               resultadoId: "derrota",
               rotulo: "A Fuga",
 
-              titulo:
-                "A fuga chega ao fim",
+              titulo: "Sua fuga chega ao fim",
 
-              texto:
-                `Sua tentativa de escapar termina nas ruas da cidade. Desarmado e capturado pelos guardas, seu destino volta a estar nas mãos do conde.`,
+              texto: `Sua tentativa de escapar termina nas ruas da cidade.
+              
+              {Desarmado|Desarmada} e {capturado|capturada} pelos guardas, seu destino é incerto.`,
 
               resultado: "Derrota",
             },
           },
         ],
       },
-    },
+      
+    }
   },
 };
+
+/* ============================================================================
+   MODELO DE CENA
+   ----------------------------------------------------------------------------
+   Referencia comentada: nao e executada pelo jogo. Copie apenas os blocos
+   necessarios para dentro de `cenas` e substitua ids e textos de exemplo.
+
+   LEMBRETES
+   - O id da cena deve ser unico e nao deve usar acentos ou espacos.
+   - Uma linha vazia dentro de `texto` ou `contexto` cria outro paragrafo.
+   - Genero: `{ferido|ferida}`, `{o|a}`, `{sozinho|sozinha}`.
+   - Cenas de combate exibem primeiro `contexto` e depois o botao de inicio.
+   - O combate retorna a uma cena narrativa; nao encerra a aventura diretamente.
+   ============================================================================
+
+modeloCena: {
+  // Numero correspondente ao mapa da aventura no Miro/documento-fonte.
+  numeroFonte: 99,
+
+  // Trechos exibidos antes do contexto geral quando a condicao e atendida.
+  variacoes: [
+    {
+      se: {
+        flag: "modeloOrigem",
+        igualA: "valorEsperado",
+      },
+
+      contexto: [
+        `Texto exclusivo desta variacao.`,
+      ],
+    },
+  ],
+
+  // Texto principal. Pode ser uma string ou uma lista de trechos.
+  contexto: [
+    `Primeiro paragrafo da cena.
+
+    Segundo paragrafo, com personagem {cansado|cansada}.`,
+
+    // Trecho condicional inserido no meio da narracao.
+    {
+      se: {
+        flag: "modeloDescobriuSegredo",
+        igualA: true,
+      },
+
+      texto: `Este trecho aparece apenas se a memoria estiver ativa.`,
+    },
+
+    // Condicao especial ja reconhecida pelo projeto.
+    {
+      se: {
+        desvantagemNadoAguasRevoltas: true,
+      },
+
+      texto: `A armadura tornara a travessia especialmente dificil.`,
+    },
+  ],
+
+  // Use quando a cena deve comecar por uma sequencia interna.
+  etapaInicial: "modeloTeste",
+
+  etapas: {
+    modeloTeste: {
+      descricao: `Voce se prepara para realizar a acao.`,
+      instrucao: "realizar a acao.",
+
+      teste: {
+        // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+        tipo: "pericia",
+        periciaId: "furtividade",
+        dificuldade: 13,
+
+        // Opcional. Ativa regras especiais, quando reconhecida pelo sistema.
+        // Exemplo existente: "nadarAguasRevoltas".
+        situacao: "modeloSituacao",
+      },
+
+      resultados: {
+        sucesso: {
+          texto: `Voce consegue realizar a acao.`,
+
+          // Memorias alteram textos e caminhos futuros.
+          memorias: {
+            modeloTeveSucesso: true,
+          },
+
+          proximaEtapa: "modeloDecisao",
+        },
+
+        fracasso: {
+          texto: `Voce nao consegue realizar a acao.`,
+
+          // Opcional: aplica dano conforme a distancia da queda.
+          queda: {
+            distanciaMetros: 3,
+          },
+
+          proximaCena: "modeloCenaFracasso",
+        },
+      },
+    },
+
+    modeloDecisao: {
+      descricao: `Agora voce precisa decidir como prosseguir.`,
+
+      escolhas: [
+        {
+          id: "modeloContinuar",
+          texto: `Continuar.`,
+          descricao: `Voce segue adiante.`,
+          proximaCena: "modeloProximaCena",
+        },
+
+        {
+          id: "modeloOutraEtapa",
+          texto: `Tentar outra abordagem.`,
+          proximaEtapa: "modeloPendente",
+        },
+      ],
+    },
+
+    modeloPendente: {
+      descricao: `Este trecho ainda nao foi escrito.`,
+
+      // Marcador temporario para conteudo ainda ausente no Miro/fonte.
+      pendenciaFonte: {
+        tipo: "destinoNarrativo",
+        descricao: "Escrever a continuacao desta etapa.",
+      },
+    },
+  },
+
+  // ALTERNATIVA: ESCOLHAS DIRETAS
+  // Use `escolhas` quando a cena nao possuir `etapaInicial` nem `combate`.
+  escolhas: [
+    {
+      id: "modeloEscolha",
+      texto: `Escolher este caminho.`,
+      descricao: `Narracao exibida depois da escolha.`,
+
+      memorias: {
+        modeloEscolheuCaminho: true,
+      },
+
+      proximaCena: "modeloProximaCena",
+    },
+  ],
+
+  // ALTERNATIVA: COMBATE
+  // Ao usar este bloco, remova `etapaInicial`, `etapas` e `escolhas` acima.
+  combate: {
+    textoBotaoInicio: "Iniciar combate",
+    dificuldadePretendida: "moderada",
+
+    // Padrao oficial do projeto: mapa 6688 x 3764 px, celulas de 64 x 64 px.
+    mapa: "Imagens/Mapas/Nome da Aventura/modeloMapa.webp",
+
+    jogador: {
+      posicao: {
+        coluna: 22,
+        linha: 14,
+      },
+
+      movimentoMaximo: 6,
+    },
+
+    inimigos: [
+      {
+        npcId: "guardaConde",
+        quantidade: 2,
+
+        // Informe uma posicao para cada inimigo declarado em `quantidade`.
+        posicoes: [
+          {
+            coluna: 20,
+            linha: 9,
+          },
+
+          {
+            coluna: 25,
+            linha: 9,
+          },
+        ],
+
+        movimentoMaximo: 6,
+      },
+    ],
+
+    resultados: {
+      vitoria: {
+        tela: {
+          titulo: "Vitoria",
+
+          texto: `Texto da janela exibida sobre o mapa.
+
+          Voce permanece {ferido|ferida}, mas venceu.`,
+        },
+
+        proximaCena: "modeloPosCombateVitoria",
+      },
+
+      derrota: {
+        tela: {
+          titulo: "Derrota",
+          texto: `Suas forcas chegam ao fim.`,
+        },
+
+        proximaCena: "modeloPosCombateDerrota",
+      },
+    },
+  },
+},
+
+// Modelo de cena narrativa posterior ao combate.
+modeloPosCombateVitoria: {
+  numeroFonte: 100,
+
+  contexto: [
+    `Narracao apresentada depois que o jogador deixa a tela de combate.`,
+  ],
+
+  escolhas: [
+    {
+      id: "modeloConcluirVitoria",
+      texto: `Concluir aventura.`,
+      registrarNarrativa: false,
+
+      fimAventura: {
+        // Vitoria recupera o personagem, registra a conclusao e bloqueia
+        // recompensas futuras de XP desta aventura para este personagem.
+        resultadoId: "vitoria",
+        rotulo: "Nome da aventura",
+        titulo: "Titulo do final",
+        texto: `Resumo exibido na tela final.`,
+        resultado: "Vitoria",
+      },
+    },
+  ],
+},
+
+modeloPosCombateDerrota: {
+  numeroFonte: 101,
+
+  contexto: [
+    `Narracao apresentada depois da derrota.`,
+  ],
+
+  escolhas: [
+    {
+      id: "modeloConcluirDerrota",
+      texto: `Concluir aventura.`,
+      registrarNarrativa: false,
+
+      fimAventura: {
+        // Derrota recupera o personagem, mas nao bloqueia XP de outra tentativa.
+        resultadoId: "derrota",
+        rotulo: "Nome da aventura",
+        titulo: "Titulo do final",
+        texto: `Resumo exibido na tela final.`,
+        resultado: "Derrota",
+      },
+    },
+  ],
+},
+*/

@@ -153,114 +153,45 @@ window.bancoNpcs = {
 
     lagartoBronze: {
       id: "lagartoBronze",
-      nome: "Lagarto de Bronze",
+
+      nome:
+        "Lagarto de Bronze",
+
       tipo: "inimigo",
 
+      // Importa estatísticas, ataques,
+      // ND e XP do Bandido oficial.
+      blocoCriaturaId: "bandido",
+
+      // Sobrescreve apenas a identidade
+      // visual do bloco oficial.
       avatar: {
-        imagem: "Imagens/Avatares/npcs/lagartoBronze.webp",
+        imagem:
+          "Imagens/Avatares/npcs/lagartoBronze.webp",
 
-        frame: "Imagens/Avatares/frame/frame-01.webp",
+        frame:
+          "Imagens/Avatares/frame/frame-01.webp",
       },
-
-      atributos: {
-        forca: 14,
-        destreza: 13,
-        constituicao: 14,
-        inteligencia: 10,
-        sabedoria: 12,
-        carisma: 10,
-      },
-
-      bonusProficiencia: 2,
-      pericias: ["intimidacao", "percepcao"],
-      salvaguardas: [],
-
-      combate: {
-        classeArmadura: 14,
-
-        pontosDeVida: {
-          atuais: 13,
-          maximo: 13,
-        },
-      },
-
-      ataques: [
-        {
-          id: "lanca",
-          nome: "Lança",
-          categoria: "corpoACorpo",
-
-          selecao: {
-            tipo: "criatura",
-
-            alcance: {
-              normal: 1,
-            },
-
-            area: null,
-          },
-
-          bonusAtaque: 4,
-
-          dano: {
-            gruposDeDados: [
-              {
-                quantidade: 1,
-                numeroDeFaces: 6,
-              },
-            ],
-
-            modificador: 2,
-            tipo: "perfurante",
-          },
-        },
-
-        {
-          id: "bestaLeve",
-          nome: "Besta leve",
-          categoria: "distancia",
-
-          selecao: {
-            tipo: "criatura",
-
-            alcance: {
-              normal: 16,
-              longo: 64,
-            },
-
-            area: null,
-          },
-
-          bonusAtaque: 3,
-
-          dano: {
-            gruposDeDados: [
-              {
-                quantidade: 1,
-                numeroDeFaces: 8,
-              },
-            ],
-
-            modificador: 1,
-            tipo: "perfurante",
-          },
-        },
-      ],
 
       narracao: {
         categoria: "humanoide",
 
         termos: {
-          sujeito: "o Lagarto de Bronze",
+          sujeito:
+            "o Lagarto de Bronze",
         },
 
+        // Os ids precisam corresponder
+        // aos ataques do bloco Bandido.
         ataques: {
-          lanca: {
-            tipoNarrativo: "lanca",
+          cimitarra: {
+            tipoNarrativo:
+              "cimitarra",
           },
 
           bestaLeve: {
-            tipoNarrativo: "bestaLeve",
+            tipoNarrativo:
+              "bestaLeve",
           },
         },
       },

@@ -677,18 +677,32 @@ function exibirTelaResultadoCombate({
   const configuracaoTela =
     consequencia.tela ?? {};
 
-  rotuloResultadoCombate.textContent =
-    configuracaoTela.rotulo ??
-    "Combate encerrado";
+    rotuloResultadoCombate.textContent =
+    NarradorAventura.adaptarGenero(
+      configuracaoTela.rotulo ??
+      "Combate encerrado"
+    );
 
   tituloResultadoCombate.textContent =
-    configuracaoTela.titulo ??
-    (vitoria ? "Vitória" : "Derrota");
+    NarradorAventura.adaptarGenero(
+      configuracaoTela.titulo ??
+      (
+        vitoria
+          ? "Vitória"
+          : "Derrota"
+      )
+    );
 
-  textoResultadoCombate.textContent =
-    obterTextoTelaResultado(
-      resultadoId,
-      consequencia
+  NarradorAventura
+    .preencherElementoComParagrafos(
+      textoResultadoCombate,
+
+      obterTextoTelaResultado(
+        resultadoId,
+        consequencia
+      ),
+
+      "paragrafo-resultado-combate"
     );
 
   telaResultadoCombate.dataset.resultado =
@@ -740,6 +754,9 @@ async function continuarAposResultadoCombate() {
 
   exibirTelaAventura();
   ocultarEscolhas();
+
+  await NarradorAventura
+    .iniciarNovoMomentoNarrativo();
 
   await window.MotorAventura
     .aplicarConsequencia(

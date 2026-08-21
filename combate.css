@@ -821,6 +821,17 @@
   line-height: 1.6;
 }
 
+.texto-resultado-combate
+  .paragrafo-resultado-combate {
+  display: block;
+  margin: 0 0 14px;
+}
+
+.texto-resultado-combate
+  .paragrafo-resultado-combate:last-child {
+  margin-bottom: 0;
+}
+
 .recompensas-resultado-combate {
   display: grid;
   gap: 5px;

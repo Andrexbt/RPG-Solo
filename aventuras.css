@@ -592,6 +592,17 @@ select {
   line-height: 1.65;
 }
 
+.texto-fim-aventura
+  .paragrafo-fim-aventura {
+  display: block;
+  margin: 0 0 16px;
+}
+
+.texto-fim-aventura
+  .paragrafo-fim-aventura:last-child {
+  margin-bottom: 0;
+}
+
 .resumo-fim-aventura {
   display: grid;
   gap: 10px;
