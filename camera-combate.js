@@ -37,6 +37,181 @@ function obterZoomMinimoVisivel() {
   );
 }
 
+function enquadrarParticipantesCombate(
+  combate,
+) {
+  const participantes =
+    combate?.participantes?.filter(
+      function (participante) {
+        return (
+          participante.posicao &&
+          Number.isFinite(
+            participante.posicao.coluna,
+          ) &&
+          Number.isFinite(
+            participante.posicao.linha,
+          )
+        );
+      },
+    ) ?? [];
+
+  if (participantes.length === 0) {
+    cameraCombate.zoom =
+      obterZoomMinimoVisivel();
+
+    cameraCombate.deslocamentoX = 0;
+    cameraCombate.deslocamentoY = 0;
+
+    atualizarCameraCombate();
+    return;
+  }
+
+  const tamanhoCelula = 140;
+
+  const colunas = participantes.map(
+    function (participante) {
+      return participante.posicao.coluna;
+    },
+  );
+
+  const linhas = participantes.map(
+    function (participante) {
+      return participante.posicao.linha;
+    },
+  );
+
+  const menorColuna = Math.min(...colunas);
+  const maiorColuna = Math.max(...colunas);
+  const menorLinha = Math.min(...linhas);
+  const maiorLinha = Math.max(...linhas);
+
+  /*
+   * Espaço adicional ao redor dos participantes.
+   * Cada lado recebe duas células e meia.
+   */
+  const margem =
+    tamanhoCelula * 2.5;
+
+  const esquerdaGrupo =
+    (menorColuna - 1) *
+      tamanhoCelula -
+    margem;
+
+  const direitaGrupo =
+    maiorColuna *
+      tamanhoCelula +
+    margem;
+
+  const topoGrupo =
+    (menorLinha - 1) *
+      tamanhoCelula -
+    margem;
+
+  const baseGrupo =
+    maiorLinha *
+      tamanhoCelula +
+    margem;
+
+  const larguraGrupo =
+    direitaGrupo - esquerdaGrupo;
+
+  const alturaGrupo =
+    baseGrupo - topoGrupo;
+
+  /*
+   * Reserva espaço horizontal para o painel
+   * de ações que fica no lado esquerdo.
+   */
+  const margemPainelEsquerdo =
+    Math.min(
+      340,
+      visualizacaoCombate.clientWidth *
+        0.28,
+    );
+
+  const margemDireita = 24;
+  const margemSuperior = 110;
+  const margemInferior = 24;
+
+  const larguraUtil =
+    visualizacaoCombate.clientWidth -
+    margemPainelEsquerdo -
+    margemDireita;
+
+  const alturaUtil =
+    visualizacaoCombate.clientHeight -
+    margemSuperior -
+    margemInferior;
+
+  const zoomHorizontal =
+    larguraUtil / larguraGrupo;
+
+  const zoomVertical =
+    alturaUtil / alturaGrupo;
+
+  cameraCombate.zoom = Math.min(
+    cameraCombate.zoomMaximo,
+    Math.max(
+      obterZoomMinimoVisivel(),
+      Math.min(
+        zoomHorizontal,
+        zoomVertical,
+      ),
+    ),
+  );
+
+  const centroGrupoX =
+    (esquerdaGrupo + direitaGrupo) / 2;
+
+  const centroGrupoY =
+    (topoGrupo + baseGrupo) / 2;
+
+  const centroTabuleiroX =
+    tabuleiroCombate.offsetWidth / 2;
+
+  const centroTabuleiroY =
+    tabuleiroCombate.offsetHeight / 2;
+
+  const centroAreaUtilX =
+    margemPainelEsquerdo +
+    larguraUtil / 2;
+
+  const centroAreaUtilY =
+    margemSuperior +
+    alturaUtil / 2;
+
+  const centroTelaX =
+    visualizacaoCombate.clientWidth / 2;
+
+  const centroTelaY =
+    visualizacaoCombate.clientHeight / 2;
+
+  cameraCombate.deslocamentoX =
+    (
+      centroTabuleiroX -
+      centroGrupoX
+    ) *
+      cameraCombate.zoom +
+    (
+      centroAreaUtilX -
+      centroTelaX
+    );
+
+  cameraCombate.deslocamentoY =
+    (
+      centroTabuleiroY -
+      centroGrupoY
+    ) *
+      cameraCombate.zoom +
+    (
+      centroAreaUtilY -
+      centroTelaY
+    );
+
+  limitarCameraCombate();
+  atualizarCameraCombate();
+}
+
 function limitarCameraCombate() {
   const larguraTabuleiro =
     tabuleiroCombate.offsetWidth *
@@ -100,7 +275,33 @@ function atualizarCameraCombate() {
   );
 
   const espessuraLinhaGrid =
-    1.25 / cameraCombate.zoom;
+  0.8 / cameraCombate.zoom;
+
+  const zoomInicioGrid = 0.35;
+const zoomCompletoGrid = 0.55;
+
+const progressoGrid = Math.min(
+  1,
+  Math.max(
+    0,
+    (
+      cameraCombate.zoom -
+      zoomInicioGrid
+    ) /
+    (
+      zoomCompletoGrid -
+      zoomInicioGrid
+    ),
+  ),
+);
+
+const opacidadeGrid =
+  0.24 * progressoGrid;
+
+cameraCombateElemento.style.setProperty(
+  "--opacidade-grid",
+  opacidadeGrid.toFixed(3),
+);
 
   cameraCombateElemento.style.setProperty(
     "--espessura-linha-grid",

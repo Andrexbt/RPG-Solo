@@ -150,61 +150,108 @@
                 <div id="conteudoDados" class="conteudo-dados">
                   <p id="solicitacaoCaixaDados" class="solicitacao-caixa-dados" hidden></p>
                   <div class="caixa-dados">
-                    <aside id="colecaoDados" class="colecao-dados" aria-label="Dados disponíveis">
-                      <button
-                        class="dado-disponivel"
-                        type="button"
-                        data-faces="4"
-                        aria-label="Dado de quatro faces"
-                      >
-                        d4
-                      </button>
 
-                      <button
-                        class="dado-disponivel"
-                        type="button"
-                        data-faces="6"
-                        aria-label="Dado de seis faces"
-                      >
-                        d6
-                      </button>
+                    <aside
+  id="colecaoDados"
+  class="colecao-dados"
+  aria-label="Dados disponíveis"
+>
+  <button
+    class="dado-disponivel"
+    type="button"
+    data-faces="4"
+    aria-label="Dado de quatro faces"
+  >
+    <span
+      class="espaco-dado-3d"
+      aria-hidden="true"
+    ></span>
 
-                      <button
-                        class="dado-disponivel"
-                        type="button"
-                        data-faces="8"
-                        aria-label="Dado de oito faces"
-                      >
-                        d8
-                      </button>
+    <span class="rotulo-dado-disponivel">
+      D4
+    </span>
+  </button>
 
-                      <button
-                        class="dado-disponivel"
-                        type="button"
-                        data-faces="10"
-                        aria-label="Dado de dez faces"
-                      >
-                        d10
-                      </button>
+  <button
+    class="dado-disponivel"
+    type="button"
+    data-faces="6"
+    aria-label="Dado de seis faces"
+  >
+    <span
+      class="espaco-dado-3d"
+      aria-hidden="true"
+    ></span>
 
-                      <button
-                        class="dado-disponivel"
-                        type="button"
-                        data-faces="12"
-                        aria-label="Dado de doze faces"
-                      >
-                        d12
-                      </button>
+    <span class="rotulo-dado-disponivel">
+      D6
+    </span>
+  </button>
 
-                      <button
-                        class="dado-disponivel"
-                        type="button"
-                        data-faces="20"
-                        aria-label="Dado de vinte faces"
-                      >
-                        d20
-                      </button>
-                    </aside>
+  <button
+    class="dado-disponivel"
+    type="button"
+    data-faces="8"
+    aria-label="Dado de oito faces"
+  >
+    <span
+      class="espaco-dado-3d"
+      aria-hidden="true"
+    ></span>
+
+    <span class="rotulo-dado-disponivel">
+      D8
+    </span>
+  </button>
+
+  <button
+    class="dado-disponivel"
+    type="button"
+    data-faces="10"
+    aria-label="Dado de dez faces"
+  >
+    <span
+      class="espaco-dado-3d"
+      aria-hidden="true"
+    ></span>
+
+    <span class="rotulo-dado-disponivel">
+      D10
+    </span>
+  </button>
+
+  <button
+    class="dado-disponivel"
+    type="button"
+    data-faces="12"
+    aria-label="Dado de doze faces"
+  >
+    <span
+      class="espaco-dado-3d"
+      aria-hidden="true"
+    ></span>
+
+    <span class="rotulo-dado-disponivel">
+      D12
+    </span>
+  </button>
+
+  <button
+    class="dado-disponivel"
+    type="button"
+    data-faces="20"
+    aria-label="Dado de vinte faces"
+  >
+    <span
+      class="espaco-dado-3d"
+      aria-hidden="true"
+    ></span>
+
+    <span class="rotulo-dado-disponivel">
+      D20
+    </span>
+  </button>
+</aside>
 
                     <div
                       id="bandejaDados"
@@ -518,6 +565,12 @@
 
     <div id="camadaDadosLancados" class="camada-dados-lancados" aria-live="polite"></div>
 
+    <div
+  id="camadaDados3D"
+  class="camada-dados-3d"
+  aria-hidden="true"
+></div>
+
     <script src="banco-idiomas.js" defer></script>
     <script src="banco-talentos.js" defer></script>
     <script src="banco-antecedentes.js" defer></script>
@@ -533,6 +586,10 @@
     <script src="janelas-flutuantes.js" defer></script>
     <script src="motor-dados.js" defer></script>
     <script src="dados.js" defer></script>
+    <script
+  type="module"
+  src="dados-3d.js"
+></script>
     <script src="banco-pericias.js" defer></script>
 
     <script src="banco-criaturas.js" defer></script>

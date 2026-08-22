@@ -3,7 +3,7 @@
    ========================================================= */
 
 .janela-dados.janela-flutuante {
-  width: min(300px, calc(100vw - 24px));
+  width: min(230px, calc(100vw - 24px));
 }
 
 .janela-dados .cabecalho-janela-flutuante {
@@ -26,36 +26,218 @@
 
 .colecao-dados {
   padding: 8px 0 0;
-
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 58px);
+  justify-content: center;
   justify-items: center;
-  gap: 7px;
-
+  column-gap: 7px;
+  row-gap: 8px;
   border: 0;
   background: transparent;
   box-shadow: none;
 }
 
 .dado-disponivel {
-  width: 44px;
-  height: 38px;
+  position: relative;
+  width: 54px;
+  height: 50px;
   min-height: 0;
   padding: 4px;
-  border: 1px solid var(--janela-borda);
-  border-radius: 3px;
-  background: var(--janela-fundo-secundario);
-  color: var(--janela-texto);
-  font-size: 0.82rem;
+  border: 0;
+  border-radius: 0;
+
+  background-color: var(
+  --cor-principal-dados,
+  #79552f
+);
+
+background-image:
+  linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.3),
+    transparent 38%,
+    rgba(0, 0, 0, 0.35)
+  ),
+  var(
+    --textura-resultado-dados
+  );
+
+background-blend-mode:
+  screen,
+  normal;
+
+color: var(
+  --cor-numeros-dados,
+  #f4ead2
+);
+
+text-shadow:
+  0 1px 1px
+    var(
+      --cor-sombra-dados,
+      #1b1009
+    ),
+  0 0 3px
+    var(
+      --cor-sombra-dados,
+      #1b1009
+    );
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.88rem;
   font-weight: 800;
   cursor: grab;
+
+  filter:
+  drop-shadow(
+    0 1px 1px
+    var(
+      --cor-sombra-dados,
+      #1b1009
+    )
+  )
+  drop-shadow(
+    0 4px 3px
+    rgba(0, 0, 0, 0.7)
+  );
+
+  transition:
+    transform 120ms ease,
+    background-color 120ms ease,
+    filter 120ms ease;
   user-select: none;
   touch-action: none;
 }
 
 .dado-disponivel:hover {
-  background: rgba(195, 154, 88, 0.18);
-  transform: translateY(-1px);
+  transform:
+    translateY(-3px)
+    scale(1.07);
+
+  filter:
+    brightness(1.18)
+    drop-shadow(
+      0 2px 2px
+      var(
+        --cor-sombra-dados,
+        #1b1009
+      )
+    )
+    drop-shadow(
+      0 5px 4px
+      rgba(0, 0, 0, 0.8)
+    );
+}
+
+.dado-disponivel::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(
+        --cor-numeros-dados,
+        #f4ead2
+      ) 32%,
+      transparent
+    );
+  clip-path: inherit;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.dado-disponivel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      35deg,
+      transparent 47%,
+      rgba(255, 255, 255, 0.2) 49%,
+      transparent 52%
+    ),
+    linear-gradient(
+      145deg,
+      transparent 48%,
+      rgba(0, 0, 0, 0.25) 50%,
+      transparent 53%
+    );
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* d4: tetraedro visto como triângulo. */
+.dado-disponivel[data-faces="4"] {
+  clip-path: polygon(
+    50% 3%,
+    97% 94%,
+    3% 94%
+  );
+  padding-top: 16px;
+}
+
+/* d6: cubo. */
+.dado-disponivel[data-faces="6"] {
+  width: 47px;
+  height: 47px;
+  margin: 2px 3px 1px;
+  clip-path: polygon(
+    3% 3%,
+    97% 3%,
+    97% 97%,
+    3% 97%
+  );
+}
+
+/* d8: octaedro. */
+.dado-disponivel[data-faces="8"] {
+  clip-path: polygon(
+    50% 1%,
+    96% 50%,
+    50% 99%,
+    4% 50%
+  );
+}
+
+/* d10: formato alongado. */
+.dado-disponivel[data-faces="10"] {
+  clip-path: polygon(
+    50% 0%,
+    84% 18%,
+    98% 51%,
+    50% 100%,
+    2% 51%,
+    16% 18%
+  );
+}
+
+/* d12: poliedro de doze faces. */
+.dado-disponivel[data-faces="12"] {
+  clip-path: polygon(
+    50% 0%,
+    83% 10%,
+    100% 38%,
+    91% 75%,
+    63% 98%,
+    28% 93%,
+    4% 65%,
+    7% 29%
+  );
+}
+
+/* d20: icosaedro. */
+.dado-disponivel[data-faces="20"] {
+  clip-path: polygon(
+    50% 0%,
+    90% 20%,
+    100% 61%,
+    72% 94%,
+    32% 100%,
+    3% 70%,
+    8% 27%
+  );
 }
 
 .dado-disponivel.dado-sendo-arrastado {
@@ -175,15 +357,42 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f4ead2;
+
+  color: var(
+  --cor-resultado-dados,
+  #dbbd83
+);
+
+background-image: var(
+  --textura-resultado-dados
+);
+
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+
   font-size: 2rem;
   font-weight: 900;
   line-height: 1;
   text-align: center;
   white-space: pre-line;
+
   text-shadow:
-    0 2px 2px rgba(0, 0, 0, 0.95),
-    0 0 8px rgba(0, 0, 0, 0.7);
+    0 1px 1px
+      var(
+        --cor-sombra-dados,
+        #1b1009
+      ),
+    0 2px 3px
+      rgba(0, 0, 0, 0.85);
+
+  -webkit-text-stroke:
+    0.65px
+    var(
+      --cor-sombra-dados,
+      #1b1009
+    );
+
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -199,6 +408,235 @@ body.arrastando-dado {
 
 body.arrastando-dado * {
   cursor: grabbing !important;
+}
+
+html.cursor-sobre-dado-3d,
+html.cursor-sobre-dado-3d * {
+  cursor: grab !important;
+}
+
+html.arrastando-dado-3d,
+html.arrastando-dado-3d * {
+  cursor: grabbing !important;
+}
+
+/* =========================================================
+   CAMADA EXPERIMENTAL DE DADOS 3D
+   ========================================================= */
+
+.camada-dados-3d {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+
+.camada-dados-3d canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+}
+
+html.previews-dados-3d-prontos
+  .dado-disponivel {
+  background: transparent;
+  color: transparent;
+  text-shadow: none;
+  filter: none;
+}
+
+html.previews-dados-3d-prontos
+  .dado-disponivel::before,
+html.previews-dados-3d-prontos
+  .dado-disponivel::after {
+  opacity: 0;
+}
+
+.janela-dados.janela-flutuante {
+  width: min(
+    250px,
+    calc(100vw - 24px)
+  );
+}
+
+.janela-dados .colecao-dados {
+  width: 100%;
+  padding: 10px 8px;
+  display: grid;
+  grid-template-columns:
+    repeat(3, 60px);
+  justify-content: center;
+  gap: 10px 8px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--cor-principal-dados) 60%,
+      #120d09
+    );
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.05),
+      transparent 35%
+    ),
+    #17120e;
+  box-shadow:
+    inset 0 2px 8px
+      rgba(0, 0, 0, 0.9),
+    inset 0 -1px 2px
+      rgba(255, 255, 255, 0.06);
+}
+
+.janela-dados
+  .colecao-dados
+  .dado-disponivel[data-faces] {
+  width: 60px;
+  height: 82px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows:
+    58px 24px;
+  align-items: center;
+  justify-items: center;
+  border: 0;
+  border-radius: 0;
+  clip-path: none;
+  background: transparent;
+  color: inherit;
+  filter: none;
+  overflow: visible;
+}
+
+.janela-dados
+  .dado-disponivel::before,
+.janela-dados
+  .dado-disponivel::after {
+  display: none;
+}
+
+.espaco-dado-3d {
+  width: 56px;
+  height: 56px;
+  display: block;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--cor-principal-dados) 52%,
+      #0b0806
+    );
+  border-radius: 7px;
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(255, 255, 255, 0.06),
+      transparent 42%
+    ),
+    #0e0b08;
+  box-shadow:
+    inset 0 5px 8px
+      rgba(0, 0, 0, 0.88),
+    inset 0 -1px 2px
+      rgba(255, 255, 255, 0.06),
+    0 1px 0
+      rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.rotulo-dado-disponivel {
+  align-self: end;
+  color: var(
+    --cor-resultado-dados,
+    #dbbd83
+  );
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 24px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-shadow:
+    0 1px 2px
+      var(
+        --cor-sombra-dados,
+        #1b1009
+      );
+  pointer-events: none;
+}
+
+html.previews-dados-3d-prontos
+  .rotulo-dado-disponivel {
+  color: var(
+    --cor-resultado-dados,
+    #dbbd83
+  );
+  -webkit-text-fill-color:
+    currentColor;
+}
+
+.janela-dados
+  .dado-disponivel:hover {
+  transform:
+    translateY(-2px);
+  filter:
+    brightness(1.12);
+}
+
+.janela-dados
+  .dado-disponivel:hover
+  .espaco-dado-3d {
+  border-color: var(
+    --cor-resultado-dados,
+    #dbbd83
+  );
+}
+
+html[data-quantidade-dados-arraste]::after {
+  content:
+    "×"
+    attr(
+      data-quantidade-dados-arraste
+    );
+  position: fixed;
+  z-index: 70;
+  left: var(
+    --cursor-dado-x,
+    0px
+  );
+  top: var(
+    --cursor-dado-y,
+    0px
+  );
+  padding: 4px 7px;
+  border: 1px solid
+    var(
+      --cor-resultado-dados,
+      #dbbd83
+    );
+  border-radius: 50%;
+  background: #17120e;
+  color: var(
+    --cor-resultado-dados,
+    #dbbd83
+  );
+  font-weight: 800;
+  transform:
+    translate(34px, -34px);
+  pointer-events: none;
+}
+
+html[
+  data-quantidade-dados-arraste="1"
+]::after {
+  display: none;
 }
 
 @media (max-width: 560px) {

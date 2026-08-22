@@ -55,12 +55,12 @@
   background-image:
   linear-gradient(
     to right,
-    rgba(244, 234, 210, 0.5) var(--espessura-linha-grid, 1px),
+    rgba(244, 234, 210, var(--opacidade-grid, 0)) var(--espessura-linha-grid, 1px),
     transparent var(--espessura-linha-grid, 1px)
   ),
   linear-gradient(
     to bottom,
-    rgba(244, 234, 210, 0.5) var(--espessura-linha-grid, 1px),
+    rgba(244, 234, 210, var(--opacidade-grid, 0)) var(--espessura-linha-grid, 1px),
     transparent var(--espessura-linha-grid, 1px)
   );
   background-size:
@@ -213,15 +213,18 @@
 
 .barra-pontos-vida-token {
   position: absolute;
-  left: 5%;
-  bottom: -12px;
-  width: 90%;
-  height: 10px;
+  left: -5%;
+  bottom: -21px;
+  width: 110%;
+  height: 18px;
   z-index: 4;
   overflow: hidden;
-  border: 1px solid rgba(244, 234, 210, 0.9);
-  border-radius: 999px;
-  background: rgba(40, 30, 24, 0.9);
+  border: 2px solid rgba(244, 234, 210, 0.95);
+  border-radius: 3px;
+  background: rgba(20, 16, 13, 0.96);
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.85),
+    inset 0 0 3px rgba(0, 0, 0, 0.8);
   pointer-events: none;
 }
 
@@ -231,9 +234,10 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: inherit;
-  background: #8faf58;
-  transition: width 180ms ease;
+  background: #6f9d45;
+  transition:
+    width 180ms ease,
+    background-color 180ms ease;
 }
 
 .texto-pontos-vida-token {
@@ -242,30 +246,61 @@
   z-index: 1;
   display: grid;
   place-items: center;
-  color: #f4ead2;
-  font-size: 7px;
-  font-weight: 700;
+  color: #fffaf0;
+  font-size: 14px;
+  font-weight: 800;
   line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.02em;
+  text-shadow:
+    0 1px 2px #000,
+    1px 0 2px #000,
+    -1px 0 2px #000;
 }
 
 .identificador-participante {
   position: absolute;
-  right: -3px;
-  bottom: -3px;
-  z-index: 4;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
+  right: -7px;
+  bottom: -7px;
+  z-index: 5;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
   display: grid;
   place-items: center;
-  border: 1px solid #f4ead2;
+  border: 2px solid #f4ead2;
   border-radius: 999px;
-  background: #5f211d;
-  color: #f4ead2;
-  font-size: 0.7rem;
-  font-weight: 700;
+  background: #672720;
+  color: #fffaf0;
+  font-size: 1rem;
+  font-weight: 800;
   line-height: 1;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+/* Número dos inimigos sobre os tokens do tabuleiro. */
+.token-combate .identificador-participante {
+  right: -11px;
+  bottom: -11px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 9px;
+  border-width: 3px;
+  font-size: 1.3rem;
+  box-shadow:
+    0 3px 7px rgba(0, 0, 0, 0.9),
+    0 0 0 2px rgba(72, 25, 21, 0.7);
+}
+
+/* Número dos inimigos na fila de iniciativa. */
+.avatar-iniciativa .identificador-participante {
+  right: -4px;
+  bottom: -4px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  border-width: 2px;
+  font-size: 1rem;
 }
 
 /* =====================================================
@@ -273,8 +308,8 @@
    ===================================================== */
 
 #botaoEncerrarTurno {
-  min-height: 42px;
-  padding: 8px 14px;
+  min-height: 38px;
+  padding: 7px 12px;
   border: 1px solid var(--janela-destaque);
   border-radius: 3px;
   background: #79552f;
@@ -288,11 +323,12 @@
 
 .painel-comandos-combate .solicitacao-combate {
   margin: 0;
-  padding: 10px;
+  padding: 8px 9px;
   border-radius: 3px;
   background: rgba(195, 154, 88, 0.1);
+  font-size: 0.88rem;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.35;
   text-align: left;
 }
 
@@ -301,18 +337,18 @@
   left: 64px;
   right: auto;
   bottom: auto;
-  width: min(320px, calc(100vw - 32px));
+  width: min(296px, calc(100vw - 32px));
   max-height: calc(100vh - 48px);
-  padding: 16px;
+  padding: 13px;
   overflow: visible;
   transform: none;
 }
 
 .conteudo-comandos-combate {
-  max-height: calc(100vh - 110px);
-  margin-top: 14px;
+  max-height: calc(100vh - 100px);
+  margin-top: 10px;
   display: grid;
-  gap: 14px;
+  gap: 10px;
   overflow: auto;
 }
 
@@ -323,7 +359,7 @@
 
 .economia-acoes-combate p {
   margin: 0;
-  padding: 7px 10px;
+  padding: 6px 9px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -353,7 +389,7 @@
 }
 
 .titulo-grupo-acoes {
-  padding: 9px 10px;
+  padding: 7px 9px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -363,7 +399,7 @@
 
 .titulo-grupo-acoes h3 {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .titulo-grupo-acoes strong {
@@ -372,9 +408,9 @@
 }
 
 .lista-acoes-turno {
-  padding: 8px;
+  padding: 5px 6px;
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .lista-acoes-turno:empty {
@@ -383,7 +419,7 @@
 
 .lista-acoes-turno button {
   width: 100%;
-  padding: 8px 10px;
+  padding: 7px 8px;
   border: 0;
   border-radius: 2px;
   background: transparent;
@@ -681,11 +717,11 @@
 
 .painel-historico-combate {
   position: relative;
-  width: 210px;
+  width: 250px;
   max-height: none;
-  padding: 8px;
+  padding: 10px;
   overflow: hidden;
-  flex: 0 0 210px;
+  flex: 0 0 250px;
   border: 1px solid var(--janela-borda);
   border-radius: 4px;
   background: var(--janela-fundo);
@@ -713,10 +749,19 @@
 }
 
 .cabecalho-historico-combate button {
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--janela-borda-suave);
+  border-radius: 2px;
+  background: rgba(195, 154, 88, 0.08);
+  color: var(--janela-texto);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.cabecalho-historico-combate button:hover {
+  border-color: var(--janela-destaque);
+  background: rgba(195, 154, 88, 0.18);
 }
 
 .lista-historico-combate {
@@ -724,21 +769,36 @@
   gap: 8px;
 }
 
+/* Quando recolhido, mostra somente os dois eventos mais recentes. */
+.painel-historico-combate:not(.historico-expandido)
+  .evento-historico-combate:nth-last-child(n + 3) {
+  display: none;
+}
+
 .evento-historico-combate {
-  padding: 6px;
-  border: 1px solid var(--janela-borda-suave);
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.025);
+  padding: 7px 8px;
+  border: 1px solid rgba(195, 154, 88, 0.3);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.018);
   font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .evento-historico-combate summary {
   cursor: pointer;
+  color: var(--janela-texto);
+  font-size: 0.8rem;
   font-weight: 700;
+  line-height: 1.35;
 }
 
 .evento-historico-combate p {
-  margin: 8px 0 0;
+  margin: 7px 0 0;
+  padding-top: 7px;
+  border-top: 1px solid rgba(195, 154, 88, 0.18);
+  color: rgba(244, 234, 210, 0.82);
+  font-size: 0.78rem;
+  line-height: 1.45;
 }
 
 .painel-historico-combate:not(.historico-expandido)

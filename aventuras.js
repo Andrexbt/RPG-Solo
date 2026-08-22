@@ -657,13 +657,9 @@ function iniciarCombateDaAventura(configuracao) {
   cameraCombate.zoomMinimo =
   obterZoomMinimoVisivel();
 
-  cameraCombate.zoom =
-  cameraCombate.zoomMinimo;
-
-  cameraCombate.deslocamentoX = 0;
-  cameraCombate.deslocamentoY = 0;
-
-  atualizarCameraCombate();
+enquadrarParticipantesCombate(
+  combate,
+);
 }
 
 function moverParticipante(participante, coluna, linha) {

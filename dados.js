@@ -34,6 +34,40 @@
   let arrasteDadoAtual = null;
   let solicitacaoRolagemAtual = null;
   let rolagemSolicitadaEmAndamento = false;
+  let temporizadorResultadoDado = null;
+
+  function limparResultadoDado() {
+    if (temporizadorResultadoDado) {
+      window.clearTimeout(
+        temporizadorResultadoDado,
+      );
+
+      temporizadorResultadoDado = null;
+    }
+
+    if (resultadoDado) {
+      resultadoDado.textContent = "";
+      resultadoDado.classList.remove(
+        "resultado-rolagem-erro",
+      );
+    }
+  }
+
+  function agendarOcultacaoResultadoDado() {
+    if (temporizadorResultadoDado) {
+      window.clearTimeout(
+        temporizadorResultadoDado,
+      );
+    }
+
+    temporizadorResultadoDado =
+      window.setTimeout(
+        function ocultarResultadoDado() {
+          limparResultadoDado();
+        },
+        5000,
+      );
+  }
 
   function obterSuperficieDados() {
   const combateEstaVisivel =
@@ -426,11 +460,11 @@ solicitacaoCaixaDados.textContent =
         "arrastando-dado"
       );
 
-    executarLancamentoPreparado(
-      lancamento,
-      posicao.x,
-      posicao.y
-    );
+    void executarLancamentoPreparado(
+  lancamento,
+  posicao.x,
+  posicao.y,
+);
   }
 
   function calcularDeslocamentoLancamento(indice, quantidadeTotal) {
@@ -599,6 +633,8 @@ solicitacaoCaixaDados.textContent =
       rolagemSolicitadaEmAndamento =
     false;
 
+      agendarOcultacaoResultadoDado();
+
       return;
     }
 
@@ -680,6 +716,8 @@ if (
       resultadoDado.classList.remove(
         "resultado-rolagem-erro",
       );
+
+      agendarOcultacaoResultadoDado();
     }
 
     document.dispatchEvent(
@@ -700,9 +738,47 @@ if (
     atualizarSolicitacaoCaixaDados();
   }
 
-  function executarLancamentoPreparado(lancamento, x, y) {
+  async function executarLancamentoPreparado(lancamento, x, y) {
     prepararCamadaDados();
     posicionarResultadoRolagem(x, y, lancamento.quantidade);
+
+    const solicitacaoDoLancamento =
+  solicitacaoRolagemAtual;
+
+if (
+  window.Dados3D &&
+  typeof window.Dados3D.rolar ===
+    "function" &&
+  !lancamento.dadoExistenteId
+) {
+  try {
+    const notacao =
+      `${lancamento.quantidade}` +
+      `d${lancamento.numeroDeFaces}`;
+
+    const lancamento3D =
+      await window.Dados3D.rolar(
+        notacao,
+        {
+          pontoSoltura:
+            lancamento.pontoSoltura3D ??
+            null,
+        },
+      );
+
+    emitirRolagemConcluida(
+      lancamento3D.dados,
+      solicitacaoDoLancamento,
+    );
+
+    return;
+  } catch (erro) {
+    console.warn(
+      "O dado 3D falhou. Usando a representação 2D.",
+      erro,
+    );
+  }
+}
 
     const dadosDoLancamento = [];
     let primeiroIndiceNovo = 0;
@@ -738,9 +814,6 @@ if (
       }
     }
 
-    const solicitacaoDoLancamento =
-      solicitacaoRolagemAtual;
-
     window.setTimeout(function concluirLancamento() {
       emitirRolagemConcluida(
         dadosDoLancamento,
@@ -753,6 +826,137 @@ if (
     dadoDisponivel.addEventListener("mousedown", iniciarArrasteManualDado);
     dadoDisponivel.addEventListener("contextmenu", (evento) => evento.preventDefault());
   }
+
+  document.addEventListener(
+  "dado3DRelancado",
+
+  function concluirRelancamento3D(
+    evento,
+  ) {
+    const dados =
+      evento.detail?.dados;
+
+    if (
+      !Array.isArray(dados) ||
+      dados.length === 0
+    ) {
+      return;
+    }
+
+    const solicitacaoDoLancamento =
+      solicitacaoRolagemAtual;
+
+    emitirRolagemConcluida(
+      dados,
+      solicitacaoDoLancamento,
+    );
+  },
+  );
+
+  document.addEventListener(
+    "dado3DFisicoConcluido",
+
+    function concluirLancamentoFisico3D(
+      evento,
+    ) {
+      const dados =
+        evento.detail?.dados;
+
+      if (
+        !Array.isArray(dados) ||
+        dados.length === 0
+      ) {
+        return;
+      }
+
+      const posicao =
+        obterPosicaoNaSuperficie(
+          evento.detail?.clientX,
+          evento.detail?.clientY,
+        );
+
+      posicionarResultadoRolagem(
+        posicao.x,
+        posicao.y,
+        dados.length,
+      );
+
+      emitirRolagemConcluida(
+        dados,
+        solicitacaoRolagemAtual,
+      );
+    },
+  );
+
+  document.addEventListener(
+    "dado3DRemovido",
+    limparResultadoDado,
+  );
+
+  document.addEventListener(
+  "dado3DPreviewLancamentoSolicitado",
+
+  function lancarPreviewDado3D(
+    evento,
+  ) {
+    const numeroDeFaces =
+      Number(
+        evento.detail
+          ?.numeroDeFaces,
+      );
+
+    if (
+      !Number.isInteger(
+        numeroDeFaces,
+      )
+    ) {
+      return;
+    }
+
+    const posicao =
+      obterPosicaoNaSuperficie(
+        evento.detail.clientX,
+        evento.detail.clientY,
+      );
+
+    if (solicitacaoRolagemAtual) {
+      rolagemSolicitadaEmAndamento =
+        true;
+    }
+
+    if (resultadoDado) {
+      resultadoDado.classList.remove(
+        "resultado-rolagem-erro",
+      );
+    }
+
+    void executarLancamentoPreparado(
+      {
+        quantidade:
+          Math.max(
+            1,
+            Number(
+              evento.detail
+                ?.quantidade,
+            ) || 1,
+          ),
+
+        numeroDeFaces,
+
+        dadoExistenteId:
+          null,
+
+        pontoSoltura3D:
+          evento.detail
+            ?.pontoSoltura ??
+          null,
+      },
+
+      posicao.x,
+      posicao.y,
+    );
+  },
+);
 
   document.addEventListener("mousemove", moverArrasteManualDado);
   document.addEventListener("mouseup", concluirArrasteManualDado);

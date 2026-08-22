@@ -1252,19 +1252,19 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         ],
 
         escolhas: [
-              {
-                id: "voltaCastelo",
-                texto: `Dar a volta no castelo.`,
-                descricao: ``,
-                proximaEtapa: "testeCastelo",
-              },
+          {
+            id: "voltaCastelo",
+            texto: `Dar a volta no castelo.`,
+            descricao: ``,
+            proximaEtapa: "testeCastelo",
+          },
 
-              {
-                id: "procurarTerritorio",
-                texto: `Ir para o território dos Lagartos de Bronze.`,
-                descricao: ``,
-                proximaEtapa: "testeTerritorio",
-              },
+          {
+            id: "procurarTerritorio",
+            texto: `Ir para o território dos Lagartos de Bronze.`,
+            descricao: ``,
+            proximaEtapa: "testeTerritorio",
+          },
         ],
 
         etapas: {
@@ -1328,23 +1328,23 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 O que você faz?`,
 
                 escolhas: [
-              {
-                id: "tentarPassarLagartos",
-                texto: `Passar {despercebido|despercebida}.`,
-                descricao: ``,
-                proximaEtapa: "testePassarLagartos",
-              },
+                  {
+                    id: "tentarPassarLagartos",
+                    texto: `Passar {despercebido|despercebida}.`,
+                    descricao: ``,
+                    proximaEtapa: "testePassarLagartos",
+                  },
 
-              {
-                id: "voltarLagartos",
-                texto: `Voltar e buscar uma rota mais segura.`,
-                descricao: ``,
-                proximaCena: "becosLagartos",
-                memorias: {
-                  origemBecosLagartos: "voltarOpostos",
-                },
-              },
-            ],
+                  {
+                    id: "voltarLagartos",
+                    texto: `Voltar e buscar uma rota mais segura.`,
+                    descricao: ``,
+                    proximaCena: "becosLagartos",
+                    memorias: {
+                      origemBecosLagartos: "voltarOpostos",
+                    },
+                  },
+                ],
               },
 
               fracasso: {
@@ -1354,14 +1354,14 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 
                 Por um segundo, vocês apenas se encaram, e então eles partem em sua direção.`,
 
-                memoria: {origemBatalhaBecos: "falhaSobrevivencia",},
+                memoria: { origemBatalhaBecos: "falhaSobrevivencia" },
 
                 proximaCena: "batalhaBecosM",
               },
             },
           },
 
-          testePassarLagartos:{
+          testePassarLagartos: {
             descricao: ``,
             instrucao: "passar {despercebido|despercebida}.",
 
@@ -1395,14 +1395,13 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Sua tentativa de passar {despercebido|despercebida} falhou, e agora o confronto direto é a única coisa entre você e sua fuga.`,
 
-                memoria: {origemBatalhaBecos: "falhaFurtividade",},
+                memoria: { origemBatalhaBecos: "falhaFurtividade" },
 
                 proximaCena: "batalhaBecosM",
               },
-
-          }
-          }
-        }
+            },
+          },
+        },
       },
 
       batalhaRuasD: {
@@ -1511,8 +1510,8 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           jogador: {
             posicao: {
-              coluna: 22,
-              linha: 14,
+              coluna: 21,
+              linha: 21,
             },
 
             movimentoMaximo: 6,
@@ -1527,16 +1526,16 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               posicoes: [
                 {
                   coluna: 22,
-                  linha: 10,
+                  linha: 25,
                 },
 
                 {
-                  coluna: 27,
-                  linha: 10,
+                  coluna: 24,
+                  linha: 24,
                 },
                 {
                   coluna: 25,
-                  linha: 3,
+                  linha: 26,
                 },
               ],
 
@@ -1573,34 +1572,30 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         },
       },
 
-      batalhaBecosM:{
+      batalhaBecosM: {
         variacoes: [
-    {
-      se: {
-        flag: "origemBatalhaBecos",
-        igualA: "falhaSobrevivencia",
-      },
+          {
+            se: {
+              flag: "origemBatalhaBecos",
+              igualA: "falhaSobrevivencia",
+            },
 
-      contexto: [
-        `Três mercenários do grupo {o|a} cercam e bloqueiam sua passagem. Para além deles, uma abertura nos muros da cidade que levará à sua liberdade.`,
-      ],
-    },
+            contexto: [
+              `Três mercenários do grupo {o|a} cercam e bloqueiam sua passagem. Para além deles, uma abertura nos muros da cidade que levará à sua liberdade.`,
+            ],
+          },
 
-    {
-      se: {
-        flag: "origemBatalhaBecos",
-        igualA: "falhaFurtividade",
-      },
+          {
+            se: {
+              flag: "origemBatalhaBecos",
+              igualA: "falhaFurtividade",
+            },
 
-      contexto: [
-        ``,
-      ],
-    },
+            contexto: [``],
+          },
         ],
 
-        contexto: [
-          `Sem uma rota segura para recuar, você se prepara para o confronto.`,
-        ],
+        contexto: [`Sem uma rota segura para recuar, você se prepara para o confronto.`],
 
         combate: {
           textoBotaoInicio: "Enfrentar os Lagartos",
@@ -1608,65 +1603,65 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           mapa: "Imagens/Mapas/A Fuga/batalhaBecos.webp",
 
           jogador: {
-      posicao: {
-        coluna: 22,
-        linha: 14,
-      },
+            posicao: {
+              coluna: 22,
+              linha: 14,
+            },
 
-      movimentoMaximo: 6,
-    },
-
-    inimigos: [
-      {
-        npcId: "lagartoBronze",
-        quantidade: 3,
-
-        posicoes: [
-          {
-            coluna: 22,
-            linha: 10,
+            movimentoMaximo: 6,
           },
 
-          {
-            coluna: 27,
-            linha: 10,
-          },
+          inimigos: [
+            {
+              npcId: "lagartoBronze",
+              quantidade: 3,
 
-          {
-            coluna: 25,
-            linha: 6,
-          },
-        ],
+              posicoes: [
+                {
+                  coluna: 22,
+                  linha: 10,
+                },
 
-        movimentoMaximo: 6,
-      },
-    ],
+                {
+                  coluna: 27,
+                  linha: 10,
+                },
 
-    resultados: {
-      vitoria: {
-        tela: {
-          titulo: "Vitória",
+                {
+                  coluna: 25,
+                  linha: 6,
+                },
+              ],
 
-          texto: `O último dos Lagartos de Bronze cai diante de você.
+              movimentoMaximo: 6,
+            },
+          ],
+
+          resultados: {
+            vitoria: {
+              tela: {
+                titulo: "Vitória",
+
+                texto: `O último dos Lagartos de Bronze cai diante de você.
 
           O caminho pelos becos está novamente livre.`,
-        },
+              },
 
-        proximaCena: "fimVitoria",
-      },
+              proximaCena: "fimVitoria",
+            },
 
-      derrota: {
-        tela: {
-          titulo: "Derrota",
+            derrota: {
+              tela: {
+                titulo: "Derrota",
 
-          texto: `Suas forças chegam ao fim.
+                texto: `Suas forças chegam ao fim.
 
           {Cercado|Cercada} pelos Lagartos de Bronze, você já não consegue continuar lutando.`,
-        },
+              },
 
-        proximaCena: "batalhaBecosDerrota",
-      },
-    },
+              proximaCena: "batalhaBecosDerrota",
+            },
+          },
         },
       },
 
@@ -1733,8 +1728,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
         ],
       },
-      
-    }
+    },
   },
 };
 
