@@ -1,5 +1,20 @@
 "use strict";
 
+const estadoLinhaTempoCombate = {
+  rodada: null,
+  participanteAtivoId: null,
+  blocoTurnoAtual: null,
+};
+
+function reiniciarLinhaTempoCombate() {
+  estadoLinhaTempoCombate.rodada = null;
+  estadoLinhaTempoCombate.participanteAtivoId = null;
+  estadoLinhaTempoCombate.blocoTurnoAtual = null;
+
+  listaHistoricoCombate.innerHTML = "";
+  filaIniciativaCombate.innerHTML = "";
+}
+
 function exibirAcaoAtualCombate(mensagem) {
   mensagemAcaoAtualCombate.textContent = mensagem;
 
@@ -7,46 +22,95 @@ function exibirAcaoAtualCombate(mensagem) {
 }
 
 function adicionarEventoHistoricoCombate(titulo, descricao) {
-  const evento = document.createElement("details");
+  const evento = document.createElement("div");
 
   evento.className = "evento-historico-combate";
 
-  const resumo = document.createElement("summary");
-
+  const resumo = document.createElement("strong");
   resumo.textContent = titulo;
 
-  const detalhes = document.createElement("p");
+  evento.append(resumo);
 
-  detalhes.textContent = descricao;
-
-  evento.append(resumo, detalhes);
-
-  listaHistoricoCombate.append(evento);
-
-  painelHistoricoCombate.hidden = false;
-
-  if (painelHistoricoCombate.classList.contains("historico-expandido")) {
-    painelHistoricoCombate.scrollTop = painelHistoricoCombate.scrollHeight;
+  if (descricao && descricao !== titulo) {
+    const detalhes = document.createElement("p");
+    detalhes.textContent = descricao;
+    evento.append(detalhes);
   }
+
+  const destino =
+    estadoLinhaTempoCombate.blocoTurnoAtual?.querySelector(
+      ".eventos-turno-linha-tempo",
+    ) ?? listaHistoricoCombate;
+
+  destino.append(evento);
+  rolarLinhaTempoParaAtual();
 }
 
 function alternarHistoricoCombate() {
-  const estaExpandido = painelHistoricoCombate.classList.toggle("historico-expandido");
+  rolarLinhaTempoParaAtual("smooth");
+}
 
-  botaoExpandirHistorico.setAttribute("aria-expanded", estaExpandido);
+function rolarLinhaTempoParaAtual(comportamento = "auto") {
+  window.requestAnimationFrame(function () {
+    const alvo =
+      estadoLinhaTempoCombate.blocoTurnoAtual ??
+      listaHistoricoCombate.lastElementChild;
 
-  botaoExpandirHistorico.setAttribute(
-    "aria-label",
-    estaExpandido ? "Recolher histórico" : "Expandir histórico",
-  );
+    if (!alvo) {
+      return;
+    }
 
-  botaoExpandirHistorico.title = estaExpandido ? "Recolher histórico" : "Expandir histórico";
+    painelHistoricoCombate.scrollTo({
+      top: Math.max(
+        0,
+        alvo.offsetTop -
+          painelHistoricoCombate.clientHeight / 2 +
+          alvo.offsetHeight / 2,
+      ),
+      behavior: comportamento,
+    });
+  });
+}
 
-  botaoExpandirHistorico.textContent = estaExpandido ? "−" : "+";
+function adicionarMarcadorLinhaTempo(texto, classe = "") {
+  const marcador = document.createElement("div");
+  marcador.className = `marcador-linha-tempo-combate ${classe}`.trim();
+  marcador.textContent = texto;
+  listaHistoricoCombate.append(marcador);
+  return marcador;
+}
 
-  if (estaExpandido) {
-    painelHistoricoCombate.scrollTop = painelHistoricoCombate.scrollHeight;
+function criarBlocoTurnoLinhaTempo(participante) {
+  const bloco = document.createElement("article");
+  bloco.className = "turno-linha-tempo-combate turno-atual-linha-tempo";
+  bloco.dataset.participanteId = participante.id;
+
+  const avatar = criarAvatarIniciativa(participante);
+  const numeroParticipante = obterNumeroParticipante(participante);
+
+  if (numeroParticipante) {
+    const identificador = document.createElement("span");
+    identificador.className = "identificador-participante";
+    identificador.textContent = numeroParticipante;
+    avatar.append(identificador);
   }
+
+  const conteudo = document.createElement("div");
+  const nome = document.createElement("strong");
+  nome.className = "nome-participante-linha-tempo";
+  nome.textContent = participante.nome;
+
+  const eventos = document.createElement("div");
+  eventos.className = "eventos-turno-linha-tempo";
+
+  const estado = document.createElement("span");
+  estado.className = "estado-turno-linha-tempo";
+  estado.textContent = "Turno atual";
+
+  conteudo.append(nome, estado, eventos);
+  bloco.append(avatar, conteudo);
+  listaHistoricoCombate.append(bloco);
+  return bloco;
 }
 
 function criarAvatarIniciativa(participante) {
@@ -88,21 +152,110 @@ function criarAvatarIniciativa(participante) {
 }
 
 function renderizarFilaIniciativa(combate) {
+  if (
+    estadoLinhaTempoCombate.rodada === null &&
+    listaHistoricoCombate.childElementCount === 0
+  ) {
+    adicionarMarcadorLinhaTempo("Início da batalha", "inicio-batalha");
+  }
+
+  if (estadoLinhaTempoCombate.rodada !== combate.rodada) {
+    adicionarMarcadorLinhaTempo(`Rodada ${combate.rodada}`);
+    estadoLinhaTempoCombate.rodada = combate.rodada;
+  }
+
+  if (estadoLinhaTempoCombate.participanteAtivoId !== combate.participanteAtivoId) {
+    estadoLinhaTempoCombate.blocoTurnoAtual?.classList.remove(
+      "turno-atual-linha-tempo",
+    );
+
+    const estadoAnterior =
+      estadoLinhaTempoCombate.blocoTurnoAtual?.querySelector(
+        ".estado-turno-linha-tempo",
+      );
+
+    if (estadoAnterior) {
+      estadoAnterior.textContent = "Turno encerrado";
+    }
+
+    const participanteAtivo = combate.participantes.find(
+      (participante) => participante.id === combate.participanteAtivoId,
+    );
+
+    if (participanteAtivo) {
+      estadoLinhaTempoCombate.blocoTurnoAtual =
+        criarBlocoTurnoLinhaTempo(participanteAtivo);
+    }
+
+    estadoLinhaTempoCombate.participanteAtivoId =
+      combate.participanteAtivoId;
+
+    rolarLinhaTempoParaAtual("smooth");
+  }
+
   filaIniciativaCombate.innerHTML = "";
 
-  const quantidadeParticipantes = Math.max(1, combate.ordemTurnos.length);
+  const ordemVisivel =
+  combate.ordemTurnos.filter(
+    function participanteContinuaNaFila(
+      participanteId,
+    ) {
+      const participante =
+        combate.participantes.find(
+          (item) =>
+            item.id === participanteId,
+        );
 
-  const larguraPainelTurno = Math.max(
-    260,
-    Math.min(692, 116 + quantidadeParticipantes * 76),
+      return (
+        participante &&
+        participante.estado !== "derrotado"
+      );
+    },
   );
 
-  painelTurnoCombate.style.setProperty(
-    "--largura-painel-turno",
-    `${larguraPainelTurno}px`,
+const indiceAtivo =
+  ordemVisivel.indexOf(
+    combate.participanteAtivoId,
   );
 
-  for (const participanteId of combate.ordemTurnos) {
+for (
+  let deslocamento = 1;
+  deslocamento <= ordemVisivel.length;
+  deslocamento += 1
+) {
+  const indiceAbsoluto =
+    indiceAtivo + deslocamento;
+
+  const indiceParticipante =
+    indiceAbsoluto %
+    ordemVisivel.length;
+
+  const rodadaDoParticipante =
+    combate.rodada +
+    Math.floor(
+      indiceAbsoluto /
+      ordemVisivel.length,
+    );
+
+  if (
+    indiceParticipante === 0
+  ) {
+    const marcadorRodada =
+      document.createElement("li");
+
+    marcadorRodada.className =
+      "marcador-proxima-rodada";
+
+    marcadorRodada.textContent =
+      `Rodada ${rodadaDoParticipante}`;
+
+    filaIniciativaCombate.append(
+      marcadorRodada,
+    );
+  }
+
+  const participanteId =
+    ordemVisivel[indiceParticipante];
     const participante = combate.participantes.find(
       (participante) => participante.id === participanteId,
     );
@@ -116,10 +269,6 @@ function renderizarFilaIniciativa(combate) {
     item.classList.add("item-iniciativa");
 
     item.title = participante.nome;
-
-    if (participante.id === combate.participanteAtivoId) {
-      item.classList.add("turno-ativo");
-    }
 
     const avatar = criarAvatarIniciativa(participante);
 

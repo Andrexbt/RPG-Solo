@@ -73,7 +73,7 @@ function atualizarIndicadorRecurso(elemento, disponivel) {
     return;
   }
 
-  elemento.textContent = disponivel ? "Disponível" : "Utilizada";
+  elemento.textContent = disponivel ? "Disponíveis" : "Utilizadas";
 
   elemento.dataset.disponivel = String(disponivel);
 }

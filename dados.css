@@ -12,9 +12,6 @@
   margin: 0;
   padding: 0;
 }
-
-
-
 .janela-dados.janela-minimizada {
   min-width: 0;
 }
@@ -27,7 +24,7 @@
 .colecao-dados {
   padding: 8px 0 0;
   display: grid;
-  grid-template-columns: repeat(3, 58px);
+  grid-template-columns: repeat(3, 60px);
   justify-content: center;
   justify-items: center;
   column-gap: 7px;
@@ -249,10 +246,6 @@ text-shadow:
   display: none;
 }
 
-.solicitacao-caixa-dados {
-  display: none !important;
-}
-
 /* =========================================================
    DADOS SOBRE O TABULEIRO
    ========================================================= */
@@ -294,22 +287,36 @@ text-shadow:
 }
 
 .grupo-dados-em-arraste {
-  position: absolute;
-  width: 0;
-  height: 0;
-  z-index: 3;
+  position: fixed;
+  width: 86px;
+  height: 86px;
+  z-index: 10000;
+  overflow: visible;
   pointer-events: none;
 }
 
 .grupo-dados-em-arraste-fixo {
   position: fixed;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .miniatura-dado-arraste {
   position: absolute;
   left: 0;
   top: 0;
+    width: 86px;
+  height: 86px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  object-fit: contain;
+  box-shadow: none;
+  filter:
+    drop-shadow(
+      0 7px 7px
+      rgba(0, 0, 0, 0.55)
+    );
   transform:
     translate(calc(-50% + var(--miniatura-x, 0px)), calc(-50% + var(--miniatura-y, 0px)))
     rotate(var(--miniatura-rotacao, 0deg))
@@ -354,24 +361,24 @@ text-shadow:
   max-width: 420px;
   min-height: 0;
   margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
+  padding: 6px 10px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--cor-resultado-dados, #dbbd83) 55%,
+      transparent
+    );
+  border-radius: 3px;
+  background: rgba(16, 12, 9, 0.86);
 
   color: var(
   --cor-resultado-dados,
   #dbbd83
 );
 
-background-image: var(
-  --textura-resultado-dados
-);
+  -webkit-text-fill-color: currentColor;
 
-background-clip: text;
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 900;
   line-height: 1;
   text-align: center;
@@ -456,52 +463,37 @@ html.previews-dados-3d-prontos
 }
 
 .janela-dados.janela-flutuante {
+  box-sizing: border-box;
   width: min(
-    250px,
-    calc(100vw - 24px)
-  );
+  220px,
+  calc(100vw - 24px)
+);
 }
 
 .janela-dados .colecao-dados {
   width: 100%;
-  padding: 10px 8px;
+  padding: 8px 0 2px;
   display: grid;
-  grid-template-columns:
-    repeat(3, 60px);
+  grid-template-columns: repeat(3, 56px);
   justify-content: center;
-  gap: 10px 8px;
-  border: 1px solid
-    color-mix(
-      in srgb,
-      var(--cor-principal-dados) 60%,
-      #120d09
-    );
-  border-radius: 6px;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.05),
-      transparent 35%
-    ),
-    #17120e;
-  box-shadow:
-    inset 0 2px 8px
-      rgba(0, 0, 0, 0.9),
-    inset 0 -1px 2px
-      rgba(255, 255, 255, 0.06);
+  column-gap: 8px;
+  row-gap: 12px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .janela-dados
   .colecao-dados
   .dado-disponivel[data-faces] {
-  width: 60px;
-  height: 82px;
+  width: 56px;
+  height: 78px;
   min-height: 0;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-rows:
-    58px 24px;
+    58px 18px;
   align-items: center;
   justify-items: center;
   border: 0;
@@ -521,8 +513,8 @@ html.previews-dados-3d-prontos
 }
 
 .espaco-dado-3d {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   display: block;
   border: 1px solid
     color-mix(
@@ -530,54 +522,98 @@ html.previews-dados-3d-prontos
       var(--cor-principal-dados) 52%,
       #0b0806
     );
-  border-radius: 7px;
+  border-radius: 50%;
   background:
     radial-gradient(
-      circle at 50% 42%,
-      rgba(255, 255, 255, 0.06),
+      circle at 50% 46%,
+      rgba(255, 255, 255, 0.035),
+      transparent 38%
+    ),
+    rgba(7, 5, 4, 0.74);
+  box-shadow:
+    inset 0 6px 9px
+      rgba(0, 0, 0, 0.94),
+    inset 0 -2px 3px
+      rgba(195, 154, 88, 0.12),
+    0 0 0 1px
+      rgba(0, 0, 0, 0.48);
+  pointer-events: none;
+}
+
+.espaco-dado-estatico {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--cor-principal-dados) 52%,
+      #0b0806
+    );
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(255, 255, 255, 0.04),
       transparent 42%
     ),
-    #0e0b08;
+    rgba(7, 5, 4, 0.78);
   box-shadow:
-    inset 0 5px 8px
-      rgba(0, 0, 0, 0.88),
-    inset 0 -1px 2px
-      rgba(255, 255, 255, 0.06),
-    0 1px 0
-      rgba(255, 255, 255, 0.04);
+    inset 0 6px 9px rgba(0, 0, 0, 0.94),
+    inset 0 -2px 3px rgba(195, 154, 88, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.48);
+  overflow: hidden;
   pointer-events: none;
+}
+
+.imagem-dado-estatico {
+  width: 52px;
+  height: 52px;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+
+  image-rendering: auto;
+  transform: translateZ(0);
+  filter: contrast(1.06) saturate(1.04);
 }
 
 .rotulo-dado-disponivel {
   align-self: end;
-  color: var(
-    --cor-resultado-dados,
-    #dbbd83
-  );
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-  font-size: 0.72rem;
-  font-weight: 800;
-  line-height: 24px;
-  letter-spacing: 0.08em;
+  min-width: 34px;
+  height: 17px;
+  padding: 0 5px;
+  border: 1px solid #8f6a31;
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      #c69a50 0%,
+      #8d642c 48%,
+      #68451e 100%
+    );
+  box-shadow:
+    inset 0 1px rgba(255, 232, 174, 0.3),
+    0 2px 3px rgba(0, 0, 0, 0.65);
+  color: #24170d;
+  
+  font-size: 0.64rem;
+  
+  line-height: 15px;
+  letter-spacing: 0.06em;
   text-align: center;
-  text-shadow:
-    0 1px 2px
-      var(
-        --cor-sombra-dados,
-        #1b1009
-      );
+  font-family: Georgia, "Times New Roman", serif;
+font-weight: 700;
+color: #24170d;
+text-shadow: 0 1px rgba(232, 195, 125, 0.28);
   pointer-events: none;
 }
 
 html.previews-dados-3d-prontos
   .rotulo-dado-disponivel {
-  color: var(
-    --cor-resultado-dados,
-    #dbbd83
-  );
+  color: #24170d;
   -webkit-text-fill-color:
     currentColor;
 }
@@ -631,6 +667,11 @@ html[data-quantidade-dados-arraste]::after {
   transform:
     translate(34px, -34px);
   pointer-events: none;
+}
+
+#resultadoDado.resultado-dado-fixo {
+  position: fixed;
+  z-index: 65;
 }
 
 html[

@@ -14,6 +14,19 @@
     <link rel="stylesheet" href="anotacoes.css" />
     <link rel="stylesheet" href="ficha-personagem.css" />
     <link rel="stylesheet" href="detalhes-ficha.css" />
+
+    <link
+  rel="modulepreload"
+  href="vendor/dice-box/dist/dice-box.es.js"
+/>
+
+<link
+  rel="preload"
+  href="vendor/dice-box/dist/assets/ammo/ammo.wasm.wasm"
+  as="fetch"
+  type="application/wasm"
+  crossorigin="anonymous"
+/>
   </head>
 
   <body>
@@ -51,6 +64,22 @@
                   aria-hidden="true"
                 />
 
+                <div class="controle-velocidade-texto">
+  <label for="velocidadeTexto">
+    Velocidade do texto:
+  </label>
+
+  <select
+    id="velocidadeTexto"
+    aria-label="Velocidade do texto"
+  >
+    <option value="instantaneo">Instantâneo</option>
+    <option value="rapido">Rápido</option>
+    <option value="normal">Normal</option>
+    <option value="lento">Lento</option>
+  </select>
+</div>
+
                 <div
                   class="controles-rolagem-pergaminho"
                   role="group"
@@ -81,7 +110,7 @@
 
             <aside class="adendos-aventura" aria-label="Ferramentas da aventura">
               <section
-                class="janela-anotacoes janela-flutuante janela-encaixada"
+                class="janela-anotacoes janela-flutuante janela-encaixada janela-minimizada"
                 aria-labelledby="tituloAnotacoes"
               >
                 <header class="cabecalho-janela-flutuante" data-alca-arraste>
@@ -91,11 +120,11 @@
                     class="botao-minimizar-janela"
                     type="button"
                     aria-controls="conteudoAnotacoes"
-                    aria-expanded="true"
+                    aria-expanded="false"
                     aria-label="Minimizar janela de anotações"
                     data-minimizar-janela
                   >
-                    -
+                    +
                   </button>
                 </header>
 
@@ -109,24 +138,7 @@
                 </div>
               </section>
 
-              <section
-                class="janela-velocidade-texto janela-flutuante janela-encaixada"
-                aria-labelledby="tituloVelocidadeTexto"
-              >
-                <h2 id="tituloVelocidadeTexto">Texto</h2>
-
-                <label for="velocidadeTexto"> Velocidade </label>
-
-                <select id="velocidadeTexto">
-                  <option value="instantaneo">Instantâneo</option>
-
-                  <option value="rapido">Rápido</option>
-
-                  <option value="normal">Normal</option>
-
-                  <option value="lento">Lento</option>
-                </select>
-              </section>
+              
 
               <section
                 class="janela-dados janela-flutuante janela-encaixada"
@@ -148,7 +160,7 @@
                 </header>
 
                 <div id="conteudoDados" class="conteudo-dados">
-                  <p id="solicitacaoCaixaDados" class="solicitacao-caixa-dados" hidden></p>
+
                   <div class="caixa-dados">
 
                     <aside
@@ -163,9 +175,14 @@
     aria-label="Dado de quatro faces"
   >
     <span
-      class="espaco-dado-3d"
+      class="espaco-dado-estatico"
       aria-hidden="true"
-    ></span>
+    ><img
+    class="imagem-dado-estatico"
+    src="Imagens/Assets/dados/d4.webp"
+    alt=""
+    draggable="false"
+  /></span>
 
     <span class="rotulo-dado-disponivel">
       D4
@@ -179,9 +196,14 @@
     aria-label="Dado de seis faces"
   >
     <span
-      class="espaco-dado-3d"
+      class="espaco-dado-estatico"
       aria-hidden="true"
-    ></span>
+    ><img
+    class="imagem-dado-estatico"
+    src="Imagens/Assets/dados/d6.webp"
+    alt=""
+    draggable="false"
+  /></span>
 
     <span class="rotulo-dado-disponivel">
       D6
@@ -195,9 +217,14 @@
     aria-label="Dado de oito faces"
   >
     <span
-      class="espaco-dado-3d"
+      class="espaco-dado-estatico"
       aria-hidden="true"
-    ></span>
+    ><img
+    class="imagem-dado-estatico"
+    src="Imagens/Assets/dados/d8.webp"
+    alt=""
+    draggable="false"
+  /></span>
 
     <span class="rotulo-dado-disponivel">
       D8
@@ -211,9 +238,14 @@
     aria-label="Dado de dez faces"
   >
     <span
-      class="espaco-dado-3d"
+      class="espaco-dado-estatico"
       aria-hidden="true"
-    ></span>
+    ><img
+    class="imagem-dado-estatico"
+    src="Imagens/Assets/dados/d10.webp"
+    alt=""
+    draggable="false"
+  /></span>
 
     <span class="rotulo-dado-disponivel">
       D10
@@ -227,9 +259,14 @@
     aria-label="Dado de doze faces"
   >
     <span
-      class="espaco-dado-3d"
+      class="espaco-dado-estatico"
       aria-hidden="true"
-    ></span>
+    ><img
+    class="imagem-dado-estatico"
+    src="Imagens/Assets/dados/d12.webp"
+    alt=""
+    draggable="false"
+  /></span>
 
     <span class="rotulo-dado-disponivel">
       D12
@@ -243,9 +280,14 @@
     aria-label="Dado de vinte faces"
   >
     <span
-      class="espaco-dado-3d"
+      class="espaco-dado-estatico"
       aria-hidden="true"
-    ></span>
+    ><img
+    class="imagem-dado-estatico"
+    src="Imagens/Assets/dados/d20.webp"
+    alt=""
+    draggable="false"
+  /></span>
 
     <span class="rotulo-dado-disponivel">
       D20
@@ -339,47 +381,67 @@
         >
           <div class="faixa-superior-combate">
             <div id="painelTurnoCombate" class="painel-turno-combate" hidden>
-              <p>
-                Rodada
-                <span id="numeroRodadaCombate"> 1 </span>
-              </p>
+              <header class="cabecalho-linha-tempo-combate">
+                <div>
+                  <span class="rotulo-linha-tempo-combate">Combate</span>
 
-              <ul id="filaIniciativaCombate" class="fila-iniciativa-combate"></ul>
-
-              <section
-                id="painelAcaoAtualCombate"
-                class="painel-acao-atual-combate"
-                aria-live="polite"
-                hidden
-              >
-                <strong> Ação atual </strong>
-
-                <p id="mensagemAcaoAtualCombate">Aguardando o início do turno.</p>
-              </section>
-            </div>
-
-            <section id="painelHistoricoCombate" class="painel-historico-combate" hidden>
-              <header class="cabecalho-historico-combate">
-                <h2>Histórico</h2>
+                  <strong>
+                    Rodada
+                    <span id="numeroRodadaCombate">1</span>
+                  </strong>
+                </div>
 
                 <button
                   id="botaoExpandirHistorico"
                   type="button"
-                  aria-expanded="false"
-                  aria-label="Expandir histórico"
-                  title="Expandir histórico"
+                  aria-label="Voltar ao turno atual"
+                  title="Voltar ao turno atual"
                 >
-                  +
+                  ↓
                 </button>
               </header>
 
-              <div
-                id="listaHistoricoCombate"
-                class="lista-historico-combate"
-                aria-live="polite"
-              ></div>
-            </section>
+              <section
+                id="painelHistoricoCombate"
+                class="painel-historico-combate"
+              >
+                <div
+                  id="listaHistoricoCombate"
+                  class="lista-historico-combate"
+                  aria-live="polite"
+                ></div>
+
+                <div class="proximos-turnos-combate">
+                  <span>Próximos</span>
+
+                  <ul
+                    id="filaIniciativaCombate"
+                    class="fila-iniciativa-combate"
+                  ></ul>
+                </div>
+              </section>
+
+              
+            </div>
           </div>
+
+          <section
+  id="painelAcaoAtualCombate"
+  class="painel-momento-combate janela-flutuante"
+  aria-live="polite"
+>
+
+  <p id="mensagemAcaoAtualCombate">
+    Aguardando o início do turno.
+  </p>
+
+  <p
+    id="solicitacaoCombate"
+    class="solicitacao-combate"
+    aria-live="polite"
+    hidden
+  ></p>
+</section>
 
           <section
             id="painelComandosCombate"
@@ -404,14 +466,17 @@
 
             <div id="conteudoComandosCombate" class="conteudo-comandos-combate">
               <div class="economia-acoes-combate">
-                <p>
-                  Movimento
-                  <strong id="movimentoRestanteCombate"> — </strong>
-                </p>
+                <section class="grupo-acoes-turno">
+                  <header class="titulo-grupo-acoes">
+                    <h3>Movimento</h3>
+
+                    <strong id="movimentoRestanteCombate"> — </strong>
+                  </header>
+                </section>
 
                 <section class="grupo-acoes-turno">
                   <header class="titulo-grupo-acoes">
-                    <h3>Ação</h3>
+                    <h3>Ações</h3>
 
                     <strong id="acaoDisponivelCombate"> — </strong>
                   </header>
@@ -421,7 +486,7 @@
 
                 <section class="grupo-acoes-turno">
                   <header class="titulo-grupo-acoes">
-                    <h3>Ação bônus</h3>
+                    <h3>Ações bônus</h3>
 
                     <strong id="acaoBonusDisponivelCombate"> — </strong>
                   </header>
@@ -430,7 +495,7 @@
                 </section>
               </div>
 
-              <p id="solicitacaoCombate" class="solicitacao-combate" aria-live="polite" hidden></p>
+        
 
               <div id="acoesCombate" class="acoes-combate"></div>
 

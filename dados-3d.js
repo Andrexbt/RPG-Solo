@@ -151,6 +151,65 @@ let observadorTamanhoJanelaDados =
 
 const dados3DAtivos = new Map();
 
+const posicoesFinaisDados3D =
+  new Map();
+
+const posicoesFinaisTransicoes3D =
+  new Map();
+
+document.addEventListener(
+  "dado3DParou",
+
+  function registrarPosicaoFinalDado(
+    evento,
+  ) {
+    const dadoId =
+      String(
+        evento.detail?.dadoId ??
+        "",
+      );
+
+    if (!dadoId) {
+      return;
+    }
+
+    posicoesFinaisDados3D.set(
+      dadoId,
+      {
+        clientX:
+          Number(
+            evento.detail.clientX,
+          ),
+
+        clientY:
+          Number(
+            evento.detail.clientY,
+          ),
+      },
+    );
+
+    const idTransicao =
+      evento.detail?.idTransicao;
+
+    if (idTransicao) {
+      posicoesFinaisTransicoes3D.set(
+        String(idTransicao),
+        {
+          clientX:
+            Number(
+              evento.detail.clientX,
+            ),
+
+          clientY:
+            Number(
+              evento.detail.clientY,
+            ),
+        },
+      );
+    }
+  },
+);
+
 const esperasResultadosFisicos =
   new Map();
 
@@ -284,6 +343,11 @@ async function criarPreviewsDados3D() {
 
   await inicializarDados3D();
 
+  await caixaDados3D.updateConfig({
+  delay: 0,
+  settleTimeout: 150,
+});
+
   camadaDados3D.style.visibility =
     "hidden";
 
@@ -319,6 +383,11 @@ async function criarPreviewsDados3D() {
         false,
     },
   );
+
+  await caixaDados3D.updateConfig({
+  delay: 10,
+  settleTimeout: 4000,
+});
 
   document.dispatchEvent(
     new CustomEvent(
@@ -794,6 +863,10 @@ async function rolarDados3D(
   const pontoSoltura =
     configuracao.pontoSoltura;
 
+  const idTransicao =
+    configuracao.idTransicao ??
+    null;
+
   const possuiPontoSoltura =
     Number.isFinite(
       pontoSoltura?.x,
@@ -814,16 +887,50 @@ async function rolarDados3D(
         3,
 
       throwForce:
-        0.15,
+        0,
+
+      spinForce:
+        12,
 
       linearDamping:
-        0.72,
+        0.62,
+
+      angularDamping:
+        0.35,
     });
+  }
+
+  let notacaoDiceBox =
+    notacao;
+
+  if (
+    idTransicao &&
+    typeof notacao === "string"
+  ) {
+    const correspondencia =
+      notacao.trim().match(
+        /^(\d+)d(\d+)$/i,
+      );
+
+    if (correspondencia) {
+      notacaoDiceBox = {
+        qty:
+          Number(correspondencia[1]),
+        sides:
+          Number(correspondencia[2]),
+        data: {
+          tipo:
+            "lancamentoEstatico",
+          idTransicao,
+          pontoSoltura,
+        },
+      };
+    }
   }
 
   const resultadoOriginal =
     await caixaDados3D.add(
-      notacao,
+      notacaoDiceBox,
       {
         newStartPoint:
           !possuiPontoSoltura,
@@ -838,8 +945,14 @@ async function rolarDados3D(
       throwForce:
         5,
 
+      spinForce:
+        6,
+
       linearDamping:
         0.5,
+
+      angularDamping:
+        0.4,
     });
   }
 
@@ -858,13 +971,74 @@ async function rolarDados3D(
   dadosConvertidos,
 );
 
+  const primeiroDado =
+    dadosConvertidos[0];
+
+  const posicaoFinal =
+    (
+      idTransicao
+        ? posicoesFinaisTransicoes3D.get(
+            String(idTransicao),
+          )
+        : null
+    ) ??
+    (primeiroDado?.dadoId
+      ? posicoesFinaisDados3D.get(
+          String(
+            primeiroDado.dadoId,
+          ),
+        ) ?? null
+      : null);
+
+  if (idTransicao) {
+    posicoesFinaisTransicoes3D.delete(
+      String(idTransicao),
+    );
+  }
+
+  for (const dado of dadosConvertidos) {
+    if (dado.dadoId) {
+      posicoesFinaisDados3D.delete(
+        String(dado.dadoId),
+      );
+    }
+  }
+
   return {
     original:
       resultadoOriginal,
 
     dados:
       dadosConvertidos,
+
+    posicaoFinal,
   };
+}
+
+async function converterPontoTelaParaMesa3D(
+  clientX,
+  clientY,
+) {
+  await inicializarDados3D();
+
+  const detalhe = {
+    clientX,
+    clientY,
+    ponto:
+      null,
+  };
+
+  document.dispatchEvent(
+    new CustomEvent(
+      "obterPontoMesa3D",
+      {
+        detail:
+          detalhe,
+      },
+    ),
+  );
+
+  return detalhe.ponto;
 }
 
 async function testarDado3D(
@@ -1086,6 +1260,21 @@ document.addEventListener(
       const dadoPrincipal =
         await resultadoPrincipal;
 
+        const posicaoFinal =
+  posicoesFinaisDados3D.get(
+    dadoId,
+  ) ?? {
+    clientX:
+      detalhe.clientX,
+
+    clientY:
+      detalhe.clientY,
+  };
+
+posicoesFinaisDados3D.delete(
+  dadoId,
+);
+
       registrarDados3D([
         dadoPrincipal,
       ]);
@@ -1101,10 +1290,10 @@ document.addEventListener(
               ],
 
               clientX:
-                detalhe.clientX,
+                posicaoFinal.clientX,
 
               clientY:
-                detalhe.clientY,
+                posicaoFinal.clientY,
             },
           },
         ),
@@ -1121,6 +1310,9 @@ document.addEventListener(
 window.Dados3D = {
   inicializar:
     inicializarDados3D,
+
+  converterPontoTela:
+    converterPontoTelaParaMesa3D,
 
     definirTema:
   definirTemaDados3D,
@@ -1149,19 +1341,3 @@ obterConfiguracaoVisual:
   relancar:
   relancarDado3D,
 };
-
-void criarPreviewsDados3D()
-  .catch(
-    function tratarFalhaPreviews(
-      erro,
-    ) {
-      camadaDados3D.style
-        .visibility =
-          "visible";
-
-      console.warn(
-        "Não foi possível criar os previews 3D dos dados.",
-        erro,
-      );
-    },
-  );

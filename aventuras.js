@@ -607,6 +607,8 @@ function aplicarMapaCombate(caminhoImagem) {
 
 function iniciarCombateDaAventura(configuracao) {
 
+  reiniciarLinhaTempoCombate();
+
   aplicarMapaCombate(
     configuracao.mapa
   );
@@ -645,6 +647,13 @@ function iniciarCombateDaAventura(configuracao) {
       ],
       jogador.bonusIniciativa,
       "Rolagem de iniciativa",
+    );
+
+    adicionarEventoHistoricoCombate(
+      "Lance de iniciativa",
+      mensagensNarrativas.iniciativa.pedir(
+        jogador.bonusIniciativa,
+      ),
     );
 
     solicitacaoCombate.hidden = false;
@@ -1969,6 +1978,18 @@ botaoContinuarResultadoCombate.addEventListener(
 );
 
 document.addEventListener("combateEncerrado", processarResultadoCombate);
+
+painelHistoricoCombate.addEventListener(
+  "wheel",
+  function impedirZoomAoRolarLinhaTempo(
+    evento,
+  ) {
+    evento.stopPropagation();
+  },
+  {
+    passive: true,
+  },
+);
 
 visualizacaoCombate.addEventListener("wheel", controlarZoomCombate, {
   passive: false,

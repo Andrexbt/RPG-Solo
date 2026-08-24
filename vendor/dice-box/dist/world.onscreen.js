@@ -13269,6 +13269,14 @@ document.addEventListener(
       return;
     }
 
+    if (
+      evento.target?.closest?.(
+        ".dado-disponivel",
+      )
+    ) {
+      return;
+    }
+
     const dadoSelecionado =
       localizarDadoNoPonto(
         evento,
@@ -13329,11 +13337,11 @@ document.addEventListener(
         .mesh
         .scaling
         .scaleInPlace(
-          1 / 0.62,
+          1 / 0.48,
         );
 
       dadoSelecionado.mesh.position.y =
-        3;
+        4.5;
 
       cena.render();
     } else {
@@ -13344,8 +13352,20 @@ document.addEventListener(
             .rollId,
         );
 
+      document.dispatchEvent(
+        new CustomEvent(
+          "dado3DArrasteIniciado",
+          {
+            detail: {
+              dadoId:
+                dadoArrastadoId,
+            },
+          },
+        ),
+      );
+
       dadoSelecionado.mesh.position.y =
-        3;
+        4.5;
     }
 
     modeloDadoArrastado =
@@ -13680,9 +13700,12 @@ document.addEventListener(
         ],
 
         angularVelocity: [
-          7 + Math.random() * 4,
-          -6 - Math.random() * 4,
-          8 + Math.random() * 4,
+          (Math.random() > 0.5 ? 1 : -1) *
+            (12 + Math.random() * 6),
+          (Math.random() > 0.5 ? 1 : -1) *
+            (12 + Math.random() * 6),
+          (Math.random() > 0.5 ? 1 : -1) *
+            (12 + Math.random() * 6),
         ],
       },
     });
@@ -13871,7 +13894,7 @@ modelo.setEnabled(
           .previewRedimensionado
       ) {
         modelo.scaling.scaleInPlace(
-          0.62,
+          0.48,
         );
 
         preview.previewRedimensionado =
@@ -13932,6 +13955,56 @@ document.addEventListener(
   },
 
   true,
+);
+
+document.addEventListener(
+  "obterPontoMesa3D",
+
+  function obterPontoMesa3D(
+    evento,
+  ) {
+    const clientX =
+      Number(evento.detail?.clientX);
+    const clientY =
+      Number(evento.detail?.clientY);
+
+    if (
+      !Number.isFinite(clientX) ||
+      !Number.isFinite(clientY)
+    ) {
+      return;
+    }
+
+    const limites =
+      canvas.getBoundingClientRect();
+    const raio =
+      cena.createPickingRay(
+        clientX - limites.left,
+        clientY - limites.top,
+      );
+    const divisor =
+      raio.direction.y;
+
+    if (Math.abs(divisor) <= 0.0001) {
+      return;
+    }
+
+    const distancia =
+      -raio.origin.y / divisor;
+
+    if (distancia <= 0) {
+      return;
+    }
+
+    evento.detail.ponto = {
+      x:
+        raio.origin.x +
+        raio.direction.x * distancia,
+      z:
+        raio.origin.z +
+        raio.direction.z * distancia,
+    };
+  },
 );
 
   this.onInitComplete();
@@ -14078,6 +14151,72 @@ document.addEventListener(
     Fe(this, me)._++;
 
     if (
+  [
+    "lancado",
+    "lancamentoEstatico",
+  ].includes(
+    e.config?.data?.tipo,
+  )
+) {
+  const larguraRender =
+    C(this, oe).getRenderWidth();
+
+  const alturaRender =
+    C(this, oe).getRenderHeight();
+
+  const viewport =
+    C(this, at).viewport.toGlobal(
+      larguraRender,
+      alturaRender,
+    );
+
+  const posicaoTela =
+    M.Project(
+      e.mesh.getAbsolutePosition(),
+      F.Identity(),
+      C(this, K).getTransformMatrix(),
+      viewport,
+    );
+
+  const limitesCanvas =
+    C(this, fe).getBoundingClientRect();
+
+  document.dispatchEvent(
+    new CustomEvent(
+      "dado3DParou",
+      {
+        detail: {
+          dadoId:
+            String(
+              e.config.rollId,
+            ),
+
+          idTransicao:
+            e.config?.data
+              ?.idTransicao ?? null,
+
+          clientX:
+            limitesCanvas.left +
+            posicaoTela.x *
+              (
+                limitesCanvas.width /
+                larguraRender
+              ),
+
+          clientY:
+            limitesCanvas.top +
+            posicaoTela.y *
+              (
+                limitesCanvas.height /
+                alturaRender
+              ),
+        },
+      },
+    ),
+  );
+}
+
+    if (
       e.config?.data?.tipo ===
       "previewReposicao"
     ) {
@@ -14107,6 +14246,66 @@ Z = new WeakMap(), Be = new WeakMap(), me = new WeakMap(), Ve = new WeakMap(), f
     scale: this.config.scale,
     lights: C(this, ce)
   }, i = new Oe(t, C(this, K));
+
+  if (e.data?.idTransicao) {
+    document.dispatchEvent(
+      new CustomEvent(
+        "dado3DModeloCriado",
+        {
+          detail: {
+            idTransicao:
+              e.data.idTransicao,
+            dadoId:
+              String(e.rollId),
+          },
+        },
+      ),
+    );
+  }
+
+  if (
+    e.data?.tipo ===
+      "lancamentoEstatico" &&
+    Number.isFinite(
+      e.data?.pontoSoltura?.x,
+    ) &&
+    Number.isFinite(
+      e.data?.pontoSoltura?.z,
+    )
+  ) {
+    window.setTimeout(
+      function soltarDadoEstatico() {
+        C(this, ne).postMessage({
+          action:
+            "dropDie",
+          options: {
+            id:
+              i.id,
+            position: [
+              e.data.pontoSoltura.x,
+              2.8,
+              e.data.pontoSoltura.z,
+            ],
+            linearVelocity: [
+              0,
+              -0.1,
+              0,
+            ],
+            angularVelocity: [
+              (Math.random() > 0.5 ? 1 : -1) *
+                (3 + Math.random() * 2),
+              (Math.random() > 0.5 ? 1 : -1) *
+                (3 + Math.random() * 2),
+              (Math.random() > 0.5 ? 1 : -1) *
+                (3 + Math.random() * 2),
+            ],
+          },
+        });
+      }.bind(this),
+      80,
+    );
+  }
+
   if (
     e.data?.tipo ===
     "previewReposicao"

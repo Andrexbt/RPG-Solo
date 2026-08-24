@@ -40,7 +40,7 @@ function obterZoomMinimoVisivel() {
 function enquadrarParticipantesCombate(
   combate,
 ) {
-  const participantes =
+  const participantesComPosicao =
     combate?.participantes?.filter(
       function (participante) {
         return (
@@ -54,6 +54,44 @@ function enquadrarParticipantesCombate(
         );
       },
     ) ?? [];
+
+  const jogador =
+    participantesComPosicao.find(
+      function encontrarJogador(
+        participante,
+      ) {
+        return participante.tipo ===
+          "jogador";
+      },
+    );
+
+  const participantes = jogador
+    ? participantesComPosicao.filter(
+        function manterAreaInicial(
+          participante,
+        ) {
+          const distanciaColuna =
+            Math.abs(
+              participante.posicao.coluna -
+                jogador.posicao.coluna,
+            );
+
+          const distanciaLinha =
+            Math.abs(
+              participante.posicao.linha -
+                jogador.posicao.linha,
+            );
+
+          return (
+            participante === jogador ||
+            Math.max(
+              distanciaColuna,
+              distanciaLinha,
+            ) <= 6
+          );
+        },
+      )
+    : participantesComPosicao;
 
   if (participantes.length === 0) {
     cameraCombate.zoom =
@@ -87,10 +125,12 @@ function enquadrarParticipantesCombate(
 
   /*
    * Espaço adicional ao redor dos participantes.
-   * Cada lado recebe duas células e meia.
+   * No início, enquadra a vizinhança útil do jogador
+   * sem revelar o mapa inteiro ou inimigos distantes.
    */
   const margem =
-    tamanhoCelula * 2.5;
+    tamanhoCelula *
+    (jogador ? 1.5 : 2.5);
 
   const esquerdaGrupo =
     (menorColuna - 1) *

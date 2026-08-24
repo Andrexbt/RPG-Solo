@@ -271,15 +271,48 @@ solicitacaoCaixaDados.textContent =
 
   window.configurarRolagemSolicitada = configurarRolagemSolicitada;
 
-  function criarMiniaturaDadoArraste(numeroDeFaces, indice) {
-    const miniatura = document.createElement("span");
+  const fantasmasLancamentos3D =
+    new Map();
 
-    miniatura.className = "miniatura-dado-arraste";
-    miniatura.dataset.indice = String(indice);
-    miniatura.textContent = `d${numeroDeFaces}`;
+  let proximoIdTransicao3D =
+    1;
 
-    return miniatura;
-  }
+  function criarMiniaturaDadoArraste(
+  numeroDeFaces,
+  indice,
+) {
+  const miniatura =
+    document.createElement("img");
+
+  miniatura.className =
+    "miniatura-dado-arraste";
+
+  miniatura.dataset.indice =
+    String(indice);
+
+  miniatura.src =
+    `Imagens/Assets/dados/d${numeroDeFaces}.webp`;
+
+    miniatura.alt =
+      "";
+
+    miniatura.draggable =
+      false;
+
+    miniatura.style.display =
+      "block";
+
+    miniatura.style.visibility =
+      "visible";
+
+    miniatura.style.opacity =
+      "1";
+
+  miniatura.draggable =
+    false;
+
+  return miniatura;
+}
 
   function posicionarMiniaturasArraste(grupo) {
     const miniaturas = grupo.querySelectorAll(".miniatura-dado-arraste");
@@ -312,6 +345,15 @@ solicitacaoCaixaDados.textContent =
     const grupo = document.createElement("div");
 
     grupo.className = "grupo-dados-em-arraste grupo-dados-em-arraste-fixo";
+    grupo.style.position = "fixed";
+    grupo.style.width = "86px";
+    grupo.style.height = "86px";
+    grupo.style.zIndex = "10000";
+    grupo.style.display = "block";
+    grupo.style.visibility = "visible";
+    grupo.style.opacity = "1";
+    grupo.style.overflow = "visible";
+    grupo.style.pointerEvents = "none";
     grupo.append(criarMiniaturaDadoArraste(numeroDeFaces, 0));
     document.body.append(grupo);
 
@@ -353,6 +395,36 @@ solicitacaoCaixaDados.textContent =
 
     evento.preventDefault();
 
+    if (
+      evento.pointerId !== undefined &&
+      typeof elementoDado.setPointerCapture ===
+        "function"
+    ) {
+      try {
+        elementoDado.setPointerCapture(
+          evento.pointerId,
+        );
+      } catch (erro) {
+        // O arraste pelo documento continua funcionando sem captura.
+      }
+    }
+
+    limparResultadoDado();
+
+    if (
+      window.Dados3D &&
+      typeof window.Dados3D.inicializar ===
+        "function"
+    ) {
+      void window.Dados3D
+        .inicializar()
+        .catch(
+          function ignorarFalhaPreparo3D() {
+            // O fallback 2D continua disponível.
+          },
+        );
+    }
+
     arrasteDadoAtual = {
       elementoOrigem: elementoDado,
       numeroDeFaces: numeroDeFaces,
@@ -360,6 +432,19 @@ solicitacaoCaixaDados.textContent =
       dadoExistenteId: elementoDado.dataset.idDado ?? null,
       fantasma: criarFantasmaArraste(numeroDeFaces, evento.clientX, evento.clientY),
     };
+
+    document.documentElement.dataset
+      .quantidadeDadosArraste = "1";
+
+    document.documentElement.style.setProperty(
+      "--cursor-dado-x",
+      `${evento.clientX}px`,
+    );
+
+    document.documentElement.style.setProperty(
+      "--cursor-dado-y",
+      `${evento.clientY}px`,
+    );
 
     elementoDado.classList.add("dado-sendo-arrastado");
     document.body.classList.add("arrastando-dado");
@@ -375,6 +460,16 @@ solicitacaoCaixaDados.textContent =
       evento.clientX,
       evento.clientY,
     );
+
+    document.documentElement.style.setProperty(
+      "--cursor-dado-x",
+      `${evento.clientX}px`,
+    );
+
+    document.documentElement.style.setProperty(
+      "--cursor-dado-y",
+      `${evento.clientY}px`,
+    );
   }
 
   function adicionarDadoAoLancamento(evento) {
@@ -386,14 +481,11 @@ solicitacaoCaixaDados.textContent =
     evento.stopPropagation();
 
     arrasteDadoAtual.quantidade += 1;
-    arrasteDadoAtual.fantasma.append(
-      criarMiniaturaDadoArraste(
-        arrasteDadoAtual.numeroDeFaces,
-        arrasteDadoAtual.quantidade - 1,
-      ),
-    );
 
-    posicionarMiniaturasArraste(arrasteDadoAtual.fantasma);
+    document.documentElement.dataset
+      .quantidadeDadosArraste = String(
+        arrasteDadoAtual.quantidade,
+      );
   }
 
   function cancelarArrasteManualDado() {
@@ -404,14 +496,17 @@ solicitacaoCaixaDados.textContent =
     arrasteDadoAtual.elementoOrigem.classList.remove("dado-sendo-arrastado");
     arrasteDadoAtual.fantasma.remove();
     arrasteDadoAtual = null;
+    delete document.documentElement.dataset
+      .quantidadeDadosArraste;
     document.body.classList.remove("arrastando-dado");
   }
 
-  function concluirArrasteManualDado(
+  async function concluirArrasteManualDado(
     evento
   ) {
     if (
       !arrasteDadoAtual ||
+      arrasteDadoAtual.finalizando ||
       evento.button !== 0
     ) {
       return;
@@ -421,6 +516,9 @@ solicitacaoCaixaDados.textContent =
 
     const lancamento =
       arrasteDadoAtual;
+
+    lancamento.finalizando =
+      true;
 
     if (solicitacaoRolagemAtual) {
   rolagemSolicitadaEmAndamento =
@@ -439,8 +537,48 @@ solicitacaoCaixaDados.textContent =
         evento.clientY
       );
 
+    const idTransicao3D =
+      `lancamento-estatico-${
+        proximoIdTransicao3D
+      }`;
+
+    proximoIdTransicao3D += 1;
+
+    lancamento.idTransicao3D =
+      idTransicao3D;
+
+    fantasmasLancamentos3D.set(
+      idTransicao3D,
+      lancamento.fantasma,
+    );
+
+    if (
+      window.Dados3D &&
+      typeof window.Dados3D
+        .converterPontoTela ===
+        "function"
+    ) {
+      try {
+        lancamento.pontoSoltura3D =
+          await window.Dados3D
+            .converterPontoTela(
+              evento.clientX,
+              evento.clientY,
+            );
+
+      } catch (erro) {
+        console.warn(
+          "Não foi possível converter o ponto de soltura do dado.",
+          erro,
+        );
+      }
+    }
+
     arrasteDadoAtual =
       null;
+
+    delete document.documentElement.dataset
+      .quantidadeDadosArraste;
 
     lancamento
       .elementoOrigem
@@ -448,10 +586,6 @@ solicitacaoCaixaDados.textContent =
       .remove(
         "dado-sendo-arrastado"
       );
-
-    lancamento
-      .fantasma
-      .remove();
 
     document
       .body
@@ -466,6 +600,30 @@ solicitacaoCaixaDados.textContent =
   posicao.y,
 );
   }
+
+  document.addEventListener(
+    "dado3DModeloCriado",
+
+    function trocarFantasmaPorModelo3D(
+      evento,
+    ) {
+      const idTransicao =
+        evento.detail?.idTransicao;
+      const fantasma =
+        fantasmasLancamentos3D.get(
+          idTransicao,
+        );
+
+      if (!fantasma) {
+        return;
+      }
+
+      fantasma.remove();
+      fantasmasLancamentos3D.delete(
+        idTransicao,
+      );
+    },
+  );
 
   function calcularDeslocamentoLancamento(indice, quantidadeTotal) {
     if (quantidadeTotal <= 1) {
@@ -514,7 +672,7 @@ solicitacaoCaixaDados.textContent =
       `${Math.floor(Math.random() * 81) - 40}deg`,
     );
 
-    elementoDado.addEventListener("mousedown", iniciarArrasteManualDado);
+    elementoDado.addEventListener("pointerdown", iniciarArrasteManualDado);
     elementoDado.addEventListener("contextmenu", removerDadoLancado);
     camadaDadosLancados.append(elementoDado);
 
@@ -568,11 +726,59 @@ solicitacaoCaixaDados.textContent =
       return;
     }
 
+    resultadoDado.classList.remove(
+      "resultado-dado-fixo",
+    );
+
     const ultimoAnel = Math.floor((Math.max(1, quantidadeTotal) - 1) / 8);
     const raio = quantidadeTotal <= 1 ? 0 : 82 + ultimoAnel * 72;
 
     resultadoDado.style.left = `${x}px`;
     resultadoDado.style.top = `${y + Math.max(84, raio + 68)}px`;
+  }
+
+  function posicionarResultadoRolagemNaTela(
+    clientX,
+    clientY,
+  ) {
+    if (!resultadoDado) {
+      return;
+    }
+
+    if (
+      resultadoDado.parentElement !==
+      document.body
+    ) {
+      document.body.append(
+        resultadoDado,
+      );
+    }
+
+    const margemHorizontal = 90;
+    const margemInferior = 54;
+
+    const x = Math.min(
+      window.innerWidth - margemHorizontal,
+      Math.max(
+        margemHorizontal,
+        Number(clientX) || window.innerWidth / 2,
+      ),
+    );
+
+    const y = Math.min(
+      window.innerHeight - margemInferior,
+      Math.max(
+        70,
+        (Number(clientY) || window.innerHeight / 2) + 96,
+      ),
+    );
+
+    resultadoDado.classList.add(
+      "resultado-dado-fixo",
+    );
+
+    resultadoDado.style.left = `${x}px`;
+    resultadoDado.style.top = `${y}px`;
   }
 
   function removerDadoLancado(evento) {
@@ -763,8 +969,19 @@ if (
           pontoSoltura:
             lancamento.pontoSoltura3D ??
             null,
+
+          idTransicao:
+            lancamento.idTransicao3D ??
+            null,
         },
       );
+
+    if (lancamento3D.posicaoFinal) {
+      posicionarResultadoRolagemNaTela(
+        lancamento3D.posicaoFinal.clientX,
+        lancamento3D.posicaoFinal.clientY,
+      );
+    }
 
     emitirRolagemConcluida(
       lancamento3D.dados,
@@ -773,6 +990,18 @@ if (
 
     return;
   } catch (erro) {
+    if (lancamento.idTransicao3D) {
+      const fantasma =
+        fantasmasLancamentos3D.get(
+          lancamento.idTransicao3D,
+        );
+
+      fantasma?.remove();
+      fantasmasLancamentos3D.delete(
+        lancamento.idTransicao3D,
+      );
+    }
+
     console.warn(
       "O dado 3D falhou. Usando a representação 2D.",
       erro,
@@ -823,7 +1052,7 @@ if (
   }
 
   for (const dadoDisponivel of dadosDisponiveis) {
-    dadoDisponivel.addEventListener("mousedown", iniciarArrasteManualDado);
+    dadoDisponivel.addEventListener("pointerdown", iniciarArrasteManualDado);
     dadoDisponivel.addEventListener("contextmenu", (evento) => evento.preventDefault());
   }
 
@@ -869,16 +1098,9 @@ if (
         return;
       }
 
-      const posicao =
-        obterPosicaoNaSuperficie(
-          evento.detail?.clientX,
-          evento.detail?.clientY,
-        );
-
-      posicionarResultadoRolagem(
-        posicao.x,
-        posicao.y,
-        dados.length,
+      posicionarResultadoRolagemNaTela(
+        evento.detail?.clientX,
+        evento.detail?.clientY,
       );
 
       emitirRolagemConcluida(
@@ -890,6 +1112,11 @@ if (
 
   document.addEventListener(
     "dado3DRemovido",
+    limparResultadoDado,
+  );
+
+  document.addEventListener(
+    "dado3DArrasteIniciado",
     limparResultadoDado,
   );
 
@@ -960,7 +1187,16 @@ if (
 
   document.addEventListener("mousemove", moverArrasteManualDado);
   document.addEventListener("mouseup", concluirArrasteManualDado);
-  document.addEventListener("mousedown", adicionarDadoAoLancamento, true);
+  document.addEventListener(
+    "pointermove",
+    moverArrasteManualDado,
+    true,
+  );
+  document.addEventListener(
+    "pointerup",
+    concluirArrasteManualDado,
+    true,
+  );
   document.addEventListener("keydown", function tratarTecla(evento) {
     if (evento.key === "Escape") {
       cancelarArrasteManualDado();
@@ -968,7 +1204,9 @@ if (
   });
   document.addEventListener("contextmenu", function impedirMenuDuranteArraste(evento) {
     if (arrasteDadoAtual) {
-      evento.preventDefault();
+      adicionarDadoAoLancamento(
+        evento,
+      );
     }
   });
 })();
