@@ -441,6 +441,10 @@
     aria-live="polite"
     hidden
   ></p>
+  <div
+  id="acoesCombate"
+  class="acoes-combate"
+></div>
 </section>
 
           <section
@@ -486,7 +490,7 @@
 
                 <section class="grupo-acoes-turno">
                   <header class="titulo-grupo-acoes">
-                    <h3>Ações bônus</h3>
+                    <h3>Ações Bônus</h3>
 
                     <strong id="acaoBonusDisponivelCombate"> — </strong>
                   </header>
@@ -497,20 +501,23 @@
 
         
 
-              <div id="acoesCombate" class="acoes-combate"></div>
+              
 
               <button id="botaoEncerrarTurno" class="botao-encerrar-turno" type="button">
                 Encerrar turno
               </button>
             </div>
 
-            <aside
+            
+          </section>
+
+          <aside
               id="painelAtaquesCombate"
-              class="painel-ataques-combate"
+              class="painel-ataques-combate janela-flutuante"
               aria-labelledby="tituloAtaquesCombate"
               hidden
             >
-              <header class="cabecalho-painel-ataques">
+              <header class="cabecalho-painel-ataques cabecalho-janela-flutuante" data-alca-arraste>
                 <h3 id="tituloAtaquesCombate">Ataques</h3>
 
                 <button
@@ -526,7 +533,6 @@
 
               <div id="listaAtaquesCombate" class="lista-ataques-combate"></div>
             </aside>
-          </section>
 
           <div class="campo-combate">
             <div id="cameraCombate" class="camera-combate">
@@ -642,6 +648,10 @@
     <script src="banco-classes.js" defer></script>
     <script src="banco-equipamentos.js" defer></script>
     <script src="banco-maestrias.js" defer></script>
+    <script
+  src="banco-condicoes.js"
+  defer
+></script>
     <script src="banco-propriedades-armas.js" defer></script>
     <script src="banco-magias.js" defer></script>
     <script src="banco-especies.js" defer></script>

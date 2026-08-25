@@ -409,6 +409,16 @@ function selecionarTokenJogador(evento) {
   }
 
   token.classList.add("token-selecionado");
+
+  atualizarDestaquesMovimentoCombate(
+  combate,
+);
+
+exibirAcaoAtualCombate(
+  participante.movimentoRestante > 0
+    ? "Escolha uma célula alcançável para se movimentar."
+    : "Seu movimento deste turno já foi utilizado.",
+);
 }
 
 function selecionarAlvoCombate(evento) {
@@ -440,9 +450,31 @@ function selecionarAlvoCombate(evento) {
     return;
   }
 
+  if (
+  !painelAtaquesCombate.hidden &&
+  !alvoDisponivelParaAtaque(
+    combate,
+    participanteAtivo,
+    alvo,
+  )
+) {
+  exibirAcaoAtualCombate(
+    `${alvo.nome} está fora do alcance ` +
+    "dos seus ataques disponíveis.",
+  );
+
+  return;
+}
+
   combate.alvoSelecionadoId = alvo.id;
 
-  atualizarInterfaceTurno(combate);
+atualizarInterfaceTurno(combate);
+
+if (!painelAtaquesCombate.hidden) {
+  exibirAcaoAtualCombate(
+    `Escolha um ataque contra ${alvo.nome}.`,
+  );
+}
 }
 
 function iniciarRolagemAtaquePreparado(resultado) {

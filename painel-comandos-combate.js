@@ -2,6 +2,58 @@
 
 function abrirPainelAtaquesCombate() {
   painelAtaquesCombate.hidden = false;
+
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+    if (combate) {
+  combate.participanteSelecionadoId =
+    null;
+
+  const tokensSelecionados =
+    tabuleiroCombate.querySelectorAll(
+      ".token-selecionado",
+    );
+
+  for (
+    const token of tokensSelecionados
+  ) {
+    token.classList.remove(
+      "token-selecionado",
+    );
+  }
+
+  atualizarDestaquesMovimentoCombate(
+    combate,
+  );
+}
+
+  const alvo =
+    combate?.participantes.find(
+      (participante) =>
+        participante.id ===
+        combate.alvoSelecionadoId,
+    );
+
+    if (combate) {
+  atualizarDestaquesAlvosCombate(
+    combate,
+  );
+}
+
+  if (alvo) {
+    exibirAcaoAtualCombate(
+      `Escolha um ataque contra ${alvo.nome}.`,
+    );
+
+    return;
+  }
+
+  exibirAcaoAtualCombate(
+    "Selecione um inimigo no campo de batalha.",
+  );
+
+  
 }
 
 function reabrirPainelComandosCombate() {
@@ -26,17 +78,29 @@ function reabrirPainelComandosCombate() {
 
 function verificarNovaSolicitacaoCombate() {
   const possuiSolicitacao =
-    !solicitacaoCombate.hidden && solicitacaoCombate.textContent.trim() !== "";
+    !solicitacaoCombate.hidden &&
+    solicitacaoCombate
+      .textContent
+      .trim() !== "";
 
   if (!possuiSolicitacao) {
     return;
   }
 
-  reabrirPainelComandosCombate();
+  painelAcaoAtualCombate.hidden =
+    false;
 }
-
 function fecharPainelAtaquesCombate() {
   painelAtaquesCombate.hidden = true;
+
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  if (combate) {
+    atualizarDestaquesAlvosCombate(
+      combate,
+    );
+  }
 }
 
 function ativarEfeitoCombate(
@@ -390,9 +454,32 @@ if (critico) {
 
     botao.type = "button";
 
-    botao.textContent =
-      `Usar rolagem ${indice + 1}: ` +
-      conta;
+botao.classList.add(
+  "opcao-rolagem-combate",
+);
+
+const rotuloRolagem =
+  document.createElement("span");
+
+rotuloRolagem.className =
+  "rotulo-opcao-rolagem";
+
+rotuloRolagem.textContent =
+  `Usar rolagem ${indice + 1}`;
+
+const calculoRolagem =
+  document.createElement("span");
+
+calculoRolagem.className =
+  "calculo-opcao-rolagem";
+
+calculoRolagem.textContent =
+  conta;
+
+botao.append(
+  rotuloRolagem,
+  calculoRolagem,
+);
 
     botao.addEventListener(
       "click",
@@ -492,10 +579,9 @@ detalhesAtaque.textContent =
   `${ataque.dano.tipo}`;
 
 botao.append(
+  nomeAtaque,
   detalhesAtaque,
 );
-
-botao.append(nomeAtaque);
 
 const dominaMaestria =
   window.TradutorRegras

@@ -134,6 +134,192 @@ function atualizarPontosDeVidaFichaCombate(
   );
 }
 
+function alvoDisponivelParaAtaque(
+  combate,
+  atacante,
+  alvo,
+) {
+  if (
+    !combate ||
+    !atacante ||
+    !alvo ||
+    atacante.tipo !== "jogador" ||
+    alvo.tipo !== "inimigo" ||
+    alvo.estado === "derrotado"
+  ) {
+    return false;
+  }
+
+  const ataques =
+    atacante.ataques ?? [];
+
+  return ataques.some(
+    function ataqueAlcancaAlvo(
+      ataque,
+    ) {
+      const resultado =
+        SistemaCombate
+          .validarSelecaoAcao(
+            atacante,
+            alvo,
+            ataque,
+          );
+
+      return resultado.sucesso;
+    },
+  );
+}
+
+function atualizarDestaquesAlvosCombate(
+  combate,
+) {
+  const modoSelecaoAtivo =
+    !painelAtaquesCombate.hidden;
+
+  tabuleiroCombate.classList.toggle(
+    "selecionando-alvo",
+    modoSelecaoAtivo,
+  );
+
+  const atacante =
+    combate?.participantes.find(
+      (participante) =>
+        participante.id ===
+        combate.participanteAtivoId,
+    );
+
+  const tokens =
+    tabuleiroCombate.querySelectorAll(
+      ".token-combate",
+    );
+
+  for (const token of tokens) {
+    const participante =
+      combate?.participantes.find(
+        (item) =>
+          item.id ===
+          token.dataset.idParticipante,
+      );
+
+    const alvoDisponivel =
+      modoSelecaoAtivo &&
+      alvoDisponivelParaAtaque(
+        combate,
+        atacante,
+        participante,
+      );
+
+    token.classList.toggle(
+      "token-alvo-disponivel",
+      alvoDisponivel,
+    );
+  }
+}
+
+function celulaDisponivelParaMovimento(
+  combate,
+  participante,
+  coluna,
+  linha,
+) {
+  if (
+    !combate ||
+    !participante ||
+    participante.tipo !== "jogador" ||
+    combate.participanteAtivoId !==
+      participante.id
+  ) {
+    return false;
+  }
+
+  const celulaOcupada =
+    combate.participantes.some(
+      function verificarOcupacao(
+        outroParticipante,
+      ) {
+        return (
+          outroParticipante.id !==
+            participante.id &&
+          outroParticipante.estado !==
+            "derrotado" &&
+          outroParticipante.posicao.coluna ===
+            coluna &&
+          outroParticipante.posicao.linha ===
+            linha
+        );
+      },
+    );
+
+  if (celulaOcupada) {
+    return false;
+  }
+
+  const distancia =
+    SistemaCombate.calcularDistancia(
+      participante.posicao,
+      {
+        coluna,
+        linha,
+      },
+    );
+
+  return (
+    distancia > 0 &&
+    distancia <=
+      participante.movimentoRestante
+  );
+}
+
+function atualizarDestaquesMovimentoCombate(
+  combate,
+) {
+  const participante =
+    combate?.participantes.find(
+      (item) =>
+        item.id ===
+        combate.participanteSelecionadoId,
+    );
+
+  const modoMovimentoAtivo =
+    participante?.tipo === "jogador" &&
+    participante.id ===
+      combate?.participanteAtivoId &&
+    participante.movimentoRestante > 0 &&
+    painelAtaquesCombate.hidden;
+
+  tabuleiroCombate.classList.toggle(
+    "selecionando-movimento",
+    Boolean(modoMovimentoAtivo),
+  );
+
+  const celulas =
+    tabuleiroCombate.querySelectorAll(
+      ".celula-combate",
+    );
+
+  for (const celula of celulas) {
+    const coluna =
+      Number(celula.dataset.coluna);
+
+    const linha =
+      Number(celula.dataset.linha);
+
+    const disponivel =
+      modoMovimentoAtivo &&
+      celulaDisponivelParaMovimento(
+        combate,
+        participante,
+        coluna,
+        linha,
+      );
+
+    celula.classList.toggle(
+      "celula-movimento-disponivel",
+      disponivel,
+    );
+  }
+}
+
 function atualizarInterfaceTurno(combate) {
   const participanteAtivo = combate.participantes.find(
     (participante) => participante.id === combate.participanteAtivoId,
@@ -174,6 +360,12 @@ function atualizarInterfaceTurno(combate) {
       token.style.gridColumn = participanteDoToken.posicao.coluna;
 
       token.style.gridRow = participanteDoToken.posicao.linha;
+
+      renderizarCondicoesToken(
+  token,
+  participanteDoToken,
+  combate,
+);
 
 
       if (
@@ -242,6 +434,14 @@ if (textoPontosDeVida) {
 
     token.classList.toggle("token-derrotado", participanteDoToken?.estado === "derrotado");
   }
+
+  atualizarDestaquesAlvosCombate(
+  combate,
+);
+
+atualizarDestaquesMovimentoCombate(
+  combate,
+);
 
   atualizarPontosDeVidaFichaCombate(
   combate,

@@ -467,49 +467,57 @@
    ===================================================== */
 
 .painel-ataques-combate {
-  position: absolute;
-  top: 48px;
-  left: calc(100% + 8px);
+  position: fixed;
+  top: 50%;
+  left: 344px;
   right: auto;
-  z-index: 2;
-  width: 280px;
-  max-height: min(440px, calc(100vh - 80px));
+  bottom: auto;
+  z-index: 22;
+
+  width: min(
+    280px,
+    calc(100vw - 368px)
+  );
+  max-height: min(
+    440px,
+    calc(100vh - 32px)
+  );
   padding: 14px;
   overflow: auto;
-  border: 1px solid var(--janela-borda);
-  border-radius: 4px;
 
-  background: linear-gradient(rgba(20, 17, 14, 0.2), rgba(20, 17, 14, 0.2)), var(--janela-textura);
-
-  background-size:
-    auto,
-    420px 420px;
-
-  background-position: center, center;
-
-  color: var(--janela-texto);
-  box-shadow: var(--janela-sombra);
-  backdrop-filter: blur(5px);
+  transform: translateY(-50%);
 }
 
 .cabecalho-painel-ataques {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+  cursor: grab;
 }
 
 .cabecalho-painel-ataques h3 {
   margin: 0;
+  color: var(--janela-texto);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
   font-size: 1rem;
 }
 
 .cabecalho-painel-ataques button {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   padding: 0;
+
   display: grid;
   place-items: center;
+
+  border: 1px solid
+    var(--janela-borda-suave);
+  border-radius: 2px;
+
+  background:
+    rgba(195, 154, 88, 0.08);
+  color: var(--janela-texto);
+  cursor: pointer;
 }
 
 .mensagem-ataques-combate {
@@ -536,16 +544,36 @@
 }
 
 .botao-ataque-combate {
-  padding: 8px 12px;
+  width: 100%;
+  padding: 10px 11px;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.15rem;
-  border: 1px solid var(--janela-borda);
-  border-radius: 3px;
-  background: rgba(121, 85, 47, 0.82);
-  color: #fff2d6;
+  gap: 3px;
+
+  border: 1px solid
+    var(--janela-borda-suave);
+  border-radius: 2px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+  color: var(--janela-texto);
+
+  text-align: left;
   cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.botao-ataque-combate:hover:not(:disabled) {
+  border-color: var(--janela-destaque);
+  background:
+    rgba(195, 154, 88, 0.1);
+  transform: translateX(2px);
 }
 
 .botao-ataque-combate:disabled {
@@ -554,17 +582,25 @@
 }
 
 .nome-ataque-combate {
+  color: var(--janela-texto);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 0.94rem;
   font-weight: 700;
 }
 
 .detalhes-ataque-combate {
-  font-size: 0.85rem;
-  opacity: 0.85;
+  color: var(--janela-texto-suave);
+  font-size: 0.75rem;
+  opacity: 1;
 }
 
 .maestria-ataque-combate {
-  font-size: 0.8rem;
-  opacity: 0.75;
+  color: var(--janela-destaque);
+  font-size: 0.7rem;
+  opacity: 0.9;
 }
 
 /* =====================================================
@@ -1300,7 +1336,7 @@
   padding: 10px 14px;
 
   transform: translateX(-50%);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 
@@ -1336,6 +1372,216 @@
 .painel-momento-combate
   .solicitacao-combate[hidden] {
   display: none;
+}
+
+.painel-momento-combate
+  .acoes-combate {
+  margin-top: 9px;
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(130px, 1fr)
+    );
+  gap: 7px;
+}
+
+.painel-momento-combate
+  .acoes-combate:empty {
+  display: none;
+}
+
+.painel-momento-combate
+  .acoes-combate button {
+  min-height: 34px;
+  padding: 7px 10px;
+
+  border: 1px solid
+    var(--janela-borda-suave);
+  border-radius: 2px;
+
+  background:
+    rgba(195, 154, 88, 0.1);
+  color: var(--janela-texto);
+
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.25;
+
+  cursor: pointer;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.painel-momento-combate
+  .acoes-combate
+  button:hover {
+  border-color:
+    var(--janela-destaque);
+
+  background:
+    rgba(195, 154, 88, 0.2);
+
+  transform: translateY(-1px);
+}
+
+.painel-momento-combate
+  .opcao-rolagem-combate {
+  padding: 8px 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  text-align: center;
+}
+
+.rotulo-opcao-rolagem {
+  color: var(--janela-texto);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.calculo-opcao-rolagem {
+  color: var(--janela-destaque);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.tabuleiro-combate.selecionando-alvo
+  .token-inimigo {
+  cursor: default;
+}
+
+.tabuleiro-combate.selecionando-alvo
+  .token-alvo-disponivel {
+  outline: 2px solid
+    rgba(210, 151, 77, 0.85);
+  outline-offset: 4px;
+
+  box-shadow:
+    0 0 0 2px
+      rgba(71, 22, 17, 0.75),
+    0 0 16px
+      rgba(210, 151, 77, 0.52);
+
+  cursor: pointer;
+
+  transition:
+    outline-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.tabuleiro-combate.selecionando-alvo
+  .token-alvo-disponivel:hover {
+  outline-color: #e8c06c;
+
+  box-shadow:
+    0 0 0 2px
+      rgba(71, 22, 17, 0.9),
+    0 0 23px
+      rgba(232, 192, 108, 0.78);
+
+  transform: scale(1.06);
+}
+
+.tabuleiro-combate.selecionando-movimento
+  .celula-combate {
+  cursor: default;
+}
+
+.tabuleiro-combate.selecionando-movimento
+  .celula-combate:hover {
+  background: transparent;
+}
+
+.tabuleiro-combate.selecionando-movimento
+  .celula-movimento-disponivel {
+  background:
+    rgba(111, 142, 78, 0.13);
+
+  box-shadow:
+    inset 0 0 0 1px
+      rgba(183, 206, 127, 0.3);
+
+  cursor: pointer;
+
+  transition:
+    background 130ms ease,
+    box-shadow 130ms ease;
+}
+
+.tabuleiro-combate.selecionando-movimento
+  .celula-movimento-disponivel:hover {
+  background:
+    rgba(151, 183, 98, 0.27);
+
+  box-shadow:
+    inset 0 0 0 2px
+      rgba(207, 226, 153, 0.66);
+}
+
+.condicoes-token-combate {
+  position: absolute;
+  top: -17px;
+  left: 50%;
+  z-index: 7;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.icone-condicao-token,
+.quantidade-condicoes-token {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+
+  border: 1px solid
+    var(--janela-borda);
+  border-radius: 50%;
+
+  background:
+    rgba(20, 16, 13, 0.94);
+
+  box-shadow:
+    0 2px 5px
+      rgba(0, 0, 0, 0.75);
+}
+
+.icone-condicao-token img {
+  width: 17px;
+  height: 17px;
+  display: block;
+  object-fit: contain;
+}
+
+.quantidade-condicoes-token {
+  color: var(--janela-destaque);
+  font-size: 0.66rem;
+  font-weight: 800;
 }
 
 /* =====================================================

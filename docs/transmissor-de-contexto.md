@@ -4,6 +4,7 @@ Documento consolidado e editável.
 
 - Documento-base e suplementos 1.0 a 3.0: convertidos do PDF de 18 de agosto de 2026.
 - Suplemento 4.0: atualizado em 19 de agosto de 2026.
+- Suplemento 5.0: atualizado em 24 de agosto de 2026.
 - O código atual continua sendo a fonte de verdade sobre a implementação.
 
 ---
@@ -1498,3 +1499,199 @@ Um jogador deve conseguir:
 - **6/6 — Expandir para o MVP formal:** pendente.
 
 O produto ainda não está pronto para o MVP formal, mas já possui a base necessária para produzir um Alpha vertical completo. A prioridade é concluir “A Fuga” antes de expandir classes, magias ou conteúdo adicional.
+
+---
+
+## Suplemento 5.0 — Alpha vertical, combate e dados 3D
+
+**Data-base:** 24 de agosto de 2026  
+**Branch auditada:** `main`  
+**Último commit confirmado:** `ba263d4` — Mudanças em estruturas de janelas de aventura e combate  
+**Estado local no momento da auditoria:** existem alterações ainda não commitadas na aventura, na interface de combate, no renderizador do tabuleiro e no novo banco de condições. O código local é a fonte de verdade para esta atualização.
+
+Este suplemento registra o trabalho realizado depois do encerramento das macroetapas 1/6 e 2/6. A macroetapa formal continua sendo **3/6 — finalizar “A Fuga”**, mas houve uma frente extensa de estabilização e apresentação do combate que deixou o Alpha vertical tecnicamente mais maduro.
+
+### 1. Panorama executivo
+
+O projeto já possui um fluxo vertical funcional com criação e seleção de personagem, aventura ramificada, testes, combate tático, XP, descansos, persistência de recursos e retorno para a narrativa. O Guerreiro de nível 1 permanece sendo a experiência mais completa e serve como referência para as demais classes.
+
+O principal bloqueio para um Alpha demonstrável deixou de ser a ausência de um núcleo de regras. Agora ele é a **conclusão editorial e a validação integral de “A Fuga”**. O MVP formal continua mais distante porque ainda inclui outras classes, magia, progressão e uma cobertura maior de regras e testes.
+
+Leitura recomendada do estágio atual:
+
+- **núcleo técnico do Alpha vertical:** avançado;
+- **Guerreiro de nível 1:** funcional e amplamente testado;
+- **apresentação e usabilidade do combate:** avançadas, ainda em estabilização;
+- **“A Fuga”:** em produção, com cenas e batalhas reais já integradas, mas ainda incompleta;
+- **salvar e retomar uma aventura incompleta:** pendente;
+- **MVP formal com quatro classes e magia:** pendente.
+
+### 2. Aventura e contrato com o combate
+
+O retorno entre aventura e combate foi ampliado para servir ao fluxo narrativo real:
+
+- escolher uma opção com batalha não inicia mais o combate imediatamente; o jogador lê a introdução e confirma em um botão próprio;
+- vitória e derrota retornam para a aventura e podem conduzir a cenas finais diferentes;
+- o combate não encerra a aventura por conta própria;
+- o texto pós-combate usa o mesmo reposicionamento narrativo empregado na entrada de uma nova cena;
+- consequências, PV, recursos e XP voltam ao personagem canônico;
+- XP de vitória possui proteção contra concessão duplicada;
+- telas finais limpam o estado temporário da aventura e oferecem acesso à lista de aventuras e à ficha do personagem;
+- variações de gênero e parágrafos foram aplicadas também aos encerramentos;
+- existe um modelo comentado de cena completa em `banco-aventuras.js`;
+- textos condicionais podem consultar o estado e as regras do personagem antes de aparecer.
+
+Conteúdo integrado ou refinado desde a última atualização inclui a cena 05, Guardas Distraídos, os caminhos de Becos Opostos e estruturas de batalhas como `batalhaRuasD` e `batalhaBecosM`. O Miro continua sendo a ferramenta de planejamento narrativo; o banco de aventuras é a versão executável.
+
+### 3. XP, encontros e descansos
+
+O projeto passou a tratar progressão e recuperação como sistemas, não como exceções da aventura:
+
+- criaturas possuem nível de desafio e XP cadastrados;
+- encontros podem usar dificuldade e recompensa derivadas dos dados das criaturas;
+- a recompensa é consolidada no encerramento do combate e persistida no personagem correto;
+- descanso curto solicita ao próprio jogador a rolagem do Dado de Vida;
+- descanso longo recupera PV e recursos aplicáveis, respeitando o intervalo exigido;
+- Dados de Vida usados, Segundo Fôlego e ficha aberta são atualizados pelo mesmo estado canônico;
+- a interface da ficha reage às alterações realizadas durante a aventura.
+
+Ainda falta transformar os descansos em uma experiência editorial completa dentro de todos os pontos permitidos de “A Fuga”.
+
+### 4. Testes, armaduras e narrativa condicional
+
+Foram adicionadas regras contextuais para os caminhos da aventura:
+
+- Furtividade aplica desvantagem conforme a propriedade oficial da armadura equipada;
+- nadar em águas revoltas aplica desvantagem quando a armadura usada possui CA base igual ou superior a 14;
+- vantagem e desvantagem conservam apenas o maior ou o menor d20, sem somar os dois dados;
+- trechos narrativos podem aparecer somente quando a condição mecânica correspondente é verdadeira.
+
+Esse padrão deve ser reutilizado: a cena descreve a experiência e consulta uma regra centralizada, em vez de repetir a regra dentro do texto.
+
+### 5. Combate tático e maestrias
+
+As oito maestrias necessárias ao Guerreiro foram implementadas e testadas: **Cleave, Graze, Nick, Push, Sap, Slow, Topple e Vex**. O identificador mecânico `slow` foi preservado, mas sua apresentação ao jogador passou a ser **Lentidão**. Vex continua automática quando aplicável.
+
+Outras correções e melhorias consolidadas:
+
+- correção da comparação entre ataque e CA;
+- seleção de alvos respeita alcance e destaca inimigos válidos;
+- células de movimento alcançáveis são destacadas e recalculadas depois do deslocamento;
+- Caído interfere em ataques e cobra metade do movimento para levantar;
+- escolhas opcionais de dano e Atacante Selvagem usam botões de mesma hierarquia visual;
+- solicitações de rolagem e decisões de maestria saíram do painel de ações e foram centralizadas na janela do acontecimento atual;
+- o grid aparece progressivamente conforme o zoom e usa linhas mais discretas;
+- barras de PV, identificadores de inimigos e frames de tokens foram ajustados para legibilidade;
+- `batalhaRuasD` inicia enquadrando os participantes, em vez de abrir sempre no zoom mais distante;
+- arraste do tabuleiro, menu de contexto e exclusão de dados por botão direito coexistem sem conflito.
+
+O padrão oficial dos mapas de batalha permanece **6688 × 3764 px**, com células de **64 × 64 px**, limites de câmera determinados pela imagem e liberdade de zoom dentro dessa área.
+
+### 6. Condições e efeitos visuais
+
+Foi criado `banco-condicoes.js` com as quinze condições do SRD 5.2.1 usadas como catálogo canônico:
+
+- Cego;
+- Enfeitiçado;
+- Surdo;
+- Exaustão;
+- Amedrontado;
+- Agarrado;
+- Incapacitado;
+- Invisível;
+- Paralisado;
+- Petrificado;
+- Envenenado;
+- Caído;
+- Contido;
+- Atordoado;
+- Inconsciente.
+
+Cada condição possui identificador, nome e ícone SVG em `Imagens/Assets/icones-condicoes/`. O token mostra até três ícones e agrupa excedentes com contador e descrição. **Caído** já possui integração mecânica por Topple, ataques e custo para levantar. **Lentidão** é apresentada como efeito visual de maestria, sem ser confundida com uma condição oficial.
+
+O catálogo não significa que todas as condições estejam mecanicamente concluídas. A estratégia aprovada é implementar seus efeitos sob demanda, conforme forem exigidos por “A Fuga” ou por uma opção real do MVP.
+
+### 7. Dados 3D
+
+O sistema de dados evoluiu de elementos 2D para uma experiência física baseada no Dice Box local:
+
+- modelos e dependências são carregados localmente em `vendor/dice-box`;
+- os dados possuem física 3D, arraste, lançamento, relançamento e exclusão com botão direito;
+- é possível acrescentar dados do mesmo tipo durante a preparação de uma rolagem;
+- o resultado aparece junto ao ponto final do dado e desaparece após cinco segundos;
+- arrastar ou excluir um dado remove também a mensagem associada;
+- a bandeja usa seis representações estáticas em WebP, encaixes individuais e placas de bronze;
+- as representações estáticas evitam manter seis cenas físicas ativas apenas para exibir os dados disponíveis;
+- dados rolados, prévias, bandeja e texto de resultado compartilham uma configuração visual;
+- `Dados3D.definirCor()` constitui a base para futura personalização de cor e textura.
+
+O sistema está funcional, mas deve receber uma rodada posterior de desempenho, carregamento e testes de consistência em diferentes tamanhos de tela.
+
+### 8. Nova organização da interface
+
+As janelas da aventura e do combate passaram a usar a mesma linguagem visual de madeira escura, placas de bronze e bordas discretas, centralizada em variáveis compartilhadas de CSS.
+
+Na aventura:
+
+- a bandeja de dados fica acima e inicia aberta;
+- Anotações fica abaixo e inicia recolhida;
+- a antiga janela de velocidade de texto foi removida;
+- o controle de velocidade agora aparece de forma discreta no pergaminho.
+
+No combate:
+
+- o painel de ações foi estreitado;
+- as seções usam os nomes Movimento, Ações e Ações bônus;
+- os estados no plural são Disponíveis e Utilizadas;
+- ataques e outras decisões abrem janelas independentes com o mesmo tema;
+- a antiga fila horizontal e o histórico separado foram substituídos por uma linha do tempo vertical à direita;
+- a linha do tempo contém início da batalha, iniciativa, marcadores de rodada, turnos, ações registradas e participantes futuros;
+- a rolagem é interna, existe retorno ao evento atual e o painel evita o conflito com a gaveta lateral de informações;
+- uma janela específica comunica o que está acontecendo e qual rolagem ou decisão é esperada.
+
+### 9. Arquitetura e dívida técnica
+
+A reestruturação modular documentada no suplemento 4.0 continua válida. As adições recentes preservaram a separação entre bancos, motores, renderizadores, fluxo da aventura e interface. O novo catálogo de condições segue o mesmo princípio de dados canônicos interpretados pelo motor.
+
+Riscos atuais:
+
+- o navegador continua sendo a principal plataforma de testes manuais;
+- ainda existem funções globais e dependências entre módulos carregados por ordem de scripts;
+- a interface recebeu muitas mudanças consecutivas e necessita um roteiro de regressão único;
+- dados 3D aumentam o custo de carregamento e a quantidade de estados de interação;
+- o conteúdo narrativo ainda muda enquanto é transferido do Miro;
+- alterações locais de condições e interface ainda precisam ser validadas e commitadas como um conjunto estável.
+
+### 10. Ponto atual e próxima sequência recomendada
+
+O projeto permanece na **macroetapa 3/6 — finalizar “A Fuga”**. Antes de voltar à escrita contínua, deve ser feita uma passagem curta e delimitada de estabilização do combate atual:
+
+1. testar iniciativa e transição entre rodadas;
+2. testar movimento por clique e arraste;
+3. testar seleção dentro e fora do alcance;
+4. testar ataque normal, vantagem e desvantagem;
+5. testar crítico e Atacante Selvagem;
+6. testar Vex, Topple/Caído e Slow/Lentidão;
+7. testar vitória, derrota, retorno e concessão única de XP;
+8. testar a mesma batalha mais de uma vez com resoluções diferentes;
+9. corrigir somente regressões encontradas nessa passagem;
+10. fazer commit do estado estável e retomar a escrita de “A Fuga”.
+
+Depois de concluir a aventura:
+
+- executar o caminho feliz completo sem console;
+- executar ao menos um caminho alternativo e um encerramento por derrota;
+- implementar salvar e retomar aventura incompleta;
+- realizar a estabilização do Alpha;
+- somente então expandir classes, magia e progressão para o MVP formal.
+
+### 11. Roteiro consolidado
+
+- **1/6 — Contrato aventura–combate:** concluída.
+- **2/6 — Guerreiro de nível 1:** concluída.
+- **3/6 — Finalizar “A Fuga”:** em andamento.
+- **4/6 — Salvar e retomar aventuras:** pendente.
+- **5/6 — Estabilizar o Alpha:** pendente.
+- **6/6 — Expandir para o MVP formal:** pendente.
+
+O próximo ganho real de produto não virá de adicionar outra regra isolada. Virá de transformar a base já construída em uma aventura completa, testável e apresentável do início ao fim.

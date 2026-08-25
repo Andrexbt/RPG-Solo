@@ -55,43 +55,183 @@ function criarTokenCombate(participante) {
     token.textContent = participante.tipo === "jogador" ? "P" : "I";
   }
 
-  if (
-  participante.tipo === "jogador"
-) {
+  if (participante.tipo === "jogador") {
+    const barraPontosDeVida = document.createElement("span");
 
-  const barraPontosDeVida =
+    barraPontosDeVida.classList.add("barra-pontos-vida-token");
+
+    const preenchimentoPontosDeVida = document.createElement("span");
+
+    preenchimentoPontosDeVida.classList.add("preenchimento-pontos-vida-token");
+
+    const textoPontosDeVida = document.createElement("span");
+
+    textoPontosDeVida.classList.add("texto-pontos-vida-token");
+
+    barraPontosDeVida.append(preenchimentoPontosDeVida, textoPontosDeVida);
+
+    token.append(barraPontosDeVida);
+  }
+
+  const areaCondicoes =
   document.createElement("span");
 
-barraPontosDeVida.classList.add(
-  "barra-pontos-vida-token",
+areaCondicoes.className =
+  "condicoes-token-combate";
+
+areaCondicoes.setAttribute(
+  "aria-hidden",
+  "true",
 );
 
-const preenchimentoPontosDeVida =
-  document.createElement("span");
+token.append(areaCondicoes);
 
-preenchimentoPontosDeVida.classList.add(
-  "preenchimento-pontos-vida-token",
+renderizarCondicoesToken(
+  token,
+  participante,
 );
-
-const textoPontosDeVida =
-  document.createElement("span");
-
-textoPontosDeVida.classList.add(
-  "texto-pontos-vida-token",
-);
-
-barraPontosDeVida.append(
-  preenchimentoPontosDeVida,textoPontosDeVida,
-);
-
-token.append(
-  barraPontosDeVida,
-);
-}
 
   token.setAttribute("aria-label", participante.id);
 
   return token;
+}
+
+function renderizarCondicoesToken(
+  token,
+  participante,
+  combate = null,
+) {
+  const areaCondicoes =
+    token.querySelector(
+      ".condicoes-token-combate",
+    );
+
+  if (!areaCondicoes) {
+    return;
+  }
+
+  areaCondicoes.innerHTML = "";
+
+  const condicoes =
+    participante.condicoes ?? [];
+
+  const condicoesConhecidas =
+    condicoes
+      .map(
+        (condicao) =>
+          window.bancoCondicoes?.[
+            condicao.id
+          ],
+      )
+      .filter(Boolean);
+
+  const efeitosTemporarios =
+    combate?.efeitosTemporarios ?? [];
+
+  const possuiLentidao =
+    efeitosTemporarios.some(
+      function encontrarLentidao(
+        efeito,
+      ) {
+        return (
+          efeito.tipo ===
+            "modificadorDeslocamento" &&
+          efeito.participanteId ===
+            participante.id &&
+          Number(efeito.valorCelulas) < 0
+        );
+      },
+    );
+
+  const efeitosVisuais = [];
+
+  if (possuiLentidao) {
+    efeitosVisuais.push(
+      window.bancoEfeitosVisuais
+        ?.lentidao,
+    );
+  }
+
+  const indicadoresVisuais = [
+    ...condicoesConhecidas,
+    ...efeitosVisuais.filter(Boolean),
+  ];
+
+  const limiteVisivel = 3;
+
+  for (
+    const condicao of
+      indicadoresVisuais.slice(
+        0,
+        limiteVisivel,
+      )
+  ) {
+    const marcador =
+      document.createElement("span");
+
+    marcador.className =
+      "icone-condicao-token";
+
+    marcador.title =
+      condicao.nome;
+
+    const imagem =
+      document.createElement("img");
+
+    imagem.src =
+      condicao.icone;
+
+    imagem.alt = "";
+
+    marcador.append(imagem);
+
+    areaCondicoes.append(
+      marcador,
+    );
+  }
+
+  const quantidadeOculta =
+    indicadoresVisuais.length -
+    limiteVisivel;
+
+  if (quantidadeOculta > 0) {
+    const excedentes =
+      document.createElement("span");
+
+    excedentes.className =
+      "quantidade-condicoes-token";
+
+    excedentes.textContent =
+      `+${quantidadeOculta}`;
+
+    excedentes.title =
+      indicadoresVisuais
+        .slice(limiteVisivel)
+        .map(
+          (condicao) =>
+            condicao.nome,
+        )
+        .join(", ");
+
+    areaCondicoes.append(
+      excedentes,
+    );
+  }
+
+  const nomesCondicoes =
+    indicadoresVisuais
+      .map(
+        (condicao) =>
+          condicao.nome,
+      )
+      .join(", ");
+
+  token.setAttribute(
+    "aria-label",
+    nomesCondicoes
+      ? `${participante.nome}. Estados: ${nomesCondicoes}.`
+      : participante.nome,
+  );
 }
 
 function criarCelulasTabuleiro(combate) {
