@@ -542,7 +542,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               },
 
               fracasso: {
-                texto: "",
+                texto: `Você se lembra de uma rota que pode {o|a} levar diretamente para a parte de trás da cidade.
+                
+                É uma rota potencialmente perigosa, passando pelo território dos Lagartos, mas é o caminho mais direto que você consegue se lembrar.`,
                 proximaCena: "becosLagartos",
               },
             },
@@ -569,7 +571,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             texto: `Apesar do risco de ser {encontrado|encontrada}, talvez a melhor opção seja permanecer {escondido|escondida} até a noite, em que você terá as sombras como proteção.`,
 
-            proximaCena: "telhadosNoite",
+            proximaCena: "movimentacaoNoite",
           },
 
           {
@@ -630,8 +632,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             resultados: {
               sucesso: {
-                texto: ``,
-                proximaCena: "movimentacaoTelhadoFurtiva",
+                texto: `Você se desloca pelos telhados com paciência, esperando a oportunidade certa, e sempre tendo a certeza de qual será sua próxima cobertura.
+
+                Engajados no conflito, os guardas não prestam atenção na sua movimentação, e você consegue tranquilamente descer dos telhados e se infiltrar no conflito.
+
+                Porém, o caos se mostra maior do que você esperava, {atordoando-o|atordoando-a} por um momento antes que você consiga se recompor.`,
+                proximaCena: "confronto",
                 memorias: { origemMovimentacaoFurtiva: "conflitoFurtivo" },
               },
 
@@ -1281,7 +1287,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             resultados: {
               sucesso: {
-                texto: `Sua rota se prova bem-sucedida. Você até viu algumas patrulhas passarem, mas conseguiu evitá-las sem problema.`,
+                texto: `Sua rota se prova bem-sucedida. Você até viu algumas patrulhas passarem, mas consegue evitá-las sem problema.`,
 
                 // Memorias alteram textos e caminhos futuros.
                 memorias: {
@@ -1292,7 +1298,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               },
 
               fracasso: {
-                texto: `Ao ver uma patrulha de guardas passar muito próxima, você acaba se vendo {obrigado|obrigada} a desviar da rota e acaba se perdendo.`,
+                texto: `Ao ver uma patrulha de guardas passar muito próxima, você acaba se vendo {obrigado|obrigada} a desviar da sua rota original.`,
 
                 // Opcional: aplica dano conforme a distancia da queda.
                 memorias: {
@@ -1404,6 +1410,952 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         },
       },
 
+      becosLagartos: {
+        numeroFonte: 7,
+
+        contexto: [
+          `Você adentra as vielas escuras com cautela. Em vários locais, você vê pintado o símbolo dos Lagartos de Bronze, garras cortando uma armadura, indicando que agora você está definitivamente em território pertencente a eles.
+
+          O som da batalha que acontece na rua principal da cidade parece se intensificar enquanto você caminha e, ao virar um conjunto particularmente apertado de casas, você vê o confronto ao longe e, do outro lado, a torre de embarcações.
+
+         {Escondido|Escondida}, você também vê vários Lagartos passando pelos becos, correndo em direção à batalha. Continuar se movimentando na área torna-se cada vez mais perigoso.
+
+         Agora, mais {próximo|próxima}, você pode tentar atravessar o conflito e chegar até a torre ou arriscar e continuar buscando uma outra saída pela área.`,
+        ],
+
+        escolhas: [
+          {
+            id: "irAteTorre",
+            texto: `Tentar ir até a torre.`,
+            descricao: ``,
+            proximaEtapa: "testeTorreOuConflito",
+          },
+
+          {
+            id: "outraSaida",
+            texto: `Continuar buscando uma saída alternativa.`,
+            descricao: ``,
+            proximaEtapa: "testeSaida",
+          },
+        ],
+
+        etapas: {
+          testeTorreOuConflito: {
+            descricao: `Buscar a esmo por uma saída que você nem ao menos tem certeza de que existe em uma área cercada de inimigos não parece uma boa opção. Não quando você está tão {próximo|próxima} da torre.
+            
+            O melhor é tentar passar pelo conflito e chegar até ela.`,
+            instrucao: "passar pelo conflito.",
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: "sobrevivencia",
+              dificuldade: 13,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Ao se aproximar do conflito, inicialmente {o|a} caos o deixa {atordoado|atordoada}. Membros mais armados da população e Lagartos enfrentam os guardas em um embate mais violento do que você esperava.
+
+                Ainda assim, você consegue se recompor e encontrar uma rota segura para a torre.`,
+
+                proximaCena: "torreChao",
+              },
+
+              fracasso: {
+                texto: `Ao se aproximar do conflito, inicialmente {o|a} caos o deixa {atordoado|atordoada}. Membros mais armados da população e Lagartos enfrentam os guardas em um embate mais violento do que você esperava.
+
+                Você tenta buscar um caminho seguro até a torre, mas acaba sendo {engolfado|engolfada} pelo caos da batalha.`,
+
+                proximaCena: "confronto",
+              },
+            },
+          },
+
+          testeSaida: {
+            descricao: `Apesar do perigo, continuar buscando uma saída parece mais prudente do que tentar passar pelo caos da batalha.
+
+            Você segue pelos becos e vielas, redobrando sua atenção para não ser {visto|vista}.`,
+
+            instrucao: "se mover pela área sem ser {visto|vista}.",
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Mover-se pelas vielas apertadas e evitar os grupos de mercenários que passavam provou-se mais difícil do que o antecipado.
+
+                Em alguns momentos, Lagartos passaram muito próximos, mas, com sua atenção voltada à batalha, não se deram conta da sua presença.`,
+
+                proximaCena: "margemRioLonge",
+
+                
+              },
+
+              fracasso: {
+                texto: `Você chega a um ponto em que precisa atravessar uma pequena área semelhante a uma praça que não oferece qualquer tipo de cobertura.
+
+                Ao sair correndo em direção ao beco oposto, ao mesmo tempo, dois mercenários dos Lagartos surgem do lado oposto, correndo em sua direção.Tanto eles quanto você param, se encarando, até que um deles finalmente grita seu nome e começa a correr em sua direção.
+
+                "{personagem}! Finalmente você deu as caras!"
+
+                Sem ter para onde correr, você se prepara para a batalha.`,
+
+                proximaCena: "batalhaBecosF",
+              },
+            },
+          },
+        },
+      },
+
+      confronto:{
+
+        numeroFonte: 8,
+
+        contexto: [`Você força sua passagem em meio ao caos e pensa nas suas opções.
+
+        Surpreendentemente, os guardas, agora definitivamente engajados no combate, quebraram a linha de defesa, expondo uma pequena abertura por onde você conseguiria passar e ir diretamente para trás do castelo do conde.
+
+        A torre também ainda permanece como sendo uma alternativa, e bem menos arriscada.
+
+        Porém, ao olhar ao redor em direção à população que se aproxima do conflito, você vê ao longe que os guardas que antes protegiam a ponte saíram de seu posto e agora enfrentam um grupo de pessoas logo à frente. Talvez voltar e tentar passar pela ponte seja uma opção.
+
+        O que você faz?`],
+
+        escolhas: [
+          {
+            id: "trasCastelo",
+            texto: `Ir para trás do castelo.`,
+            descricao: `Indo na direção oposta do conflito, você encontra pouca resistência pelo caminho e consegue passar {despercebido|despercebida}, entrando em uma área com becos que seguem para trás do castelo e se afastam da batalha.`,
+            proximaCena: "margemRioLonge",
+          },
+
+          {
+            id: "torrePosConfronto",
+            texto: `Ir para a torre.`,
+            descricao: ``,
+            proximaEtapa: "torrePosConfrontoTeste",
+          },
+
+          {
+            id: "voltarPonte",
+            texto: `Voltar e passar pela ponte.`,
+            descricao: ``,
+            proximaEtapa: "voltarPonteTeste",
+          },
+        ],
+
+        etapas: {
+          torrePosConfrontoTeste: {
+            descricao: `Passar pelo caos e chegar até a torre parece mais difícil, mas menos perigoso.
+
+            Você precisará forçar seu caminho pelo confronto, mas não vai precisar se expor diretamente.`,
+
+            instrucao: "passar pelo conflito.",
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: "atletismo",
+              dificuldade: 13,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Apesar da dificuldade, você consegue empurrar as pessoas pelo caminho, distraídas com a  batalha, e forçar sua passagem até a torre.`,
+
+                proximaCena: "torreChao",
+              },
+
+              fracasso: {
+                texto: `Forçando seu caminho, você acaba chegando a um ponto em que uma batalha particularmente brutal ocorre.
+
+                Incapaz de seguir nessa direção, você tenta voltar, mas sente alguém {o|a} puxando por trás.
+                
+                Você se vira rapidamente e se depara com um guarda, já pronto para o combate.`,
+
+                proximaCena: "batalhaConfrontoM",
+              },
+            },
+          },
+
+          voltarPonteTeste: {
+            descricao: `Indo em direção à ponte, você precisará se expor em algumas áreas abertas, uma vez que, entre a rua e a margem do rio, não há qualquer tipo de cobertura.`,
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: ["furtividade", "sobrevivencia"],
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Você consegue cobrir a distância sem ser {visto|vista} e se aproximar da pequena batalha que acontece próximo à ponte.`,
+
+                proximaCena: "guardasDistraidos",
+
+                
+              },
+
+              fracasso: {
+                texto: `O caos de pessoas correndo em direção ao conflito próximo ao castelo acaba se mostrando mais desafiador do que a falta de cobertura.
+
+                Ao se aproximar da ponte, um dos guardas {o|a} percebe após ter recém desferido um golpe mortal em um dos mercenários dos Lagartos.
+
+                "{personagem}!" Ele grita, já correndo em sua direção.`,
+
+                proximaCena: "batalhaPonteAlt",
+              },
+            },
+          },
+        },
+
+      },
+
+      movimentacaoNoite:{
+
+        numeroFonte: 9,
+
+        contexto: [`Em cima do telhado, a noite chega enquanto você observa a batalha pelas ruas terminar.
+
+        Os guardas reais acabaram cercados pela população vinda das ruas e os Lagartos vindo dos becos por trás do castelo. Ainda assim, conseguiram bater em retirada para dentro do castelo.
+
+        Em meio aos gritos de comemoração da população, aos poucos a rua principal foi tomada por reforços de um grupo mais organizado e bem equipado de aldeões, apoiados por alguns membros dos Lagartos.
+
+        Nas últimas horas, uma forte chuva começou a cair enquanto o grupo iniciava a montagem de uma espécie de cerco improvisado em volta do castelo.
+
+        As coisas estão calmas no momento, mas, infelizmente, a ponte ainda está sendo vigiada, mas dessa vez por um grupo de Lagartos, em vez de soldados.
+
+        Com a chuva, continuar pulando pelos telhados escorregadios se torna perigoso demais, e sua melhor opção é descer e, usando a chuva e a noite como cobertura, tentar se aproximar da ponte ou da torre.
+
+        Para onde você vai?`],
+
+        escolhas: [
+          {
+            id: "noiteParaATorre",
+            texto: `Para a torre.`,
+            descricao: `Seguir para a torre parece muito menos arriscado. Com as ruas vazias, a chance de ser {visto|vista} é quase nula.`,
+            proximaEtapa: "torreNoite",
+          },
+
+          {
+            id: "noiteParaAPonte",
+            texto: `Para a ponte.`,
+            descricao: ``,
+            proximaEtapa: "testePonteNoite",
+          },
+        ],
+
+        etapas: {
+          torreNoite: {
+            descricao: `Você consegue chegar à torre sem problemas, mas congela ao perceber que o local está sendo fortemente vigiado por um grupo de Lagartos.
+            
+            Mais do que simplesmente vigiando, eles parecem estar fiscalizando as embarcações próximas, carregando caixas de dentro dos barcos para a margem.
+
+            A chuva tornou o rio especialmente revolto, e atravessar a nado é uma opção perigosa. Porém, observando a disposição das embarcações paradas ao longo do rio, uma ideia ainda mais ousada lhe ocorre.
+
+            Você percebe que seria possível atingir a margem oposta pulando de uma embarcação para outra. Algumas passam perigosamente perto de onde estão os Lagartos, mas parece perfeitamente possível chegar do outro lado sem ser {visto|vista}.
+
+            Qual a sua escolha?`,
+
+            escolhas: [
+          {
+            id: "irNoiteNadandoTorre",
+            texto: `Tentar atravessar nadando.`,
+            descricao: ``,
+            proximaEtapa: "noiteNadandoTorre",
+          },
+
+          {
+            id: "irNoitePelasEmbarcacoes",
+            texto: `Tentar atravessar pelas embarcações.`,
+            descricao: ``,
+            proximaCena: "noitePelasEmbarcacoes",
+          },
+        ],
+          },
+
+          testePonteNoite: {
+            descricao: ``,
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: ["furtividade", "sobrevivencia"],
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Você consegue cobrir a distância sem ser {visto|vista} e se aproximar da pequena batalha que acontece próximo à ponte.`,
+
+                proximaCena: "guardasDistraidos",
+
+                
+              },
+
+              fracasso: {
+                texto: `O caos de pessoas correndo em direção ao conflito próximo ao castelo acaba se mostrando mais desafiador do que a falta de cobertura.
+
+                Ao se aproximar da ponte, um dos guardas {o|a} percebe após ter recém desferido um golpe mortal em um dos mercenários dos Lagartos.
+
+                "{personagem}!" Ele grita, já correndo em sua direção.`,
+
+                proximaCena: "batalhaPonteAlt",
+              },
+            },
+          },
+
+          noiteNadandoTorre: {
+            descricao: `Indo em direção à ponte, você precisará se expor em algumas áreas abertas, uma vez que, entre a rua e a margem do rio, não há qualquer tipo de cobertura.`,
+
+            teste: {
+              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
+              tipo: "pericia",
+              periciaId: ["furtividade", "sobrevivencia"],
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Você consegue cobrir a distância sem ser {visto|vista} e se aproximar da pequena batalha que acontece próximo à ponte.`,
+
+                proximaCena: "guardasDistraidos",
+
+                
+              },
+
+              fracasso: {
+                texto: `O caos de pessoas correndo em direção ao conflito próximo ao castelo acaba se mostrando mais desafiador do que a falta de cobertura.
+
+                Ao se aproximar da ponte, um dos guardas {o|a} percebe após ter recém desferido um golpe mortal em um dos mercenários dos Lagartos.
+
+                "{personagem}!" Ele grita, já correndo em sua direção.`,
+
+                proximaCena: "batalhaPonteAlt",
+              },
+            },
+          },
+        },
+
+      },
+
+      torreChao: {
+        numeroFonte: 10,
+
+        contexto: [],
+
+        etapaInicial: "conteudoTorreChaoPendente",
+
+        etapas: {
+          conteudoTorreChaoPendente: {
+            descricao: ``,
+
+            pendenciaFonte: {
+              tipo: "destinoNarrativo",
+              descricao: "Transferir do Miro ou escrever o conteúdo da cena 10: Torre Chão.",
+            },
+          },
+        },
+      },
+
+      margemRioLonge:{
+
+        numeroFonte: 15,
+
+        contexto: [],
+
+      },
+
+      noitePelasEmbarcacoes:{
+
+        numeroFonte: 17,
+
+        contexto: [`Atravessar o rio a nado já seria perigoso em condições normais e, em sua condição atual, seria virtualmente impossível.
+
+          Pular pelas embarcações, surpreendentemente, parece ser a melhor opção.
+
+          Você sai do seu esconderijo e se aproxima do cais para poder ver melhor as embarcações e planejar a melhor rota.
+
+          Uma sequência de três saltos {o|a} levaria muito próximo da outra margem, onde você poderia tentar um último salto mais longo ou mesmo nadar o restante do caminho.
+
+          Você entra no cais e sobe na primeira embarcação aportada, um grande navio cargueiro, e caminha até onde vai realizar o primeiro salto, para um barco pesqueiro menor logo abaixo.`],
+
+          etapaInicial: "testeAtletismo1",
+
+          etapas: {
+            testeAtletismo1: {
+              descricao: ``,
+
+              teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              dificuldade: 13,
+              },
+
+              resultados: {
+                sucesso: {
+                  texto: ``,
+
+                  proximaEtapa: "testeFurtividade1",
+                },
+
+                fracasso: {
+                texto: `A chuva acaba {o|a} atrapalhando mais do que você imaginaria, e a dificuldade de identificar um ponto para aterrissagem faz com que você erre o pulo.
+
+                Batendo desajeitadamente no barco e caindo no rio, você perde completamente a noção de espaço por um segundo.`,
+
+                ataquesNpc: {
+                  npcId: "lagartoBronze",
+                  ataqueId: "bestaLeve",
+                  quantidade: 2,
+                  tipoRolagem: "desvantagem",
+
+                  resultadosPorAcertos: {
+                    0: {
+                      texto: `Você se recompõe e volta à superfície a tempo de ver uma flecha voar em sua direção, {o|a} errando por pouco.
+
+                      Em meio ao borbulho incessante da água ao seu redor, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      memorias: {origemBatalhaTorreNoite: "quedaNaAguaSemAcertos",},
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    1: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas a dor no braço {o|a} impede de nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      memorias: {origemBatalhaTorreNoite: "quedaNaAguaUmAcerto",},
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    2: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Lutando contra a correnteza, você não consegue se desviar, e sente outra pontada forte, dessa vez na perna, onde o virote {o|a} atinge dentro d'água. Com os membros feridos, você não consegue nadar, e o rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      memorias: {origemBatalhaTorreNoite: "quedaNaAguaDoisAcertos",},
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+                  },
+                },
+                },
+              },
+            },
+
+            testeFurtividade1: {
+              // NARRATIVA: descreva o personagem tentando não chamar atenção após o primeiro pulo.
+              descricao: ``,
+
+              instrucao: "continuar sem ser {visto|vista} pelos Lagartos.",
+
+              teste: {
+                tipo: "oposto",
+
+                jogador: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                },
+
+                oponente: {
+                  npcId: "lagartoBronze",
+                  tipo: "pericia",
+                  periciaId: "percepcao",
+                },
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: descreva os Lagartos ainda sem perceber o personagem.
+                  texto: ``,
+                  proximaEtapa: "testeAtletismo2",
+                },
+
+                fracasso: {
+                  // NARRATIVA: descreva o momento em que os Lagartos localizam o personagem.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposFurtividade1",
+                },
+              },
+            },
+
+            ataquesAposFurtividade1: {
+              // NARRATIVA: introduza os primeiros disparos depois que o personagem foi localizado.
+              descricao: ``,
+
+              ataquesNpc: {
+                npcId: "lagartoBronze",
+                ataqueId: "bestaLeve",
+                quantidade: 2,
+                tipoRolagem: "desvantagem",
+
+                resultadosPorAcertos: {
+                  0: {
+                    // NARRATIVA: os dois disparos erram; o personagem continua sob fogo.
+                    texto: ``,
+                    proximaEtapa: "testeAtletismo2SobFogo",
+                  },
+
+                  1: {
+                    // NARRATIVA: exatamente um disparo acerta.
+                    texto: ``,
+                    proximaEtapa: "salvaguardaAposFurtividade1",
+                  },
+
+                  2: {
+                    // NARRATIVA: os dois disparos acertam.
+                    texto: ``,
+                    proximaEtapa: "salvaguardaAposFurtividade1",
+                  },
+                },
+              },
+            },
+
+            salvaguardaAposFurtividade1: {
+              // NARRATIVA: descreva o impacto ameaçando derrubar o personagem entre os barcos.
+              descricao: ``,
+
+              instrucao: "manter o equilíbrio após ser {atingido|atingida}.",
+
+              teste: {
+                tipo: "salvaguarda",
+                atributoId: "constituicao",
+                dificuldade: 12,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: suporta o impacto e se prepara para o segundo pulo.
+                  texto: ``,
+                  proximaEtapa: "testeAtletismo2SobFogo",
+                },
+
+                fracasso: {
+                  // NARRATIVA: perde o equilíbrio e cai em uma embarcação, iniciando a batalha.
+                  texto: ``,
+                  memorias: {
+                    origemBatalhaTorreNoite: "quedaAposFurtividade1",
+                  },
+                  proximaCena: "batalhaTorreNoite",
+                },
+              },
+            },
+
+            testeAtletismo2: {
+              // NARRATIVA: introduza o segundo pulo enquanto o personagem ainda está escondido.
+              descricao: ``,
+
+              instrucao: "realizar o segundo pulo entre as embarcações.",
+
+              teste: {
+                tipo: "pericia",
+                periciaId: "atletismo",
+                dificuldade: 13,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: conclui o segundo pulo sem ter sido localizado.
+                  texto: ``,
+                  proximaEtapa: "testeFurtividade2",
+                },
+
+                fracasso: {
+                  // NARRATIVA: falha no segundo pulo e cai na água.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposQuedaSegundoPulo",
+                },
+              },
+            },
+
+            testeAtletismo2SobFogo: {
+              // NARRATIVA: introduza o segundo pulo com os Lagartos já atirando.
+              descricao: ``,
+
+              instrucao: "realizar o segundo pulo sob fogo.",
+
+              teste: {
+                tipo: "pericia",
+                periciaId: "atletismo",
+                dificuldade: 13,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: conclui o segundo pulo, ainda sob ataque.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposSegundoPulo",
+                },
+
+                fracasso: {
+                  // NARRATIVA: falha no segundo pulo e cai na água.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposQuedaSegundoPulo",
+                },
+              },
+            },
+
+            ataquesAposSegundoPulo: {
+              // NARRATIVA: descreva uma nova rajada antes do terceiro pulo.
+              descricao: ``,
+
+              ataquesNpc: {
+                npcId: "lagartoBronze",
+                ataqueId: "bestaLeve",
+                quantidade: 2,
+                tipoRolagem: "desvantagem",
+
+                resultadosPorAcertos: {
+                  0: {
+                    // NARRATIVA: os dois disparos erram.
+                    texto: ``,
+                    proximaEtapa: "testeAtletismo3SobFogo",
+                  },
+
+                  1: {
+                    // NARRATIVA: exatamente um disparo acerta.
+                    texto: ``,
+                    proximaEtapa: "salvaguardaAposSegundoPulo",
+                  },
+
+                  2: {
+                    // NARRATIVA: os dois disparos acertam.
+                    texto: ``,
+                    proximaEtapa: "salvaguardaAposSegundoPulo",
+                  },
+                },
+              },
+            },
+
+            salvaguardaAposSegundoPulo: {
+              // NARRATIVA: descreva o impacto dos disparos depois do segundo pulo.
+              descricao: ``,
+
+              instrucao: "manter o equilíbrio após ser {atingido|atingida}.",
+
+              teste: {
+                tipo: "salvaguarda",
+                atributoId: "constituicao",
+                dificuldade: 12,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: permanece de pé e prepara o terceiro pulo.
+                  texto: ``,
+                  proximaEtapa: "testeAtletismo3SobFogo",
+                },
+
+                fracasso: {
+                  // NARRATIVA: cai em uma embarcação e inicia a batalha.
+                  texto: ``,
+                  memorias: {
+                    origemBatalhaTorreNoite: "quedaAposSegundoPulo",
+                  },
+                  proximaCena: "batalhaTorreNoite",
+                },
+              },
+            },
+
+            ataquesAposQuedaSegundoPulo: {
+              // NARRATIVA: descreva os Lagartos disparando contra o personagem na água.
+              descricao: ``,
+
+              ataquesNpc: {
+                npcId: "lagartoBronze",
+                ataqueId: "bestaLeve",
+                quantidade: 2,
+                tipoRolagem: "desvantagem",
+
+                resultadosPorAcertos: {
+                  0: {
+                    // NARRATIVA: nenhum disparo acerta antes da batalha na margem.
+                    texto: ``,
+                    memorias: {
+                      origemBatalhaTorreNoite: "quedaSegundoPuloSemAcertos",
+                    },
+                    proximaCena: "batalhaTorreNoite",
+                  },
+
+                  1: {
+                    // NARRATIVA: um disparo acerta antes da batalha na margem.
+                    texto: ``,
+                    memorias: {
+                      origemBatalhaTorreNoite: "quedaSegundoPuloUmAcerto",
+                    },
+                    proximaCena: "batalhaTorreNoite",
+                  },
+
+                  2: {
+                    // NARRATIVA: os dois disparos acertam antes da batalha na margem.
+                    texto: ``,
+                    memorias: {
+                      origemBatalhaTorreNoite: "quedaSegundoPuloDoisAcertos",
+                    },
+                    proximaCena: "batalhaTorreNoite",
+                  },
+                },
+              },
+            },
+
+            testeFurtividade2: {
+              // NARRATIVA: após o segundo pulo, descreva a nova tentativa de permanecer escondido.
+              descricao: ``,
+
+              instrucao: "continuar sem ser {visto|vista} pelos Lagartos.",
+
+              teste: {
+                tipo: "oposto",
+
+                jogador: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                },
+
+                oponente: {
+                  npcId: "lagartoBronze",
+                  tipo: "pericia",
+                  periciaId: "percepcao",
+                },
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: continua sem ser localizado e prepara o terceiro pulo.
+                  texto: ``,
+                  proximaEtapa: "testeAtletismo3",
+                },
+
+                fracasso: {
+                  // NARRATIVA: é localizado depois do segundo pulo.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposSegundoPulo",
+                },
+              },
+            },
+
+            testeAtletismo3: {
+              // NARRATIVA: introduza o terceiro pulo enquanto o personagem ainda está escondido.
+              descricao: ``,
+
+              instrucao: "realizar o terceiro pulo entre as embarcações.",
+
+              teste: {
+                tipo: "pericia",
+                periciaId: "atletismo",
+                dificuldade: 13,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: conclui o terceiro pulo sem ser localizado.
+                  texto: ``,
+                  proximaEtapa: "testeFurtividade3",
+                },
+
+                fracasso: {
+                  // NARRATIVA: falha no terceiro pulo e cai na água.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposQuedaTerceiroPulo",
+                },
+              },
+            },
+
+            testeAtletismo3SobFogo: {
+              // NARRATIVA: introduza o último pulo com os Lagartos já atirando.
+              descricao: ``,
+
+              instrucao: "realizar o terceiro pulo sob fogo.",
+
+              teste: {
+                tipo: "pericia",
+                periciaId: "atletismo",
+                dificuldade: 13,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: conclui o terceiro pulo, mas ainda precisa sobreviver à rajada final.
+                  texto: ``,
+                  proximaEtapa: "ataquesFinais",
+                },
+
+                fracasso: {
+                  // NARRATIVA: falha no terceiro pulo e cai na água.
+                  texto: ``,
+                  proximaEtapa: "ataquesAposQuedaTerceiroPulo",
+                },
+              },
+            },
+
+            testeFurtividade3: {
+              // NARRATIVA: depois do terceiro pulo, descreva a última tentativa de não ser localizado.
+              descricao: ``,
+
+              instrucao: "alcançar o fim da travessia sem ser {visto|vista}.",
+
+              teste: {
+                tipo: "oposto",
+
+                jogador: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                },
+
+                oponente: {
+                  npcId: "lagartoBronze",
+                  tipo: "pericia",
+                  periciaId: "percepcao",
+                },
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: completa toda a travessia sem ser localizado.
+                  texto: ``,
+                  proximaEtapa: "travessiaConcluida",
+                },
+
+                fracasso: {
+                  // NARRATIVA: é localizado no final da travessia.
+                  texto: ``,
+                  proximaEtapa: "ataquesFinais",
+                },
+              },
+            },
+
+            ataquesFinais: {
+              // NARRATIVA: descreva a última rajada antes de o personagem alcançar a margem.
+              descricao: ``,
+
+              ataquesNpc: {
+                npcId: "lagartoBronze",
+                ataqueId: "bestaLeve",
+                quantidade: 2,
+                tipoRolagem: "desvantagem",
+
+                resultadosPorAcertos: {
+                  0: {
+                    // NARRATIVA: os dois disparos erram e o personagem completa a travessia.
+                    texto: ``,
+                    proximaEtapa: "travessiaConcluida",
+                  },
+
+                  1: {
+                    // NARRATIVA: exatamente um disparo acerta no trecho final.
+                    texto: ``,
+                    proximaEtapa: "salvaguardaFinal",
+                  },
+
+                  2: {
+                    // NARRATIVA: os dois disparos acertam no trecho final.
+                    texto: ``,
+                    proximaEtapa: "salvaguardaFinal",
+                  },
+                },
+              },
+            },
+
+            salvaguardaFinal: {
+              // NARRATIVA: descreva o último esforço para não cair antes da margem.
+              descricao: ``,
+
+              instrucao: "permanecer de pé após o impacto final.",
+
+              teste: {
+                tipo: "salvaguarda",
+                atributoId: "constituicao",
+                dificuldade: 12,
+              },
+
+              resultados: {
+                sucesso: {
+                  // NARRATIVA: suporta os ferimentos e completa a travessia.
+                  texto: ``,
+                  proximaEtapa: "travessiaConcluida",
+                },
+
+                fracasso: {
+                  // NARRATIVA: cai em uma embarcação no fim do percurso e inicia a batalha.
+                  texto: ``,
+                  memorias: {
+                    origemBatalhaTorreNoite: "quedaNoFinalDaTravessia",
+                  },
+                  proximaCena: "batalhaTorreNoite",
+                },
+              },
+            },
+
+            ataquesAposQuedaTerceiroPulo: {
+              // NARRATIVA: descreva os disparos contra o personagem após a queda no último pulo.
+              descricao: ``,
+
+              ataquesNpc: {
+                npcId: "lagartoBronze",
+                ataqueId: "bestaLeve",
+                quantidade: 2,
+                tipoRolagem: "desvantagem",
+
+                resultadosPorAcertos: {
+                  0: {
+                    // NARRATIVA: nenhum disparo acerta antes da batalha.
+                    texto: ``,
+                    memorias: {
+                      origemBatalhaTorreNoite: "quedaTerceiroPuloSemAcertos",
+                    },
+                    proximaCena: "batalhaTorreNoite",
+                  },
+
+                  1: {
+                    // NARRATIVA: um disparo acerta antes da batalha.
+                    texto: ``,
+                    memorias: {
+                      origemBatalhaTorreNoite: "quedaTerceiroPuloUmAcerto",
+                    },
+                    proximaCena: "batalhaTorreNoite",
+                  },
+
+                  2: {
+                    // NARRATIVA: os dois disparos acertam antes da batalha.
+                    texto: ``,
+                    memorias: {
+                      origemBatalhaTorreNoite: "quedaTerceiroPuloDoisAcertos",
+                    },
+                    proximaCena: "batalhaTorreNoite",
+                  },
+                },
+              },
+            },
+
+            travessiaConcluida: {
+              // NARRATIVA: escreva aqui a conclusão da travessia e defina a próxima cena.
+              descricao: ``,
+
+              pendenciaFonte: {
+                tipo: "destinoNarrativo",
+                descricao:
+                  "Definir o texto final e o destino após concluir a travessia noturna pelas embarcações.",
+              },
+            },
+          },
+      },
+
       batalhaRuasD: {
         contexto: [
           `Os guardas avançam sobre você pelas ruas próximas à ponte. Não há mais como evitar o confronto.`,
@@ -1476,25 +2428,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               },
 
               proximaCena: "batalhaRuaseTorreDerrota",
-            },
-          },
-        },
-      },
-
-      torreChao: {
-        numeroFonte: 10,
-
-        contexto: [],
-
-        etapaInicial: "conteudoTorreChaoPendente",
-
-        etapas: {
-          conteudoTorreChaoPendente: {
-            descricao: ``,
-
-            pendenciaFonte: {
-              tipo: "destinoNarrativo",
-              descricao: "Transferir do Miro ou escrever o conteúdo da cena 10: Torre Chão.",
             },
           },
         },
@@ -1664,6 +2597,14 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
         },
       },
+
+      batalhaBecosF:{},
+
+      batalhaConfrontoM:{},
+
+      batalhaPonteAlt:{},
+
+      batalhaTorreNoite:{},
 
       batalhaRuasDVitoria: {
         numeroFonte: null,
