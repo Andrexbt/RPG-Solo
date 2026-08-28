@@ -817,6 +817,11 @@ function processarResultadoCombate(
     return;
   }
 
+  registrarEventoNarrativo({
+    tipo: "combate",
+    resultado: resultadoId,
+  });
+
     exibirTelaResultadoCombate({
     resultadoId,
     resultado,

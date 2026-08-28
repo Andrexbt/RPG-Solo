@@ -14,6 +14,11 @@ function criarEstadoInicialJogo() {
       cenaId: null,
       caminhoId: null,
       etapaId: null,
+
+      ultimaTransicao: null,
+      historicoTransicoes: [],
+      ultimoEventoNarrativo: null,
+
       escolhasRemovidas: {},
       contadores: {},
       flags: {},
@@ -71,6 +76,65 @@ function registrarMemorias(memorias) {
     window.estadoJogo.progresso.flags,
     memorias,
   );
+}
+
+function registrarEventoNarrativo(evento = {}) {
+  const progresso = window.estadoJogo?.progresso;
+
+  if (!progresso) {
+    return;
+  }
+
+  progresso.ultimoEventoNarrativo = {
+    cenaId: progresso.cenaId,
+    etapaId: progresso.etapaId,
+    caminhoId: progresso.caminhoId,
+    ...evento,
+  };
+}
+
+function registrarTransicaoAutomatica(cenaDestinoId) {
+  const progresso = window.estadoJogo?.progresso;
+
+  if (!progresso) {
+    return;
+  }
+
+  const evento = progresso.ultimoEventoNarrativo;
+
+  const eventoPertenceAoLocalAtual =
+    evento?.cenaId === progresso.cenaId &&
+    evento?.etapaId === progresso.etapaId;
+
+  const transicao = {
+    cenaOrigemId: progresso.cenaId,
+    etapaOrigemId: progresso.etapaId,
+    caminhoOrigemId: progresso.caminhoId,
+    cenaDestinoId,
+
+    tipo: eventoPertenceAoLocalAtual
+      ? evento.tipo ?? null
+      : null,
+
+    resultado: eventoPertenceAoLocalAtual
+      ? evento.resultado ?? null
+      : null,
+
+    quantidadeAcertos: eventoPertenceAoLocalAtual
+      ? evento.quantidadeAcertos ?? null
+      : null,
+  };
+
+  progresso.ultimaTransicao = transicao;
+  progresso.historicoTransicoes ??= [];
+  progresso.historicoTransicoes.push(transicao);
+
+  // Impede que uma aventura muito longa acumule indefinidamente.
+  if (progresso.historicoTransicoes.length > 100) {
+    progresso.historicoTransicoes.shift();
+  }
+
+  progresso.ultimoEventoNarrativo = null;
 }
 
 function carregarNpcsDaAventura(aventuraId) {

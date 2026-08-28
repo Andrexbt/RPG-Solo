@@ -156,7 +156,6 @@ const bancoAventuras = {
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaTelhado" },
               },
             ],
           },
@@ -190,7 +189,6 @@ const bancoAventuras = {
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "telhadosTorreFalhaFurtiva" },
               },
             },
           },
@@ -277,8 +275,6 @@ const bancoAventuras = {
                 O caos se instaura rapidamente. Guardas avançam pelas laterais enquanto você corre na direção oposta.
                 
                 Com eles distraídos, agora você tem uma chance.`,
-
-                memorias: { origemGuardasDistraidos: "multidao" },
 
                 proximaCena: "guardasDistraidos",
               },
@@ -377,8 +373,6 @@ const bancoAventuras = {
                 
                 Rapidamente ele se afasta, caminhando em outra direção. Você segue a multidão e, ao se aproximar da ponte, força sua saída e se esconde em uma esquina próxima, entre caixas e barris.`,
 
-                memorias: { origemGuardasDistraidos: "ned" },
-
                 proximaCena: "guardasDistraidos",
               },
 
@@ -445,7 +439,6 @@ Você se vira na direção para a qual Ned aponta, já pensando em como seguir e
 
 Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direção indicada por ele.`,
                 proximaCena: "becosOpostos",
-                memorias: { origemBecosOpostos: "testeNed" },
               },
 
               fracasso: {
@@ -538,7 +531,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               sucesso: {
                 texto: "",
                 proximaCena: "becosOpostos",
-                memorias: { origemBecosOpostos: "testePessoal" },
               },
 
               fracasso: {
@@ -616,7 +608,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 id: "irConflitoRapido",
                 texto: `A mais direta.`,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "irConflitoRapido" },
               },
             ],
           },
@@ -638,13 +629,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Porém, o caos se mostra maior do que você esperava, {atordoando-o|atordoando-a} por um momento antes que você consiga se recompor.`,
                 proximaCena: "confronto",
-                memorias: { origemMovimentacaoFurtiva: "conflitoFurtivo" },
               },
 
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "conflitoFalhaFurtiva" },
               },
             },
           },
@@ -671,7 +660,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 id: "rotaRapida",
                 texto: "A rota mais rápida.",
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "rotaRapidaEspera" },
               },
             ],
           },
@@ -705,7 +693,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               fracasso: {
                 texto: ``,
                 proximaCena: "movimentacaoTelhadoRapida",
-                memorias: { origemMovimentacaoTelhadoRapida: "esperaTorreFalhaFurtiva" },
               },
             },
           },
@@ -739,7 +726,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             texto: `Descer e buscar uma rota pelo chão.`,
 
             proximaCena: "torreChao",
-            memorias: { origemTorreChao: "chaoSemDano" },
           },
         ],
 
@@ -802,13 +788,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               sucesso: {
                 texto: ``,
                 proximaCena: "torreChao",
-                memorias: { origemTorreChao: "chaoComDano" },
               },
 
               fracasso: {
                 texto: ``,
                 proximaCena: "becosOpostos",
-                memorias: { origemBecosOpostos: "chaoComDano" },
               },
             },
           },
@@ -821,8 +805,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         variacoes: [
           {
             se: {
-              flag: "origemMovimentacaoTelhadoRapida",
-              igualA: "telhadosTorreFalhaFurtiva",
+              veioDe: {
+                cenaId: "inicio",
+                etapaId: "movimentacaoFurtiva",
+                tipo: "teste",
+                resultado: "fracasso",
+              },
             },
 
             contexto: [
@@ -842,8 +830,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemMovimentacaoTelhadoRapida",
-              igualA: "esperaTorreFalhaFurtiva",
+              veioDe: {
+                cenaId: "esperaNoTelhado",
+                etapaId: "movimentacaoFurtiva",
+                tipo: "teste",
+                resultado: "fracasso",
+              },
             },
 
             contexto: [
@@ -863,8 +855,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemMovimentacaoTelhadoRapida",
-              igualA: "rotaRapidaEspera",
+              veioDe: {
+                cenaId: "esperaNoTelhado",
+                etapaId: "escolherRotaTelhado",
+                tipo: "escolha",
+                resultado: "rotaRapida",
+              },
             },
 
             contexto: [
@@ -884,8 +880,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemMovimentacaoTelhadoRapida",
-              igualA: "rotaRapidaTelhado",
+              veioDe: {
+                cenaId: "inicio",
+                etapaId: "escolherRotaTelhado",
+                tipo: "escolha",
+                resultado: "rotaRapida",
+              },
             },
 
             contexto: [
@@ -1044,7 +1044,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 texto: `Descer e buscar uma rota pelo chão.`,
 
                 proximaCena: "torreChao",
-                memorias: { origemTorreChao: "flechada" },
               },
             ],
           },
@@ -1086,8 +1085,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         variacoes: [
           {
             se: {
-              flag: "origemGuardasDistraidos",
-              igualA: "multidao",
+              veioDe: {
+                cenaId: "inicio",
+                etapaId: "decidirNaMultidao",
+                tipo: "escolha",
+                resultado: "distrairGuardas",
+              },
             },
 
             contexto: [
@@ -1099,8 +1102,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemGuardasDistraidos",
-              igualA: "ned",
+              veioDe: {
+                cenaId: "inicio",
+                etapaId: "decidirPedidoAjuda",
+                tipo: "escolha",
+                resultado: "pedirDistracao",
+              },
             },
 
             contexto: [
@@ -1188,9 +1195,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
               fracasso: {
                 texto: ``,
-                memorias: {
-                  origemTorreChaoMolhado: "guardasDistraidos",
-                },
                 proximaCena: "torreChaoMolhado",
               },
             },
@@ -1206,8 +1210,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         variacoes: [
           {
             se: {
-              flag: "origemBecosOpostos",
-              igualA: "chaoComDano",
+              veioDe: {
+                cenaId: "movimentacaoTelhadoFurtiva",
+                etapaId: "fracassoPulo",
+                tipo: "teste",
+                resultado: "fracasso",
+              },
             },
 
             contexto: [
@@ -1221,8 +1229,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemBecosOpostos",
-              igualA: "testePessoal",
+              veioDe: {
+                cenaId: "inicio",
+                etapaId: "investigarBecos",
+                tipo: "teste",
+                resultado: "sucesso",
+              },
             },
 
             contexto: [
@@ -1234,8 +1246,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemBecosOpostos",
-              igualA: "testeNed",
+              veioDe: {
+                cenaId: "inicio",
+                etapaId: "perguntarOutraSaida",
+                tipo: "teste",
+                resultado: "sucesso",
+              },
             },
 
             contexto: [
@@ -1289,21 +1305,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               sucesso: {
                 texto: `Sua rota se prova bem-sucedida. Você até viu algumas patrulhas passarem, mas consegue evitá-las sem problema.`,
 
-                // Memorias alteram textos e caminhos futuros.
-                memorias: {
-                  origemMargemRioLonge: "vindoOpostos",
-                },
-
                 proximaCena: "margemRioLonge",
               },
 
               fracasso: {
                 texto: `Ao ver uma patrulha de guardas passar muito próxima, você acaba se vendo {obrigado|obrigada} a desviar da sua rota original.`,
-
-                // Opcional: aplica dano conforme a distancia da queda.
-                memorias: {
-                  origemBecosLagartos: "vindoOpostos",
-                },
 
                 proximaCena: "becosLagartos",
               },
@@ -1346,9 +1352,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                     texto: `Voltar e buscar uma rota mais segura.`,
                     descricao: ``,
                     proximaCena: "becosLagartos",
-                    memorias: {
-                      origemBecosLagartos: "voltarOpostos",
-                    },
                   },
                 ],
               },
@@ -1359,8 +1362,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 Esse erro se prova fatal conforme você se expõe bem em frente a um grupo de Lagartos.
                 
                 Por um segundo, vocês apenas se encaram, e então eles partem em sua direção.`,
-
-                memoria: { origemBatalhaBecos: "falhaSobrevivencia" },
 
                 proximaCena: "batalhaBecosM",
               },
@@ -1386,11 +1387,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Se espremendo por um pequeno espaço entre as casas, você consegue sair do outro lado e passar pela abertura.`,
 
-                // Memorias alteram textos e caminhos futuros.
-                memorias: {
-                  origemFimVitoria: "becosOpostos",
-                },
-
                 proximaCena: "fimVitoria",
               },
 
@@ -1400,8 +1396,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 O nervosismo faz você se mover rápido demais, derrubando um amontoado de latas e madeiras no caminho. Imediatamente o grupo de Lagartos se vira em sua direção.
 
                 Sua tentativa de passar {despercebido|despercebida} falhou, e agora o confronto direto é a única coisa entre você e sua fuga.`,
-
-                memoria: { origemBatalhaBecos: "falhaFurtividade" },
 
                 proximaCena: "batalhaBecosM",
               },
@@ -1647,7 +1641,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           {
             id: "noiteParaAPonte",
             texto: `Para a ponte.`,
-            descricao: ``,
+            descricao: `Seguir para a ponte pode ser mais arriscado, mas é a rota mais direta para fora da cidade. E agora, com as ruas vazias, a chance de ser {visto|vista} é muito menor.`,
             proximaEtapa: "testePonteNoite",
           },
         ],
@@ -1665,20 +1659,20 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             Qual a sua escolha?`,
 
             escolhas: [
-          {
-            id: "irNoiteNadandoTorre",
-            texto: `Tentar atravessar nadando.`,
-            descricao: ``,
-            proximaEtapa: "noiteNadandoTorre",
-          },
+              {
+                id: "irNoiteNadandoTorre",
+                texto: `Tentar atravessar nadando.`,
+                descricao: ``,
+                proximaEtapa: "noiteNadandoTorre",
+              },
 
-          {
-            id: "irNoitePelasEmbarcacoes",
-            texto: `Tentar atravessar pelas embarcações.`,
-            descricao: ``,
-            proximaCena: "noitePelasEmbarcacoes",
-          },
-        ],
+              {
+                id: "irNoitePelasEmbarcacoes",
+                texto: `Tentar atravessar pelas embarcações.`,
+                descricao: ``,
+                proximaCena: "noitePelasEmbarcacoes",
+              },
+            ],
           },
 
           testePonteNoite: {
@@ -1770,26 +1764,25 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         numeroFonte: 15,
 
         contexto: [],
-
       },
 
-      noitePelasEmbarcacoes:{
+      noitePelasEmbarcacoes: {
 
         numeroFonte: 17,
 
         contexto: [`Atravessar o rio a nado já seria perigoso em condições normais e, em sua condição atual, seria virtualmente impossível.
 
-          Pular pelas embarcações, surpreendentemente, parece ser a melhor opção.
+        Pular pelas embarcações, surpreendentemente, parece ser a melhor opção.
 
-          Você sai do seu esconderijo e se aproxima do cais para poder ver melhor as embarcações e planejar a melhor rota.
+        Você sai do seu esconderijo e se aproxima do cais para poder ver melhor as embarcações e planejar a melhor rota.
 
-          Uma sequência de três saltos {o|a} levaria muito próximo da outra margem, onde você poderia tentar um último salto mais longo ou mesmo nadar o restante do caminho.
+        Uma sequência de três saltos {o|a} levaria muito próximo da outra margem, onde você poderia tentar um último salto mais longo ou mesmo nadar o restante do caminho.
 
-          Você entra no cais e sobe na primeira embarcação aportada, um grande navio cargueiro, e caminha até onde vai realizar o primeiro salto, para um barco pesqueiro menor logo abaixo.`],
+        Você entra no cais e sobe na primeira embarcação aportada, um grande navio cargueiro, e caminha até onde vai realizar o primeiro salto, para um barco pesqueiro menor logo abaixo.`],
 
-          etapaInicial: "testeAtletismo1",
+        etapaInicial: "testeAtletismo1",
 
-          etapas: {
+        etapas: {
             testeAtletismo1: {
               descricao: ``,
 
@@ -1825,8 +1818,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                       Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
 
-                      memorias: {origemBatalhaTorreNoite: "quedaNaAguaSemAcertos",},
-
                       proximaCena: "batalhaTorreNoite",
                     },
 
@@ -1836,8 +1827,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                       Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
 
                       Você consegue se desviar no último momento, mas a dor no braço {o|a} impede de nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
-
-                      memorias: {origemBatalhaTorreNoite: "quedaNaAguaUmAcerto",},
 
                       proximaCena: "batalhaTorreNoite",
                     },
@@ -1849,10 +1838,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                       Lutando contra a correnteza, você não consegue se desviar, e sente outra pontada forte, dessa vez na perna, onde o virote {o|a} atinge dentro d'água. Com os membros feridos, você não consegue nadar, e o rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
 
-                      memorias: {origemBatalhaTorreNoite: "quedaNaAguaDoisAcertos",},
-
                       proximaCena: "batalhaTorreNoite",
                     },
+
                   },
                 },
                 },
@@ -1861,9 +1849,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             testeFurtividade1: {
               // NARRATIVA: descreva o personagem tentando não chamar atenção após o primeiro pulo.
-              descricao: ``,
+              descricao: `Você pula na embarcação mais abaixo, causando um baque mais forte do que esperava.
 
-              instrucao: "continuar sem ser {visto|vista} pelos Lagartos.",
+              Imediatamente você se abaixa, prendendo a respiração.`,
+
+              instrucao: "permanecer {escondido|escondida}.",
 
               teste: {
                 tipo: "oposto",
@@ -1883,44 +1873,70 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               resultados: {
                 sucesso: {
                   // NARRATIVA: descreva os Lagartos ainda sem perceber o personagem.
-                  texto: ``,
+                  texto: `"O que foi isso?" Você ouve uma voz vinda do cais.
+
+                    "Isso o quê?" Uma outra voz, aparentemente mais longe, responde.
+
+                    "Você não ouviu um barulho agora?"
+
+                    A voz ao longe responde algo que você não consegue entender enquanto você se arrasta para o outro extremo do barco e, se escondendo atrás de duas grandes caixas, se prepara para se levantar e dar o próximo pulo.`,
+
                   proximaEtapa: "testeAtletismo2",
                 },
 
                 fracasso: {
                   // NARRATIVA: descreva o momento em que os Lagartos localizam o personagem.
-                  texto: ``,
+                  texto: `"Ei! Rodrick! Eu vi alguém pulando entre os barcos."
+
+                    Seu sangue gela ao ouvir a voz vindo do cais.
+
+                    "Que barco?" Outra voz, mais próxima, responde.
+
+                    "Esse barquinho menor aí perto de você, animal. Vai ali ver, rápido!"
+
+                    Você precisa se mover rápido. Arrastando-se para o outro extremo do barco, você se esconde atrás de duas grandes caixas e se prepara para se levantar e dar o próximo pulo.`,
                   proximaEtapa: "ataquesAposFurtividade1",
                 },
               },
             },
 
             ataquesAposFurtividade1: {
-              // NARRATIVA: introduza os primeiros disparos depois que o personagem foi localizado.
+              // NARRATIVA: introduza o primeiro disparo depois que o personagem foi localizado.
               descricao: ``,
 
-              ataquesNpc: {
+              ataqueNpc: {
                 npcId: "lagartoBronze",
                 ataqueId: "bestaLeve",
-                quantidade: 2,
                 tipoRolagem: "desvantagem",
 
-                resultadosPorAcertos: {
-                  0: {
-                    // NARRATIVA: os dois disparos erram; o personagem continua sob fogo.
-                    texto: ``,
+                resultados: {
+                  erro: {
+                    // NARRATIVA: o disparo erra; o personagem continua sob fogo e tenta o segundo pulo.
+                    texto: `Assim que você se levanta, ouve um grito do outro lado do cais.
+
+                    "No barco da frente, Rodrick! Perto das caixas."
+
+                    O caos se instaura.
+
+                    Dois mercenários puxam suas bestas; um puxa um grande arco composto, e Rodrick corre em sua direção.
+
+                    Uma flecha é lançada rapidamente e atinge a caixa a centímetros de onde você está. Não há tempo para pensar. Você pula para o próximo barco.`,
                     proximaEtapa: "testeAtletismo2SobFogo",
                   },
 
-                  1: {
-                    // NARRATIVA: exatamente um disparo acerta.
-                    texto: ``,
-                    proximaEtapa: "salvaguardaAposFurtividade1",
-                  },
+                  acerto: {
+                    // NARRATIVA: o disparo acerta e ameaça derrubar o personagem.
+                    texto: `Assim que você se levanta, ouve um grito do outro lado do cais.
 
-                  2: {
-                    // NARRATIVA: os dois disparos acertam.
-                    texto: ``,
+                    "No barco da frente, Rodrick! Perto das caixas."
+
+                    O caos se instaura.
+
+                    Dois mercenários puxam suas bestas; um puxa um grande arco composto, e Rodrick corre em sua direção.
+
+                    Não há tempo para pensar. Você se prepara para pular para o próximo barco.
+
+                    Uma flecha é lançada rapidamente e atinge suas costas no momento em que você se preparava para dar o salto.`,
                     proximaEtapa: "salvaguardaAposFurtividade1",
                   },
                 },
@@ -1929,7 +1945,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             salvaguardaAposFurtividade1: {
               // NARRATIVA: descreva o impacto ameaçando derrubar o personagem entre os barcos.
-              descricao: ``,
+              descricao: `O impacto joga você para frente, atrapalhando totalmente o ritmo do seu pulo e fazendo você se desequilibrar próximo da borda do navio.`,
 
               instrucao: "manter o equilíbrio após ser {atingido|atingida}.",
 
@@ -1942,26 +1958,27 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               resultados: {
                 sucesso: {
                   // NARRATIVA: suporta o impacto e se prepara para o segundo pulo.
-                  texto: ``,
+                  texto: `Apesar da dor e do impacto, você consegue recuperar seu equilíbrio e se preparar para o salto.`,
                   proximaEtapa: "testeAtletismo2SobFogo",
                 },
 
                 fracasso: {
                   // NARRATIVA: perde o equilíbrio e cai em uma embarcação, iniciando a batalha.
-                  texto: ``,
-                  memorias: {
-                    origemBatalhaTorreNoite: "quedaAposFurtividade1",
+                  texto: `O impacto foi forte demais, fazendo você se desequilibrar e cair no rio.
+
+                    Por um momento, você perde completamente a noção de direção enquanto a água entra por suas narinas.
+
+                    Nadando de volta à superfície, você vê virotes e flechas sendo lançados em sua direção enquanto o rio o arrasta de volta para a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+                      proximaCena: "batalhaTorreNoite",
+                    },
                   },
-                  proximaCena: "batalhaTorreNoite",
-                },
-              },
             },
 
             testeAtletismo2: {
               // NARRATIVA: introduza o segundo pulo enquanto o personagem ainda está escondido.
               descricao: ``,
 
-              instrucao: "realizar o segundo pulo entre as embarcações.",
+              instrucao: "realizar o segundo pulo.",
 
               teste: {
                 tipo: "pericia",
@@ -1977,18 +1994,58 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 },
 
                 fracasso: {
-                  // NARRATIVA: falha no segundo pulo e cai na água.
-                  texto: ``,
-                  proximaEtapa: "ataquesAposQuedaSegundoPulo",
+                texto: `A chuva acaba {o|a} atrapalhando mais do que você imaginaria, e a dificuldade de identificar um ponto para aterrissagem faz com que você erre o pulo.
+
+                Batendo desajeitadamente no barco e caindo no rio, você perde completamente a noção de espaço por um segundo.`,
+
+                ataquesNpc: {
+                  npcId: "lagartoBronze",
+                  ataqueId: "bestaLeve",
+                  quantidade: 2,
+                  tipoRolagem: "desvantagem",
+
+                  resultadosPorAcertos: {
+                    0: {
+                      texto: `Você se recompõe e volta à superfície a tempo de ver uma flecha voar em sua direção, {o|a} errando por pouco.
+
+                      Em meio ao borbulho incessante da água ao seu redor, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    1: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas a dor no braço {o|a} impede de nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    2: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Lutando contra a correnteza, você não consegue se desviar, e sente outra pontada forte, dessa vez na perna, onde o virote {o|a} atinge dentro d'água. Com os membros feridos, você não consegue nadar, e o rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                  },
+                },
                 },
               },
             },
 
             testeAtletismo2SobFogo: {
               // NARRATIVA: introduza o segundo pulo com os Lagartos já atirando.
-              descricao: ``,
+              descricao: `Sem pensar muito, você pula rapidamente para o próximo barco, agora sem se preocupar em permanecer {escondido|escondida}.`,
 
-              instrucao: "realizar o segundo pulo sob fogo.",
+              instrucao: "realizar o segundo pulo.",
 
               teste: {
                 tipo: "pericia",
@@ -2005,38 +2062,43 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 fracasso: {
                   // NARRATIVA: falha no segundo pulo e cai na água.
-                  texto: ``,
-                  proximaEtapa: "ataquesAposQuedaSegundoPulo",
+                  texto: `A pressa em pular faz você calcular mal o pulo e cair no rio.
+
+                    Por um momento, você perde completamente a noção de direção enquanto a água entra por suas narinas.
+
+                    Nadando de volta à superfície, você vê virotes e flechas sendo lançados em sua direção enquanto o rio o arrasta de volta para a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                  proximaCena: "batalhaTorreNoite",
                 },
               },
             },
 
             ataquesAposSegundoPulo: {
-              // NARRATIVA: descreva uma nova rajada antes do terceiro pulo.
+              // NARRATIVA: descreva um novo disparo antes do terceiro pulo.
               descricao: ``,
 
-              ataquesNpc: {
+              ataqueNpc: {
                 npcId: "lagartoBronze",
                 ataqueId: "bestaLeve",
-                quantidade: 2,
                 tipoRolagem: "desvantagem",
 
-                resultadosPorAcertos: {
-                  0: {
-                    // NARRATIVA: os dois disparos erram.
-                    texto: ``,
+                resultados: {
+                  erro: {
+                    // NARRATIVA: o disparo erra.
+                    texto: `Você percebe a tempo um belo tiro de flecha, lançado à sua frente, na direção em que você está correndo.
+
+                    Parando repentinamente, a flecha passa voando pela noite e não {o|a} atinge.
+
+                    Você volta a correr, já se preparando para dar um próximo salto, enquanto seus perseguidores se aproximam pelos barcos.`,
+
                     proximaEtapa: "testeAtletismo3SobFogo",
                   },
 
-                  1: {
-                    // NARRATIVA: exatamente um disparo acerta.
-                    texto: ``,
-                    proximaEtapa: "salvaguardaAposSegundoPulo",
-                  },
+                  acerto: {
+                    // NARRATIVA: o disparo acerta.
+                    texto: `Você percebe a tempo um belo tiro de flecha, lançado à sua frente, na direção em que você está correndo.
 
-                  2: {
-                    // NARRATIVA: os dois disparos acertam.
-                    texto: ``,
+                    Você tenta parar repentinamente, mas seu momento ainda {o|a} leva um pouco mais à frente, fazendo com que a flecha {o|a} atinja na coxa.`,
                     proximaEtapa: "salvaguardaAposSegundoPulo",
                   },
                 },
@@ -2045,9 +2107,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             salvaguardaAposSegundoPulo: {
               // NARRATIVA: descreva o impacto dos disparos depois do segundo pulo.
-              descricao: ``,
+              descricao: `Batendo com as costas na borda do navio, você tenta se reequilibrar e continuar correndo.`,
 
-              instrucao: "manter o equilíbrio após ser {atingido|atingida}.",
+              instrucao: "manter o equilíbrio.",
 
               teste: {
                 tipo: "salvaguarda",
@@ -2058,67 +2120,31 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
               resultados: {
                 sucesso: {
                   // NARRATIVA: permanece de pé e prepara o terceiro pulo.
-                  texto: ``,
+                  texto: `Mesmo com a perna machucada, você consegue firmar a base com força suficiente para evitar a queda e continuar correndo.
+
+                  Você dispara em direção ao próximo salto.`,
                   proximaEtapa: "testeAtletismo3SobFogo",
                 },
 
                 fracasso: {
                   // NARRATIVA: cai em uma embarcação e inicia a batalha.
-                  texto: ``,
-                  memorias: {
-                    origemBatalhaTorreNoite: "quedaAposSegundoPulo",
-                  },
+                  texto: `Com a perna machucada, você não consegue manter uma base forte o suficiente e acaba tombando do barco em direção ao rio.
+
+                  Por um momento, você perde completamente a noção de direção enquanto a água entra por suas narinas.
+
+                  Nadando de volta à superfície, você vê virotes e flechas sendo lançados em sua direção enquanto o rio o arrasta de volta para a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
                   proximaCena: "batalhaTorreNoite",
-                },
-              },
-            },
-
-            ataquesAposQuedaSegundoPulo: {
-              // NARRATIVA: descreva os Lagartos disparando contra o personagem na água.
-              descricao: ``,
-
-              ataquesNpc: {
-                npcId: "lagartoBronze",
-                ataqueId: "bestaLeve",
-                quantidade: 2,
-                tipoRolagem: "desvantagem",
-
-                resultadosPorAcertos: {
-                  0: {
-                    // NARRATIVA: nenhum disparo acerta antes da batalha na margem.
-                    texto: ``,
-                    memorias: {
-                      origemBatalhaTorreNoite: "quedaSegundoPuloSemAcertos",
-                    },
-                    proximaCena: "batalhaTorreNoite",
-                  },
-
-                  1: {
-                    // NARRATIVA: um disparo acerta antes da batalha na margem.
-                    texto: ``,
-                    memorias: {
-                      origemBatalhaTorreNoite: "quedaSegundoPuloUmAcerto",
-                    },
-                    proximaCena: "batalhaTorreNoite",
-                  },
-
-                  2: {
-                    // NARRATIVA: os dois disparos acertam antes da batalha na margem.
-                    texto: ``,
-                    memorias: {
-                      origemBatalhaTorreNoite: "quedaSegundoPuloDoisAcertos",
-                    },
-                    proximaCena: "batalhaTorreNoite",
-                  },
                 },
               },
             },
 
             testeFurtividade2: {
               // NARRATIVA: após o segundo pulo, descreva a nova tentativa de permanecer escondido.
-              descricao: ``,
+              descricao: `Com certa dificuldade, você consegue realizar o salto para o próximo navio, um pouco mais afastado. Ao atingir o chão, você acaba se desequilibrando e batendo em uma mesa contendo ferramentas de pesca.
 
-              instrucao: "continuar sem ser {visto|vista} pelos Lagartos.",
+              Rapidamente você se desloca para o outro extremo do barco, já pegando impulso para o próximo pulo.`,
+
+              instrucao: "continuar sem ser {visto|vista}.",
 
               teste: {
                 tipo: "oposto",
@@ -2144,7 +2170,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 fracasso: {
                   // NARRATIVA: é localizado depois do segundo pulo.
-                  texto: ``,
+                  texto: `"Rodrick! Ali perto do pesqueiro grande! Rápido, animal!"
+
+                  Seu sangue gela ao ouvir a voz vindo do cais e passos fortes vindo logo atrás.
+                  
+                  Sem pensar muito, você dispara em direção à barco, agora sem se preocupar em permanecer {escondido|escondida}.`,
+
                   proximaEtapa: "ataquesAposSegundoPulo",
                 },
               },
@@ -2152,9 +2183,13 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             testeAtletismo3: {
               // NARRATIVA: introduza o terceiro pulo enquanto o personagem ainda está escondido.
-              descricao: ``,
+              descricao: `"Rodrick! Ali perto do pesqueiro grande! Eu ouvi um barulho."
 
-              instrucao: "realizar o terceiro pulo entre as embarcações.",
+              Seu sangue gela ao ouvir a voz vindo do cais e passos fortes vindo logo atrás.
+
+              Rapidamente você calcula a próxima rota e pula para o navio seguinte.`,
+
+              instrucao: "dar o terceiro pulo entre as embarcações.",
 
               teste: {
                 tipo: "pericia",
@@ -2170,18 +2205,58 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 },
 
                 fracasso: {
-                  // NARRATIVA: falha no terceiro pulo e cai na água.
-                  texto: ``,
-                  proximaEtapa: "ataquesAposQuedaTerceiroPulo",
+                texto: `A pressa em pular faz você calcular mal o pulo e cair no rio.
+
+                Batendo desajeitadamente no barco, você perde completamente a noção de espaço por um segundo enquanto a água entra por suas narinas.`,
+
+                ataquesNpc: {
+                  npcId: "lagartoBronze",
+                  ataqueId: "bestaLeve",
+                  quantidade: 2,
+                  tipoRolagem: "desvantagem",
+
+                  resultadosPorAcertos: {
+                    0: {
+                      texto: `Você se recompõe e volta à superfície a tempo de ver uma flecha voar em sua direção, {o|a} errando por pouco.
+
+                      Em meio ao borbulho incessante da água ao seu redor, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    1: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas a dor no braço {o|a} impede de nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    2: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Lutando contra a correnteza, você não consegue se desviar, e sente outra pontada forte, dessa vez na perna, onde o virote {o|a} atinge dentro d'água. Com os membros feridos, você não consegue nadar, e o rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                  },
+                },
                 },
               },
             },
 
             testeAtletismo3SobFogo: {
               // NARRATIVA: introduza o último pulo com os Lagartos já atirando.
-              descricao: ``,
+              descricao: `No limite do navio, você pula com a maior força possível em uma trajetória calculada com pressa, torcendo para que seja o suficiente.`,
 
-              instrucao: "realizar o terceiro pulo sob fogo.",
+              instrucao: "realizar o terceiro pulo.",
 
               teste: {
                 tipo: "pericia",
@@ -2198,17 +2273,22 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 fracasso: {
                   // NARRATIVA: falha no terceiro pulo e cai na água.
-                  texto: ``,
-                  proximaEtapa: "ataquesAposQuedaTerceiroPulo",
+                  texto: `A pressa em pular faz você calcular mal o pulo e cair no rio.
+
+                  Por um momento, você perde completamente a noção de direção enquanto a água entra por suas narinas.
+
+                  Nadando de volta à superfície, você vê virotes e flechas sendo lançados em sua direção enquanto o rio o arrasta de volta para a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                  proximaCena: "batalhaTorreNoite",
                 },
               },
             },
 
             testeFurtividade3: {
               // NARRATIVA: depois do terceiro pulo, descreva a última tentativa de não ser localizado.
-              descricao: ``,
+              descricao: `Com um baque forte, você cai no último navio. Agora tudo que resta é permanecer {escondido|escondida} até chegar no outro lado do navio e dar um pulo simples até a margem.`,
 
-              instrucao: "alcançar o fim da travessia sem ser {visto|vista}.",
+              instrucao: "alcançar a margem.",
 
               teste: {
                 tipo: "oposto",
@@ -2234,110 +2314,37 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 fracasso: {
                   // NARRATIVA: é localizado no final da travessia.
-                  texto: ``,
+                  texto: `"Rodrick! Ali perto do pesqueiro grande! Rápido, animal!"
+
+                  Seu sangue gela ao ouvir a voz vindo do cais e passos fortes vindo logo atrás.
+
+                  Sem pensar muito, você corre e se prepara para pular para a margem, agora sem se preocupar em permanecer {escondido|escondida}.`,
+
                   proximaEtapa: "ataquesFinais",
                 },
               },
             },
 
             ataquesFinais: {
-              // NARRATIVA: descreva a última rajada antes de o personagem alcançar a margem.
+              // NARRATIVA: descreva o último disparo antes de o personagem alcançar a margem.
               descricao: ``,
 
-              ataquesNpc: {
+              ataqueNpc: {
                 npcId: "lagartoBronze",
                 ataqueId: "bestaLeve",
-                quantidade: 2,
                 tipoRolagem: "desvantagem",
 
-                resultadosPorAcertos: {
-                  0: {
-                    // NARRATIVA: os dois disparos erram e o personagem completa a travessia.
-                    texto: ``,
+                resultados: {
+                  erro: {
+                    // NARRATIVA: o disparo erra e o personagem completa a travessia.
+                    texto: `Duas últimas flechas passam próximo de você, uma enquanto você ainda estava no arco do pulo, outra assim que você alcança a margem oposta.`,
                     proximaEtapa: "travessiaConcluida",
                   },
 
-                  1: {
-                    // NARRATIVA: exatamente um disparo acerta no trecho final.
-                    texto: ``,
-                    proximaEtapa: "salvaguardaFinal",
-                  },
-
-                  2: {
-                    // NARRATIVA: os dois disparos acertam no trecho final.
-                    texto: ``,
-                    proximaEtapa: "salvaguardaFinal",
-                  },
-                },
-              },
-            },
-
-            salvaguardaFinal: {
-              // NARRATIVA: descreva o último esforço para não cair antes da margem.
-              descricao: ``,
-
-              instrucao: "permanecer de pé após o impacto final.",
-
-              teste: {
-                tipo: "salvaguarda",
-                atributoId: "constituicao",
-                dificuldade: 12,
-              },
-
-              resultados: {
-                sucesso: {
-                  // NARRATIVA: suporta os ferimentos e completa a travessia.
-                  texto: ``,
-                  proximaEtapa: "travessiaConcluida",
-                },
-
-                fracasso: {
-                  // NARRATIVA: cai em uma embarcação no fim do percurso e inicia a batalha.
-                  texto: ``,
-                  memorias: {
-                    origemBatalhaTorreNoite: "quedaNoFinalDaTravessia",
-                  },
-                  proximaCena: "batalhaTorreNoite",
-                },
-              },
-            },
-
-            ataquesAposQuedaTerceiroPulo: {
-              // NARRATIVA: descreva os disparos contra o personagem após a queda no último pulo.
-              descricao: ``,
-
-              ataquesNpc: {
-                npcId: "lagartoBronze",
-                ataqueId: "bestaLeve",
-                quantidade: 2,
-                tipoRolagem: "desvantagem",
-
-                resultadosPorAcertos: {
-                  0: {
-                    // NARRATIVA: nenhum disparo acerta antes da batalha.
-                    texto: ``,
-                    memorias: {
-                      origemBatalhaTorreNoite: "quedaTerceiroPuloSemAcertos",
-                    },
-                    proximaCena: "batalhaTorreNoite",
-                  },
-
-                  1: {
-                    // NARRATIVA: um disparo acerta antes da batalha.
-                    texto: ``,
-                    memorias: {
-                      origemBatalhaTorreNoite: "quedaTerceiroPuloUmAcerto",
-                    },
-                    proximaCena: "batalhaTorreNoite",
-                  },
-
-                  2: {
-                    // NARRATIVA: os dois disparos acertam antes da batalha.
-                    texto: ``,
-                    memorias: {
-                      origemBatalhaTorreNoite: "quedaTerceiroPuloDoisAcertos",
-                    },
-                    proximaCena: "batalhaTorreNoite",
+                  acerto: {
+                    // NARRATIVA: o disparo acerta no trecho final.
+                    texto: `Uma flecha passa muito próxima enquanto você ainda estava no arco do pulo. Porém outra {o|a} atinge na parte de trás da perna no momento em que você cai no chão na margem oposta.`,
+                    proximaEtapa: "travessiaConcluida",
                   },
                 },
               },
@@ -2353,7 +2360,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                   "Definir o texto final e o destino após concluir a travessia noturna pelas embarcações.",
               },
             },
-          },
+        },
       },
 
       batalhaRuasD: {
@@ -2415,7 +2422,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 Sentindo os ferimentos ardendo, você sai em disparada.`,
               },
 
-              proximaCena: "batalhaRuasDVitoria",
+              proximaCena: "fimVitoria",
             },
 
             derrota: {
@@ -2427,7 +2434,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 {Cercado|Cercada} pelos guardas, você já não consegue continuar lutando.`,
               },
 
-              proximaCena: "batalhaRuaseTorreDerrota",
+              proximaCena: "fimDerrota",
             },
           },
         },
@@ -2499,7 +2506,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 {Cercado|Cercada} pelos guardas, você já não consegue continuar lutando.`,
               },
 
-              proximaCena: "batalhaRuaseTorreDerrota",
+              proximaCena: "fimDerrota",
             },
           },
         },
@@ -2509,8 +2516,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         variacoes: [
           {
             se: {
-              flag: "origemBatalhaBecos",
-              igualA: "falhaSobrevivencia",
+              veioDe: {
+                cenaId: "becosOpostos",
+                etapaId: "testeTerritorio",
+                tipo: "teste",
+                resultado: "fracasso",
+              },
             },
 
             contexto: [
@@ -2520,8 +2531,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           {
             se: {
-              flag: "origemBatalhaBecos",
-              igualA: "falhaFurtividade",
+              veioDe: {
+                cenaId: "becosOpostos",
+                etapaId: "testePassarLagartos",
+                tipo: "teste",
+                resultado: "fracasso",
+              },
             },
 
             contexto: [``],
@@ -2592,7 +2607,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           {Cercado|Cercada} pelos Lagartos de Bronze, você já não consegue continuar lutando.`,
               },
 
-              proximaCena: "batalhaBecosDerrota",
+              proximaCena: "fimDerrota",
             },
           },
         },
@@ -2606,18 +2621,106 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
       batalhaTorreNoite:{},
 
-      batalhaRuasDVitoria: {
+      // Esqueletos de cenas ainda não implementadas.
+      margemRioPonte: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      batalhaRuasF: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      torreTetoSemGuardas: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      torreTetoComGuardas: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      batalha2torre: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      batalhaPonteF: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      batalhaPonteD: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      torreChaoMolhado: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
+      fimVitoria: {
         numeroFonte: null,
 
-        contexto: [
-          `Às suas costas, você deixa a cidade em caos. À sua frente, a segurança da floresta de Rawriaq, onde você irá se esconder pelos próximos dias.
+        variacoes: [
+          {
+            se: {
+              veioDe: {
+                cenaId: "batalhaRuasD",
+                tipo: "combate",
+                resultado: "vitoria",
+              },
+            },
 
-          Seu destino é incerto, mas ele está em suas mãos.`,
+            contexto: [
+              `Às suas costas, você deixa a cidade em caos. À sua frente, a segurança da floresta de Rawriaq, onde você irá se esconder pelos próximos dias.
+
+              Seu destino é incerto, mas ele está em suas mãos.`,
+            ],
+          },
+
+          {
+            se: {
+              veioDe: {
+                cenaId: "becosOpostos",
+                etapaId: "testePassarLagartos",
+                tipo: "teste",
+                resultado: "sucesso",
+              },
+            },
+
+            contexto: [],
+          },
+
+          {
+            se: {
+              veioDe: {
+                cenaId: "batalhaBecosM",
+                tipo: "combate",
+                resultado: "vitoria",
+              },
+            },
+
+            contexto: [],
+          },
         ],
+
+        contexto: [],
 
         escolhas: [
           {
-            id: "concluirAventuraVitoriaRuas",
+            id: "concluirAventuraVitoria",
 
             texto: `Concluir Aventura.`,
 
@@ -2629,7 +2732,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
               titulo: "Você escapou",
 
-              texto: `Você venceu a sua batalha, mas a batalha na cidade está apenas começando.`,
+              texto: `Você conseguiu escapar da cidade, mas a batalha por ela está apenas começando.`,
 
               resultado: "Vitória",
             },
@@ -2637,18 +2740,60 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         ],
       },
 
-      batalhaRuaseTorreDerrota: {
+      fimDerrota: {
         numeroFonte: null,
 
-        contexto: [
-          `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
+        variacoes: [
+          {
+            se: {
+              veioDe: {
+                cenaId: "batalhaRuasD",
+                tipo: "combate",
+                resultado: "derrota",
+              },
+            },
+
+            contexto: [
+              `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
           
-          Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
+              Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
+            ],
+          },
+
+          {
+            se: {
+              veioDe: {
+                cenaId: "batalhaTorreM",
+                tipo: "combate",
+                resultado: "derrota",
+              },
+            },
+
+            contexto: [
+              `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
+
+              Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
+            ],
+          },
+
+          {
+            se: {
+              veioDe: {
+                cenaId: "batalhaBecosM",
+                tipo: "combate",
+                resultado: "derrota",
+              },
+            },
+
+            contexto: [],
+          },
         ],
+
+        contexto: [],
 
         escolhas: [
           {
-            id: "concluirAventuraDerrotaRuas",
+            id: "concluirAventuraDerrota",
 
             texto: `Concluir Aventura.`,
 
@@ -2660,9 +2805,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
               titulo: "Sua fuga chega ao fim",
 
-              texto: `Sua tentativa de escapar termina nas ruas da cidade.
+              texto: `Sua tentativa de escapar da cidade chega ao fim.
               
-              {Desarmado|Desarmada} e {capturado|capturada} pelos guardas, seu destino é incerto.`,
+              {Desarmado|Desarmada} e {capturado|capturada}, seu destino é incerto.`,
 
               resultado: "Derrota",
             },
@@ -2695,8 +2840,12 @@ modeloCena: {
   variacoes: [
     {
       se: {
-        flag: "modeloOrigem",
-        igualA: "valorEsperado",
+        veioDe: {
+          cenaId: "modeloCenaAnterior",
+          etapaId: "modeloEtapaAnterior",
+          tipo: "teste",
+          resultado: "sucesso",
+        },
       },
 
       contexto: [

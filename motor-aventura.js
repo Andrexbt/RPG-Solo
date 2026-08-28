@@ -390,6 +390,13 @@ const tipoRolagemJogador =
         : "fracasso"
     ];
 
+  registrarEventoNarrativo({
+    tipo: "teste",
+    resultado: resultadoTeste.sucesso
+      ? "sucesso"
+      : "fracasso",
+  });
+
   await aplicarConsequencia(
     consequencia
   );
@@ -397,16 +404,121 @@ const tipoRolagemJogador =
   return true;
 }
 
-async function resolverAtaqueNpc(configuracao) {
-  const npc =
-    window.estadoJogo
-      ?.npcs
-      ?.[configuracao.npcId];
+function normalizarTipoRolagemAtaque(tipoRolagem) {
+  if (tipoRolagem === "vantagem" || tipoRolagem === "desvantagem") {
+    return tipoRolagem;
+  }
 
-  const personagem =
+  return "normal";
+}
+
+function resolverAtaqueNpcIndividual(ataque, personagem, configuracao = {}) {
+  const tipoRolagem = normalizarTipoRolagemAtaque(configuracao.tipoRolagem);
+  const quantidadeD20 = tipoRolagem === "normal" ? 1 : 2;
+  const resultadoRolagem = realizarRolagemComposta({
+    gruposDeDados: [
+      {
+        quantidade: quantidadeD20,
+        numeroDeFaces: 20,
+      },
+    ],
+
+    modificador: ataque.bonusAtaque ?? 0,
+  });
+
+  const grupoD20 = resultadoRolagem.gruposRolados.find(
+    (grupo) => grupo.numeroDeFaces === 20,
+  );
+  const resultadosD20 = grupoD20?.resultados ?? [];
+  const resultadoNatural = SistemaTestes.selecionarResultadoD20(
+    resultadosD20,
+    tipoRolagem,
+  );
+  const totalAtaque = resultadoNatural + (Number(ataque.bonusAtaque) || 0);
+  const classeArmadura = personagem.combate?.classeArmadura ?? 10;
+  const acertoCritico = resultadoNatural === 20;
+  const falhaAutomatica = resultadoNatural === 1;
+  const acertou =
+    !falhaAutomatica && (acertoCritico || totalAtaque >= classeArmadura);
+
+  let dano = 0;
+
+  if (acertou) {
+    const modificadorDano =
+      configuracao.dano?.substituirModificador ?? ataque.dano?.modificador ?? 0;
+    const resultadoDano = realizarRolagemComposta({
+      gruposDeDados: ataque.dano?.gruposDeDados ?? [],
+      modificador: modificadorDano,
+    });
+    const subtotal = Number(resultadoDano.subtotal) || 0;
+    const modificador = Number(resultadoDano.modificador) || 0;
+
+    dano = acertoCritico ? subtotal * 2 + modificador : subtotal + modificador;
+    dano = Math.max(configuracao.dano?.minimo ?? 0, dano);
+  }
+
+  return {
+    acertou,
+    acertoCritico,
+    falhaAutomatica,
+    tipoRolagem,
+    resultadosD20,
+    resultadoNatural,
+    totalAtaque,
+    dano,
+  };
+}
+
+function aplicarDanoNarrativo(personagem, dano) {
+  const pontosDeVida = personagem.combate?.pontosDeVida;
+
+  if (!pontosDeVida || dano <= 0) {
+    return;
+  }
+
+  pontosDeVida.atuais = Math.max(0, pontosDeVida.atuais - dano);
+}
+
+function personagemEstaSemPontosDeVida() {
+  const pontosDeVida =
     window.estadoJogo
       ?.personagem
-      ?.dados;
+      ?.dados
+      ?.combate
+      ?.pontosDeVida;
+
+  if (!pontosDeVida) {
+    return false;
+  }
+
+  return Number(pontosDeVida.atuais) <= 0;
+}
+
+async function encaminharParaFimDerrotaSeNecessario() {
+  if (!personagemEstaSemPontosDeVida()) {
+    return false;
+  }
+
+  await aplicarConsequencia({
+    proximaCena: "fimDerrota",
+  });
+
+  return true;
+}
+
+function obterAtaqueNpc(configuracao) {
+  const npc = window.estadoJogo?.npcs?.[configuracao.npcId];
+  const ataque = npc?.ataques?.find((item) => item.id === configuracao.ataqueId);
+
+  return {
+    npc,
+    ataque,
+    personagem: window.estadoJogo?.personagem?.dados,
+  };
+}
+
+async function resolverAtaqueNpc(configuracao) {
+  const { npc, ataque, personagem } = obterAtaqueNpc(configuracao);
 
   if (!npc || !personagem) {
     console.warn(
@@ -415,12 +527,6 @@ async function resolverAtaqueNpc(configuracao) {
 
     return false;
   }
-
-  const ataque =
-    npc.ataques?.find(
-      (ataque) =>
-        ataque.id === configuracao.ataqueId,
-    );
 
   if (!ataque) {
     console.warn(
@@ -431,113 +537,102 @@ async function resolverAtaqueNpc(configuracao) {
     return false;
   }
 
-  const resultadoRolagem =
-    realizarRolagemComposta({
-      gruposDeDados: [
-        {
-          quantidade: 1,
-          numeroDeFaces: 20,
-        },
-      ],
+  const resultado = resolverAtaqueNpcIndividual(ataque, personagem, configuracao);
 
-      modificador:
-        ataque.bonusAtaque ?? 0,
-    });
+  aplicarDanoNarrativo(personagem, resultado.dano);
 
-  const grupoD20 =
-    resultadoRolagem.gruposRolados.find(
-      (grupo) =>
-        grupo.numeroDeFaces === 20,
-    );
-
-  const resultadoNatural =
-    grupoD20?.resultados?.[0] ?? null;
-
-  const classeArmadura =
-    personagem.combate
-      ?.classeArmadura ?? 10;
-
-  const acertoCritico =
-    resultadoNatural === 20;
-
-  const falhaAutomatica =
-    resultadoNatural === 1;
-
-  const acertou =
-    !falhaAutomatica &&
-    (
-      acertoCritico ||
-      resultadoRolagem.total >=
-        classeArmadura
-    );
-
-    let dano = 0;
-
-if (acertou) {
-  const modificadorDano =
-    configuracao.dano
-      ?.substituirModificador
-    ?? ataque.dano?.modificador
-    ?? 0;
-
-  const resultadoDano =
-    realizarRolagemComposta({
-      gruposDeDados:
-        ataque.dano?.gruposDeDados ?? [],
-
-      modificador:
-        modificadorDano,
-    });
-
-  const subtotal =
-  Number(resultadoDano.subtotal) || 0;
-
-const modificador =
-  Number(resultadoDano.modificador) || 0;
-
-dano =
-  acertoCritico
-    ? subtotal * 2 + modificador
-    : subtotal + modificador;
-
-const danoMinimo =
-  configuracao.dano?.minimo ?? 0;
-
-dano = Math.max(
-  danoMinimo,
-  dano,
-);
-
-  const pontosDeVida =
-    personagem.combate
-      ?.pontosDeVida;
-
-  if (pontosDeVida) {
-    pontosDeVida.atuais = Math.max(
-      0,
-      pontosDeVida.atuais - dano,
-    );
-  }
-
-  if (dano > 0) {
+  if (resultado.dano > 0) {
     await exibirContexto(
-      `Você sofreu ${dano} pontos de dano.`,
+      `Você sofreu ${resultado.dano} pontos de dano.`,
     );
   }
-}
 
   const consequencia =
-    configuracao.resultados?.[
-      acertou
-        ? "acerto"
-        : "erro"
-    ];
+    configuracao.resultados?.[resultado.acertou ? "acerto" : "erro"];
 
-  await aplicarConsequencia(
-    consequencia,
-  );
+    registrarEventoNarrativo({
+  tipo: "ataqueNpc",
+  resultado: resultado.acertou
+    ? "acerto"
+    : "erro",
+  quantidadeAcertos: resultado.acertou ? 1 : 0,
+});
+
+if (
+  await encaminharParaFimDerrotaSeNecessario()
+) {
+  return true;
+}
+
+  await aplicarConsequencia(consequencia);
 
   return true;
+}
+
+async function resolverAtaquesNpc(configuracao) {
+  const { npc, ataque, personagem } = obterAtaqueNpc(configuracao);
+
+  if (!npc || !personagem) {
+    console.warn("NPC ou personagem não encontrado para ataques narrativos.");
+    return false;
+  }
+
+  if (!ataque) {
+    console.warn("Ataque do NPC não encontrado:", configuracao.ataqueId);
+    return false;
+  }
+
+  const quantidade = Math.max(1, Math.floor(Number(configuracao.quantidade) || 1));
+  const ataques = Array.from({ length: quantidade }, function () {
+    return resolverAtaqueNpcIndividual(ataque, personagem, configuracao);
+  });
+  const quantidadeAcertos = ataques.filter((resultado) => resultado.acertou).length;
+  const quantidadeErros = quantidade - quantidadeAcertos;
+  const quantidadeCriticos = ataques.filter(
+    (resultado) => resultado.acertoCritico,
+  ).length;
+  const danoTotal = ataques.reduce((total, resultado) => total + resultado.dano, 0);
+
+  aplicarDanoNarrativo(personagem, danoTotal);
+
+  if (danoTotal > 0) {
+    await exibirContexto(`Você sofreu ${danoTotal} pontos de dano.`);
+  }
+
+  const consequencia = configuracao.resultadosPorAcertos?.[quantidadeAcertos];
+
+  registrarEventoNarrativo({
+    tipo: "ataquesNpc",
+    resultado: quantidadeAcertos > 0
+      ? "acerto"
+      : "erro",
+    quantidadeAcertos,
+  });
+
+  if (
+  await encaminharParaFimDerrotaSeNecessario()
+) {
+  return {
+    quantidadeAtaques: quantidade,
+    quantidadeAcertos,
+    quantidadeErros,
+    quantidadeCriticos,
+    danoTotal,
+    ataques,
+    personagemDerrotado: true,
+  };
+}
+
+  await aplicarConsequencia(consequencia);
+
+  return {
+    quantidadeAtaques: quantidade,
+    quantidadeAcertos,
+    quantidadeErros,
+    quantidadeCriticos,
+    danoTotal,
+    ataques,
+  };
 }
 
 async function resolverDescansoCurto(configuracao = {}) {
@@ -817,6 +912,25 @@ async function resolverDescansoLongo(configuracao = {}) {
       `Você sofreu ${resultadoQueda.dano} pontos de dano.`,
     );
   }
+
+  if (resultadoQueda?.dano > 0) {
+  await exibirContexto(
+    `Você sofreu ${resultadoQueda.dano} pontos de dano.`,
+  );
+
+  registrarEventoNarrativo({
+    tipo: "queda",
+    resultado: personagemEstaSemPontosDeVida()
+      ? "derrota"
+      : "sobreviveu",
+  });
+
+  if (
+    await encaminharParaFimDerrotaSeNecessario()
+  ) {
+    return;
+  }
+}
 }
 
 if (consequencia.memorias) {
@@ -835,6 +949,11 @@ if (consequencia.memorias) {
 
     if (consequencia.pendenciaFonte) {
       await mostrarPendenciaFonte(consequencia);
+      return;
+    }
+
+    if (consequencia.ataquesNpc) {
+      await resolverAtaquesNpc(consequencia.ataquesNpc);
       return;
     }
 
@@ -959,6 +1078,13 @@ const resultadoTeste =
     const consequencia = ativo.resultados[
       resultadoTeste.sucesso ? "sucesso" : "fracasso"
     ];
+
+    registrarEventoNarrativo({
+  tipo: "teste",
+  resultado: resultadoTeste.sucesso
+    ? "sucesso"
+    : "fracasso",
+});
 
     const acao =
       ativo.instrucao

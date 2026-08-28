@@ -74,6 +74,45 @@ function condicaoNarrativaAtendida(condicao) {
     }
   }
 
+  if (condicao.veioDe) {
+    possuiCondicaoReconhecida = true;
+
+    const transicao =
+      estadoAtualJogo
+        ?.progresso
+        ?.ultimaTransicao;
+
+    if (
+      !transicaoAtendeCondicao(
+        transicao,
+        condicao.veioDe,
+      )
+    ) {
+      return false;
+    }
+  }
+
+  if (condicao.historicoContem) {
+    possuiCondicaoReconhecida = true;
+
+    const historico =
+      estadoAtualJogo
+        ?.progresso
+        ?.historicoTransicoes ?? [];
+
+    const encontrou = historico.some(
+      (transicao) =>
+        transicaoAtendeCondicao(
+          transicao,
+          condicao.historicoContem,
+        ),
+    );
+
+    if (!encontrou) {
+      return false;
+    }
+  }
+
   if (
     Object.hasOwn(
       condicao,
@@ -102,6 +141,28 @@ function condicaoNarrativaAtendida(condicao) {
   }
 
   return possuiCondicaoReconhecida;
+}
+
+function transicaoAtendeCondicao(transicao, condicao = {}) {
+  if (!transicao) {
+    return false;
+  }
+
+  const campos = {
+    cenaId: "cenaOrigemId",
+    etapaId: "etapaOrigemId",
+    caminhoId: "caminhoOrigemId",
+    destinoCenaId: "cenaDestinoId",
+    tipo: "tipo",
+    resultado: "resultado",
+    quantidadeAcertos: "quantidadeAcertos",
+  };
+
+  return Object.entries(campos).every(
+    ([campoCondicao, campoTransicao]) =>
+      condicao[campoCondicao] === undefined ||
+      transicao[campoTransicao] === condicao[campoCondicao],
+  );
 }
 
 function resolverTrechosNarrativos(contexto) {
@@ -247,6 +308,14 @@ async function iniciarEtapa(idEtapa) {
   if (etapa.ataqueNpc) {
     await MotorAventura.aplicarConsequencia({
       ataqueNpc: etapa.ataqueNpc,
+    });
+
+    return;
+  }
+
+  if (etapa.ataquesNpc) {
+    await MotorAventura.aplicarConsequencia({
+      ataquesNpc: etapa.ataquesNpc,
     });
 
     return;
@@ -529,6 +598,11 @@ async function selecionarEscolha(evento) {
     return;
   }
 
+  registrarEventoNarrativo({
+    tipo: "escolha",
+    resultado: escolhaSelecionada.id,
+  });
+
   if (escolhaSelecionada.registrarNarrativa !== false) {
     NarradorAventura.adicionarEscolhaRealizada(escolhaSelecionada);
     await esperar(250);
@@ -583,6 +657,8 @@ function mudarCena(idProximaCena) {
     console.warn("Cena não encontrada:", idProximaCena);
     return;
   }
+
+  registrarTransicaoAutomatica(idProximaCena);
 
   cenaAtual = proximaCena;
   estadoAtualJogo.progresso.cenaId = idProximaCena;
