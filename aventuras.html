@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="anotacoes.css" />
     <link rel="stylesheet" href="ficha-personagem.css" />
     <link rel="stylesheet" href="detalhes-ficha.css" />
+    <link rel="stylesheet" href="acabamento-tematico.css" />
 
     <link
   rel="modulepreload"
@@ -379,14 +380,55 @@
           aria-label="Campo de combate"
           hidden
         >
+
+          <dialog
+            id="modalIntroducaoCombate"
+            class="modal-introducao-combate"
+            aria-labelledby="tituloIntroducaoCombate"
+          >
+            <div class="conteudo-modal-introducao-combate">
+              <h2 id="tituloIntroducaoCombate">Início da batalha</h2>
+
+              <p id="descricaoIntroducaoCombate"></p>
+
+              <section
+                class="objetivos-modal-combate"
+                aria-labelledby="tituloObjetivosModalCombate"
+              >
+                <h3 id="tituloObjetivosModalCombate">Objetivos</h3>
+                <ul id="listaObjetivosModalCombate"></ul>
+              </section>
+
+              <button id="botaoContinuarIntroducaoCombate" type="button">
+                Continuar para a batalha
+              </button>
+            </div>
+          </dialog>
+
           <div class="faixa-superior-combate">
+            <section
+              id="painelObjetivosCombate"
+              class="painel-objetivos-combate"
+              aria-labelledby="tituloObjetivosCombate"
+              aria-haspopup="dialog"
+              role="button"
+              tabindex="0"
+              hidden
+            >
+              <h2 id="tituloObjetivosCombate">Objetivos</h2>
+              <ul
+                id="listaObjetivosCombate"
+                class="lista-objetivos-combate"
+              ></ul>
+            </section>
+
             <div id="painelTurnoCombate" class="painel-turno-combate" hidden>
               <header class="cabecalho-linha-tempo-combate">
                 <div>
                   <span class="rotulo-linha-tempo-combate">Combate</span>
 
                   <strong>
-                    Rodada
+                    <span id="rotuloFaseCombate">Rodada</span>
                     <span id="numeroRodadaCombate">1</span>
                   </strong>
                 </div>
@@ -421,31 +463,25 @@
                 </div>
               </section>
 
-              
             </div>
           </div>
 
           <section
-  id="painelAcaoAtualCombate"
-  class="painel-momento-combate janela-flutuante"
-  aria-live="polite"
->
+            id="painelAcaoAtualCombate"
+            class="painel-momento-combate janela-flutuante"
+            aria-live="polite"
+          >
+            <p id="mensagemAcaoAtualCombate"></p>
 
-  <p id="mensagemAcaoAtualCombate">
-    Aguardando o início do turno.
-  </p>
+            <p
+              id="solicitacaoCombate"
+              class="solicitacao-combate"
+              aria-live="polite"
+              hidden
+            ></p>
 
-  <p
-    id="solicitacaoCombate"
-    class="solicitacao-combate"
-    aria-live="polite"
-    hidden
-  ></p>
-  <div
-  id="acoesCombate"
-  class="acoes-combate"
-></div>
-</section>
+            <div id="acoesCombate" class="acoes-combate"></div>
+          </section>
 
           <section
             id="painelComandosCombate"

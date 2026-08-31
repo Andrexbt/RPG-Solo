@@ -521,6 +521,8 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             
             Enquanto caminha, você tenta se lembrar de mais detalhes dos rumores para ter certeza de qual caminho seguir.`,
 
+            instrucao: "se lembrar da geografia local.",
+
             teste: {
               tipo: "periciaEscolha",
               periciasIds: ["historia", "sobrevivencia"],
@@ -724,6 +726,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             id: "irChao",
 
             texto: `Descer e buscar uma rota pelo chão.`,
+            descricao: `Tentar o pulo é arriscado demais. Você já se deslocou boa parte do caminho pelos telhados e julga que encontrar uma rota até a torre não vai se provar muito difícil.
+
+            E, de fato, apesar do caos do conflito, uma rota direta se apresenta entre você e a torre.
+
+            Deslocando-se rápido e não chamando a atenção, você desce da rua para a margem do rio e rapidamente entra na torre.`,
 
             proximaCena: "torreChao",
           },
@@ -749,7 +756,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             resultados: {
               sucesso: {
-                texto: `VER SE PRECISA`,
+                texto: `Em um momento desesperador, ainda no alto, você julga que não vai conseguir alcançar a torre.
+
+                Porém, esticando os braços e se preparando para se agarrar a qualquer saliência de sua alvenaria irregular, você consegue se segurar em uma viga de madeira que se projeta para fora da torre.
+
+                Usando toda sua força, você consegue se erguer, entrando na torre pelo teto.`,
                 proximaCena: "torreTetoSemGuardas",
               },
 
@@ -786,7 +797,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             resultados: {
               sucesso: {
-                texto: ``,
+                texto: `Por um triz, você consegue se deslocar até a carruagem e usá-la como cobertura no exato momento em que um grupo de guardas chega ao local.
+
+                Ao perceber que a atenção deles está voltada para as caixas quebradas por sua queda, você rapidamente se desloca para o lado oposto em direção à torre.`,
                 proximaCena: "torreChao",
               },
 
@@ -1042,6 +1055,13 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 id: "irChao",
 
                 texto: `Descer e buscar uma rota pelo chão.`,
+                descricao:`Rapidamente, você vira em direção aos becos e pula do telhado.
+
+                Assim que cai no chão, você corre em direção a uma pequena rua ao lado. Se você for {rápido|rápida} o suficiente, vai conseguir entrar nela e usá-la para dar a volta e chegar na torre; do contrário, os guardas {o|a} verão.
+
+                Para sua sorte, os guardas se confundem em relação a como cercar a pequena casa na qual você estava, e isso lhe dá margem suficiente para entrar na rua.
+
+               Seguindo o plano, você rapidamente se desloca para a torre.`,
 
                 proximaCena: "torreChao",
               },
@@ -1049,7 +1069,11 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
 
           pularAteTorreFlechada: {
-            descricao: [],
+            descricao: `Pode ser arriscado tentar o pulo, mas é ainda mais arriscado descer e se expor pelas ruas tão próximo dos guardas.
+
+            Você dá alguns passos para trás, aproveitando ao máximo o pequeno espaço que o telhado oferece.
+
+            Então respira fundo e parte em disparada à torre, usando toda sua força para realizar o salto no último momento possível.`,
 
             instrucao: "pular para a torre.",
 
@@ -1061,15 +1085,25 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             resultados: {
               sucesso: {
-                texto: `VER SE PRECISA`,
+                texto: `Em um momento desesperador, ainda no alto, você julga que não vai conseguir alcançar a torre.
+
+                Porém, esticando os braços e se preparando para se agarrar a qualquer saliência de sua alvenaria irregular, você consegue se segurar em uma viga de madeira que se projeta para fora da torre.
+
+                Usando toda sua força, você consegue se erguer, entrando na torre pelo teto.`,
                 proximaCena: "torreTetoComGuardas",
               },
 
               fracasso: {
                 texto: `Ainda no alto, você percebe com desespero que não vai alcançar a torre. Você não calculou bem a distância e precisou diminuir a velocidade, perdendo potência no pulo.
-                
-                Você estica os braços em uma tentativa pífia de se agarrar a alguma parte da torre, mas sem sucesso. O choque com a torre tira completamente o seu fôlego enquanto você vai ao chão, caindo entre caixas e ferramentas.`,
-                proximaCena: "batalha2torre",
+
+                Você estica os braços em uma tentativa pífia de se agarrar a alguma parte da torre, mas sem sucesso. O choque com a torre tira completamente o seu fôlego enquanto você vai ao chão, caindo entre caixas e ferramentas.
+
+                {Dolorido|Dolorida}, você começa a se levantar em meio aos escombros e congela ao ouvir uma voz próxima.
+
+                "Aqui!"
+
+                Você se levanta lentamente enquanto os três guardas {o|a} cercam.`,
+                proximaCena: "batalhaTorreM",
                 queda: {
                   distanciaMetros: 3,
                 },
@@ -1125,7 +1159,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
           A primeira delas envolve tentar passar {despercebido|despercebida} pela ponte. Você ainda vai precisar lidar com os outros dois guardas do outro lado da ponte, mas talvez você tenha tempo o suficiente antes que eles recebam reforços.
 
-          A outra possibilidade é tentar atravessar pelo rio. Isso lhe daria uma chance de tentar passar {despercebido|despercebida} pelos guardas do outro lado.`,
+          A outra possibilidade é tentar atravessar nadando pelo rio. Isso lhe daria uma chance de tentar passar {despercebido|despercebida} pelos guardas do outro lado.`,
 
           {
             se: {
@@ -1154,7 +1188,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
         etapas: {
           atravessarPonteFurtivo: {
-            descricao: [],
+            descricao: `Você decide se aproveitar da confusão para tentar atravessar a ponte.
+
+            Ainda perto da margem, você espera o momento certo de dar o primeiro passo.`,
             instrucao: "passar {escondido|escondida} pela ponte.",
 
             teste: {
@@ -1165,19 +1201,37 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             resultados: {
               sucesso: {
-                texto: ``,
+                texto: `Com os guardas envolvidos no combate, passar {escondido|escondida} pela ponte é fácil.
+                
+                Assim que atinge uma distância segura, você apressa o passo em direção ao outro extremo da ponte, onde outros dois guardas, de costas para você, fazem a vigília.
+
+                Quando se aproxima o suficiente, você volta a andar mais devagar e se prepara para desferir um golpe em um deles, esperando que um ataque rápido os pegue distraídos.`,
                 proximaCena: "batalhaPonteF",
               },
 
               fracasso: {
-                texto: ``,
+                texto: `Com os guardas envolvidos no combate, dar os primeiros passos pela ponte é fácil.
+                
+                Assim que atinge uma distância segura, você se move mais rápido em direção ao outro extremo da ponte, onde outros dois guardas, de costas para você, fazem a vigília.
+
+                Prestando atenção aos guardas, você não percebe uma pedra solta em seu caminho e acaba chutando-a. O barulho chama a atenção dos guardas e um deles olha para trás.
+
+                De início, ele se assusta com sua presença, mas logo se recompõe e chama a atenção do companheiro, e ambos saem correndo em sua direção.
+
+                "Martin! Hector!" Um deles grita a plenos pulmões.
+
+                Às suas costas, outros dois guardas se aproximam.
+
+                {Cercado|Cercada}, você se prepara para a batalha.`,
                 proximaCena: "batalhaPonteD",
               },
             },
           },
 
           atravessarRio: {
-            descricao: [],
+            descricao: `Você entra devagar no rio, evitando fazer barulho. A água gelada pressionando o ar de seu peito e roubando-lhe o ar.
+
+            Logo nos primeiros passos, a força da correnteza {o|a} surpreende. Você respira fundo e mergulha.`,
             instrucao: "atravessar o rio em águas revoltas.",
 
             teste: {
@@ -1190,16 +1244,51 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             resultados: {
               sucesso: {
                 texto: ``,
-                proximaCena: "torreChaoMolhado",
+                proximaCena: "fimVitoria",
               },
 
               fracasso: {
-                texto: ``,
-                proximaCena: "torreChaoMolhado",
+                texto: `Incapaz de lutar contra a correnteza, você perde completamente a noção de direção enquanto perde rapidamente o ar, vendo-se {obrigado|obrigada} a voltar para a superfície.`,
+
+                ataquesNpc: {
+                  npcId: "guardaConde",
+                  ataqueId: "bestaLeve",
+                  quantidade: 2,
+                  tipoRolagem: "desvantagem",
+
+                  resultadosPorAcertos: {
+                    0: {
+                      texto: `Assim que coloca a cabeça para fora d'água, você vê uma flecha voar em sua direção, {o|a} errando por pouco.
+
+                      Em meio ao borbulho incessante da água ao seu redor, você consegue ouvir gritos vindos da ponte, onde os dois soldados o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem. Além dos guardas da ponte, outros dois envolvidos no conflito correm em sua direção.`,
+
+                      proximaCena: "batalhaPonteD",
+                    },
+
+                    1: {
+                      texto: `Enquanto volta para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora da água e respirar fundo, você consegue ouvir gritos vindos da ponte, onde os dois soldados o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem. Além dos guardas da ponte, outros dois envolvidos no conflito correm em sua direção.`,
+
+                      proximaCena: "batalhaPonteD",
+                    },
+
+                    2: {
+                      texto: `Enquanto volta para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos da ponte, onde os dois soldados o observam, um deles disparando um virote em sua direção.
+
+                      Lutando contra a correnteza, você não consegue se desviar, e sente outra pontada forte, dessa vez na perna, onde o virote {o|a} atinge dentro d'água. Com os membros feridos, você não consegue nadar, e o rio agora {o|a} carrega até a margem. Além dos guardas da ponte, outros dois envolvidos no conflito correm em sua direção.`,
+
+                      proximaCena: "batalhaPonteD",
+                    },
+
+                  },
+                },
               },
             },
           },
-        },
+        }
       },
 
       becosOpostos: {
@@ -1581,10 +1670,12 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           voltarPonteTeste: {
             descricao: `Indo em direção à ponte, você precisará se expor em algumas áreas abertas, uma vez que, entre a rua e a margem do rio, não há qualquer tipo de cobertura.`,
 
+            instrucao: "chegar até a ponte sem ser {visto|vista}",
+
             teste: {
               // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
-              tipo: "pericia",
-              periciaId: ["furtividade", "sobrevivencia"],
+              tipo: "periciaEscolha",
+              periciasIds: ["furtividade", "sobrevivencia"],
               dificuldade: 15,
             },
 
@@ -1593,8 +1684,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 texto: `Você consegue cobrir a distância sem ser {visto|vista} e se aproximar da pequena batalha que acontece próximo à ponte.`,
 
                 proximaCena: "guardasDistraidos",
-
-                
               },
 
               fracasso: {
@@ -1624,7 +1713,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
         Nas últimas horas, uma forte chuva começou a cair enquanto o grupo iniciava a montagem de uma espécie de cerco improvisado em volta do castelo.
 
-        As coisas estão calmas no momento, mas, infelizmente, a ponte ainda está sendo vigiada, mas dessa vez por um grupo de Lagartos, em vez de soldados.
+        As coisas estão calmas no momento, mas, infelizmente, a ponte ainda está sendo vigiada, embora por um grupo de Lagartos, em vez de soldados.
 
         Com a chuva, continuar pulando pelos telhados escorregadios se torna perigoso demais, e sua melhor opção é descer e, usando a chuva e a noite como cobertura, tentar se aproximar da ponte ou da torre.
 
@@ -1675,66 +1764,305 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             ],
           },
 
-          testePonteNoite: {
-            descricao: ``,
+          noiteNadandoTorre: {
+            descricao: `Você julga que pular pelas embarcações seja arriscado demais e decide enfrentar o rio.
+
+            Saindo de trás de seu esconderijo, você caminha rapidamente em direção ao rio, encontrando cobertura em algumas caixas empilhadas em um dos cais.
+
+            O rio estaria frio, não fosse pelo fato de seu corpo já estar há algumas horas sendo castigado pela chuva.
+
+            Você prende a respiração e mergulha.`,
+
+            instrucao: "atravessar o rio.",
 
             teste: {
-              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
               tipo: "pericia",
-              periciaId: ["furtividade", "sobrevivencia"],
-              dificuldade: 15,
+              periciaId: "atletismo",
+              situacao: "nadarAguasRevoltas",
+              dificuldade: 16,
             },
 
             resultados: {
               sucesso: {
-                texto: `Você consegue cobrir a distância sem ser {visto|vista} e se aproximar da pequena batalha que acontece próximo à ponte.`,
+                texto: ``,
 
-                proximaCena: "guardasDistraidos",
-
-                
+                proximaCena: "fimVitoria",
               },
 
               fracasso: {
-                texto: `O caos de pessoas correndo em direção ao conflito próximo ao castelo acaba se mostrando mais desafiador do que a falta de cobertura.
+                texto: `Para o seu desespero, o rio se mostra muito mais revolto do que você esperava, {impedindo-o|impedindo-a} de nadar em linha reta até a outra margem.
 
-                Ao se aproximar da ponte, um dos guardas {o|a} percebe após ter recém desferido um golpe mortal em um dos mercenários dos Lagartos.
+                A forte correnteza joga você contra o casco de um navio, e você bate a cabeça, perdendo completamente a noção de espaço e sentindo a água entrar em suas narinas.`,
 
-                "{personagem}!" Ele grita, já correndo em sua direção.`,
+                ataquesNpc: {
+                  npcId: "lagartoBronze",
+                  ataqueId: "bestaLeve",
+                  quantidade: 2,
+                  tipoRolagem: "desvantagem",
 
-                proximaCena: "batalhaPonteAlt",
+                  resultadosPorAcertos: {
+                    0: {
+                      texto: `Você se recompõe e volta à superfície a tempo de ver uma flecha voar em sua direção, {o|a} errando por pouco.
+
+                      Em meio ao borbulho incessante da água ao seu redor, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas não consegue se concentrar em nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    1: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Você consegue se desviar no último momento, mas a dor no braço {o|a} impede de nadar. O rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                    2: {
+                      texto: `Você consegue prender a respiração segundos antes de cair, mas perde completamente o senso de direção debaixo d'água.
+
+                      Enquanto tenta voltar para a superfície, sente repentinamente uma dor lancinante. Ao olhar para baixo, um virote de besta encontra-se cravado em seu ombro. Ao finalmente colocar a cabeça para fora das águas e respirar fundo, você consegue ouvir gritos vindos do cais, onde quatro mercenários o observam, um deles disparando um virote em sua direção.
+
+                      Lutando contra a correnteza, você não consegue se desviar, e sente outra pontada forte, dessa vez na perna, onde o virote {o|a} atinge dentro d'água. Com os membros feridos, você não consegue nadar, e o rio agora {o|a} carrega até a margem, onde os mercenários certamente estarão prontos para a sua captura.`,
+
+                      proximaCena: "batalhaTorreNoite",
+                    },
+
+                  },
+                },
               },
             },
           },
 
-          noiteNadandoTorre: {
-            descricao: `Indo em direção à ponte, você precisará se expor em algumas áreas abertas, uma vez que, entre a rua e a margem do rio, não há qualquer tipo de cobertura.`,
+          testePonteNoite:{
+
+            descricao: ``,
+
+            instrucao: "chegar até a ponte sem ser {visto|vista}.",
 
             teste: {
-              // Tipos usuais: "pericia", "atributo" ou "salvaguarda".
-              tipo: "pericia",
-              periciaId: ["furtividade", "sobrevivencia"],
-              dificuldade: 15,
+                tipo: "oposto",
+
+                jogador: {
+                  tipo: "pericia",
+                  periciaId: "furtividade",
+                },
+
+                oponente: {
+                  npcId: "lagartoBronze",
+                  tipo: "pericia",
+                  periciaId: "percepcao",
+                },
             },
 
             resultados: {
               sucesso: {
-                texto: `Você consegue cobrir a distância sem ser {visto|vista} e se aproximar da pequena batalha que acontece próximo à ponte.`,
+                texto: `A chuva acaba {o|a} atrapalhando mais do que você imaginaria, mas você segue em frente.
 
-                proximaCena: "guardasDistraidos",
+                Em certo ponto, não há outro caminho a não ser atravessar a rua principal. No momento em que você se preparava para começar a travessia, um Lagarto surge de trás de uma das ruas.
 
-                
+                Você dá alguns passos para trás, escondendo-se nas sombras e esperando ele passar. Em seguida, atravessa a rua e se esconde no declive da cabeceira da ponte.`,
+
+                proximaEtapa: "ponteNoiteEscolha",
               },
 
               fracasso: {
-                texto: `O caos de pessoas correndo em direção ao conflito próximo ao castelo acaba se mostrando mais desafiador do que a falta de cobertura.
+                texto: `A chuva acaba {o|a} atrapalhando mais do que você imaginaria, mas você segue em frente.
 
-                Ao se aproximar da ponte, um dos guardas {o|a} percebe após ter recém desferido um golpe mortal em um dos mercenários dos Lagartos.
+                Em certo ponto, não há outro caminho a não ser atravessar a rua principal. E, para o seu azar, um Lagarto surge de trás de uma das ruas no exato momento em que você começa a travessia.
 
-                "{personagem}!" Ele grita, já correndo em sua direção.`,
+                "Ei!" Ele grita atrás de você.
 
-                proximaCena: "batalhaPonteAlt",
+                Pouco tempo depois, uma flecha passa muito próxima, batendo no chão.
+
+                À sua frente, outros dois mercenários surgem.
+
+                {Cercado|Cercada}, você se prepara para a batalha.`,
+
+                proximaCena: "batalhaPonteNoite",
               },
             },
+
+          },
+
+          ponteNoiteEscolha:{
+            descricao: `{Escondido|Escondida}, você considera suas opções.
+
+            A chuva tornou o rio especialmente revolto, e atravessar a nado é uma opção perigosa. Ainda assim, parece menos perigoso do que tentar atravessar a ponte, agora vigiada por três Lagartos, controlando a entrada.
+
+            Enquanto você pensa, um barulho vindo da rua chama sua atenção. Uma grande carroça se aproxima, e para praticamente do seu lado.
+
+            Apesar de não conseguir entender exatamente, o tom de conversa entre o cocheiro e os mercenários é amigável o suficiente. Há uma chance de que ele esteja pedindo para atravessar a ponte.
+
+            Se você agir rápido, conseguiria se segurar embaixo da carroça e acompanhá-la até o outro lado da ponte.
+
+            O que você faz?`,
+
+            escolhas: [
+              {
+                id: "ponteNoitePonte",
+                texto: `Aproveita o momento de distração dos Lagartos para tentar atravessar a ponte.`,
+                descricao: ``,
+                proximaEtapa: "testePonteNoitePonte",
+              },
+
+              {
+                id: "ponteNoiteNado",
+                texto: `Tenta atravessar o rio a nado.`,
+                descricao: ``,
+                proximaEtapa: "testePonteNoiteNado",
+              },
+
+              {
+                id: "ponteNoiteCarroca",
+                texto: `Vai para a carroça imediatamente e tenta se segurar nela até atravessar a ponte.`,
+                descricao: ``,
+                proximaEtapa: "testePonteNoiteCarroca",
+              },
+            ],
+
+
+          },
+
+          testePonteNoitePonte:{
+
+            descricao: `Você dá alguns passos temerosos e olha pelo canto de um dos pequenos blocos estruturais da ponte. Os Lagartos ainda conversam com o cocheiro, e agora o tom da conversa é claro.
+
+            Eles parecem se conhecer de fato, e estão apenas compartilhando algumas informações sobre os últimos acontecimentos.
+
+            Parece ser possível, pelo outro lado, pular para a ponte e se arrastar próximo de suas ameias.`,
+
+            instrucao: "pular para a ponte e seguir {despercebido|despercebida}.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 17,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Encontrando um equilíbrio entre movimentos precisos para não chamar a atenção e rápidos para se expor o mínimo possível, você pula para a ponte.
+
+                Erguer-se pelas ameias e efetuar o pulo foi surpreendentemente fácil, e rapidamente você consegue se abaixar e continuar uma boa parte do caminho {agachado|agachada}.
+
+                Ao julgar que está a uma distância segura o suficiente, você apressa o passo. Em seguida, o som do galope do cavalo se aproximando pelas pedras da ponte lhe incentiva a correr o mais rápido possível.`,
+
+                proximaCena: "fimVitoria",
+              },
+
+              fracasso: {
+                texto: `Você tenta encontrar um equilíbrio entre movimentos precisos para não chamar a atenção e rápidos para se expor o mínimo possível.
+
+                Porém, a pressa {o|a} impede de calcular bem a altura e, ao pular da ameia da ponte, você acaba perdendo o equilíbrio e se vê {forçado|forçada} a cair de joelhos.
+
+                "O que foi isso?" Uma voz vem da entrada da ponte e, mais rápido do que você conseguiria imaginar, o rosto de um dos Lagartos surge fantasmagoricamente em meio à chuva, iluminado por um lampião carregado por ele.
+
+                Seus olhos se cruzam e, após um segundo de silêncio, ele grita:
+
+                "{personagem}!"
+
+                Os passos dos outros mercenários acompanham o chamado, e rapidamente você se vê quase {cercado|cercada}, e sem alternativa a não ser lutar.`,
+
+                proximaCena: "batalhaPonteNoite",
+              },
+            }
+          },
+
+          testePonteNoiteNado:{
+            descricao: `Você julga que o risco de tentar passar pelos guardas é grande demais, mesmo com a possibilidade de usar a carroça como subterfúgio, e decide enfrentar o rio.
+
+            Saindo de trás de seu esconderijo, você desce para a margem.
+
+            O rio estaria frio, não fosse pelo fato de seu corpo já estar há algumas horas sendo castigado pela chuva.
+
+            Você prende a respiração e mergulha.`,
+
+            instrucao: "atravessar o rio.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              situacao: "nadarAguasRevoltas",
+              dificuldade: 16,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Nadar pelo rio se mostra muito mais desafiador do que você imaginou inicialmente.
+
+                A correnteza {o|a} joga de um lado para o outro, e resistir a ela enquanto tenta permanecer {escondido|escondida} drena rapidamente o seu fôlego.
+
+                Vendo-se {obrigado|obrigada} a voltar à superfície em três ocasiões, você teme estar fazendo barulho demais e chamando a atenção dos Lagartos.
+
+                Por fim, você vence o rio e chega do outro lado.`,
+
+                proximaCena: "fimVitoria",
+              },
+
+              fracasso: {
+                texto: `Para o seu desespero, o rio se mostra muito mais revolto do que você esperava, {impedindo-o|impedindo-a} de nadar em linha reta até a outra margem.
+
+                A forte correnteza joga você contra as bases da ponte, e você bate a cabeça, perdendo completamente a noção de espaço e sentindo a água entrar em suas narinas.
+
+                Você se recompõe e volta à superfície a tempo de ver uma flecha voar em sua direção, {o|a} errando por pouco.
+                
+                "Connor!" Uma voz vem da margem, iluminada por um lampião.
+
+                {Carregado|Carregada} de volta à margem pelo rio, você se prepara para o possível embate.`,
+
+                proximaCena: "batalhaPonteNoite",
+              },
+            }
+          },
+
+          testePonteNoiteCarroca:{
+            descricao: `Em um movimento rápido, você sai de seu esconderijo e vai {abaixado|abaixada} até a carroça, rapidamente se jogando ao chão e girando para baixo dela.
+
+            Você tateia pelo escuro em algum local onde possa se segurar e encontra facilmente um apoio para as mãos no aro central da carroça.
+
+            Porém, não consegue encontrar um local para encaixar os pés e, ao perceber a carroça começar a se movimentar, simplesmente pressiona-os contra duas extremidades com a maior força possível.
+
+            Você vai precisar de mais força do que imaginou para se segurar.`,
+
+            instrucao: "se segurar na carroça até a travessia.",
+
+            teste: {
+              tipo: "atributo",
+              atributoIdId: "forca",
+              dificuldade: 16,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Seus músculos ardem com o esforço, mas você consegue se segurar na carroça até que ela termine a travessia.
+
+                A mudança da suavidade do galope indica que o cavalo agora pisa na grama e que você chegou com sucesso à margem oposta.
+
+                Você se solta antes que a velocidade se torne alta demais e se permite deitar na grama por breves segundos, sentindo o alívio nos músculos, a chuva no rosto e o ar de liberdade.`,
+
+                proximaCena: "fimVitoria",
+              },
+
+              fracasso: {
+                texto: `Seus músculos ardem com o esforço e, quando a carroça passa por um pequeno desnível nas pedras da ponte, seus pés se soltam.
+
+                Eles se arrastam no chão e, incapaz de forçá-los novamente para cima, você solta da carroça, caindo no chão com um baque surdo.
+
+                "O que foi isso?" Uma voz vem da entrada da ponte e, mais rápido do que você conseguiria imaginar, o rosto de um dos Lagartos surge fantasmagoricamente em meio à chuva, iluminado por um lampião carregado por ele.
+
+                Seus olhos se cruzam e, após um segundo de silêncio, ele grita:
+
+                "{personagem}!"
+
+                Os passos dos outros guardas acompanham o chamado, e rapidamente você se vê quase {cercado|cercada}, e sem alternativa a não ser lutar.`,
+
+                proximaCena: "batalhaPonteNoite",
+              },
+            }
           },
         },
 
@@ -1743,19 +2071,119 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
       torreChao: {
         numeroFonte: 10,
 
-        contexto: [],
+        contexto: `Você entra rapidamente na torre.
 
-        etapaInicial: "conteudoTorreChaoPendente",
+        Dentro da torre você encontra uma grande mesa com diversos instrumentos de pesca, bem como caixas com redes, varas e o que parecem ser instrumentos de navegação.
+
+        Acima dessa mesa, há uma pequena janela, por onde é possível ver que a área não é muito vigiada. Há pouca movimentação de pescadores e apenas um guarda em um dos pequenos cais.
+
+        O rio parece especialmente revolto, e atravessar a nado é uma opção perigosa. Porém, observando a disposição das embarcações paradas ao longo do rio, uma ideia ainda mais ousada lhe ocorre.
+
+        Há uma pequena embarcação, um pouco mais distante, onde parece ser possível chegar sem que o guarda {o|a} veja. Se você conseguir, talvez consiga usá-la para atravessar o rio.
+
+        Qual você considera a melhor alternativa?`,
+
+        escolhas: [
+          {
+            id: "torreEscolhaNado",
+            texto: `Tentar atravessar o rio a nado.`,
+            descricao: ``,
+            proximaEtapa: "torreNadando",
+          },
+
+          {
+            id: "torreEscolhaBarco",
+            texto: `Tentar chegar à pequena embarcação.`,
+            descricao: ``,
+            proximaEtapa: "furtividadeAteBarco",
+          },
+        ],
 
         etapas: {
-          conteudoTorreChaoPendente: {
-            descricao: ``,
+          torreNadando: {
+            descricao: `Chamar a atenção do guarda é arriscado demais, e você decide enfrentar a fúria do rio.
 
-            pendenciaFonte: {
-              tipo: "destinoNarrativo",
-              descricao: "Transferir do Miro ou escrever o conteúdo da cena 10: Torre Chão.",
+            Saindo da torre, você busca cobertura em uma pilha de caixas em um dos cais e entra devagar no rio, evitando fazer barulho. A água gelada pressionando o ar de seus pulmões.
+
+            Logo nos primeiros passos, a força da correnteza {o|a} surpreende. Você respira fundo e mergulha.`,
+
+            instrucao: "atravessar o rio.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "atletismo",
+              situacao: "nadarAguasRevoltas",
+              dificuldade: 15,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: `Nadar pelo rio se mostra muito mais desafiador do que você imaginou inicialmente.
+
+                A correnteza {o|a} joga de um lado para o outro, e resistir a ela enquanto nada por entre os cascos de barcos drena rapidamente o seu fôlego.
+
+                Vendo-se {obrigado|obrigada} a voltar à superfície em três ocasiões, você teme estar fazendo barulho demais e chamando a atenção do guarda.
+
+                Por fim, você vence o rio e chega do outro lado.`,
+
+                proximaCena: "fimVitoria",
+              },
+
+              fracasso: {
+                texto: `Para o seu desespero, o rio se mostra muito mais revolto do que você esperava, {impedindo-o|impedindo-a} de nadar em linha reta até a outra margem.
+
+                A forte correnteza joga você contra o casco de um navio, e você bate a cabeça, perdendo completamente a noção de espaço e sentindo a água entrar em suas narinas.
+
+                Você se recompõe e volta à superfície a tempo de ver uma flecha voar em sua direção, {o|a} errando por pouco.
+                
+                "Connor!" O guarda que você havia visto antes grita enquanto prepara outro virote na besta.
+
+                {Carregado|Carregada} de volta à margem pelo rio, você se prepara para o embate.`,
+
+                proximaCena: "batalhaTorreF",
+              },
             },
           },
+
+          furtividadeAteBarco:{
+
+            descricao:`Atravessar o rio não vale o risco. Não quando há uma alternativa melhor.
+
+            Saindo da torre, você busca cobertura em uma pilha de caixas em um dos cais e se prepara para se esgueirar até o barco.`,
+
+            instrucao: "chegar {escondido|escondida} até o barco.",
+
+            teste: {
+              tipo: "pericia",
+              periciaId: "furtividade",
+              dificuldade: 13,
+            },
+
+            resultados: {
+              sucesso: {
+                texto: ``,
+
+                proximaEtapa: "pilotarBarco",
+              },
+
+              fracasso: {
+                texto: `Enquanto se esgueira, repentinamente, uma flecha passa raspando pelo seu braço, vinda de trás.
+
+                Você vira rapidamente e, para seu espanto, vê um guarda, diferente daquele que havia visto antes, já armando outra flecha.
+
+                "Connor!" Ele grita, ainda sem disparar a flecha.
+
+                Atrás de você, o outro guarda surge, já com a espada em punho.
+
+                {Cercado|Cercada}, você se prepara para a batalha.`,
+
+                proximaCena: "batalhaTorreF",
+              },
+            },
+
+          },
+
+          pilotarBarco:{}
         },
       },
 
@@ -1785,6 +2213,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         etapas: {
             testeAtletismo1: {
               descricao: ``,
+              instrucao: "pular para o barco.",
 
               teste: {
               tipo: "pericia",
@@ -2363,6 +2792,14 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         },
       },
 
+      //BATALHAS//
+
+      batalhaRuasF: {
+        numeroFonte: null,
+        contexto: [],
+        escolhas: [],
+      },
+
       batalhaRuasD: {
         contexto: [
           `Os guardas avançam sobre você pelas ruas próximas à ponte. Não há mais como evitar o confronto.`,
@@ -2371,7 +2808,53 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         combate: {
           textoBotaoInicio: "Enfrentar os guardas",
           dificuldadePretendida: "alta",
+
+          introducao: {
+            titulo: "Confronto nas ruas",
+            
+            descricao: `Os guardas avançam em sua direção, bloqueando o caminho até a ponte.
+            
+            Você pode vencer o confronto derrotando-os ou encontrando uma oportunidade para escapar.`,
+          },
+
           mapa: "Imagens/Mapas/A Fuga/batalhaRuas.webp",
+
+          areas: {
+            ponte: {
+              colunaInicial: 23,
+              colunaFinal: 25,
+              linhaInicial: 1,
+              linhaFinal: 8,
+
+              rotulo: "Ponte",
+              visivel: false,
+            },
+
+            saidaPonte: {
+              colunaInicial: 23,
+              colunaFinal: 25,
+              linhaInicial: 1,
+              linhaFinal: 1,
+
+              rotulo: "Saída da ponte",
+            },
+          },
+
+          objetivos: [
+            {
+              id: "eliminarGuardas",
+              tipo: "principal",
+              titulo: "Derrotar os guardas",
+              descricao: "Derrote todos os guardas.",
+              
+              condicao: {
+                tipo: "inimigosDerrotados",
+              },
+              
+              resultadoId: "vitoria",
+              categoria: "sucesso",
+            },
+          ],
 
           jogador: {
             posicao: {
@@ -2438,6 +2921,9 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             },
           },
         },
+      },
+
+      batalhaTorreF:{
       },
 
       batalhaTorreM: {
@@ -2613,22 +3099,23 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         },
       },
 
-      batalhaBecosF:{},
+      batalhaBecosF:{ 
+      },
 
-      batalhaConfrontoM:{},
+      batalhaConfrontoM:{       
+      },
 
-      batalhaPonteAlt:{},
+      batalhaPonteAlt:{       
+      },
 
-      batalhaTorreNoite:{},
+      batalhaPonteNoite:{       
+      },
+
+      batalhaTorreNoite:{       
+      },
 
       // Esqueletos de cenas ainda não implementadas.
       margemRioPonte: {
-        numeroFonte: null,
-        contexto: [],
-        escolhas: [],
-      },
-
-      batalhaRuasF: {
         numeroFonte: null,
         contexto: [],
         escolhas: [],
@@ -2819,7 +3306,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 };
 
 /* ============================================================================
-   MODELO DE CENA
+   MODELOS DE CENA
    ----------------------------------------------------------------------------
    Referencia comentada: nao e executada pelo jogo. Copie apenas os blocos
    necessarios para dentro de `cenas` e substitua ids e textos de exemplo.
@@ -2979,6 +3466,47 @@ modeloCena: {
     // Padrao oficial do projeto: mapa 6688 x 3764 px, celulas de 64 x 64 px.
     mapa: "Imagens/Mapas/Nome da Aventura/modeloMapa.webp",
 
+    // `objetivos` e `areas` sao opcionais. Sem eles, o objetivo automatico
+    // continua sendo derrotar todos os inimigos. Ao declarar `objetivos`,
+    // inclua explicitamente a eliminacao caso ela tambem deva encerrar a luta.
+    areas: {
+      saida: {
+        colunaInicial: 45,
+        colunaFinal: 48,
+        linhaInicial: 10,
+        linhaFinal: 17,
+        rotulo: "Area de fuga",
+      },
+    },
+
+    objetivos: [
+      {
+        id: "eliminacao",
+        tipo: "principal",
+        titulo: "Derrotar os inimigos",
+        descricao: "Derrote todos os inimigos.",
+        condicao: {
+          tipo: "inimigosDerrotados",
+        },
+        resultadoId: "vitoria",
+        categoria: "sucesso",
+      },
+
+      {
+        id: "escapar",
+        tipo: "principal",
+        titulo: "Escapar",
+        descricao: "Alcance a area destacada.",
+        condicao: {
+          tipo: "participanteNaArea",
+          participanteId: "jogador",
+          areaId: "saida",
+        },
+        resultadoId: "fuga",
+        categoria: "sucesso",
+      },
+    ],
+
     jogador: {
       posicao: {
         coluna: 22,
@@ -3012,6 +3540,7 @@ modeloCena: {
 
     resultados: {
       vitoria: {
+        categoria: "sucesso",
         tela: {
           titulo: "Vitoria",
 
@@ -3023,7 +3552,19 @@ modeloCena: {
         proximaCena: "modeloPosCombateVitoria",
       },
 
+      fuga: {
+        categoria: "sucesso",
+
+        tela: {
+          titulo: "Voce escapou",
+          texto: `Voce alcanca a area de fuga antes que os inimigos consigam impedir.`,
+        },
+
+        proximaCena: "modeloPosCombateVitoria",
+      },
+
       derrota: {
+        categoria: "derrota",
         tela: {
           titulo: "Derrota",
           texto: `Suas forcas chegam ao fim.`,

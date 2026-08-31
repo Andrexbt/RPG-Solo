@@ -88,6 +88,14 @@ function solicitarRolagemNaCaixa(
 function processarTurnoAtual(combate) {
   atualizarInterfaceTurno(combate);
 
+  const resultadoObjetivo = SistemaCombate.verificarObjetivosCombate(combate);
+
+  if (resultadoObjetivo) {
+    atualizarInterfaceTurno(combate);
+    notificarFimCombate(combate);
+    return;
+  }
+
   if (combate.status !== "ativo") {
     return;
   }
@@ -178,7 +186,8 @@ function notificarFimCombate(combate) {
     new CustomEvent("combateEncerrado", {
       detail: {
         combateId: combate.id,
-        resultado: combate.status,
+        resultado: combate.resultadoId ?? combate.status,
+        categoria: combate.status,
         combate,
       },
     }),
@@ -360,8 +369,9 @@ function concederXpDaVitoria(
     };
   }
 
+  const resultadoId = combate.resultadoId ?? "vitoria";
   const recompensaId =
-    `combate:${combate.id}:vitoria:xp`;
+    `combate:${combate.id}:${resultadoId}:xp`;
 
   const resultadoXp =
     window.SistemaProgressao
@@ -385,8 +395,7 @@ function concederXpDaVitoria(
             combateId:
               combate.id,
 
-            resultado:
-              "vitoria",
+            resultado: resultadoId,
           },
         },
       );
@@ -438,6 +447,7 @@ function concederXpDaVitoria(
 function consolidarResultadoCombate({
   combate,
   resultadoId,
+  categoriaResultado,
   consequencia,
 }) {
   if (!combate || !resultadoId || !consequencia) {
@@ -517,7 +527,7 @@ function consolidarResultadoCombate({
 
   let resultadoXp = null;
 
-  if (resultadoId === "vitoria") {
+  if (categoriaResultado === "vitoria") {
     resultadoXp =
       concederXpDaVitoria(
         combate
@@ -645,7 +655,7 @@ function consolidarResultadoCombate({
 let resultadoCombatePendente = null;
 
 function obterTextoTelaResultado(
-  resultadoId,
+  categoriaResultado,
   consequencia
 ) {
   const textoConfigurado =
@@ -658,7 +668,7 @@ function obterTextoTelaResultado(
     return textoConfigurado;
   }
 
-  if (resultadoId === "vitoria") {
+  if (categoriaResultado === "vitoria") {
     return "Seus adversários foram derrotados. O caminho está livre para continuar.";
   }
 
@@ -667,12 +677,13 @@ function obterTextoTelaResultado(
 
 function exibirTelaResultadoCombate({
   resultadoId,
+  categoriaResultado,
   resultado,
   consequencia,
   combate,
 }) {
   const vitoria =
-    resultadoId === "vitoria";
+    categoriaResultado === "vitoria";
 
   const configuracaoTela =
     consequencia.tela ?? {};
@@ -698,7 +709,7 @@ function exibirTelaResultadoCombate({
       textoResultadoCombate,
 
       obterTextoTelaResultado(
-        resultadoId,
+        categoriaResultado,
         consequencia
       ),
 
@@ -775,6 +786,11 @@ function processarResultadoCombate(
   const combate =
     evento.detail?.combate;
 
+  const categoriaEvento =
+    evento.detail?.categoria ??
+    combate?.status ??
+    (resultadoId === "derrota" ? "derrota" : "vitoria");
+
   const consequencia =
     cenaAtual
       .combate
@@ -790,10 +806,18 @@ function processarResultadoCombate(
     return;
   }
 
+  const categoriaResultado =
+    consequencia.categoria === "derrota"
+      ? "derrota"
+      : consequencia.categoria === "sucesso"
+        ? "vitoria"
+        : categoriaEvento;
+
   const resultado =
     consolidarResultadoCombate({
       combate,
       resultadoId,
+      categoriaResultado,
       consequencia,
     });
 
@@ -820,10 +844,13 @@ function processarResultadoCombate(
   registrarEventoNarrativo({
     tipo: "combate",
     resultado: resultadoId,
+    categoria: categoriaResultado === "vitoria" ? "sucesso" : "derrota",
+    objetivoId: combate.objetivoConcluidoId ?? null,
   });
 
     exibirTelaResultadoCombate({
     resultadoId,
+    categoriaResultado,
     resultado,
     consequencia,
     combate,
@@ -832,6 +859,28 @@ function processarResultadoCombate(
 
 function verificarCombateDaCena(cena) {
   if (!cena.combate || estadoAtualJogo.combateAtual?.status === "ativo") {
+    return;
+  }
+
+  const errosObjetivos = SistemaCombate.validarConfiguracaoObjetivos(
+    cena.combate,
+  );
+
+  for (const objetivo of cena.combate.objetivos ?? []) {
+    if (
+      objetivo.tipo !== "secundario" &&
+      objetivo.resultadoId &&
+      !cena.combate.resultados?.[objetivo.resultadoId]
+    ) {
+      errosObjetivos.push(
+        `O objetivo "${objetivo.id}" aponta para o resultado inexistente ` +
+        `"${objetivo.resultadoId}".`,
+      );
+    }
+  }
+
+  if (errosObjetivos.length > 0) {
+    console.error("A configuração dos objetivos do combate possui erros:", errosObjetivos);
     return;
   }
 
@@ -924,6 +973,10 @@ function verificarCombateDaCena(cena) {
     id: `${aventuraAtual.id}-${estadoAtualJogo.progresso.cenaId}`,
     participantes: [participanteJogador, ...participantesInimigos],
     mapa: cena.combate.mapa,
+    introducao: cena.combate.introducao,
+    objetivos: cena.combate.objetivos,
+    areas: cena.combate.areas,
+    marcadores: cena.combate.marcadores,
 
     encontro: {
       dificuldadePretendida,

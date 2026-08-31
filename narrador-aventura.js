@@ -72,6 +72,7 @@ window.NarradorAventura = (function () {
     window.estadoJogo
       ?.personagem
       ?.dados
+      ?.detalhes
       ?.nome
     ?? "Personagem"
   );

@@ -321,6 +321,8 @@ function atualizarDestaquesMovimentoCombate(
 }
 
 function atualizarInterfaceTurno(combate) {
+  renderizarObjetivosCombate(combate);
+
   const participanteAtivo = combate.participantes.find(
     (participante) => participante.id === combate.participanteAtivoId,
   );
@@ -329,7 +331,19 @@ function atualizarInterfaceTurno(combate) {
 
   botaoEncerrarTurno.disabled = !participanteJogadorAtivo || combate.status !== "ativo";
 
-  numeroRodadaCombate.textContent = combate.rodada;
+  const estaNaIniciativa =
+  combate.fase === "iniciativa";
+
+rotuloFaseCombate.textContent =
+  estaNaIniciativa
+    ? "Iniciativa"
+    : "Rodada";
+
+numeroRodadaCombate.hidden =
+  estaNaIniciativa;
+
+numeroRodadaCombate.textContent =
+  combate.rodada;
 
   renderizarFilaIniciativa(combate);
 
@@ -448,4 +462,53 @@ atualizarDestaquesMovimentoCombate(
 );
 
   painelTurnoCombate.hidden = false;
+}
+
+function renderizarObjetivosCombate(combate) {
+  if (!painelObjetivosCombate || !listaObjetivosCombate) {
+    return;
+  }
+
+  const objetivosVisiveis = (combate?.objetivos ?? []).filter(
+    (objetivo) => objetivo.visivel !== false,
+  );
+
+  painelObjetivosCombate.hidden = objetivosVisiveis.length === 0;
+  listaObjetivosCombate.innerHTML = "";
+
+  for (const objetivo of objetivosVisiveis) {
+    const item = document.createElement("li");
+    item.className = "item-objetivo-combate";
+    item.classList.toggle("objetivo-secundario", objetivo.tipo === "secundario");
+    item.classList.toggle("objetivo-concluido", objetivo.estado === "concluido");
+
+    const marcador = document.createElement("span");
+    marcador.className = "marcador-objetivo-combate";
+    marcador.setAttribute("aria-hidden", "true");
+    marcador.textContent = objetivo.estado === "concluido" ? "✓" : "•";
+
+    const conteudo = document.createElement("span");
+    conteudo.className = "conteudo-objetivo-combate";
+
+    const titulo = document.createElement("strong");
+    titulo.textContent = NarradorAventura.adaptarGenero(
+      objetivo.titulo ?? objetivo.descricao ?? objetivo.id,
+    );
+    conteudo.append(titulo);
+
+    if (objetivo.titulo && objetivo.descricao) {
+      const descricao = document.createElement("span");
+      descricao.textContent = NarradorAventura.adaptarGenero(objetivo.descricao);
+      conteudo.append(descricao);
+    }
+
+    if (objetivo.tipo === "secundario") {
+      const rotuloOpcional = document.createElement("small");
+      rotuloOpcional.textContent = "Opcional";
+      conteudo.append(rotuloOpcional);
+    }
+
+    item.append(marcador, conteudo);
+    listaObjetivosCombate.append(item);
+  }
 }

@@ -168,12 +168,8 @@ text-shadow: 0 1px rgba(232, 195, 125, 0.28);
   order: 1;
 }
 
-.adendos-aventura .janela-velocidade-texto {
-  order: 2;
-}
-
 .adendos-aventura .janela-anotacoes {
-  order: 3;
+  order: 2;
 }
 
 .janela-flutuante .conteudo-dados,

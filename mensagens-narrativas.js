@@ -46,11 +46,7 @@ window.exibirMensagemNarrativa = exibirMensagemNarrativa;
 window.mensagensNarrativas = {
   iniciativa: {
     pedir: function (modificador) {
-      return (
-        "A batalha começou! Você vai rolar " +
-        `<strong>1d20 ${formatarSinalNarrativo(modificador)}</strong>` +
-        " para definir sua posição na fila de combate."
-      );
+      return `Role 1d20 ${formatarSinalNarrativo(modificador)} para definir sua posição na ordem do combate.`;
     },
   },
 

@@ -89,6 +89,7 @@ const imagemMapaCombate =
 const painelTurnoCombate = document.querySelector("#painelTurnoCombate");
 const painelComandosCombate = document.querySelector("#painelComandosCombate");
 
+const rotuloFaseCombate = document.querySelector("#rotuloFaseCombate");
 const numeroRodadaCombate = document.querySelector("#numeroRodadaCombate");
 
 const filaIniciativaCombate = document.querySelector("#filaIniciativaCombate");
@@ -117,6 +118,8 @@ const botaoExpandirHistorico = document.querySelector("#botaoExpandirHistorico")
 
 const botaoEncerrarTurno = document.querySelector("#botaoEncerrarTurno");
 const acoesCombate = document.querySelector("#acoesCombate");
+const painelObjetivosCombate = document.querySelector("#painelObjetivosCombate");
+const listaObjetivosCombate = document.querySelector("#listaObjetivosCombate");
 
 const tituloAventura = document.querySelector("#tituloAventura");
 const listaEscolhas = document.querySelector("#listaEscolhas");
@@ -202,6 +205,80 @@ const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 const areaEscolhas = document.querySelector(".area-escolhas");
 
 const painelAcaoAtualCombate = document.querySelector("#painelAcaoAtualCombate");
+
+const modalIntroducaoCombate =
+  document.querySelector("#modalIntroducaoCombate");
+
+const tituloIntroducaoCombate =
+  document.querySelector("#tituloIntroducaoCombate");
+
+const descricaoIntroducaoCombate =
+  document.querySelector("#descricaoIntroducaoCombate");
+
+const listaObjetivosModalCombate =
+  document.querySelector("#listaObjetivosModalCombate");
+
+const botaoContinuarIntroducaoCombate =
+  document.querySelector("#botaoContinuarIntroducaoCombate");
+
+let introducaoCombateConfirmada = false;
+
+function abrirIntroducaoCombate() {
+  botaoContinuarIntroducaoCombate.textContent =
+    introducaoCombateConfirmada
+      ? "Voltar à batalha"
+      : "Continuar para a batalha";
+
+  if (!modalIntroducaoCombate.open) {
+    modalIntroducaoCombate.showModal();
+  }
+}
+
+botaoContinuarIntroducaoCombate.addEventListener(
+  "click",
+  function continuarParaBatalha() {
+    const primeiraConfirmacao =
+      !introducaoCombateConfirmada;
+
+    introducaoCombateConfirmada = true;
+    modalIntroducaoCombate.close();
+
+    if (!primeiraConfirmacao) {
+      return;
+    }
+
+    const combate =
+      estadoAtualJogo.combateAtual;
+
+    if (
+      !combate ||
+      combate.status !== "ativo"
+    ) {
+      return;
+    }
+
+    iniciarEtapaIniciativaCombate(
+      combate,
+    );
+  },
+);
+
+painelObjetivosCombate.addEventListener(
+  "click",
+  abrirIntroducaoCombate,
+);
+
+painelObjetivosCombate.addEventListener(
+  "keydown",
+  function abrirObjetivosPeloTeclado(evento) {
+    if (evento.key !== "Enter" && evento.key !== " ") {
+      return;
+    }
+
+    evento.preventDefault();
+    abrirIntroducaoCombate();
+  },
+);
 
 const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualCombate");
 
@@ -615,6 +692,7 @@ function criarParticipantesNpcsCombate(configuracoes) {
         nome: quantidade > 1 ? `${npc.nome} ${indice + 1}` : npc.nome,
 
         tipo: npc.tipo,
+        grupoId: configuracao.grupoId ?? configuracao.npcId,
 
         posicao: posicao,
 
@@ -637,13 +715,97 @@ function aplicarMapaCombate(caminhoImagem) {
     caminhoImagem ?? "";
 }
 
-function iniciarCombateDaAventura(configuracao) {
+function preencherIntroducaoCombate(configuracao) {
+  const introducao = configuracao.introducao ?? {};
 
+  tituloIntroducaoCombate.textContent =
+    introducao.titulo ?? "Início da batalha";
+
+  descricaoIntroducaoCombate.textContent =
+    introducao.descricao ?? "";
+
+  listaObjetivosModalCombate.innerHTML = "";
+
+  const objetivos =
+    Array.isArray(configuracao.objetivos) &&
+    configuracao.objetivos.length > 0
+      ? configuracao.objetivos
+      : [
+          {
+            titulo: "Derrotar os inimigos",
+            descricao: "Derrote todos os inimigos.",
+          },
+        ];
+
+  for (const objetivo of objetivos) {
+    const itemObjetivo = document.createElement("li");
+
+    const tituloObjetivo = document.createElement("strong");
+    tituloObjetivo.textContent =
+      objetivo.titulo ?? "Objetivo";
+
+    const descricaoObjetivo = document.createElement("p");
+    descricaoObjetivo.textContent =
+      objetivo.descricao ?? "";
+
+    itemObjetivo.append(
+      tituloObjetivo,
+      descricaoObjetivo,
+    );
+
+    listaObjetivosModalCombate.append(itemObjetivo);
+  }
+}
+
+function iniciarEtapaIniciativaCombate(combate) {
+  const jogador = combate.participantes.find(
+    (participante) =>
+      participante.tipo === "jogador",
+  );
+
+  if (!jogador) {
+    return;
+  }
+
+  combate.iniciativaPendenteId = jogador.id;
+
+  SistemaCombate.rolarIniciativasInimigos(
+    combate,
+  );
+
+  exibirMensagemNarrativa(
+    solicitacaoCombate,
+    mensagensNarrativas.iniciativa.pedir(
+      jogador.bonusIniciativa,
+    ),
+  );
+
+  solicitarRolagemNaCaixa(
+    [
+      {
+        quantidade: 1,
+        numeroDeFaces: 20,
+      },
+    ],
+    jogador.bonusIniciativa,
+    "Rolagem de iniciativa",
+  );
+
+  adicionarEventoHistoricoCombate(
+    "Rolagem de iniciativa",
+    "Role para determinar sua posição na ordem dos turnos.",
+  );
+
+  solicitacaoCombate.hidden = false;
+
+  atualizarInterfaceTurno(combate);
+}
+
+function iniciarCombateDaAventura(configuracao) {
+  introducaoCombateConfirmada = false;
   reiniciarLinhaTempoCombate();
 
-  aplicarMapaCombate(
-    configuracao.mapa
-  );
+  aplicarMapaCombate(configuracao.mapa);
   const configuracaoCombate = structuredClone(configuracao);
 
   const participanteJogador = configuracaoCombate.participantes.find(
@@ -658,49 +820,21 @@ function iniciarCombateDaAventura(configuracao) {
 
   const combate = SistemaCombate.iniciarCombate(configuracaoCombate);
 
-  const jogador = combate.participantes.find((participante) => participante.tipo === "jogador");
-
-  combate.iniciativaPendenteId = jogador ? jogador.id : null;
-
-  SistemaCombate.rolarIniciativasInimigos(combate);
-
-  if (jogador) {
-    exibirMensagemNarrativa(
-      solicitacaoCombate,
-      mensagensNarrativas.iniciativa.pedir(jogador.bonusIniciativa),
-    );
-
-    solicitarRolagemNaCaixa(
-      [
-        {
-          quantidade: 1,
-          numeroDeFaces: 20,
-        },
-      ],
-      jogador.bonusIniciativa,
-      "Rolagem de iniciativa",
-    );
-
-    adicionarEventoHistoricoCombate(
-      "Lance de iniciativa",
-      mensagensNarrativas.iniciativa.pedir(
-        jogador.bonusIniciativa,
-      ),
-    );
-
-    solicitacaoCombate.hidden = false;
-  }
+  
 
   renderizarTabuleiroCombate(combate);
 
+  atualizarInterfaceTurno(combate);
+
   exibirTelaCombate();
 
-  cameraCombate.zoomMinimo =
-  obterZoomMinimoVisivel();
+  preencherIntroducaoCombate(configuracao);
+  abrirIntroducaoCombate();
 
-enquadrarParticipantesCombate(
-  combate,
-);
+  cameraCombate.zoomMinimo =
+    obterZoomMinimoVisivel();
+
+  enquadrarParticipantesCombate(combate);
 }
 
 function moverParticipante(participante, coluna, linha) {
@@ -719,11 +853,11 @@ function moverParticipante(participante, coluna, linha) {
 
   if (participante.tipo === "jogador") {
     adicionarEventoHistoricoCombate(
-      `${participante.nome} se movimentou`,
-      "Você mudou de posição no campo de batalha.",
+      `${participante.nome} se moveu.`,
+      "Você se moveu.",
     );
 
-    exibirAcaoAtualCombate("Você se movimentou.");
+    exibirAcaoAtualCombate("Você se moveu.");
   }
 
   const token = tabuleiroCombate.querySelector(`[data-id-participante="${participante.id}"]`);
@@ -736,7 +870,15 @@ function moverParticipante(participante, coluna, linha) {
 
   token.style.gridRow = linha;
 
+  const resultadoObjetivo = SistemaCombate.verificarObjetivosCombate(
+    estadoAtualJogo.combateAtual,
+  );
+
   atualizarInterfaceTurno(estadoAtualJogo.combateAtual);
+
+  if (resultadoObjetivo) {
+    notificarFimCombate(estadoAtualJogo.combateAtual);
+  }
 
   return true;
 }
@@ -1435,6 +1577,10 @@ function oferecerToppleAposDano(
         combate,
       );
 
+      if (resultado.resultadoCombate) {
+        notificarFimCombate(combate);
+      }
+
       solicitacaoCombate.hidden =
         false;
     },
@@ -1533,6 +1679,10 @@ function oferecerPushAposDano(
       atualizarInterfaceTurno(
         combate,
       );
+
+      if (resultado.resultadoCombate) {
+        notificarFimCombate(combate);
+      }
 
       if (resultado.aplicado) {
         adicionarEventoHistoricoCombate(

@@ -1,0 +1,159 @@
+/* =========================================================
+   ACABAMENTO TEMATICO COMPARTILHADO
+   Madeira escura, pergaminho e metal envelhecido.
+   Carregado depois dos estilos de cada pagina para manter
+   uma unica camada de acabamento, sem duplicar componentes.
+   ========================================================= */
+
+:root {
+  --tema-madeira:
+    linear-gradient(rgba(20, 17, 14, 0.18), rgba(20, 17, 14, 0.18)),
+    url("Imagens/Assets/textura-carvalho-escuro.webp");
+  --tema-pergaminho:
+    linear-gradient(rgba(255, 250, 226, 0.04), rgba(102, 59, 27, 0.05)),
+    url("Imagens/Assets/moldura-ficha/papel.webp");
+  --tema-borda-metal: rgba(195, 154, 88, 0.5);
+  --tema-borda-interna: rgba(238, 206, 145, 0.16);
+  --tema-sombra-painel: 0 18px 48px rgba(0, 0, 0, 0.38);
+  --tema-raio-painel: 6px;
+  --tema-raio-controle: 3px;
+}
+
+/* Navegacao e grandes superficies de interface. */
+.menu-principal,
+.vitrine-home,
+.destaque-lateral,
+.card-recurso,
+.card-aventura,
+.secao-selecao-personagem,
+.card-personagem-aventura,
+.card-personagem,
+.conteudo-passo,
+.navegacao-passos,
+.layout-ficha-salva {
+  border-color: var(--tema-borda-metal);
+  border-radius: var(--tema-raio-painel);
+  background: var(--tema-madeira);
+  background-position: center, center;
+  background-size: auto, 420px 420px;
+  box-shadow:
+    inset 0 0 0 1px var(--tema-borda-interna),
+    var(--tema-sombra-painel);
+}
+
+/* Cartoes internos lembram folhas apoiadas sobre a madeira. */
+.card-opcao,
+.card-classe,
+.bloco-distribuicao-atributos,
+.bloco-revisao,
+.painel-detalhes-principais,
+.painel-detalhes-narrativos,
+.valor-card-personagem,
+.aviso-sem-personagens {
+  border-color: rgba(105, 72, 47, 0.48);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 225, 0.12),
+    0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* Botoes principais e controles equivalentes de todas as paginas. */
+.botao,
+.botao-proximo,
+.botao-rolar,
+.botao-finalizar,
+.botao-voltar,
+.botao-selecionar,
+.botao-link,
+.botao-link-card,
+.botao-excluir,
+.botao-fim-aventura,
+.botao-continuar-resultado-combate {
+  isolation: isolate;
+  border: 1px solid var(--tema-borda-metal);
+  border-radius: var(--tema-raio-controle);
+  background:
+    linear-gradient(rgba(195, 154, 88, 0.1), rgba(195, 154, 88, 0.04)),
+    url("Imagens/Assets/textura-carvalho-escuro.webp");
+  background-position: center, center;
+  background-size: auto, 300px 300px;
+  color: var(--cor-texto);
+  box-shadow:
+    inset 0 0 0 1px rgba(238, 206, 145, 0.08),
+    0 8px 20px rgba(0, 0, 0, 0.24);
+  transform: none;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.botao::before,
+.botao::after {
+  display: none;
+}
+
+.botao:hover,
+.botao-proximo:hover,
+.botao-rolar:hover,
+.botao-finalizar:hover,
+.botao-voltar:hover,
+.botao-selecionar:hover,
+.botao-link:hover,
+.botao-link-card:hover,
+.botao-excluir:hover,
+.botao-fim-aventura:hover,
+.botao-continuar-resultado-combate:hover {
+  border-color: var(--cor-ambar);
+  border-radius: var(--tema-raio-controle);
+  background-color: rgba(195, 154, 88, 0.16);
+  color: var(--cor-texto);
+  box-shadow:
+    inset 0 0 0 1px rgba(238, 206, 145, 0.16),
+    0 11px 26px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.botao-principal,
+.botao-finalizar,
+.botao-fim-aventura-principal {
+  background:
+    linear-gradient(rgba(215, 163, 95, 0.3), rgba(111, 61, 36, 0.18)),
+    url("Imagens/Assets/textura-carvalho-escuro.webp");
+  color: #f6ead7;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--cor-ambar);
+  outline-offset: 3px;
+}
+
+button:disabled,
+.botao[aria-disabled="true"] {
+  cursor: not-allowed;
+  filter: saturate(0.45);
+  opacity: 0.58;
+  transform: none;
+}
+
+/* Campos lembram papel envelhecido sem trocar a paleta da pagina. */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  border-color: rgba(195, 154, 88, 0.34);
+  border-radius: var(--tema-raio-controle);
+  box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botao,
+  button,
+  a {
+    transition-duration: 0.01ms !important;
+  }
+}

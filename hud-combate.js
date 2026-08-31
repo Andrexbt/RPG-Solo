@@ -2,12 +2,15 @@
 
 const estadoLinhaTempoCombate = {
   rodada: null,
+  iniciativaRegistrada: false,
   participanteAtivoId: null,
   blocoTurnoAtual: null,
+  
 };
 
 function reiniciarLinhaTempoCombate() {
   estadoLinhaTempoCombate.rodada = null;
+  estadoLinhaTempoCombate.iniciativaRegistrada = false;
   estadoLinhaTempoCombate.participanteAtivoId = null;
   estadoLinhaTempoCombate.blocoTurnoAtual = null;
 
@@ -158,6 +161,21 @@ function renderizarFilaIniciativa(combate) {
   ) {
     adicionarMarcadorLinhaTempo("Início da batalha", "inicio-batalha");
   }
+
+  if (combate.fase === "iniciativa") {
+  if (!estadoLinhaTempoCombate.iniciativaRegistrada) {
+    adicionarMarcadorLinhaTempo(
+      "Iniciativa",
+      "iniciativa-combate",
+    );
+
+    estadoLinhaTempoCombate.iniciativaRegistrada = true;
+  }
+
+  filaIniciativaCombate.innerHTML = "";
+
+  return;
+}
 
   if (estadoLinhaTempoCombate.rodada !== combate.rodada) {
     adicionarMarcadorLinhaTempo(`Rodada ${combate.rodada}`);

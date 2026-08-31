@@ -257,6 +257,8 @@ function criarCelulasTabuleiro(combate) {
 
       celula.setAttribute("aria-label", `Coluna ${coluna}, linha ${linha}`);
 
+      celula.title = `Coluna ${coluna}, linha ${linha}`;
+
       tabuleiroCombate.append(celula);
     }
   }
@@ -280,10 +282,62 @@ function renderizarParticipantesCombate(participantes) {
   }
 }
 
+function celulaPertenceAreaCombate(coluna, linha, area) {
+  const colunaInicial = Number(area.colunaInicial);
+  const colunaFinal = Number(area.colunaFinal ?? area.colunaInicial);
+  const linhaInicial = Number(area.linhaInicial);
+  const linhaFinal = Number(area.linhaFinal ?? area.linhaInicial);
+
+  return (
+    Number.isFinite(colunaInicial) &&
+    Number.isFinite(colunaFinal) &&
+    Number.isFinite(linhaInicial) &&
+    Number.isFinite(linhaFinal) &&
+    coluna >= Math.min(colunaInicial, colunaFinal) &&
+    coluna <= Math.max(colunaInicial, colunaFinal) &&
+    linha >= Math.min(linhaInicial, linhaFinal) &&
+    linha <= Math.max(linhaInicial, linhaFinal)
+  );
+}
+
+function renderizarAreasObjetivoCombate(combate) {
+  const areas = Object.entries(combate.areas ?? {}).filter(
+    ([, area]) => area.visivel !== false,
+  );
+
+  if (areas.length === 0) {
+    return;
+  }
+
+  const celulas = tabuleiroCombate.querySelectorAll(".celula-combate");
+
+  for (const celula of celulas) {
+    const coluna = Number(celula.dataset.coluna);
+    const linha = Number(celula.dataset.linha);
+
+    for (const [areaId, area] of areas) {
+      if (!celulaPertenceAreaCombate(coluna, linha, area)) {
+        continue;
+      }
+
+      celula.classList.add("celula-area-objetivo");
+      celula.dataset.areaObjetivo = areaId;
+
+      const rotulo = area.rotulo ?? "Área de objetivo";
+      celula.setAttribute(
+        "aria-label",
+        `Coluna ${coluna}, linha ${linha}. ${rotulo}.`,
+      );
+    }
+  }
+}
+
 function renderizarTabuleiroCombate(combate) {
   tabuleiroCombate.innerHTML = "";
 
   criarCelulasTabuleiro(combate);
+
+  renderizarAreasObjetivoCombate(combate);
 
   renderizarParticipantesCombate(combate.participantes);
 }
