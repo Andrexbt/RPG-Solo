@@ -225,6 +225,26 @@ function obterContextoCena(cena) {
   return contexto;
 }
 
+function obterEscolhasCena(cena) {
+  for (const variacao of cena.variacoes ?? []) {
+    if (
+      !condicaoNarrativaAtendida(
+        variacao.se,
+      )
+    ) {
+      continue;
+    }
+
+    if (Array.isArray(variacao.escolhas)) {
+      return variacao.escolhas;
+    }
+  }
+
+  return Array.isArray(cena.escolhas)
+    ? cena.escolhas
+    : [];
+}
+
 function exibirConfirmacaoInicioCombate(
   cena
 ) {
@@ -279,11 +299,11 @@ async function exibirCena(aventura, cena) {
   }
 
   exibirEscolhas(
-    obterEscolhasDisponiveis(
-      estadoAtualJogo.progresso.cenaId,
-      cena.escolhas ?? [],
-    ),
-  );
+  obterEscolhasDisponiveis(
+    estadoAtualJogo.progresso.cenaId,
+    obterEscolhasCena(cena),
+  ),
+);
 }
 
 async function iniciarEtapa(idEtapa) {

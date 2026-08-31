@@ -2844,14 +2844,30 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             {
               id: "eliminarGuardas",
               tipo: "principal",
-              titulo: "Derrotar os guardas",
+              titulo: "Derrotar os inimigos",
               descricao: "Derrote todos os guardas.",
               
               condicao: {
                 tipo: "inimigosDerrotados",
               },
               
-              resultadoId: "vitoria",
+              resultadoId: "vitoriaPorCombate",
+              categoria: "sucesso",
+            },
+
+            {
+              id: "atravessarPonte",
+              tipo: "principal",
+              titulo: "Escapar pela ponte",
+              descricao: "Alcance a saída no extremo oposto da ponte.",
+              
+              condicao: {
+                tipo: "participanteNaArea",
+                participanteId: "jogador",
+                areaId: "saidaPonte",
+              },
+
+              resultadoId: "fugaPelaPonte",
               categoria: "sucesso",
             },
           ],
@@ -2896,7 +2912,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           ],
 
           resultados: {
-            vitoria: {
+            vitoriaPorCombate: {
               tela: {
                 titulo: "Vitória",
 
@@ -2905,6 +2921,19 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 Sentindo os ferimentos ardendo, você sai em disparada.`,
               },
 
+              proximaCena: "fimVitoria",
+            },
+
+            fugaPelaPonte: {
+              categoria: "sucesso",
+              
+              tela: {
+                titulo: "Você escapou",
+                texto: `Você alcança o extremo oposto da ponte antes que os guardas consigam impedir sua fuga.
+                
+                Sem diminuir o passo, você deixa o confronto para trás e continua em direção à saída da cidade.`,
+              },
+              
               proximaCena: "fimVitoria",
             },
 
@@ -3178,6 +3207,46 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
 
           {
+  se: {
+    veioDe: {
+      cenaId: "batalhaRuasD",
+      tipo: "combate",
+      resultado: "fugaPelaPonte",
+    },
+  },
+
+  contexto: [
+    `Sem olhar para trás, você atravessa o restante da ponte e deixa os guardas para trás.
+
+À sua frente está a segurança da floresta de Rawriaq, onde poderá se esconder pelos próximos dias.
+
+Seu destino permanece incerto, mas, por enquanto, você está livre.`,
+  ],
+
+  escolhas: [
+    {
+      id: "concluirAventuraFugaPelaPonte",
+
+      texto: "Concluir Aventura.",
+
+      registrarNarrativa: false,
+
+      fimAventura: {
+        resultadoId: "vitoria",
+
+        rotulo: "A Fuga",
+
+        titulo: "Você escapou pela ponte",
+
+        texto: `Você conseguiu deixar a cidade para trás antes que os guardas pudessem impedir sua fuga.`,
+
+        resultado: "Vitória",
+      },
+    },
+  ],
+},
+
+          {
             se: {
               veioDe: {
                 cenaId: "becosOpostos",
@@ -3203,28 +3272,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
         ],
 
-        contexto: [],
-
-        escolhas: [
-          {
-            id: "concluirAventuraVitoria",
-
-            texto: `Concluir Aventura.`,
-
-            registrarNarrativa: false,
-
-            fimAventura: {
-              resultadoId: "vitoria",
-              rotulo: "A Fuga",
-
-              titulo: "Você escapou",
-
-              texto: `Você conseguiu escapar da cidade, mas a batalha por ela está apenas começando.`,
-
-              resultado: "Vitória",
-            },
-          },
-        ],
       },
 
       fimDerrota: {

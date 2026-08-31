@@ -68,7 +68,7 @@
 .botao-link-card,
 .botao-excluir,
 .botao-fim-aventura,
-.botao-continuar-resultado-combate {
+.botao-fim-aventura-principal {
   isolation: isolate;
   border: 1px solid var(--tema-borda-metal);
   border-radius: var(--tema-raio-controle);
@@ -104,7 +104,7 @@
 .botao-link-card:hover,
 .botao-excluir:hover,
 .botao-fim-aventura:hover,
-.botao-continuar-resultado-combate:hover {
+.botao-fim-aventura-principal:hover {
   border-color: var(--cor-ambar);
   border-radius: var(--tema-raio-controle);
   background-color: rgba(195, 154, 88, 0.16);

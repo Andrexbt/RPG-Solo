@@ -1079,9 +1079,9 @@ right: -13px;
   display: grid;
   place-items: center;
 
-  padding: 24px;
+  padding: 16px;
 
-  background: radial-gradient(circle at center, rgba(18, 16, 13, 0.38), rgba(7, 6, 5, 0.88));
+  background: rgba(5, 4, 3, 0.72);
 
   backdrop-filter: blur(3px);
 }
@@ -1091,18 +1091,28 @@ right: -13px;
 }
 
 .cartao-resultado-combate {
-  width: min(520px, calc(100vw - 48px));
-  padding: 34px 38px;
-
-  color: #eee4d2;
-  text-align: center;
-
-  background: linear-gradient(145deg, rgba(40, 34, 27, 0.97), rgba(20, 18, 15, 0.98));
-
-  border: 1px solid #806538;
+  width: min(680px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid var(--janela-borda);
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(20, 17, 14, 0.2), rgba(20, 17, 14, 0.2)),
+    var(--janela-textura);
+  background-position: center, center;
+  background-size: auto, 420px 420px;
+  color: var(--janela-texto);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.65),
-    inset 0 0 30px rgba(186, 139, 62, 0.07);
+    0 24px 80px rgba(0, 0, 0, 0.72),
+    0 0 0 4px rgba(15, 12, 9, 0.92);
+}
+
+.conteudo-modal-resultado-combate {
+  padding: clamp(24px, 4vw, 46px);
+  padding-bottom: 22px;
+  border: 1px solid var(--janela-borda-suave);
+  background: rgba(13, 11, 9, 0.32);
 }
 
 .rotulo-resultado-combate {
@@ -1117,19 +1127,20 @@ right: -13px;
 
 .cartao-resultado-combate h2 {
   margin: 0;
-
-  color: #f0d394;
-  font-family: Georgia, serif;
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  font-weight: 500;
+  color: var(--janela-destaque);
+  font-family: var(--fonte-titulos);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
 }
 
 .texto-resultado-combate {
-  margin: 22px 0;
-
-  color: #ded4c3;
+  margin: 28px 0 34px;
+  color: var(--janela-texto);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
+  text-align: left;
 }
 
 .texto-resultado-combate .paragrafo-resultado-combate {
@@ -1172,23 +1183,29 @@ right: -13px;
 }
 
 .botao-continuar-resultado-combate {
-  min-width: 220px;
-  margin-top: 8px;
-  padding: 12px 20px;
-
-  color: #f5ead8;
-  font: inherit;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 30px;
+  padding: 11px 18px;
+  border: 1px solid var(--janela-borda);
+  border-radius: 3px;
+  background: rgba(195, 154, 88, 0.12);
+  color: var(--janela-texto);
+  font-family: var(--fonte-interface);
+  font-size: 0.92rem;
   font-weight: 700;
-
-  background: #755126;
-  border: 1px solid #a27a3e;
-  border-radius: 2px;
-
+  letter-spacing: 0.03em;
   cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
 }
 
 .botao-continuar-resultado-combate:hover {
-  background: #8a622e;
+  border-color: var(--janela-destaque);
+  background: rgba(195, 154, 88, 0.24);
+  transform: translateY(-1px);
 }
 
 .painel-momento-combate {

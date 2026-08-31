@@ -167,8 +167,8 @@ window.mensagensNarrativas = {
       xpTotal,
     ) {
       return (
-        `Você recebeu <strong>${quantidade} XP</strong>. ` +
-        `Seu total agora é <strong>${xpTotal} XP</strong>.`
+        `Você recebeu ${quantidade} XP. ` +
+        `Seu total agora é ${xpTotal} XP.`
       );
     },
 
@@ -177,7 +177,7 @@ window.mensagensNarrativas = {
     ) {
       return (
         `Você alcançou XP suficiente para o ` +
-        `<strong>nível ${nivel}</strong>. ` +
+        `nível ${nivel}. ` +
         "A evolução do personagem estará disponível após a aventura."
       );
     },
