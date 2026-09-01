@@ -300,6 +300,49 @@ function celulaPertenceAreaCombate(coluna, linha, area) {
   );
 }
 
+function renderizarTerrenosCombate(combate) {
+  const celulas =
+    tabuleiroCombate.querySelectorAll(
+      ".celula-combate",
+    );
+
+  for (const celula of celulas) {
+    const coluna =
+      Number(celula.dataset.coluna);
+
+    const linha =
+      Number(celula.dataset.linha);
+
+    const tipoTerreno =
+      SistemaCombate.obterTipoTerreno(
+        combate,
+        coluna,
+        linha,
+      );
+
+    if (tipoTerreno === "normal") {
+      continue;
+    }
+
+    celula.classList.add(
+      `celula-terreno-${tipoTerreno}`,
+    );
+
+    const descricao =
+      tipoTerreno === "bloqueado"
+        ? "Terreno intransponível"
+        : "Terreno difícil";
+
+    celula.setAttribute(
+      "aria-label",
+      `Coluna ${coluna}, linha ${linha}. ${descricao}.`,
+    );
+
+    celula.title =
+      `Coluna ${coluna}, linha ${linha}. ${descricao}.`;
+  }
+}
+
 function renderizarAreasObjetivoCombate(combate) {
   const areas = Object.entries(combate.areas ?? {}).filter(
     ([, area]) => area.visivel !== false,
@@ -336,6 +379,7 @@ function renderizarTabuleiroCombate(combate) {
   tabuleiroCombate.innerHTML = "";
 
   criarCelulasTabuleiro(combate);
+  renderizarTerrenosCombate(combate);
 
   renderizarAreasObjetivoCombate(combate);
 

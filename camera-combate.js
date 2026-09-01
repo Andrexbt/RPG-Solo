@@ -315,7 +315,7 @@ function atualizarCameraCombate() {
   );
 
   const espessuraLinhaGrid =
-  0.8 / cameraCombate.zoom;
+  1.1 / cameraCombate.zoom;
 
   const zoomInicioGrid = 0.35;
 const zoomCompletoGrid = 0.55;
@@ -336,7 +336,7 @@ const progressoGrid = Math.min(
 );
 
 const opacidadeGrid =
-  0.24 * progressoGrid;
+  0.32 * progressoGrid;
 
 cameraCombateElemento.style.setProperty(
   "--opacidade-grid",

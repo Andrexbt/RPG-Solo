@@ -975,6 +975,7 @@ function verificarCombateDaCena(cena) {
     mapa: cena.combate.mapa,
     introducao: cena.combate.introducao,
     objetivos: cena.combate.objetivos,
+    terreno: cena.combate.terreno,
     areas: cena.combate.areas,
     marcadores: cena.combate.marcadores,
 

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editor de terreno</title>
+    <link rel="stylesheet" href="editor-terreno.css" />
+    <script src="banco-aventuras.js?v=editor-terreno-1" defer></script>
+    <script src="editor-terreno.js?v=2" defer></script>
+  </head>
+
+  <body>
+    <header class="cabecalho-editor">
+      <div>
+        <span class="sobretitulo">Ferramenta de desenvolvimento</span>
+        <h1>Editor de terreno</h1>
+      </div>
+
+      <label class="campo-cena">
+        <span>Batalha</span>
+        <select id="seletorBatalha"></select>
+      </label>
+    </header>
+
+    <main class="layout-editor">
+      <aside class="barra-ferramentas">
+        <section>
+          <h2>Pincel</h2>
+
+          <div class="grupo-pinceis" role="group" aria-label="Tipo de terreno">
+            <button class="botao-pincel ativo" type="button" data-tipo="normal">
+              <span class="amostra normal"></span>
+              Normal
+            </button>
+
+            <button class="botao-pincel" type="button" data-tipo="dificil">
+              <span class="amostra dificil"></span>
+              Difícil
+            </button>
+
+            <button class="botao-pincel" type="button" data-tipo="bloqueado">
+              <span class="amostra bloqueado"></span>
+              Bloqueado
+            </button>
+          </div>
+
+          <p class="ajuda">Clique e arraste sobre as casas. O pincel normal apaga uma marcação.</p>
+        </section>
+
+        <section>
+          <h2>Histórico</h2>
+          <div class="linha-botoes">
+            <button id="botaoDesfazer" type="button">Desfazer</button>
+            <button id="botaoRefazer" type="button">Refazer</button>
+          </div>
+        </section>
+
+        <section>
+          <h2>Visualização</h2>
+          <label class="campo-zoom">
+            <span>Zoom</span>
+            <input id="controleZoom" type="range" min="25" max="100" value="55" />
+            <output id="valorZoom">55%</output>
+          </label>
+        </section>
+
+        <section class="resumo-terreno">
+          <h2>Resumo</h2>
+          <p><span>Difícil</span><strong id="quantidadeDificil">0</strong></p>
+          <p><span>Bloqueado</span><strong id="quantidadeBloqueado">0</strong></p>
+          <p><span>Casa</span><strong id="coordenadaAtual">—</strong></p>
+        </section>
+
+        <button id="botaoGerarCodigo" class="botao-principal" type="button">
+          Gerar código
+        </button>
+      </aside>
+
+      <section class="area-mapa" aria-label="Mapa editável">
+        <div id="rolagemMapa" class="rolagem-mapa">
+          <div id="canvasEditor" class="canvas-editor">
+            <img id="imagemMapa" alt="Mapa da batalha selecionada" draggable="false" />
+            <div id="gridEditor" class="grid-editor"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="painel-codigo">
+        <header>
+          <div>
+            <span class="sobretitulo">Saída compactada</span>
+            <h2>Configuração</h2>
+          </div>
+          <button id="botaoCopiarCodigo" type="button">Copiar</button>
+        </header>
+
+        <textarea
+          id="saidaCodigo"
+          spellcheck="false"
+          aria-label="Código de configuração do terreno"
+          readonly
+        ></textarea>
+
+        <p id="mensagemEditor" class="mensagem-editor" aria-live="polite"></p>
+      </aside>
+    </main>
+  </body>
+</html>

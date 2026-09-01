@@ -118,6 +118,12 @@ bonusProficiencia:
       objetivoConcluidoId: null,
       encontro: structuredClone(configuracao.encontro ?? null),
       objetivos,
+      terreno: structuredClone(
+  configuracao.terreno ?? {
+    bloqueado: [],
+    dificil: [],
+  },
+),
       areas: structuredClone(configuracao.areas ?? {}),
       marcadores: structuredClone(configuracao.marcadores ?? {}),
 
@@ -196,6 +202,360 @@ bonusProficiencia:
 
     return Math.max(distanciaColunas, distanciaLinhas);
   }
+
+  function celulaPertenceRegiao(coluna, linha, regiao) {
+  if (!regiao) {
+    return false;
+  }
+
+  const colunaUnica = Number(regiao.coluna);
+  const linhaUnica = Number(regiao.linha);
+
+  if (
+    Number.isFinite(colunaUnica) &&
+    Number.isFinite(linhaUnica)
+  ) {
+    return (
+      coluna === colunaUnica &&
+      linha === linhaUnica
+    );
+  }
+
+  const colunaInicial = Number(regiao.colunaInicial);
+  const colunaFinal = Number(regiao.colunaFinal);
+  const linhaInicial = Number(regiao.linhaInicial);
+  const linhaFinal = Number(regiao.linhaFinal);
+
+  if (
+    !Number.isFinite(colunaInicial) ||
+    !Number.isFinite(colunaFinal) ||
+    !Number.isFinite(linhaInicial) ||
+    !Number.isFinite(linhaFinal)
+  ) {
+    return false;
+  }
+
+  const menorColuna = Math.min(
+    colunaInicial,
+    colunaFinal,
+  );
+
+  const maiorColuna = Math.max(
+    colunaInicial,
+    colunaFinal,
+  );
+
+  const menorLinha = Math.min(
+    linhaInicial,
+    linhaFinal,
+  );
+
+  const maiorLinha = Math.max(
+    linhaInicial,
+    linhaFinal,
+  );
+
+  return (
+    coluna >= menorColuna &&
+    coluna <= maiorColuna &&
+    linha >= menorLinha &&
+    linha <= maiorLinha
+  );
+}
+
+function obterTipoTerreno(
+  combate,
+  coluna,
+  linha,
+) {
+  const regioesBloqueadas =
+    combate?.terreno?.bloqueado ?? [];
+
+  const celulaBloqueada =
+    regioesBloqueadas.some(
+      (regiao) =>
+        celulaPertenceRegiao(
+          coluna,
+          linha,
+          regiao,
+        ),
+    );
+
+  if (celulaBloqueada) {
+    return "bloqueado";
+  }
+
+  const regioesDificeis =
+    combate?.terreno?.dificil ?? [];
+
+  const celulaDificil =
+    regioesDificeis.some(
+      (regiao) =>
+        celulaPertenceRegiao(
+          coluna,
+          linha,
+          regiao,
+        ),
+    );
+
+  if (celulaDificil) {
+    return "dificil";
+  }
+
+  return "normal";
+}
+
+function criarChaveCelula(coluna, linha) {
+  return `${coluna},${linha}`;
+}
+
+function converterChaveCelula(chave) {
+  const [coluna, linha] =
+    chave.split(",").map(Number);
+
+  return {
+    coluna,
+    linha,
+  };
+}
+
+function celulaOcupadaPorOutro(
+  combate,
+  participanteId,
+  coluna,
+  linha,
+) {
+  return combate.participantes.some(
+    (participante) =>
+      participante.id !== participanteId &&
+      participante.estado !== "derrotado" &&
+      participante.posicao.coluna === coluna &&
+      participante.posicao.linha === linha,
+  );
+}
+
+function calcularCaminhoMovimento(
+  combate,
+  participante,
+  destino,
+) {
+  if (!combate || !participante || !destino) {
+    return null;
+  }
+
+  const destinoForaDoTabuleiro =
+    destino.coluna < 1 ||
+    destino.coluna > combate.tabuleiro.colunas ||
+    destino.linha < 1 ||
+    destino.linha > combate.tabuleiro.linhas;
+
+  if (destinoForaDoTabuleiro) {
+    return null;
+  }
+
+  if (
+    obterTipoTerreno(
+      combate,
+      destino.coluna,
+      destino.linha,
+    ) === "bloqueado"
+  ) {
+    return null;
+  }
+
+  if (
+    celulaOcupadaPorOutro(
+      combate,
+      participante.id,
+      destino.coluna,
+      destino.linha,
+    )
+  ) {
+    return null;
+  }
+
+  const origem = {
+    coluna: participante.posicao.coluna,
+    linha: participante.posicao.linha,
+  };
+
+  const chaveOrigem =
+    criarChaveCelula(
+      origem.coluna,
+      origem.linha,
+    );
+
+  const chaveDestino =
+    criarChaveCelula(
+      destino.coluna,
+      destino.linha,
+    );
+
+  if (chaveOrigem === chaveDestino) {
+    return {
+      caminho: [],
+      custo: 0,
+    };
+  }
+
+  const custos = new Map([
+    [chaveOrigem, 0],
+  ]);
+
+  const anteriores = new Map();
+
+  const celulasAbertas = [
+    {
+      coluna: origem.coluna,
+      linha: origem.linha,
+      custo: 0,
+    },
+  ];
+
+  while (celulasAbertas.length > 0) {
+    celulasAbertas.sort(
+      (celulaA, celulaB) =>
+        celulaA.custo - celulaB.custo,
+    );
+
+    const atual = celulasAbertas.shift();
+
+    const chaveAtual =
+      criarChaveCelula(
+        atual.coluna,
+        atual.linha,
+      );
+
+    if (
+      atual.custo !== custos.get(chaveAtual)
+    ) {
+      continue;
+    }
+
+    if (chaveAtual === chaveDestino) {
+      const caminho = [];
+
+      let chavePercorrida = chaveDestino;
+
+      while (chavePercorrida !== chaveOrigem) {
+        caminho.unshift(
+          converterChaveCelula(
+            chavePercorrida,
+          ),
+        );
+
+        chavePercorrida =
+          anteriores.get(chavePercorrida);
+      }
+
+      return {
+        caminho,
+        custo: atual.custo,
+      };
+    }
+
+    for (
+      let diferencaColuna = -1;
+      diferencaColuna <= 1;
+      diferencaColuna++
+    ) {
+      for (
+        let diferencaLinha = -1;
+        diferencaLinha <= 1;
+        diferencaLinha++
+      ) {
+        if (
+          diferencaColuna === 0 &&
+          diferencaLinha === 0
+        ) {
+          continue;
+        }
+
+        const proximaColuna =
+          atual.coluna + diferencaColuna;
+
+        const proximaLinha =
+          atual.linha + diferencaLinha;
+
+        const foraDoTabuleiro =
+          proximaColuna < 1 ||
+          proximaColuna >
+            combate.tabuleiro.colunas ||
+          proximaLinha < 1 ||
+          proximaLinha >
+            combate.tabuleiro.linhas;
+
+        if (foraDoTabuleiro) {
+          continue;
+        }
+
+        const tipoTerreno =
+          obterTipoTerreno(
+            combate,
+            proximaColuna,
+            proximaLinha,
+          );
+
+        if (tipoTerreno === "bloqueado") {
+          continue;
+        }
+
+        if (
+          celulaOcupadaPorOutro(
+            combate,
+            participante.id,
+            proximaColuna,
+            proximaLinha,
+          )
+        ) {
+          continue;
+        }
+
+        const custoPasso =
+          tipoTerreno === "dificil"
+            ? 2
+            : 1;
+
+        const novoCusto =
+          atual.custo + custoPasso;
+
+        const chaveProxima =
+          criarChaveCelula(
+            proximaColuna,
+            proximaLinha,
+          );
+
+        const custoRegistrado =
+          custos.get(chaveProxima);
+
+        if (
+          custoRegistrado !== undefined &&
+          custoRegistrado <= novoCusto
+        ) {
+          continue;
+        }
+
+        custos.set(
+          chaveProxima,
+          novoCusto,
+        );
+
+        anteriores.set(
+          chaveProxima,
+          chaveAtual,
+        );
+
+        celulasAbertas.push({
+          coluna: proximaColuna,
+          linha: proximaLinha,
+          custo: novoCusto,
+        });
+      }
+    }
+  }
+
+  return null;
+}
 
   function validarSelecaoCriatura(atacante, alvo, acao) {
     const distancia = calcularDistancia(atacante.posicao, alvo.posicao);
@@ -278,6 +638,20 @@ bonusProficiencia:
       };
     }
 
+    const tipoTerrenoDestino =
+  obterTipoTerreno(
+    combate,
+    coluna,
+    linha,
+  );
+
+if (tipoTerrenoDestino === "bloqueado") {
+  return {
+    sucesso: false,
+    motivo: "terrenoBloqueado",
+  };
+}
+
     const celulaOcupada = combate.participantes.some(
       (outroParticipante) =>
         outroParticipante.id !== participante.id &&
@@ -292,36 +666,67 @@ bonusProficiencia:
       };
     }
 
-    const distancia = calcularDistancia(participante.posicao, {
+    const mesmaCelula =
+  participante.posicao.coluna === coluna &&
+  participante.posicao.linha === linha;
+
+if (mesmaCelula) {
+  return {
+    sucesso: false,
+    motivo: "mesmaCelula",
+  };
+}
+
+const resultadoCaminho =
+  calcularCaminhoMovimento(
+    combate,
+    participante,
+    {
       coluna,
       linha,
-    });
+    },
+  );
 
-    if (distancia === 0) {
-      return {
-        sucesso: false,
-        motivo: "mesmaCelula",
-      };
-    }
+if (!resultadoCaminho) {
+  return {
+    sucesso: false,
+    motivo: "caminhoIndisponivel",
+  };
+}
 
-    if (distancia > participante.movimentoRestante) {
-      return {
-        sucesso: false,
-        motivo: "movimentoInsuficiente",
-      };
-    }
+if (
+  resultadoCaminho.custo >
+  participante.movimentoRestante
+) {
+  return {
+    sucesso: false,
+    motivo: "movimentoInsuficiente",
+    custoMovimento:
+      resultadoCaminho.custo,
+  };
+}
 
-    participante.posicao.coluna = coluna;
+participante.posicao.coluna = coluna;
+participante.posicao.linha = linha;
 
-    participante.posicao.linha = linha;
+participante.movimentoRestante -=
+  resultadoCaminho.custo;
 
-    participante.movimentoRestante -= distancia;
+return {
+  sucesso: true,
 
-    return {
-      sucesso: true,
-      distancia,
-      movimentoRestante: participante.movimentoRestante,
-    };
+  distancia:
+    resultadoCaminho.caminho.length,
+
+  custoMovimento:
+    resultadoCaminho.custo,
+
+  caminho:
+    resultadoCaminho.caminho,
+
+  movimentoRestante:
+    participante.movimentoRestante,
+};
   }
 
   function consumirRecurso(participante, nomeRecurso) {
@@ -2139,6 +2544,8 @@ if (indiceCondicaoCaido >= 0) {
     registrarIniciativa,
     rolarIniciativasInimigos,
     calcularDistancia,
+    obterTipoTerreno,
+    calcularCaminhoMovimento,
     validarSelecaoCriatura,
     validarSelecaoAcao,
     obterCustoAtaque,

@@ -254,68 +254,64 @@ function celulaDisponivelParaMovimento(
     return false;
   }
 
-  const distancia =
-    SistemaCombate.calcularDistancia(
-      participante.posicao,
-      {
-        coluna,
-        linha,
-      },
-    );
-
-  return (
-    distancia > 0 &&
-    distancia <=
-      participante.movimentoRestante
+  const tipoTerreno =
+  SistemaCombate.obterTipoTerreno(
+    combate,
+    coluna,
+    linha,
   );
+
+if (tipoTerreno === "bloqueado") {
+  return false;
 }
 
-function atualizarDestaquesMovimentoCombate(
-  combate,
+  const distanciaMinima =
+  SistemaCombate.calcularDistancia(
+    participante.posicao,
+    {
+      coluna,
+      linha,
+    },
+  );
+
+if (
+  distanciaMinima === 0 ||
+  distanciaMinima >
+    participante.movimentoRestante
 ) {
-  const participante =
-    combate?.participantes.find(
-      (item) =>
-        item.id ===
-        combate.participanteSelecionadoId,
-    );
+  return false;
+}
 
-  const modoMovimentoAtivo =
-    participante?.tipo === "jogador" &&
-    participante.id ===
-      combate?.participanteAtivoId &&
-    participante.movimentoRestante > 0 &&
-    painelAtaquesCombate.hidden;
+const resultadoCaminho =
+  SistemaCombate.calcularCaminhoMovimento(
+    combate,
+    participante,
+    {
+      coluna,
+      linha,
+    },
+  );
 
-  tabuleiroCombate.classList.toggle(
+return (
+  resultadoCaminho !== null &&
+  resultadoCaminho.custo <=
+    participante.movimentoRestante
+);
+}
+
+function atualizarDestaquesMovimentoCombate() {
+  tabuleiroCombate.classList.remove(
     "selecionando-movimento",
-    Boolean(modoMovimentoAtivo),
   );
 
   const celulas =
     tabuleiroCombate.querySelectorAll(
-      ".celula-combate",
+      ".celula-movimento-disponivel",
     );
 
   for (const celula of celulas) {
-    const coluna =
-      Number(celula.dataset.coluna);
-
-    const linha =
-      Number(celula.dataset.linha);
-
-    const disponivel =
-      modoMovimentoAtivo &&
-      celulaDisponivelParaMovimento(
-        combate,
-        participante,
-        coluna,
-        linha,
-      );
-
-    celula.classList.toggle(
+    celula.classList.remove(
       "celula-movimento-disponivel",
-      disponivel,
     );
   }
 }

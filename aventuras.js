@@ -135,6 +135,9 @@ const visualizacaoAventura = document.querySelector("#visualizacaoAventura");
 
 const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
 
+const botaoAlternarTerrenoCombate =
+  document.querySelector("#botaoAlternarTerrenoCombate");
+
 const telaResultadoCombate =
   document.querySelector("#telaResultadoCombate");
 
@@ -804,6 +807,10 @@ function iniciarEtapaIniciativaCombate(combate) {
 function iniciarCombateDaAventura(configuracao) {
   introducaoCombateConfirmada = false;
   reiniciarLinhaTempoCombate();
+
+  tabuleiroCombate.classList.remove("exibindo-terreno");
+  botaoAlternarTerrenoCombate.setAttribute("aria-pressed", "false");
+  botaoAlternarTerrenoCombate.title = "Mostrar tipos de terreno";
 
   aplicarMapaCombate(configuracao.mapa);
   const configuracaoCombate = structuredClone(configuracao);
@@ -2147,6 +2154,23 @@ tabuleiroCombate.addEventListener("click", selecionarAlvoCombate);
 listaAtaquesCombate.addEventListener("click", selecionarAtaqueCombate);
 
 botaoEncerrarTurno.addEventListener("click", encerrarTurnoAtual);
+
+botaoAlternarTerrenoCombate.addEventListener(
+  "click",
+  function alternarVisualizacaoTerreno() {
+    const exibindoTerreno =
+      tabuleiroCombate.classList.toggle("exibindo-terreno");
+
+    botaoAlternarTerrenoCombate.setAttribute(
+      "aria-pressed",
+      String(exibindoTerreno),
+    );
+
+    botaoAlternarTerrenoCombate.title = exibindoTerreno
+      ? "Ocultar tipos de terreno"
+      : "Mostrar tipos de terreno";
+  },
+);
 
 NarradorAventura.limpar();
 
