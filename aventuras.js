@@ -102,6 +102,36 @@ const listaAcoesTurno = document.querySelector("#listaAcoesTurno");
 
 const listaAcoesBonusTurno = document.querySelector("#listaAcoesBonusTurno");
 
+const camadaDecisaoCombate =
+  document.querySelector(
+    "#camadaDecisaoCombate",
+  );
+
+const janelaDecisaoCombate =
+  document.querySelector(
+    "#janelaDecisaoCombate",
+  );
+
+const tituloDecisaoCombate =
+  document.querySelector(
+    "#tituloDecisaoCombate",
+  );
+
+const mensagemDecisaoCombate =
+  document.querySelector(
+    "#mensagemDecisaoCombate",
+  );
+
+const botaoConfirmarDecisaoCombate =
+  document.querySelector(
+    "#botaoConfirmarDecisaoCombate",
+  );
+
+const botaoCancelarDecisaoCombate =
+  document.querySelector(
+    "#botaoCancelarDecisaoCombate",
+  );
+
 const painelAtaquesCombate = document.querySelector("#painelAtaquesCombate");
 
 const botaoFecharAtaquesCombate = document.querySelector("#botaoFecharAtaquesCombate");
@@ -137,6 +167,8 @@ const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
 
 const botaoAlternarTerrenoCombate =
   document.querySelector("#botaoAlternarTerrenoCombate");
+const legendaTerrenoCombate =
+  document.querySelector("#legendaTerrenoCombate");
 
 const telaResultadoCombate =
   document.querySelector("#telaResultadoCombate");
@@ -583,6 +615,17 @@ function iniciarRolagemAtaquePreparado(resultado) {
     );
   }
 
+  if (resultado.bonusCobertura > 0) {
+    const nomeCobertura =
+      resultado.cobertura === "coberturaTresQuartos"
+        ? "cobertura de 3/4"
+        : "meia cobertura";
+
+    mensagemAtaque +=
+      ` ${resultado.alvo.nome} possui ${nomeCobertura} e recebe ` +
+      `+${resultado.bonusCobertura} na CA contra este ataque.`;
+  }
+
   exibirMensagemNarrativa(solicitacaoCombate, mensagemAtaque);
 
   solicitarRolagemNaCaixa(
@@ -631,6 +674,13 @@ function selecionarAtaqueCombate(evento) {
 
   if (!resultado.sucesso) {
     console.warn("Ataque recusado:", resultado.motivo);
+
+    if (resultado.motivo === "semLinhaDeVisao") {
+      exibirAcaoAtualCombate(
+        "O alvo está protegido por um bloqueio total e não pode ser atingido dessa posição.",
+      );
+    }
+
     atualizarInterfaceTurno(combate);
     return;
   }
@@ -810,7 +860,8 @@ function iniciarCombateDaAventura(configuracao) {
 
   tabuleiroCombate.classList.remove("exibindo-terreno");
   botaoAlternarTerrenoCombate.setAttribute("aria-pressed", "false");
-  botaoAlternarTerrenoCombate.title = "Mostrar tipos de terreno";
+  botaoAlternarTerrenoCombate.title = "Mostrar terreno e cobertura";
+  legendaTerrenoCombate.hidden = true;
 
   aplicarMapaCombate(configuracao.mapa);
   const configuracaoCombate = structuredClone(configuracao);
@@ -844,47 +895,521 @@ function iniciarCombateDaAventura(configuracao) {
   enquadrarParticipantesCombate(combate);
 }
 
-function moverParticipante(participante, coluna, linha) {
-  const resultadoMovimento = SistemaCombate.movimentarParticipante(
-    estadoAtualJogo.combateAtual,
-    participante.id,
-    coluna,
-    linha,
+function fecharDecisaoCombate() {
+  camadaDecisaoCombate.hidden = true;
+
+  janelaDecisaoCombate.style.left =
+  "";
+
+janelaDecisaoCombate.style.top =
+  "";
+
+  tituloDecisaoCombate.textContent =
+    "";
+
+  mensagemDecisaoCombate.textContent =
+    "";
+}
+
+function posicionarDecisaoProximaAoParticipante(
+  participanteId,
+) {
+  const token =
+    tabuleiroCombate.querySelector(
+      `[data-id-participante="${participanteId}"]`,
+    );
+
+  if (!token) {
+    janelaDecisaoCombate.style.left =
+      "50%";
+
+    janelaDecisaoCombate.style.top =
+      "50%";
+
+    return;
+  }
+
+  const retanguloToken =
+    token.getBoundingClientRect();
+
+  const retanguloJanela =
+    janelaDecisaoCombate
+      .getBoundingClientRect();
+
+  const margemTela = 16;
+  const distanciaToken = 18;
+
+  const metadeLarguraJanela =
+    retanguloJanela.width / 2;
+
+  const metadeAlturaJanela =
+    retanguloJanela.height / 2;
+
+  let centroHorizontal =
+    retanguloToken.right +
+    distanciaToken +
+    metadeLarguraJanela;
+
+  const ultrapassaDireita =
+    centroHorizontal +
+      metadeLarguraJanela >
+    window.innerWidth -
+      margemTela;
+
+  if (ultrapassaDireita) {
+    centroHorizontal =
+      retanguloToken.left -
+      distanciaToken -
+      metadeLarguraJanela;
+  }
+
+  centroHorizontal =
+    Math.max(
+      margemTela +
+        metadeLarguraJanela,
+
+      Math.min(
+        window.innerWidth -
+          margemTela -
+          metadeLarguraJanela,
+
+        centroHorizontal,
+      ),
+    );
+
+  let centroVertical =
+    retanguloToken.top +
+    retanguloToken.height / 2;
+
+  centroVertical =
+    Math.max(
+      margemTela +
+        metadeAlturaJanela,
+
+      Math.min(
+        window.innerHeight -
+          margemTela -
+          metadeAlturaJanela,
+
+        centroVertical,
+      ),
+    );
+
+  janelaDecisaoCombate.style.left =
+    `${centroHorizontal}px`;
+
+  janelaDecisaoCombate.style.top =
+    `${centroVertical}px`;
+}
+
+function abrirConfirmacaoSaidaZona(
+  decisao,
+) {
+  const nomesAmeacadores =
+    decisao.ameacadores.map(
+      function (ameacador) {
+        return ameacador.nome;
+      },
+    );
+
+  const textoAmeacadores =
+    nomesAmeacadores.length === 1
+      ? nomesAmeacadores[0]
+      : nomesAmeacadores.join(", ");
+
+  tituloDecisaoCombate.textContent =
+    "Sair da zona de influência?";
+
+  mensagemDecisaoCombate.textContent =
+    `Você está saindo do alcance de um inimigo sem desengajar. ` +
+    "Se continuar, poderá sofrer um ataque de oportunidade.";
+
+  botaoConfirmarDecisaoCombate.textContent =
+    "Continuar";
+
+  botaoCancelarDecisaoCombate.textContent =
+    "Cancelar";
+
+  camadaDecisaoCombate.hidden =
+    false;
+
+  window.requestAnimationFrame(
+  function exibirDecisaoProximaAoPersonagem() {
+    posicionarDecisaoProximaAoParticipante(
+      decisao.participanteId,
+    );
+
+    botaoCancelarDecisaoCombate.focus();
+  },
+);
+}
+
+function abrirOfertaAtaqueOportunidade(
+  decisao,
+) {
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  const alvo =
+    combate?.participantes.find(
+      function (participante) {
+        return (
+          participante.id ===
+          decisao.alvoId
+        );
+      },
+    );
+
+  const nomeAlvo =
+    alvo?.nome ?? "O inimigo";
+
+  tituloDecisaoCombate.textContent =
+    "Ataque de oportunidade";
+
+  mensagemDecisaoCombate.textContent =
+    `Um inimigo está saindo do seu alcance. ` +
+    "Deseja gastar sua reação para realizar um ataque de oportunidade?";
+
+  botaoConfirmarDecisaoCombate.textContent =
+    "Realizar ataque";
+
+  botaoCancelarDecisaoCombate.textContent =
+    "Deixar passar";
+
+  camadaDecisaoCombate.hidden =
+    false;
+
+  window.requestAnimationFrame(
+    function exibirOfertaProximaAoPersonagem() {
+      posicionarDecisaoProximaAoParticipante(
+        decisao.participanteId,
+      );
+
+      botaoCancelarDecisaoCombate.focus();
+    },
+  );
+}
+
+function abrirDecisaoPendenteCombate(
+  decisao,
+) {
+  if (!decisao) {
+    return false;
+  }
+
+  if (
+    decisao.tipo ===
+    "confirmarSaidaZona"
+  ) {
+    abrirConfirmacaoSaidaZona(
+      decisao,
+    );
+
+    return true;
+  }
+
+  if (
+    decisao.tipo ===
+    "oferecerAtaqueOportunidade"
+  ) {
+    abrirOfertaAtaqueOportunidade(
+      decisao,
+    );
+
+    return true;
+  }
+
+  console.warn(
+    "Tipo de decisão não reconhecido:",
+    decisao.tipo,
   );
 
+  return false;
+}
+
+function confirmarDecisaoCombate() {
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  const decisao =
+    combate?.decisaoPendente;
+
+    if (
+  decisao?.tipo ===
+  "oferecerAtaqueOportunidade"
+) {
+  const inimigo =
+    combate.participantes.find(
+      function (participante) {
+        return (
+          participante.id ===
+          decisao.alvoId
+        );
+      },
+    );
+
+  if (!inimigo) {
+    combate.decisaoPendente = null;
+
+    fecharDecisaoCombate();
+
+    return;
+  }
+
+  const destino =
+    structuredClone(
+      decisao.destino,
+    );
+
+  fecharDecisaoCombate();
+
+  moverParticipante(
+    inimigo,
+    destino.coluna,
+    destino.linha,
+    {
+      reacaoJogador: "usar",
+    },
+  );
+
+  return;
+}
+
+  if (
+    !decisao ||
+    decisao.tipo !==
+      "confirmarSaidaZona"
+  ) {
+    fecharDecisaoCombate();
+
+    return;
+  }
+
+  const participante =
+    combate.participantes.find(
+      function (participanteAtual) {
+        return (
+          participanteAtual.id ===
+          decisao.participanteId
+        );
+      },
+    );
+
+  if (!participante) {
+    combate.decisaoPendente = null;
+
+    fecharDecisaoCombate();
+
+    return;
+  }
+
+  const destino =
+    structuredClone(
+      decisao.destino,
+    );
+
+  fecharDecisaoCombate();
+
+  moverParticipante(
+    participante,
+    destino.coluna,
+    destino.linha,
+    {
+      confirmarSaidaZona: true,
+    },
+  );
+}
+
+function cancelarDecisaoCombate() {
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+    const decisao =
+  combate?.decisaoPendente;
+
+if (
+  decisao?.tipo ===
+  "oferecerAtaqueOportunidade"
+) {
+  const inimigo =
+    combate.participantes.find(
+      function (participante) {
+        return (
+          participante.id ===
+          decisao.alvoId
+        );
+      },
+    );
+
+  if (!inimigo) {
+    combate.decisaoPendente = null;
+
+    fecharDecisaoCombate();
+
+    return;
+  }
+
+  const destino =
+    structuredClone(
+      decisao.destino,
+    );
+
+  fecharDecisaoCombate();
+
+  moverParticipante(
+    inimigo,
+    destino.coluna,
+    destino.linha,
+    {
+      reacaoJogador: "ignorar",
+    },
+  );
+
+  return;
+}
+
+  if (combate) {
+    combate.decisaoPendente = null;
+  }
+
+  fecharDecisaoCombate();
+
+  exibirAcaoAtualCombate(
+    "Ação Cancelada",
+  );
+}
+
+function moverParticipante(participante, coluna, linha,opcoes = {}) {
+  const combate = estadoAtualJogo.combateAtual;
+
+  const resultadoMovimento =
+    SistemaCombate.movimentarParticipante(
+      combate,
+      participante.id,
+      coluna,
+      linha,
+      opcoes,
+    );
+
   if (!resultadoMovimento.sucesso) {
-    console.warn("Movimento recusado:", resultadoMovimento.motivo);
+  if (
+    resultadoMovimento
+      .confirmacaoNecessaria &&
+    resultadoMovimento.decisao
+      ?.tipo ===
+      "confirmarSaidaZona"
+  ) {
+    abrirDecisaoPendenteCombate(
+  resultadoMovimento.decisao,
+);
 
     return false;
   }
 
-  if (participante.tipo === "jogador") {
-    adicionarEventoHistoricoCombate(
-      `${participante.nome} se moveu.`,
-      "Você se moveu.",
-    );
-
-    exibirAcaoAtualCombate("Você se moveu.");
-  }
-
-  const token = tabuleiroCombate.querySelector(`[data-id-participante="${participante.id}"]`);
-
-  if (!token) {
-    return;
-  }
-
-  token.style.gridColumn = coluna;
-
-  token.style.gridRow = linha;
-
-  const resultadoObjetivo = SistemaCombate.verificarObjetivosCombate(
-    estadoAtualJogo.combateAtual,
+  console.warn(
+    "Movimento recusado:",
+    resultadoMovimento.motivo,
   );
 
-  atualizarInterfaceTurno(estadoAtualJogo.combateAtual);
+  return false;
+}
+
+  const mensagensOportunidade = [];
+
+  for (
+    const ataqueExecutado of
+    resultadoMovimento.ataquesOportunidade
+  ) {
+    const resultado =
+      ataqueExecutado.resultado;
+
+    if (!resultado.sucesso) {
+      continue;
+    }
+
+    const nomeAmeacador =
+      resultado.ameacador.nome;
+
+    const nomeAtaque =
+      resultado.ataque.nome;
+
+    let mensagem;
+
+    if (!resultado.resultadoAtaque.acertou) {
+      mensagem =
+        `${nomeAmeacador} desfere um ataque de oportunidade, ` +
+        `mas erra.`;
+    } else {
+      const dano =
+        resultado.resultadoDano?.dano ?? 0;
+
+      mensagem =
+        `${nomeAmeacador} acerta um ataque de oportunidade ` +
+        `com ${nomeAtaque} e causa ${dano} de dano.`;
+    }
+
+    mensagensOportunidade.push(mensagem);
+
+    adicionarEventoHistoricoCombate(
+      "Ataque de oportunidade",
+      mensagem,
+    );
+  }
+
+  if (participante.tipo === "jogador") {
+    let mensagemMovimento =
+      "Você se moveu.";
+
+    if (
+      resultadoMovimento.movimentoInterrompido
+    ) {
+      mensagemMovimento =
+        "Seu movimento foi interrompido.";
+    } else if (
+      mensagensOportunidade.length > 0
+    ) {
+      mensagemMovimento =
+        mensagensOportunidade.join(" ");
+    }
+
+    adicionarEventoHistoricoCombate(
+      `${participante.nome} se moveu.`,
+      mensagemMovimento,
+    );
+
+    exibirAcaoAtualCombate(
+      mensagemMovimento,
+    );
+  }
+
+  const token =
+    tabuleiroCombate.querySelector(
+      `[data-id-participante="${participante.id}"]`,
+    );
+
+  if (token) {
+    token.style.gridColumn =
+      resultadoMovimento.posicaoFinal.coluna;
+
+    token.style.gridRow =
+      resultadoMovimento.posicaoFinal.linha;
+  }
+
+  atualizarInterfaceTurno(combate);
+
+  if (combate.status !== "ativo") {
+    notificarFimCombate(combate);
+
+    return true;
+  }
+
+  const resultadoObjetivo =
+    SistemaCombate.verificarObjetivosCombate(
+      combate,
+    );
 
   if (resultadoObjetivo) {
-    notificarFimCombate(estadoAtualJogo.combateAtual);
+    notificarFimCombate(combate);
   }
 
   return true;
@@ -2166,9 +2691,11 @@ botaoAlternarTerrenoCombate.addEventListener(
       String(exibindoTerreno),
     );
 
+    legendaTerrenoCombate.hidden = !exibindoTerreno;
+
     botaoAlternarTerrenoCombate.title = exibindoTerreno
-      ? "Ocultar tipos de terreno"
-      : "Mostrar tipos de terreno";
+      ? "Ocultar terreno e cobertura"
+      : "Mostrar terreno e cobertura";
   },
 );
 
@@ -2232,6 +2759,16 @@ window.addEventListener("resize", function () {
   limitarCameraCombate();
   atualizarCameraCombate();
 });
+
+botaoConfirmarDecisaoCombate.addEventListener(
+  "click",
+  confirmarDecisaoCombate,
+);
+
+botaoCancelarDecisaoCombate.addEventListener(
+  "click",
+  cancelarDecisaoCombate,
+);
 
 botaoFecharAtaquesCombate.addEventListener("click", fecharPainelAtaquesCombate);
 

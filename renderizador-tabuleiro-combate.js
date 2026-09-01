@@ -343,6 +343,36 @@ function renderizarTerrenosCombate(combate) {
   }
 }
 
+function renderizarVisaoCombate(combate) {
+  const obterCelula = (coluna, linha) =>
+    tabuleiroCombate.querySelector(
+      `.celula-combate[data-coluna="${coluna}"][data-linha="${linha}"]`,
+    );
+
+  for (const regiao of combate.visao?.bloqueios ?? []) {
+    const colunaInicial = Number(regiao.colunaInicial ?? regiao.coluna);
+    const colunaFinal = Number(regiao.colunaFinal ?? regiao.coluna);
+    const linhaInicial = Number(regiao.linhaInicial ?? regiao.linha);
+    const linhaFinal = Number(regiao.linhaFinal ?? regiao.linha);
+
+    for (let linha = Math.min(linhaInicial, linhaFinal); linha <= Math.max(linhaInicial, linhaFinal); linha++) {
+      for (let coluna = Math.min(colunaInicial, colunaFinal); coluna <= Math.max(colunaInicial, colunaFinal); coluna++) {
+        obterCelula(coluna, linha)?.classList.add("celula-bloqueio-visao");
+      }
+    }
+  }
+
+  for (const barreira of combate.visao?.barreiras ?? []) {
+    const celula = obterCelula(Number(barreira.coluna), Number(barreira.linha));
+
+    if (!celula || !barreira.lado || !barreira.tipo) {
+      continue;
+    }
+
+    celula.classList.add(`celula-borda-${barreira.lado}-${barreira.tipo}`);
+  }
+}
+
 function renderizarAreasObjetivoCombate(combate) {
   const areas = Object.entries(combate.areas ?? {}).filter(
     ([, area]) => area.visivel !== false,
@@ -380,6 +410,7 @@ function renderizarTabuleiroCombate(combate) {
 
   criarCelulasTabuleiro(combate);
   renderizarTerrenosCombate(combate);
+  renderizarVisaoCombate(combate);
 
   renderizarAreasObjetivoCombate(combate);
 

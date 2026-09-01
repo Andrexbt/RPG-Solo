@@ -281,6 +281,45 @@ function renderizarEfeitosAtivaveisCombate(
   };
 }
 
+function ativarDesengajarCombate(
+  participante,
+) {
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  if (!combate) {
+    return;
+  }
+
+  const resultado =
+    SistemaCombate.usarAcaoDesengajar(
+      combate,
+      participante.id,
+    );
+
+  if (!resultado.sucesso) {
+    console.warn(
+      "Não foi possível desengajar:",
+      resultado.motivo,
+    );
+
+    return;
+  }
+
+  fecharPainelAtaquesCombate();
+
+  adicionarEventoHistoricoCombate(
+    `${participante.nome} desengajou.`,
+    "Você se preparou para deixar o alcance dos inimigos.",
+  );
+
+  exibirAcaoAtualCombate(
+    "Você pode se mover sem provocar ataques de oportunidade até o final deste turno.",
+  );
+
+  atualizarInterfaceTurno(combate);
+}
+
 function renderizarAcoesCombate(participante) {
   listaAcoesTurno.innerHTML = "";
 
@@ -305,6 +344,36 @@ function renderizarAcoesCombate(participante) {
   botaoAtacar.addEventListener("click", abrirPainelAtaquesCombate);
 
   listaAcoesTurno.append(botaoAtacar);
+
+  const botaoDesengajar =
+  document.createElement("button");
+
+botaoDesengajar.type = "button";
+
+botaoDesengajar.textContent =
+  participante.desengajando
+    ? "Desengajando"
+    : "Desengajar";
+
+botaoDesengajar.title =
+  "Gaste sua ação para se mover sem provocar ataques de oportunidade neste turno.";
+
+botaoDesengajar.disabled =
+  !participante.acaoDisponivel ||
+  participante.desengajando;
+
+botaoDesengajar.addEventListener(
+  "click",
+  function () {
+    ativarDesengajarCombate(
+      participante,
+    );
+  },
+);
+
+listaAcoesTurno.append(
+  botaoDesengajar,
+);
 
   const resultadoEfeitos =
   renderizarEfeitosAtivaveisCombate(
@@ -628,7 +697,7 @@ if (
       (custoAtaque === "acaoBonus" && participante.acaoBonusDisponivel);
 
     if (alvo && recursoDisponivel) {
-      const validacao = SistemaCombate.validarSelecaoAcao(participante, alvo, ataque);
+      const validacao = SistemaCombate.validarSelecaoAcao(participante, alvo, ataque, combate);
 
       ataqueDisponivel = validacao.sucesso;
     }

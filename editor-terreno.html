@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Editor de terreno</title>
-    <link rel="stylesheet" href="editor-terreno.css" />
+    <link rel="stylesheet" href="editor-terreno.css?v=6" />
     <script src="banco-aventuras.js?v=editor-terreno-1" defer></script>
-    <script src="editor-terreno.js?v=2" defer></script>
+    <script src="editor-terreno.js?v=6" defer></script>
   </head>
 
   <body>
@@ -24,8 +24,8 @@
 
     <main class="layout-editor">
       <aside class="barra-ferramentas">
-        <section>
-          <h2>Pincel</h2>
+        <section id="ferramentasTerreno">
+          <h2>Terreno e movimentação</h2>
 
           <div class="grupo-pinceis" role="group" aria-label="Tipo de terreno">
             <button class="botao-pincel ativo" type="button" data-tipo="normal">
@@ -45,6 +45,69 @@
           </div>
 
           <p class="ajuda">Clique e arraste sobre as casas. O pincel normal apaga uma marcação.</p>
+        </section>
+
+        <section id="ferramentasVisao">
+          <h2>Visão e cobertura</h2>
+
+          <div
+            id="seletorModoVisao"
+            class="linha-botoes seletor-modo-visao"
+            role="group"
+            aria-label="Modo de marcação visual"
+          >
+            <button class="ativo" type="button" data-modo-visao="casa" aria-pressed="true">
+              Casa inteira
+            </button>
+
+            <button type="button" data-modo-visao="borda" aria-pressed="false">
+              Borda
+            </button>
+          </div>
+
+          <div id="pinceisVisaoCasa" class="grupo-pinceis" role="group" aria-label="Volume opaco">
+            <button class="botao-pincel ativo" type="button" data-tipo-visao-casa="livre">
+              <span class="amostra visao-livre"></span>
+              Visão livre
+            </button>
+
+            <button class="botao-pincel" type="button" data-tipo-visao-casa="bloqueio">
+              <span class="amostra bloqueio-visao"></span>
+              Volume opaco
+            </button>
+          </div>
+
+          <div
+            id="pinceisVisaoBorda"
+            class="grupo-pinceis"
+            role="group"
+            aria-label="Barreira na borda"
+            hidden
+          >
+            <button class="botao-pincel ativo" type="button" data-tipo-barreira="livre">
+              <span class="amostra visao-livre"></span>
+              Apagar borda
+            </button>
+
+            <button class="botao-pincel" type="button" data-tipo-barreira="coberturaParcial">
+              <span class="amostra cobertura-parcial"></span>
+              Meia cobertura
+            </button>
+
+            <button class="botao-pincel" type="button" data-tipo-barreira="coberturaTresQuartos">
+              <span class="amostra cobertura-tres-quartos"></span>
+              Cobertura de 3/4
+            </button>
+
+            <button class="botao-pincel" type="button" data-tipo-barreira="bloqueioTotal">
+              <span class="amostra bloqueio-visao"></span>
+              Bloqueio total
+            </button>
+          </div>
+
+          <p id="ajudaVisao" class="ajuda">
+            Preencha construções e outros volumes totalmente opacos.
+          </p>
         </section>
 
         <section>
@@ -68,6 +131,8 @@
           <h2>Resumo</h2>
           <p><span>Difícil</span><strong id="quantidadeDificil">0</strong></p>
           <p><span>Bloqueado</span><strong id="quantidadeBloqueado">0</strong></p>
+          <p><span>Bloqueio de visão</span><strong id="quantidadeBloqueioVisao">0</strong></p>
+          <p><span>Barreiras</span><strong id="quantidadeBarreirasVisao">0</strong></p>
           <p><span>Casa</span><strong id="coordenadaAtual">—</strong></p>
         </section>
 

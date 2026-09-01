@@ -13,26 +13,11 @@ window.SistemaCombate = (function () {
 
       atributos: structuredClone(entidade.atributos ?? {}),
 
-      salvaguardas:
-  structuredClone(
-    entidade.salvaguardas ?? [],
-  ),
+      salvaguardas: structuredClone(entidade.salvaguardas ?? []),
 
-bonusProficiencia:
-  Number(
-    entidade.bonusProficiencia,
-  ) ||
-  (
-    2 +
-    Math.floor(
-      (
-        Math.max(
-          1,
-          Number(entidade.nivel) || 1,
-        ) - 1
-      ) / 4,
-    )
-  ),
+      bonusProficiencia:
+        Number(entidade.bonusProficiencia) ||
+        2 + Math.floor((Math.max(1, Number(entidade.nivel) || 1) - 1) / 4),
 
       bonusIniciativa: SistemaTestes.calcularModificadorAtributo(entidade.atributos.destreza),
 
@@ -84,27 +69,29 @@ bonusProficiencia:
       participante.acaoDisponivel = true;
       participante.acaoBonusDisponivel = true;
       participante.reacaoDisponivel = true;
+      participante.desengajando = false;
     }
 
     const objetivosConfigurados = Array.isArray(configuracao.objetivos)
       ? structuredClone(configuracao.objetivos)
       : [];
 
-    const objetivos = objetivosConfigurados.length > 0
-      ? objetivosConfigurados
-      : [
-          {
-            id: "eliminacao",
-            tipo: "principal",
-            titulo: "Derrotar os inimigos",
-            descricao: "Derrote todos os inimigos.",
-            condicao: {
-              tipo: "inimigosDerrotados",
+    const objetivos =
+      objetivosConfigurados.length > 0
+        ? objetivosConfigurados
+        : [
+            {
+              id: "eliminacao",
+              tipo: "principal",
+              titulo: "Derrotar os inimigos",
+              descricao: "Derrote todos os inimigos.",
+              condicao: {
+                tipo: "inimigosDerrotados",
+              },
+              resultadoId: "vitoria",
+              categoria: "sucesso",
             },
-            resultadoId: "vitoria",
-            categoria: "sucesso",
-          },
-        ];
+          ];
 
     for (const objetivo of objetivos) {
       objetivo.estado = objetivo.estado ?? "pendente";
@@ -119,11 +106,17 @@ bonusProficiencia:
       encontro: structuredClone(configuracao.encontro ?? null),
       objetivos,
       terreno: structuredClone(
-  configuracao.terreno ?? {
-    bloqueado: [],
-    dificil: [],
-  },
-),
+        configuracao.terreno ?? {
+          bloqueado: [],
+          dificil: [],
+        },
+      ),
+      visao: structuredClone(
+        configuracao.visao ?? {
+          bloqueios: [],
+          barreiras: [],
+        },
+      ),
       areas: structuredClone(configuracao.areas ?? {}),
       marcadores: structuredClone(configuracao.marcadores ?? {}),
 
@@ -136,6 +129,7 @@ bonusProficiencia:
       iniciativaPendenteId: null,
       ataquePendente: null,
       danoPendente: null,
+      decisaoPendente: null,
 
       maestriasAtivas: {},
 
@@ -203,361 +197,615 @@ bonusProficiencia:
     return Math.max(distanciaColunas, distanciaLinhas);
   }
 
-  function celulaPertenceRegiao(coluna, linha, regiao) {
-  if (!regiao) {
-    return false;
-  }
-
-  const colunaUnica = Number(regiao.coluna);
-  const linhaUnica = Number(regiao.linha);
-
-  if (
-    Number.isFinite(colunaUnica) &&
-    Number.isFinite(linhaUnica)
-  ) {
-    return (
-      coluna === colunaUnica &&
-      linha === linhaUnica
-    );
-  }
-
-  const colunaInicial = Number(regiao.colunaInicial);
-  const colunaFinal = Number(regiao.colunaFinal);
-  const linhaInicial = Number(regiao.linhaInicial);
-  const linhaFinal = Number(regiao.linhaFinal);
-
-  if (
-    !Number.isFinite(colunaInicial) ||
-    !Number.isFinite(colunaFinal) ||
-    !Number.isFinite(linhaInicial) ||
-    !Number.isFinite(linhaFinal)
-  ) {
-    return false;
-  }
-
-  const menorColuna = Math.min(
-    colunaInicial,
-    colunaFinal,
-  );
-
-  const maiorColuna = Math.max(
-    colunaInicial,
-    colunaFinal,
-  );
-
-  const menorLinha = Math.min(
-    linhaInicial,
-    linhaFinal,
-  );
-
-  const maiorLinha = Math.max(
-    linhaInicial,
-    linhaFinal,
-  );
-
-  return (
-    coluna >= menorColuna &&
-    coluna <= maiorColuna &&
-    linha >= menorLinha &&
-    linha <= maiorLinha
-  );
-}
-
-function obterTipoTerreno(
-  combate,
-  coluna,
-  linha,
-) {
-  const regioesBloqueadas =
-    combate?.terreno?.bloqueado ?? [];
-
-  const celulaBloqueada =
-    regioesBloqueadas.some(
-      (regiao) =>
-        celulaPertenceRegiao(
-          coluna,
-          linha,
-          regiao,
-        ),
-    );
-
-  if (celulaBloqueada) {
-    return "bloqueado";
-  }
-
-  const regioesDificeis =
-    combate?.terreno?.dificil ?? [];
-
-  const celulaDificil =
-    regioesDificeis.some(
-      (regiao) =>
-        celulaPertenceRegiao(
-          coluna,
-          linha,
-          regiao,
-        ),
-    );
-
-  if (celulaDificil) {
-    return "dificil";
-  }
-
-  return "normal";
-}
-
-function criarChaveCelula(coluna, linha) {
-  return `${coluna},${linha}`;
-}
-
-function converterChaveCelula(chave) {
-  const [coluna, linha] =
-    chave.split(",").map(Number);
-
-  return {
-    coluna,
-    linha,
-  };
-}
-
-function celulaOcupadaPorOutro(
-  combate,
-  participanteId,
-  coluna,
-  linha,
-) {
-  return combate.participantes.some(
-    (participante) =>
-      participante.id !== participanteId &&
-      participante.estado !== "derrotado" &&
-      participante.posicao.coluna === coluna &&
-      participante.posicao.linha === linha,
-  );
-}
-
-function calcularCaminhoMovimento(
-  combate,
-  participante,
-  destino,
-) {
-  if (!combate || !participante || !destino) {
-    return null;
-  }
-
-  const destinoForaDoTabuleiro =
-    destino.coluna < 1 ||
-    destino.coluna > combate.tabuleiro.colunas ||
-    destino.linha < 1 ||
-    destino.linha > combate.tabuleiro.linhas;
-
-  if (destinoForaDoTabuleiro) {
-    return null;
-  }
-
-  if (
-    obterTipoTerreno(
-      combate,
-      destino.coluna,
-      destino.linha,
-    ) === "bloqueado"
-  ) {
-    return null;
-  }
-
-  if (
-    celulaOcupadaPorOutro(
-      combate,
-      participante.id,
-      destino.coluna,
-      destino.linha,
-    )
-  ) {
-    return null;
-  }
-
-  const origem = {
-    coluna: participante.posicao.coluna,
-    linha: participante.posicao.linha,
-  };
-
-  const chaveOrigem =
-    criarChaveCelula(
-      origem.coluna,
-      origem.linha,
-    );
-
-  const chaveDestino =
-    criarChaveCelula(
-      destino.coluna,
-      destino.linha,
-    );
-
-  if (chaveOrigem === chaveDestino) {
-    return {
-      caminho: [],
-      custo: 0,
-    };
-  }
-
-  const custos = new Map([
-    [chaveOrigem, 0],
-  ]);
-
-  const anteriores = new Map();
-
-  const celulasAbertas = [
-    {
-      coluna: origem.coluna,
-      linha: origem.linha,
-      custo: 0,
-    },
-  ];
-
-  while (celulasAbertas.length > 0) {
-    celulasAbertas.sort(
-      (celulaA, celulaB) =>
-        celulaA.custo - celulaB.custo,
-    );
-
-    const atual = celulasAbertas.shift();
-
-    const chaveAtual =
-      criarChaveCelula(
-        atual.coluna,
-        atual.linha,
-      );
-
-    if (
-      atual.custo !== custos.get(chaveAtual)
-    ) {
-      continue;
+  function participantesSaoHostis(participanteA, participanteB) {
+    if (!participanteA || !participanteB || participanteA.id === participanteB.id) {
+      return false;
     }
 
-    if (chaveAtual === chaveDestino) {
-      const caminho = [];
+    if (participanteA.grupoId !== null && participanteB.grupoId !== null) {
+      return participanteA.grupoId !== participanteB.grupoId;
+    }
 
-      let chavePercorrida = chaveDestino;
+    const participanteAInimigo = participanteA.tipo === "inimigo";
 
-      while (chavePercorrida !== chaveOrigem) {
-        caminho.unshift(
-          converterChaveCelula(
-            chavePercorrida,
-          ),
-        );
+    const participanteBInimigo = participanteB.tipo === "inimigo";
 
-        chavePercorrida =
-          anteriores.get(chavePercorrida);
+    return participanteAInimigo !== participanteBInimigo;
+  }
+
+  function obterAlcanceAmeaca(participante) {
+    const ataquesCorpoACorpo =
+      participante?.ataques?.filter((ataque) => ataque.categoria === "corpoACorpo") ?? [];
+
+    return ataquesCorpoACorpo.reduce(
+      (maiorAlcance, ataque) =>
+        Math.max(maiorAlcance, Number(ataque.selecao?.alcance?.normal) || 0),
+      0,
+    );
+  }
+
+  function listarAmeacadoresDaPosicao(combate, participante, posicao) {
+    if (!combate || !participante || !posicao) {
+      return [];
+    }
+
+    return combate.participantes.filter((possivelAmeacador) => {
+      if (
+        possivelAmeacador.estado === "derrotado" ||
+        !participantesSaoHostis(participante, possivelAmeacador)
+      ) {
+        return false;
       }
 
-      return {
-        caminho,
-        custo: atual.custo,
+      const alcanceAmeaca = obterAlcanceAmeaca(possivelAmeacador);
+
+      if (alcanceAmeaca <= 0) {
+        return false;
+      }
+
+      const distancia = calcularDistancia(possivelAmeacador.posicao, posicao);
+
+      return distancia > 0 && distancia <= alcanceAmeaca;
+    });
+  }
+
+  function listarSaidasDeZonaInfluencia(combate, participante, caminho) {
+    if (!combate || !participante || !Array.isArray(caminho)) {
+      return [];
+    }
+
+    const saidas = [];
+
+    let posicaoAnterior = {
+      coluna: participante.posicao.coluna,
+      linha: participante.posicao.linha,
+    };
+
+    for (let indicePasso = 0; indicePasso < caminho.length; indicePasso++) {
+      const proximaPosicao = caminho[indicePasso];
+
+      const ameacadoresAntes = listarAmeacadoresDaPosicao(combate, participante, posicaoAnterior);
+
+      const idsAmeacadoresDepois = new Set(
+        listarAmeacadoresDaPosicao(combate, participante, proximaPosicao).map(
+          (ameacador) => ameacador.id,
+        ),
+      );
+
+      for (const ameacador of ameacadoresAntes) {
+        if (idsAmeacadoresDepois.has(ameacador.id)) {
+          continue;
+        }
+
+        saidas.push({
+          ameacador,
+          ameacadorId: ameacador.id,
+
+          indicePasso,
+
+          origem: {
+            coluna: posicaoAnterior.coluna,
+            linha: posicaoAnterior.linha,
+          },
+
+          destino: {
+            coluna: proximaPosicao.coluna,
+            linha: proximaPosicao.linha,
+          },
+        });
+      }
+
+      posicaoAnterior = {
+        coluna: proximaPosicao.coluna,
+        linha: proximaPosicao.linha,
       };
     }
 
-    for (
-      let diferencaColuna = -1;
-      diferencaColuna <= 1;
-      diferencaColuna++
+    return saidas;
+  }
+
+  function escolherAtaqueOportunidade(ameacador, posicaoAlvo) {
+    const distancia = calcularDistancia(ameacador.posicao, posicaoAlvo);
+
+    return (
+      ameacador.ataques?.find((ataque) => {
+        if (ataque.categoria !== "corpoACorpo") {
+          return false;
+        }
+
+        const alcance = Number(ataque.selecao?.alcance?.normal) || 0;
+
+        return alcance > 0 && distancia <= alcance;
+      }) ?? null
+    );
+  }
+
+  function prepararAtaquesOportunidadeMovimento(combate, participante, caminho) {
+    if (!combate || !participante || !Array.isArray(caminho) || participante.desengajando) {
+      return [];
+    }
+
+    const saidas = listarSaidasDeZonaInfluencia(combate, participante, caminho);
+
+    const ameacadoresPreparados = new Set();
+
+    const oportunidades = [];
+
+    for (const saida of saidas) {
+      const ameacador = saida.ameacador;
+
+      if (!ameacador.reacaoDisponivel || ameacadoresPreparados.has(ameacador.id)) {
+        continue;
+      }
+
+      const ataque = escolherAtaqueOportunidade(ameacador, saida.origem);
+
+      if (!ataque) {
+        continue;
+      }
+
+      ameacadoresPreparados.add(ameacador.id);
+
+      oportunidades.push({
+        ameacador,
+        ameacadorId: ameacador.id,
+
+        alvo: participante,
+        alvoId: participante.id,
+
+        ataque,
+
+        indicePasso: saida.indicePasso,
+
+        origem: structuredClone(saida.origem),
+
+        destino: structuredClone(saida.destino),
+      });
+    }
+
+    return oportunidades;
+  }
+
+  function celulaPertenceRegiao(coluna, linha, regiao) {
+    if (!regiao) {
+      return false;
+    }
+
+    const colunaUnica = Number(regiao.coluna);
+    const linhaUnica = Number(regiao.linha);
+
+    if (Number.isFinite(colunaUnica) && Number.isFinite(linhaUnica)) {
+      return coluna === colunaUnica && linha === linhaUnica;
+    }
+
+    const colunaInicial = Number(regiao.colunaInicial);
+    const colunaFinal = Number(regiao.colunaFinal);
+    const linhaInicial = Number(regiao.linhaInicial);
+    const linhaFinal = Number(regiao.linhaFinal);
+
+    if (
+      !Number.isFinite(colunaInicial) ||
+      !Number.isFinite(colunaFinal) ||
+      !Number.isFinite(linhaInicial) ||
+      !Number.isFinite(linhaFinal)
     ) {
-      for (
-        let diferencaLinha = -1;
-        diferencaLinha <= 1;
-        diferencaLinha++
-      ) {
-        if (
-          diferencaColuna === 0 &&
-          diferencaLinha === 0
-        ) {
-          continue;
-        }
+      return false;
+    }
 
-        const proximaColuna =
-          atual.coluna + diferencaColuna;
+    const menorColuna = Math.min(colunaInicial, colunaFinal);
 
-        const proximaLinha =
-          atual.linha + diferencaLinha;
+    const maiorColuna = Math.max(colunaInicial, colunaFinal);
 
-        const foraDoTabuleiro =
-          proximaColuna < 1 ||
-          proximaColuna >
-            combate.tabuleiro.colunas ||
-          proximaLinha < 1 ||
-          proximaLinha >
-            combate.tabuleiro.linhas;
+    const menorLinha = Math.min(linhaInicial, linhaFinal);
 
-        if (foraDoTabuleiro) {
-          continue;
-        }
+    const maiorLinha = Math.max(linhaInicial, linhaFinal);
 
-        const tipoTerreno =
-          obterTipoTerreno(
-            combate,
-            proximaColuna,
-            proximaLinha,
-          );
+    return (
+      coluna >= menorColuna && coluna <= maiorColuna && linha >= menorLinha && linha <= maiorLinha
+    );
+  }
 
-        if (tipoTerreno === "bloqueado") {
-          continue;
-        }
+  function listarCelulasLinhaVisao(origem, destino) {
+    if (!origem || !destino) {
+      return [];
+    }
 
-        if (
-          celulaOcupadaPorOutro(
-            combate,
-            participante.id,
-            proximaColuna,
-            proximaLinha,
-          )
-        ) {
-          continue;
-        }
+    let colunaAtual = Number(origem.coluna);
 
-        const custoPasso =
-          tipoTerreno === "dificil"
-            ? 2
-            : 1;
+    let linhaAtual = Number(origem.linha);
 
-        const novoCusto =
-          atual.custo + custoPasso;
+    const colunaDestino = Number(destino.coluna);
 
-        const chaveProxima =
-          criarChaveCelula(
-            proximaColuna,
-            proximaLinha,
-          );
+    const linhaDestino = Number(destino.linha);
 
-        const custoRegistrado =
-          custos.get(chaveProxima);
+    const diferencaColunas = Math.abs(colunaDestino - colunaAtual);
 
-        if (
-          custoRegistrado !== undefined &&
-          custoRegistrado <= novoCusto
-        ) {
-          continue;
-        }
+    const diferencaLinhas = Math.abs(linhaDestino - linhaAtual);
 
-        custos.set(
-          chaveProxima,
-          novoCusto,
-        );
+    const direcaoColuna = colunaAtual < colunaDestino ? 1 : -1;
 
-        anteriores.set(
-          chaveProxima,
-          chaveAtual,
-        );
+    const direcaoLinha = linhaAtual < linhaDestino ? 1 : -1;
 
-        celulasAbertas.push({
-          coluna: proximaColuna,
-          linha: proximaLinha,
-          custo: novoCusto,
+    let erro = diferencaColunas - diferencaLinhas;
+
+    const celulas = [];
+
+    while (colunaAtual !== colunaDestino || linhaAtual !== linhaDestino) {
+      const erroDuplicado = 2 * erro;
+
+      if (erroDuplicado > -diferencaLinhas) {
+        erro -= diferencaLinhas;
+
+        colunaAtual += direcaoColuna;
+      }
+
+      if (erroDuplicado < diferencaColunas) {
+        erro += diferencaColunas;
+
+        linhaAtual += direcaoLinha;
+      }
+
+      const chegouAoDestino = colunaAtual === colunaDestino && linhaAtual === linhaDestino;
+
+      if (!chegouAoDestino) {
+        celulas.push({
+          coluna: colunaAtual,
+
+          linha: linhaAtual,
         });
       }
     }
+
+    return celulas;
   }
 
-  return null;
-}
+  function verificarLinhaVisao(combate, origem, destino) {
+    if (!combate || !origem || !destino) {
+      return {
+        sucesso: false,
 
-  function validarSelecaoCriatura(atacante, alvo, acao) {
+        motivo: "dadosInvalidos",
+
+        linhaLivre: false,
+
+        celulasPercorridas: [],
+
+        bloqueio: null,
+      };
+    }
+
+    const celulasPercorridas = listarCelulasLinhaVisao(origem, destino);
+
+    const bloqueios = combate.visao?.bloqueios ?? [];
+
+    const barreiras = combate.visao?.barreiras ?? [];
+
+    let bloqueioEncontrado = null;
+
+    let celulaBloqueada = null;
+
+    let barreiraEncontrada = null;
+
+    let cobertura = null;
+
+    const pesoCobertura = {
+      coberturaParcial: 1,
+      coberturaTresQuartos: 2,
+      bloqueioTotal: 3,
+    };
+
+    function encontrarBarreira(coluna, linha, lado) {
+      return (
+        barreiras.find(
+          (barreira) =>
+            Number(barreira.coluna) === coluna &&
+            Number(barreira.linha) === linha &&
+            barreira.lado === lado,
+        ) ?? null
+      );
+    }
+
+    function registrarBarreira(barreira) {
+      if (!barreira) {
+        return;
+      }
+
+      if (
+        !barreiraEncontrada ||
+        (pesoCobertura[barreira.tipo] ?? 0) > (pesoCobertura[barreiraEncontrada.tipo] ?? 0)
+      ) {
+        barreiraEncontrada = barreira;
+        cobertura = barreira.tipo;
+      }
+    }
+
+    const caminhoCompleto = [origem, ...celulasPercorridas, destino];
+
+    for (let indice = 1; indice < caminhoCompleto.length; indice++) {
+      const anterior = caminhoCompleto[indice - 1];
+      const atual = caminhoCompleto[indice];
+      const diferencaColuna = Number(atual.coluna) - Number(anterior.coluna);
+      const diferencaLinha = Number(atual.linha) - Number(anterior.linha);
+
+      if (diferencaColuna > 0) {
+        registrarBarreira(
+          encontrarBarreira(Number(atual.coluna), Number(atual.linha), "oeste") ??
+            encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "leste"),
+        );
+      } else if (diferencaColuna < 0) {
+        registrarBarreira(
+          encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "oeste") ??
+            encontrarBarreira(Number(atual.coluna), Number(atual.linha), "leste"),
+        );
+      }
+
+      if (diferencaLinha > 0) {
+        registrarBarreira(
+          encontrarBarreira(Number(atual.coluna), Number(atual.linha), "norte") ??
+            encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "sul"),
+        );
+      } else if (diferencaLinha < 0) {
+        registrarBarreira(
+          encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "norte") ??
+            encontrarBarreira(Number(atual.coluna), Number(atual.linha), "sul"),
+        );
+      }
+    }
+
+    for (const celula of celulasPercorridas) {
+      const bloqueio = bloqueios.find(function (regiao) {
+        return celulaPertenceRegiao(celula.coluna, celula.linha, regiao);
+      });
+
+      if (bloqueio) {
+        bloqueioEncontrado = bloqueio;
+
+        celulaBloqueada = {
+          coluna: celula.coluna,
+
+          linha: celula.linha,
+        };
+
+        break;
+      }
+    }
+
+    return {
+      sucesso: true,
+
+      motivo: null,
+
+      linhaLivre: bloqueioEncontrado === null && cobertura !== "bloqueioTotal",
+
+      celulasPercorridas,
+
+      bloqueio: bloqueioEncontrado,
+
+      celulaBloqueada,
+
+      barreira: barreiraEncontrada,
+
+      cobertura,
+
+      bonusCobertura:
+        cobertura === "coberturaTresQuartos" ? 5 : cobertura === "coberturaParcial" ? 2 : 0,
+    };
+  }
+
+  function obterTipoTerreno(combate, coluna, linha) {
+    const regioesBloqueadas = combate?.terreno?.bloqueado ?? [];
+
+    const celulaBloqueada = regioesBloqueadas.some((regiao) =>
+      celulaPertenceRegiao(coluna, linha, regiao),
+    );
+
+    if (celulaBloqueada) {
+      return "bloqueado";
+    }
+
+    const regioesDificeis = combate?.terreno?.dificil ?? [];
+
+    const celulaDificil = regioesDificeis.some((regiao) =>
+      celulaPertenceRegiao(coluna, linha, regiao),
+    );
+
+    if (celulaDificil) {
+      return "dificil";
+    }
+
+    return "normal";
+  }
+
+  function movimentoDiagonalCruzaCantoBloqueado(combate, origem, destino) {
+    const diferencaColuna = destino.coluna - origem.coluna;
+
+    const diferencaLinha = destino.linha - origem.linha;
+
+    if (Math.abs(diferencaColuna) !== 1 || Math.abs(diferencaLinha) !== 1) {
+      return false;
+    }
+
+    const terrenoHorizontal = obterTipoTerreno(
+      combate,
+      origem.coluna + diferencaColuna,
+      origem.linha,
+    );
+
+    const terrenoVertical = obterTipoTerreno(combate, origem.coluna, origem.linha + diferencaLinha);
+
+    return terrenoHorizontal === "bloqueado" || terrenoVertical === "bloqueado";
+  }
+
+  function criarChaveCelula(coluna, linha) {
+    return `${coluna},${linha}`;
+  }
+
+  function converterChaveCelula(chave) {
+    const [coluna, linha] = chave.split(",").map(Number);
+
+    return {
+      coluna,
+      linha,
+    };
+  }
+
+  function celulaOcupadaPorOutro(combate, participanteId, coluna, linha) {
+    return combate.participantes.some(
+      (participante) =>
+        participante.id !== participanteId &&
+        participante.estado !== "derrotado" &&
+        participante.posicao.coluna === coluna &&
+        participante.posicao.linha === linha,
+    );
+  }
+
+  function calcularCaminhoMovimento(combate, participante, destino) {
+    if (!combate || !participante || !destino) {
+      return null;
+    }
+
+    const destinoForaDoTabuleiro =
+      destino.coluna < 1 ||
+      destino.coluna > combate.tabuleiro.colunas ||
+      destino.linha < 1 ||
+      destino.linha > combate.tabuleiro.linhas;
+
+    if (destinoForaDoTabuleiro) {
+      return null;
+    }
+
+    if (obterTipoTerreno(combate, destino.coluna, destino.linha) === "bloqueado") {
+      return null;
+    }
+
+    if (celulaOcupadaPorOutro(combate, participante.id, destino.coluna, destino.linha)) {
+      return null;
+    }
+
+    const origem = {
+      coluna: participante.posicao.coluna,
+      linha: participante.posicao.linha,
+    };
+
+    const chaveOrigem = criarChaveCelula(origem.coluna, origem.linha);
+
+    const chaveDestino = criarChaveCelula(destino.coluna, destino.linha);
+
+    if (chaveOrigem === chaveDestino) {
+      return {
+        caminho: [],
+        custo: 0,
+      };
+    }
+
+    const custos = new Map([[chaveOrigem, 0]]);
+
+    const anteriores = new Map();
+
+    const celulasAbertas = [
+      {
+        coluna: origem.coluna,
+        linha: origem.linha,
+        custo: 0,
+      },
+    ];
+
+    while (celulasAbertas.length > 0) {
+      celulasAbertas.sort((celulaA, celulaB) => celulaA.custo - celulaB.custo);
+
+      const atual = celulasAbertas.shift();
+
+      const chaveAtual = criarChaveCelula(atual.coluna, atual.linha);
+
+      if (atual.custo !== custos.get(chaveAtual)) {
+        continue;
+      }
+
+      if (chaveAtual === chaveDestino) {
+        const caminho = [];
+
+        let chavePercorrida = chaveDestino;
+
+        while (chavePercorrida !== chaveOrigem) {
+          caminho.unshift(converterChaveCelula(chavePercorrida));
+
+          chavePercorrida = anteriores.get(chavePercorrida);
+        }
+
+        return {
+          caminho,
+          custo: atual.custo,
+        };
+      }
+
+      for (let diferencaColuna = -1; diferencaColuna <= 1; diferencaColuna++) {
+        for (let diferencaLinha = -1; diferencaLinha <= 1; diferencaLinha++) {
+          if (diferencaColuna === 0 && diferencaLinha === 0) {
+            continue;
+          }
+
+          const proximaColuna = atual.coluna + diferencaColuna;
+
+          const proximaLinha = atual.linha + diferencaLinha;
+
+          const foraDoTabuleiro =
+            proximaColuna < 1 ||
+            proximaColuna > combate.tabuleiro.colunas ||
+            proximaLinha < 1 ||
+            proximaLinha > combate.tabuleiro.linhas;
+
+          if (foraDoTabuleiro) {
+            continue;
+          }
+
+          if (
+            movimentoDiagonalCruzaCantoBloqueado(combate, atual, {
+              coluna: proximaColuna,
+              linha: proximaLinha,
+            })
+          ) {
+            continue;
+          }
+
+          const tipoTerreno = obterTipoTerreno(combate, proximaColuna, proximaLinha);
+
+          if (tipoTerreno === "bloqueado") {
+            continue;
+          }
+
+          if (celulaOcupadaPorOutro(combate, participante.id, proximaColuna, proximaLinha)) {
+            continue;
+          }
+
+          const custoPasso = tipoTerreno === "dificil" ? 2 : 1;
+
+          const novoCusto = atual.custo + custoPasso;
+
+          const chaveProxima = criarChaveCelula(proximaColuna, proximaLinha);
+
+          const custoRegistrado = custos.get(chaveProxima);
+
+          if (custoRegistrado !== undefined && custoRegistrado <= novoCusto) {
+            continue;
+          }
+
+          custos.set(chaveProxima, novoCusto);
+
+          anteriores.set(chaveProxima, chaveAtual);
+
+          celulasAbertas.push({
+            coluna: proximaColuna,
+            linha: proximaLinha,
+            custo: novoCusto,
+          });
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function validarSelecaoCriatura(atacante, alvo, acao, combate = null) {
     const distancia = calcularDistancia(atacante.posicao, alvo.posicao);
 
     const alcanceNormal = acao.selecao.alcance.normal;
@@ -578,6 +826,19 @@ function calcularCaminhoMovimento(
       };
     }
 
+    const resultadoLinhaVisao = combate
+      ? verificarLinhaVisao(combate, atacante.posicao, alvo.posicao)
+      : null;
+
+    if (resultadoLinhaVisao?.sucesso && !resultadoLinhaVisao.linhaLivre) {
+      return {
+        sucesso: false,
+        motivo: "semLinhaDeVisao",
+        distancia,
+        linhaVisao: resultadoLinhaVisao,
+      };
+    }
+
     const tipoRolagem =
       alcanceLongo !== null && distancia > alcanceNormal ? "desvantagem" : "normal";
 
@@ -585,10 +846,12 @@ function calcularCaminhoMovimento(
       sucesso: true,
       distancia,
       tipoRolagem,
+      cobertura: resultadoLinhaVisao?.cobertura ?? null,
+      bonusCobertura: resultadoLinhaVisao?.bonusCobertura ?? 0,
     };
   }
 
-  function validarSelecaoAcao(atacante, alvo, acao) {
+  function validarSelecaoAcao(atacante, alvo, acao, combate = null) {
     if (!acao.selecao) {
       return {
         sucesso: false,
@@ -597,7 +860,7 @@ function calcularCaminhoMovimento(
     }
 
     if (acao.selecao.tipo === "criatura") {
-      return validarSelecaoCriatura(atacante, alvo, acao);
+      return validarSelecaoCriatura(atacante, alvo, acao, combate);
     }
 
     return {
@@ -606,7 +869,7 @@ function calcularCaminhoMovimento(
     };
   }
 
-  function movimentarParticipante(combate, idParticipante, coluna, linha) {
+  function movimentarParticipante(combate, idParticipante, coluna, linha, opcoes = {}) {
     const participante = combate.participantes.find(
       (participante) => participante.id === idParticipante,
     );
@@ -638,19 +901,14 @@ function calcularCaminhoMovimento(
       };
     }
 
-    const tipoTerrenoDestino =
-  obterTipoTerreno(
-    combate,
-    coluna,
-    linha,
-  );
+    const tipoTerrenoDestino = obterTipoTerreno(combate, coluna, linha);
 
-if (tipoTerrenoDestino === "bloqueado") {
-  return {
-    sucesso: false,
-    motivo: "terrenoBloqueado",
-  };
-}
+    if (tipoTerrenoDestino === "bloqueado") {
+      return {
+        sucesso: false,
+        motivo: "terrenoBloqueado",
+      };
+    }
 
     const celulaOcupada = combate.participantes.some(
       (outroParticipante) =>
@@ -667,66 +925,222 @@ if (tipoTerrenoDestino === "bloqueado") {
     }
 
     const mesmaCelula =
-  participante.posicao.coluna === coluna &&
-  participante.posicao.linha === linha;
+      participante.posicao.coluna === coluna && participante.posicao.linha === linha;
 
-if (mesmaCelula) {
-  return {
-    sucesso: false,
-    motivo: "mesmaCelula",
-  };
-}
+    if (mesmaCelula) {
+      return {
+        sucesso: false,
+        motivo: "mesmaCelula",
+      };
+    }
 
-const resultadoCaminho =
-  calcularCaminhoMovimento(
-    combate,
-    participante,
-    {
+    const resultadoCaminho = calcularCaminhoMovimento(combate, participante, {
       coluna,
       linha,
-    },
-  );
+    });
 
-if (!resultadoCaminho) {
-  return {
-    sucesso: false,
-    motivo: "caminhoIndisponivel",
-  };
-}
+    if (!resultadoCaminho) {
+      return {
+        sucesso: false,
+        motivo: "caminhoIndisponivel",
+      };
+    }
 
-if (
-  resultadoCaminho.custo >
-  participante.movimentoRestante
-) {
-  return {
-    sucesso: false,
-    motivo: "movimentoInsuficiente",
-    custoMovimento:
-      resultadoCaminho.custo,
-  };
-}
+    if (resultadoCaminho.custo > participante.movimentoRestante) {
+      return {
+        sucesso: false,
+        motivo: "movimentoInsuficiente",
+        custoMovimento: resultadoCaminho.custo,
+      };
+    }
 
-participante.posicao.coluna = coluna;
-participante.posicao.linha = linha;
+    let oportunidades = prepararAtaquesOportunidadeMovimento(
+      combate,
+      participante,
+      resultadoCaminho.caminho,
+    );
 
-participante.movimentoRestante -=
-  resultadoCaminho.custo;
+    const oportunidadesDoJogador = oportunidades.filter(function (oportunidade) {
+      return oportunidade.ameacador.tipo === "jogador";
+    });
 
-return {
-  sucesso: true,
+    const escolhaReacaoJogador = opcoes.reacaoJogador;
 
-  distancia:
-    resultadoCaminho.caminho.length,
+    if (
+      participante.tipo === "inimigo" &&
+      oportunidadesDoJogador.length > 0 &&
+      escolhaReacaoJogador !== "usar" &&
+      escolhaReacaoJogador !== "ignorar"
+    ) {
+      const oportunidadePrincipal = oportunidadesDoJogador[0];
 
-  custoMovimento:
-    resultadoCaminho.custo,
+      combate.decisaoPendente = {
+        tipo: "oferecerAtaqueOportunidade",
 
-  caminho:
-    resultadoCaminho.caminho,
+        participanteId: oportunidadePrincipal.ameacadorId,
 
-  movimentoRestante:
-    participante.movimentoRestante,
-};
+        alvoId: participante.id,
+
+        destino: {
+          coluna,
+          linha,
+        },
+
+        ataque: {
+          id: obterIdentificadorAtaque(oportunidadePrincipal.ataque),
+
+          nome: oportunidadePrincipal.ataque.nome,
+        },
+
+        origem: structuredClone(oportunidadePrincipal.origem),
+
+        proximaPosicao: structuredClone(oportunidadePrincipal.destino),
+      };
+
+      return {
+        sucesso: false,
+
+        motivo: "reacaoJogadorPendente",
+
+        reacaoPendente: true,
+
+        decisao: combate.decisaoPendente,
+      };
+    }
+
+    if (
+      combate.decisaoPendente?.tipo === "oferecerAtaqueOportunidade" &&
+      combate.decisaoPendente.alvoId === participante.id
+    ) {
+      combate.decisaoPendente = null;
+    }
+
+    if (participante.tipo === "inimigo" && escolhaReacaoJogador === "ignorar") {
+      oportunidades = oportunidades.filter(function (oportunidade) {
+        return oportunidade.ameacador.tipo !== "jogador";
+      });
+    }
+
+    if (participante.tipo === "jogador" && oportunidades.length > 0 && !opcoes.confirmarSaidaZona) {
+      combate.decisaoPendente = {
+        tipo: "confirmarSaidaZona",
+
+        participanteId: participante.id,
+
+        destino: {
+          coluna,
+          linha,
+        },
+
+        ameacadores: oportunidades.map(function (oportunidade) {
+          return {
+            id: oportunidade.ameacadorId,
+
+            nome: oportunidade.ameacador.nome,
+          };
+        }),
+      };
+
+      return {
+        sucesso: false,
+
+        motivo: "confirmacaoSaidaZonaNecessaria",
+
+        confirmacaoNecessaria: true,
+
+        decisao: combate.decisaoPendente,
+      };
+    }
+
+    if (
+      combate.decisaoPendente?.tipo === "confirmarSaidaZona" &&
+      combate.decisaoPendente.participanteId === participante.id
+    ) {
+      combate.decisaoPendente = null;
+    }
+
+    const oportunidadesPorPasso = new Map();
+
+    for (const oportunidade of oportunidades) {
+      const listaDoPasso = oportunidadesPorPasso.get(oportunidade.indicePasso) ?? [];
+
+      listaDoPasso.push(oportunidade);
+
+      oportunidadesPorPasso.set(oportunidade.indicePasso, listaDoPasso);
+    }
+
+    const caminhoPercorrido = [];
+
+    const ataquesOportunidade = [];
+
+    let custoMovimento = 0;
+
+    let movimentoInterrompido = false;
+
+    movimento: for (
+      let indicePasso = 0;
+      indicePasso < resultadoCaminho.caminho.length;
+      indicePasso++
+    ) {
+      const passo = resultadoCaminho.caminho[indicePasso];
+
+      const oportunidadesDoPasso = oportunidadesPorPasso.get(indicePasso) ?? [];
+
+      for (const oportunidade of oportunidadesDoPasso) {
+        const resultadoOportunidade = executarAtaqueOportunidade(combate, oportunidade);
+
+        ataquesOportunidade.push({
+          oportunidade,
+          resultado: resultadoOportunidade,
+        });
+
+        if (participante.estado === "derrotado" || combate.status !== "ativo") {
+          movimentoInterrompido = true;
+
+          break movimento;
+        }
+      }
+
+      const tipoTerreno = obterTipoTerreno(combate, passo.coluna, passo.linha);
+
+      const custoPasso = tipoTerreno === "dificil" ? 2 : 1;
+
+      participante.posicao.coluna = passo.coluna;
+
+      participante.posicao.linha = passo.linha;
+
+      participante.movimentoRestante -= custoPasso;
+
+      custoMovimento += custoPasso;
+
+      caminhoPercorrido.push({
+        coluna: passo.coluna,
+        linha: passo.linha,
+      });
+    }
+
+    const destinoAlcancado =
+      participante.posicao.coluna === coluna && participante.posicao.linha === linha;
+
+    return {
+      sucesso: true,
+
+      distancia: caminhoPercorrido.length,
+
+      custoMovimento,
+
+      caminho: caminhoPercorrido,
+
+      ataquesOportunidade,
+
+      movimentoInterrompido,
+
+      destinoAlcancado,
+
+      posicaoFinal: structuredClone(participante.posicao),
+
+      movimentoRestante: participante.movimentoRestante,
+    };
   }
 
   function consumirRecurso(participante, nomeRecurso) {
@@ -749,6 +1163,49 @@ return {
 
   function consumirReacao(participante) {
     return consumirRecurso(participante, "reacaoDisponivel");
+  }
+
+  function usarAcaoDesengajar(combate, idParticipante) {
+    const participante = combate?.participantes.find(
+      (participante) => participante.id === idParticipante,
+    );
+
+    if (!participante) {
+      return {
+        sucesso: false,
+        motivo: "participanteInexistente",
+      };
+    }
+
+    if (combate.participanteAtivoId !== participante.id) {
+      return {
+        sucesso: false,
+        motivo: "foraDoTurno",
+      };
+    }
+
+    if (participante.estado === "derrotado") {
+      return {
+        sucesso: false,
+        motivo: "participanteDerrotado",
+      };
+    }
+
+    if (!participante.acaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "acaoIndisponivel",
+      };
+    }
+
+    consumirAcao(participante);
+
+    participante.desengajando = true;
+
+    return {
+      sucesso: true,
+      participante,
+    };
   }
 
   function participanteDominaArma(participante, ataque) {
@@ -793,21 +1250,17 @@ return {
     const ataqueEhLeve = ataque?.propriedades?.includes("leve") ?? false;
 
     const ehAtaqueAdicionalLeve =
-      ataqueEhLeve &&
-      ataqueHabilitador &&
-      ataqueHabilitador.ataqueId !== identificadorAtaque;
+      ataqueEhLeve && ataqueHabilitador && ataqueHabilitador.ataqueId !== identificadorAtaque;
 
     if (!ehAtaqueAdicionalLeve) {
       return ataque?.custoPadrao ?? "acao";
     }
 
-    const operacaoNick = window.TradutorRegras
-      .prepararOperacoes({
-        gatilho: "aoPrepararAtaqueAdicionalArmaLeve",
-        participante,
-        ataque,
-      })
-      .find((operacao) => operacao.tipo === "alterarCustoAtaqueAdicional");
+    const operacaoNick = window.TradutorRegras.prepararOperacoes({
+      gatilho: "aoPrepararAtaqueAdicionalArmaLeve",
+      participante,
+      ataque,
+    }).find((operacao) => operacao.tipo === "alterarCustoAtaqueAdicional");
 
     return operacaoNick ? "nenhum" : "acaoBonus";
   }
@@ -822,7 +1275,7 @@ return {
       };
     }
 
-    if (combate.participanteAtivoId !== atacante.id) {
+    if (!opcoes.ignorarTurno && combate.participanteAtivoId !== atacante.id) {
       return {
         sucesso: false,
         motivo: "foraDoTurno",
@@ -865,123 +1318,72 @@ return {
       };
     }
 
-    const resultadoSelecao =
-  validarSelecaoAcao(
-    atacante,
-    alvo,
-    ataque,
-  );
+    if (custoAtaque === "reacao" && !atacante.reacaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "reacaoIndisponivel",
+      };
+    }
 
-if (!resultadoSelecao.sucesso) {
-  return resultadoSelecao;
-}
+    const resultadoSelecao = validarSelecaoAcao(atacante, alvo, ataque, combate);
 
-const atacanteEstaCaido =
-  atacante.condicoes?.some(
-    condicao =>
-      condicao.id === "caido",
-  ) ?? false;
+    if (!resultadoSelecao.sucesso) {
+      return resultadoSelecao;
+    }
 
-const alvoEstaCaido =
-  alvo.condicoes?.some(
-    condicao =>
-      condicao.id === "caido",
-  ) ?? false;
+    const atacanteEstaCaido =
+      atacante.condicoes?.some((condicao) => condicao.id === "caido") ?? false;
 
-const ataqueProximoContraCaido =
-  alvoEstaCaido &&
-  resultadoSelecao.distancia <= 1;
+    const alvoEstaCaido = alvo.condicoes?.some((condicao) => condicao.id === "caido") ?? false;
 
-const ataqueDistanteContraCaido =
-  alvoEstaCaido &&
-  resultadoSelecao.distancia > 1;
+    const ataqueProximoContraCaido = alvoEstaCaido && resultadoSelecao.distancia <= 1;
 
-  const ataqueEhPesado =
-  ataque.propriedades?.includes(
-    "pesada",
-  ) ?? false;
+    const ataqueDistanteContraCaido = alvoEstaCaido && resultadoSelecao.distancia > 1;
 
-const atributoExigidoPelaArmaPesada =
-  ataque.categoria === "distancia"
-    ? "destreza"
-    : "forca";
+    const ataqueEhPesado = ataque.propriedades?.includes("pesada") ?? false;
 
-const valorAtributoArmaPesada =
-  Number(
-    atacante
-      .atributos
-      ?.[atributoExigidoPelaArmaPesada],
-  ) || 0;
+    const atributoExigidoPelaArmaPesada = ataque.categoria === "distancia" ? "destreza" : "forca";
 
-const naoAtendeRequisitoArmaPesada =
-  ataqueEhPesado &&
-  valorAtributoArmaPesada < 13;
+    const valorAtributoArmaPesada =
+      Number(atacante.atributos?.[atributoExigidoPelaArmaPesada]) || 0;
 
-const possuiVantagemTemporaria =
-  combate.efeitosTemporarios?.some(
-    function verificarVantagem(
-      efeito,
-    ) {
-      return (
-        efeito.tipo ===
-          "vantagem" &&
+    const naoAtendeRequisitoArmaPesada = ataqueEhPesado && valorAtributoArmaPesada < 13;
 
-        efeito.participanteId ===
-          atacante.id &&
+    const possuiVantagemTemporaria =
+      combate.efeitosTemporarios?.some(function verificarVantagem(efeito) {
+        return (
+          efeito.tipo === "vantagem" &&
+          efeito.participanteId === atacante.id &&
+          efeito.alvoId === alvo.id &&
+          efeito.rolagemAfetada === "ataque" &&
+          efeito.usosRestantes > 0
+        );
+      }) ?? false;
 
-        efeito.alvoId ===
-          alvo.id &&
+    const possuiDesvantagemTemporaria =
+      combate.efeitosTemporarios?.some(function verificarDesvantagem(efeito) {
+        return (
+          efeito.tipo === "desvantagem" &&
+          efeito.participanteId === atacante.id &&
+          efeito.rolagemAfetada === "ataque" &&
+          efeito.usosRestantes > 0
+        );
+      }) ?? false;
 
-        efeito.rolagemAfetada ===
-          "ataque" &&
+    const possuiVantagemBase = resultadoSelecao.tipoRolagem === "vantagem";
 
-        efeito.usosRestantes > 0
-      );
-    },
-  ) ?? false;
+    const possuiDesvantagemBase = resultadoSelecao.tipoRolagem === "desvantagem";
 
-const possuiDesvantagemTemporaria =
-  combate.efeitosTemporarios?.some(
-    function verificarDesvantagem(
-      efeito,
-    ) {
-      return (
-        efeito.tipo ===
-          "desvantagem" &&
+    const tipoRolagem = resolverTipoRolagem({
+      vantagem: possuiVantagemBase || possuiVantagemTemporaria || ataqueProximoContraCaido,
 
-        efeito.participanteId ===
-          atacante.id &&
-
-        efeito.rolagemAfetada ===
-          "ataque" &&
-
-        efeito.usosRestantes > 0
-      );
-    },
-  ) ?? false;
-
-const possuiVantagemBase =
-  resultadoSelecao.tipoRolagem ===
-    "vantagem";
-
-const possuiDesvantagemBase =
-  resultadoSelecao.tipoRolagem ===
-    "desvantagem";
-
-const tipoRolagem =
-  resolverTipoRolagem({
-    vantagem:
-      possuiVantagemBase ||
-      possuiVantagemTemporaria ||
-      ataqueProximoContraCaido,
-
-    desvantagem:
-      possuiDesvantagemBase ||
-      possuiDesvantagemTemporaria ||
-      atacanteEstaCaido ||
-      ataqueDistanteContraCaido ||
-  naoAtendeRequisitoArmaPesada,
-  });
+      desvantagem:
+        possuiDesvantagemBase ||
+        possuiDesvantagemTemporaria ||
+        atacanteEstaCaido ||
+        ataqueDistanteContraCaido ||
+        naoAtendeRequisitoArmaPesada,
+    });
 
     combate.ataquePendente = {
       atacanteId: atacante.id,
@@ -990,6 +1392,8 @@ const tipoRolagem =
       custo: custoAtaque,
       tipoEspecial: opcoes.tipoEspecial ?? null,
       tipoRolagem: tipoRolagem,
+      cobertura: resultadoSelecao.cobertura ?? null,
+      bonusCobertura: Number(resultadoSelecao.bonusCobertura) || 0,
       vantagemTemporaria: possuiVantagemTemporaria,
       desvantagemTemporaria: possuiDesvantagemTemporaria,
     };
@@ -1002,6 +1406,8 @@ const tipoRolagem =
       distancia: resultadoSelecao.distancia,
       tipoRolagem,
       custo: custoAtaque,
+      cobertura: resultadoSelecao.cobertura ?? null,
+      bonusCobertura: Number(resultadoSelecao.bonusCobertura) || 0,
     };
   }
 
@@ -1055,10 +1461,16 @@ const tipoRolagem =
 
     const falhaAutomatica = resultadoNatural === 1;
 
-    const acertou = !falhaAutomatica && (acertoCritico || total >= alvo.classeArmadura);
+    const bonusCobertura = Number(ataquePendente.bonusCobertura) || 0;
+
+    const classeArmaduraEfetiva = alvo.classeArmadura + bonusCobertura;
+
+    const acertou = !falhaAutomatica && (acertoCritico || total >= classeArmaduraEfetiva);
 
     if (ataquePendente.custo === "acaoBonus") {
       consumirAcaoBonus(atacante);
+    } else if (ataquePendente.custo === "reacao") {
+      consumirReacao(atacante);
     } else if (ataquePendente.custo !== "nenhum") {
       consumirAcao(atacante);
     }
@@ -1166,30 +1578,20 @@ const tipoRolagem =
         alvo: alvo,
       });
 
-      const efeitosOpcionaisAposAcerto =
-  operacoesAposAcerto.filter(
-    operacao =>
-      operacao.tipo ===
-        "deslocarAlvo" ||
-
-      operacao.tipo ===
-        "solicitarSalvaguarda" ||
-
-      (
-        operacao.tipo === "permitirAtaqueAdicional" &&
-        !(atacante.maestriasUsadasTurno ?? []).includes("cleave")
-      ),
-  );
+      const efeitosOpcionaisAposAcerto = operacoesAposAcerto.filter(
+        (operacao) =>
+          operacao.tipo === "deslocarAlvo" ||
+          operacao.tipo === "solicitarSalvaguarda" ||
+          (operacao.tipo === "permitirAtaqueAdicional" &&
+            !(atacante.maestriasUsadasTurno ?? []).includes("cleave")),
+      );
 
       combate.danoPendente = {
         atacanteId: atacante.id,
         alvoId: alvo.id,
         ataqueId: identificadorAtaque,
         critico: acertoCritico,
-        efeitos: [
-  ...efeitosDano,
-  ...efeitosOpcionaisAposAcerto,
-],
+        efeitos: [...efeitosDano, ...efeitosOpcionaisAposAcerto],
       };
     }
 
@@ -1200,7 +1602,10 @@ const tipoRolagem =
       resultadoNatural,
       total,
       tipoRolagem,
-      classeArmadura: alvo.classeArmadura,
+      classeArmadura: classeArmaduraEfetiva,
+      classeArmaduraBase: alvo.classeArmadura,
+      cobertura: ataquePendente.cobertura ?? null,
+      bonusCobertura,
       atacante,
       alvo,
       ataque:
@@ -1221,9 +1626,7 @@ const tipoRolagem =
   }
 
   function listarAlvosCleave(combate, atacanteId, primeiroAlvoId, ataqueId) {
-    const atacante = combate?.participantes?.find(
-      (participante) => participante.id === atacanteId,
-    );
+    const atacante = combate?.participantes?.find((participante) => participante.id === atacanteId);
     const primeiroAlvo = combate?.participantes?.find(
       (participante) => participante.id === primeiroAlvoId,
     );
@@ -1243,20 +1646,16 @@ const tipoRolagem =
         return false;
       }
 
-      const proximoDoPrimeiroAlvo =
-        calcularDistancia(primeiroAlvo.posicao, candidato.posicao) <= 1;
+      const proximoDoPrimeiroAlvo = calcularDistancia(primeiroAlvo.posicao, candidato.posicao) <= 1;
 
       return (
-        proximoDoPrimeiroAlvo &&
-        validarSelecaoAcao(atacante, candidato, ataque).sucesso
+        proximoDoPrimeiroAlvo && validarSelecaoAcao(atacante, candidato, ataque, combate).sucesso
       );
     });
   }
 
   function prepararAtaqueCleave(combate, atacanteId, primeiroAlvoId, novoAlvoId, ataqueId) {
-    const atacante = combate?.participantes?.find(
-      (participante) => participante.id === atacanteId,
-    );
+    const atacante = combate?.participantes?.find((participante) => participante.id === atacanteId);
 
     if ((atacante?.maestriasUsadasTurno ?? []).includes("cleave")) {
       return {
@@ -1265,12 +1664,9 @@ const tipoRolagem =
       };
     }
 
-    const alvoValido = listarAlvosCleave(
-      combate,
-      atacanteId,
-      primeiroAlvoId,
-      ataqueId,
-    ).some((alvo) => alvo.id === novoAlvoId);
+    const alvoValido = listarAlvosCleave(combate, atacanteId, primeiroAlvoId, ataqueId).some(
+      (alvo) => alvo.id === novoAlvoId,
+    );
 
     if (!alvoValido) {
       return {
@@ -1279,16 +1675,10 @@ const tipoRolagem =
       };
     }
 
-    return prepararAtaque(
-      combate,
-      atacanteId,
-      novoAlvoId,
-      ataqueId,
-      {
-        custo: "nenhum",
-        tipoEspecial: "cleave",
-      },
-    );
+    return prepararAtaque(combate, atacanteId, novoAlvoId, ataqueId, {
+      custo: "nenhum",
+      tipoEspecial: "cleave",
+    });
   }
 
   function removerParticipanteDaOrdem(combate, idParticipante) {
@@ -1322,14 +1712,10 @@ const tipoRolagem =
 
   function obterParticipanteObjetivo(combate, participanteId) {
     if (participanteId === "jogador") {
-      return combate.participantes.find(
-        (participante) => participante.tipo === "jogador",
-      ) ?? null;
+      return combate.participantes.find((participante) => participante.tipo === "jogador") ?? null;
     }
 
-    return combate.participantes.find(
-      (participante) => participante.id === participanteId,
-    ) ?? null;
+    return combate.participantes.find((participante) => participante.id === participanteId) ?? null;
   }
 
   function participanteEstaNaArea(combate, participante, areaId) {
@@ -1361,30 +1747,21 @@ const tipoRolagem =
     );
   }
 
-  avaliadoresObjetivos.inimigosDerrotados = function inimigosDerrotados(
-    combate,
-    condicao,
-  ) {
+  avaliadoresObjetivos.inimigosDerrotados = function inimigosDerrotados(combate, condicao) {
     const inimigos = combate.participantes.filter(
       (participante) =>
         participante.tipo === "inimigo" &&
-        (
-          !condicao.grupoId ||
+        (!condicao.grupoId ||
           condicao.grupoId === "todos" ||
-          participante.grupoId === condicao.grupoId
-        ),
+          participante.grupoId === condicao.grupoId),
     );
 
     return (
-      inimigos.length > 0 &&
-      inimigos.every((participante) => participante.estado === "derrotado")
+      inimigos.length > 0 && inimigos.every((participante) => participante.estado === "derrotado")
     );
   };
 
-  avaliadoresObjetivos.participanteDerrotado = function participanteDerrotado(
-    combate,
-    condicao,
-  ) {
+  avaliadoresObjetivos.participanteDerrotado = function participanteDerrotado(combate, condicao) {
     return obterParticipanteObjetivo(combate, condicao.participanteId)?.estado === "derrotado";
   };
 
@@ -1406,9 +1783,7 @@ const tipoRolagem =
     condicao,
   ) {
     const participante = obterParticipanteObjetivo(combate, condicao.participanteId);
-    return Boolean(
-      participante?.condicoes?.some((item) => item.id === condicao.condicaoId),
-    );
+    return Boolean(participante?.condicoes?.some((item) => item.id === condicao.condicaoId));
   };
 
   avaliadoresObjetivos.rodadaAlcancada = function rodadaAlcancada(combate, condicao) {
@@ -1435,15 +1810,11 @@ const tipoRolagem =
     }
 
     if (Array.isArray(condicao.todas)) {
-      return condicao.todas.every(
-        (item) => avaliarCondicaoObjetivo(combate, item),
-      );
+      return condicao.todas.every((item) => avaliarCondicaoObjetivo(combate, item));
     }
 
     if (Array.isArray(condicao.qualquer)) {
-      return condicao.qualquer.some(
-        (item) => avaliarCondicaoObjetivo(combate, item),
-      );
+      return condicao.qualquer.some((item) => avaliarCondicaoObjetivo(combate, item));
     }
 
     if (condicao.nao) {
@@ -1519,8 +1890,8 @@ const tipoRolagem =
           if (!Array.isArray(condicao[operador]) || condicao[operador].length === 0) {
             erros.push(`${caminho}.${operador} deve ser uma lista não vazia.`);
           } else {
-            condicao[operador].forEach(
-              (item, indice) => validarCondicao(item, `${caminho}.${operador}[${indice}]`),
+            condicao[operador].forEach((item, indice) =>
+              validarCondicao(item, `${caminho}.${operador}[${indice}]`),
             );
           }
           return;
@@ -1564,11 +1935,11 @@ const tipoRolagem =
     return erros;
   }
 
-  function escolherAtaqueInimigo(inimigo, alvo) {
+  function escolherAtaqueInimigo(combate, inimigo, alvo) {
     let ataqueComDesvantagem = null;
 
     for (const ataque of inimigo.ataques) {
-      const resultadoSelecao = validarSelecaoAcao(inimigo, alvo, ataque);
+      const resultadoSelecao = validarSelecaoAcao(inimigo, alvo, ataque, combate);
 
       if (!resultadoSelecao.sucesso) {
         continue;
@@ -1590,7 +1961,7 @@ const tipoRolagem =
     const caminho = [];
 
     while (inimigo.movimentoRestante > 0) {
-      const ataqueDisponivel = escolherAtaqueInimigo(inimigo, alvo);
+      const ataqueDisponivel = escolherAtaqueInimigo(combate, inimigo, alvo);
 
       if (ataqueDisponivel) {
         break;
@@ -1629,6 +2000,26 @@ const tipoRolagem =
           destino.coluna,
           destino.linha,
         );
+
+        if (resultadoMovimento.reacaoPendente) {
+          return {
+            sucesso: false,
+
+            motivo: "reacaoJogadorPendente",
+
+            turnoPausado: true,
+
+            reacaoPendente: true,
+
+            decisao: resultadoMovimento.decisao,
+
+            celulasPercorridas,
+
+            caminho,
+
+            destinoPendente: structuredClone(destino),
+          };
+        }
 
         if (resultadoMovimento.sucesso) {
           celulasPercorridas++;
@@ -1680,14 +2071,31 @@ const tipoRolagem =
       };
     }
 
-    let ataque = escolherAtaqueInimigo(inimigo, alvo);
+    let ataque = escolherAtaqueInimigo(combate, inimigo, alvo);
 
     let resultadoMovimento = null;
 
     if (!ataque) {
       resultadoMovimento = moverInimigoEmDirecaoAoAlvo(combate, inimigo, alvo);
 
-      ataque = escolherAtaqueInimigo(inimigo, alvo);
+      if (resultadoMovimento?.turnoPausado) {
+        return {
+          sucesso: true,
+
+          turnoPausado: true,
+
+          reacaoPendente: true,
+
+          inimigo,
+          alvo,
+
+          resultadoMovimento,
+
+          decisao: resultadoMovimento.decisao,
+        };
+      }
+
+      ataque = escolherAtaqueInimigo(combate, inimigo, alvo);
     }
 
     if (!ataque) {
@@ -1697,7 +2105,6 @@ const tipoRolagem =
         inimigo,
         alvo,
         resultadoMovimento,
-        resultadoCombate,
       };
     }
 
@@ -1761,177 +2168,173 @@ const tipoRolagem =
     };
   }
 
-  function aplicarCondicaoCombate(
-  participante,
-  condicaoId,
-  dados = {},
-) {
-  if (!participante || !condicaoId) {
-    return {
-      sucesso: false,
-      motivo: "dadosInvalidos",
+  function aplicarCondicaoCombate(participante, condicaoId, dados = {}) {
+    if (!participante || !condicaoId) {
+      return {
+        sucesso: false,
+        motivo: "dadosInvalidos",
+      };
+    }
+
+    participante.condicoes ??= [];
+
+    const condicaoExistente = participante.condicoes.find((condicao) => condicao.id === condicaoId);
+
+    if (condicaoExistente) {
+      return {
+        sucesso: true,
+        aplicada: false,
+        motivo: "condicaoJaExistente",
+        condicao: condicaoExistente,
+      };
+    }
+
+    const condicao = {
+      id: condicaoId,
+
+      origem: structuredClone(dados.origem ?? null),
+
+      aplicadoPorId: dados.aplicadoPorId ?? null,
+
+      rodadaAplicacao: dados.rodadaAplicacao ?? null,
     };
-  }
 
-  participante.condicoes ??= [];
+    participante.condicoes.push(condicao);
 
-  const condicaoExistente =
-    participante.condicoes.find(
-      condicao =>
-        condicao.id === condicaoId,
-    );
-
-  if (condicaoExistente) {
     return {
       sucesso: true,
-      aplicada: false,
-      motivo: "condicaoJaExistente",
-      condicao: condicaoExistente,
+      aplicada: true,
+      condicao,
     };
   }
 
-  const condicao = {
-    id: condicaoId,
+  function resolverSalvaguardaCombate(combate, operacao, resultadoRolagem = null) {
+    if (!combate || operacao?.tipo !== "solicitarSalvaguarda") {
+      return {
+        sucesso: false,
+        motivo: "operacaoInvalida",
+      };
+    }
 
-    origem:
-      structuredClone(
-        dados.origem ?? null,
-      ),
+    const alvo = combate.participantes.find((participante) => participante.id === operacao.alvoId);
 
-    aplicadoPorId:
-      dados.aplicadoPorId ?? null,
+    if (!alvo) {
+      return {
+        sucesso: false,
+        motivo: "alvoInexistente",
+      };
+    }
 
-    rodadaAplicacao:
-      dados.rodadaAplicacao ?? null,
-  };
-
-  participante.condicoes.push(
-    condicao,
-  );
-
-  return {
-    sucesso: true,
-    aplicada: true,
-    condicao,
-  };
-}
-
-function resolverSalvaguardaCombate(
-  combate,
-  operacao,
-  resultadoRolagem = null,
-) {
-  if (
-    !combate ||
-    operacao?.tipo !==
-      "solicitarSalvaguarda"
-  ) {
-    return {
-      sucesso: false,
-      motivo: "operacaoInvalida",
-    };
-  }
-
-  const alvo =
-    combate.participantes.find(
-      participante =>
-        participante.id ===
-        operacao.alvoId,
+    const origem = combate.participantes.find(
+      (participante) => participante.id === operacao.participanteId,
     );
 
-  if (!alvo) {
+    const salvaguardaDeDestreza = operacao.atributoId === "destreza";
+
+    const exigeLinhaVisao = operacao.exigeLinhaVisao !== false;
+
+    const resultadoCobertura = origem
+      ? verificarLinhaVisao(combate, origem.posicao, alvo.posicao)
+      : null;
+
+    const cobertura = resultadoCobertura?.cobertura ?? null;
+
+    const bonusCobertura = salvaguardaDeDestreza ? (resultadoCobertura?.bonusCobertura ?? 0) : 0;
+
+    if (exigeLinhaVisao && resultadoCobertura?.sucesso && !resultadoCobertura.linhaLivre) {
+      return {
+        sucesso: false,
+        motivo: "semLinhaDeVisao",
+        alvo,
+        cobertura,
+        resultadoCobertura,
+      };
+    }
+
+    const bonusSalvaguardaBase = window.SistemaTestes.calcularBonusSalvaguarda(
+      alvo,
+      operacao.atributoId,
+    );
+
+    const bonusSalvaguarda = bonusSalvaguardaBase + bonusCobertura;
+
+    const rolagemBase =
+  resultadoRolagem ??
+  realizarRolagemComposta({
+    gruposDeDados: [
+      {
+        quantidade: 1,
+        numeroDeFaces: 20,
+      },
+    ],
+
+    modificador: bonusSalvaguarda,
+  });
+
+const rolagem =
+  resultadoRolagem && bonusCobertura > 0
+    ? {
+        ...rolagemBase,
+
+        modificador:
+          (Number(rolagemBase.modificador) || 0) +
+          bonusCobertura,
+
+        total:
+          (Number(rolagemBase.total) || 0) +
+          bonusCobertura,
+      }
+    : rolagemBase;
+
+    const resultadoTeste = window.SistemaTestes.resolverTesteContraCd(
+      rolagem,
+      operacao.dificuldade,
+    );
+
+    let resultadoCondicao = null;
+
+    const efeitoDoResultado = resultadoTeste.sucesso
+      ? operacao.resultados?.sucesso
+      : operacao.resultados?.fracasso;
+
+    if (efeitoDoResultado?.tipo === "aplicarCondicao") {
+      resultadoCondicao = aplicarCondicaoCombate(alvo, efeitoDoResultado.condicaoId, {
+        origem: operacao.origem,
+
+        aplicadoPorId: operacao.participanteId,
+
+        rodadaAplicacao: combate.rodada,
+      });
+    }
+
     return {
-      sucesso: false,
-      motivo: "alvoInexistente",
+      sucesso: true,
+
+      alvo,
+
+      atributoId: operacao.atributoId,
+
+      cobertura,
+
+      bonusCobertura,
+
+      dificuldade: operacao.dificuldade,
+
+      bonusSalvaguardaBase,
+
+      bonusSalvaguarda,
+
+      rolagem,
+
+      resultadoTeste,
+
+      passou: resultadoTeste.sucesso,
+
+      resultadoCondicao,
+
+      resultadoCombate: verificarObjetivosCombate(combate),
     };
   }
-
-  const bonusSalvaguarda =
-    window.SistemaTestes
-      .calcularBonusSalvaguarda(
-        alvo,
-        operacao.atributoId,
-      );
-
-  const rolagem =
-    resultadoRolagem ??
-    realizarRolagemComposta({
-      gruposDeDados: [
-        {
-          quantidade: 1,
-          numeroDeFaces: 20,
-        },
-      ],
-
-      modificador:
-        bonusSalvaguarda,
-    });
-
-  const resultadoTeste =
-    window.SistemaTestes
-      .resolverTesteContraCd(
-        rolagem,
-        operacao.dificuldade,
-      );
-
-  let resultadoCondicao = null;
-
-  const efeitoDoResultado =
-    resultadoTeste.sucesso
-      ? operacao
-          .resultados
-          ?.sucesso
-      : operacao
-          .resultados
-          ?.fracasso;
-
-  if (
-    efeitoDoResultado?.tipo ===
-      "aplicarCondicao"
-  ) {
-    resultadoCondicao =
-      aplicarCondicaoCombate(
-        alvo,
-        efeitoDoResultado.condicaoId,
-        {
-          origem:
-            operacao.origem,
-
-          aplicadoPorId:
-            operacao.participanteId,
-
-          rodadaAplicacao:
-            combate.rodada,
-        },
-      );
-  }
-
-  return {
-    sucesso: true,
-
-    alvo,
-
-    atributoId:
-      operacao.atributoId,
-
-    dificuldade:
-      operacao.dificuldade,
-
-    bonusSalvaguarda,
-
-    rolagem,
-
-    resultadoTeste,
-
-    passou:
-      resultadoTeste.sucesso,
-
-    resultadoCondicao,
-
-    resultadoCombate:
-      verificarObjetivosCombate(combate),
-  };
-}
 
   function aplicarDeslocamentoForcado(combate, operacao) {
     if (!combate || operacao?.tipo !== "deslocarAlvo") {
@@ -1981,6 +2384,18 @@ function resolverSalvaguardaCombate(
         proximaLinha > combate.tabuleiro.linhas;
 
       if (foraDoTabuleiro) {
+        break;
+      }
+
+      const terrenoBloqueado =
+        obterTipoTerreno(combate, proximaColuna, proximaLinha) === "bloqueado";
+
+      const diagonalBloqueada = movimentoDiagonalCruzaCantoBloqueado(combate, alvo.posicao, {
+        coluna: proximaColuna,
+        linha: proximaLinha,
+      });
+
+      if (terrenoBloqueado || diagonalBloqueada) {
         break;
       }
 
@@ -2215,27 +2630,15 @@ function resolverSalvaguardaCombate(
       };
     }
 
-    for (
-  const efeito of
-  danoPendente.efeitos ?? []
-) {
-  if (
-  efeito.tipo ===
-    "deslocarAlvo" ||
-
-  efeito.tipo ===
-    "solicitarSalvaguarda" ||
-
-  efeito.tipo ===
-    "permitirAtaqueAdicional"
-) {
-    efeitosDisponiveis.push(
-      structuredClone(
-        efeito,
-      ),
-    );
-  }
-}
+    for (const efeito of danoPendente.efeitos ?? []) {
+      if (
+        efeito.tipo === "deslocarAlvo" ||
+        efeito.tipo === "solicitarSalvaguarda" ||
+        efeito.tipo === "permitirAtaqueAdicional"
+      ) {
+        efeitosDisponiveis.push(structuredClone(efeito));
+      }
+    }
 
     const alvo = combate.participantes.find(
       (participante) => participante.id === danoPendente.alvoId,
@@ -2343,6 +2746,114 @@ function resolverSalvaguardaCombate(
     };
   }
 
+  function executarAtaqueOportunidade(combate, oportunidade) {
+    if (!combate || !oportunidade) {
+      return {
+        sucesso: false,
+        motivo: "oportunidadeInvalida",
+      };
+    }
+
+    const ameacador = combate.participantes.find(
+      (participante) => participante.id === oportunidade.ameacadorId,
+    );
+
+    const alvo = combate.participantes.find(
+      (participante) => participante.id === oportunidade.alvoId,
+    );
+
+    if (!ameacador || !alvo) {
+      return {
+        sucesso: false,
+        motivo: "participanteInexistente",
+      };
+    }
+
+    if (ameacador.estado === "derrotado" || alvo.estado === "derrotado") {
+      return {
+        sucesso: false,
+        motivo: "participanteDerrotado",
+      };
+    }
+
+    if (!ameacador.reacaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "reacaoIndisponivel",
+      };
+    }
+
+    const ataquePreparado = prepararAtaque(
+      combate,
+      ameacador.id,
+      alvo.id,
+      obterIdentificadorAtaque(oportunidade.ataque),
+      {
+        custo: "reacao",
+        tipoEspecial: "ataqueOportunidade",
+        ignorarTurno: true,
+      },
+    );
+
+    if (!ataquePreparado.sucesso) {
+      return ataquePreparado;
+    }
+
+    const quantidadeD20 = ataquePreparado.tipoRolagem === "normal" ? 1 : 2;
+
+    const rolagemAtaque = realizarRolagemComposta({
+      gruposDeDados: [
+        {
+          quantidade: quantidadeD20,
+          numeroDeFaces: 20,
+        },
+      ],
+
+      modificador: oportunidade.ataque.bonusAtaque,
+    });
+
+    const resultadoAtaque = resolverAtaque(combate, rolagemAtaque);
+
+    if (!resultadoAtaque.sucesso) {
+      return resultadoAtaque;
+    }
+
+    let resultadoDano = null;
+
+    if (resultadoAtaque.acertou) {
+      const gruposDano = structuredClone(oportunidade.ataque.dano.gruposDeDados);
+
+      if (resultadoAtaque.acertoCritico) {
+        for (const grupo of gruposDano) {
+          grupo.quantidade *= 2;
+        }
+      }
+
+      const rolagemDano = realizarRolagemComposta({
+        gruposDeDados: gruposDano,
+
+        modificador: oportunidade.ataque.dano.modificador,
+      });
+
+      resultadoDano = resolverDano(combate, rolagemDano);
+    }
+
+    const resultadoCombate = verificarFimCombate(combate);
+
+    return {
+      sucesso: true,
+
+      ameacador,
+      alvo,
+
+      ataque: oportunidade.ataque,
+
+      resultadoAtaque,
+      resultadoDano,
+      resultadoCombate,
+    };
+  }
+
   function aplicarCura(participante, quantidade) {
     if (!participante?.pontosDeVida) {
       return {
@@ -2408,32 +2919,22 @@ function resolverSalvaguardaCombate(
     );
 
     const indiceCondicaoCaido =
-  participante.condicoes?.findIndex(
-    condicao =>
-      condicao.id === "caido",
-  ) ?? -1;
+      participante.condicoes?.findIndex((condicao) => condicao.id === "caido") ?? -1;
 
-if (indiceCondicaoCaido >= 0) {
-  const custoParaLevantar =
-    Math.ceil(
-      participante.movimentoMaximo / 2,
-    );
+    if (indiceCondicaoCaido >= 0) {
+      const custoParaLevantar = Math.ceil(participante.movimentoMaximo / 2);
 
-  participante.movimentoRestante =
-    Math.max(
-      0,
-      participante.movimentoRestante -
-        custoParaLevantar,
-    );
+      participante.movimentoRestante = Math.max(
+        0,
+        participante.movimentoRestante - custoParaLevantar,
+      );
 
-  participante.condicoes.splice(
-    indiceCondicaoCaido,
-    1,
-  );
-}
+      participante.condicoes.splice(indiceCondicaoCaido, 1);
+    }
     participante.acaoDisponivel = true;
     participante.acaoBonusDisponivel = true;
     participante.reacaoDisponivel = true;
+    participante.desengajando = false;
     participante.ataqueAdicionalLeve = null;
     participante.maestriasUsadasTurno = [];
 
@@ -2453,6 +2954,8 @@ if (indiceCondicaoCaido >= 0) {
 
     if (participanteAtual) {
       atualizarExpiracaoEfeitosTemporarios(combate, participanteAtual, "fimTurno");
+
+      participanteAtual.desengajando = false;
     }
 
     combate.indiceTurno++;
@@ -2544,19 +3047,33 @@ if (indiceCondicaoCaido >= 0) {
     registrarIniciativa,
     rolarIniciativasInimigos,
     calcularDistancia,
+
+    participantesSaoHostis,
+    obterAlcanceAmeaca,
+    listarAmeacadoresDaPosicao,
+    listarSaidasDeZonaInfluencia,
+    escolherAtaqueOportunidade,
+    prepararAtaquesOportunidadeMovimento,
+    executarAtaqueOportunidade,
+
+    listarCelulasLinhaVisao,
+    verificarLinhaVisao,
     obterTipoTerreno,
     calcularCaminhoMovimento,
+
     validarSelecaoCriatura,
     validarSelecaoAcao,
     obterCustoAtaque,
     listarAlvosCleave,
     prepararAtaqueCleave,
     movimentarParticipante,
+
     consumirAcao,
     consumirAcaoBonus,
     consumirReacao,
-    prepararAtaque,
+    usarAcaoDesengajar,
 
+    prepararAtaque,
     resolverAtaque,
     aplicarDanoSemAcerto,
     aplicarCondicaoCombate,

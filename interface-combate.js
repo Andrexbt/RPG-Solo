@@ -163,6 +163,7 @@ function alvoDisponivelParaAtaque(
             atacante,
             alvo,
             ataque,
+            combate,
           );
 
       return resultado.sucesso;

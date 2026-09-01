@@ -151,6 +151,71 @@
   background: rgba(205, 57, 45, 0.14);
 }
 
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-bloqueio-visao {
+  background: rgba(156, 105, 209, 0.2);
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-norte-coberturaParcial {
+  border-top: 4px solid #3aa7b8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-leste-coberturaParcial {
+  border-right: 4px solid #3aa7b8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-sul-coberturaParcial {
+  border-bottom: 4px solid #3aa7b8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-oeste-coberturaParcial {
+  border-left: 4px solid #3aa7b8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-norte-coberturaTresQuartos {
+  border-top: 6px solid #4777c8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-leste-coberturaTresQuartos {
+  border-right: 6px solid #4777c8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-sul-coberturaTresQuartos {
+  border-bottom: 6px solid #4777c8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-oeste-coberturaTresQuartos {
+  border-left: 6px solid #4777c8;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-norte-bloqueioTotal {
+  border-top: 8px solid #9c69d1;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-leste-bloqueioTotal {
+  border-right: 8px solid #9c69d1;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-sul-bloqueioTotal {
+  border-bottom: 8px solid #9c69d1;
+}
+
+.tabuleiro-combate.exibindo-terreno
+  .celula-combate.celula-borda-oeste-bloqueioTotal {
+  border-left: 8px solid #9c69d1;
+}
+
 .botao-alternar-terreno-combate {
   flex: 0 0 auto;
   width: 100%;
@@ -177,6 +242,58 @@
     linear-gradient(rgba(195, 154, 88, 0.2), rgba(195, 154, 88, 0.2)),
     var(--janela-textura);
 }
+
+.legenda-terreno-combate {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--janela-borda);
+  border-radius: 3px;
+  background:
+    linear-gradient(rgba(20, 17, 14, 0.16), rgba(20, 17, 14, 0.16)),
+    var(--janela-textura);
+  color: var(--janela-texto);
+  box-shadow: var(--janela-sombra);
+  font-family: var(--fonte-interface);
+}
+
+.legenda-terreno-combate h2 {
+  margin: 0 0 8px;
+  color: var(--janela-destaque);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.legenda-terreno-combate ul {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.legenda-terreno-combate li {
+  display: grid;
+  grid-template-columns: 13px 1fr;
+  gap: 8px;
+  align-items: start;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.amostra-legenda {
+  width: 11px;
+  height: 11px;
+  margin-top: 2px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+}
+
+.amostra-legenda.terreno-dificil { color: #e89130; }
+.amostra-legenda.terreno-bloqueado { color: #cd392d; }
+.amostra-legenda.cobertura-parcial { color: #3aa7b8; }
+.amostra-legenda.cobertura-tres-quartos { color: #4777c8; }
+.amostra-legenda.bloqueio-visao { color: #9c69d1; }
 
 .celula-combate.celula-area-objetivo {
   background: rgba(92, 190, 120, 0.22);
@@ -1744,6 +1861,237 @@ right: -13px;
 .faixa-superior-combate > .painel-objetivos-combate .conteudo-objetivo-combate small {
   font-size: 0.7rem;
   line-height: 1.25;
+}
+
+/* =====================================================
+   Decisões urgentes do combate
+   ===================================================== */
+
+.camada-decisao-combate {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+
+  background:
+    rgba(12, 8, 5, 0.28);
+
+  pointer-events: auto;
+}
+
+.camada-decisao-combate[hidden] {
+  display: none;
+}
+
+.janela-decisao-combate {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: min(
+    360px,
+    calc(100vw - 32px)
+  );
+
+  padding: 18px;
+
+  border: 1px solid
+    var(--janela-borda);
+
+  border-radius: 4px;
+
+  background:
+    linear-gradient(
+      rgba(23, 17, 12, 0.96),
+      rgba(15, 11, 8, 0.98)
+    );
+
+  color:
+    var(--janela-texto);
+
+  box-shadow:
+    0 0 0 1px
+      rgba(232, 192, 108, 0.18),
+    0 12px 34px
+      rgba(0, 0, 0, 0.68),
+    0 0 24px
+      rgba(232, 192, 108, 0.48);
+
+  transform:
+    translate(-50%, -50%);
+
+  animation:
+    chamar-atencao-decisao
+    700ms ease-out;
+}
+
+.rotulo-decisao-combate {
+  margin:
+    0 0 6px;
+
+  color:
+    var(--janela-destaque);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.14em;
+
+  text-transform:
+    uppercase;
+}
+
+.janela-decisao-combate h2 {
+  margin:
+    0 0 12px;
+
+  color:
+    var(--janela-texto);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    1.35rem;
+
+  line-height:
+    1.15;
+}
+
+.mensagem-decisao-combate {
+  margin:
+    0 0 16px;
+
+  color:
+    var(--janela-texto-suave);
+
+  font-size:
+    0.9rem;
+
+  line-height:
+    1.5;
+}
+
+.acoes-decisao-combate {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap:
+    8px;
+}
+
+.acoes-decisao-combate button {
+  min-height:
+    40px;
+
+  padding:
+    8px 10px;
+
+  border:
+    1px solid
+    var(--janela-borda-suave);
+
+  border-radius:
+    3px;
+
+  color:
+    var(--janela-texto);
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    700;
+
+  line-height:
+    1.25;
+
+  cursor:
+    pointer;
+}
+
+.botao-confirmar-decisao-combate {
+  background:
+    rgba(164, 92, 48, 0.26);
+}
+
+.botao-cancelar-decisao-combate {
+  background:
+    rgba(195, 154, 88, 0.08);
+}
+
+.acoes-decisao-combate
+  button:hover {
+  border-color:
+    var(--janela-destaque);
+
+  background:
+    rgba(195, 154, 88, 0.22);
+}
+
+.acoes-decisao-combate
+  button:focus-visible {
+  outline:
+    2px solid
+    #f0c66c;
+
+  outline-offset:
+    3px;
+}
+
+@keyframes chamar-atencao-decisao {
+  0% {
+    opacity:
+      0;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.9);
+
+    box-shadow:
+      0 0 0 8px
+        rgba(240, 198, 108, 0.45);
+  }
+
+  55% {
+    opacity:
+      1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1.03);
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .acoes-decisao-combate {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .janela-decisao-combate {
+    animation:
+      none;
+  }
 }
 
 /* =====================================================

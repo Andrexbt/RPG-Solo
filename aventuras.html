@@ -470,10 +470,26 @@
               class="botao-alternar-terreno-combate"
               type="button"
               aria-pressed="false"
-              title="Mostrar tipos de terreno"
+              title="Mostrar terreno e cobertura"
             >
-              Terreno
+              Terreno e cobertura
             </button>
+
+            <section
+              id="legendaTerrenoCombate"
+              class="legenda-terreno-combate"
+              aria-label="Legenda de terreno e cobertura"
+              hidden
+            >
+              <h2>Legenda</h2>
+              <ul>
+                <li><span class="amostra-legenda terreno-dificil"></span><span><strong>Terreno difícil</strong> — cada casa consome o dobro do deslocamento.</span></li>
+                <li><span class="amostra-legenda terreno-bloqueado"></span><span><strong>Intransponível</strong> — não é possível ocupar ou atravessar a casa.</span></li>
+                <li><span class="amostra-legenda cobertura-parcial"></span><span><strong>Meia cobertura</strong> — concede +2 na CA e em salvaguardas de Destreza.</span></li>
+                <li><span class="amostra-legenda cobertura-tres-quartos"></span><span><strong>Cobertura de 3/4</strong> — concede +5 na CA e em salvaguardas de Destreza.</span></li>
+                <li><span class="amostra-legenda bloqueio-visao"></span><span><strong>Bloqueio total</strong> — impede ataques e efeitos que exijam visão direta.</span></li>
+              </ul>
+            </section>
           </div>
 
           <section
@@ -586,6 +602,52 @@
 
               <div id="tabuleiroCombate" class="tabuleiro-combate"></div>
             </div>
+            <div
+  id="camadaDecisaoCombate"
+  class="camada-decisao-combate"
+  hidden
+>
+  <section
+    id="janelaDecisaoCombate"
+    class="janela-decisao-combate"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="tituloDecisaoCombate"
+    aria-describedby="mensagemDecisaoCombate"
+    tabindex="-1"
+  >
+    <p class="rotulo-decisao-combate">
+      Decisão necessária
+    </p>
+
+    <h2 id="tituloDecisaoCombate">
+      Ataque de Oportunidade
+    </h2>
+
+    <p
+      id="mensagemDecisaoCombate"
+      class="mensagem-decisao-combate"
+    ></p>
+
+    <div class="acoes-decisao-combate">
+      <button
+        id="botaoConfirmarDecisaoCombate"
+        class="botao-confirmar-decisao-combate"
+        type="button"
+      >
+        Continuar
+      </button>
+
+      <button
+        id="botaoCancelarDecisaoCombate"
+        class="botao-cancelar-decisao-combate"
+        type="button"
+      >
+        Cancelar
+      </button>
+    </div>
+  </section>
+</div>
           </div>
 
           <section

@@ -12,6 +12,8 @@ const controleZoom = document.querySelector("#controleZoom");
 const valorZoom = document.querySelector("#valorZoom");
 const quantidadeDificil = document.querySelector("#quantidadeDificil");
 const quantidadeBloqueado = document.querySelector("#quantidadeBloqueado");
+const quantidadeBloqueioVisao = document.querySelector("#quantidadeBloqueioVisao");
+const quantidadeBarreirasVisao = document.querySelector("#quantidadeBarreirasVisao");
 const coordenadaAtual = document.querySelector("#coordenadaAtual");
 const botaoDesfazer = document.querySelector("#botaoDesfazer");
 const botaoRefazer = document.querySelector("#botaoRefazer");
@@ -19,13 +21,25 @@ const botaoGerarCodigo = document.querySelector("#botaoGerarCodigo");
 const botaoCopiarCodigo = document.querySelector("#botaoCopiarCodigo");
 const saidaCodigo = document.querySelector("#saidaCodigo");
 const mensagemEditor = document.querySelector("#mensagemEditor");
+const ferramentasTerreno = document.querySelector("#ferramentasTerreno");
+const ferramentasVisao = document.querySelector("#ferramentasVisao");
+const seletorModoVisao = document.querySelector("#seletorModoVisao");
+const pinceisVisaoCasa = document.querySelector("#pinceisVisaoCasa");
+const pinceisVisaoBorda = document.querySelector("#pinceisVisaoBorda");
+const ajudaVisao = document.querySelector("#ajudaVisao");
 
 const batalhasDisponiveis = new Map();
 const tiposCelulas = new Map();
+const bloqueiosVisao = new Set();
+const barreirasVisao = new Map();
 const historicoDesfazer = [];
 const historicoRefazer = [];
 
 let tipoPincel = "normal";
+let tipoPincelVisaoCasa = "livre";
+let tipoPincelBarreira = "livre";
+let camadaEditor = "terreno";
+let modoVisao = "casa";
 let pintando = false;
 let estadoAntesDoTraco = null;
 
@@ -89,6 +103,43 @@ function obterTipoConfigurado(terreno, coluna, linha) {
   return "normal";
 }
 
+function possuiBloqueioVisaoConfigurado(visao, coluna, linha) {
+  return (visao?.bloqueios ?? []).some((regiao) =>
+    celulaPertenceRegiao(coluna, linha, regiao),
+  );
+}
+
+function chaveBarreira(barreira) {
+  return `${barreira.coluna},${barreira.linha},${barreira.lado}`;
+}
+
+function normalizarBarreira(coluna, linha, lado, tipo) {
+  if (lado === "leste" && coluna < COLUNAS_TABULEIRO) {
+    return { coluna: coluna + 1, linha, lado: "oeste", tipo };
+  }
+
+  if (lado === "sul" && linha < LINHAS_TABULEIRO) {
+    return { coluna, linha: linha + 1, lado: "norte", tipo };
+  }
+
+  return { coluna, linha, lado, tipo };
+}
+
+function carregarBarreiraConfigurada(barreira) {
+  if (!barreira?.lado || !barreira?.tipo) {
+    return;
+  }
+
+  const normalizada = normalizarBarreira(
+    Number(barreira.coluna),
+    Number(barreira.linha),
+    barreira.lado,
+    barreira.tipo,
+  );
+
+  barreirasVisao.set(chaveBarreira(normalizada), normalizada);
+}
+
 function criarGrid() {
   const fragmento = document.createDocumentFragment();
 
@@ -120,6 +171,59 @@ function atualizarCelulaVisual(coluna, linha) {
   const tipo = tiposCelulas.get(chaveCelula(coluna, linha)) ?? "normal";
   celula.classList.toggle("tipo-dificil", tipo === "dificil");
   celula.classList.toggle("tipo-bloqueado", tipo === "bloqueado");
+  celula.classList.toggle(
+    "tipo-bloqueio-visao",
+    bloqueiosVisao.has(chaveCelula(coluna, linha)),
+  );
+}
+
+const classesBarreiras = [
+  "borda-norte-coberturaParcial",
+  "borda-norte-coberturaTresQuartos",
+  "borda-norte-bloqueioTotal",
+  "borda-leste-coberturaParcial",
+  "borda-leste-coberturaTresQuartos",
+  "borda-leste-bloqueioTotal",
+  "borda-sul-coberturaParcial",
+  "borda-sul-coberturaTresQuartos",
+  "borda-sul-bloqueioTotal",
+  "borda-oeste-coberturaParcial",
+  "borda-oeste-coberturaTresQuartos",
+  "borda-oeste-bloqueioTotal",
+];
+
+function atualizarTodasBarreirasVisuais() {
+  for (const celula of gridEditor.querySelectorAll(".celula-editor")) {
+    celula.classList.remove(...classesBarreiras);
+  }
+
+  for (const barreira of barreirasVisao.values()) {
+    const celula = gridEditor.querySelector(
+      `[data-coluna="${barreira.coluna}"][data-linha="${barreira.linha}"]`,
+    );
+
+    celula?.classList.add(`borda-${barreira.lado}-${barreira.tipo}`);
+  }
+}
+
+function atualizarBarreiraVisual(barreira) {
+  const celula = gridEditor.querySelector(
+    `[data-coluna="${barreira.coluna}"][data-linha="${barreira.linha}"]`,
+  );
+
+  if (!celula) {
+    return;
+  }
+
+  for (const tipo of ["coberturaParcial", "coberturaTresQuartos", "bloqueioTotal"]) {
+    celula.classList.remove(`borda-${barreira.lado}-${tipo}`);
+  }
+
+  const atual = barreirasVisao.get(chaveBarreira(barreira));
+
+  if (atual) {
+    celula.classList.add(`borda-${atual.lado}-${atual.tipo}`);
+  }
 }
 
 function atualizarTodasCelulas() {
@@ -129,6 +233,7 @@ function atualizarTodasCelulas() {
     }
   }
 
+  atualizarTodasBarreirasVisuais();
   atualizarResumo();
 }
 
@@ -146,6 +251,8 @@ function atualizarResumo() {
 
   quantidadeDificil.textContent = dificeis;
   quantidadeBloqueado.textContent = bloqueadas;
+  quantidadeBloqueioVisao.textContent = bloqueiosVisao.size;
+  quantidadeBarreirasVisao.textContent = barreirasVisao.size;
 }
 
 function carregarBatalhaSelecionada() {
@@ -156,6 +263,8 @@ function carregarBatalhaSelecionada() {
   }
 
   tiposCelulas.clear();
+  bloqueiosVisao.clear();
+  barreirasVisao.clear();
   historicoDesfazer.length = 0;
   historicoRefazer.length = 0;
 
@@ -169,7 +278,16 @@ function carregarBatalhaSelecionada() {
       if (tipo !== "normal") {
         tiposCelulas.set(chaveCelula(coluna, linha), tipo);
       }
+
+      if (possuiBloqueioVisaoConfigurado(item.cena.combate.visao, coluna, linha)) {
+        bloqueiosVisao.add(chaveCelula(coluna, linha));
+      }
+
     }
+  }
+
+  for (const barreira of item.cena.combate.visao?.barreiras ?? []) {
+    carregarBarreiraConfigurada(barreira);
   }
 
   saidaCodigo.value = "";
@@ -178,21 +296,91 @@ function carregarBatalhaSelecionada() {
   atualizarBotoesHistorico();
 }
 
-function selecionarPincel(evento) {
-  const botao = evento.target.closest("[data-tipo]");
+function ativarCamadaEditor(novaCamada) {
+  camadaEditor = novaCamada;
+  gridEditor.classList.toggle("editando-visao", camadaEditor === "visao");
+
+  mensagemEditor.textContent =
+    camadaEditor === "terreno"
+      ? "Editando terreno e movimentação."
+      : "Editando bloqueios de visão.";
+}
+
+function selecionarModoVisao(evento) {
+  const botao = evento.target.closest("[data-modo-visao]");
 
   if (!botao) {
     return;
   }
 
-  tipoPincel = botao.dataset.tipo;
+  ativarCamadaEditor("visao");
+  modoVisao = botao.dataset.modoVisao;
+  pinceisVisaoCasa.hidden = modoVisao !== "casa";
+  pinceisVisaoBorda.hidden = modoVisao !== "borda";
 
-  for (const outroBotao of document.querySelectorAll("[data-tipo]")) {
+  for (const outroBotao of seletorModoVisao.querySelectorAll("[data-modo-visao]")) {
+    const selecionado = outroBotao === botao;
+    outroBotao.classList.toggle("ativo", selecionado);
+    outroBotao.setAttribute("aria-pressed", String(selecionado));
+  }
+
+  ajudaVisao.textContent =
+    modoVisao === "casa"
+      ? "Preencha construções e outros volumes totalmente opacos."
+      : "Aproxime o ponteiro de um dos quatro lados da casa e clique ou arraste.";
+}
+
+function selecionarPincel(evento) {
+  const botao = evento.target.closest(
+    "[data-tipo], [data-tipo-visao-casa], [data-tipo-barreira]",
+  );
+
+  if (!botao) {
+    return;
+  }
+
+  let seletor;
+  let grupo;
+
+  if (botao.matches("[data-tipo]")) {
+    ativarCamadaEditor("terreno");
+    seletor = "[data-tipo]";
+    grupo = ferramentasTerreno;
+    tipoPincel = botao.dataset.tipo;
+  } else if (botao.matches("[data-tipo-visao-casa]")) {
+    ativarCamadaEditor("visao");
+    modoVisao = "casa";
+    seletor = "[data-tipo-visao-casa]";
+    grupo = pinceisVisaoCasa;
+    tipoPincelVisaoCasa = botao.dataset.tipoVisaoCasa;
+  } else {
+    ativarCamadaEditor("visao");
+    modoVisao = "borda";
+    seletor = "[data-tipo-barreira]";
+    grupo = pinceisVisaoBorda;
+    tipoPincelBarreira = botao.dataset.tipoBarreira;
+  }
+
+  for (const outroBotao of grupo.querySelectorAll(seletor)) {
     outroBotao.classList.toggle("ativo", outroBotao === botao);
   }
 }
 
-function aplicarPincel(celula) {
+function obterLadoMaisProximo(celula, evento) {
+  const retangulo = celula.getBoundingClientRect();
+  const distancias = {
+    oeste: Math.abs(evento.clientX - retangulo.left),
+    leste: Math.abs(retangulo.right - evento.clientX),
+    norte: Math.abs(evento.clientY - retangulo.top),
+    sul: Math.abs(retangulo.bottom - evento.clientY),
+  };
+
+  return Object.entries(distancias).sort(([, distanciaA], [, distanciaB]) =>
+    distanciaA - distanciaB,
+  )[0][0];
+}
+
+function aplicarPincel(celula, evento) {
   if (!celula) {
     return;
   }
@@ -201,10 +389,30 @@ function aplicarPincel(celula) {
   const linha = Number(celula.dataset.linha);
   const chave = chaveCelula(coluna, linha);
 
-  if (tipoPincel === "normal") {
-    tiposCelulas.delete(chave);
+  if (camadaEditor === "visao" && modoVisao === "borda") {
+    const lado = obterLadoMaisProximo(celula, evento);
+    const barreira = normalizarBarreira(coluna, linha, lado, tipoPincelBarreira);
+    const chaveDaBarreira = chaveBarreira(barreira);
+
+    if (tipoPincelBarreira === "livre") {
+      barreirasVisao.delete(chaveDaBarreira);
+    } else {
+      barreirasVisao.set(chaveDaBarreira, barreira);
+    }
+
+    atualizarBarreiraVisual(barreira);
+  } else if (camadaEditor === "visao") {
+    if (tipoPincelVisaoCasa === "livre") {
+      bloqueiosVisao.delete(chave);
+    } else {
+      bloqueiosVisao.add(chave);
+    }
   } else {
-    tiposCelulas.set(chave, tipoPincel);
+    if (tipoPincel === "normal") {
+      tiposCelulas.delete(chave);
+    } else {
+      tiposCelulas.set(chave, tipoPincel);
+    }
   }
 
   atualizarCelulaVisual(coluna, linha);
@@ -224,8 +432,8 @@ function iniciarPintura(evento) {
 
   evento.preventDefault();
   pintando = true;
-  estadoAntesDoTraco = new Map(tiposCelulas);
-  aplicarPincel(celula);
+  estadoAntesDoTraco = criarEstadoEditor();
+  aplicarPincel(celula, evento);
 }
 
 function continuarPintura(evento) {
@@ -236,7 +444,7 @@ function continuarPintura(evento) {
   }
 
   if (pintando && celula) {
-    aplicarPincel(celula);
+    aplicarPincel(celula, evento);
   }
 }
 
@@ -254,6 +462,52 @@ function mapasIguais(mapaA, mapaB) {
   return true;
 }
 
+function conjuntosIguais(conjuntoA, conjuntoB) {
+  if (conjuntoA.size !== conjuntoB.size) {
+    return false;
+  }
+
+  for (const valor of conjuntoA) {
+    if (!conjuntoB.has(valor)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function mapasBarreirasIguais(mapaA, mapaB) {
+  if (mapaA.size !== mapaB.size) {
+    return false;
+  }
+
+  for (const [chave, barreiraA] of mapaA) {
+    const barreiraB = mapaB.get(chave);
+
+    if (!barreiraB || barreiraA.tipo !== barreiraB.tipo) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function criarEstadoEditor() {
+  return {
+    terreno: new Map(tiposCelulas),
+    bloqueiosVisao: new Set(bloqueiosVisao),
+    barreirasVisao: new Map(barreirasVisao),
+  };
+}
+
+function estadosIguais(estadoA, estadoB) {
+  return (
+    mapasIguais(estadoA.terreno, estadoB.terreno) &&
+    conjuntosIguais(estadoA.bloqueiosVisao, estadoB.bloqueiosVisao) &&
+    mapasBarreirasIguais(estadoA.barreirasVisao, estadoB.barreirasVisao)
+  );
+}
+
 function finalizarPintura() {
   if (!pintando) {
     return;
@@ -261,7 +515,9 @@ function finalizarPintura() {
 
   pintando = false;
 
-  if (estadoAntesDoTraco && !mapasIguais(estadoAntesDoTraco, tiposCelulas)) {
+  const estadoAtual = criarEstadoEditor();
+
+  if (estadoAntesDoTraco && !estadosIguais(estadoAntesDoTraco, estadoAtual)) {
     historicoDesfazer.push(estadoAntesDoTraco);
     historicoRefazer.length = 0;
 
@@ -274,11 +530,21 @@ function finalizarPintura() {
   atualizarBotoesHistorico();
 }
 
-function restaurarMapa(mapa) {
+function restaurarEstado(estado) {
   tiposCelulas.clear();
+  bloqueiosVisao.clear();
+  barreirasVisao.clear();
 
-  for (const [chave, tipo] of mapa) {
+  for (const [chave, tipo] of estado.terreno) {
     tiposCelulas.set(chave, tipo);
+  }
+
+  for (const chave of estado.bloqueiosVisao) {
+    bloqueiosVisao.add(chave);
+  }
+
+  for (const [chave, barreira] of estado.barreirasVisao) {
+    barreirasVisao.set(chave, barreira);
   }
 
   atualizarTodasCelulas();
@@ -291,8 +557,8 @@ function desfazer() {
     return;
   }
 
-  historicoRefazer.push(new Map(tiposCelulas));
-  restaurarMapa(estado);
+  historicoRefazer.push(criarEstadoEditor());
+  restaurarEstado(estado);
   atualizarBotoesHistorico();
 }
 
@@ -303,8 +569,8 @@ function refazer() {
     return;
   }
 
-  historicoDesfazer.push(new Map(tiposCelulas));
-  restaurarMapa(estado);
+  historicoDesfazer.push(criarEstadoEditor());
+  restaurarEstado(estado);
   atualizarBotoesHistorico();
 }
 
@@ -313,16 +579,22 @@ function atualizarBotoesHistorico() {
   botaoRefazer.disabled = historicoRefazer.length === 0;
 }
 
-function obterRegioesCompactadas(tipo) {
+function obterRegioesCompactadas(tipo, conjunto = null) {
   const linhasAtivas = new Map();
   const regioes = [];
+
+  function celulaEstaAtiva(coluna, linha) {
+    const chave = chaveCelula(coluna, linha);
+
+    return conjunto ? conjunto.has(chave) : tiposCelulas.get(chave) === tipo;
+  }
 
   for (let linha = 1; linha <= LINHAS_TABULEIRO; linha++) {
     const intervalos = [];
     let coluna = 1;
 
     while (coluna <= COLUNAS_TABULEIRO) {
-      if (tiposCelulas.get(chaveCelula(coluna, linha)) !== tipo) {
+      if (!celulaEstaAtiva(coluna, linha)) {
         coluna++;
         continue;
       }
@@ -331,7 +603,7 @@ function obterRegioesCompactadas(tipo) {
 
       while (
         coluna < COLUNAS_TABULEIRO &&
-        tiposCelulas.get(chaveCelula(coluna + 1, linha)) === tipo
+        celulaEstaAtiva(coluna + 1, linha)
       ) {
         coluna++;
       }
@@ -389,9 +661,26 @@ function formatarRegiao(regiao) {
   );
 }
 
+function formatarBarreira(barreira) {
+  return (
+    "    { " +
+    `coluna: ${barreira.coluna}, ` +
+    `linha: ${barreira.linha}, ` +
+    `lado: "${barreira.lado}", ` +
+    `tipo: "${barreira.tipo}" },`
+  );
+}
+
 function gerarCodigo() {
   const bloqueadas = obterRegioesCompactadas("bloqueado");
   const dificeis = obterRegioesCompactadas("dificil");
+  const bloqueiosVisuais = obterRegioesCompactadas(null, bloqueiosVisao);
+  const barreiras = [...barreirasVisao.values()].sort(
+    (barreiraA, barreiraB) =>
+      barreiraA.linha - barreiraB.linha ||
+      barreiraA.coluna - barreiraB.coluna ||
+      barreiraA.lado.localeCompare(barreiraB.lado),
+  );
 
   saidaCodigo.value = [
     "terreno: {",
@@ -403,10 +692,25 @@ function gerarCodigo() {
     ...dificeis.map(formatarRegiao),
     "  ],",
     "},",
+    "",
+    "visao: {",
+    "  bloqueios: [",
+    ...bloqueiosVisuais.map(formatarRegiao),
+    "  ],",
+    "",
+    "  barreiras: [",
+    ...barreiras.map(formatarBarreira),
+    "  ],",
+    "},",
   ].join("\n");
 
   mensagemEditor.textContent =
-    `Código gerado em ${bloqueadas.length + dificeis.length} regiões compactadas.`;
+    `Código gerado em ${
+      bloqueadas.length +
+        dificeis.length +
+        bloqueiosVisuais.length +
+        barreiras.length
+    } regiões compactadas.`;
 }
 
 async function copiarCodigo() {
@@ -433,10 +737,11 @@ function atualizarZoom() {
   valorZoom.textContent = `${porcentagem}%`;
 }
 
-document.querySelector(".grupo-pinceis").addEventListener("click", selecionarPincel);
+document.querySelector(".barra-ferramentas").addEventListener("click", selecionarPincel);
+seletorModoVisao.addEventListener("click", selecionarModoVisao);
 seletorBatalha.addEventListener("change", carregarBatalhaSelecionada);
 gridEditor.addEventListener("pointerdown", iniciarPintura);
-gridEditor.addEventListener("pointerover", continuarPintura);
+gridEditor.addEventListener("pointermove", continuarPintura);
 document.addEventListener("pointerup", finalizarPintura);
 document.addEventListener("pointercancel", finalizarPintura);
 botaoDesfazer.addEventListener("click", desfazer);
