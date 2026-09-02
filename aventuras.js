@@ -746,6 +746,10 @@ function criarParticipantesNpcsCombate(configuracoes) {
 
         tipo: npc.tipo,
         grupoId: configuracao.grupoId ?? configuracao.npcId,
+                inteligencia: structuredClone(
+          configuracao.inteligencia ??
+          null,
+        ),
 
         posicao: posicao,
 
@@ -1127,7 +1131,7 @@ function abrirDecisaoPendenteCombate(
   return false;
 }
 
-function confirmarDecisaoCombate() {
+async function confirmarDecisaoCombate() {
   const combate =
     estadoAtualJogo.combateAtual;
 
@@ -1161,9 +1165,21 @@ function confirmarDecisaoCombate() {
       decisao.destino,
     );
 
+      const posicaoInicial =
+    structuredClone(
+      inimigo.posicao,
+    );
+
+  const caminhoPlanejado =
+    SistemaCombate.calcularCaminhoMovimento(
+      combate,
+      inimigo,
+      destino,
+    )?.caminho ?? [];
+
   fecharDecisaoCombate();
 
-  moverParticipante(
+    const movimentoConcluido = moverParticipante(
     inimigo,
     destino.coluna,
     destino.linha,
@@ -1171,6 +1187,35 @@ function confirmarDecisaoCombate() {
       reacaoJogador: "usar",
     },
   );
+
+    if (movimentoConcluido) {
+    const token =
+      tabuleiroCombate.querySelector(
+        `[data-id-participante="${inimigo.id}"]`,
+      );
+
+    if (token) {
+      token.style.gridColumn =
+        posicaoInicial.coluna;
+
+      token.style.gridRow =
+        posicaoInicial.linha;
+    }
+
+    await animarMovimentoInimigo(
+      inimigo,
+      caminhoPlanejado,
+    );
+
+    atualizarInterfaceTurno(combate);
+  }
+
+  if (
+    movimentoConcluido &&
+    combate.status === "ativo"
+  ) {
+    processarTurnoAtual(combate);
+  }
 
   return;
 }
@@ -1220,7 +1265,7 @@ function confirmarDecisaoCombate() {
   );
 }
 
-function cancelarDecisaoCombate() {
+async function cancelarDecisaoCombate() {
   const combate =
     estadoAtualJogo.combateAtual;
 
@@ -1254,9 +1299,21 @@ if (
       decisao.destino,
     );
 
+      const posicaoInicial =
+    structuredClone(
+      inimigo.posicao,
+    );
+
+  const caminhoPlanejado =
+    SistemaCombate.calcularCaminhoMovimento(
+      combate,
+      inimigo,
+      destino,
+    )?.caminho ?? [];
+
   fecharDecisaoCombate();
 
-  moverParticipante(
+      const movimentoConcluido = moverParticipante(
     inimigo,
     destino.coluna,
     destino.linha,
@@ -1264,6 +1321,35 @@ if (
       reacaoJogador: "ignorar",
     },
   );
+
+  if (movimentoConcluido) {
+    const token =
+      tabuleiroCombate.querySelector(
+        `[data-id-participante="${inimigo.id}"]`,
+      );
+
+    if (token) {
+      token.style.gridColumn =
+        posicaoInicial.coluna;
+
+      token.style.gridRow =
+        posicaoInicial.linha;
+    }
+
+    await animarMovimentoInimigo(
+      inimigo,
+      caminhoPlanejado,
+    );
+
+    atualizarInterfaceTurno(combate);
+  }
+
+  if (
+    movimentoConcluido &&
+    combate.status === "ativo"
+  ) {
+    processarTurnoAtual(combate);
+  }
 
   return;
 }
@@ -1454,18 +1540,26 @@ function iniciarArrasteToken(evento) {
 }
 
 function continuarArrasteToken(evento) {
-  if (!tokenArrastado || evento.pointerId !== inicioArraste.ponteiroId) {
+  if (
+    !tokenArrastado ||
+    evento.pointerId !== inicioArraste.ponteiroId
+  ) {
     return;
   }
 
-  const deslocamentoX = evento.clientX - inicioArraste.x;
+  const zoom =
+    cameraCombate.zoom || 1;
 
-  const deslocamentoY = evento.clientY - inicioArraste.y;
+  const deslocamentoX =
+    (evento.clientX - inicioArraste.x) /
+    zoom;
 
-  tokenArrastado.style.transform = `translate(
-      ${deslocamentoX}px,
-      ${deslocamentoY}px
-    )`;
+  const deslocamentoY =
+    (evento.clientY - inicioArraste.y) /
+    zoom;
+
+  tokenArrastado.style.translate =
+    `${deslocamentoX}px ${deslocamentoY}px`;
 }
 
 function finalizarArrasteToken(evento) {
@@ -1495,7 +1589,7 @@ function finalizarArrasteToken(evento) {
     moverParticipante(participante, coluna, linha);
   }
 
-  tokenArrastado.style.transform = "";
+    tokenArrastado.style.translate = "";
 
   tokenArrastado.classList.remove("token-arrastando");
 
@@ -1506,32 +1600,86 @@ function finalizarArrasteToken(evento) {
   inicioArraste = null;
 }
 
-function moverTokenSelecionado(evento) {
-  const celula = evento.target.closest(".celula-combate");
+async function moverTokenSelecionado(evento) {
+  const celula =
+    evento.target.closest(".celula-combate");
 
   if (!celula) {
     return;
   }
 
-  const combate = estadoAtualJogo.combateAtual;
+  const combate =
+    estadoAtualJogo.combateAtual;
 
-  if (!combate || !combate.participanteSelecionadoId) {
+  if (
+    !combate ||
+    !combate.participanteSelecionadoId
+  ) {
     return;
   }
 
-  const participante = combate.participantes.find(
-    (participante) => participante.id === combate.participanteSelecionadoId,
-  );
+  const participante =
+    combate.participantes.find(
+      (participante) =>
+        participante.id ===
+        combate.participanteSelecionadoId,
+    );
 
   if (!participante) {
     return;
   }
 
-  const coluna = Number(celula.dataset.coluna);
+  const coluna =
+    Number(celula.dataset.coluna);
 
-  const linha = Number(celula.dataset.linha);
+  const linha =
+    Number(celula.dataset.linha);
 
-  moverParticipante(participante, coluna, linha);
+  const posicaoInicial =
+    structuredClone(
+      participante.posicao,
+    );
+
+  const caminho =
+    SistemaCombate.calcularCaminhoMovimento(
+      combate,
+      participante,
+      {
+        coluna,
+        linha,
+      },
+    )?.caminho ?? [];
+
+  const movimentoConcluido =
+    moverParticipante(
+      participante,
+      coluna,
+      linha,
+    );
+
+  if (!movimentoConcluido) {
+    return;
+  }
+
+  const token =
+    tabuleiroCombate.querySelector(
+      `[data-id-participante="${participante.id}"]`,
+    );
+
+  if (token) {
+    token.style.gridColumn =
+      posicaoInicial.coluna;
+
+    token.style.gridRow =
+      posicaoInicial.linha;
+  }
+
+  await animarMovimentoInimigo(
+    participante,
+    caminho,
+  );
+
+  atualizarInterfaceTurno(combate);
 }
 
 function resolverIniciativaJogador(resultadoRolagem) {

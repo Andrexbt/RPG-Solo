@@ -1695,3 +1695,168 @@ Depois de concluir a aventura:
 - **6/6 — Expandir para o MVP formal:** pendente.
 
 O próximo ganho real de produto não virá de adicionar outra regra isolada. Virá de transformar a base já construída em uma aventura completa, testável e apresentável do início ao fim.
+
+---
+
+## Suplemento 6.0 — Estado em 2 de setembro de 2026
+
+Este suplemento substitui qualquer descrição anterior do ponto exato de retomada. As decisões arquiteturais anteriores continuam válidas quando não forem contraditas abaixo.
+
+### 1. Estado executivo
+
+- **1/6 — Contrato aventura–combate:** concluída.
+- **2/6 — Guerreiro de nível 1:** concluída.
+- **3/6 — Finalizar “A Fuga”:** em andamento.
+- **4/6 — Salvar e retomar aventuras:** pendente.
+- **5/6 — Estabilizar o Alpha:** pendente.
+- **6/6 — Expandir para o MVP formal:** pendente.
+
+A aventura, o combate e o retorno narrativo já formam uma base utilizável, mas “A Fuga” ainda possui cenas por escrever e batalhas por finalizar. O avanço recente aprofundou sobretudo o combate tático e preparou uma inteligência inimiga mais robusta.
+
+### 2. Linha de raciocínio que levou ao estado atual
+
+1. A escrita da cena `noitePelasEmbarcacoes` expôs a necessidade de resolver sequências condicionais de testes, ataques e salvaguardas sem duplicar narrativa.
+2. Isso levou à automatização da procedência narrativa: o motor registra de onde o personagem veio e permite escolher variações sem exigir uma memória manual em toda cena.
+3. A mesma ideia foi estendida aos encerramentos: uma única cena `fimVitoria` e uma única `fimDerrota` podem conter variações contextuais e o botão **Concluir aventura**.
+4. Para batalhas que não encerram a aventura, tornou-se necessário formalizar objetivos, resultados especiais e a cena de retorno.
+5. `batalhaRuasD` virou o exemplo completo: apresenta os objetivos, aceita vitória por derrotar os guardas ou escapar pela ponte, mostra o resultado e devolve o jogador à consequência narrativa configurada.
+6. A fuga e a movimentação exigiram terreno bloqueado/difícil, zonas de controle, Desengajar e ataques de oportunidade.
+7. Ataques à distância exigiram alcance real, linha de visão e cobertura. A edição manual desses dados ficou difícil, então foi criado um editor de mapa.
+8. Com o mapa tático utilizável, ficou evidente que a IA antiga apenas atacava com besta e quase não tomava decisões de posição. Por isso foi criado um planejador tático separado.
+9. O planejador já foi testado isoladamente. O próximo passo é conectá-lo com cuidado à execução real dos turnos inimigos.
+
+### 3. Aventura e contexto narrativo
+
+- `noitePelasEmbarcacoes` contém a sequência de Atletismo, Furtividade contra Percepção, ataques condicionais, salvaguardas e transições para batalha.
+- Resultados intermediários podem apoiar-se no texto imediatamente anterior ou posterior; a exigência atual é que o jogador nunca fique sem uma descrição compreensível.
+- O motor mantém procedência automática de cena, etapa e caminho. Variações de chegada não devem depender de elementos de memória repetidos em cada cena.
+- O placeholder `{personagem}` voltou a substituir corretamente o nome.
+- Alcançar 0 PV pode conduzir automaticamente à derrota contextual.
+- `fimVitoria` e `fimDerrota` concentram finais com variações. Cada variação pode definir sua própria consequência e ainda terminar por **Concluir aventura**.
+- Referências quebradas já encontradas foram corrigidas; destinos ainda não escritos podem existir como esqueletos vazios.
+
+### 4. Objetivos, resultados e interface de batalha
+
+- Uma batalha pode declarar mais de uma condição de sucesso e pode ganhar novos tipos de objetivo no futuro.
+- A abertura mostra uma modal com título, contexto, objetivos e botão para continuar.
+- Depois de fechada, os objetivos permanecem em uma janela pequena e exclusiva acima da fila de iniciativa; clicar nela reabre a modal.
+- A fila informa explicitamente a rodada e a etapa de iniciativa.
+- A modal de resultado usa a mesma linguagem visual da modal inicial.
+- O resultado possui identificador próprio, texto, categoria e próxima cena. Ao voltar para a aventura, o fluxo consulta a consequência correspondente.
+- A concessão de XP acontece uma única vez quando aplicável; marcações HTML como `<strong>` não devem aparecer literalmente.
+- Em `batalhaRuasD`, a ponte ocupa colunas 23–25 e linhas 1–8. A saída ocupa colunas 23–25 na linha 1.
+- As duas condições mantidas para essa batalha são: derrotar todos os guardas ou alcançar a saída da ponte. A antiga hipótese de fuga por 18 metros livres foi descartada.
+
+### 5. Movimento, terreno e zona de controle
+
+- O deslocamento básico usado no combate é 6 células, equivalentes a 9 metros.
+- Terreno difícil consome o dobro do movimento; terreno bloqueado não pode ser atravessado.
+- O cálculo trata diagonais e impede atravessar cantos inválidos.
+- O jogador pode alternar a visualização tática do mapa. Terreno, bloqueios e coberturas não precisam poluir permanentemente a imagem.
+- A visualização possui legenda para explicar as cores e os efeitos mecânicos.
+- Sair da zona de controle sem Desengajar abre uma confirmação próxima ao personagem e pode provocar ataque de oportunidade.
+- Desengajar e a reação usada pelo ataque de oportunidade participam da economia do turno.
+
+### 6. Editor de mapa e cobertura
+
+- O editor é composto por `editor-terreno.html`, `editor-terreno.js` e `editor-terreno.css`.
+- Ferramentas de terreno e visão aparecem juntas.
+- O editor oferece desfazer/refazer e gera a configuração copiável para a batalha.
+- A visão aceita volumes opacos e barreiras direcionais no formato geral:
+
+```js
+visao: {
+    bloqueios: [],
+    barreiras: [
+        { coluna, linha, lado, tipo }
+    ]
+}
+```
+
+- Tipos direcionais atuais: cobertura parcial, cobertura de três quartos e bloqueio total.
+- Cobertura parcial concede +2 CA; três quartos concede +5 CA; total impede o ataque.
+- Coberturas parcial e três quartos contam quando a aresta final antes do alvo é atravessada. Bloqueio total interrompe a linha nos dois sentidos em qualquer ponto do trajeto.
+- Cobertura também beneficia salvaguardas de Destreza, tanto em rolagens automáticas quanto nas informadas pelo jogador.
+- Cobertura total impede efeitos diretos, exceto quando a operação declara `exigeLinhaVisao: false`.
+- Em `batalhaRuasD` foram recuperadas 35 barreiras: 17 parciais, 12 de três quartos e 6 totais. Ainda não foram cadastrados volumes opacos para esse mapa.
+
+### 7. Alcance de ataques à distância
+
+- A besta leve usa alcance normal de 16 células (24 m) e alcance longo de 64 células (96 m).
+- Dentro do alcance longo, o ataque ocorre com desvantagem; além dele, é inválido.
+- Um atacante à distância ameaçado por inimigo adjacente também sofre desvantagem.
+- Alcance, linha de visão e cobertura devem ser validados pelo motor mesmo quando a IA propõe a ação.
+
+### 8. Organização dos dados
+
+- O antigo banco monolítico de aventuras foi dividido em:
+  - `aventuras/registro-aventuras.js`;
+  - `aventuras/a-fuga.js`.
+- Os HTMLs foram ajustados para carregar os novos arquivos.
+- A decisão atual é manter **um arquivo por aventura**, não um arquivo por cena.
+- A configuração do mapa e da batalha pertence ao arquivo da aventura; regras genéricas permanecem nos motores.
+- A inteligência inimiga foi separada em `inteligencia-inimigos.js`.
+
+### 9. Inteligência inimiga preparada
+
+Existem cinco perfis táticos:
+
+- `equilibrado`;
+- `agressivo`;
+- `atirador`;
+- `defensivo`;
+- `covarde`.
+
+Eles ponderam `bonusCorpoACorpo`, `bonusDistancia`, `valorAproximacao`, `valorDistancia`, `valorCobertura` e `toleranciaRisco`.
+
+O módulo novo expõe e já teve testes manuais isolados para:
+
+- `obterPerfilTatico`;
+- `avaliarCoberturaDaPosicao`;
+- `avaliarAtaqueDaPosicao`;
+- `avaliarPosicaoTaticaDeAtaque`;
+- `listarPosicoesAlcancaveis`;
+- `escolherMelhorPosicaoTatica`;
+- `planejarPosicaoParaAtaque`;
+- `planejarAproximacaoAoAlvo`;
+- `planejarAtaqueEPosicao`;
+- `planejarTurnoTatico`;
+- `escolherPosicaoComMelhorCobertura`, mantida como apoio legado.
+
+Os testes confirmaram:
+
+- pontuação distinta para nenhuma cobertura, parcial, três quartos e total;
+- alcance normal, longo e fora do alcance;
+- barreiras direcionais e bloqueio total nos dois sentidos;
+- lista de células alcançáveis respeitando movimento, terreno difícil e bloqueios;
+- preservação de caminho e custo na posição escolhida;
+- diferenças de pontuação entre perfis;
+- desvantagem de ataque à distância sob ameaça adjacente;
+- perfil agressivo adjacente preferindo cimitarra à besta;
+- perfil agressivo distante preferindo aproximar-se quando essa opção supera o disparo ruim.
+
+### 10. Limite atual da IA e ponto exato de retomada
+
+O planejamento funciona, mas **ainda não comanda o turno real dos inimigos**. O caminho antigo continua em `combate.js`, especialmente nas funções equivalentes a `escolherAtaqueInimigo`, `moverInimigoEmDirecaoAoAlvo` e `executarTurnoInimigo`.
+
+Próximo trabalho:
+
+1. localizar o ponto em que `executarTurnoInimigo` decide entre atacar e mover;
+2. chamar `InteligenciaInimigos.planejarTurnoTatico` sem apagar imediatamente o fluxo antigo;
+3. primeiro executar apenas um plano de movimento em cenário controlado;
+4. confirmar consumo de movimento, caminho, terreno e ataques de oportunidade;
+5. depois executar o ataque escolhido pelo plano;
+6. testar em `batalhaRuasD` inimigos adjacentes, distantes, ameaçados e sem linha de visão;
+7. só então retirar ou reduzir a IA antiga.
+
+Critério de aceite imediato: durante uma batalha real, um guarda distante deve escolher conscientemente entre disparar e aproximar-se; quando se mover, deve seguir uma rota válida e, quando atacar, todas as validações continuam pertencendo ao motor de combate.
+
+### 11. Decisões que não devem ser perdidas no próximo chat
+
+- A IA **propõe**; o motor de combate **valida e executa**.
+- Não duplicar regra mecânica em `inteligencia-inimigos.js`.
+- Não apagar o comportamento antigo antes de o novo estar validado em batalha real.
+- Continuar em passos pequenos: uma alteração, explicação precisa de onde inserir, teste do usuário e somente então o passo seguinte.
+- Não editar o código diretamente enquanto o usuário estiver aprendendo a integração, salvo se ele pedir explicitamente.
+- “A Fuga” continua sendo o eixo do Alpha; novos sistemas devem servir à aventura, não substituí-la indefinidamente.
+- Ainda faltam cenas, acabamento das batalhas, teste integral sem console, salvar/retomar e regressão do Alpha.

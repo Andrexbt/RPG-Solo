@@ -7,6 +7,11 @@ window.SistemaCombate = (function () {
       nome: configuracao.nome ?? entidade.nome,
       tipo: configuracao.tipo ?? entidade.tipo,
       grupoId: configuracao.grupoId ?? null,
+            inteligencia: structuredClone(
+        configuracao.inteligencia ??
+        entidade.inteligencia ??
+        null,
+      ),
 
       tamanho:
         (Array.isArray(entidade.tamanho) ? entidade.tamanho[0] : entidade.tamanho) ?? "medio",
@@ -505,8 +510,14 @@ window.SistemaCombate = (function () {
       );
     }
 
-    function registrarBarreira(barreira) {
+    function registrarBarreira(barreira, concedeCobertura) {
       if (!barreira) {
+        return;
+      }
+
+      const bloqueiaCompletamente = barreira.tipo === "bloqueioTotal";
+
+      if (!bloqueiaCompletamente && !concedeCobertura) {
         return;
       }
 
@@ -524,6 +535,7 @@ window.SistemaCombate = (function () {
     for (let indice = 1; indice < caminhoCompleto.length; indice++) {
       const anterior = caminhoCompleto[indice - 1];
       const atual = caminhoCompleto[indice];
+      const passoFinal = indice === caminhoCompleto.length - 1;
       const diferencaColuna = Number(atual.coluna) - Number(anterior.coluna);
       const diferencaLinha = Number(atual.linha) - Number(anterior.linha);
 
@@ -531,11 +543,13 @@ window.SistemaCombate = (function () {
         registrarBarreira(
           encontrarBarreira(Number(atual.coluna), Number(atual.linha), "oeste") ??
             encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "leste"),
+          passoFinal,
         );
       } else if (diferencaColuna < 0) {
         registrarBarreira(
           encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "oeste") ??
             encontrarBarreira(Number(atual.coluna), Number(atual.linha), "leste"),
+          passoFinal,
         );
       }
 
@@ -543,11 +557,13 @@ window.SistemaCombate = (function () {
         registrarBarreira(
           encontrarBarreira(Number(atual.coluna), Number(atual.linha), "norte") ??
             encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "sul"),
+          passoFinal,
         );
       } else if (diferencaLinha < 0) {
         registrarBarreira(
           encontrarBarreira(Number(anterior.coluna), Number(anterior.linha), "norte") ??
             encontrarBarreira(Number(atual.coluna), Number(atual.linha), "sul"),
+          passoFinal,
         );
       }
     }
@@ -839,8 +855,16 @@ window.SistemaCombate = (function () {
       };
     }
 
-    const tipoRolagem =
-      alcanceLongo !== null && distancia > alcanceNormal ? "desvantagem" : "normal";
+    const foraDoAlcanceNormal = alcanceLongo !== null && distancia > alcanceNormal;
+
+    const ataqueADistancia = acao.categoria === "distancia";
+
+    const atacanteEstaAmeacado =
+      combate &&
+      ataqueADistancia &&
+      listarAmeacadoresDaPosicao(combate, atacante, atacante.posicao).length > 0;
+
+    const tipoRolagem = foraDoAlcanceNormal || atacanteEstaAmeacado ? "desvantagem" : "normal";
 
     return {
       sucesso: true,
@@ -2071,12 +2095,90 @@ window.SistemaCombate = (function () {
       };
     }
 
-    let ataque = escolherAtaqueInimigo(combate, inimigo, alvo);
+    const planoTatico = InteligenciaInimigos.planejarTurnoTatico(
+      combate,
+      inimigo,
+      alvo,
+    );
+
+    const movimentoPlanejado = planoTatico.sucesso
+      ? planoTatico.planoEscolhido?.posicao
+      : null;
 
     let resultadoMovimento = null;
 
-    if (!ataque) {
-      resultadoMovimento = moverInimigoEmDirecaoAoAlvo(combate, inimigo, alvo);
+    if (
+      movimentoPlanejado?.caminho?.length > 0
+    ) {
+      const movimentoExecutado = movimentarParticipante(
+        combate,
+        inimigo.id,
+        movimentoPlanejado.posicao.coluna,
+        movimentoPlanejado.posicao.linha,
+      );
+
+      resultadoMovimento = {
+        ...movimentoExecutado,
+
+        celulasPercorridas:
+          movimentoExecutado.distancia ?? 0,
+      };
+
+            if (movimentoExecutado.reacaoPendente) {
+        return {
+          sucesso: true,
+
+          turnoPausado: true,
+          reacaoPendente: true,
+
+          inimigo,
+          alvo,
+
+          resultadoMovimento,
+          decisao: movimentoExecutado.decisao,
+        };
+      }
+    }
+
+            const planoParaAtaque =
+      resultadoMovimento?.sucesso
+        ? InteligenciaInimigos.planejarTurnoTatico(
+            combate,
+            {
+              ...inimigo,
+
+              movimentoRestante: 0,
+            },
+            alvo,
+          )
+        : planoTatico;
+
+    const ataquePlanejado =
+      planoParaAtaque.sucesso &&
+      planoParaAtaque.planoEscolhido?.tipo === "atacar"
+        ? planoParaAtaque.planoEscolhido.ataque
+        : null;
+
+    let ataque =
+      ataquePlanejado;
+
+    if (
+      !ataque &&
+      !planoParaAtaque.sucesso
+    ) {
+      ataque = escolherAtaqueInimigo(
+        combate,
+        inimigo,
+        alvo,
+      );
+    }
+
+    if (!ataque && !resultadoMovimento?.sucesso) {
+      resultadoMovimento = moverInimigoEmDirecaoAoAlvo(
+        combate,
+        inimigo,
+        alvo,
+      );
 
       if (resultadoMovimento?.turnoPausado) {
         return {
@@ -2095,7 +2197,11 @@ window.SistemaCombate = (function () {
         };
       }
 
-      ataque = escolherAtaqueInimigo(combate, inimigo, alvo);
+      ataque = escolherAtaqueInimigo(
+        combate,
+        inimigo,
+        alvo,
+      );
     }
 
     if (!ataque) {
@@ -2259,32 +2365,28 @@ window.SistemaCombate = (function () {
     const bonusSalvaguarda = bonusSalvaguardaBase + bonusCobertura;
 
     const rolagemBase =
-  resultadoRolagem ??
-  realizarRolagemComposta({
-    gruposDeDados: [
-      {
-        quantidade: 1,
-        numeroDeFaces: 20,
-      },
-    ],
+      resultadoRolagem ??
+      realizarRolagemComposta({
+        gruposDeDados: [
+          {
+            quantidade: 1,
+            numeroDeFaces: 20,
+          },
+        ],
 
-    modificador: bonusSalvaguarda,
-  });
+        modificador: bonusSalvaguarda,
+      });
 
-const rolagem =
-  resultadoRolagem && bonusCobertura > 0
-    ? {
-        ...rolagemBase,
+    const rolagem =
+      resultadoRolagem && bonusCobertura > 0
+        ? {
+            ...rolagemBase,
 
-        modificador:
-          (Number(rolagemBase.modificador) || 0) +
-          bonusCobertura,
+            modificador: (Number(rolagemBase.modificador) || 0) + bonusCobertura,
 
-        total:
-          (Number(rolagemBase.total) || 0) +
-          bonusCobertura,
-      }
-    : rolagemBase;
+            total: (Number(rolagemBase.total) || 0) + bonusCobertura,
+          }
+        : rolagemBase;
 
     const resultadoTeste = window.SistemaTestes.resolverTesteContraCd(
       rolagem,

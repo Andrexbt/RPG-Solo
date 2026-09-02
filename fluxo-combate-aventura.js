@@ -123,6 +123,16 @@ function processarTurnoAtual(combate) {
 
       const resultado = SistemaCombate.executarTurnoInimigo(combate);
 
+            if (resultado.turnoPausado) {
+        abrirDecisaoPendenteCombate(
+          resultado.decisao,
+        );
+
+        atualizarInterfaceTurno(combate);
+
+        return;
+      }
+
       await registrarResultadoTurnoInimigo(resultado, participanteAtivo);
       atualizarInterfaceTurno(combate);
     } catch (erro) {
