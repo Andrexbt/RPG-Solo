@@ -500,7 +500,7 @@ async function encaminharParaFimDerrotaSeNecessario() {
   }
 
   await aplicarConsequencia({
-    proximaCena: "fimDerrota",
+    proximaCena: "encerramentoAventura",
   });
 
   return true;

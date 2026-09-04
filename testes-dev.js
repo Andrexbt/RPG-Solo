@@ -10,6 +10,7 @@
   }
 
   let saidaPainel = null;
+  let seletorEncerramento = null;
 
   function clonar(valor) {
     return structuredClone(valor);
@@ -236,6 +237,104 @@
     return resumo;
   }
 
+  function obterVariacoesEncerramento() {
+    return aventuraAtual
+      ?.cenas
+      ?.encerramentoAventura
+      ?.variacoes ?? [];
+  }
+
+  function obterResultadoFinalVariacao(variacao) {
+    return variacao.escolhas
+      ?.find((escolha) => escolha.fimAventura)
+      ?.fimAventura
+      ?.resultadoId ?? "indefinido";
+  }
+
+  function criarRotuloVariacaoEncerramento(variacao, indice) {
+    const origem = variacao.se?.veioDe ?? {};
+    const resultadoFinal = obterResultadoFinalVariacao(variacao);
+    const local = [origem.cenaId, origem.etapaId]
+      .filter(Boolean)
+      .join(" / ");
+    const evento = [origem.tipo, origem.resultado]
+      .filter(Boolean)
+      .join(": ");
+
+    return `${indice + 1}. ${resultadoFinal} — ${local || "sem origem"}` +
+      (evento ? ` — ${evento}` : "");
+  }
+
+  function abrirEncerramentoAventura(indiceVariacao) {
+    const cenaEncerramento =
+      aventuraAtual?.cenas?.encerramentoAventura;
+
+    if (!cenaEncerramento) {
+      return exibirResultado("Abrir encerramento", {
+        sucesso: false,
+        motivo: "encerramentoAventuraNaoEncontrado",
+      });
+    }
+
+    if (!estadoAtualJogo.personagem?.dados) {
+      return exibirResultado("Abrir encerramento", {
+        sucesso: false,
+        motivo: "personagemNaoCarregado",
+      });
+    }
+
+    const variacao =
+      cenaEncerramento.variacoes?.[indiceVariacao];
+    const origem = variacao?.se?.veioDe;
+
+    if (!origem) {
+      return exibirResultado("Abrir encerramento", {
+        sucesso: false,
+        motivo: "variacaoSemProcedencia",
+        indiceVariacao,
+      });
+    }
+
+    estadoAtualJogo.combateAtual = null;
+    estadoAtualJogo.progresso.cenaId = origem.cenaId;
+    estadoAtualJogo.progresso.etapaId = origem.etapaId ?? null;
+    estadoAtualJogo.progresso.caminhoId = origem.caminhoId ?? null;
+
+    registrarEventoNarrativo({
+      tipo: origem.tipo ?? null,
+      resultado: origem.resultado ?? null,
+      quantidadeAcertos: origem.quantidadeAcertos ?? null,
+    });
+
+    exibirTelaAventura();
+    NarradorAventura.limpar();
+    mudarCena("encerramentoAventura");
+
+    return exibirResultado("Abrir encerramento", {
+      sucesso: true,
+      indiceVariacao,
+      resultadoFinal: obterResultadoFinalVariacao(variacao),
+      procedencia: clonar(origem),
+      cenaId: "encerramentoAventura",
+    });
+  }
+
+  function abrirEncerramentoSelecionado() {
+    return abrirEncerramentoAventura(
+      Number(seletorEncerramento?.value ?? 0),
+    );
+  }
+
+  function abrirPrimeiroEncerramentoDoTipo(resultadoId) {
+    const indice = obterVariacoesEncerramento()
+      .findIndex(
+        (variacao) =>
+          obterResultadoFinalVariacao(variacao) === resultadoId,
+      );
+
+    return abrirEncerramentoAventura(indice);
+  }
+
   function criarBotao(rotulo, acao) {
     const botao = document.createElement("button");
     botao.type = "button";
@@ -270,7 +369,7 @@
     painel.style.font = "13px/1.4 system-ui, sans-serif";
 
     const titulo = document.createElement("summary");
-    titulo.textContent = "Modo DEV — IA inimiga";
+    titulo.textContent = "Modo DEV — Aventura e IA";
     titulo.style.cursor = "pointer";
     titulo.style.fontWeight = "700";
 
@@ -291,6 +390,37 @@
       criarBotao("Sem visão", () => prepararCenario("semLinhaDeVisao")),
     );
 
+    const areaEncerramento = document.createElement("div");
+    areaEncerramento.style.display = "grid";
+    areaEncerramento.style.gap = "6px";
+    areaEncerramento.style.marginTop = "10px";
+
+    const rotuloEncerramento = document.createElement("strong");
+    rotuloEncerramento.textContent = "Encerramentos";
+
+    seletorEncerramento = document.createElement("select");
+    seletorEncerramento.style.width = "100%";
+    seletorEncerramento.style.padding = "7px";
+
+    obterVariacoesEncerramento().forEach(function adicionarOpcao(
+      variacao,
+      indice,
+    ) {
+      const opcao = document.createElement("option");
+      opcao.value = String(indice);
+      opcao.textContent = criarRotuloVariacaoEncerramento(
+        variacao,
+        indice,
+      );
+      seletorEncerramento.append(opcao);
+    });
+
+    areaEncerramento.append(
+      rotuloEncerramento,
+      seletorEncerramento,
+      criarBotao("Abrir final selecionado", abrirEncerramentoSelecionado),
+    );
+
     saidaPainel = document.createElement("pre");
     saidaPainel.style.margin = "10px 0 0";
     saidaPainel.style.padding = "8px";
@@ -301,7 +431,13 @@
     saidaPainel.style.background = "rgba(255, 255, 255, 0.07)";
     saidaPainel.textContent = "Aguardando cenário.";
 
-    painel.append(titulo, instrucoes, botoes, saidaPainel);
+    painel.append(
+      titulo,
+      instrucoes,
+      botoes,
+      areaEncerramento,
+      saidaPainel,
+    );
     document.body.append(painel);
   }
 
@@ -312,6 +448,9 @@
     distante: () => prepararCenario("distante"),
     ameacado: () => prepararCenario("ameacado"),
     semLinhaDeVisao: () => prepararCenario("semLinhaDeVisao"),
+    abrirFinal: abrirEncerramentoAventura,
+    finalVitoria: () => abrirPrimeiroEncerramentoDoTipo("vitoria"),
+    finalDerrota: () => abrirPrimeiroEncerramentoDoTipo("derrota"),
   });
 
   if (document.readyState === "loading") {

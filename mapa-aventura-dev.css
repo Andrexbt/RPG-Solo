@@ -1,0 +1,61 @@
+#mapaAventuraDev {
+  width: min(96vw, 1800px);
+  height: 92vh;
+  padding: 0;
+  border: 1px solid #a9793d;
+  border-radius: 12px;
+  background: #18110d;
+  color: #f3e6cb;
+  box-shadow: 0 24px 80px #000c;
+}
+
+#mapaAventuraDev::backdrop { background: #090603d9; }
+.mapa-dev-cabecalho { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #704c2e; background: #241810; }
+.mapa-dev-cabecalho h2 { margin: 2px 0 0; font: 700 24px Georgia, serif; }
+.mapa-dev-sobretitulo { color: #c99a5b; font: 700 11px/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.mapa-dev-fechar, .mapa-dev-acoes button, .mapa-dev-acoes a, .mapa-dev-abrir { padding: 8px 11px; border: 1px solid #a9793d; border-radius: 6px; background: #362316; color: #f6ead1; cursor: pointer; text-decoration: none; }
+.mapa-dev-abrir { width: 100%; margin-top: 10px; }
+.mapa-dev-barra { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 8px 18px; border-bottom: 1px solid #503520; }
+.mapa-dev-legenda { display: flex; gap: 16px; font: 12px system-ui, sans-serif; }
+.mapa-dev-legenda span::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; background: #4e9d65; }
+.mapa-dev-legenda .aviso::before { background: #d29a3f; }
+.mapa-dev-legenda .erro::before { background: #d75a50; }
+.mapa-dev-legenda .combate::before { background: #7d67c7; }
+.mapa-dev-escala { display: flex; align-items: center; gap: 9px; min-width: 220px; font: 12px system-ui, sans-serif; }
+.mapa-dev-escala input { flex: 1; accent-color: #c99550; }
+.mapa-dev-corpo { display: grid; grid-template-columns: minmax(0, 1fr) 390px; height: calc(92vh - 105px); }
+.mapa-dev-rolagem { overflow: auto; background-color: #130e0b; background-image: radial-gradient(#5c412b 1px, transparent 1px); background-size: 22px 22px; }
+.mapa-dev-grafo { position: relative; min-width: 100%; min-height: 100%; }
+.mapa-dev-nivel { position: absolute; top: 17px; width: 210px; color: #ac8e69; font: 700 11px/1 system-ui, sans-serif; letter-spacing: .1em; text-align: center; text-transform: uppercase; }
+.mapa-dev-linhas { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.mapa-dev-linhas path { fill: none; stroke: #805c38; stroke-width: 2; opacity: .75; }
+.mapa-dev-no { position: absolute; width: 210px; min-height: 65px; padding: 9px; border: 2px solid #4e9d65; border-radius: 8px; background: #2a1d15; color: #f3e6cb; text-align: left; cursor: pointer; box-shadow: 0 4px 12px #0008; }
+.mapa-dev-no strong, .mapa-dev-no span { display: block; overflow: hidden; text-overflow: ellipsis; }
+.mapa-dev-no strong { white-space: nowrap; }
+.mapa-dev-no span { margin-top: 5px; color: #cdbb9c; font: 11px/1.25 system-ui, sans-serif; }
+.mapa-dev-no.tem-avisos { border-color: #d29a3f; }
+.mapa-dev-no.tem-erros { border-color: #d75a50; }
+.mapa-dev-no.batalha { background: #272038; }
+.mapa-dev-no.etapa { min-height: 56px; border-width: 1px; border-style: dashed; background: #1d2927; }
+.mapa-dev-no.etapa strong { color: #c8dfd9; font-size: 12px; }
+.mapa-dev-no.etapa span { color: #91aaa4; }
+.mapa-dev-no.selecionado { outline: 3px solid #f1c77c; outline-offset: 2px; }
+.mapa-dev-detalhes { overflow: auto; padding: 18px; border-left: 1px solid #704c2e; background: #211710; font: 13px/1.45 system-ui, sans-serif; }
+.mapa-dev-detalhes-topo { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.mapa-dev-detalhes h3 { margin: 0; font: 700 21px Georgia, serif; overflow-wrap: anywhere; }
+.mapa-dev-detalhes h4 { margin: 18px 0 6px; color: #e0b875; }
+.mapa-dev-detalhes ul { margin: 0; padding-left: 20px; }
+.mapa-dev-detalhes li { margin-bottom: 5px; }
+.mapa-dev-tipo { flex: none; padding: 3px 7px; border-radius: 20px; background: #395c43; font-size: 11px; }
+.mapa-dev-tipo.combate { background: #584886; }
+.mapa-dev-resumo { color: #decfb5; }
+.mapa-dev-acoes { display: flex; gap: 8px; margin: 12px 0; }
+.mapa-dev-vazio { margin: 0; color: #988a75; font-style: italic; }
+.mapa-dev-link { padding: 0; border: 0; background: transparent; color: #e6b96f; font: inherit; text-align: left; text-decoration: underline; cursor: pointer; }
+.mapa-dev-link:hover { color: #ffe0a8; }
+
+@media (max-width: 900px) {
+  .mapa-dev-barra { align-items: flex-start; flex-direction: column; }
+  .mapa-dev-corpo { grid-template-columns: 1fr; }
+  .mapa-dev-detalhes { position: absolute; right: 2vw; bottom: 2vh; width: min(86vw, 390px); max-height: 55vh; border: 1px solid #704c2e; box-shadow: 0 10px 35px #000b; }
+}

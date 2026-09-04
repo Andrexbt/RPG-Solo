@@ -329,11 +329,6 @@ h2 {
   pointer-events: none;
 }
 
-.grid-editor.editando-visao
-  .celula-editor:not(.tipo-bloqueio-visao) {
-  background-color: rgba(12, 9, 16, 0.12);
-}
-
 .celula-editor.borda-norte-coberturaParcial {
   border-top: 3px solid var(--cobertura-parcial);
 }

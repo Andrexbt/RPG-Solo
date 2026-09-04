@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editor visual de aventura | RPG Solo</title>
+    <link rel="stylesheet" href="editor-aventura.css?v=7" />
+    <script src="aventuras/registro-aventuras.js?v=1" defer></script>
+    <script src="aventuras/a-fuga.js?v=1" defer></script>
+    <script src="editor-aventura.js?v=7" defer></script>
+  </head>
+
+  <body>
+    <header class="cabecalho-editor-aventura">
+      <div>
+        <span class="sobretitulo">Ferramenta de desenvolvimento</span>
+        <h1>Editor visual de aventura</h1>
+      </div>
+
+      <label>
+        <span>Aventura</span>
+        <select id="seletorAventura"></select>
+      </label>
+    </header>
+
+    <main class="layout-editor-aventura">
+      <section id="rolagemGrafo" class="rolagem-grafo" aria-label="Fluxo da aventura">
+        <nav class="barra-editor-aventura" aria-label="Controles do editor">
+          <div class="grupo-controles">
+            <button id="botaoDesfazer" type="button">Desfazer</button>
+            <button id="botaoRefazer" type="button">Refazer</button>
+            <button id="botaoReenquadrar" type="button">Reenquadrar</button>
+            <span id="rotuloEscala" class="rotulo-navegacao">70%</span>
+          </div>
+          <div class="grupo-controles grupo-controles-direita">
+            <span id="resumoValidacao" class="resumo-validacao" aria-live="polite"></span>
+            <button id="botaoGerarCodigo" type="button">Gerar alterações</button>
+          </div>
+        </nav>
+        <div id="grafoAventura" class="grafo-aventura"></div>
+      </section>
+
+      <aside id="painelPropriedades" class="painel-propriedades">
+        <div class="legenda-status" aria-label="Legenda de validação">
+          <span>Completo</span>
+          <span class="aviso">Com avisos</span>
+          <span class="erro">Com erros</span>
+        </div>
+        <p>Selecione uma cena ou etapa no mapa.</p>
+      </aside>
+    </main>
+
+    <dialog id="modalCodigo">
+      <header>
+        <div>
+          <span class="sobretitulo">Saída segura</span>
+          <h2>Alterações de conexões</h2>
+        </div>
+        <button id="botaoFecharCodigo" type="button">Fechar</button>
+      </header>
+      <p>
+        Este código contém somente as conexões modificadas. Revise-o antes de aplicar ao arquivo da aventura.
+      </p>
+      <textarea id="saidaCodigo" readonly spellcheck="false"></textarea>
+      <footer>
+        <span id="mensagemCopia" aria-live="polite"></span>
+        <button id="botaoCopiarCodigo" type="button">Copiar código</button>
+      </footer>
+    </dialog>
+  </body>
+</html>

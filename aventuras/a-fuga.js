@@ -93,7 +93,13 @@ bancoAventuras.aFuga = {
 
           resultados: {
             sucesso: {
-              texto: ``,
+              texto: `Enquanto se esgueira em direção ao barco, um outro guarda, que você não havia visto antes, surge de trás de uma das embarcações, andando calmamente.
+
+              Imediatamente você se abaixa e se joga para o lado, em uma área cheia de pedaços de barcos velhos empilhados.
+
+              O guarda passa muito próximo, assoviando displicentemente, e não parece ter percebido sua presença.
+
+              Você espera ele estar em uma boa distância e anda os últimos metros até o barco.`,
 
               proximaEtapa: "decidirNoTelhado",
             },
@@ -1243,7 +1249,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           resultados: {
             sucesso: {
               texto: ``,
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -1474,7 +1480,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Se espremendo por um pequeno espaço entre as casas, você consegue sair do outro lado e passar pela abertura.`,
 
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -1783,7 +1789,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             sucesso: {
               texto: ``,
 
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -1942,7 +1948,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Ao julgar que está a uma distância segura o suficiente, você apressa o passo. Em seguida, o som do galope do cavalo se aproximando pelas pedras da ponte lhe incentiva a correr o mais rápido possível.`,
 
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -1991,7 +1997,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Por fim, você vence o rio e chega do outro lado.`,
 
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -2035,7 +2041,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Você se solta antes que a velocidade se torne alta demais e se permite deitar na grama por breves segundos, sentindo o alívio nos músculos, a chuva no rosto e o ar de liberdade.`,
 
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -2116,7 +2122,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
                 Por fim, você vence o rio e chega do outro lado.`,
 
-              proximaCena: "fimVitoria",
+              proximaCena: "encerramentoAventura",
             },
 
             fracasso: {
@@ -2171,7 +2177,31 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
         },
 
-        pilotarBarco: {},
+        pilotarBarco: {
+          descricao: `O barco é simples, com apenas uma vela, no momento ferrada ao mastro, e uma amarra que prende o barco a um pequeno cabeço de madeira no cais. Com a forte correnteza, você nem precisaria içar a vela, bastaria usar o leme para guiar o barco.
+
+          Você rapidamente solta a amarra e deixa o barco correr livremente no rio.`,
+
+          instrucao: "navegar pelo rio.",
+
+          teste: {
+            tipo: "atributo",
+            atributoId: "inteligencia",
+            dificuldade: 15,
+          },
+
+          resultados: {
+            sucesso: {
+              texto: ``,
+              proximaCena: "encerramentoAventura",
+            },
+
+            fracasso: {
+              texto: ``,
+              proximaCena: "",
+            },
+          },
+        },
       },
     },
 
@@ -2805,142 +2835,177 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         mapa: "Imagens/Mapas/A Fuga/batalhaRuas.webp",
 
         terreno: {
-          bloqueado: [
-            { colunaInicial: 1, colunaFinal: 2, linhaInicial: 1, linhaFinal: 3 },
-            { colunaInicial: 4, colunaFinal: 22, linhaInicial: 1, linhaFinal: 3 },
-            { colunaInicial: 26, colunaFinal: 39, linhaInicial: 1, linhaFinal: 4 },
-            { colunaInicial: 42, colunaFinal: 48, linhaInicial: 1, linhaFinal: 4 },
-            { colunaInicial: 1, colunaFinal: 22, linhaInicial: 4, linhaFinal: 6 },
-            { colunaInicial: 26, colunaFinal: 48, linhaInicial: 5, linhaFinal: 6 },
-            { colunaInicial: 1, colunaFinal: 13, linhaInicial: 7, linhaFinal: 7 },
-            { colunaInicial: 37, colunaFinal: 48, linhaInicial: 7, linhaFinal: 7 },
-            { colunaInicial: 1, colunaFinal: 5, linhaInicial: 8, linhaFinal: 8 },
-            { colunaInicial: 15, colunaFinal: 22, linhaInicial: 7, linhaFinal: 8 },
-            { colunaInicial: 26, colunaFinal: 34, linhaInicial: 7, linhaFinal: 8 },
-            { colunaInicial: 37, colunaFinal: 39, linhaInicial: 8, linhaFinal: 8 },
-            { colunaInicial: 41, colunaFinal: 48, linhaInicial: 8, linhaFinal: 8 },
-            { colunaInicial: 8, colunaFinal: 13, linhaInicial: 8, linhaFinal: 9 },
-            { colunaInicial: 15, colunaFinal: 21, linhaInicial: 9, linhaFinal: 9 },
-            { colunaInicial: 36, colunaFinal: 39, linhaInicial: 9, linhaFinal: 9 },
-            { colunaInicial: 43, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
-            { colunaInicial: 1, colunaFinal: 6, linhaInicial: 9, linhaFinal: 12 },
-            { colunaInicial: 42, colunaFinal: 48, linhaInicial: 10, linhaFinal: 12 },
-            { colunaInicial: 1, colunaFinal: 5, linhaInicial: 13, linhaFinal: 13 },
-            { colunaInicial: 45, colunaFinal: 48, linhaInicial: 13, linhaFinal: 13 },
-            { colunaInicial: 34, colunaFinal: 36, linhaInicial: 14, linhaFinal: 14 },
-            { colunaInicial: 34, colunaFinal: 37, linhaInicial: 15, linhaFinal: 15 },
-            { colunaInicial: 3, colunaFinal: 6, linhaInicial: 16, linhaFinal: 16 },
-            { colunaInicial: 9, colunaFinal: 10, linhaInicial: 16, linhaFinal: 16 },
-            { colunaInicial: 13, colunaFinal: 15, linhaInicial: 15, linhaFinal: 16 },
-            { colunaInicial: 23, colunaFinal: 26, linhaInicial: 15, linhaFinal: 16 },
-            { colunaInicial: 34, colunaFinal: 38, linhaInicial: 16, linhaFinal: 16 },
-            { colunaInicial: 40, colunaFinal: 43, linhaInicial: 16, linhaFinal: 16 },
-            { colunaInicial: 18, colunaFinal: 21, linhaInicial: 16, linhaFinal: 17 },
-            { colunaInicial: 23, colunaFinal: 28, linhaInicial: 17, linhaFinal: 17 },
-            { colunaInicial: 23, colunaFinal: 29, linhaInicial: 18, linhaFinal: 18 },
-            { colunaInicial: 31, colunaFinal: 37, linhaInicial: 17, linhaFinal: 18 },
-            { colunaInicial: 32, colunaFinal: 37, linhaInicial: 19, linhaFinal: 19 },
-            { colunaInicial: 40, colunaFinal: 48, linhaInicial: 17, linhaFinal: 19 },
-            { colunaInicial: 1, colunaFinal: 6, linhaInicial: 17, linhaFinal: 20 },
-            { colunaInicial: 12, colunaFinal: 15, linhaInicial: 17, linhaFinal: 20 },
-            { colunaInicial: 25, colunaFinal: 29, linhaInicial: 19, linhaFinal: 20 },
-            { colunaInicial: 35, colunaFinal: 37, linhaInicial: 20, linhaFinal: 20 },
-            { colunaInicial: 1, colunaFinal: 2, linhaInicial: 21, linhaFinal: 21 },
-            { colunaInicial: 1, colunaFinal: 5, linhaInicial: 22, linhaFinal: 22 },
-            { colunaInicial: 8, colunaFinal: 10, linhaInicial: 18, linhaFinal: 22 },
-            { colunaInicial: 31, colunaFinal: 36, linhaInicial: 22, linhaFinal: 22 },
-            { colunaInicial: 39, colunaFinal: 48, linhaInicial: 20, linhaFinal: 22 },
-            { colunaInicial: 8, colunaFinal: 11, linhaInicial: 23, linhaFinal: 23 },
-            { colunaInicial: 14, colunaFinal: 15, linhaInicial: 21, linhaFinal: 23 },
-            { colunaInicial: 31, colunaFinal: 37, linhaInicial: 23, linhaFinal: 23 },
-            { colunaInicial: 40, colunaFinal: 48, linhaInicial: 23, linhaFinal: 23 },
-            { colunaInicial: 23, colunaFinal: 29, linhaInicial: 21, linhaFinal: 24 },
-            { colunaInicial: 32, colunaFinal: 38, linhaInicial: 24, linhaFinal: 24 },
-            { colunaInicial: 8, colunaFinal: 15, linhaInicial: 24, linhaFinal: 25 },
-            { colunaInicial: 17, colunaFinal: 21, linhaInicial: 18, linhaFinal: 25 },
-            { colunaInicial: 23, colunaFinal: 27, linhaInicial: 25, linhaFinal: 25 },
-            { colunaInicial: 1, colunaFinal: 6, linhaInicial: 23, linhaFinal: 26 },
-            { colunaInicial: 31, colunaFinal: 41, linhaInicial: 25, linhaFinal: 26 },
-            { colunaInicial: 43, colunaFinal: 48, linhaInicial: 24, linhaFinal: 26 },
-            { colunaInicial: 9, colunaFinal: 15, linhaInicial: 26, linhaFinal: 27 },
-            { colunaInicial: 17, colunaFinal: 20, linhaInicial: 26, linhaFinal: 27 },
-            { colunaInicial: 23, colunaFinal: 29, linhaInicial: 26, linhaFinal: 27 },
-            { colunaInicial: 31, colunaFinal: 48, linhaInicial: 27, linhaFinal: 27 },
-          ],
+  bloqueado: [
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 1, linhaFinal: 3 },
+    { colunaInicial: 4, colunaFinal: 22, linhaInicial: 1, linhaFinal: 3 },
+    { colunaInicial: 26, colunaFinal: 39, linhaInicial: 1, linhaFinal: 4 },
+    { colunaInicial: 42, colunaFinal: 48, linhaInicial: 1, linhaFinal: 4 },
+    { colunaInicial: 1, colunaFinal: 22, linhaInicial: 4, linhaFinal: 6 },
+    { colunaInicial: 26, colunaFinal: 48, linhaInicial: 5, linhaFinal: 6 },
+    { colunaInicial: 1, colunaFinal: 13, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 37, colunaFinal: 48, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 15, colunaFinal: 22, linhaInicial: 7, linhaFinal: 8 },
+    { colunaInicial: 26, colunaFinal: 34, linhaInicial: 7, linhaFinal: 8 },
+    { colunaInicial: 37, colunaFinal: 39, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 41, colunaFinal: 48, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 8, colunaFinal: 13, linhaInicial: 8, linhaFinal: 9 },
+    { colunaInicial: 15, colunaFinal: 21, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 36, colunaFinal: 39, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 43, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 9, linhaFinal: 12 },
+    { colunaInicial: 42, colunaFinal: 48, linhaInicial: 10, linhaFinal: 12 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 15, linhaFinal: 15 },
+    { colunaInicial: 3, colunaFinal: 6, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 9, colunaFinal: 10, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 13, colunaFinal: 15, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 23, colunaFinal: 26, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 34, colunaFinal: 38, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 40, colunaFinal: 43, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 18, colunaFinal: 21, linhaInicial: 16, linhaFinal: 17 },
+    { colunaInicial: 23, colunaFinal: 28, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 23, colunaFinal: 29, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 31, colunaFinal: 37, linhaInicial: 17, linhaFinal: 18 },
+    { colunaInicial: 32, colunaFinal: 37, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 40, colunaFinal: 48, linhaInicial: 17, linhaFinal: 19 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 17, linhaFinal: 20 },
+    { colunaInicial: 12, colunaFinal: 15, linhaInicial: 17, linhaFinal: 20 },
+    { colunaInicial: 25, colunaFinal: 29, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 8, colunaFinal: 10, linhaInicial: 18, linhaFinal: 22 },
+    { colunaInicial: 31, colunaFinal: 36, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 39, colunaFinal: 48, linhaInicial: 20, linhaFinal: 22 },
+    { colunaInicial: 8, colunaFinal: 11, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 14, colunaFinal: 15, linhaInicial: 21, linhaFinal: 23 },
+    { colunaInicial: 31, colunaFinal: 37, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 40, colunaFinal: 48, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 23, colunaFinal: 29, linhaInicial: 21, linhaFinal: 24 },
+    { colunaInicial: 32, colunaFinal: 38, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 8, colunaFinal: 15, linhaInicial: 24, linhaFinal: 25 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 18, linhaFinal: 25 },
+    { colunaInicial: 23, colunaFinal: 27, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 23, linhaFinal: 26 },
+    { colunaInicial: 31, colunaFinal: 41, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 43, colunaFinal: 48, linhaInicial: 24, linhaFinal: 26 },
+    { colunaInicial: 9, colunaFinal: 15, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 17, colunaFinal: 20, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 23, colunaFinal: 29, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 31, colunaFinal: 48, linhaInicial: 27, linhaFinal: 27 },
+  ],
 
-          dificil: [
-            { colunaInicial: 3, colunaFinal: 3, linhaInicial: 1, linhaFinal: 3 },
-            { colunaInicial: 40, colunaFinal: 41, linhaInicial: 1, linhaFinal: 4 },
-            { colunaInicial: 14, colunaFinal: 14, linhaInicial: 7, linhaFinal: 8 },
-            { colunaInicial: 35, colunaFinal: 36, linhaInicial: 7, linhaFinal: 8 },
-            { coluna: 40, linha: 8 },
-            { colunaInicial: 27, colunaFinal: 35, linhaInicial: 9, linhaFinal: 9 },
-            { colunaInicial: 40, colunaFinal: 42, linhaInicial: 9, linhaFinal: 9 },
-            { colunaInicial: 8, colunaFinal: 13, linhaInicial: 10, linhaFinal: 10 },
-            { colunaInicial: 18, colunaFinal: 20, linhaInicial: 10, linhaFinal: 10 },
-            { colunaInicial: 33, colunaFinal: 41, linhaInicial: 10, linhaFinal: 10 },
-            { coluna: 18, linha: 11 },
-            { coluna: 9, linha: 12 },
-            { coluna: 16, linha: 12 },
-            { colunaInicial: 33, colunaFinal: 36, linhaInicial: 12, linhaFinal: 12 },
-            { coluna: 38, linha: 12 },
-            { coluna: 8, linha: 13 },
-            { colunaInicial: 11, colunaFinal: 12, linhaInicial: 12, linhaFinal: 13 },
-            { colunaInicial: 19, colunaFinal: 21, linhaInicial: 13, linhaFinal: 13 },
-            { coluna: 27, linha: 13 },
-            { colunaInicial: 34, colunaFinal: 36, linhaInicial: 13, linhaFinal: 13 },
-            { colunaInicial: 27, colunaFinal: 28, linhaInicial: 14, linhaFinal: 15 },
-            { colunaInicial: 31, colunaFinal: 33, linhaInicial: 15, linhaFinal: 15 },
-            { colunaInicial: 27, colunaFinal: 33, linhaInicial: 16, linhaFinal: 16 },
-            { colunaInicial: 8, colunaFinal: 10, linhaInicial: 17, linhaFinal: 17 },
-            { colunaInicial: 29, colunaFinal: 30, linhaInicial: 17, linhaFinal: 17 },
-            { colunaInicial: 33, colunaFinal: 34, linhaInicial: 20, linhaFinal: 20 },
-            { colunaInicial: 33, colunaFinal: 36, linhaInicial: 21, linhaFinal: 21 },
-            { coluna: 13, linha: 23 },
-          ],
-        },
+  dificil: [
+    { colunaInicial: 3, colunaFinal: 3, linhaInicial: 1, linhaFinal: 3 },
+    { colunaInicial: 40, colunaFinal: 41, linhaInicial: 1, linhaFinal: 4 },
+    { colunaInicial: 14, colunaFinal: 14, linhaInicial: 7, linhaFinal: 8 },
+    { colunaInicial: 35, colunaFinal: 36, linhaInicial: 7, linhaFinal: 8 },
+    { colunaInicial: 27, colunaFinal: 35, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 40, colunaFinal: 40, linhaInicial: 8, linhaFinal: 9 },
+    { coluna: 42, linha: 9 },
+    { colunaInicial: 8, colunaFinal: 13, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 18, colunaFinal: 20, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 33, colunaFinal: 40, linhaInicial: 10, linhaFinal: 10 },
+    { coluna: 18, linha: 11 },
+    { colunaInicial: 11, colunaFinal: 12, linhaInicial: 12, linhaFinal: 12 },
+    { coluna: 16, linha: 12 },
+    { colunaInicial: 33, colunaFinal: 36, linhaInicial: 12, linhaFinal: 12 },
+    { coluna: 38, linha: 12 },
+    { coluna: 8, linha: 13 },
+    { colunaInicial: 19, colunaFinal: 21, linhaInicial: 13, linhaFinal: 13 },
+    { coluna: 27, linha: 13 },
+    { colunaInicial: 34, colunaFinal: 36, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 31, colunaFinal: 33, linhaInicial: 15, linhaFinal: 15 },
+    { colunaInicial: 27, colunaFinal: 28, linhaInicial: 14, linhaFinal: 16 },
+    { colunaInicial: 30, colunaFinal: 33, linhaInicial: 16, linhaFinal: 16 },
+    { coluna: 30, linha: 17 },
+    { colunaInicial: 33, colunaFinal: 34, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 33, colunaFinal: 36, linhaInicial: 21, linhaFinal: 21 },
+    { coluna: 13, linha: 23 },
+  ],
+},
 
-        visao: {
-          bloqueios: [],
+visao: {
+  bloqueios: [
+    { colunaInicial: 43, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 9, linhaFinal: 12 },
+    { colunaInicial: 42, colunaFinal: 48, linhaInicial: 10, linhaFinal: 12 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 15, linhaFinal: 15 },
+    { colunaInicial: 3, colunaFinal: 6, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 9, colunaFinal: 10, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 13, colunaFinal: 15, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 23, colunaFinal: 26, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 34, colunaFinal: 38, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 40, colunaFinal: 43, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 18, colunaFinal: 21, linhaInicial: 16, linhaFinal: 17 },
+    { colunaInicial: 23, colunaFinal: 28, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 23, colunaFinal: 29, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 31, colunaFinal: 37, linhaInicial: 17, linhaFinal: 18 },
+    { colunaInicial: 32, colunaFinal: 37, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 40, colunaFinal: 48, linhaInicial: 17, linhaFinal: 19 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 17, linhaFinal: 20 },
+    { colunaInicial: 12, colunaFinal: 15, linhaInicial: 17, linhaFinal: 20 },
+    { colunaInicial: 25, colunaFinal: 29, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 8, colunaFinal: 10, linhaInicial: 18, linhaFinal: 22 },
+    { colunaInicial: 31, colunaFinal: 36, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 39, colunaFinal: 48, linhaInicial: 20, linhaFinal: 22 },
+    { colunaInicial: 8, colunaFinal: 11, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 14, colunaFinal: 15, linhaInicial: 21, linhaFinal: 23 },
+    { colunaInicial: 31, colunaFinal: 37, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 40, colunaFinal: 48, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 23, colunaFinal: 29, linhaInicial: 21, linhaFinal: 24 },
+    { colunaInicial: 32, colunaFinal: 38, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 8, colunaFinal: 15, linhaInicial: 24, linhaFinal: 25 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 18, linhaFinal: 25 },
+    { colunaInicial: 23, colunaFinal: 27, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 23, linhaFinal: 26 },
+    { colunaInicial: 31, colunaFinal: 41, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 43, colunaFinal: 48, linhaInicial: 24, linhaFinal: 26 },
+    { colunaInicial: 9, colunaFinal: 15, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 17, colunaFinal: 20, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 23, colunaFinal: 29, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 31, colunaFinal: 48, linhaInicial: 27, linhaFinal: 27 },
+  ],
 
-          barreiras: [
-            { coluna: 40, linha: 8, lado: "oeste", tipo: "bloqueioTotal" },
-            { coluna: 6, linha: 9, lado: "norte", tipo: "coberturaTresQuartos" },
-            { coluna: 7, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 9, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 14, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 15, linha: 9, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 35, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 36, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 40, linha: 9, lado: "oeste", tipo: "bloqueioTotal" },
-            { coluna: 9, linha: 10, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 42, linha: 10, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 42, linha: 10, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 11, linha: 12, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 11, linha: 12, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 16, linha: 12, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 17, linha: 12, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 8, linha: 13, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 9, linha: 13, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 11, linha: 13, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 12, linha: 13, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 19, linha: 13, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 19, linha: 13, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 20, linha: 13, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 21, linha: 13, lado: "oeste", tipo: "coberturaParcial" },
-            { coluna: 35, linha: 13, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 35, linha: 13, lado: "norte", tipo: "coberturaTresQuartos" },
-            { coluna: 8, linha: 14, lado: "norte", tipo: "coberturaParcial" },
-            { coluna: 27, linha: 14, lado: "norte", tipo: "coberturaTresQuartos" },
-            { coluna: 28, linha: 14, lado: "oeste", tipo: "coberturaTresQuartos" },
-            { coluna: 28, linha: 15, lado: "norte", tipo: "coberturaTresQuartos" },
-            { coluna: 9, linha: 16, lado: "oeste", tipo: "bloqueioTotal" },
-            { coluna: 9, linha: 16, lado: "norte", tipo: "bloqueioTotal" },
-            { coluna: 10, linha: 16, lado: "norte", tipo: "bloqueioTotal" },
-            { coluna: 11, linha: 16, lado: "oeste", tipo: "bloqueioTotal" },
-            { coluna: 6, linha: 22, lado: "oeste", tipo: "coberturaTresQuartos" },
-          ],
-        },
+  barreiras: [
+    { coluna: 40, linha: 8, lado: "oeste", tipo: "bloqueioTotal" },
+    { coluna: 9, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 14, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 15, linha: 9, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 35, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 36, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 40, linha: 9, lado: "oeste", tipo: "bloqueioTotal" },
+    { coluna: 9, linha: 10, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 42, linha: 10, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 42, linha: 10, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 11, linha: 12, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 11, linha: 12, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 16, linha: 12, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 17, linha: 12, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 8, linha: 13, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 9, linha: 13, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 11, linha: 13, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 12, linha: 13, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 19, linha: 13, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 19, linha: 13, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 13, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 21, linha: 13, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 35, linha: 13, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 35, linha: 13, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 8, linha: 14, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 27, linha: 14, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 28, linha: 14, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 28, linha: 15, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 6, linha: 22, lado: "oeste", tipo: "coberturaTresQuartos" },
+  ],
+},
 
         areas: {
           ponte: {
@@ -3007,9 +3072,10 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         inimigos: [
           {
             npcId: "guardaConde",
+
             inteligencia: {
-                perfil: "equilibrado",
-              },
+              perfil: "equilibrado",
+            },
 
             quantidade: 4,
 
@@ -3047,7 +3113,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 Sentindo os ferimentos ardendo, você sai em disparada.`,
             },
 
-            proximaCena: "fimVitoria",
+            proximaCena: "encerramentoAventura",
           },
 
           fugaPelaPonte: {
@@ -3055,12 +3121,10 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
             tela: {
               titulo: "Você escapou",
-              texto: `Você alcança o extremo oposto da ponte antes que os guardas consigam impedir sua fuga.
-                
-                Sem diminuir o passo, você deixa o confronto para trás e continua em direção à saída da cidade.`,
+              texto: `Você alcança o extremo oposto da ponte, deixando os guardas para trás e correndo em direção à Floresta de Rawriaq, onde poderá se esconder pelos próximos dias.`,
             },
 
-            proximaCena: "fimVitoria",
+            proximaCena: "encerramentoAventura",
           },
 
           derrota: {
@@ -3072,13 +3136,14 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 {Cercado|Cercada} pelos guardas, você já não consegue continuar lutando.`,
             },
 
-            proximaCena: "fimDerrota",
+            proximaCena: "encerramentoAventura",
           },
         },
       },
     },
 
-    batalhaTorreF: {},
+    batalhaTorreF: {
+    },
 
     batalhaTorreM: {
       contexto: [``],
@@ -3087,6 +3152,285 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
         textoBotaoInicio: "Enfrentar os guardas",
         dificuldadePretendida: "moderada",
         mapa: "Imagens/Mapas/A Fuga/batalhaTorre.webp",
+
+        terreno: {
+  bloqueado: [
+    { coluna: 48, linha: 1 },
+    { coluna: 1, linha: 2 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 19, colunaFinal: 25, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 42, colunaFinal: 48, linhaInicial: 2, linhaFinal: 3 },
+    { colunaInicial: 35, colunaFinal: 38, linhaInicial: 3, linhaFinal: 4 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 7, colunaFinal: 15, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 18, colunaFinal: 24, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 29, colunaFinal: 32, linhaInicial: 3, linhaFinal: 5 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 5, linhaFinal: 5 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 18, colunaFinal: 26, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 28, colunaFinal: 48, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 1, colunaFinal: 15, linhaInicial: 6, linhaFinal: 7 },
+    { colunaInicial: 18, colunaFinal: 37, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 39, colunaFinal: 48, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 1, colunaFinal: 31, linhaInicial: 8, linhaFinal: 8 },
+    { coluna: 33, linha: 8 },
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 47, colunaFinal: 48, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 1, colunaFinal: 27, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 30, colunaFinal: 31, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 46, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 1, colunaFinal: 16, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 18, colunaFinal: 26, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 41, colunaFinal: 43, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 1, colunaFinal: 10, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 13, colunaFinal: 14, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 23, colunaFinal: 24, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 10, linhaFinal: 11 },
+    { colunaInicial: 1, colunaFinal: 11, linhaInicial: 12, linhaFinal: 12 },
+    { coluna: 14, linha: 12 },
+    { colunaInicial: 19, colunaFinal: 21, linhaInicial: 11, linhaFinal: 12 },
+    { colunaInicial: 36, colunaFinal: 43, linhaInicial: 11, linhaFinal: 12 },
+    { colunaInicial: 46, colunaFinal: 48, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 7, colunaFinal: 11, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 14, colunaFinal: 17, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 26, colunaFinal: 30, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 35, colunaFinal: 43, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 35, colunaFinal: 42, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 1, colunaFinal: 5, linhaInicial: 13, linhaFinal: 15 },
+    { colunaInicial: 8, colunaFinal: 11, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 25, colunaFinal: 31, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 2, colunaFinal: 5, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 24, colunaFinal: 31, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 35, colunaFinal: 41, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 23, colunaFinal: 31, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 36, colunaFinal: 40, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 43, colunaFinal: 48, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 21, colunaFinal: 31, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 39, colunaFinal: 40, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 42, colunaFinal: 48, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 7, colunaFinal: 8, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 6, colunaFinal: 9, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 11, colunaFinal: 13, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 25, colunaFinal: 30, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 34, colunaFinal: 38, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 42, colunaFinal: 46, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 41, colunaFinal: 45, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 48, colunaFinal: 48, linhaInicial: 19, linhaFinal: 21 },
+    { colunaInicial: 5, colunaFinal: 15, linhaInicial: 21, linhaFinal: 22 },
+    { colunaInicial: 17, colunaFinal: 20, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 32, colunaFinal: 38, linhaInicial: 21, linhaFinal: 23 },
+    { colunaInicial: 40, colunaFinal: 45, linhaInicial: 22, linhaFinal: 23 },
+    { colunaInicial: 4, colunaFinal: 14, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 16, colunaFinal: 21, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 32, colunaFinal: 36, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 40, colunaFinal: 43, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 47, colunaFinal: 48, linhaInicial: 22, linhaFinal: 24 },
+    { colunaInicial: 3, colunaFinal: 13, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 29, colunaFinal: 36, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 39, colunaFinal: 43, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 46, colunaFinal: 48, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 2, colunaFinal: 13, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 16, colunaFinal: 20, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 29, colunaFinal: 35, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 2, colunaFinal: 12, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 15, colunaFinal: 19, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 26, colunaFinal: 35, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 39, colunaFinal: 41, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 27, linhaFinal: 27 },
+  ],
+
+  dificil: [
+    { coluna: 36, linha: 1 },
+    { coluna: 39, linha: 1 },
+    { coluna: 41, linha: 1 },
+    { colunaInicial: 15, colunaFinal: 17, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 20, colunaFinal: 22, linhaInicial: 1, linhaFinal: 2 },
+    { coluna: 25, linha: 2 },
+    { colunaInicial: 27, colunaFinal: 29, linhaInicial: 2, linhaFinal: 2 },
+    { coluna: 32, linha: 2 },
+    { colunaInicial: 34, colunaFinal: 39, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 3, colunaFinal: 5, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 7, colunaFinal: 10, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 12, colunaFinal: 18, linhaInicial: 3, linhaFinal: 3 },
+    { coluna: 34, linha: 3 },
+    { colunaInicial: 39, colunaFinal: 43, linhaInicial: 4, linhaFinal: 4 },
+    { colunaInicial: 25, colunaFinal: 26, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 28, colunaFinal: 28, linhaInicial: 3, linhaFinal: 5 },
+    { colunaInicial: 33, colunaFinal: 34, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 38, colunaFinal: 43, linhaInicial: 5, linhaFinal: 5 },
+    { coluna: 27, linha: 6 },
+    { coluna: 38, linha: 7 },
+    { coluna: 32, linha: 8 },
+    { colunaInicial: 34, colunaFinal: 35, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 40, colunaFinal: 46, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 28, colunaFinal: 29, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 32, colunaFinal: 35, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 40, colunaFinal: 45, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 27, colunaFinal: 28, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 30, colunaFinal: 34, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 38, colunaFinal: 40, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 25, colunaFinal: 28, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 44, colunaFinal: 44, linhaInicial: 10, linhaFinal: 11 },
+    { colunaInicial: 44, colunaFinal: 45, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 13, linhaFinal: 13 },
+    { coluna: 12, linha: 15 },
+    { coluna: 42, linha: 15 },
+    { colunaInicial: 8, colunaFinal: 12, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 18, colunaFinal: 19, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 14, colunaFinal: 15, linhaInicial: 19, linhaFinal: 19 },
+    { coluna: 38, linha: 19 },
+    { colunaInicial: 14, colunaFinal: 16, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 21, colunaFinal: 24, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 47, colunaFinal: 47, linhaInicial: 19, linhaFinal: 20 },
+    { coluna: 16, linha: 21 },
+    { colunaInicial: 24, colunaFinal: 28, linhaInicial: 21, linhaFinal: 21 },
+    { coluna: 39, linha: 21 },
+    { colunaInicial: 46, colunaFinal: 47, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 24, colunaFinal: 25, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 27, colunaFinal: 28, linhaInicial: 22, linhaFinal: 22 },
+    { coluna: 46, linha: 22 },
+    { colunaInicial: 22, colunaFinal: 22, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 37, colunaFinal: 38, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 15, colunaFinal: 15, linhaInicial: 24, linhaFinal: 25 },
+    { coluna: 37, linha: 25 },
+    { colunaInicial: 21, colunaFinal: 21, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 20, colunaFinal: 21, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 26, linhaFinal: 27 },
+  ],
+        },
+
+        visao: {
+  bloqueios: [
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 47, colunaFinal: 48, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 46, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 41, colunaFinal: 43, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 10, linhaFinal: 11 },
+    { colunaInicial: 36, colunaFinal: 43, linhaInicial: 11, linhaFinal: 12 },
+    { colunaInicial: 46, colunaFinal: 48, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 26, colunaFinal: 30, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 35, colunaFinal: 43, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 35, colunaFinal: 42, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 25, colunaFinal: 31, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 24, colunaFinal: 31, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 35, colunaFinal: 41, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 23, colunaFinal: 31, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 36, colunaFinal: 40, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 43, colunaFinal: 48, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 21, colunaFinal: 31, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 39, colunaFinal: 40, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 42, colunaFinal: 48, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 25, colunaFinal: 30, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 34, colunaFinal: 38, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 42, colunaFinal: 46, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 41, colunaFinal: 45, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 48, colunaFinal: 48, linhaInicial: 19, linhaFinal: 21 },
+    { colunaInicial: 5, colunaFinal: 15, linhaInicial: 21, linhaFinal: 22 },
+    { colunaInicial: 17, colunaFinal: 20, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 32, colunaFinal: 38, linhaInicial: 21, linhaFinal: 23 },
+    { colunaInicial: 40, colunaFinal: 45, linhaInicial: 22, linhaFinal: 23 },
+    { colunaInicial: 4, colunaFinal: 14, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 16, colunaFinal: 21, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 32, colunaFinal: 36, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 40, colunaFinal: 43, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 47, colunaFinal: 48, linhaInicial: 22, linhaFinal: 24 },
+    { colunaInicial: 3, colunaFinal: 13, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 29, colunaFinal: 36, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 39, colunaFinal: 43, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 46, colunaFinal: 48, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 2, colunaFinal: 13, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 16, colunaFinal: 20, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 29, colunaFinal: 35, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 2, colunaFinal: 12, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 15, colunaFinal: 19, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 26, colunaFinal: 35, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 39, colunaFinal: 41, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 27, linhaFinal: 27 },
+  ],
+
+  barreiras: [
+    { coluna: 41, linha: 8, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 41, linha: 8, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 42, linha: 8, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 46, linha: 8, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 41, linha: 9, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 44, linha: 10, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 33, linha: 11, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 33, linha: 11, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 34, linha: 11, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 33, linha: 12, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 33, linha: 12, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 34, linha: 12, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 35, linha: 12, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 33, linha: 13, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 34, linha: 13, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 14, linha: 14, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 15, linha: 14, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 14, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 20, linha: 14, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 21, linha: 14, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 34, linha: 14, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 12, linha: 15, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 13, linha: 15, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 14, linha: 15, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 18, linha: 15, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 18, linha: 15, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 19, linha: 15, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 15, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 20, linha: 15, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 9, linha: 16, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 11, linha: 16, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 13, linha: 16, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 18, linha: 16, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 16, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 9, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 10, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 11, linha: 17, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 12, linha: 17, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 18, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 19, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 10, linha: 18, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 10, linha: 18, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 11, linha: 18, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 39, linha: 18, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 10, linha: 19, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 21, linha: 19, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 38, linha: 19, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 39, linha: 19, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 21, linha: 20, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 22, linha: 20, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 33, linha: 20, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 33, linha: 20, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 41, linha: 20, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 41, linha: 20, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 23, linha: 21, lado: "oeste", tipo: "coberturaTresQuartos" },
+    { coluna: 25, linha: 21, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 27, linha: 21, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 39, linha: 21, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 23, linha: 22, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 29, linha: 22, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 16, linha: 23, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 22, linha: 23, lado: "norte", tipo: "coberturaTresQuartos" },
+    { coluna: 27, linha: 23, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 28, linha: 23, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 30, linha: 23, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 30, linha: 23, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 25, linha: 26, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 25, linha: 26, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 25, linha: 27, lado: "norte", tipo: "coberturaParcial" },
+  ],
+        },
 
         jogador: {
           posicao: {
@@ -3146,7 +3490,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
                 {Cercado|Cercada} pelos guardas, você já não consegue continuar lutando.`,
             },
 
-            proximaCena: "fimDerrota",
+            proximaCena: "encerramentoAventura",
           },
         },
       },
@@ -3188,7 +3532,424 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
       combate: {
         textoBotaoInicio: "Enfrentar os Lagartos",
         dificuldadePretendida: "moderada",
+
+        introducao: {
+          titulo: "Batalha nos becos",
+
+          descricao: `Três mercenários dos Lagartos impedem seu avanço.
+            
+            Você pode vencer o confronto derrotando-os ou encontrando uma oportunidade para escapar.`,
+        },
+
         mapa: "Imagens/Mapas/A Fuga/batalhaBecos.webp",
+
+        terreno: {
+  bloqueado: [
+    { colunaInicial: 7, colunaFinal: 11, linhaInicial: 1, linhaFinal: 1 },
+    { colunaInicial: 14, colunaFinal: 18, linhaInicial: 1, linhaFinal: 1 },
+    { colunaInicial: 27, colunaFinal: 32, linhaInicial: 1, linhaFinal: 1 },
+    { colunaInicial: 1, colunaFinal: 4, linhaInicial: 1, linhaFinal: 2 },
+    { colunaInicial: 8, colunaFinal: 12, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 22, colunaFinal: 26, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 28, colunaFinal: 33, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 10, colunaFinal: 12, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 22, colunaFinal: 27, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 29, colunaFinal: 35, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 23, colunaFinal: 26, linhaInicial: 4, linhaFinal: 4 },
+    { colunaInicial: 32, colunaFinal: 38, linhaInicial: 4, linhaFinal: 4 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 3, linhaFinal: 5 },
+    { colunaInicial: 9, colunaFinal: 13, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 16, colunaFinal: 20, linhaInicial: 2, linhaFinal: 5 },
+    { coluna: 28, linha: 5 },
+    { colunaInicial: 35, colunaFinal: 40, linhaInicial: 5, linhaFinal: 5 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 23, colunaFinal: 25, linhaInicial: 5, linhaFinal: 6 },
+    { colunaInicial: 27, colunaFinal: 29, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 31, colunaFinal: 33, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 36, colunaFinal: 40, linhaInicial: 6, linhaFinal: 6 },
+    { coluna: 42, linha: 6 },
+    { colunaInicial: 1, colunaFinal: 7, linhaInicial: 6, linhaFinal: 7 },
+    { colunaInicial: 10, colunaFinal: 14, linhaInicial: 6, linhaFinal: 7 },
+    { colunaInicial: 18, colunaFinal: 21, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 23, colunaFinal: 26, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 33, colunaFinal: 35, linhaInicial: 7, linhaFinal: 7 },
+    { coluna: 39, linha: 7 },
+    { colunaInicial: 41, colunaFinal: 44, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 2, colunaFinal: 8, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 11, colunaFinal: 14, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 18, colunaFinal: 20, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 24, colunaFinal: 26, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 28, colunaFinal: 30, linhaInicial: 7, linhaFinal: 8 },
+    { colunaInicial: 34, colunaFinal: 36, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 41, colunaFinal: 46, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 3, colunaFinal: 9, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 11, colunaFinal: 15, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 18, colunaFinal: 21, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 24, colunaFinal: 27, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
+    { coluna: 1, linha: 10 },
+    { colunaInicial: 5, colunaFinal: 10, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 12, colunaFinal: 15, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 20, colunaFinal: 21, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 24, colunaFinal: 26, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 29, colunaFinal: 32, linhaInicial: 9, linhaFinal: 10 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 6, colunaFinal: 10, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 20, colunaFinal: 22, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 25, colunaFinal: 26, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 30, colunaFinal: 33, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 41, colunaFinal: 41, linhaInicial: 10, linhaFinal: 11 },
+    { colunaInicial: 47, colunaFinal: 48, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 7, colunaFinal: 10, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 12, colunaFinal: 16, linhaInicial: 11, linhaFinal: 12 },
+    { colunaInicial: 24, colunaFinal: 27, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 31, colunaFinal: 33, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 36, colunaFinal: 38, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 1, colunaFinal: 4, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 8, colunaFinal: 10, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 13, colunaFinal: 16, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 19, colunaFinal: 22, linhaInicial: 12, linhaFinal: 13 },
+    { colunaInicial: 25, colunaFinal: 28, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 31, colunaFinal: 32, linhaInicial: 13, linhaFinal: 13 },
+    { coluna: 36, linha: 13 },
+    { colunaInicial: 40, colunaFinal: 42, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 11, colunaFinal: 15, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 25, colunaFinal: 26, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 11, colunaFinal: 17, linhaInicial: 15, linhaFinal: 15 },
+    { coluna: 26, linha: 15 },
+    { coluna: 31, linha: 15 },
+    { colunaInicial: 33, colunaFinal: 37, linhaInicial: 15, linhaFinal: 15 },
+    { colunaInicial: 39, colunaFinal: 42, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 1, colunaFinal: 7, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 12, colunaFinal: 17, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 29, colunaFinal: 37, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 5, colunaFinal: 9, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 12, colunaFinal: 14, linhaInicial: 17, linhaFinal: 17 },
+    { coluna: 16, linha: 17 },
+    { colunaInicial: 30, colunaFinal: 37, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 17, linhaFinal: 18 },
+    { colunaInicial: 19, colunaFinal: 24, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 27, colunaFinal: 28, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 30, colunaFinal: 35, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 6, colunaFinal: 10, linhaInicial: 18, linhaFinal: 19 },
+    { colunaInicial: 16, colunaFinal: 17, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 20, colunaFinal: 24, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 27, colunaFinal: 29, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 31, colunaFinal: 35, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 39, colunaFinal: 42, linhaInicial: 17, linhaFinal: 19 },
+    { colunaInicial: 5, colunaFinal: 10, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 21, colunaFinal: 24, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 31, colunaFinal: 32, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 6, colunaFinal: 8, linhaInicial: 21, linhaFinal: 21 },
+    { coluna: 11, linha: 21 },
+    { colunaInicial: 14, colunaFinal: 18, linhaInicial: 20, linhaFinal: 21 },
+    { colunaInicial: 22, colunaFinal: 24, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 26, colunaFinal: 29, linhaInicial: 20, linhaFinal: 21 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 20, linhaFinal: 22 },
+    { colunaInicial: 9, colunaFinal: 12, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 15, colunaFinal: 16, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 22, colunaFinal: 23, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 26, colunaFinal: 31, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 34, colunaFinal: 36, linhaInicial: 21, linhaFinal: 22 },
+    { colunaInicial: 39, colunaFinal: 41, linhaInicial: 20, linhaFinal: 22 },
+    { colunaInicial: 1, colunaFinal: 4, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 18, colunaFinal: 20, linhaInicial: 23, linhaFinal: 23 },
+    { coluna: 23, linha: 23 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 7, colunaFinal: 12, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 25, colunaFinal: 32, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 40, colunaFinal: 41, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 8, colunaFinal: 9, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 24, linhaFinal: 25 },
+    { colunaInicial: 4, colunaFinal: 5, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 8, colunaFinal: 10, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 13, colunaFinal: 15, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 18, colunaFinal: 23, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 25, colunaFinal: 27, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 1, colunaFinal: 10, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 14, colunaFinal: 16, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 18, colunaFinal: 27, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 29, colunaFinal: 32, linhaInicial: 25, linhaFinal: 27 },
+  ],
+
+  dificil: [
+    { coluna: 13, linha: 1 },
+    { colunaInicial: 24, colunaFinal: 26, linhaInicial: 1, linhaFinal: 1 },
+    { coluna: 27, linha: 2 },
+    { colunaInicial: 8, colunaFinal: 9, linhaInicial: 3, linhaFinal: 3 },
+    { coluna: 15, linha: 3 },
+    { coluna: 28, linha: 3 },
+    { colunaInicial: 29, colunaFinal: 31, linhaInicial: 4, linhaFinal: 4 },
+    { coluna: 29, linha: 5 },
+    { colunaInicial: 32, colunaFinal: 34, linhaInicial: 5, linhaFinal: 5 },
+    { coluna: 30, linha: 6 },
+    { coluna: 35, linha: 6 },
+    { colunaInicial: 31, colunaFinal: 32, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 21, colunaFinal: 22, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 31, colunaFinal: 33, linhaInicial: 8, linhaFinal: 8 },
+    { coluna: 37, linha: 8 },
+    { colunaInicial: 17, colunaFinal: 17, linhaInicial: 8, linhaFinal: 9 },
+    { coluna: 33, linha: 9 },
+    { coluna: 16, linha: 10 },
+    { colunaInicial: 18, colunaFinal: 19, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 33, colunaFinal: 34, linhaInicial: 10, linhaFinal: 10 },
+    { coluna: 19, linha: 11 },
+    { coluna: 17, linha: 13 },
+    { coluna: 33, linha: 13 },
+    { coluna: 37, linha: 13 },
+    { colunaInicial: 9, colunaFinal: 10, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 16, colunaFinal: 17, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 20, colunaFinal: 22, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 14, linhaFinal: 14 },
+    { coluna: 25, linha: 15 },
+    { coluna: 11, linha: 16 },
+    { colunaInicial: 18, colunaFinal: 18, linhaInicial: 15, linhaFinal: 16 },
+    { colunaInicial: 22, colunaFinal: 24, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 39, colunaFinal: 42, linhaInicial: 16, linhaFinal: 16 },
+    { coluna: 4, linha: 17 },
+    { coluna: 17, linha: 17 },
+    { colunaInicial: 20, colunaFinal: 24, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 4, colunaFinal: 5, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 12, colunaFinal: 14, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 29, colunaFinal: 29, linhaInicial: 17, linhaFinal: 18 },
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 3, colunaFinal: 5, linhaInicial: 19, linhaFinal: 19 },
+    { coluna: 36, linha: 19 },
+    { colunaInicial: 11, colunaFinal: 11, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 30, colunaFinal: 30, linhaInicial: 19, linhaFinal: 20 },
+    { colunaInicial: 33, colunaFinal: 35, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 4, colunaFinal: 5, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 9, colunaFinal: 10, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 30, colunaFinal: 33, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 5, colunaFinal: 8, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 17, colunaFinal: 19, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 32, colunaFinal: 33, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 16, colunaFinal: 17, linhaInicial: 23, linhaFinal: 23 },
+    { coluna: 22, linha: 23 },
+    { coluna: 4, linha: 24 },
+    { colunaInicial: 33, colunaFinal: 33, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 25, colunaFinal: 28, linhaInicial: 25, linhaFinal: 25 },
+    { coluna: 11, linha: 27 },
+    { colunaInicial: 28, colunaFinal: 28, linhaInicial: 26, linhaFinal: 27 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 27, linhaFinal: 27 },
+  ],
+},
+
+visao: {
+  bloqueios: [
+    { colunaInicial: 7, colunaFinal: 11, linhaInicial: 1, linhaFinal: 1 },
+    { colunaInicial: 14, colunaFinal: 18, linhaInicial: 1, linhaFinal: 1 },
+    { colunaInicial: 27, colunaFinal: 32, linhaInicial: 1, linhaFinal: 1 },
+    { colunaInicial: 1, colunaFinal: 4, linhaInicial: 1, linhaFinal: 2 },
+    { colunaInicial: 8, colunaFinal: 12, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 22, colunaFinal: 26, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 28, colunaFinal: 33, linhaInicial: 2, linhaFinal: 2 },
+    { colunaInicial: 10, colunaFinal: 12, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 22, colunaFinal: 27, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 29, colunaFinal: 35, linhaInicial: 3, linhaFinal: 3 },
+    { colunaInicial: 23, colunaFinal: 26, linhaInicial: 4, linhaFinal: 4 },
+    { colunaInicial: 32, colunaFinal: 38, linhaInicial: 4, linhaFinal: 4 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 3, linhaFinal: 5 },
+    { colunaInicial: 9, colunaFinal: 13, linhaInicial: 4, linhaFinal: 5 },
+    { colunaInicial: 16, colunaFinal: 20, linhaInicial: 2, linhaFinal: 5 },
+    { coluna: 28, linha: 5 },
+    { colunaInicial: 35, colunaFinal: 40, linhaInicial: 5, linhaFinal: 5 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 23, colunaFinal: 25, linhaInicial: 5, linhaFinal: 6 },
+    { colunaInicial: 27, colunaFinal: 29, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 31, colunaFinal: 33, linhaInicial: 6, linhaFinal: 6 },
+    { colunaInicial: 36, colunaFinal: 40, linhaInicial: 6, linhaFinal: 6 },
+    { coluna: 42, linha: 6 },
+    { colunaInicial: 1, colunaFinal: 7, linhaInicial: 6, linhaFinal: 7 },
+    { colunaInicial: 10, colunaFinal: 14, linhaInicial: 6, linhaFinal: 7 },
+    { colunaInicial: 18, colunaFinal: 21, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 23, colunaFinal: 26, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 33, colunaFinal: 35, linhaInicial: 7, linhaFinal: 7 },
+    { coluna: 39, linha: 7 },
+    { colunaInicial: 41, colunaFinal: 44, linhaInicial: 7, linhaFinal: 7 },
+    { colunaInicial: 2, colunaFinal: 8, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 11, colunaFinal: 14, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 18, colunaFinal: 20, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 24, colunaFinal: 26, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 28, colunaFinal: 30, linhaInicial: 7, linhaFinal: 8 },
+    { colunaInicial: 34, colunaFinal: 36, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 41, colunaFinal: 46, linhaInicial: 8, linhaFinal: 8 },
+    { colunaInicial: 3, colunaFinal: 9, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 11, colunaFinal: 15, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 18, colunaFinal: 21, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 24, colunaFinal: 27, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 9, linhaFinal: 9 },
+    { colunaInicial: 44, colunaFinal: 48, linhaInicial: 9, linhaFinal: 9 },
+    { coluna: 1, linha: 10 },
+    { colunaInicial: 5, colunaFinal: 10, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 12, colunaFinal: 15, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 20, colunaFinal: 21, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 24, colunaFinal: 26, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 29, colunaFinal: 32, linhaInicial: 9, linhaFinal: 10 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 45, colunaFinal: 48, linhaInicial: 10, linhaFinal: 10 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 6, colunaFinal: 10, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 20, colunaFinal: 22, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 25, colunaFinal: 26, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 30, colunaFinal: 33, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 36, colunaFinal: 37, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 41, colunaFinal: 41, linhaInicial: 10, linhaFinal: 11 },
+    { colunaInicial: 47, colunaFinal: 48, linhaInicial: 11, linhaFinal: 11 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 7, colunaFinal: 10, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 12, colunaFinal: 16, linhaInicial: 11, linhaFinal: 12 },
+    { colunaInicial: 24, colunaFinal: 27, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 31, colunaFinal: 33, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 36, colunaFinal: 38, linhaInicial: 12, linhaFinal: 12 },
+    { colunaInicial: 1, colunaFinal: 4, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 8, colunaFinal: 10, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 13, colunaFinal: 16, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 19, colunaFinal: 22, linhaInicial: 12, linhaFinal: 13 },
+    { colunaInicial: 25, colunaFinal: 28, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 31, colunaFinal: 32, linhaInicial: 13, linhaFinal: 13 },
+    { coluna: 36, linha: 13 },
+    { colunaInicial: 40, colunaFinal: 42, linhaInicial: 13, linhaFinal: 13 },
+    { colunaInicial: 11, colunaFinal: 15, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 25, colunaFinal: 26, linhaInicial: 14, linhaFinal: 14 },
+    { colunaInicial: 1, colunaFinal: 6, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 11, colunaFinal: 17, linhaInicial: 15, linhaFinal: 15 },
+    { coluna: 26, linha: 15 },
+    { coluna: 31, linha: 15 },
+    { colunaInicial: 33, colunaFinal: 37, linhaInicial: 15, linhaFinal: 15 },
+    { colunaInicial: 39, colunaFinal: 42, linhaInicial: 14, linhaFinal: 15 },
+    { colunaInicial: 1, colunaFinal: 7, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 12, colunaFinal: 17, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 29, colunaFinal: 37, linhaInicial: 16, linhaFinal: 16 },
+    { colunaInicial: 5, colunaFinal: 9, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 12, colunaFinal: 14, linhaInicial: 17, linhaFinal: 17 },
+    { coluna: 16, linha: 17 },
+    { colunaInicial: 30, colunaFinal: 37, linhaInicial: 17, linhaFinal: 17 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 17, linhaFinal: 18 },
+    { colunaInicial: 19, colunaFinal: 24, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 27, colunaFinal: 28, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 30, colunaFinal: 35, linhaInicial: 18, linhaFinal: 18 },
+    { colunaInicial: 1, colunaFinal: 2, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 6, colunaFinal: 10, linhaInicial: 18, linhaFinal: 19 },
+    { colunaInicial: 16, colunaFinal: 17, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 20, colunaFinal: 24, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 27, colunaFinal: 29, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 31, colunaFinal: 35, linhaInicial: 19, linhaFinal: 19 },
+    { colunaInicial: 39, colunaFinal: 42, linhaInicial: 17, linhaFinal: 19 },
+    { colunaInicial: 5, colunaFinal: 10, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 21, colunaFinal: 24, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 31, colunaFinal: 32, linhaInicial: 20, linhaFinal: 20 },
+    { colunaInicial: 6, colunaFinal: 8, linhaInicial: 21, linhaFinal: 21 },
+    { coluna: 11, linha: 21 },
+    { colunaInicial: 14, colunaFinal: 18, linhaInicial: 20, linhaFinal: 21 },
+    { colunaInicial: 22, colunaFinal: 24, linhaInicial: 21, linhaFinal: 21 },
+    { colunaInicial: 26, colunaFinal: 29, linhaInicial: 20, linhaFinal: 21 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 20, linhaFinal: 22 },
+    { colunaInicial: 9, colunaFinal: 12, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 15, colunaFinal: 16, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 22, colunaFinal: 23, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 26, colunaFinal: 31, linhaInicial: 22, linhaFinal: 22 },
+    { colunaInicial: 34, colunaFinal: 36, linhaInicial: 21, linhaFinal: 22 },
+    { colunaInicial: 39, colunaFinal: 41, linhaInicial: 20, linhaFinal: 22 },
+    { colunaInicial: 1, colunaFinal: 4, linhaInicial: 23, linhaFinal: 23 },
+    { colunaInicial: 18, colunaFinal: 20, linhaInicial: 23, linhaFinal: 23 },
+    { coluna: 23, linha: 23 },
+    { colunaInicial: 1, colunaFinal: 3, linhaInicial: 24, linhaFinal: 24 },
+    { colunaInicial: 7, colunaFinal: 12, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 25, colunaFinal: 32, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 34, colunaFinal: 37, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 40, colunaFinal: 41, linhaInicial: 23, linhaFinal: 24 },
+    { colunaInicial: 8, colunaFinal: 9, linhaInicial: 25, linhaFinal: 25 },
+    { colunaInicial: 17, colunaFinal: 21, linhaInicial: 24, linhaFinal: 25 },
+    { colunaInicial: 4, colunaFinal: 5, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 8, colunaFinal: 10, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 13, colunaFinal: 15, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 18, colunaFinal: 23, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 25, colunaFinal: 27, linhaInicial: 26, linhaFinal: 26 },
+    { colunaInicial: 35, colunaFinal: 37, linhaInicial: 25, linhaFinal: 26 },
+    { colunaInicial: 1, colunaFinal: 10, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 14, colunaFinal: 16, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 18, colunaFinal: 27, linhaInicial: 27, linhaFinal: 27 },
+    { colunaInicial: 29, colunaFinal: 32, linhaInicial: 25, linhaFinal: 27 },
+  ],
+
+  barreiras: [
+    { coluna: 20, linha: 15, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 15, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 21, linha: 15, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 16, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 23, linha: 16, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 24, linha: 16, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 25, linha: 16, lado: "oeste", tipo: "coberturaParcial" },
+    { coluna: 20, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 21, linha: 17, lado: "norte", tipo: "coberturaParcial" },
+    { coluna: 25, linha: 17, lado: "oeste", tipo: "coberturaParcial" },
+  ],
+},
+
+        areas: {
+          ponte: {
+            colunaInicial: 23,
+            colunaFinal: 25,
+            linhaInicial: 1,
+            linhaFinal: 8,
+
+            rotulo: "Ponte",
+            visivel: false,
+          },
+
+          saidaPonte: {
+            colunaInicial: 23,
+            colunaFinal: 25,
+            linhaInicial: 1,
+            linhaFinal: 1,
+
+            rotulo: "Saída da ponte",
+          },
+        },
+
+        objetivos: [
+          {
+            id: "eliminarGuardas",
+            tipo: "principal",
+            titulo: "Derrotar os inimigos",
+            descricao: "Derrote todos os guardas.",
+
+            condicao: {
+              tipo: "inimigosDerrotados",
+            },
+
+            resultadoId: "vitoriaPorCombate",
+            categoria: "sucesso",
+          },
+
+          {
+            id: "atravessarPonte",
+            tipo: "principal",
+            titulo: "Escapar pela ponte",
+            descricao: "Alcance a saída no extremo oposto da ponte.",
+
+            condicao: {
+              tipo: "participanteNaArea",
+              participanteId: "jogador",
+              areaId: "saidaPonte",
+            },
+
+            resultadoId: "fugaPelaPonte",
+            categoria: "sucesso",
+          },
+        ],
 
         jogador: {
           posicao: {
@@ -3235,7 +3996,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           O caminho pelos becos está novamente livre.`,
             },
 
-            proximaCena: "fimVitoria",
+            proximaCena: "encerramentoAventura",
           },
 
           derrota: {
@@ -3247,7 +4008,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           {Cercado|Cercada} pelos Lagartos de Bronze, você já não consegue continuar lutando.`,
             },
 
-            proximaCena: "fimDerrota",
+            proximaCena: "encerramentoAventura",
           },
         },
       },
@@ -3263,7 +4024,406 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
 
     batalhaTorreNoite: {},
 
-    // Esqueletos de cenas ainda não implementadas.
+    // Encerramento //
+
+    encerramentoAventura: {
+      numeroFonte: null,
+
+      variacoes: [
+        //batalhaRuasD//
+        {
+          se: {
+            veioDe: {
+              cenaId: "batalhaRuasD",
+              tipo: "combate",
+              resultado: "vitoria",
+            },
+          },
+
+          contexto: [
+            `Às suas costas, você deixa a cidade em caos. À sua frente, a segurança da floresta de Rawriaq, onde você irá se esconder pelos próximos dias.
+
+              Seu destino é incerto, mas ele está em suas mãos.`,
+          ],
+
+          escolhas: [
+            {
+              id: "concluirAventuraVitoriaGuardasBatalhaRuasD",
+              texto: "Concluir Aventura",
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Deixando a cidade para trás, você alcança a segurança da floresta de Rawriaq.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "batalhaRuasD",
+              tipo: "combate",
+              resultado: "fugaPelaPonte",
+            },
+          },
+
+          contexto: [
+            `Às suas costas, você deixa a cidade em caos enquanto corre em direção à floresta.
+
+            Seu destino permanece incerto, mas, por enquanto, você está livre.`,
+          ],
+
+          escolhas: [
+            {
+              id: "concluirAventuraFugaPelaPonte",
+
+              texto: "Concluir Aventura.",
+
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "vitoria",
+
+                rotulo: "A Fuga",
+
+                titulo: "Você escapou pela ponte",
+
+                texto: `Você conseguiu deixar a cidade para trás antes que os guardas pudessem impedir sua fuga.`,
+
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "batalhaRuasD",
+              tipo: "combate",
+              resultado: "derrota",
+            },
+          },
+
+          contexto: [
+            `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
+          
+              Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
+          ],
+
+          escolhas: [
+            {
+              id: "concluirAventuraDerrotaGuardasBatalhaRuasD",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "derrota",
+                rotulo: "A Fuga",
+                titulo: "Sua fuga chega ao fim",
+                texto: `Sua tentativa de escapar da cidade chega ao fim.
+
+                  {Desarmado|Desarmada} e {capturado|capturada}, seu destino é incerto.`,
+                resultado: "Derrota",
+              },
+            },
+          ],
+        },
+
+        //Becos//
+        {
+          se: {
+            veioDe: {
+              cenaId: "becosOpostos",
+              etapaId: "testePassarLagartos",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+
+          contexto: `Correndo pela pequena rua, você deixa a cidade para trás, com o intuito de adentrar a floresta de Rawriaq.
+
+          Para onde seguir em seguida, você não sabe, mas, pelo menos por enquanto, poderá encontrar segurança na floresta.`,
+
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoBecosOpostos",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você escapou da cidade",
+                texto: `Usando uma saída clandestina, seu destino agora é a segurança da floresta de Rawriaq.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "batalhaBecosM",
+              tipo: "combate",
+              resultado: "vitoria",
+            },
+          },
+
+          contexto: [],
+
+          escolhas: [
+            {
+              id: "concluirAventuraVitoriaBatalhaBecosM",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Você conseguiu deixar a cidade para trás.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "batalhaBecosM",
+              tipo: "combate",
+              resultado: "derrota",
+            },
+          },
+
+          contexto: [],
+
+          escolhas: [
+            {
+              id: "concluirAventuraDerrotaBatalhaBecosM",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "derrota",
+                rotulo: "A Fuga",
+                titulo: "Sua fuga chega ao fim",
+                texto: `Sua tentativa de escapar da cidade chega ao fim.
+
+                  {Desarmado|Desarmada} e {capturado|capturada}, seu destino é incerto.`,
+                resultado: "Derrota",
+              },
+            },
+          ],
+        },
+
+        //n//
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "guardasDistraidos",
+              etapaId: "atravessarRio",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+          contexto: [],
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoGuardasDistraidos",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Você conseguiu deixar a cidade para trás.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "movimentacaoNoite",
+              etapaId: "noiteNadandoTorre",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+          contexto: [],
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoNoiteNadandoTorre",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Você conseguiu deixar a cidade para trás.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "movimentacaoNoite",
+              etapaId: "testePonteNoitePonte",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+          contexto: [],
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoPonteNoitePonte",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Você conseguiu deixar a cidade para trás.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "movimentacaoNoite",
+              etapaId: "testePonteNoiteNado",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+          contexto: [],
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoPonteNoiteNado",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Você conseguiu deixar a cidade para trás.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "movimentacaoNoite",
+              etapaId: "testePonteNoiteCarroca",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+          contexto: [],
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoPonteNoiteCarroca",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você conquistou sua liberdade",
+                texto: `Você conseguiu deixar a cidade para trás.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "torreChao",
+              tipo: "teste",
+              resultado: "sucesso",
+            },
+          },
+
+          contexto: [
+            `Às suas costas, você deixa a cidade em caos. À sua frente, a segurança da floresta de Rawriaq, onde você irá se esconder pelos próximos dias.
+
+            Seu destino é incerto, mas ele está em suas mãos.`,
+          ],
+
+          escolhas: [
+            {
+              id: "concluirAventuraSucessoTorreNadando",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+              fimAventura: {
+                resultadoId: "vitoria",
+                rotulo: "A Fuga",
+                titulo: "Você escapou pela ponte",
+                texto: `Você conseguiu deixar a cidade para trás antes que os guardas pudessem impedir sua fuga.`,
+                resultado: "Vitória",
+              },
+            },
+          ],
+        },
+
+        {
+          se: {
+            veioDe: {
+              cenaId: "batalhaTorreM",
+              tipo: "combate",
+              resultado: "derrota",
+            },
+          },
+
+          contexto: [
+            `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
+
+              Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
+          ],
+
+          escolhas: [
+            {
+              id: "concluirAventuraDerrotaGuardasBatalhaTorreM",
+              texto: "Concluir Aventura.",
+              registrarNarrativa: false,
+
+              fimAventura: {
+                resultadoId: "derrota",
+                rotulo: "A Fuga",
+                titulo: "Sua fuga chega ao fim",
+                texto: `Sua tentativa de escapar da cidade chega ao fim.
+
+                  {Desarmado|Desarmada} e {capturado|capturada}, seu destino é incerto.`,
+                resultado: "Derrota",
+              },
+            },
+          ],
+        },
+      ],
+    },
+
     margemRioPonte: {
       numeroFonte: null,
       contexto: [],
@@ -3304,168 +4464,6 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
       numeroFonte: null,
       contexto: [],
       escolhas: [],
-    },
-
-    fimVitoria: {
-      numeroFonte: null,
-
-      variacoes: [
-        {
-          se: {
-            veioDe: {
-              cenaId: "batalhaRuasD",
-              tipo: "combate",
-              resultado: "vitoria",
-            },
-          },
-
-          contexto: [
-            `Às suas costas, você deixa a cidade em caos. À sua frente, a segurança da floresta de Rawriaq, onde você irá se esconder pelos próximos dias.
-
-              Seu destino é incerto, mas ele está em suas mãos.`,
-          ],
-        },
-
-        {
-          se: {
-            veioDe: {
-              cenaId: "batalhaRuasD",
-              tipo: "combate",
-              resultado: "fugaPelaPonte",
-            },
-          },
-
-          contexto: [
-            `Sem olhar para trás, você atravessa o restante da ponte e deixa os guardas para trás.
-
-À sua frente está a segurança da floresta de Rawriaq, onde poderá se esconder pelos próximos dias.
-
-Seu destino permanece incerto, mas, por enquanto, você está livre.`,
-          ],
-
-          escolhas: [
-            {
-              id: "concluirAventuraFugaPelaPonte",
-
-              texto: "Concluir Aventura.",
-
-              registrarNarrativa: false,
-
-              fimAventura: {
-                resultadoId: "vitoria",
-
-                rotulo: "A Fuga",
-
-                titulo: "Você escapou pela ponte",
-
-                texto: `Você conseguiu deixar a cidade para trás antes que os guardas pudessem impedir sua fuga.`,
-
-                resultado: "Vitória",
-              },
-            },
-          ],
-        },
-
-        {
-          se: {
-            veioDe: {
-              cenaId: "becosOpostos",
-              etapaId: "testePassarLagartos",
-              tipo: "teste",
-              resultado: "sucesso",
-            },
-          },
-
-          contexto: [],
-        },
-
-        {
-          se: {
-            veioDe: {
-              cenaId: "batalhaBecosM",
-              tipo: "combate",
-              resultado: "vitoria",
-            },
-          },
-
-          contexto: [],
-        },
-      ],
-    },
-
-    fimDerrota: {
-      numeroFonte: null,
-
-      variacoes: [
-        {
-          se: {
-            veioDe: {
-              cenaId: "batalhaRuasD",
-              tipo: "combate",
-              resultado: "derrota",
-            },
-          },
-
-          contexto: [
-            `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
-          
-              Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
-          ],
-        },
-
-        {
-          se: {
-            veioDe: {
-              cenaId: "batalhaTorreM",
-              tipo: "combate",
-              resultado: "derrota",
-            },
-          },
-
-          contexto: [
-            `Sua visão se torna turva enquanto suas forças abandonam seu corpo. Incapaz de se manter de pé, você cai de joelhos.
-
-              Os sons do caos na cidade parecem cada vez mais distantes, e a última coisa que você sente é uma forte pancada na parte de trás da cabeça.`,
-          ],
-        },
-
-        {
-          se: {
-            veioDe: {
-              cenaId: "batalhaBecosM",
-              tipo: "combate",
-              resultado: "derrota",
-            },
-          },
-
-          contexto: [],
-        },
-      ],
-
-      contexto: [],
-
-      escolhas: [
-        {
-          id: "concluirAventuraDerrota",
-
-          texto: `Concluir Aventura.`,
-
-          registrarNarrativa: false,
-
-          fimAventura: {
-            resultadoId: "derrota",
-            rotulo: "A Fuga",
-
-            titulo: "Sua fuga chega ao fim",
-
-            texto: `Sua tentativa de escapar da cidade chega ao fim.
-              
-              {Desarmado|Desarmada} e {capturado|capturada}, seu destino é incerto.`,
-
-            resultado: "Derrota",
-          },
-        },
-      ],
     },
   },
 };

@@ -69,11 +69,14 @@ function preencherListaBatalhas() {
     }
   }
 
+  const batalhaSolicitada = new URLSearchParams(window.location.search).get("batalha");
   const batalhaRuas = [...batalhasDisponiveis.entries()].find(
     ([, item]) => item.cenaId === "batalhaRuasD",
   );
 
-  if (batalhaRuas) {
+  if (batalhaSolicitada && batalhasDisponiveis.has(batalhaSolicitada)) {
+    seletorBatalha.value = batalhaSolicitada;
+  } else if (batalhaRuas) {
     seletorBatalha.value = batalhaRuas[0];
   }
 }
