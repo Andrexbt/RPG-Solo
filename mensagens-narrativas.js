@@ -44,51 +44,173 @@ function exibirMensagemNarrativa(elemento, mensagem) {
 window.exibirMensagemNarrativa = exibirMensagemNarrativa;
 
 window.mensagensNarrativas = {
+  eventos: {
+    descricoesNarrativas: {
+      combate: {
+        arremesso: {
+        caiuAposErro: {
+          momento: "Depois que um ataque de arremesso erra e a arma cai no mapa.",
+          variaveis: ["arma", "alvo", "coluna", "linha"],
+          canais: {
+            acaoAtual: "A {arma} errou o alvo e caiu nas proximidades.",
+            solicitacao:
+              "A {arma} passou por {alvo} e caiu na coluna {coluna}, linha {linha}.",
+            historicoTitulo: "{arma} caída",
+            historicoDescricao:
+              "A arma arremessada errou {alvo} e caiu na coluna {coluna}, linha {linha}.",
+          },
+        },
+
+        caiuAposAcerto: {
+          momento:
+            "Depois que um ataque de arremesso acerta, mas nenhum dado de dano alcança o máximo.",
+          variaveis: ["arma", "alvo", "coluna", "linha"],
+          canais: {
+            acaoAtual: "A {arma} atingiu o alvo e caiu nas proximidades.",
+            solicitacao:
+              "Após atingir {alvo}, a {arma} caiu na coluna {coluna}, linha {linha}.",
+            historicoTitulo: "{arma} caída",
+            historicoDescricao:
+              "Depois do impacto, a arma caiu na coluna {coluna}, linha {linha}.",
+          },
+        },
+
+        cravada: {
+          momento:
+            "Depois que um ataque de arremesso acerta e ao menos um dado de dano alcança o máximo.",
+          variaveis: ["arma", "alvo"],
+          canais: {
+            acaoAtual: "A {arma} ficou cravada no alvo.",
+            solicitacao: "A {arma} ficou cravada em {alvo}.",
+            historicoTitulo: "{arma} cravada",
+            historicoDescricao: "A arma ficou cravada em {alvo} após o impacto.",
+          },
+        },
+        },
+      },
+    },
+
+    regras: {
+      combate: {
+        iniciativa: {
+          pedir: {
+            momento: "Quando o combate começa e o jogador precisa determinar sua iniciativa.",
+            variaveis: ["modificador"],
+            canais: {
+              solicitacao:
+                "Role 1d20 {modificador} para definir sua posição na ordem do combate.",
+            },
+          },
+        },
+
+        ataque: {
+          selecionarAlvo: {
+            momento: "Quando uma tentativa de ataque ainda não possui um alvo selecionado.",
+            variaveis: [],
+            canais: {
+              solicitacao: "Selecione um inimigo antes de atacar.",
+            },
+          },
+
+          pedirNormal: {
+            momento: "Quando o jogador realiza uma jogada de ataque normal.",
+            variaveis: ["modificador", "alvo"],
+            canais: {
+              solicitacao:
+                "Role <strong>1d20 {modificador}</strong> para atacar {alvo}.",
+            },
+          },
+
+          pedirVantagem: {
+            momento: "Quando o jogador realiza uma jogada de ataque com Vantagem.",
+            variaveis: ["modificador", "alvo"],
+            canais: {
+              solicitacao:
+                "Role <strong>2d20 {modificador}</strong>, <strong>usar o maior resultado</strong> para atacar {alvo}.",
+            },
+          },
+
+          pedirDesvantagem: {
+            momento: "Quando o jogador realiza uma jogada de ataque com Desvantagem.",
+            variaveis: ["modificador", "alvo"],
+            canais: {
+              solicitacao:
+                "Role <strong>2d20 {modificador}</strong>, <strong>usar o menor resultado</strong> para atacar {alvo}.",
+            },
+          },
+        },
+
+        dano: {
+          pedirNormal: {
+            momento: "Depois de um acerto normal, antes da rolagem de dano.",
+            variaveis: ["expressaoDano"],
+            canais: {
+              solicitacao:
+                "O ataque acertou. Role <strong>{expressaoDano}</strong> de dano.",
+            },
+          },
+
+          pedirCritico: {
+            momento: "Depois de um acerto crítico, antes da rolagem de dano.",
+            variaveis: [],
+            canais: {
+              solicitacao:
+                "Acerto Crítico! Role dano normalmente, <strong>multiplicar por 2</strong>, e depois adicione o bônus de dano do ataque escolhido.",
+            },
+          },
+        },
+      },
+    },
+  },
+
   iniciativa: {
     pedir: function (modificador) {
-      return `Role 1d20 ${formatarSinalNarrativo(modificador)} para definir sua posição na ordem do combate.`;
+      return obterMensagemJogabilidade("regras.combate.iniciativa.pedir", {
+        modificador: formatarSinalNarrativo(modificador),
+      }).solicitacao;
     },
   },
 
   ataque: {
-    selecionarAlvo: "Selecione um inimigo antes de atacar.",
+    get selecionarAlvo() {
+      return obterMensagemJogabilidade(
+        "regras.combate.ataque.selecionarAlvo",
+      ).solicitacao;
+    },
 
     pedirNormal: function (modificador, alvoNome) {
-      return (
-        `Você vai rolar <strong>1d20 ${formatarSinalNarrativo(modificador)}</strong> ` +
-        `para atacar ${alvoNome}.`
-      );
+      return obterMensagemJogabilidade("regras.combate.ataque.pedirNormal", {
+        modificador: formatarSinalNarrativo(modificador),
+        alvo: alvoNome,
+      }).solicitacao;
     },
 
     pedirVantagem: function (modificador, alvoNome) {
-      return (
-        `Você vai rolar <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
-        `<strong>usar o maior resultado</strong> para atacar ${alvoNome}.`
-      );
+      return obterMensagemJogabilidade("regras.combate.ataque.pedirVantagem", {
+        modificador: formatarSinalNarrativo(modificador),
+        alvo: alvoNome,
+      }).solicitacao;
     },
 
     pedirDesvantagem: function (modificador, alvoNome) {
-      return (
-        `Você vai rolar <strong>2d20 ${formatarSinalNarrativo(modificador)}</strong>, ` +
-        `<strong>usar o menor resultado</strong> para atacar ${alvoNome}.`
-      );
+      return obterMensagemJogabilidade("regras.combate.ataque.pedirDesvantagem", {
+        modificador: formatarSinalNarrativo(modificador),
+        alvo: alvoNome,
+      }).solicitacao;
     },
   },
 
   dano: {
     acertoNormal: function (expressaoCompleta) {
-      return (
-        "O ataque acertou. Você vai rolar " +
-        `<strong>${expressaoCompleta}</strong> de dano.`
-      );
+      return obterMensagemJogabilidade("regras.combate.dano.pedirNormal", {
+        expressaoDano: expressaoCompleta,
+      }).solicitacao;
     },
 
     acertoCritico: function () {
-      return (
-        "Acerto Crítico! Você vai rolar seu dano normalmente, " +
-        "<strong>multiplicar por 2</strong>, e depois adicionar " +
-        "o bônus de dano do ataque escolhido."
-      );
+      return obterMensagemJogabilidade(
+        "regras.combate.dano.pedirCritico",
+      ).solicitacao;
     },
   },
 
@@ -190,3 +312,80 @@ window.mensagensNarrativas = {
   },
 
 };
+
+function aplicarRascunhoMensagensJogabilidade() {
+  if (typeof localStorage === "undefined") {
+    return;
+  }
+
+  const chaveRascunho = "rpg-solo:mensagens-jogabilidade:rascunho:v1";
+  let rascunho;
+
+  try {
+    rascunho = JSON.parse(localStorage.getItem(chaveRascunho));
+  } catch (erro) {
+    console.warn("Não foi possível ler o rascunho local de mensagens.", erro);
+    return;
+  }
+
+  for (const [caminho, personalizacao] of Object.entries(rascunho ?? {})) {
+    const caminhoAtual = caminho.startsWith("combate.arremesso.")
+      ? `descricoesNarrativas.${caminho}`
+      : caminho;
+    const entrada = caminhoAtual.split(".").reduce(
+      (valor, parte) => valor?.[parte],
+      window.mensagensNarrativas.eventos,
+    );
+
+    if (!entrada?.canais || !personalizacao?.canais) {
+      continue;
+    }
+
+    for (const [canal, texto] of Object.entries(personalizacao.canais)) {
+      if (typeof texto === "string" && Object.hasOwn(entrada.canais, canal)) {
+        entrada.canais[canal] = texto;
+      }
+    }
+  }
+}
+
+aplicarRascunhoMensagensJogabilidade();
+
+function obterEntradaCatalogoMensagens(caminho) {
+  return caminho.split(".").reduce(
+    (entrada, parte) => entrada?.[parte],
+    window.mensagensNarrativas.eventos,
+  ) ?? null;
+}
+
+function preencherVariaveisMensagem(modelo, variaveis = {}) {
+  if (typeof modelo !== "string") {
+    return "";
+  }
+
+  return modelo.replace(/\{([a-zA-Z0-9_]+)\}/g, function substituir(
+    marcador,
+    nomeVariavel,
+  ) {
+    return Object.hasOwn(variaveis, nomeVariavel)
+      ? String(variaveis[nomeVariavel])
+      : marcador;
+  });
+}
+
+function obterMensagemJogabilidade(caminho, variaveis = {}) {
+  const entrada = obterEntradaCatalogoMensagens(caminho);
+
+  if (!entrada?.canais) {
+    return null;
+  }
+
+  return Object.fromEntries(
+    Object.entries(entrada.canais).map(([canal, modelo]) => [
+      canal,
+      preencherVariaveisMensagem(modelo, variaveis),
+    ]),
+  );
+}
+
+window.obterMensagemJogabilidade = obterMensagemJogabilidade;

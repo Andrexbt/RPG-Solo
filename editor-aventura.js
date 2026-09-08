@@ -3,12 +3,15 @@
 const seletorAventura = document.querySelector("#seletorAventura");
 const grafoAventura = document.querySelector("#grafoAventura");
 const rolagemGrafo = document.querySelector("#rolagemGrafo");
+const layoutEditor = document.querySelector(".layout-editor-aventura");
+const painelComparacao = document.querySelector("#painelComparacao");
+const painelNarrativa = document.querySelector("#painelNarrativa");
 const painelPropriedades = document.querySelector("#painelPropriedades");
 const rotuloEscala = document.querySelector("#rotuloEscala");
 const botaoReenquadrar = document.querySelector("#botaoReenquadrar");
-const botaoDesfazer = document.querySelector("#botaoDesfazer");
-const botaoRefazer = document.querySelector("#botaoRefazer");
-const botaoGerarCodigo = document.querySelector("#botaoGerarCodigo");
+const botaoSalvarAlteracoes = document.querySelector("#botaoSalvarAlteracoes");
+const botaoDesfazerAlteracoes = document.querySelector("#botaoDesfazerAlteracoes");
+const botaoEnviarAventura = document.querySelector("#botaoEnviarAventura");
 const resumoValidacao = document.querySelector("#resumoValidacao");
 const modalCodigo = document.querySelector("#modalCodigo");
 const saidaCodigo = document.querySelector("#saidaCodigo");
@@ -24,9 +27,12 @@ let deslocamentoX = 24;
 let deslocamentoY = 24;
 let arrastandoGrafo = false;
 let ponteiroAnterior = null;
-const historicoDesfazer = [];
-const historicoRefazer = [];
+let memoriaEditorSalvaEm = null;
+let mensagemEnvioAventura = null;
 const valoresOriginais = new Map();
+const alteracoesPendentes = new Map();
+const caminhosSalvos = new Map();
+const paineisExpandidos = new Set(["teia", "narrativa"]);
 
 function clonar(valor) {
   return structuredClone(valor);
@@ -51,6 +57,10 @@ function chaveIntermediario(tipo, caminho) {
   return `${tipo}:${caminhoComoChave(caminho)}`;
 }
 
+function tituloVisual(item) {
+  return item.valor?.titulo?.trim() || item.rotulo;
+}
+
 function caminhoComoChave(caminho) {
   return caminho.map(String).join("\u001f");
 }
@@ -66,6 +76,77 @@ function obterNoCaminho(raiz, caminho) {
 function definirNoCaminho(raiz, caminho, valor) {
   const pai = obterNoCaminho(raiz, caminho.slice(0, -1));
   pai[caminho.at(-1)] = valor;
+}
+
+function chaveMemoriaEditor(aventuraId) {
+  return `rpg-solo:editor-aventura:memoria:${aventuraId}`;
+}
+
+function caminhoPodeSerAplicado(raiz, caminho) {
+  if (!Array.isArray(caminho) || !caminho.length) return false;
+  if (caminho.some((parte) => ["__proto__", "prototype", "constructor"].includes(String(parte)))) {
+    return false;
+  }
+  const pai = obterNoCaminho(raiz, caminho.slice(0, -1));
+  return pai !== null
+    && typeof pai === "object";
+}
+
+function persistirMemoriaEditor() {
+  const alteracoes = listarDiferencasSalvas().map(({ caminho, atual }) => ({
+    caminho,
+    valor: atual,
+  }));
+  memoriaEditorSalvaEm = new Date().toISOString();
+  const memoria = {
+    versao: 1,
+    aventuraId: aventuraOriginal.id,
+    salvoEm: memoriaEditorSalvaEm,
+    alteracoes,
+  };
+  localStorage.setItem(chaveMemoriaEditor(aventuraOriginal.id), JSON.stringify(memoria));
+}
+
+function restaurarMemoriaEditor() {
+  memoriaEditorSalvaEm = null;
+  const conteudo = localStorage.getItem(chaveMemoriaEditor(aventuraOriginal.id));
+  if (!conteudo) return;
+
+  try {
+    const memoria = JSON.parse(conteudo);
+    if (memoria?.versao !== 1
+      || memoria.aventuraId !== aventuraOriginal.id
+      || !Array.isArray(memoria.alteracoes)) return;
+
+    memoria.alteracoes.forEach((alteracao) => {
+      const caminho = alteracao?.caminho;
+      if (!caminhoPodeSerAplicado(aventuraEditavel, caminho)) return;
+      definirNoCaminho(aventuraEditavel, caminho, alteracao.valor);
+      const original = obterNoCaminho(aventuraOriginal, caminho);
+      if (!Object.is(original, alteracao.valor)) {
+        caminhosSalvos.set(caminhoComoChave(caminho), [...caminho]);
+      }
+    });
+    memoriaEditorSalvaEm = memoria.salvoEm ?? null;
+  } catch (erro) {
+    console.warn("Não foi possível restaurar a memória do editor.", erro);
+  }
+}
+
+function registrarAlteracaoPendente(caminho, novoValor) {
+  const chave = caminhoComoChave(caminho);
+  const valorSalvo = obterNoCaminho(aventuraEditavel, caminho);
+  if (Object.is(valorSalvo, novoValor)) {
+    alteracoesPendentes.delete(chave);
+  } else {
+    alteracoesPendentes.set(chave, {
+      caminho: [...caminho],
+      valorAnterior: valorSalvo,
+      novoValor,
+    });
+  }
+  atualizarBotoesEdicao();
+  atualizarComparacao();
 }
 
 function textoResumo(valor) {
@@ -154,6 +235,7 @@ function criarFluxo() {
       cenaId,
       rotulo: cenaId,
       valor: cena,
+      caminho: ["cenas", cenaId],
       batalha: Boolean(cena.combate),
     });
     for (const [etapaId, etapa] of Object.entries(cena.etapas ?? {})) {
@@ -183,6 +265,7 @@ function criarFluxo() {
         etapaId,
         rotulo: etapaId,
         valor: etapa,
+        caminho: ["cenas", cenaId, "etapas", etapaId],
         batalha: false,
       });
     }
@@ -207,7 +290,7 @@ function criarFluxo() {
       const rotulo = tipo === "escolha"
         ? valor?.id ?? `escolha-${indice + 1}`
         : valor?.periciaId ?? valor?.atributoId ?? valor?.tipo ?? "Teste";
-      nos.set(id, { id, tipo, cenaId, rotulo: String(rotulo), valor, batalha: false });
+      nos.set(id, { id, tipo, cenaId, rotulo: String(rotulo), valor, caminho: [...caminho], batalha: false });
     }
     return id;
   }
@@ -535,7 +618,7 @@ function desenharGrafo() {
     );
     const no = criarElemento("button", `no-fluxo ${item.tipo}`);
     no.type = "button";
-    no.title = item.rotulo;
+    no.title = item.valor?.titulo ? `${item.valor.titulo} (${item.rotulo})` : item.rotulo;
     no.dataset.noId = noId;
     no.style.left = `${ponto.x - ponto.largura / 2}px`;
     no.style.top = `${ponto.y - ponto.altura / 2}px`;
@@ -543,8 +626,12 @@ function desenharGrafo() {
     no.classList.toggle("batalha", item.batalha);
     no.classList.toggle("selecionado", noId === noSelecionadoId);
     no.append(
-      criarElemento("strong", null, item.rotulo),
-      criarElemento("span", null, item.tipo === "cena" && item.batalha ? "Batalha" : item.tipo),
+      criarElemento("strong", null, tituloVisual(item)),
+      criarElemento(
+        "span",
+        null,
+        `${item.tipo === "cena" && item.batalha ? "Batalha" : item.tipo} · ${item.rotulo}`,
+      ),
     );
     no.addEventListener("click", () => selecionarNo(noId));
     grafoAventura.append(no);
@@ -570,7 +657,7 @@ function desenharGrafo() {
   aplicarTransformacao();
 
   validarFluxo();
-  atualizarBotoesHistorico();
+  atualizarBotoesEdicao();
 }
 
 function rotuloReferencia(referencia) {
@@ -608,7 +695,8 @@ function criarSeletorDestino(referencia) {
     opcao.textContent = item.rotulo;
     seletor.append(opcao);
   });
-  seletor.value = referencia.destinoId;
+  const chaveReferencia = caminhoComoChave(referencia.caminho);
+  seletor.value = alteracoesPendentes.get(chaveReferencia)?.novoValor ?? referencia.destinoId;
   seletor.addEventListener("change", () => alterarDestino(referencia.caminho, seletor.value));
   caixa.append(rotulo, seletor);
   return caixa;
@@ -620,10 +708,10 @@ function criarMiniTeiaCena(cenaId) {
   const nos = new Map();
   const arestas = [];
   const raizId = chaveCena(cenaId);
-  nos.set(raizId, { id: raizId, tipo: "cena", rotulo: cenaId, valor: cena });
+  nos.set(raizId, { id: raizId, tipo: "cena", rotulo: cenaId, valor: cena, caminho: ["cenas", cenaId] });
   Object.entries(etapas).forEach(([etapaId, etapa]) => {
     const id = chaveEtapa(cenaId, etapaId);
-    nos.set(id, { id, tipo: "etapa", rotulo: etapaId, valor: etapa, etapaId });
+    nos.set(id, { id, tipo: "etapa", rotulo: etapaId, valor: etapa, etapaId, caminho: ["cenas", cenaId, "etapas", etapaId] });
   });
 
   const adicionarAresta = (origem, destino, resultado = null) => {
@@ -652,6 +740,7 @@ function criarMiniTeiaCena(cenaId) {
           tipo: "teste",
           rotulo: String(teste.periciaId ?? teste.atributoId ?? teste.tipo ?? "Teste"),
           valor: teste,
+          caminho: caminhoTeste,
         });
       }
       adicionarAresta(origemId, testeId, resultadoDoCaminho(caminho));
@@ -671,6 +760,7 @@ function criarMiniTeiaCena(cenaId) {
             tipo: "escolha",
             rotulo: escolha?.id ?? `escolha-${indice + 1}`,
             valor: escolha,
+            caminho: caminhoEscolha,
           });
           adicionarAresta(origemConteudo, escolhaId, resultadoDoCaminho(caminhoEscolha));
           percorrer(escolha, escolhaId, caminhoEscolha, false);
@@ -731,7 +821,8 @@ function criarMiniTeiaCena(cenaId) {
       const textoAusente = textoResumo(item.valor) === "Nenhum texto preenchido neste bloco.";
       const no = criarElemento("button", `mini-etapa ${item.tipo}${item.tipo === "cena" ? " raiz" : ""}`);
       no.type = "button";
-      no.textContent = item.rotulo;
+      no.textContent = tituloVisual(item);
+      no.title = item.valor?.titulo ? `${item.valor.titulo} (${item.rotulo})` : item.rotulo;
       no.style.left = `${x}px`;
       no.style.top = `${y}px`;
       const analise = analisesCena.get(cenaId);
@@ -785,15 +876,21 @@ function abrirNoDaMiniTeia(cenaId, item) {
 }
 
 function mostrarBlocoInterno(cenaId, item) {
+  paineisExpandidos.add("narrativa");
+  atualizarLayoutPaineis();
   document.querySelectorAll(".no-fluxo.selecionado").forEach((no) => no.classList.remove("selecionado"));
   grafoAventura.querySelector(`[data-no-id="${CSS.escape(chaveCena(cenaId))}"]`)?.classList.add("selecionado");
   painelPropriedades.replaceChildren(criarLegendaStatus());
   painelPropriedades.append(
-    criarElemento("span", "tipo-no", `${item.tipo} interno de ${cenaId}`),
-    criarElemento("h2", null, item.rotulo),
+    criarElemento("span", "tipo-no", `${item.tipo} interno de ${cenaId} · ID: ${item.rotulo}`),
+    criarElemento("h2", null, tituloVisual(item)),
     criarElemento("p", null, textoResumo(item.valor)),
-    criarElemento("h3", null, "Conexões deste bloco"),
   );
+  const editorPropriedades = criarEditorPropriedades(item);
+  if (editorPropriedades) painelPropriedades.append(editorPropriedades);
+  const editorTextos = criarEditorTextos(item);
+  if (editorTextos) painelPropriedades.append(editorTextos);
+  painelPropriedades.append(criarElemento("h3", null, "Conexões deste bloco"));
   const saidas = fluxoAtual.referencias.filter((referencia) => {
     if (referencia.cenaId !== cenaId) return false;
     if (item.tipo === "etapa") {
@@ -812,7 +909,169 @@ function mostrarBlocoInterno(cenaId, item) {
   painelPropriedades.append(criarElemento("h3", null, "Mini-teia das etapas"), criarMiniTeiaCena(cenaId));
 }
 
+function criarEditorTextos(item) {
+  if (!item.caminho) return null;
+  const chavesTexto = new Set(["contexto", "texto", "descricao", "instrucao"]);
+  const descritores = [];
+
+  function registrarValor(rotulo, caminho, valor) {
+    if (typeof valor === "string") {
+      descritores.push({ rotulo, caminho, valor });
+      return;
+    }
+    if (Array.isArray(valor)) {
+      valor.forEach((parte, indice) => {
+        if (typeof parte === "string") {
+          descritores.push({
+            rotulo: `${rotulo} · parágrafo ${indice + 1}`,
+            caminho: [...caminho, indice],
+            valor: parte,
+          });
+        }
+      });
+    }
+  }
+
+  for (const chave of chavesTexto) {
+    registrarValor(chave, [...item.caminho, chave], item.valor?.[chave]);
+  }
+
+  if (item.tipo === "teste") {
+    const caminhoBloco = item.caminho.slice(0, -1);
+    const bloco = obterNoCaminho(aventuraEditavel, caminhoBloco);
+    function percorrerResultados(valor, caminho, rotulo) {
+      if (!valor || typeof valor !== "object") return;
+      for (const [chave, filho] of Object.entries(valor)) {
+        if (["escolhas", "teste", "etapas"].includes(chave)) continue;
+        const caminhoFilho = [...caminho, chave];
+        const rotuloFilho = [...rotulo, chave];
+        if (chavesTexto.has(chave)) registrarValor(rotuloFilho.join(" › "), caminhoFilho, filho);
+        else if (filho && typeof filho === "object") percorrerResultados(filho, caminhoFilho, rotuloFilho);
+      }
+    }
+    for (const chaveResultados of ["resultados", "resultadosPorAcertos"]) {
+      if (bloco?.[chaveResultados]) {
+        percorrerResultados(
+          bloco[chaveResultados],
+          [...caminhoBloco, chaveResultados],
+          [chaveResultados],
+        );
+      }
+    }
+  }
+
+  if (!descritores.length) return null;
+  const secao = criarElemento("section", "editor-textos");
+  secao.append(criarElemento("h3", null, item.tipo === "teste" ? "Textos e resultados" : "Texto do elemento"));
+
+  function adicionarCampo(rotuloTexto, caminhoCampo, valor) {
+    const rotulo = document.createElement("label");
+    rotulo.append(criarElemento("span", null, rotuloTexto));
+    const campo = document.createElement("textarea");
+    const chaveCampo = caminhoComoChave(caminhoCampo);
+    campo.value = alteracoesPendentes.get(chaveCampo)?.novoValor ?? valor;
+    campo.rows = Math.min(9, Math.max(3, campo.value.split("\n").length + 1));
+    campo.addEventListener("input", () => {
+      registrarAlteracaoPendente(caminhoCampo, campo.value);
+    });
+    rotulo.append(campo);
+    secao.append(rotulo);
+  }
+
+  descritores.forEach(({ rotulo, caminho, valor }) => adicionarCampo(rotulo, caminho, valor));
+  return secao;
+}
+
+function criarEditorPropriedades(item) {
+  if (!item.caminho || !item.valor || typeof item.valor !== "object") return null;
+  const ignoradas = new Set([
+    "contexto", "texto", "descricao", "instrucao", "id", "__editorId",
+    "proximaCena", "proximaEtapa", "etapaInicial",
+  ]);
+  const propriedades = Object.entries(item.valor).filter(([chave, valor]) =>
+    !ignoradas.has(chave) && ["string", "number", "boolean"].includes(typeof valor),
+  );
+  if (!Object.prototype.hasOwnProperty.call(item.valor, "titulo")) {
+    propriedades.unshift(["titulo", ""]);
+  }
+  if (!propriedades.length) return null;
+
+  const secao = criarElemento("section", "editor-propriedades");
+  secao.append(criarElemento("h3", null, "Propriedades"));
+  const caminhoId = [...item.caminho, "__editorId"];
+  const chaveId = caminhoComoChave(caminhoId);
+  const idOriginal = ["cena", "etapa"].includes(item.tipo) ? item.caminho.at(-1) : item.valor.id ?? "";
+  const rotuloId = document.createElement("label");
+  rotuloId.append(criarElemento("span", null, "ID"));
+  const campoId = document.createElement("input");
+  campoId.type = "text";
+  campoId.value = alteracoesPendentes.get(chaveId)?.novoValor ?? item.valor.__editorId ?? idOriginal;
+  const avisoId = criarElemento("small", null, "A renomeação e suas referências serão aplicadas ao enviar para a aventura.");
+  campoId.addEventListener("input", () => {
+    const novo = campoId.value.trim();
+    const erro = validarNovoId(item, novo);
+    campoId.setCustomValidity(erro);
+    avisoId.textContent = erro || "ID válido. Salve e envie para aplicar a renomeação.";
+    if (novo === idOriginal && !item.valor.__editorId) alteracoesPendentes.delete(chaveId);
+    else registrarAlteracaoPendente(caminhoId, novo);
+    atualizarBotoesEdicao();
+    atualizarComparacao();
+  });
+  rotuloId.append(campoId, avisoId);
+  secao.append(rotuloId);
+  propriedades.forEach(([chave, valor]) => {
+    const caminho = [...item.caminho, chave];
+    const chaveCaminho = caminhoComoChave(caminho);
+    const valorAtual = alteracoesPendentes.get(chaveCaminho)?.novoValor ?? valor;
+    const rotulo = document.createElement("label");
+    rotulo.append(criarElemento("span", null, chave));
+    const campo = document.createElement("input");
+
+    if (typeof valor === "boolean") {
+      campo.type = "checkbox";
+      campo.checked = Boolean(valorAtual);
+      rotulo.classList.add("campo-booleano");
+      campo.addEventListener("change", () => registrarAlteracaoPendente(caminho, campo.checked));
+    } else if (typeof valor === "number") {
+      campo.type = "number";
+      campo.value = String(valorAtual);
+      campo.addEventListener("input", () => {
+        if (campo.value !== "") registrarAlteracaoPendente(caminho, Number(campo.value));
+      });
+    } else {
+      campo.type = "text";
+      campo.value = String(valorAtual);
+      campo.placeholder = chave === "titulo" ? "Título para organização" : "";
+      campo.addEventListener("input", () => {
+        if (chave === "titulo" && !Object.prototype.hasOwnProperty.call(item.valor, "titulo") && !campo.value.trim()) {
+          alteracoesPendentes.delete(chaveCaminho);
+          atualizarBotoesEdicao();
+          atualizarComparacao();
+          return;
+        }
+        registrarAlteracaoPendente(caminho, campo.value);
+      });
+    }
+    rotulo.append(campo);
+    secao.append(rotulo);
+  });
+  return secao;
+}
+
+function validarNovoId(item, novo) {
+  if (!/^[a-z][a-zA-Z0-9_]*$/.test(novo) || ["constructor", "prototype", "__proto__"].includes(novo)) {
+    return "Use uma letra minúscula no início, seguida de letras sem acento, números ou sublinhado.";
+  }
+  const pai = obterNoCaminho(aventuraEditavel, item.caminho.slice(0, -1));
+  const outros = ["cena", "etapa"].includes(item.tipo)
+    ? Object.entries(pai).filter(([id]) => id !== item.caminho.at(-1)).map(([id, valor]) => valor.__editorId ?? id)
+    : Array.isArray(pai) ? pai.filter((v) => v !== item.valor).map((v) => v.__editorId ?? v.id) : [];
+  return outros.includes(novo) ? "Este ID já existe neste grupo." : "";
+}
+
 function selecionarNo(noId) {
+  paineisExpandidos.add("narrativa");
+  atualizarLayoutPaineis();
   noSelecionadoId = noId;
   const item = fluxoAtual.nos.get(noId);
   document.querySelectorAll(".no-fluxo.selecionado").forEach((no) => no.classList.remove("selecionado"));
@@ -825,10 +1084,15 @@ function selecionarNo(noId) {
     escolha: `Escolha de ${item.cenaId}`,
     teste: `Teste de ${item.cenaId}`,
   };
-  const tipo = criarElemento("span", "tipo-no", nomesTipos[item.tipo]);
-  const titulo = criarElemento("h2", null, item.rotulo);
+  const tipo = criarElemento("span", "tipo-no", `${nomesTipos[item.tipo]} · ID: ${item.rotulo}`);
+  const titulo = criarElemento("h2", null, tituloVisual(item));
   const resumo = criarElemento("p", null, textoResumo(item.valor));
-  painelPropriedades.append(tipo, titulo, resumo, criarElemento("h3", null, "Conexões de saída"));
+  painelPropriedades.append(tipo, titulo, resumo);
+  const editorPropriedades = criarEditorPropriedades(item);
+  if (editorPropriedades) painelPropriedades.append(editorPropriedades);
+  const editorTextos = criarEditorTextos(item);
+  if (editorTextos) painelPropriedades.append(editorTextos);
+  painelPropriedades.append(criarElemento("h3", null, "Conexões de saída"));
 
   const analise = analisesCena.get(item.cenaId);
   if (analise && item.tipo === "cena") {
@@ -865,37 +1129,117 @@ function selecionarNo(noId) {
 }
 
 function alterarDestino(caminho, novoValor) {
-  const valorAnterior = obterNoCaminho(aventuraEditavel, caminho);
-  if (valorAnterior === novoValor) return;
-  definirNoCaminho(aventuraEditavel, caminho, novoValor);
-  historicoDesfazer.push({ caminho: [...caminho], valorAnterior, novoValor });
-  historicoRefazer.length = 0;
-  desenharGrafo();
-  if (fluxoAtual.nos.has(noSelecionadoId)) selecionarNo(noSelecionadoId);
+  registrarAlteracaoPendente(caminho, novoValor);
 }
 
-function aplicarHistorico(operacao, usarNovoValor) {
-  definirNoCaminho(
-    aventuraEditavel,
-    operacao.caminho,
-    usarNovoValor ? operacao.novoValor : operacao.valorAnterior,
-  );
-  desenharGrafo();
-  if (fluxoAtual.nos.has(noSelecionadoId)) selecionarNo(noSelecionadoId);
+function atualizarBotoesEdicao() {
+  const temPendentes = alteracoesPendentes.size > 0;
+  botaoSalvarAlteracoes.disabled = !temPendentes;
+  botaoDesfazerAlteracoes.disabled = !temPendentes;
+  botaoEnviarAventura.disabled = temPendentes;
 }
 
-function atualizarBotoesHistorico() {
-  botaoDesfazer.disabled = historicoDesfazer.length === 0;
-  botaoRefazer.disabled = historicoRefazer.length === 0;
+function nomeArquivoAventura() {
+  const nomes = {
+    aFuga: "a-fuga.js",
+  };
+  return nomes[aventuraOriginal.id] ?? `${aventuraOriginal.id}.js`;
+}
+
+async function enviarAlteracoesParaAventura() {
+  if (alteracoesPendentes.size) return;
+  if (!("showOpenFilePicker" in window)) {
+    mensagemEnvioAventura = "Este navegador não permite gravar o arquivo diretamente.";
+    atualizarComparacao();
+    return;
+  }
+
+  const nomeEsperado = nomeArquivoAventura();
+  try {
+    const [arquivoHandle] = await window.showOpenFilePicker({
+      id: `rpg-solo-editor-${aventuraOriginal.id}`,
+      suggestedName: nomeEsperado,
+      types: [{
+        description: "Arquivo JavaScript da aventura",
+        accept: { "text/javascript": [".js"] },
+      }],
+      multiple: false,
+    });
+    if (arquivoHandle.name !== nomeEsperado) {
+      mensagemEnvioAventura = `Arquivo não enviado: selecione ${nomeEsperado}.`;
+      atualizarComparacao();
+      return;
+    }
+
+    const arquivo = await arquivoHandle.getFile();
+    const conteudo = await arquivo.text();
+    const assinatura = `bancoAventuras.${aventuraOriginal.id} = {`;
+    if (!conteudo.includes(assinatura)) {
+      mensagemEnvioAventura = `Arquivo não enviado: ${nomeEsperado} não contém a aventura esperada.`;
+      atualizarComparacao();
+      return;
+    }
+
+    const fonteEditor = await import("./editor-aventura-fonte.mjs?v=3");
+    const alteracoesDoBloco = fonteEditor.extrairAlteracoesDoBlocoGerado(
+      conteudo,
+      aventuraOriginal.id,
+    );
+    const alteracoesAtuais = listarDiferencasSalvas().map(({ caminho, atual }) => ({
+      caminho,
+      valor: atual,
+    }));
+    const alteracoes = [...alteracoesDoBloco, ...alteracoesAtuais];
+    if (!alteracoes.length) {
+      mensagemEnvioAventura = "O arquivo já está sincronizado; não há alterações para enviar.";
+      atualizarComparacao();
+      return;
+    }
+
+    let novoConteudo = fonteEditor.aplicarAlteracoesNoObjeto(
+      conteudo,
+      aventuraOriginal.id,
+      alteracoes,
+    );
+    novoConteudo = fonteEditor.removerBlocoGerado(novoConteudo);
+    const gravador = await arquivoHandle.createWritable();
+    await gravador.write(novoConteudo);
+    await gravador.close();
+
+    if (alteracoes.some((a) => a.caminho.at(-1) === "__editorId")) {
+      localStorage.removeItem(chaveMemoriaEditor(aventuraOriginal.id));
+      window.location.reload();
+      return;
+    }
+
+    listarDiferencasSalvas().forEach(({ caminho, atual }) =>
+      definirNoCaminho(aventuraOriginal, caminho, clonar(atual)),
+    );
+    caminhosSalvos.clear();
+    memoriaEditorSalvaEm = null;
+    localStorage.removeItem(chaveMemoriaEditor(aventuraOriginal.id));
+    mensagemEnvioAventura = `Alterações aplicadas nos locais originais de aventuras/${nomeEsperado}.`;
+    atualizarComparacao();
+    atualizarBotoesEdicao();
+  } catch (erro) {
+    if (erro?.name === "AbortError") return;
+    console.error("Não foi possível enviar as alterações para a aventura.", erro);
+    mensagemEnvioAventura = "Não foi possível gravar o arquivo da aventura.";
+    atualizarComparacao();
+  }
 }
 
 function gerarCodigoAlteracoes() {
   const alteracoes = [];
-  for (const referencia of fluxoAtual.referencias) {
-    const chave = caminhoComoChave(referencia.caminho);
-    const original = valoresOriginais.get(chave);
-    const atual = obterNoCaminho(aventuraEditavel, referencia.caminho);
-    if (original !== atual) alteracoes.push({ caminho: referencia.caminho, original, atual });
+  const caminhos = new Map();
+  fluxoAtual.referencias.forEach((referencia) =>
+    caminhos.set(caminhoComoChave(referencia.caminho), referencia.caminho),
+  );
+  caminhosSalvos.forEach((caminho, chave) => caminhos.set(chave, caminho));
+  for (const caminho of caminhos.values()) {
+    const original = obterNoCaminho(aventuraOriginal, caminho);
+    const atual = obterNoCaminho(aventuraEditavel, caminho);
+    if (original !== atual) alteracoes.push({ caminho, original, atual });
   }
 
   const idAventura = aventuraEditavel.id;
@@ -906,21 +1250,120 @@ function gerarCodigoAlteracoes() {
   );
   saidaCodigo.value = linhas.length
     ? linhas.join("\n\n")
-    : "// Nenhuma conexão foi modificada.";
+    : "// Nenhuma alteração foi feita.";
   mensagemCopia.textContent = `${alteracoes.length} alteração(ões).`;
   modalCodigo.showModal();
+}
+
+function listarDiferencasSalvas() {
+  const diferencas = [];
+  for (const [chave, caminho] of caminhosSalvos) {
+    const original = obterNoCaminho(aventuraOriginal, caminho);
+    const atual = obterNoCaminho(aventuraEditavel, caminho);
+    if (original !== atual) diferencas.push({ chave, caminho, original, atual });
+  }
+  return diferencas;
+}
+
+function atualizarComparacao() {
+  painelComparacao.replaceChildren(criarElemento("h2", null, "Comparação"));
+  if (mensagemEnvioAventura) {
+    painelComparacao.append(criarElemento("p", "aviso-comparacao", mensagemEnvioAventura));
+  }
+  if (memoriaEditorSalvaEm) {
+    const dataSalva = new Date(memoriaEditorSalvaEm);
+    const rotuloData = Number.isNaN(dataSalva.getTime())
+      ? "em um momento anterior"
+      : dataSalva.toLocaleString("pt-BR");
+    painelComparacao.append(criarElemento(
+      "p",
+      "aviso-vazio",
+      `Memória deste editor salva neste navegador em ${rotuloData}.`,
+    ));
+  }
+  if (alteracoesPendentes.size) {
+    painelComparacao.append(criarElemento(
+      "p",
+      "aviso-comparacao",
+      `${alteracoesPendentes.size} alteração(ões) ainda não salva(s) na memória do editor.`,
+    ));
+  }
+  const diferencas = listarDiferencasSalvas();
+  if (!diferencas.length) {
+    painelComparacao.append(criarElemento("p", "aviso-vazio", "A memória do editor ainda é igual à aventura."));
+    return;
+  }
+  painelComparacao.append(criarElemento("p", null, `${diferencas.length} diferença(s) salva(s) na memória do editor.`));
+  diferencas.forEach(({ caminho, original, atual }) => {
+    const bloco = criarElemento("article", "diferenca-editor");
+    bloco.append(
+      criarElemento("strong", null, caminho.map((parte) => parte === "__editorId" ? "ID (renomear ao enviar)" : parte).join(" › ")),
+      criarElemento("span", null, `Na aventura: ${JSON.stringify(original)}`),
+      criarElemento("span", null, `No editor: ${JSON.stringify(atual)}`),
+    );
+    painelComparacao.append(bloco);
+  });
+}
+
+function salvarAlteracoesNaMemoria() {
+  if (!alteracoesPendentes.size) return;
+  for (const operacao of alteracoesPendentes.values()) {
+    if (operacao.caminho.at(-1) !== "__editorId") continue;
+    const caminho = operacao.caminho.slice(0, -1);
+    const tipo = caminho.length === 2 ? "cena" : caminho.length === 4 && caminho[2] === "etapas" ? "etapa" : caminho.at(-1) === "teste" ? "teste" : "escolha";
+    const erro = validarNovoId({ caminho, tipo, valor: obterNoCaminho(aventuraEditavel, caminho) }, operacao.novoValor);
+    if (erro) { window.alert(erro); return; }
+  }
+  const selecionado = noSelecionadoId;
+  for (const [chave, operacao] of alteracoesPendentes) {
+    definirNoCaminho(aventuraEditavel, operacao.caminho, operacao.novoValor);
+    const original = obterNoCaminho(aventuraOriginal, operacao.caminho);
+    if (original === operacao.novoValor) caminhosSalvos.delete(chave);
+    else caminhosSalvos.set(chave, [...operacao.caminho]);
+  }
+  alteracoesPendentes.clear();
+  persistirMemoriaEditor();
+  desenharGrafo();
+  if (fluxoAtual.nos.has(selecionado)) selecionarNo(selecionado);
+  atualizarComparacao();
+  atualizarBotoesEdicao();
+}
+
+function desfazerAlteracoesPendentes() {
+  if (!alteracoesPendentes.size) return;
+  alteracoesPendentes.clear();
+  if (fluxoAtual.nos.has(noSelecionadoId)) selecionarNo(noSelecionadoId);
+  atualizarComparacao();
+  atualizarBotoesEdicao();
+}
+
+function atualizarLayoutPaineis() {
+  const ordem = ["comparacao", "teia", "narrativa"];
+  layoutEditor.style.gridTemplateColumns = ordem
+    .map((painel) => paineisExpandidos.has(painel) ? "minmax(0, 1fr)" : "48px")
+    .join(" ");
+  document.querySelectorAll("[data-area]").forEach((elemento) =>
+    elemento.classList.toggle("recolhido", !paineisExpandidos.has(elemento.dataset.area)),
+  );
+  document.querySelectorAll("[data-painel]").forEach((botao) =>
+    botao.setAttribute("aria-pressed", String(paineisExpandidos.has(botao.dataset.painel))),
+  );
 }
 
 function carregarAventura() {
   aventuraOriginal = bancoAventuras[seletorAventura.value];
   aventuraEditavel = clonar(aventuraOriginal);
+  mensagemEnvioAventura = null;
   valoresOriginais.clear();
-  historicoDesfazer.length = 0;
-  historicoRefazer.length = 0;
+  alteracoesPendentes.clear();
+  caminhosSalvos.clear();
+  restaurarMemoriaEditor();
   noSelecionadoId = chaveCena(aventuraEditavel.cenaInicial);
   desenharGrafo();
   selecionarNo(noSelecionadoId);
   reenquadrarGrafo();
+  atualizarComparacao();
+  atualizarBotoesEdicao();
 }
 
 function iniciarEditor() {
@@ -986,23 +1429,25 @@ rolagemGrafo.addEventListener("pointercancel", encerrarArraste);
 rolagemGrafo.addEventListener("dblclick", function reenquadrarComDuploClique(evento) {
   if (!evento.target.closest(".no-fluxo")) reenquadrarGrafo();
 });
-botaoDesfazer.addEventListener("click", function desfazer() {
-  const operacao = historicoDesfazer.pop();
-  if (!operacao) return;
-  historicoRefazer.push(operacao);
-  aplicarHistorico(operacao, false);
+botaoSalvarAlteracoes.addEventListener("click", salvarAlteracoesNaMemoria);
+botaoDesfazerAlteracoes.addEventListener("click", desfazerAlteracoesPendentes);
+botaoEnviarAventura.addEventListener("click", enviarAlteracoesParaAventura);
+document.querySelectorAll("[data-painel]").forEach((botao) => {
+  botao.addEventListener("click", () => {
+    const painel = botao.dataset.painel;
+    if (paineisExpandidos.has(painel)) {
+      if (paineisExpandidos.size > 1) paineisExpandidos.delete(painel);
+    } else {
+      paineisExpandidos.add(painel);
+    }
+    atualizarLayoutPaineis();
+  });
 });
-botaoRefazer.addEventListener("click", function refazer() {
-  const operacao = historicoRefazer.pop();
-  if (!operacao) return;
-  historicoDesfazer.push(operacao);
-  aplicarHistorico(operacao, true);
-});
-botaoGerarCodigo.addEventListener("click", gerarCodigoAlteracoes);
 document.querySelector("#botaoFecharCodigo").addEventListener("click", () => modalCodigo.close());
 document.querySelector("#botaoCopiarCodigo").addEventListener("click", async function copiar() {
   await navigator.clipboard.writeText(saidaCodigo.value);
   mensagemCopia.textContent = "Código copiado.";
 });
 
+atualizarLayoutPaineis();
 iniciarEditor();

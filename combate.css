@@ -107,6 +107,146 @@
   z-index: 0;
 }
 
+.mira-ataque-combate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.mira-ataque-combate[hidden] {
+  display: none;
+}
+
+.linha-mira-ataque-combate {
+  stroke: rgba(232, 201, 111, 0.92);
+  stroke-width: 4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 5px rgba(20, 12, 7, 0.9));
+}
+
+.linha-mira-alcance-normal {
+  stroke: rgba(113, 198, 124, 0.95);
+}
+
+.linha-mira-alcance-longo {
+  stroke: rgba(224, 164, 74, 0.95);
+  stroke-dasharray: 16 12;
+}
+
+.texto-alcance-combate {
+  font-family: inherit;
+  font-size: 34px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(20, 12, 7, 0.95);
+  stroke-width: 8px;
+  stroke-linejoin: round;
+}
+
+.texto-alcance-normal {
+  fill: rgb(148, 224, 158);
+}
+
+.texto-alcance-longo {
+  fill: rgb(244, 187, 98);
+}
+
+.texto-cobertura-mira-combate {
+  fill: rgb(255, 230, 174);
+  font-family: inherit;
+  font-size: 32px;
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(20, 12, 7, 0.96);
+  stroke-width: 9px;
+  stroke-linejoin: round;
+}
+
+.projetil-arma-arremessada-combate {
+  position: fixed;
+  z-index: 120000;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  transform-origin: center;
+  filter:
+    drop-shadow(0 0 3px rgba(255, 231, 162, 0.85))
+    drop-shadow(0 3px 3px rgba(0, 0, 0, 0.8));
+}
+
+.item-no-chao-combate {
+  position: relative;
+  z-index: 2;
+  place-self: center;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transform: rotate(28deg);
+  opacity: 0.9;
+  filter:
+    drop-shadow(0 2px 2px rgba(0, 0, 0, 0.95))
+  drop-shadow(0 0 4px rgba(84, 220, 114, 1))
+  drop-shadow(0 0 10px rgba(45, 180, 83, 0.95));
+}
+
+.itens-cravados-token {
+  position: absolute;
+  top: 42%;
+  right: -12%;
+  z-index: 6;
+  pointer-events: none;
+  transform: rotate(72deg);
+  filter:
+    
+  drop-shadow(0 2px 2px rgba(0, 0, 0, 0.95))
+  drop-shadow(0 0 5px rgba(255, 72, 58, 1))
+  drop-shadow(0 0 12px rgba(210, 35, 30, 1));
+}
+
+.itens-cravados-token > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.quantidade-itens-cravados-token {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #f2d7a0;
+  border-radius: 50%;
+  color: #fff4d8;
+  background: #7d261f;
+  font-size: 11px;
+  font-weight: 800;
+  transform: rotate(-72deg);
+}
+
+.mira-ataque-combate.mira-bloqueada
+  .linha-mira-ataque-combate {
+  stroke: rgba(224, 78, 68, 0.98);
+}
+
+.mira-ataque-combate.mira-bloqueada
+  .texto-alcance-combate {
+  fill: rgb(244, 112, 101);
+}
+
 .celula-combate {
   width: 100%;
   height: 100%;

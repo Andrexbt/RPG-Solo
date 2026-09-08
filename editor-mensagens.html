@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Central de textos | RPG Solo</title>
+    <script src="acesso-area-mestre.js"></script>
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="editor-mensagens.css" />
+    <script src="mensagens-narrativas.js" defer></script>
+    <script src="narracao-combate.js" defer></script>
+    <script src="editor-mensagens.js" defer></script>
+  </head>
+
+  <body>
+    <header class="cabecalho-site">
+      <a class="marca" href="area-mestre.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Área do Mestre</span>
+      </a>
+
+      <nav class="menu-principal" aria-label="Navegação da Central de Textos">
+        <a href="area-mestre.html">Mesa de trabalho</a>
+        <a href="editor-mensagens.html" aria-current="page">Central de textos</a>
+      </nav>
+    </header>
+
+    <main class="central-textos">
+      <header class="cabecalho-central-textos">
+        <div>
+          <span class="sobretitulo-central">Narrativa e interface</span>
+          <h1>Central de textos</h1>
+          <p>Veja quando cada mensagem aparece e o que será exibido em cada parte da interface.</p>
+        </div>
+
+        <div class="estado-rascunho" id="estadoRascunho" aria-live="polite">
+          Código original em uso
+        </div>
+      </header>
+
+      <section class="barra-central-textos" aria-label="Controles do catálogo">
+        <label class="campo-busca-textos">
+          <span>Buscar</span>
+          <input
+            id="buscaMensagens"
+            type="search"
+            placeholder="Ex.: adaga, ataque, histórico..."
+            autocomplete="off"
+          />
+        </label>
+
+        <div class="acoes-central-textos">
+          <button id="botaoDescartarEdicoes" type="button">Desfazer edições</button>
+          <button id="botaoRestaurarOriginais" type="button">Restaurar originais</button>
+          <button id="botaoSalvarMensagens" class="acao-principal" type="button">
+            Salvar rascunho local
+          </button>
+        </div>
+      </section>
+
+      <section class="resumo-catalogo" aria-live="polite">
+        <strong id="quantidadeMensagens">0 mensagens catalogadas</strong>
+        <span>
+          As mensagens antigas serão incorporadas gradualmente. Salvar aqui ainda não altera o
+          arquivo-fonte.
+        </span>
+      </section>
+
+      <nav class="abas-central-textos" aria-label="Categorias de textos">
+  <button
+    class="aba-central-textos ativa"
+    type="button"
+    data-aba-textos="regras"
+    aria-selected="true"
+  >
+    Regras
+  </button>
+
+  <button
+    class="aba-central-textos"
+    type="button"
+    data-aba-textos="narracoes"
+    aria-selected="false"
+  >
+    Narrações
+  </button>
+
+  <button
+    class="aba-central-textos"
+    type="button"
+    data-aba-textos="interface"
+    aria-selected="false"
+  >
+    Interface
+  </button>
+</nav>
+
+      <section id="listaMensagens" class="lista-mensagens" aria-label="Mensagens catalogadas"></section>
+    </main>
+  </body>
+</html>

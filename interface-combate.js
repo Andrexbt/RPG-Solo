@@ -319,6 +319,7 @@ function atualizarDestaquesMovimentoCombate() {
 
 function atualizarInterfaceTurno(combate) {
   renderizarObjetivosCombate(combate);
+  renderizarItensNoChaoCombate(combate);
 
   const participanteAtivo = combate.participantes.find(
     (participante) => participante.id === combate.participanteAtivoId,
@@ -376,6 +377,11 @@ numeroRodadaCombate.textContent =
   token,
   participanteDoToken,
   combate,
+);
+
+renderizarItensCravadosToken(
+  token,
+  participanteDoToken,
 );
 
 

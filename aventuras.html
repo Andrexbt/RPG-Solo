@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="detalhes-ficha.css" />
     <link rel="stylesheet" href="acabamento-tematico.css" />
     <link rel="stylesheet" href="mapa-aventura-dev.css?v=3" />
+    <link rel="stylesheet" href="montador-batalha-dev.css" />
 
     <link
   rel="modulepreload"
@@ -601,6 +602,40 @@
             <div id="cameraCombate" class="camera-combate">
               <img id="imagemMapaCombate" class="imagem-mapa-combate" alt="" />
 
+              <svg
+  id="miraAtaqueCombate"
+  class="mira-ataque-combate"
+  viewBox="0 0 6720 3780"
+  aria-hidden="true"
+  hidden
+>
+  <line
+  id="linhaMiraAtaqueCombate"
+  class="linha-mira-ataque-combate linha-mira-alcance-normal"
+></line>
+
+<line
+  id="linhaMiraAlcanceLongoCombate"
+  class="linha-mira-ataque-combate linha-mira-alcance-longo"
+  hidden
+></line>
+<text
+  id="textoAlcanceNormalCombate"
+  class="texto-alcance-combate texto-alcance-normal"
+></text>
+
+<text
+  id="textoAlcanceLongoCombate"
+  class="texto-alcance-combate texto-alcance-longo"
+  hidden
+></text>
+<text
+  id="textoCoberturaMiraCombate"
+  class="texto-cobertura-mira-combate"
+  hidden
+></text>
+</svg>
+
               <div id="tabuleiroCombate" class="tabuleiro-combate"></div>
             </div>
             <div
@@ -809,6 +844,7 @@
     <script src="interface-narrativa-aventura.js" defer></script>
     <script src="fluxo-combate-aventura.js" defer></script>
     <script src="aventuras.js" defer></script>
+    <script src="montador-batalha-dev.js" defer></script>
     <script src="testes-dev.js" defer></script>
     <script src="mapa-aventura-dev.js?v=6" defer></script>
   </body>

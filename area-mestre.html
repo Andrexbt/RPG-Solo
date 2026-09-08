@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Área do Mestre | RPG Solo</title>
+    <script src="acesso-area-mestre.js"></script>
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="area-mestre.css" />
+    <script src="transicoes-paginas.js"></script>
+    <script src="area-mestre.js" defer></script>
+  </head>
+
+  <body>
+    <header class="cabecalho-site cabecalho-area-mestre">
+      <a class="marca" href="index.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Projeto RPG Solo</span>
+      </a>
+
+      <nav class="menu-principal" aria-label="Navegação da Área do Mestre">
+        <a href="index.html">Início</a>
+        <a href="aventuras-disponiveis.html">Jogar</a>
+        <a href="area-mestre.html" aria-current="page">Área do Mestre</a>
+      </nav>
+    </header>
+
+    <main class="area-mestre">
+      <section class="apresentacao-area-mestre">
+        <div>
+          <span class="sobretitulo-area-mestre">Mesa de criação e condução</span>
+          <h1>Área do Mestre</h1>
+          <p>
+            Escreva aventuras, prepare mapas, monte encontros e reúna as ferramentas usadas para
+            conduzir e testar suas histórias.
+          </p>
+        </div>
+
+        <aside class="nota-mesa">
+          <strong>Mesa em preparação</strong>
+          <span>As ferramentas serão integradas aqui gradualmente.</span>
+        </aside>
+      </section>
+
+      <section class="mesa-ferramentas" aria-labelledby="tituloFerramentasMestre">
+        <header class="titulo-mesa">
+          <span>Instrumentos do mestre</span>
+          <h2 id="tituloFerramentasMestre">O que deseja preparar?</h2>
+        </header>
+
+        <div class="grade-ferramentas-mestre">
+          <article class="ferramenta-mestre ferramenta-aventura">
+            <span class="icone-ferramenta" aria-hidden="true">✒</span>
+            <span class="estado-ferramenta">Disponível</span>
+            <h3>Editor de aventuras</h3>
+            <p>Organize cenas, escolhas, testes, conexões e textos narrativos em uma teia visual.</p>
+            <a class="acao-ferramenta" href="editor-aventura.html">Abrir manuscrito</a>
+          </article>
+
+          <article class="ferramenta-mestre ferramenta-mapa">
+            <span class="icone-ferramenta" aria-hidden="true">⌖</span>
+            <span class="estado-ferramenta">Disponível</span>
+            <h3>Editor de mapas</h3>
+            <p>Marque terreno, obstáculos, volumes opacos e diferentes graus de cobertura.</p>
+            <a class="acao-ferramenta" href="editor-terreno.html">Abrir cartografia</a>
+          </article>
+
+          <article class="ferramenta-mestre ferramenta-batalha">
+            <span class="icone-ferramenta" aria-hidden="true">⚔</span>
+            <span class="estado-ferramenta estado-evolucao">Em evolução</span>
+            <h3>Oficina de batalhas</h3>
+            <p>Posicione heróis e inimigos, salve encontros e execute batalhas completas.</p>
+            <a
+              class="acao-ferramenta"
+              href="aventuras.html?ferramenta=montador-batalha"
+            >Montar encontro</a>
+          </article>
+
+          <article class="ferramenta-mestre ferramenta-textos">
+            <span class="icone-ferramenta" aria-hidden="true">¶</span>
+            <span class="estado-ferramenta estado-evolucao">Em evolução</span>
+            <h3>Central de textos</h3>
+            <p>Consulte quando cada mensagem aparece e edite seus diferentes canais.</p>
+            <a class="acao-ferramenta" href="editor-mensagens.html">Abrir catálogo</a>
+          </article>
+
+          <article class="ferramenta-mestre ferramenta-mesa-offline">
+            <span class="icone-ferramenta" aria-hidden="true">◈</span>
+            <span class="estado-ferramenta estado-planejado">Planejado</span>
+            <h3>Mesa presencial</h3>
+            <p>Use mapas, iniciativas, anotações e consultas como apoio para uma sessão offline.</p>
+            <button class="acao-ferramenta" type="button" disabled>Em preparação</button>
+          </article>
+
+          <article class="ferramenta-mestre ferramenta-dev" data-ferramenta-dev hidden>
+            <span class="icone-ferramenta" aria-hidden="true">⚙</span>
+            <span class="estado-ferramenta estado-dev">Somente local</span>
+            <h3>Laboratório DEV</h3>
+            <p>Execute cenários técnicos e verificações internas durante o desenvolvimento.</p>
+            <a class="acao-ferramenta" href="aventuras.html">Abrir laboratório</a>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

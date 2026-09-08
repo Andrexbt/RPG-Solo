@@ -1,0 +1,307 @@
+.camada-montador-batalha-dev {
+  position: fixed;
+  inset: 0;
+  z-index: 110000;
+  padding: 18px;
+  background: rgba(8, 6, 5, 0.88);
+  backdrop-filter: blur(5px);
+}
+
+.camada-montador-batalha-dev[hidden] {
+  display: none;
+}
+
+.janela-montador-batalha-dev {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid #9d7138;
+  border-radius: 12px;
+  background: #17100c;
+  color: #f4ead2;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.72);
+}
+
+.cabecalho-montador-batalha-dev,
+.barra-montador-batalha-dev,
+.rodape-montador-batalha-dev {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(184, 138, 74, 0.35);
+}
+
+.cabecalho-montador-batalha-dev {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cabecalho-montador-batalha-dev h2 {
+  margin: 2px 0 0;
+  font-size: 1.45rem;
+}
+
+.rotulo-montador-batalha-dev {
+  color: #d79b4d;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.botao-fechar-montador-batalha-dev {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #8d6738;
+  border-radius: 7px;
+  background: #2b1c13;
+  color: #f4ead2;
+  font-size: 1.45rem;
+  cursor: pointer;
+}
+
+.barra-montador-batalha-dev {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
+.campo-montador-batalha-dev {
+  flex: 1 1 240px;
+  max-width: 520px;
+  display: grid;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.campo-cenario-salvo-dev {
+  max-width: 320px;
+}
+
+.campo-montador-batalha-dev select,
+.campo-montador-batalha-dev input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #805d34;
+  border-radius: 6px;
+  background: #241810;
+  color: #f4ead2;
+}
+
+.botao-acao-montador-batalha-dev {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border: 1px solid #b67b35;
+  border-radius: 6px;
+  background: #4a2c17;
+  color: #fff2d2;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.botao-acao-montador-batalha-dev:hover {
+  background: #62391c;
+}
+
+.botao-excluir-cenario-dev {
+  border-color: #914b42;
+  background: #3e201c;
+  color: #ffd9d4;
+}
+
+.botao-excluir-cenario-dev:hover {
+  background: #572923;
+}
+
+.botao-iniciar-batalha-dev {
+  margin-left: auto;
+  border-color: #6fa15f;
+  background: #294222;
+  color: #e5ffdc;
+}
+
+.botao-iniciar-batalha-dev:hover {
+  background: #36582c;
+}
+
+.corpo-montador-batalha-dev {
+  min-height: 0;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  background: #0c0907;
+}
+
+.prateleira-inimigos-dev {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid rgba(184, 138, 74, 0.36);
+  border-radius: 8px;
+  background: #19110d;
+}
+
+.prateleira-inimigos-dev h3,
+.prateleira-inimigos-dev p {
+  margin: 0 0 8px;
+}
+
+.prateleira-inimigos-dev p {
+  color: rgba(244, 234, 210, 0.65);
+  font-size: 0.78rem;
+}
+
+.lista-prateleira-inimigos-dev {
+  display: grid;
+  gap: 7px;
+}
+
+.card-prateleira-inimigo-dev {
+  width: 100%;
+  padding: 7px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #6f4d2d;
+  border-radius: 7px;
+  background: #281a12;
+  color: #f4ead2;
+  text-align: left;
+  cursor: grab;
+}
+
+.card-prateleira-inimigo-dev:hover {
+  border-color: #d69a4c;
+  background: #352218;
+}
+
+.card-prateleira-inimigo-dev img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.area-mapa-montador-batalha-dev {
+  position: relative;
+  width: min(100%, 1280px);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(232, 201, 111, 0.48);
+  background: #31271d;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+}
+
+.imagem-mapa-montador-batalha-dev {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  display: block;
+  object-fit: fill;
+}
+
+.tabuleiro-montador-batalha-dev {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(48, 1fr);
+  grid-template-rows: repeat(27, 1fr);
+  background-image:
+    linear-gradient(to right, rgba(244, 234, 210, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(244, 234, 210, 0.2) 1px, transparent 1px);
+  background-size: calc(100% / 48) calc(100% / 27);
+}
+
+.token-montador-batalha-dev {
+  position: relative;
+  z-index: 2;
+  width: 86%;
+  aspect-ratio: 1;
+  place-self: center;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid #76c982;
+  border-radius: 50%;
+  background: #263b29;
+  color: #fff8e5;
+  font-size: clamp(0.55rem, 1.1vw, 1rem);
+  font-weight: 800;
+  cursor: grab;
+  box-shadow: 0 0 0 2px rgba(10, 8, 6, 0.76), 0 2px 8px rgba(0, 0, 0, 0.75);
+}
+
+.token-montador-batalha-dev img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.token-montador-batalha-dev.token-em-arraste {
+  opacity: 0.48;
+  cursor: grabbing;
+}
+
+.token-inimigo-montador-batalha-dev {
+  border-color: #db665b;
+  background: #4a211d;
+}
+
+.identificador-mapa-montador-batalha-dev {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: rgba(15, 10, 7, 0.82);
+  color: #f4ead2;
+  font-size: 0.78rem;
+  pointer-events: none;
+}
+
+.rodape-montador-batalha-dev {
+  border-top: 1px solid rgba(184, 138, 74, 0.35);
+  border-bottom: 0;
+  color: rgba(244, 234, 210, 0.72);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 700px) {
+  .camada-montador-batalha-dev {
+    padding: 6px;
+  }
+
+  .cabecalho-montador-batalha-dev,
+  .barra-montador-batalha-dev,
+  .rodape-montador-batalha-dev {
+    padding: 9px 10px;
+  }
+
+  .corpo-montador-batalha-dev {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: auto;
+  }
+
+  .prateleira-inimigos-dev {
+    height: auto;
+    max-height: 150px;
+  }
+
+  .lista-prateleira-inimigos-dev {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}

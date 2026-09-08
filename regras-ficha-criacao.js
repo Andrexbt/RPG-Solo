@@ -306,10 +306,20 @@ function criarAtaqueCombateArma(
   personagemAtual,
   idArma,
   origemEquipamento = "armaPrincipal",
+  modoUso = "padrao",
 ) {
   const arma = obterDadosArma(idArma);
 
   if (!arma) {
+    return null;
+  }
+
+    const arremessando = modoUso === "arremesso";
+
+  if (
+    arremessando &&
+    !arma.propriedades?.includes("arremesso")
+  ) {
     return null;
   }
 
@@ -332,16 +342,24 @@ function criarAtaqueCombateArma(
   idArma,
 );
 
-  const ataqueDistancia = arma.categoria === "distancia";
+    const ataqueDistancia =
+    arma.categoria === "distancia" || arremessando;
 
   return {
     id: idArma,
 
-    instanciaId: `${idArma}:${origemEquipamento}`,
+        instanciaId: arremessando
+      ? `${idArma}:${origemEquipamento}:arremesso`
+      : `${idArma}:${origemEquipamento}`,
+
+    modoUso,
 
     armaId: idArma,
+        equipamentoInstanciaId: `${idArma}:${origemEquipamento}`,
 
-    nome: arma.nome,
+    nome: arremessando
+      ? `${arma.nome} (arremesso)`
+      : arma.nome,
 
     atributoId: atributoAtaque,
 
@@ -356,11 +374,11 @@ function criarAtaqueCombateArma(
 
       alcance: ataqueDistancia
         ? {
-            normal: 16,
-            longo: 64,
+            normal: arma.alcanceDistanciaPes.normal / 5,
+            longo: arma.alcanceDistanciaPes.longo / 5,
           }
         : {
-            normal: 1,
+            normal: arma.alcanceCorpoACorpoPes / 5,
           },
 
       area: null,
@@ -384,36 +402,49 @@ function criarAtaqueCombateArma(
 
 function atualizarAtaquesCombatePersonagem() {
   const equipamentos = personagem.detalhes.equipamentos;
-
   const ataques = [];
 
-  if (!equipamentos) {
-    personagem.combate.ataques = ataques;
+  function adicionarAtaquesDaArma(idArma, origemEquipamento) {
+    const arma = obterDadosArma(idArma);
 
-    return;
+    if (!arma) {
+      return;
+    }
+
+    const modos = ["padrao"];
+
+    if (
+      arma.categoria === "corpo-a-corpo" &&
+      arma.propriedades?.includes("arremesso")
+    ) {
+      modos.push("arremesso");
+    }
+
+    for (const modo of modos) {
+      const ataque = criarAtaqueCombateArma(
+        personagem,
+        idArma,
+        origemEquipamento,
+        modo,
+      );
+
+      if (ataque) {
+        ataques.push(ataque);
+      }
+    }
   }
 
-  if (equipamentos.armaPrincipal) {
-    const ataquePrincipal = criarAtaqueCombateArma(
-      personagem,
+  if (equipamentos) {
+    adicionarAtaquesDaArma(
       equipamentos.armaPrincipal,
       "armaPrincipal",
     );
 
-    if (ataquePrincipal) {
-      ataques.push(ataquePrincipal);
-    }
-  }
-
-  if (equipamentos.itemSecundario === "armaSecundaria" && equipamentos.armaSecundaria) {
-    const ataqueSecundario = criarAtaqueCombateArma(
-      personagem,
-      equipamentos.armaSecundaria,
-      "armaSecundaria",
-    );
-
-    if (ataqueSecundario) {
-      ataques.push(ataqueSecundario);
+    if (equipamentos.itemSecundario === "armaSecundaria") {
+      adicionarAtaquesDaArma(
+        equipamentos.armaSecundaria,
+        "armaSecundaria",
+      );
     }
   }
 
@@ -437,6 +468,28 @@ function obterNomeArma(idArma) {
   }
 
   return arma.nome;
+}
+
+function preencherSelectArmaduras() {
+  const selecaoAnterior = armaduraInicial.value;
+
+  armaduraInicial.replaceChildren();
+
+  const opcaoInicial = document.createElement("option");
+  opcaoInicial.value = "";
+  opcaoInicial.textContent = "Escolha";
+  armaduraInicial.append(opcaoInicial);
+
+  for (const [id, armadura] of Object.entries(window.bancoEquipamentos.armaduras)) {
+    const opcao = document.createElement("option");
+
+    opcao.value = id;
+    opcao.textContent = armadura.nome;
+
+    armaduraInicial.append(opcao);
+  }
+
+  armaduraInicial.value = selecaoAnterior;
 }
 
 function preencherSelectArmas() {

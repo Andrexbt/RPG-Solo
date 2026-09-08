@@ -7,6 +7,22 @@
 // =====================================================
 
 window.bancoPropriedadesArmas = {
+  alcance: {
+    id: "alcance",
+    nome: "Alcance",
+    descricaoCurta: "Aumenta o alcance corpo a corpo em 5 pés (1,5 m).",
+    descricaoLonga:
+      "Esta propriedade acrescenta 5 pés ao alcance usado para atacar com a arma e para determinar seu alcance nos ataques de oportunidade.",
+  },
+
+  recarga: {
+    id: "recarga",
+    nome: "Recarga",
+    descricaoCurta: "Limita o disparo a uma munição por ação, ação bônus ou reação usada para disparar.",
+    descricaoLonga:
+      "Ao usar uma ação, ação bônus ou reação para disparar esta arma, você só pode disparar uma munição, independentemente de quantos ataques normalmente poderia realizar.",
+  },
+
   // =====================================================
   // Propriedades disponíveis
   // =====================================================
@@ -59,7 +75,7 @@ window.bancoPropriedadesArmas = {
     nome: "Munição",
     descricaoCurta: "A arma usa munição para realizar ataques.",
     descricaoLonga:
-      "Uma arma com a propriedade Munição requer que o personagem tenha munição adequada para realizar ataques. O sistema verifica automaticamente se o personagem possui munição suficiente antes de permitir o ataque.",
+      "Cada ataque consome uma munição do tipo indicado pela arma. Carregar uma arma de uma mão exige uma mão livre. Após o combate, gastar 1 minuto permite recuperar metade das munições usadas, arredondando para baixo.",
   },
 
   versatil: {

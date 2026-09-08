@@ -11,6 +11,10 @@
 
   let saidaPainel = null;
   let seletorEncerramento = null;
+  let seletorMapaBatalha = null;
+  let colunaJogadorBatalha = null;
+  let linhaJogadorBatalha = null;
+  let listaInimigosBatalha = null;
 
   function clonar(valor) {
     return structuredClone(valor);
@@ -346,6 +350,352 @@
     return botao;
   }
 
+  function listarBatalhasDisponiveis() {
+    return Object.entries(aventuraAtual?.cenas ?? {})
+      .filter(([, cena]) => Boolean(cena?.combate?.mapa))
+      .map(([cenaId, cena]) => ({
+        cenaId,
+        cena,
+        combate: cena.combate,
+      }));
+  }
+
+  function criarCampoNumero(valorInicial) {
+    const campo = document.createElement("input");
+    campo.type = "number";
+    campo.min = "1";
+    campo.step = "1";
+    campo.value = String(valorInicial ?? 1);
+    campo.style.width = "68px";
+    campo.style.padding = "6px";
+
+    return campo;
+  }
+
+  function criarSeletorNpc(npcIdSelecionado) {
+    const seletor = document.createElement("select");
+    seletor.style.minWidth = "0";
+    seletor.style.padding = "6px";
+
+    for (const [npcId, npc] of Object.entries(estadoAtualJogo.npcs ?? {})) {
+      if (npc.tipo !== "inimigo") {
+        continue;
+      }
+
+      const opcao = document.createElement("option");
+      opcao.value = npcId;
+      opcao.textContent = `${npc.nome} (${npcId})`;
+      opcao.selected = npcId === npcIdSelecionado;
+      seletor.append(opcao);
+    }
+
+    return seletor;
+  }
+
+  function adicionarInimigoBatalha(
+    npcId = null,
+    posicao = { coluna: 1, linha: 1 },
+  ) {
+    if (!listaInimigosBatalha) {
+      return;
+    }
+
+    const linha = document.createElement("div");
+    linha.dataset.inimigoBatalhaDev = "";
+    linha.style.display = "grid";
+    linha.style.gridTemplateColumns = "minmax(0, 1fr) auto auto auto";
+    linha.style.gap = "5px";
+    linha.style.alignItems = "center";
+
+    const seletorNpc = criarSeletorNpc(npcId);
+    seletorNpc.dataset.campo = "npcId";
+
+    const coluna = criarCampoNumero(posicao.coluna);
+    coluna.dataset.campo = "coluna";
+    coluna.title = "Coluna";
+
+    const linhaPosicao = criarCampoNumero(posicao.linha);
+    linhaPosicao.dataset.campo = "linha";
+    linhaPosicao.title = "Linha";
+
+    const remover = criarBotao("×", () => linha.remove());
+    remover.title = "Remover inimigo";
+
+    linha.append(seletorNpc, coluna, linhaPosicao, remover);
+    listaInimigosBatalha.append(linha);
+  }
+
+  function obterBatalhaSelecionada() {
+    return listarBatalhasDisponiveis().find(
+      (batalha) => batalha.cenaId === seletorMapaBatalha?.value,
+    ) ?? null;
+  }
+
+  function carregarPosicoesOriginaisBatalha() {
+    const batalha = obterBatalhaSelecionada();
+
+    if (!batalha) {
+      return;
+    }
+
+    colunaJogadorBatalha.value = String(
+      batalha.combate.jogador?.posicao?.coluna ?? 1,
+    );
+    linhaJogadorBatalha.value = String(
+      batalha.combate.jogador?.posicao?.linha ?? 1,
+    );
+
+    listaInimigosBatalha.innerHTML = "";
+
+    for (const configuracao of batalha.combate.inimigos ?? []) {
+      for (const posicao of configuracao.posicoes ?? []) {
+        adicionarInimigoBatalha(configuracao.npcId, posicao);
+      }
+    }
+
+    if (!listaInimigosBatalha.children.length) {
+      adicionarInimigoBatalha();
+    }
+  }
+
+  function lerPosicao(coluna, linha) {
+    return {
+      coluna: Number(coluna),
+      linha: Number(linha),
+    };
+  }
+
+  function validarPosicoesBatalha(combateBase, posicoes) {
+    const ocupadas = new Set();
+
+    for (const item of posicoes) {
+      const { coluna, linha } = item.posicao;
+
+      if (
+        !Number.isInteger(coluna) ||
+        !Number.isInteger(linha) ||
+        coluna < 1 ||
+        coluna > 48 ||
+        linha < 1 ||
+        linha > 27
+      ) {
+        return `Posição inválida para ${item.nome}: coluna ${coluna}, linha ${linha}.`;
+      }
+
+      const chave = `${coluna},${linha}`;
+
+      if (ocupadas.has(chave)) {
+        return `Mais de um participante ocupa a célula ${chave}.`;
+      }
+
+      ocupadas.add(chave);
+
+      const tipoTerreno = SistemaCombate.obterTipoTerreno(
+        { terreno: combateBase.terreno },
+        coluna,
+        linha,
+      );
+
+      if (tipoTerreno === "bloqueado") {
+        return `${item.nome} foi colocado em terreno bloqueado (${chave}).`;
+      }
+    }
+
+    return null;
+  }
+
+  function iniciarBatalhaPersonalizada() {
+    const batalha = obterBatalhaSelecionada();
+
+    if (!batalha) {
+      return exibirResultado("Batalha personalizada", {
+        sucesso: false,
+        motivo: "mapaNaoSelecionado",
+      });
+    }
+
+    if (!estadoAtualJogo.personagem?.dados) {
+      return exibirResultado("Batalha personalizada", {
+        sucesso: false,
+        motivo: "personagemNaoCarregado",
+      });
+    }
+
+    const posicaoJogador = lerPosicao(
+      colunaJogadorBatalha.value,
+      linhaJogadorBatalha.value,
+    );
+
+    const inimigosInformados = Array.from(
+      listaInimigosBatalha.querySelectorAll("[data-inimigo-batalha-dev]"),
+    ).map((linha, indice) => ({
+      npcId: linha.querySelector('[data-campo="npcId"]').value,
+      nome: `Inimigo ${indice + 1}`,
+      posicao: lerPosicao(
+        linha.querySelector('[data-campo="coluna"]').value,
+        linha.querySelector('[data-campo="linha"]').value,
+      ),
+    }));
+
+    if (!inimigosInformados.length) {
+      return exibirResultado("Batalha personalizada", {
+        sucesso: false,
+        motivo: "nenhumInimigo",
+      });
+    }
+
+    const erroPosicao = validarPosicoesBatalha(
+      batalha.combate,
+      [
+        { nome: "Jogador", posicao: posicaoJogador },
+        ...inimigosInformados,
+      ],
+    );
+
+    if (erroPosicao) {
+      return exibirResultado("Batalha personalizada", {
+        sucesso: false,
+        motivo: "posicaoInvalida",
+        mensagem: erroPosicao,
+      });
+    }
+
+    const inimigosAgrupados = new Map();
+
+    for (const inimigo of inimigosInformados) {
+      const grupo = inimigosAgrupados.get(inimigo.npcId) ?? {
+        npcId: inimigo.npcId,
+        quantidade: 0,
+        posicoes: [],
+        inteligencia: { perfil: "equilibrado" },
+        movimentoMaximo: 6,
+      };
+
+      grupo.quantidade += 1;
+      grupo.posicoes.push(inimigo.posicao);
+      inimigosAgrupados.set(inimigo.npcId, grupo);
+    }
+
+    const participanteJogador = criarParticipanteJogadorCombate({
+      posicao: posicaoJogador,
+      movimentoMaximo: batalha.combate.jogador?.movimentoMaximo ?? 6,
+    });
+
+    const participantesInimigos = criarParticipantesNpcsCombate(
+      Array.from(inimigosAgrupados.values()),
+    );
+
+    estadoAtualJogo.combateAtual = null;
+    estadoAtualJogo.progresso.cenaId = batalha.cenaId;
+    cenaAtual = batalha.cena;
+
+    iniciarCombateDaAventura({
+      id: `dev-${batalha.cenaId}-${Date.now()}`,
+      participantes: [participanteJogador, ...participantesInimigos],
+      mapa: batalha.combate.mapa,
+      introducao: {
+        titulo: "Batalha de teste",
+        descricao: `Mapa: ${batalha.cenaId}`,
+      },
+      objetivos: batalha.combate.objetivos,
+      terreno: batalha.combate.terreno,
+      visao: batalha.combate.visao,
+      areas: batalha.combate.areas,
+      marcadores: batalha.combate.marcadores,
+    });
+
+    introducaoCombateConfirmada = true;
+
+    if (modalIntroducaoCombate.open) {
+      modalIntroducaoCombate.close();
+    }
+
+    iniciarEtapaIniciativaCombate(estadoAtualJogo.combateAtual);
+
+    return exibirResultado("Batalha personalizada", {
+      sucesso: true,
+      mapa: batalha.cenaId,
+      posicaoJogador,
+      inimigos: inimigosInformados,
+    });
+  }
+
+  function criarConstrutorBatalha() {
+    const area = document.createElement("fieldset");
+    area.style.display = "grid";
+    area.style.gap = "7px";
+    area.style.margin = "10px 0 0";
+    area.style.padding = "8px";
+    area.style.border = "1px solid rgba(184, 138, 74, 0.55)";
+
+    const legenda = document.createElement("legend");
+    legenda.textContent = "Montar batalha";
+    legenda.style.fontWeight = "700";
+
+    seletorMapaBatalha = document.createElement("select");
+    seletorMapaBatalha.style.width = "100%";
+    seletorMapaBatalha.style.padding = "7px";
+
+    for (const batalha of listarBatalhasDisponiveis()) {
+      const opcao = document.createElement("option");
+      opcao.value = batalha.cenaId;
+      opcao.textContent = batalha.cena.titulo
+        ? `${batalha.cena.titulo} (${batalha.cenaId})`
+        : batalha.cenaId;
+      seletorMapaBatalha.append(opcao);
+    }
+
+    const posicaoJogador = document.createElement("div");
+    posicaoJogador.style.display = "flex";
+    posicaoJogador.style.alignItems = "center";
+    posicaoJogador.style.gap = "6px";
+
+    const rotuloJogador = document.createElement("span");
+    rotuloJogador.textContent = "Jogador — coluna / linha";
+    rotuloJogador.style.flex = "1";
+
+    colunaJogadorBatalha = criarCampoNumero(1);
+    linhaJogadorBatalha = criarCampoNumero(1);
+    posicaoJogador.append(
+      rotuloJogador,
+      colunaJogadorBatalha,
+      linhaJogadorBatalha,
+    );
+
+    const cabecalhoInimigos = document.createElement("div");
+    cabecalhoInimigos.style.display = "flex";
+    cabecalhoInimigos.style.alignItems = "center";
+    cabecalhoInimigos.style.justifyContent = "space-between";
+
+    const rotuloInimigos = document.createElement("span");
+    rotuloInimigos.textContent = "Inimigos — NPC / coluna / linha";
+
+    const adicionar = criarBotao("+ Inimigo", () => adicionarInimigoBatalha());
+    cabecalhoInimigos.append(rotuloInimigos, adicionar);
+
+    listaInimigosBatalha = document.createElement("div");
+    listaInimigosBatalha.style.display = "grid";
+    listaInimigosBatalha.style.gap = "5px";
+
+    seletorMapaBatalha.addEventListener(
+      "change",
+      carregarPosicoesOriginaisBatalha,
+    );
+
+    area.append(
+      legenda,
+      seletorMapaBatalha,
+      posicaoJogador,
+      cabecalhoInimigos,
+      listaInimigosBatalha,
+      criarBotao("Iniciar e rolar iniciativa", iniciarBatalhaPersonalizada),
+    );
+
+    carregarPosicoesOriginaisBatalha();
+
+    return area;
+  }
+
   function criarPainel() {
     if (document.querySelector("#painelTestesDev")) {
       return;
@@ -357,8 +707,8 @@
     painel.style.left = "12px";
     painel.style.bottom = "12px";
     painel.style.zIndex = "100000";
-    painel.style.width = "330px";
-    painel.style.maxHeight = "75vh";
+    painel.style.width = "min(460px, calc(100vw - 24px))";
+    painel.style.maxHeight = "85vh";
     painel.style.overflow = "auto";
     painel.style.padding = "10px";
     painel.style.border = "1px solid #b88a4a";
@@ -375,7 +725,7 @@
 
     const instrucoes = document.createElement("p");
     instrucoes.textContent =
-      "Cada cenário reinicia o estado tático e começa diretamente o turno do guarda.";
+      "Use os cenários rápidos ou monte uma batalha escolhendo mapa, participantes e posições.";
 
     const botoes = document.createElement("div");
     botoes.style.display = "grid";
@@ -388,6 +738,13 @@
       criarBotao("Distante", () => prepararCenario("distante")),
       criarBotao("Ameaçado", () => prepararCenario("ameacado")),
       criarBotao("Sem visão", () => prepararCenario("semLinhaDeVisao")),
+      criarBotao("Testar adagas", async function testarAdagas() {
+        const resultado = await window.testarDestinosAdagaDev?.();
+        exibirResultado("Visuais da adaga", resultado ?? {
+          sucesso: false,
+          motivo: "testeIndisponivel",
+        });
+      }),
     );
 
     const areaEncerramento = document.createElement("div");
@@ -435,10 +792,20 @@
       titulo,
       instrucoes,
       botoes,
+      criarBotao("Montar batalha", function abrirMontadorBatalha() {
+        window.MontadorBatalhaDev?.abrir();
+      }),
       areaEncerramento,
       saidaPainel,
     );
     document.body.append(painel);
+
+    if (
+      new URLSearchParams(window.location.search).get("ferramenta") ===
+      "montador-batalha"
+    ) {
+      window.MontadorBatalhaDev?.abrir();
+    }
   }
 
   window.TestesDev = Object.freeze({

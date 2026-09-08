@@ -80,6 +80,36 @@ let tokenArrastado = null;
 let inicioArraste = null;
 let escolhasAtuais = [];
 
+const miraAtaqueCombate =
+  document.querySelector(
+    "#miraAtaqueCombate",
+  );
+
+const linhaMiraAtaqueCombate =
+  document.querySelector(
+    "#linhaMiraAtaqueCombate",
+  );
+
+  const linhaMiraAlcanceLongoCombate =
+  document.querySelector(
+    "#linhaMiraAlcanceLongoCombate",
+  );
+
+  const textoAlcanceNormalCombate =
+  document.querySelector(
+    "#textoAlcanceNormalCombate",
+  );
+
+const textoAlcanceLongoCombate =
+  document.querySelector(
+    "#textoAlcanceLongoCombate",
+  );
+
+  const textoCoberturaMiraCombate =
+  document.querySelector(
+    "#textoCoberturaMiraCombate",
+  );
+
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
 const cameraCombateElemento =
   document.querySelector("#cameraCombate");
@@ -406,6 +436,229 @@ async function animarMovimentoInimigo(participante, caminho) {
   }
 }
 
+async function animarArremessoArma(
+  atacanteId,
+  alvoId,
+  armaId,
+) {
+  const configuracao =
+    window.bancoEquipamentos?.armas?.[armaId]?.visual?.arremesso;
+
+  if (!configuracao?.src) {
+    return false;
+  }
+
+  const tokenAtacante = tabuleiroCombate.querySelector(
+    `[data-id-participante="${atacanteId}"]`,
+  );
+
+  const tokenAlvo = tabuleiroCombate.querySelector(
+    `[data-id-participante="${alvoId}"]`,
+  );
+
+  if (!tokenAtacante || !tokenAlvo) {
+    return false;
+  }
+
+  const origem = tokenAtacante.getBoundingClientRect();
+  const destino = tokenAlvo.getBoundingClientRect();
+
+  const origemX = origem.left + origem.width / 2;
+  const origemY = origem.top + origem.height / 2;
+  const destinoX = destino.left + destino.width / 2;
+  const destinoY = destino.top + destino.height / 2;
+
+  const deslocamentoX = destinoX - origemX;
+  const deslocamentoY = destinoY - origemY;
+
+  const anguloTrajetoria =
+    Math.atan2(deslocamentoY, deslocamentoX) *
+    (180 / Math.PI);
+
+  const anguloInicial =
+    anguloTrajetoria +
+    (Number(configuracao.anguloBase) || 0);
+
+  const rotacoes =
+    Number(configuracao.rotacoesDuranteVoo) || 0;
+
+  const anguloFinal =
+    anguloInicial + rotacoes * 360;
+
+  const projetil = document.createElement("img");
+  projetil.className = "projetil-arma-arremessada-combate";
+  projetil.src = configuracao.src;
+  projetil.alt = "";
+  projetil.draggable = false;
+
+  projetil.style.left = `${origemX}px`;
+  projetil.style.top = `${origemY}px`;
+
+  const zoomAtual =
+  Number(cameraCombate.zoom) || 1;
+
+const larguraProjetil =
+  (Number(configuracao.larguraPx) || 64) *
+  zoomAtual;
+
+const comprimentoProjetil =
+  (Number(configuracao.comprimentoPx) || 96) *
+  zoomAtual;
+
+projetil.style.width =
+  `${larguraProjetil}px`;
+
+projetil.style.height =
+  `${comprimentoProjetil}px`;
+
+  document.body.append(projetil);
+
+  const reduzirMovimento = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  const animacao = projetil.animate(
+    [
+      {
+        transform:
+          `translate(-50%, -50%) ` +
+          `rotate(${anguloInicial}deg)`,
+      },
+      {
+        transform:
+          `translate(calc(-50% + ${deslocamentoX}px), ` +
+          `calc(-50% + ${deslocamentoY}px)) ` +
+          `rotate(${anguloFinal}deg)`,
+      },
+    ],
+    {
+      duration: reduzirMovimento ? 1 : Number(configuracao.duracaoMs) || 700,
+      easing: "cubic-bezier(0.3, 0.7, 0.25, 1)",
+      fill: "forwards",
+    },
+  );
+
+  await animacao.finished.catch(() => null);
+  projetil.remove();
+
+  return true;
+}
+
+window.animarArremessoAdagaDev = function testarArremessoAdaga() {
+  const combate = estadoAtualJogo.combateAtual;
+  const jogador = combate?.participantes.find(
+    (participante) => participante.tipo === "jogador",
+  );
+  const inimigo = combate?.participantes.find(
+    (participante) =>
+      participante.tipo === "inimigo" && participante.estado !== "derrotado",
+  );
+
+  return animarArremessoArma(
+  jogador?.id,
+  inimigo?.id,
+  "adaga",
+);
+};
+
+window.testarDestinosAdagaDev = async function testarDestinosAdaga() {
+  const combate = estadoAtualJogo.combateAtual;
+  const jogador = combate?.participantes.find(
+    (participante) => participante.tipo === "jogador",
+  );
+  const inimigos = combate?.participantes.filter(
+    (participante) =>
+      participante.tipo === "inimigo" && participante.estado !== "derrotado",
+  );
+
+  if (!combate || !jogador || !inimigos?.length) {
+    return {
+      sucesso: false,
+      motivo: "batalhaSemJogadorOuInimigo",
+    };
+  }
+
+  const idsTeste = new Set([
+    "adaga:teste-visual-chao",
+    "adaga:teste-visual-cravada",
+  ]);
+
+  combate.itensNoChao = (combate.itensNoChao ?? []).filter(
+    (item) => !idsTeste.has(item.equipamentoInstanciaId),
+  );
+
+  for (const participante of combate.participantes) {
+    participante.itensCravados = (participante.itensCravados ?? []).filter(
+      (item) => !idsTeste.has(item.equipamentoInstanciaId),
+    );
+  }
+
+  atualizarInterfaceTurno(combate);
+
+  const alvoChao = inimigos[0];
+  const alvoCravado = inimigos[1] ?? inimigos[0];
+  const ataqueBase = {
+    armaId: "adaga",
+    modoUso: "arremesso",
+    nome: "Adaga (arremesso)",
+  };
+
+  await animarArremessoArma(
+  jogador.id,
+  alvoChao.id,
+  "adaga",
+);
+  const resultadoChao = SistemaCombate.registrarArmaArremessadaNoChao(
+    combate,
+    jogador,
+    {
+      ...ataqueBase,
+      equipamentoInstanciaId: "adaga:teste-visual-chao",
+    },
+    alvoChao.posicao,
+  );
+  atualizarInterfaceTurno(combate);
+  apresentarDestinoArmaArremessada({
+    ...resultadoChao,
+    aplicavel: true,
+    destino: "chao",
+  }, {
+    acertou: false,
+    alvoNome: alvoChao.nome,
+  });
+
+  await esperar(650);
+  await animarArremessoArma(
+  jogador.id,
+  alvoCravado.id,
+  "adaga",
+);
+  const resultadoCravado = SistemaCombate.registrarArmaCravadaNoAlvo(
+    combate,
+    jogador,
+    alvoCravado,
+    {
+      ...ataqueBase,
+      equipamentoInstanciaId: "adaga:teste-visual-cravada",
+    },
+  );
+  atualizarInterfaceTurno(combate);
+  apresentarDestinoArmaArremessada({
+    ...resultadoCravado,
+    aplicavel: true,
+    destino: "alvo",
+  }, {
+    acertou: true,
+    alvoNome: alvoCravado.nome,
+  });
+
+  return {
+    sucesso: resultadoChao.sucesso && resultadoCravado.sucesso,
+    resultadoChao,
+    resultadoCravado,
+  };
+};
+
 function esperar(milissegundos) {
   return new Promise(function (resolve) {
     setTimeout(resolve, milissegundos);
@@ -533,60 +786,594 @@ exibirAcaoAtualCombate(
 );
 }
 
-function selecionarAlvoCombate(evento) {
-  const token = evento.target.closest(".token-combate");
-
-  if (!token) {
-    return;
-  }
-
-  const combate = estadoAtualJogo.combateAtual;
-
-  if (!combate) {
-    return;
-  }
-
-  const participanteAtivo = combate.participantes.find(
-    (participante) => participante.id === combate.participanteAtivoId,
-  );
-
-  if (!participanteAtivo || participanteAtivo.tipo !== "jogador") {
-    return;
-  }
-
-  const alvo = combate.participantes.find(
-    (participante) => participante.id === token.dataset.idParticipante,
-  );
-
-  if (!alvo || alvo.tipo !== "inimigo") {
-    return;
-  }
+function atualizarMiraAtaqueCombate(
+  evento,
+) {
+  const combate =
+    estadoAtualJogo.combateAtual;
 
   if (
-  !painelAtaquesCombate.hidden &&
-  !alvoDisponivelParaAtaque(
-    combate,
-    participanteAtivo,
-    alvo,
-  )
-) {
-  exibirAcaoAtualCombate(
-    `${alvo.nome} está fora do alcance ` +
-    "dos seus ataques disponíveis.",
+    !combate?.ataqueSelecionadoId ||
+    !miraAtaqueCombate ||
+    !linhaMiraAtaqueCombate ||
+    !linhaMiraAlcanceLongoCombate
+  ) {
+    if (miraAtaqueCombate) {
+      miraAtaqueCombate.setAttribute(
+        "hidden",
+        "",
+      );
+    }
+
+    return;
+  }
+
+  const atacante =
+    combate.participantes.find(
+      (participante) =>
+        participante.id ===
+        combate.participanteAtivoId,
+    );
+
+  if (
+    !atacante ||
+    atacante.tipo !== "jogador"
+  ) {
+    miraAtaqueCombate.setAttribute(
+      "hidden",
+      "",
+    );
+
+    return;
+  }
+
+  const ataque =
+    atacante.ataques?.find(
+      (ataqueAtual) =>
+        (
+          ataqueAtual.instanciaId ??
+          ataqueAtual.id
+        ) === combate.ataqueSelecionadoId,
+    );
+
+  if (!ataque) {
+    miraAtaqueCombate.setAttribute(
+      "hidden",
+      "",
+    );
+
+    return;
+  }
+
+  const tamanhoCelula = 140;
+
+  const origemX =
+    (atacante.posicao.coluna - 0.5) *
+    tamanhoCelula;
+
+  const origemY =
+    (atacante.posicao.linha - 0.5) *
+    tamanhoCelula;
+
+  const celulaApontada =
+  evento.target.closest(
+    ".celula-combate",
+  );
+
+const tokenApontado =
+  evento.target.closest(
+    ".token-combate",
+  );
+
+let posicaoApontada = null;
+
+if (tokenApontado) {
+  const participanteApontado =
+    combate.participantes.find(
+      (participante) =>
+        participante.id ===
+        tokenApontado.dataset.idParticipante,
+    );
+
+  posicaoApontada =
+    participanteApontado?.posicao ?? null;
+} else if (celulaApontada) {
+  posicaoApontada = {
+    coluna:
+      Number(
+        celulaApontada.dataset.coluna,
+      ),
+
+    linha:
+      Number(
+        celulaApontada.dataset.linha,
+      ),
+  };
+}
+
+if (!posicaoApontada) {
+  miraAtaqueCombate.setAttribute(
+    "hidden",
+    "",
   );
 
   return;
 }
 
-  combate.alvoSelecionadoId = alvo.id;
+const resultadoLinhaVisao =
+  SistemaCombate.verificarLinhaVisao(
+    combate,
+    atacante.posicao,
+    posicaoApontada,
+  );
 
-atualizarInterfaceTurno(combate);
+const linhaBloqueada =
+  resultadoLinhaVisao.sucesso &&
+  !resultadoLinhaVisao.linhaLivre;
 
-if (!painelAtaquesCombate.hidden) {
-  exibirAcaoAtualCombate(
-    `Escolha um ataque contra ${alvo.nome}.`,
+miraAtaqueCombate.classList.toggle(
+  "mira-bloqueada",
+  linhaBloqueada,
+);
+
+const cobertura =
+  resultadoLinhaVisao.cobertura;
+
+let textoCobertura = "";
+
+if (
+  !linhaBloqueada &&
+  cobertura === "coberturaParcial"
+) {
+  textoCobertura =
+    "Meia cobertura · +2 CA";
+} else if (
+  !linhaBloqueada &&
+  cobertura ===
+    "coberturaTresQuartos"
+) {
+  textoCobertura =
+    "Cobertura 3/4 · +5 CA";
+}
+
+if (textoCobertura) {
+  textoCoberturaMiraCombate.textContent =
+    textoCobertura;
+
+  textoCoberturaMiraCombate.setAttribute(
+    "x",
+    (
+      posicaoApontada.coluna -
+      0.5
+    ) *
+      tamanhoCelula,
+  );
+
+  textoCoberturaMiraCombate.setAttribute(
+    "y",
+    posicaoApontada.linha <= 2
+      ? (posicaoApontada.linha - 0.5) * tamanhoCelula + 90
+      : (posicaoApontada.linha - 0.5) * tamanhoCelula - 90,
+  );
+
+  textoCoberturaMiraCombate.removeAttribute(
+    "hidden",
+  );
+} else {
+  textoCoberturaMiraCombate.setAttribute(
+    "hidden",
+    "",
   );
 }
+
+const ponteiroX =
+  (posicaoApontada.coluna - 0.5) *
+  tamanhoCelula;
+
+const ponteiroY =
+  (posicaoApontada.linha - 0.5) *
+  tamanhoCelula;
+
+  const direcaoX =
+    ponteiroX - origemX;
+
+  const direcaoY =
+    ponteiroY - origemY;
+
+  const maiorDeslocamento =
+    Math.max(
+      Math.abs(direcaoX),
+      Math.abs(direcaoY),
+    );
+
+  if (maiorDeslocamento === 0) {
+    miraAtaqueCombate.setAttribute(
+      "hidden",
+      "",
+    );
+
+    return;
+  }
+
+  const alcanceNormal =
+    Number(
+      ataque.selecao?.alcance?.normal,
+    ) || 0;
+
+  const alcanceLongo =
+    Number(
+      ataque.selecao?.alcance?.longo,
+    ) || alcanceNormal;
+
+  const fatorAlcanceNormal =
+    (
+      alcanceNormal *
+      tamanhoCelula
+    ) /
+    maiorDeslocamento;
+
+  const fatorAlcanceLongo =
+    (
+      alcanceLongo *
+      tamanhoCelula
+    ) /
+    maiorDeslocamento;
+
+  const fimNormalX =
+    origemX +
+    direcaoX * fatorAlcanceNormal;
+
+  const fimNormalY =
+    origemY +
+    direcaoY * fatorAlcanceNormal;
+
+  const fimLongoX =
+    origemX +
+    direcaoX * fatorAlcanceLongo;
+
+  const fimLongoY =
+    origemY +
+    direcaoY * fatorAlcanceLongo;
+
+    const formatarAlcanceMetros = (
+  alcanceCelulas,
+) => {
+  const alcanceMetros =
+    alcanceCelulas * 1.5;
+
+  return `${alcanceMetros.toLocaleString(
+    "pt-BR",
+    {
+      maximumFractionDigits: 1,
+    },
+  )} m`;
+};
+
+textoAlcanceNormalCombate.textContent =
+  formatarAlcanceMetros(
+    alcanceNormal,
+  );
+
+textoAlcanceNormalCombate.setAttribute(
+  "x",
+  fimNormalX,
+);
+
+textoAlcanceNormalCombate.setAttribute(
+  "y",
+  fimNormalY - 38,
+);
+
+  linhaMiraAtaqueCombate.setAttribute(
+    "x1",
+    origemX,
+  );
+
+  linhaMiraAtaqueCombate.setAttribute(
+    "y1",
+    origemY,
+  );
+
+  linhaMiraAtaqueCombate.setAttribute(
+    "x2",
+    fimNormalX,
+  );
+
+  linhaMiraAtaqueCombate.setAttribute(
+    "y2",
+    fimNormalY,
+  );
+
+  if (alcanceLongo > alcanceNormal) {
+    linhaMiraAlcanceLongoCombate.setAttribute(
+      "x1",
+      fimNormalX,
+    );
+
+    linhaMiraAlcanceLongoCombate.setAttribute(
+      "y1",
+      fimNormalY,
+    );
+
+    linhaMiraAlcanceLongoCombate.setAttribute(
+      "x2",
+      fimLongoX,
+    );
+
+    linhaMiraAlcanceLongoCombate.setAttribute(
+      "y2",
+      fimLongoY,
+    );
+
+    linhaMiraAlcanceLongoCombate.removeAttribute(
+      "hidden",
+    );
+
+    textoAlcanceLongoCombate.textContent =
+  formatarAlcanceMetros(
+    alcanceLongo,
+  );
+
+textoAlcanceLongoCombate.setAttribute(
+  "x",
+  fimLongoX,
+);
+
+textoAlcanceLongoCombate.setAttribute(
+  "y",
+  fimLongoY - 38,
+);
+
+textoAlcanceLongoCombate.removeAttribute(
+  "hidden",
+);
+  }
+
+  else {
+    linhaMiraAlcanceLongoCombate.setAttribute(
+      "hidden",
+      "",
+    );
+
+    textoAlcanceLongoCombate.setAttribute(
+  "hidden",
+  "",
+);
+  }
+  let pontoBloqueio = null;
+
+if (
+  linhaBloqueada &&
+  resultadoLinhaVisao.celulaBloqueada
+) {
+  pontoBloqueio = {
+    x:
+      (
+        resultadoLinhaVisao
+          .celulaBloqueada.coluna -
+        0.5
+      ) *
+      tamanhoCelula,
+
+    y:
+      (
+        resultadoLinhaVisao
+          .celulaBloqueada.linha -
+        0.5
+      ) *
+      tamanhoCelula,
+  };
+} else if (
+  linhaBloqueada &&
+  resultadoLinhaVisao.barreira?.tipo ===
+    "bloqueioTotal"
+) {
+  const barreira =
+    resultadoLinhaVisao.barreira;
+
+  const centroX =
+    (
+      Number(barreira.coluna) -
+      0.5
+    ) *
+    tamanhoCelula;
+
+  const centroY =
+    (
+      Number(barreira.linha) -
+      0.5
+    ) *
+    tamanhoCelula;
+
+  pontoBloqueio = {
+    x: centroX,
+    y: centroY,
+  };
+
+  if (barreira.lado === "norte") {
+    pontoBloqueio.y =
+      (
+        Number(barreira.linha) -
+        1
+      ) *
+      tamanhoCelula;
+  } else if (
+    barreira.lado === "sul"
+  ) {
+    pontoBloqueio.y =
+      Number(barreira.linha) *
+      tamanhoCelula;
+  } else if (
+    barreira.lado === "oeste"
+  ) {
+    pontoBloqueio.x =
+      (
+        Number(barreira.coluna) -
+        1
+      ) *
+      tamanhoCelula;
+  } else if (
+    barreira.lado === "leste"
+  ) {
+    pontoBloqueio.x =
+      Number(barreira.coluna) *
+      tamanhoCelula;
+  }
+}
+
+if (pontoBloqueio) {
+  linhaMiraAtaqueCombate.setAttribute(
+    "x2",
+    pontoBloqueio.x,
+  );
+
+  linhaMiraAtaqueCombate.setAttribute(
+    "y2",
+    pontoBloqueio.y,
+  );
+
+  linhaMiraAlcanceLongoCombate.setAttribute(
+    "hidden",
+    "",
+  );
+
+  textoAlcanceNormalCombate.setAttribute(
+    "hidden",
+    "",
+  );
+
+  textoAlcanceLongoCombate.setAttribute(
+    "hidden",
+    "",
+  );
+} else {
+  textoAlcanceNormalCombate.removeAttribute(
+    "hidden",
+  );
+
+
+}
+
+  miraAtaqueCombate.removeAttribute(
+    "hidden",
+  );
+}
+
+function ocultarMiraAtaqueCombate() {
+  if (miraAtaqueCombate) {
+    miraAtaqueCombate.setAttribute(
+      "hidden",
+      "",
+    );
+  }
+}
+
+function selecionarAlvoCombate(evento) {
+  const token = evento.target.closest(
+    ".token-combate",
+  );
+
+  if (!token) {
+    return;
+  }
+
+  const combate =
+    estadoAtualJogo.combateAtual;
+
+  if (!combate) {
+    return;
+  }
+
+  const participanteAtivo =
+    combate.participantes.find(
+      (participante) =>
+        participante.id ===
+        combate.participanteAtivoId,
+    );
+
+  if (
+    !participanteAtivo ||
+    participanteAtivo.tipo !== "jogador"
+  ) {
+    return;
+  }
+
+  const alvo =
+    combate.participantes.find(
+      (participante) =>
+        participante.id ===
+        token.dataset.idParticipante,
+    );
+
+  if (
+    !alvo ||
+    alvo.tipo !== "inimigo"
+  ) {
+    return;
+  }
+
+  if (!combate.ataqueSelecionadoId) {
+    exibirAcaoAtualCombate(
+      "Escolha uma arma antes de selecionar o alvo.",
+    );
+
+    return;
+  }
+
+  const resultado =
+    SistemaCombate.prepararAtaque(
+      combate,
+      participanteAtivo.id,
+      alvo.id,
+      combate.ataqueSelecionadoId,
+    );
+
+  if (!resultado.sucesso) {
+    if (
+      resultado.motivo ===
+      "alvoForaDoAlcance"
+    ) {
+      exibirAcaoAtualCombate(
+        `${alvo.nome} está fora do alcance desta arma.`,
+      );
+
+      return;
+    }
+
+    if (
+      resultado.motivo ===
+      "semLinhaDeVisao"
+    ) {
+      exibirAcaoAtualCombate(
+        `${alvo.nome} não está na sua linha de visão.`,
+      );
+
+      return;
+    }
+
+    console.warn(
+      "Ataque recusado:",
+      resultado.motivo,
+    );
+
+    exibirAcaoAtualCombate(
+      "Este ataque não pode ser realizado agora.",
+    );
+
+    return;
+  }
+
+  combate.alvoSelecionadoId =
+    alvo.id;
+
+  combate.ataqueSelecionadoId =
+    null;
+
+  atualizarInterfaceTurno(combate);
+
+  iniciarRolagemAtaquePreparado(
+    resultado,
+  );
 }
 
 function iniciarRolagemAtaquePreparado(resultado) {
@@ -647,7 +1434,9 @@ function iniciarRolagemAtaquePreparado(resultado) {
 }
 
 function selecionarAtaqueCombate(evento) {
-  const botao = evento.target.closest(".botao-ataque-combate");
+  const botao = evento.target.closest(
+    ".botao-ataque-combate",
+  );
 
   if (!botao || botao.disabled) {
     return;
@@ -659,33 +1448,16 @@ function selecionarAtaqueCombate(evento) {
     return;
   }
 
-  if (!combate.alvoSelecionadoId) {
-    exibirMensagemNarrativa(solicitacaoCombate, mensagensNarrativas.ataque.selecionarAlvo);
-    solicitacaoCombate.hidden = false;
-    return;
-  }
+  combate.ataqueSelecionadoId =
+    botao.dataset.idAtaque;
 
-  const resultado = SistemaCombate.prepararAtaque(
-    combate,
-    combate.participanteAtivoId,
-    combate.alvoSelecionadoId,
-    botao.dataset.idAtaque,
+  combate.alvoSelecionadoId = null;
+
+  atualizarInterfaceTurno(combate);
+
+  exibirAcaoAtualCombate(
+    "Arma selecionada. Escolha um alvo.",
   );
-
-  if (!resultado.sucesso) {
-    console.warn("Ataque recusado:", resultado.motivo);
-
-    if (resultado.motivo === "semLinhaDeVisao") {
-      exibirAcaoAtualCombate(
-        "O alvo está protegido por um bloqueio total e não pode ser atingido dessa posição.",
-      );
-    }
-
-    atualizarInterfaceTurno(combate);
-    return;
-  }
-
-  iniciarRolagemAtaquePreparado(resultado);
 }
 
 function criarParticipanteJogadorCombate(configuracao) {
@@ -1967,7 +2739,31 @@ function oferecerGrazeAposErro(
   return true;
 }
 
-function resolverAtaqueJogador(resultadoRolagem) {
+function apresentarDestinoArmaArremessada(
+  resultadoDestino,
+  { acertou, alvoNome },
+) {
+  if (!resultadoDestino?.sucesso || !resultadoDestino.aplicavel) {
+    return false;
+  }
+
+  const item = resultadoDestino.item;
+  const caminhoMensagem =
+    resultadoDestino.destino === "alvo"
+      ? "descricoesNarrativas.combate.arremesso.cravada"
+      : acertou
+        ? "descricoesNarrativas.combate.arremesso.caiuAposAcerto"
+        : "descricoesNarrativas.combate.arremesso.caiuAposErro";
+
+  return apresentarMensagemCombate(caminhoMensagem, {
+    arma: item?.nome ?? "arma",
+    alvo: alvoNome,
+    coluna: item?.posicao?.coluna ?? "—",
+    linha: item?.posicao?.linha ?? "—",
+  });
+}
+
+async function resolverAtaqueJogador(resultadoRolagem) {
   const combate = estadoAtualJogo.combateAtual;
 
   const resultadoAtaque = SistemaCombate.resolverAtaque(combate, resultadoRolagem);
@@ -1977,6 +2773,16 @@ function resolverAtaqueJogador(resultadoRolagem) {
 
     return;
   }
+
+  if (
+  resultadoAtaque.ataque.modoUso === "arremesso"
+) {
+  await animarArremessoArma(
+    resultadoAtaque.atacante.id,
+    resultadoAtaque.alvo.id,
+    resultadoAtaque.ataque.armaId,
+  );
+}
 
   atualizarInterfaceTurno(combate);
 
@@ -2003,6 +2809,14 @@ if (grazeFoiOferecido) {
     solicitacaoCombate.textContent = "O ataque errou.";
 
     solicitacaoCombate.hidden = false;
+
+    apresentarDestinoArmaArremessada(
+      resultadoAtaque.destinoArmaArremessada,
+      {
+        acertou: false,
+        alvoNome: resultadoAtaque.alvo.nome,
+      },
+    );
 
     return;
   }
@@ -2585,6 +3399,14 @@ function concluirDanoJogador(combate, resultadoRolagem) {
       `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
   }
 
+  apresentarDestinoArmaArremessada(
+    resultadoDano.destinoArmaArremessada,
+    {
+      acertou: true,
+      alvoNome: resultadoDano.alvo.nome,
+    },
+  );
+
   const cleaveFoiOferecido = oferecerCleaveAposDano(
     combate,
     resultadoDano,
@@ -2890,6 +3712,17 @@ visualizacaoCombate.addEventListener("pointermove", continuarArrasteCamera);
 visualizacaoCombate.addEventListener("pointerup", finalizarArrasteCamera);
 
 visualizacaoCombate.addEventListener("pointercancel", finalizarArrasteCamera);
+
+
+cameraCombateElemento.addEventListener(
+  "pointermove",
+  atualizarMiraAtaqueCombate,
+);
+
+cameraCombateElemento.addEventListener(
+  "pointerleave",
+  ocultarMiraAtaqueCombate,
+);
 
 window.addEventListener("resize", function () {
   cameraCombate.zoomMinimo =

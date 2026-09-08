@@ -11,6 +11,7 @@ bancoAventuras.aFuga = {
 
   cenas: {
     inicio: {
+      titulo: "Início",
       numeroFonte: 1,
 
       contexto: [
@@ -93,13 +94,7 @@ bancoAventuras.aFuga = {
 
           resultados: {
             sucesso: {
-              texto: `Enquanto se esgueira em direção ao barco, um outro guarda, que você não havia visto antes, surge de trás de uma das embarcações, andando calmamente.
-
-              Imediatamente você se abaixa e se joga para o lado, em uma área cheia de pedaços de barcos velhos empilhados.
-
-              O guarda passa muito próximo, assoviando displicentemente, e não parece ter percebido sua presença.
-
-              Você espera ele estar em uma boa distância e anda os últimos metros até o barco.`,
+              texto: `Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.`,
 
               proximaEtapa: "decidirNoTelhado",
             },
@@ -115,13 +110,11 @@ bancoAventuras.aFuga = {
 
         decidirNoTelhado: {
           descricao: [
-            `Você consegue alcançar o telhado. As caixas que usou como suporte cedem debaixo dos seus pés, e você rapidamente se abaixa para não chamar a atenção.
-
-                Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
-
-                Você vê também a torre de embarcações próxima à margem do rio. Em teoria, ela lhe concederia acesso fácil a um pequeno cais por onde você poderia buscar uma saída. Chegar à torre pulando pelos telhados parece perfeitamente possível.
-
-                Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém {o|a} procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
+            `Do alto, agora você consegue ver mais da multidão se dirigindo até o castelo do Conde. Ao longe, uma fileira de guardas já se posiciona para impedir a passagem. O conflito parece inevitável.
+            
+            Você vê também a torre de embarcações próxima à margem do rio. Em teoria, ela lhe concederia acesso fácil a um pequeno cais por onde você poderia buscar uma saída. Chegar à torre pulando pelos telhados parece perfeitamente possível.
+            
+            Porém, talvez sua melhor escolha seja esperar. É pouco provável que alguém o/a procure no alto das casas, e uma boa oportunidade pode aparecer depois que o conflito se iniciar de fato. Por outro lado, talvez seja melhor se aproveitar da crescente tensão ao redor do conflito iminente e escapar o mais rápido possível, enquanto os guardas estão distraídos.`,
           ],
 
           escolhas: [
@@ -549,6 +542,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
           },
         },
       },
+
     },
 
     esperaNoTelhado: {

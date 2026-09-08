@@ -686,21 +686,23 @@ if (
   }
 }
 
-    let ataqueDisponivel = false;
-
     const custoAtaque =
-      SistemaCombate.obterCustoAtaque(participante, ataque);
+  SistemaCombate.obterCustoAtaque(participante, ataque);
 
-    const recursoDisponivel =
-      custoAtaque === "nenhum" ||
-      (custoAtaque === "acao" && participante.acaoDisponivel) ||
-      (custoAtaque === "acaoBonus" && participante.acaoBonusDisponivel);
+const recursoDisponivel =
+  custoAtaque === "nenhum" ||
+  (custoAtaque === "acao" && participante.acaoDisponivel) ||
+  (custoAtaque === "acaoBonus" && participante.acaoBonusDisponivel);
 
-    if (alvo && recursoDisponivel) {
-      const validacao = SistemaCombate.validarSelecaoAcao(participante, alvo, ataque, combate);
+const equipamentoFoiArremessado =
+  ataque.equipamentoInstanciaId &&
+  participante.equipamentosArremessados?.includes(
+    ataque.equipamentoInstanciaId,
+  );
 
-      ataqueDisponivel = validacao.sucesso;
-    }
+const ataqueDisponivel =
+  recursoDisponivel &&
+  !equipamentoFoiArremessado;
 
     botao.disabled = !ataqueDisponivel;
 
@@ -728,11 +730,13 @@ if (
   }
 
   if (!alvo) {
-    mensagemAtaquesCombate.textContent = "Selecione um inimigo no tabuleiro.";
+  mensagemAtaquesCombate.textContent =
+    combate.ataqueSelecionadoId
+      ? "Agora selecione um inimigo no tabuleiro."
+      : "Escolha uma arma para realizar o ataque.";
 
-    return;
-  }
-
+  return;
+}
   if (quantidadeDisponivel === 0) {
     mensagemAtaquesCombate.textContent =
       `Aproxime-se de ${alvo.nome} ` + "para entrar no alcance de um ataque.";

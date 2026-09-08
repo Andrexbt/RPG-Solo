@@ -132,6 +132,65 @@ window.narracaoCombate = {
   },
 };
 
+function aplicarRascunhoNarracoesCombate() {
+  if (typeof localStorage === "undefined") {
+    return;
+  }
+
+  const chaveRascunho =
+    "rpg-solo:mensagens-jogabilidade:rascunho:v1";
+
+  let rascunho;
+
+  try {
+    rascunho = JSON.parse(
+      localStorage.getItem(chaveRascunho),
+    );
+  } catch (erro) {
+    console.warn(
+      "Não foi possível ler o rascunho das narrações de combate.",
+      erro,
+    );
+
+    return;
+  }
+
+  for (const [caminho, personalizacao] of Object.entries(
+    rascunho ?? {},
+  )) {
+    const partes = caminho.split(".");
+
+    if (partes[0] !== "narracoes" || partes[1] !== "combate") {
+      continue;
+    }
+
+    const grupo = partes[2];
+    const referencia = grupo === "fallbacks" ? null : partes[3];
+    const evento = grupo === "fallbacks" ? partes[3] : partes[4];
+    const variacoes = personalizacao?.variacoes;
+    const destino = referencia
+      ? window.narracaoCombate[grupo]?.[referencia]?.[evento]
+      : window.narracaoCombate[grupo]?.[evento];
+
+    if (
+      !Array.isArray(destino) ||
+      !Array.isArray(variacoes) ||
+      variacoes.length === 0 ||
+      !variacoes.every((texto) => typeof texto === "string")
+    ) {
+      continue;
+    }
+
+    if (referencia) {
+      window.narracaoCombate[grupo][referencia][evento] = [...variacoes];
+    } else {
+      window.narracaoCombate[grupo][evento] = [...variacoes];
+    }
+  }
+}
+
+aplicarRascunhoNarracoesCombate();
+
 function escolherVariacaoNarrativa(lista) {
   if (!Array.isArray(lista) || lista.length === 0) {
     return null;

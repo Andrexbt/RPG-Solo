@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Editor visual de aventura | RPG Solo</title>
-    <link rel="stylesheet" href="editor-aventura.css?v=7" />
+    <link rel="stylesheet" href="editor-aventura.css?v=12" />
     <script src="aventuras/registro-aventuras.js?v=1" defer></script>
     <script src="aventuras/a-fuga.js?v=1" defer></script>
-    <script src="editor-aventura.js?v=7" defer></script>
+    <script src="editor-aventura.js?v=18" defer></script>
   </head>
 
   <body>
@@ -17,6 +17,12 @@
         <h1>Editor visual de aventura</h1>
       </div>
 
+      <nav class="seletor-paineis" aria-label="Áreas do editor">
+        <button type="button" data-painel="comparacao" aria-pressed="false">Comparação</button>
+        <button type="button" data-painel="teia" aria-pressed="true">Teia da aventura</button>
+        <button type="button" data-painel="narrativa" aria-pressed="true">Edição narrativa</button>
+      </nav>
+
       <label>
         <span>Aventura</span>
         <select id="seletorAventura"></select>
@@ -24,29 +30,38 @@
     </header>
 
     <main class="layout-editor-aventura">
-      <section id="rolagemGrafo" class="rolagem-grafo" aria-label="Fluxo da aventura">
+      <aside id="painelComparacao" class="painel-editor painel-comparacao recolhido" data-area="comparacao">
+        <h2>Comparação</h2>
+        <p>As diferenças salvas na memória do editor aparecerão aqui.</p>
+      </aside>
+
+      <section id="rolagemGrafo" class="rolagem-grafo painel-editor" data-area="teia" aria-label="Fluxo da aventura">
         <nav class="barra-editor-aventura" aria-label="Controles do editor">
           <div class="grupo-controles">
-            <button id="botaoDesfazer" type="button">Desfazer</button>
-            <button id="botaoRefazer" type="button">Refazer</button>
             <button id="botaoReenquadrar" type="button">Reenquadrar</button>
             <span id="rotuloEscala" class="rotulo-navegacao">70%</span>
           </div>
           <div class="grupo-controles grupo-controles-direita">
             <span id="resumoValidacao" class="resumo-validacao" aria-live="polite"></span>
-            <button id="botaoGerarCodigo" type="button">Gerar alterações</button>
           </div>
         </nav>
         <div id="grafoAventura" class="grafo-aventura"></div>
       </section>
 
-      <aside id="painelPropriedades" class="painel-propriedades">
+      <aside id="painelNarrativa" class="painel-editor painel-narrativa" data-area="narrativa">
+        <div class="acoes-edicao">
+          <button id="botaoSalvarAlteracoes" type="button">Salvar alterações</button>
+          <button id="botaoDesfazerAlteracoes" type="button">Desfazer alterações</button>
+          <button id="botaoEnviarAventura" type="button" disabled title="A gravação segura no arquivo será implementada na próxima etapa.">Enviar para aventura</button>
+        </div>
+        <div id="painelPropriedades" class="painel-propriedades">
         <div class="legenda-status" aria-label="Legenda de validação">
           <span>Completo</span>
           <span class="aviso">Com avisos</span>
           <span class="erro">Com erros</span>
         </div>
         <p>Selecione uma cena ou etapa no mapa.</p>
+        </div>
       </aside>
     </main>
 

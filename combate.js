@@ -125,12 +125,15 @@ window.SistemaCombate = (function () {
       areas: structuredClone(configuracao.areas ?? {}),
       marcadores: structuredClone(configuracao.marcadores ?? {}),
 
+      itensNoChao: [],
+
       rodada: 1,
       indiceTurno: 0,
       ordemTurnos: [],
       participanteAtivoId: null,
       participanteSelecionadoId: null,
       alvoSelecionadoId: null,
+      ataqueSelecionadoId: null,
       iniciativaPendenteId: null,
       ataquePendente: null,
       danoPendente: null,
@@ -218,9 +221,22 @@ window.SistemaCombate = (function () {
     return participanteAInimigo !== participanteBInimigo;
   }
 
+    function equipamentoFoiArremessado(participante, ataque) {
+    const equipamentoId = ataque?.equipamentoInstanciaId;
+
+    return Boolean(
+      equipamentoId &&
+      participante?.equipamentosArremessados?.includes(equipamentoId)
+    );
+  }
+
   function obterAlcanceAmeaca(participante) {
-    const ataquesCorpoACorpo =
-      participante?.ataques?.filter((ataque) => ataque.categoria === "corpoACorpo") ?? [];
+        const ataquesCorpoACorpo =
+      participante?.ataques?.filter(
+        (ataque) =>
+          ataque.categoria === "corpoACorpo" &&
+          !equipamentoFoiArremessado(participante, ataque)
+      ) ?? [];
 
     return ataquesCorpoACorpo.reduce(
       (maiorAlcance, ataque) =>
@@ -314,7 +330,10 @@ window.SistemaCombate = (function () {
 
     return (
       ameacador.ataques?.find((ataque) => {
-        if (ataque.categoria !== "corpoACorpo") {
+                if (
+          ataque.categoria !== "corpoACorpo" ||
+          equipamentoFoiArremessado(ameacador, ataque)
+        ) {
           return false;
         }
 
@@ -876,6 +895,12 @@ window.SistemaCombate = (function () {
   }
 
   function validarSelecaoAcao(atacante, alvo, acao, combate = null) {
+            if (equipamentoFoiArremessado(atacante, acao)) {
+      return {
+        sucesso: false,
+        motivo: "armaArremessada",
+      };
+    }
     if (!acao.selecao) {
       return {
         sucesso: false,
@@ -1258,6 +1283,295 @@ window.SistemaCombate = (function () {
     return "normal";
   }
 
+  function listarCelulasAdjacentesLivres(combate, posicaoCentral) {
+  const celulas = [];
+
+  for (let deslocamentoLinha = -1; deslocamentoLinha <= 1; deslocamentoLinha++) {
+    for (
+      let deslocamentoColuna = -1;
+      deslocamentoColuna <= 1;
+      deslocamentoColuna++
+    ) {
+      if (deslocamentoColuna === 0 && deslocamentoLinha === 0) {
+        continue;
+      }
+
+      const posicao = {
+        coluna: posicaoCentral.coluna + deslocamentoColuna,
+        linha: posicaoCentral.linha + deslocamentoLinha,
+      };
+
+      const foraDoMapa =
+        posicao.coluna < 1 ||
+        posicao.coluna > combate.tabuleiro.colunas ||
+        posicao.linha < 1 ||
+        posicao.linha > combate.tabuleiro.linhas;
+
+      if (foraDoMapa) {
+        continue;
+      }
+
+      const terrenoBloqueado =
+        obterTipoTerreno(combate, posicao.coluna, posicao.linha) ===
+        "bloqueado";
+
+      if (terrenoBloqueado) {
+        continue;
+      }
+
+      const participanteNaCelula = combate.participantes.some(
+        (participante) =>
+          participante.estado !== "derrotado" &&
+          participante.posicao.coluna === posicao.coluna &&
+          participante.posicao.linha === posicao.linha,
+      );
+
+      const itemNaCelula = combate.itensNoChao.some(
+        (item) =>
+          item.posicao.coluna === posicao.coluna &&
+          item.posicao.linha === posicao.linha,
+      );
+
+      if (!participanteNaCelula && !itemNaCelula) {
+        celulas.push(posicao);
+      }
+    }
+  }
+
+  return celulas;
+}
+
+function sortearCelulaAdjacenteLivre(
+  combate,
+  posicaoCentral,
+  gerarAleatorio = Math.random,
+) {
+  const celulasLivres = listarCelulasAdjacentesLivres(
+    combate,
+    posicaoCentral,
+  );
+
+  if (celulasLivres.length === 0) {
+    return null;
+  }
+
+  const indiceSorteado = Math.floor(
+    gerarAleatorio() * celulasLivres.length,
+  );
+
+  return structuredClone(celulasLivres[indiceSorteado]);
+}
+
+function algumDadoRolouMaximo(resultadoRolagem) {
+  return resultadoRolagem?.gruposRolados?.some(
+    (grupo) =>
+      grupo.resultados?.some(
+        (resultado) =>
+          Number(resultado) ===
+          Number(grupo.numeroDeFaces),
+      ),
+  ) ?? false;
+}
+
+function registrarArmaArremessadaNoChao(
+  combate,
+  atacante,
+  ataque,
+  posicaoReferencia,
+) {
+  if (
+    !combate ||
+    !atacante ||
+    !ataque ||
+    !posicaoReferencia
+  ) {
+    return {
+      sucesso: false,
+      motivo: "dadosInvalidos",
+    };
+  }
+
+  if (ataque.modoUso !== "arremesso") {
+    return {
+      sucesso: false,
+      motivo: "ataqueNaoEhArremesso",
+    };
+  }
+
+  const equipamentoInstanciaId =
+    ataque.equipamentoInstanciaId;
+
+  if (!equipamentoInstanciaId) {
+    return {
+      sucesso: false,
+      motivo: "equipamentoSemIdentidade",
+    };
+  }
+
+  const itemJaRegistrado =
+    combate.itensNoChao.some(
+      (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
+    ) ||
+    combate.participantes.some((participante) =>
+      participante.itensCravados?.some(
+        (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
+      ),
+    );
+
+  if (itemJaRegistrado) {
+    return {
+      sucesso: false,
+      motivo: "itemJaEstaNoChao",
+    };
+  }
+
+  const posicao = sortearCelulaAdjacenteLivre(
+    combate,
+    posicaoReferencia,
+  );
+
+  if (!posicao) {
+    return {
+      sucesso: false,
+      motivo: "nenhumaCelulaAdjacenteLivre",
+    };
+  }
+
+  const item = {
+    id: equipamentoInstanciaId,
+    tipo: "arma",
+    armaId: ataque.armaId,
+    equipamentoInstanciaId,
+    nome: ataque.nome.replace(
+      /\s*\(arremesso\)$/i,
+      "",
+    ),
+    origemParticipanteId: atacante.id,
+    posicao,
+  };
+
+  combate.itensNoChao.push(item);
+
+  return {
+    sucesso: true,
+    motivo: null,
+    item: structuredClone(item),
+  };
+}
+
+function registrarArmaCravadaNoAlvo(combate, atacante, alvo, ataque) {
+  if (!combate || !atacante || !alvo || !ataque) {
+    return { sucesso: false, motivo: "dadosInvalidos" };
+  }
+
+  if (ataque.modoUso !== "arremesso") {
+    return { sucesso: false, motivo: "ataqueNaoEhArremesso" };
+  }
+
+  const equipamentoInstanciaId = ataque.equipamentoInstanciaId;
+
+  if (!equipamentoInstanciaId) {
+    return { sucesso: false, motivo: "equipamentoSemIdentidade" };
+  }
+
+  const itemJaRegistrado =
+    combate.itensNoChao.some(
+      (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
+    ) ||
+    combate.participantes.some((participante) =>
+      participante.itensCravados?.some(
+        (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
+      ),
+    );
+
+  if (itemJaRegistrado) {
+    return { sucesso: false, motivo: "itemJaFoiRegistrado" };
+  }
+
+  const item = {
+    id: equipamentoInstanciaId,
+    tipo: "arma",
+    armaId: ataque.armaId,
+    equipamentoInstanciaId,
+    nome: ataque.nome.replace(/\s*\(arremesso\)$/i, ""),
+    origemParticipanteId: atacante.id,
+    alvoId: alvo.id,
+  };
+
+  alvo.itensCravados ??= [];
+  alvo.itensCravados.push(item);
+
+  return {
+    sucesso: true,
+    motivo: null,
+    item: structuredClone(item),
+  };
+}
+
+function resolverDestinoArmaArremessada({
+  combate,
+  atacante,
+  alvo,
+  ataque,
+  acertou,
+  resultadoRolagemDano = null,
+}) {
+  if (ataque?.modoUso !== "arremesso") {
+    return { sucesso: true, aplicavel: false, destino: null };
+  }
+
+  if (!acertou || !algumDadoRolouMaximo(resultadoRolagemDano)) {
+    const resultado = registrarArmaArremessadaNoChao(
+      combate,
+      atacante,
+      ataque,
+      alvo.posicao,
+    );
+
+    return { ...resultado, aplicavel: true, destino: "chao" };
+  }
+
+  const resultado = registrarArmaCravadaNoAlvo(
+    combate,
+    atacante,
+    alvo,
+    ataque,
+  );
+
+  return { ...resultado, aplicavel: true, destino: "alvo" };
+}
+
+    function registrarArremesso(participante, ataque) {
+        const usaArremesso =
+      ataque?.propriedades?.includes("arremesso") &&
+      (
+        ataque.modoUso === "arremesso" ||
+        ataque.categoria === "distancia"
+      );
+
+    if (!usaArremesso) {
+      return false;
+    }
+
+    const equipamentoId = ataque.equipamentoInstanciaId;
+
+    if (!equipamentoId) {
+      return false;
+    }
+
+    participante.equipamentosArremessados ??= [];
+
+    if (
+      participante.equipamentosArremessados.includes(equipamentoId)
+    ) {
+      return false;
+    }
+
+    participante.equipamentosArremessados.push(equipamentoId);
+
+    return true;
+  }
+
   function obterIdentificadorAtaque(ataque) {
     return ataque?.instanciaId ?? ataque?.id ?? null;
   }
@@ -1273,8 +1587,21 @@ window.SistemaCombate = (function () {
     const identificadorAtaque = obterIdentificadorAtaque(ataque);
     const ataqueEhLeve = ataque?.propriedades?.includes("leve") ?? false;
 
+        const ataqueAnterior = ataqueHabilitador
+      ? encontrarAtaque(participante, ataqueHabilitador.ataqueId)
+      : null;
+
+    const equipamentoAnterior =
+      ataqueAnterior?.equipamentoInstanciaId ??
+      obterIdentificadorAtaque(ataqueAnterior);
+
+    const equipamentoAtual =
+      ataque?.equipamentoInstanciaId ?? identificadorAtaque;
+
     const ehAtaqueAdicionalLeve =
-      ataqueEhLeve && ataqueHabilitador && ataqueHabilitador.ataqueId !== identificadorAtaque;
+      ataqueEhLeve &&
+      ataqueAnterior &&
+      equipamentoAnterior !== equipamentoAtual;
 
     if (!ehAtaqueAdicionalLeve) {
       return ataque?.custoPadrao ?? "acao";
@@ -1491,6 +1818,18 @@ window.SistemaCombate = (function () {
 
     const acertou = !falhaAutomatica && (acertoCritico || total >= classeArmaduraEfetiva);
 
+    const arremessoRegistrado = registrarArremesso(atacante, ataque);
+    const destinoArmaArremessada =
+      arremessoRegistrado && !acertou
+        ? resolverDestinoArmaArremessada({
+            combate,
+            atacante,
+            alvo,
+            ataque,
+            acertou: false,
+          })
+        : null;
+
     if (ataquePendente.custo === "acaoBonus") {
       consumirAcaoBonus(atacante);
     } else if (ataquePendente.custo === "reacao") {
@@ -1615,6 +1954,7 @@ window.SistemaCombate = (function () {
         alvoId: alvo.id,
         ataqueId: identificadorAtaque,
         critico: acertoCritico,
+        arremessoPendente: arremessoRegistrado,
         efeitos: [...efeitosDano, ...efeitosOpcionaisAposAcerto],
       };
     }
@@ -1630,6 +1970,7 @@ window.SistemaCombate = (function () {
       classeArmaduraBase: alvo.classeArmadura,
       cobertura: ataquePendente.cobertura ?? null,
       bonusCobertura,
+      destinoArmaArremessada,
       atacante,
       alvo,
       ataque:
@@ -2761,6 +3102,17 @@ window.SistemaCombate = (function () {
 
     const ataque = encontrarAtaque(atacante, danoPendente.ataqueId);
 
+    const destinoArmaArremessada = danoPendente.arremessoPendente
+      ? resolverDestinoArmaArremessada({
+          combate,
+          atacante,
+          alvo,
+          ataque,
+          acertou: true,
+          resultadoRolagemDano: resultadoRolagem,
+        })
+      : null;
+
     const danoOriginal = Math.max(0, resultadoRolagem.total);
 
     const tipoDano = ataque?.dano?.tipo ?? ataque?.dano?.tipoDano ?? ataque?.tipoDano ?? null;
@@ -2837,6 +3189,7 @@ window.SistemaCombate = (function () {
       dano,
       tipoDano,
       resistenciaAplicada: possuiResistencia,
+      destinoArmaArremessada,
 
       alvo,
       foiDerrotado,
@@ -3143,6 +3496,14 @@ window.SistemaCombate = (function () {
   }
 
   return {
+    listarCelulasAdjacentesLivres,
+    sortearCelulaAdjacenteLivre,
+    algumDadoRolouMaximo,
+    registrarArmaArremessadaNoChao,
+    registrarArmaCravadaNoAlvo,
+    resolverDestinoArmaArremessada,
+    registrarArremesso,
+
     criarParticipanteCombate,
     criarEstadoCombate,
     iniciarCombate,

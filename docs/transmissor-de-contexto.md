@@ -1860,3 +1860,26 @@ Critério de aceite imediato: durante uma batalha real, um guarda distante deve 
 - Não editar o código diretamente enquanto o usuário estiver aprendendo a integração, salvo se ele pedir explicitamente.
 - “A Fuga” continua sendo o eixo do Alpha; novos sistemas devem servir à aventura, não substituí-la indefinidamente.
 - Ainda faltam cenas, acabamento das batalhas, teste integral sem console, salvar/retomar e regressão do Alpha.
+
+### 12. Central de Textos — estado intermediário e próxima etapa arquitetural
+
+A **Central de Textos** já valida a direção de uma ferramenta visual de autoria. Ela separa visualmente **Regras**, **Narrações** e **Interface**, permite pesquisar e editar textos catalogados e conserva um rascunho local. As narrações específicas de ataques, por categoria e de fallback continuam sendo escolhidas dinamicamente pelo gerador: a ferramenta edita os modelos e suas variações, sem substituir a lógica que monta a frase conforme atacante, alvo, ataque, dano e resultado.
+
+Essa frente **não deve ser considerada arquiteturalmente concluída**. O estado atual é funcional, mas deliberadamente intermediário:
+
+- `mensagens-narrativas.js` ainda reúne catálogo novo, funções de compatibilidade e textos legados;
+- `narracao-combate.js` ainda mistura o banco de variações, a composição contextual e a integração que observa resultados e escreve na interface;
+- ainda existem textos visíveis espalhados por motores, interfaces e outros arquivos;
+- o rascunho da Central é salvo em `localStorage`, mas ainda não publica as alterações nos arquivos-fonte;
+- ainda faltam criação e exclusão de variações, validação de marcadores, identificação de campos vazios e comparação/publicação segura.
+
+Próxima etapa futura: **concluir a arquitetura da Central de Textos**, separando claramente:
+
+1. um banco declarativo para `regras`, `narracoes` e `interface`;
+2. um motor responsável por localizar textos, substituir variáveis, escolher variações e distribuir mensagens pelos canais corretos;
+3. integrações de jogabilidade, como a narração de combate, responsáveis apenas por interpretar acontecimentos e solicitar mensagens ao motor;
+4. a ferramenta de autoria, responsável por editar, validar, comparar e enviar alterações para a fonte persistente.
+
+Os textos próprios das cenas, etapas, escolhas e testes devem permanecer sob responsabilidade do **Editor de Aventuras**, sem serem duplicados na Central de Textos. Da mesma forma, centralização não significa juntar armas, criaturas, aventuras e mensagens em um único objeto: cada domínio conserva seu banco canônico, enquanto as ferramentas oferecem pontos de autoria consistentes.
+
+Esta reorganização deve ser retomada depois das prioridades imediatas de jogabilidade. O ponto atual pode permanecer em uso sem bloquear o trabalho de completar a experiência do Guerreiro, começando pela continuação das armas de arremesso.

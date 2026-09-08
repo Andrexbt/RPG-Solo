@@ -49,6 +49,36 @@ function adicionarEventoHistoricoCombate(titulo, descricao) {
   rolarLinhaTempoParaAtual();
 }
 
+function apresentarMensagemCombate(caminho, variaveis = {}) {
+  const mensagem = window.obterMensagemJogabilidade?.(
+    caminho,
+    variaveis,
+  );
+
+  if (!mensagem) {
+    console.warn("Mensagem de jogabilidade não encontrada:", caminho);
+    return false;
+  }
+
+  if (mensagem.acaoAtual) {
+    exibirAcaoAtualCombate(mensagem.acaoAtual);
+  }
+
+  if (mensagem.solicitacao) {
+    solicitacaoCombate.textContent = mensagem.solicitacao;
+    solicitacaoCombate.hidden = false;
+  }
+
+  if (mensagem.historicoTitulo) {
+    adicionarEventoHistoricoCombate(
+      mensagem.historicoTitulo,
+      mensagem.historicoDescricao,
+    );
+  }
+
+  return true;
+}
+
 function alternarHistoricoCombate() {
   rolarLinhaTempoParaAtual("smooth");
 }

@@ -542,6 +542,7 @@ function atualizarFichaPersonagem(secoes) {
   });
 }
 
+preencherSelectArmaduras();
 preencherSelectArmas();
 atualizarVisibilidadeArmaSecundaria();
 

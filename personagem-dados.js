@@ -47,8 +47,64 @@ function normalizarAtaquesPersonagem(personagem) {
     ataque.instanciaId ??=
       `${ataque.armaId}:${ataque.origemEquipamento}`;
 
+      ataque.equipamentoInstanciaId ??=
+  `${ataque.armaId}:${ataque.origemEquipamento}`;
+
+ataque.modoUso ??= "padrao";
+
     ataque.custoPadrao ??= "acao";
   }
+
+  const ataquesArremessados = [];
+
+for (const ataque of ataques) {
+  const arma = window.bancoEquipamentos?.armas?.[ataque.armaId];
+
+  if (
+    !arma ||
+    arma.categoria !== "corpo-a-corpo" ||
+    !arma.propriedades?.includes("arremesso") ||
+    ataque.modoUso !== "padrao"
+  ) {
+    continue;
+  }
+
+  const instanciaIdArremesso =
+    `${ataque.equipamentoInstanciaId}:arremesso`;
+
+  const varianteJaExiste = ataques.some(function (outroAtaque) {
+    return outroAtaque?.instanciaId === instanciaIdArremesso;
+  });
+
+  if (varianteJaExiste) {
+    continue;
+  }
+
+  ataquesArremessados.push({
+    ...structuredClone(ataque),
+
+    instanciaId: instanciaIdArremesso,
+
+    modoUso: "arremesso",
+
+    nome: `${arma.nome} (arremesso)`,
+
+    categoria: "distancia",
+
+    selecao: {
+      tipo: "criatura",
+
+      alcance: {
+        normal: arma.alcanceDistanciaPes.normal / 5,
+        longo: arma.alcanceDistanciaPes.longo / 5,
+      },
+
+      area: null,
+    },
+  });
+}
+
+ataques.push(...ataquesArremessados);
 }
 
 function normalizarRecursosPersonagem(

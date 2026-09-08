@@ -91,6 +91,11 @@ renderizarCondicoesToken(
   participante,
 );
 
+renderizarItensCravadosToken(
+  token,
+  participante,
+);
+
   token.setAttribute("aria-label", participante.id);
 
   return token;
@@ -234,6 +239,85 @@ function renderizarCondicoesToken(
   );
 }
 
+function obterVisualArmaCombate(armaId) {
+  const visual =
+    window.bancoEquipamentos?.armas?.[armaId]?.visual;
+
+  const src =
+    visual?.icone?.src ??
+    visual?.arremesso?.src;
+
+  if (!src) {
+    return null;
+  }
+
+  return {
+    src,
+    larguraPx:
+      Number(visual?.arremesso?.larguraPx) || 64,
+    comprimentoPx:
+      Number(visual?.arremesso?.comprimentoPx) || 96,
+  };
+}
+
+function renderizarItensCravadosToken(
+  token,
+  participante,
+) {
+  token
+    .querySelector(".itens-cravados-token")
+    ?.remove();
+
+  const itensCravados =
+    participante.itensCravados ?? [];
+
+  if (itensCravados.length === 0) {
+    return;
+  }
+
+  const indicador = document.createElement("span");
+
+  indicador.className = "itens-cravados-token";
+  indicador.title = itensCravados
+    .map((item) => item.nome)
+    .join(", ");
+
+  const itemRepresentado = itensCravados[0];
+const visualArma = obterVisualArmaCombate(
+  itemRepresentado.armaId,
+);
+
+if (!visualArma) {
+  return;
+}
+
+const imagem = document.createElement("img");
+
+imagem.src = visualArma.src;
+indicador.style.width =
+  `${visualArma.larguraPx}px`;
+
+indicador.style.height =
+  `${visualArma.comprimentoPx}px`;
+imagem.alt = "";
+
+  indicador.append(imagem);
+
+  if (itensCravados.length > 1) {
+    const quantidade = document.createElement("span");
+
+    quantidade.className =
+      "quantidade-itens-cravados-token";
+
+    quantidade.textContent =
+      String(itensCravados.length);
+
+    indicador.append(quantidade);
+  }
+
+  token.append(indicador);
+}
+
 function criarCelulasTabuleiro(combate) {
   const quantidadeColunas = combate.tabuleiro.colunas;
 
@@ -279,6 +363,44 @@ function renderizarParticipantesCombate(participantes) {
     const token = criarTokenCombate(participante);
 
     tabuleiroCombate.append(token);
+  }
+}
+
+function renderizarItensNoChaoCombate(combate) {
+  const itensAnteriores = tabuleiroCombate.querySelectorAll(
+    ".item-no-chao-combate",
+  );
+
+  for (const itemAnterior of itensAnteriores) {
+    itemAnterior.remove();
+  }
+
+  for (const item of combate.itensNoChao ?? []) {
+  const visualArma = obterVisualArmaCombate(
+  item.armaId,
+);
+
+if (!visualArma) {
+  continue;
+}
+
+  const imagem = document.createElement("img");
+
+  imagem.className = "item-no-chao-combate";
+  imagem.src = visualArma.src;
+  imagem.style.width = `${visualArma.larguraPx}px`;
+  imagem.style.height = `${visualArma.comprimentoPx}px`;
+
+    imagem.alt = `${item.nome} caída`;
+    imagem.title =
+      `${item.nome} caída — coluna ${item.posicao.coluna}, ` +
+      `linha ${item.posicao.linha}`;
+
+    imagem.dataset.idItem = item.id;
+    imagem.style.gridColumn = item.posicao.coluna;
+    imagem.style.gridRow = item.posicao.linha;
+
+    tabuleiroCombate.append(imagem);
   }
 }
 
@@ -414,5 +536,6 @@ function renderizarTabuleiroCombate(combate) {
 
   renderizarAreasObjetivoCombate(combate);
 
+  renderizarItensNoChaoCombate(combate);
   renderizarParticipantesCombate(combate.participantes);
 }
