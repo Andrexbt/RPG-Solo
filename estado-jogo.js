@@ -33,9 +33,9 @@ function criarEstadoInicialJogo() {
     },
 
     descansos: {
-    ultimoDescansoLongoConcluidoEm: null,
-    descansoCurtoAtual: null
-},
+      ultimoDescansoLongoConcluidoEm: null,
+      descansoCurtoAtual: null,
+    },
 
     efeitosTemporarios: [],
     diario: [],
@@ -64,18 +64,11 @@ function obterEscolhasDisponiveis(cenaId, escolhas = []) {
 }
 
 function registrarMemorias(memorias) {
-  if (
-    !memorias ||
-    typeof memorias !== "object" ||
-    Array.isArray(memorias)
-  ) {
+  if (!memorias || typeof memorias !== "object" || Array.isArray(memorias)) {
     return;
   }
 
-  Object.assign(
-    window.estadoJogo.progresso.flags,
-    memorias,
-  );
+  Object.assign(window.estadoJogo.progresso.flags, memorias);
 }
 
 function registrarEventoNarrativo(evento = {}) {
@@ -103,8 +96,7 @@ function registrarTransicaoAutomatica(cenaDestinoId) {
   const evento = progresso.ultimoEventoNarrativo;
 
   const eventoPertenceAoLocalAtual =
-    evento?.cenaId === progresso.cenaId &&
-    evento?.etapaId === progresso.etapaId;
+    evento?.cenaId === progresso.cenaId && evento?.etapaId === progresso.etapaId;
 
   const transicao = {
     cenaOrigemId: progresso.cenaId,
@@ -112,17 +104,11 @@ function registrarTransicaoAutomatica(cenaDestinoId) {
     caminhoOrigemId: progresso.caminhoId,
     cenaDestinoId,
 
-    tipo: eventoPertenceAoLocalAtual
-      ? evento.tipo ?? null
-      : null,
+    tipo: eventoPertenceAoLocalAtual ? (evento.tipo ?? null) : null,
 
-    resultado: eventoPertenceAoLocalAtual
-      ? evento.resultado ?? null
-      : null,
+    resultado: eventoPertenceAoLocalAtual ? (evento.resultado ?? null) : null,
 
-    quantidadeAcertos: eventoPertenceAoLocalAtual
-      ? evento.quantidadeAcertos ?? null
-      : null,
+    quantidadeAcertos: eventoPertenceAoLocalAtual ? (evento.quantidadeAcertos ?? null) : null,
   };
 
   progresso.ultimaTransicao = transicao;
@@ -138,14 +124,10 @@ function registrarTransicaoAutomatica(cenaDestinoId) {
 }
 
 function carregarNpcsDaAventura(aventuraId) {
-  const npcsDaAventura =
-    window.bancoNpcs?.[aventuraId];
+  const npcsDaAventura = window.bancoNpcs?.[aventuraId];
 
   if (!npcsDaAventura) {
-    console.warn(
-      "NPCs não encontrados para a aventura:",
-      aventuraId,
-    );
+    console.warn("NPCs não encontrados para a aventura:", aventuraId);
 
     window.estadoJogo.npcs = {};
 
@@ -154,21 +136,11 @@ function carregarNpcsDaAventura(aventuraId) {
 
   const npcsCarregados = {};
 
-  for (
-    const [npcId, configuracaoNpc]
-    of Object.entries(npcsDaAventura)
-  ) {
-    const npc =
-      window.CriaturaDados
-        ?.criarNpcAPartirDoBloco(
-          configuracaoNpc,
-        );
+  for (const [npcId, configuracaoNpc] of Object.entries(npcsDaAventura)) {
+    const npc = window.CriaturaDados?.criarNpcAPartirDoBloco(configuracaoNpc);
 
     if (!npc) {
-      console.warn(
-        "Não foi possível carregar o NPC:",
-        npcId,
-      );
+      console.warn("Não foi possível carregar o NPC:", npcId);
 
       continue;
     }

@@ -27,117 +27,87 @@ function normalizarAtaquesPersonagem(personagem) {
       ataque.nome = ataque.nome.replace(/ \(secundária\)$/i, "");
     }
 
-    if (
-  !ataque.atributoId &&
-  typeof window.obterAtributoAtaqueDaArma === "function"
-) {
-  ataque.atributoId = window.obterAtributoAtaqueDaArma(
-    personagem,
-    ataque.id,
-  );
-}
+    if (!ataque.atributoId && typeof window.obterAtributoAtaqueDaArma === "function") {
+      ataque.atributoId = window.obterAtributoAtaqueDaArma(personagem, ataque.id);
+    }
 
     ataque.armaId ??= ataque.id;
 
-    ataque.origemEquipamento ??=
-      indice === 0
-        ? "armaPrincipal"
-        : "armaSecundaria";
+    ataque.origemEquipamento ??= indice === 0 ? "armaPrincipal" : "armaSecundaria";
 
-    ataque.instanciaId ??=
-      `${ataque.armaId}:${ataque.origemEquipamento}`;
+    ataque.instanciaId ??= `${ataque.armaId}:${ataque.origemEquipamento}`;
 
-      ataque.equipamentoInstanciaId ??=
-  `${ataque.armaId}:${ataque.origemEquipamento}`;
+    ataque.equipamentoInstanciaId ??= `${ataque.armaId}:${ataque.origemEquipamento}`;
 
-ataque.modoUso ??= "padrao";
+    ataque.modoUso ??= "padrao";
 
     ataque.custoPadrao ??= "acao";
   }
 
   const ataquesArremessados = [];
 
-for (const ataque of ataques) {
-  const arma = window.bancoEquipamentos?.armas?.[ataque.armaId];
+  for (const ataque of ataques) {
+    const arma = window.bancoEquipamentos?.armas?.[ataque.armaId];
 
-  if (
-    !arma ||
-    arma.categoria !== "corpo-a-corpo" ||
-    !arma.propriedades?.includes("arremesso") ||
-    ataque.modoUso !== "padrao"
-  ) {
-    continue;
-  }
-
-  const instanciaIdArremesso =
-    `${ataque.equipamentoInstanciaId}:arremesso`;
-
-  const varianteJaExiste = ataques.some(function (outroAtaque) {
-    return outroAtaque?.instanciaId === instanciaIdArremesso;
-  });
-
-  if (varianteJaExiste) {
-    continue;
-  }
-
-  ataquesArremessados.push({
-    ...structuredClone(ataque),
-
-    instanciaId: instanciaIdArremesso,
-
-    modoUso: "arremesso",
-
-    nome: `${arma.nome} (arremesso)`,
-
-    categoria: "distancia",
-
-    selecao: {
-      tipo: "criatura",
-
-      alcance: {
-        normal: arma.alcanceDistanciaPes.normal / 5,
-        longo: arma.alcanceDistanciaPes.longo / 5,
-      },
-
-      area: null,
-    },
-  });
-}
-
-ataques.push(...ataquesArremessados);
-}
-
-function normalizarRecursosPersonagem(
-  personagem,
-) {
-  const recursos =
-    personagem
-      ?.habilidades
-      ?.recursos;
-
-  if (
-    !recursos ||
-    typeof recursos !== "object" ||
-    Array.isArray(recursos)
-  ) {
-    return;
-  }
-
-  for (
-    const recurso
-    of Object.values(recursos)
-  ) {
     if (
-      !recurso ||
-      typeof recurso !== "object"
+      !arma ||
+      arma.categoria !== "corpo-a-corpo" ||
+      !arma.propriedades?.includes("arremesso") ||
+      ataque.modoUso !== "padrao"
     ) {
       continue;
     }
 
-    if (
-      recurso.id ===
-      "segundoFolego"
-    ) {
+    const instanciaIdArremesso = `${ataque.equipamentoInstanciaId}:arremesso`;
+
+    const varianteJaExiste = ataques.some(function (outroAtaque) {
+      return outroAtaque?.instanciaId === instanciaIdArremesso;
+    });
+
+    if (varianteJaExiste) {
+      continue;
+    }
+
+    ataquesArremessados.push({
+      ...structuredClone(ataque),
+
+      instanciaId: instanciaIdArremesso,
+
+      modoUso: "arremesso",
+
+      nome: `${arma.nome} (arremesso)`,
+
+      categoria: "distancia",
+
+      selecao: {
+        tipo: "criatura",
+
+        alcance: {
+          normal: arma.alcanceDistanciaPes.normal / 5,
+          longo: arma.alcanceDistanciaPes.longo / 5,
+        },
+
+        area: null,
+      },
+    });
+  }
+
+  ataques.push(...ataquesArremessados);
+}
+
+function normalizarRecursosPersonagem(personagem) {
+  const recursos = personagem?.habilidades?.recursos;
+
+  if (!recursos || typeof recursos !== "object" || Array.isArray(recursos)) {
+    return;
+  }
+
+  for (const recurso of Object.values(recursos)) {
+    if (!recurso || typeof recurso !== "object") {
+      continue;
+    }
+
+    if (recurso.id === "segundoFolego") {
       recurso.recuperacao = {
         descansoCurto: {
           quantidade: 1,
@@ -153,26 +123,17 @@ function normalizarRecursosPersonagem(
       continue;
     }
 
-    if (
-      recurso.recuperacao ||
-      !recurso.recuperaEm
-    ) {
+    if (recurso.recuperacao || !recurso.recuperaEm) {
       continue;
     }
 
-    if (
-      recurso.recuperaEm ===
-      "descansoLongo"
-    ) {
+    if (recurso.recuperaEm === "descansoLongo") {
       recurso.recuperacao = {
         descansoLongo: {
           restaurarTodos: true,
         },
       };
-    } else if (
-      recurso.recuperaEm ===
-      "descansoCurto"
-    ) {
+    } else if (recurso.recuperaEm === "descansoCurto") {
       recurso.recuperacao = {
         descansoCurto: {
           restaurarTodos: true,
@@ -215,31 +176,20 @@ function normalizarPersonagem(personagemOriginal) {
     personagemNormalizado.recompensasRecebidas = [];
   }
 
-    if (
-    !Array.isArray(
-      personagemNormalizado
-        .aventurasConcluidas
-    )
-  ) {
-    personagemNormalizado
-      .aventurasConcluidas = [];
+  if (!Array.isArray(personagemNormalizado.aventurasConcluidas)) {
+    personagemNormalizado.aventurasConcluidas = [];
   }
 
-  personagemNormalizado
-    .aventurasConcluidas =
-      personagemNormalizado
-        .aventurasConcluidas
-        .filter(
-          function (registro) {
-            return (
-              registro &&
-              typeof registro === "object" &&
-              typeof registro.aventuraId ===
-                "string" &&
-              registro.aventuraId.trim() !== ""
-            );
-          }
-        );
+  personagemNormalizado.aventurasConcluidas = personagemNormalizado.aventurasConcluidas.filter(
+    function (registro) {
+      return (
+        registro &&
+        typeof registro === "object" &&
+        typeof registro.aventuraId === "string" &&
+        registro.aventuraId.trim() !== ""
+      );
+    },
+  );
 
   if (
     personagemNormalizado.niveisPorClasse === undefined ||
@@ -269,9 +219,7 @@ function normalizarPersonagem(personagemOriginal) {
     }
   }
 
-  normalizarRecursosPersonagem(
-    personagemNormalizado,
-  );
+  normalizarRecursosPersonagem(personagemNormalizado);
 
   normalizarAtaquesPersonagem(personagemNormalizado);
 
@@ -302,46 +250,20 @@ function obterNivelClasse(personagem, classeId) {
   return 0;
 }
 
-function personagemVenceuAventura(
-  personagemOriginal,
-  aventuraId
-) {
-  if (
-    !personagemOriginal ||
-    typeof aventuraId !== "string" ||
-    aventuraId.trim() === ""
-  ) {
+function personagemVenceuAventura(personagemOriginal, aventuraId) {
+  if (!personagemOriginal || typeof aventuraId !== "string" || aventuraId.trim() === "") {
     return false;
   }
 
-  const personagem =
-    normalizarPersonagem(
-      personagemOriginal
-    );
+  const personagem = normalizarPersonagem(personagemOriginal);
 
-  return personagem
-    .aventurasConcluidas
-    .some(
-      function (registro) {
-        return (
-          registro.aventuraId ===
-            aventuraId &&
-          registro.resultado ===
-            "vitoria"
-        );
-      }
-    );
+  return personagem.aventurasConcluidas.some(function (registro) {
+    return registro.aventuraId === aventuraId && registro.resultado === "vitoria";
+  });
 }
 
-function registrarVitoriaAventura(
-  personagemOriginal,
-  aventuraId
-) {
-  if (
-    !personagemOriginal?.id ||
-    typeof aventuraId !== "string" ||
-    aventuraId.trim() === ""
-  ) {
+function registrarVitoriaAventura(personagemOriginal, aventuraId) {
+  if (!personagemOriginal?.id || typeof aventuraId !== "string" || aventuraId.trim() === "") {
     return {
       sucesso: false,
       registrada: false,
@@ -349,39 +271,24 @@ function registrarVitoriaAventura(
     };
   }
 
-  const personagem =
-    normalizarPersonagem(
-      personagemOriginal
-    );
+  const personagem = normalizarPersonagem(personagemOriginal);
 
-  if (
-    personagemVenceuAventura(
-      personagem,
-      aventuraId
-    )
-  ) {
+  if (personagemVenceuAventura(personagem, aventuraId)) {
     return {
       sucesso: true,
       registrada: false,
-      motivo:
-        "aventuraJaConcluida",
+      motivo: "aventuraJaConcluida",
       personagem,
     };
   }
 
-  personagem
-    .aventurasConcluidas
-    .push({
-      aventuraId,
-      resultado: "vitoria",
-      concluidaEm:
-        new Date().toISOString(),
-    });
+  personagem.aventurasConcluidas.push({
+    aventuraId,
+    resultado: "vitoria",
+    concluidaEm: new Date().toISOString(),
+  });
 
-  const personagemSalvo =
-    atualizarPersonagemSalvo(
-      personagem
-    );
+  const personagemSalvo = atualizarPersonagemSalvo(personagem);
 
   if (!personagemSalvo) {
     return {
@@ -395,8 +302,7 @@ function registrarVitoriaAventura(
     sucesso: true,
     registrada: true,
     motivo: null,
-    personagem:
-      personagemSalvo,
+    personagem: personagemSalvo,
   };
 }
 
@@ -636,11 +542,9 @@ window.PersonagemDados = {
 
   obterNivelClasse: obterNivelClasse,
 
-    venceuAventura:
-    personagemVenceuAventura,
+  venceuAventura: personagemVenceuAventura,
 
-  registrarVitoriaAventura:
-    registrarVitoriaAventura,
+  registrarVitoriaAventura: registrarVitoriaAventura,
 
   listarSalvos: listarPersonagensSalvos,
 

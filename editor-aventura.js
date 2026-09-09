@@ -88,8 +88,7 @@ function caminhoPodeSerAplicado(raiz, caminho) {
     return false;
   }
   const pai = obterNoCaminho(raiz, caminho.slice(0, -1));
-  return pai !== null
-    && typeof pai === "object";
+  return pai !== null && typeof pai === "object";
 }
 
 function persistirMemoriaEditor() {
@@ -114,9 +113,12 @@ function restaurarMemoriaEditor() {
 
   try {
     const memoria = JSON.parse(conteudo);
-    if (memoria?.versao !== 1
-      || memoria.aventuraId !== aventuraOriginal.id
-      || !Array.isArray(memoria.alteracoes)) return;
+    if (
+      memoria?.versao !== 1 ||
+      memoria.aventuraId !== aventuraOriginal.id ||
+      !Array.isArray(memoria.alteracoes)
+    )
+      return;
 
     memoria.alteracoes.forEach((alteracao) => {
       const caminho = alteracao?.caminho;
@@ -188,11 +190,13 @@ function analisarQualidadeCena(cenaId, cena, cenas) {
         if (textos.some((item) => typeof item === "string" && item.trim())) temTexto = true;
       }
       if (chave === "proximaCena") {
-        if (typeof filho !== "string" || !filho.trim()) erros.push(`Destino vazio em ${caminhoFilho}.`);
+        if (typeof filho !== "string" || !filho.trim())
+          erros.push(`Destino vazio em ${caminhoFilho}.`);
         else if (!cenas[filho]) erros.push(`Cena inexistente: ${filho}.`);
       }
       if (chave === "proximaEtapa") {
-        if (typeof filho !== "string" || !filho.trim()) erros.push(`Destino vazio em ${caminhoFilho}.`);
+        if (typeof filho !== "string" || !filho.trim())
+          erros.push(`Destino vazio em ${caminhoFilho}.`);
         else if (!cena.etapas?.[filho]) erros.push(`Etapa inexistente: ${filho}.`);
       }
       if (filho && typeof filho === "object") percorrer(filho, caminhoFilho, visitados);
@@ -273,7 +277,8 @@ function criarFluxo() {
 
   function classificarResultado(caminho) {
     const termos = caminho.map(String).map((parte) => parte.toLowerCase());
-    if (termos.some((parte) => ["sucesso", "acerto", "vitoria", "sobreviveu"].includes(parte))) return "sucesso";
+    if (termos.some((parte) => ["sucesso", "acerto", "vitoria", "sobreviveu"].includes(parte)))
+      return "sucesso";
     if (termos.some((parte) => ["fracasso", "erro", "derrota"].includes(parte))) return "fracasso";
     return null;
   }
@@ -287,10 +292,19 @@ function criarFluxo() {
   function criarNoDecisao(tipo, valor, cenaId, caminho, indice = 0) {
     const id = chaveIntermediario(tipo, caminho);
     if (!nos.has(id)) {
-      const rotulo = tipo === "escolha"
-        ? valor?.id ?? `escolha-${indice + 1}`
-        : valor?.periciaId ?? valor?.atributoId ?? valor?.tipo ?? "Teste";
-      nos.set(id, { id, tipo, cenaId, rotulo: String(rotulo), valor, caminho: [...caminho], batalha: false });
+      const rotulo =
+        tipo === "escolha"
+          ? (valor?.id ?? `escolha-${indice + 1}`)
+          : (valor?.periciaId ?? valor?.atributoId ?? valor?.tipo ?? "Teste");
+      nos.set(id, {
+        id,
+        tipo,
+        cenaId,
+        rotulo: String(rotulo),
+        valor,
+        caminho: [...caminho],
+        batalha: false,
+      });
     }
     return id;
   }
@@ -339,9 +353,8 @@ function criarFluxo() {
       if (["proximaCena", "proximaEtapa", "etapaInicial"].includes(chave)) {
         const tipoDestino = chave === "proximaCena" ? "cena" : "etapa";
         const destinoId = typeof filho === "string" ? filho : "";
-        const destinoNoId = tipoDestino === "cena"
-          ? chaveCena(destinoId)
-          : chaveEtapa(cenaId, destinoId);
+        const destinoNoId =
+          tipoDestino === "cena" ? chaveCena(destinoId) : chaveEtapa(cenaId, destinoId);
         const referencia = {
           origemId: origemConteudo,
           cenaId,
@@ -351,11 +364,8 @@ function criarFluxo() {
           destinoId,
           destinoNoId,
           valida: Boolean(
-            destinoId && (
-              tipoDestino === "cena"
-                ? cenas[destinoId]
-                : cenas[cenaId]?.etapas?.[destinoId]
-            )
+            destinoId &&
+              (tipoDestino === "cena" ? cenas[destinoId] : cenas[cenaId]?.etapas?.[destinoId]),
           ),
         };
         referencias.push(referencia);
@@ -483,8 +493,7 @@ function validarFluxo() {
 }
 
 function aplicarTransformacao() {
-  grafoAventura.style.transform =
-    `translate(${deslocamentoX}px, ${deslocamentoY}px) scale(${escalaAtual})`;
+  grafoAventura.style.transform = `translate(${deslocamentoX}px, ${deslocamentoY}px) scale(${escalaAtual})`;
   rotuloEscala.textContent = `${Math.round(escalaAtual * 100)}%`;
 }
 
@@ -493,7 +502,10 @@ function reenquadrarGrafo() {
   const alturaDisponivel = Math.max(200, rolagemGrafo.clientHeight - 48);
   const larguraGrafo = parseFloat(grafoAventura.style.width) || larguraDisponivel;
   const alturaGrafo = parseFloat(grafoAventura.style.height) || alturaDisponivel;
-  escalaAtual = Math.max(0.12, Math.min(0.7, larguraDisponivel / larguraGrafo, alturaDisponivel / alturaGrafo));
+  escalaAtual = Math.max(
+    0.12,
+    Math.min(0.7, larguraDisponivel / larguraGrafo, alturaDisponivel / alturaGrafo),
+  );
   deslocamentoX = (rolagemGrafo.clientWidth - larguraGrafo * escalaAtual) / 2;
   deslocamentoY = (rolagemGrafo.clientHeight - alturaGrafo * escalaAtual) / 2;
   aplicarTransformacao();
@@ -529,7 +541,10 @@ function calcularPosicoesTeia(fluxo) {
     });
   }
 
-  const pares = fluxo.arestas.map((aresta) => [posicoes.get(aresta.origem), posicoes.get(aresta.destino)]);
+  const pares = fluxo.arestas.map((aresta) => [
+    posicoes.get(aresta.origem),
+    posicoes.get(aresta.destino),
+  ]);
   for (let iteracao = 0; iteracao < 260; iteracao++) {
     for (let a = 0; a < ids.length; a++) {
       const pa = posicoes.get(ids[a]);
@@ -650,7 +665,10 @@ function desenharGrafo() {
     const deslocamento = Math.min(55, Math.hypot(dx, dy) * 0.12);
     const linha = document.createElementNS("http://www.w3.org/2000/svg", "path");
     if (aresta.resultado) linha.classList.add(aresta.resultado);
-    linha.setAttribute("d", `M ${x1} ${y1} C ${x1 - dy / Math.max(1, Math.hypot(dx, dy)) * deslocamento} ${y1 + dx / Math.max(1, Math.hypot(dx, dy)) * deslocamento}, ${x2 - dy / Math.max(1, Math.hypot(dx, dy)) * deslocamento} ${y2 + dx / Math.max(1, Math.hypot(dx, dy)) * deslocamento}, ${x2} ${y2}`);
+    linha.setAttribute(
+      "d",
+      `M ${x1} ${y1} C ${x1 - (dy / Math.max(1, Math.hypot(dx, dy))) * deslocamento} ${y1 + (dx / Math.max(1, Math.hypot(dx, dy))) * deslocamento}, ${x2 - (dy / Math.max(1, Math.hypot(dx, dy))) * deslocamento} ${y2 + (dx / Math.max(1, Math.hypot(dx, dy))) * deslocamento}, ${x2} ${y2}`,
+    );
     svg.append(linha);
   });
 
@@ -669,18 +687,19 @@ function criarSeletorDestino(referencia) {
   const caixa = criarElemento("div", `conexao${referencia.valida ? "" : " erro"}`);
   const rotulo = criarElemento("label", null, rotuloReferencia(referencia));
   const seletor = document.createElement("select");
-  const destinos = referencia.tipoDestino === "cena"
-    ? Object.keys(aventuraEditavel.cenas).map((cenaId) => ({
-        cenaId,
-        rotulo: cenaId,
-        tipo: "cena",
-      }))
-    : Object.keys(aventuraEditavel.cenas[referencia.cenaId]?.etapas ?? {}).map((etapaId) => ({
-        cenaId: referencia.cenaId,
-        etapaId,
-        rotulo: etapaId,
-        tipo: "etapa",
-      }));
+  const destinos =
+    referencia.tipoDestino === "cena"
+      ? Object.keys(aventuraEditavel.cenas).map((cenaId) => ({
+          cenaId,
+          rotulo: cenaId,
+          tipo: "cena",
+        }))
+      : Object.keys(aventuraEditavel.cenas[referencia.cenaId]?.etapas ?? {}).map((etapaId) => ({
+          cenaId: referencia.cenaId,
+          etapaId,
+          rotulo: etapaId,
+          tipo: "etapa",
+        }));
 
   if (!referencia.valida) {
     const atual = document.createElement("option");
@@ -708,21 +727,36 @@ function criarMiniTeiaCena(cenaId) {
   const nos = new Map();
   const arestas = [];
   const raizId = chaveCena(cenaId);
-  nos.set(raizId, { id: raizId, tipo: "cena", rotulo: cenaId, valor: cena, caminho: ["cenas", cenaId] });
+  nos.set(raizId, {
+    id: raizId,
+    tipo: "cena",
+    rotulo: cenaId,
+    valor: cena,
+    caminho: ["cenas", cenaId],
+  });
   Object.entries(etapas).forEach(([etapaId, etapa]) => {
     const id = chaveEtapa(cenaId, etapaId);
-    nos.set(id, { id, tipo: "etapa", rotulo: etapaId, valor: etapa, etapaId, caminho: ["cenas", cenaId, "etapas", etapaId] });
+    nos.set(id, {
+      id,
+      tipo: "etapa",
+      rotulo: etapaId,
+      valor: etapa,
+      etapaId,
+      caminho: ["cenas", cenaId, "etapas", etapaId],
+    });
   });
 
   const adicionarAresta = (origem, destino, resultado = null) => {
     if (!origem || !destino || !nos.has(origem) || !nos.has(destino)) return;
     const chave = `${origem}->${destino}:${resultado ?? "neutro"}`;
-    if (!arestas.some((item) => item.chave === chave)) arestas.push({ chave, origem, destino, resultado });
+    if (!arestas.some((item) => item.chave === chave))
+      arestas.push({ chave, origem, destino, resultado });
   };
 
   function resultadoDoCaminho(caminho) {
     const termos = caminho.map(String).map((parte) => parte.toLowerCase());
-    if (termos.some((parte) => ["sucesso", "acerto", "vitoria", "sobreviveu"].includes(parte))) return "sucesso";
+    if (termos.some((parte) => ["sucesso", "acerto", "vitoria", "sobreviveu"].includes(parte)))
+      return "sucesso";
     if (termos.some((parte) => ["fracasso", "erro", "derrota"].includes(parte))) return "fracasso";
     return null;
   }
@@ -768,9 +802,14 @@ function criarMiniTeiaCena(cenaId) {
         continue;
       }
       if (["proximaEtapa", "etapaInicial"].includes(chave) && typeof filho === "string") {
-        adicionarAresta(origemConteudo, chaveEtapa(cenaId, filho), resultadoDoCaminho(caminhoFilho));
+        adicionarAresta(
+          origemConteudo,
+          chaveEtapa(cenaId, filho),
+          resultadoDoCaminho(caminhoFilho),
+        );
       }
-      if (filho && typeof filho === "object") percorrer(filho, origemConteudo, caminhoFilho, ignorarEtapas);
+      if (filho && typeof filho === "object")
+        percorrer(filho, origemConteudo, caminhoFilho, ignorarEtapas);
     }
   }
 
@@ -783,15 +822,19 @@ function criarMiniTeiaCena(cenaId) {
   const fila = [raizId];
   while (fila.length) {
     const atual = fila.shift();
-    arestas.filter((item) => item.origem === atual).forEach((item) => {
-      if (!niveis.has(item.destino)) {
-        niveis.set(item.destino, niveis.get(atual) + 1);
-        fila.push(item.destino);
-      }
-    });
+    arestas
+      .filter((item) => item.origem === atual)
+      .forEach((item) => {
+        if (!niveis.has(item.destino)) {
+          niveis.set(item.destino, niveis.get(atual) + 1);
+          fila.push(item.destino);
+        }
+      });
   }
   const maior = Math.max(0, ...niveis.values());
-  nos.forEach((item, id) => { if (!niveis.has(id)) niveis.set(id, maior + 1); });
+  nos.forEach((item, id) => {
+    if (!niveis.has(id)) niveis.set(id, maior + 1);
+  });
   const colunas = new Map();
   for (const [id, nivel] of niveis) {
     if (!colunas.has(nivel)) colunas.set(nivel, []);
@@ -799,7 +842,10 @@ function criarMiniTeiaCena(cenaId) {
   }
 
   const largura = (Math.max(...colunas.keys()) + 1) * 132 + 24;
-  const altura = Math.max(190, Math.max(...[...colunas.values()].map((itens) => itens.length)) * 72 + 28);
+  const altura = Math.max(
+    190,
+    Math.max(...[...colunas.values()].map((itens) => itens.length)) * 72 + 28,
+  );
   const caixa = criarElemento("div", "mini-teia");
   const conteudo = criarElemento("div");
   conteudo.style.position = "relative";
@@ -819,14 +865,23 @@ function criarMiniTeiaCena(cenaId) {
       const y = 14 + indice * 72;
       posicoes.set(id, { x, y, largura: larguraNo, altura: alturaNo });
       const textoAusente = textoResumo(item.valor) === "Nenhum texto preenchido neste bloco.";
-      const no = criarElemento("button", `mini-etapa ${item.tipo}${item.tipo === "cena" ? " raiz" : ""}`);
+      const no = criarElemento(
+        "button",
+        `mini-etapa ${item.tipo}${item.tipo === "cena" ? " raiz" : ""}`,
+      );
       no.type = "button";
       no.textContent = tituloVisual(item);
       no.title = item.valor?.titulo ? `${item.valor.titulo} (${item.rotulo})` : item.rotulo;
       no.style.left = `${x}px`;
       no.style.top = `${y}px`;
       const analise = analisesCena.get(cenaId);
-      no.classList.add(analise?.status === "erro" ? "status-erro" : textoAusente ? "status-aviso" : "status-completo");
+      no.classList.add(
+        analise?.status === "erro"
+          ? "status-erro"
+          : textoAusente
+            ? "status-aviso"
+            : "status-completo",
+      );
       no.addEventListener("click", () => abrirNoDaMiniTeia(cenaId, item));
       conteudo.append(no);
     });
@@ -837,7 +892,10 @@ function criarMiniTeiaCena(cenaId) {
     if (!origem || !destino) return;
     const linha = document.createElementNS("http://www.w3.org/2000/svg", "path");
     if (aresta.resultado) linha.classList.add(aresta.resultado);
-    linha.setAttribute("d", `M ${origem.x + origem.largura} ${origem.y + origem.altura / 2} C ${origem.x + origem.largura + 16} ${origem.y + origem.altura / 2}, ${destino.x - 16} ${destino.y + destino.altura / 2}, ${destino.x} ${destino.y + destino.altura / 2}`);
+    linha.setAttribute(
+      "d",
+      `M ${origem.x + origem.largura} ${origem.y + origem.altura / 2} C ${origem.x + origem.largura + 16} ${origem.y + origem.altura / 2}, ${destino.x - 16} ${destino.y + destino.altura / 2}, ${destino.x} ${destino.y + destino.altura / 2}`,
+    );
     svg.append(linha);
   });
   caixa.append(conteudo);
@@ -878,8 +936,12 @@ function abrirNoDaMiniTeia(cenaId, item) {
 function mostrarBlocoInterno(cenaId, item) {
   paineisExpandidos.add("narrativa");
   atualizarLayoutPaineis();
-  document.querySelectorAll(".no-fluxo.selecionado").forEach((no) => no.classList.remove("selecionado"));
-  grafoAventura.querySelector(`[data-no-id="${CSS.escape(chaveCena(cenaId))}"]`)?.classList.add("selecionado");
+  document
+    .querySelectorAll(".no-fluxo.selecionado")
+    .forEach((no) => no.classList.remove("selecionado"));
+  grafoAventura
+    .querySelector(`[data-no-id="${CSS.escape(chaveCena(cenaId))}"]`)
+    ?.classList.add("selecionado");
   painelPropriedades.replaceChildren(criarLegendaStatus());
   painelPropriedades.append(
     criarElemento("span", "tipo-no", `${item.tipo} interno de ${cenaId} · ID: ${item.rotulo}`),
@@ -904,9 +966,14 @@ function mostrarBlocoInterno(cenaId, item) {
     saidas.forEach((referencia) => lista.append(criarSeletorDestino(referencia)));
     painelPropriedades.append(lista);
   } else {
-    painelPropriedades.append(criarElemento("p", "aviso-vazio", "Este bloco não possui conexões editáveis."));
+    painelPropriedades.append(
+      criarElemento("p", "aviso-vazio", "Este bloco não possui conexões editáveis."),
+    );
   }
-  painelPropriedades.append(criarElemento("h3", null, "Mini-teia das etapas"), criarMiniTeiaCena(cenaId));
+  painelPropriedades.append(
+    criarElemento("h3", null, "Mini-teia das etapas"),
+    criarMiniTeiaCena(cenaId),
+  );
 }
 
 function criarEditorTextos(item) {
@@ -946,7 +1013,8 @@ function criarEditorTextos(item) {
         const caminhoFilho = [...caminho, chave];
         const rotuloFilho = [...rotulo, chave];
         if (chavesTexto.has(chave)) registrarValor(rotuloFilho.join(" › "), caminhoFilho, filho);
-        else if (filho && typeof filho === "object") percorrerResultados(filho, caminhoFilho, rotuloFilho);
+        else if (filho && typeof filho === "object")
+          percorrerResultados(filho, caminhoFilho, rotuloFilho);
       }
     }
     for (const chaveResultados of ["resultados", "resultadosPorAcertos"]) {
@@ -962,7 +1030,9 @@ function criarEditorTextos(item) {
 
   if (!descritores.length) return null;
   const secao = criarElemento("section", "editor-textos");
-  secao.append(criarElemento("h3", null, item.tipo === "teste" ? "Textos e resultados" : "Texto do elemento"));
+  secao.append(
+    criarElemento("h3", null, item.tipo === "teste" ? "Textos e resultados" : "Texto do elemento"),
+  );
 
   function adicionarCampo(rotuloTexto, caminhoCampo, valor) {
     const rotulo = document.createElement("label");
@@ -985,11 +1055,19 @@ function criarEditorTextos(item) {
 function criarEditorPropriedades(item) {
   if (!item.caminho || !item.valor || typeof item.valor !== "object") return null;
   const ignoradas = new Set([
-    "contexto", "texto", "descricao", "instrucao", "id", "__editorId",
-    "proximaCena", "proximaEtapa", "etapaInicial",
+    "contexto",
+    "texto",
+    "descricao",
+    "instrucao",
+    "id",
+    "__editorId",
+    "proximaCena",
+    "proximaEtapa",
+    "etapaInicial",
   ]);
-  const propriedades = Object.entries(item.valor).filter(([chave, valor]) =>
-    !ignoradas.has(chave) && ["string", "number", "boolean"].includes(typeof valor),
+  const propriedades = Object.entries(item.valor).filter(
+    ([chave, valor]) =>
+      !ignoradas.has(chave) && ["string", "number", "boolean"].includes(typeof valor),
   );
   if (!Object.prototype.hasOwnProperty.call(item.valor, "titulo")) {
     propriedades.unshift(["titulo", ""]);
@@ -1000,13 +1078,20 @@ function criarEditorPropriedades(item) {
   secao.append(criarElemento("h3", null, "Propriedades"));
   const caminhoId = [...item.caminho, "__editorId"];
   const chaveId = caminhoComoChave(caminhoId);
-  const idOriginal = ["cena", "etapa"].includes(item.tipo) ? item.caminho.at(-1) : item.valor.id ?? "";
+  const idOriginal = ["cena", "etapa"].includes(item.tipo)
+    ? item.caminho.at(-1)
+    : (item.valor.id ?? "");
   const rotuloId = document.createElement("label");
   rotuloId.append(criarElemento("span", null, "ID"));
   const campoId = document.createElement("input");
   campoId.type = "text";
-  campoId.value = alteracoesPendentes.get(chaveId)?.novoValor ?? item.valor.__editorId ?? idOriginal;
-  const avisoId = criarElemento("small", null, "A renomeação e suas referências serão aplicadas ao enviar para a aventura.");
+  campoId.value =
+    alteracoesPendentes.get(chaveId)?.novoValor ?? item.valor.__editorId ?? idOriginal;
+  const avisoId = criarElemento(
+    "small",
+    null,
+    "A renomeação e suas referências serão aplicadas ao enviar para a aventura.",
+  );
   campoId.addEventListener("input", () => {
     const novo = campoId.value.trim();
     const erro = validarNovoId(item, novo);
@@ -1043,7 +1128,11 @@ function criarEditorPropriedades(item) {
       campo.value = String(valorAtual);
       campo.placeholder = chave === "titulo" ? "Título para organização" : "";
       campo.addEventListener("input", () => {
-        if (chave === "titulo" && !Object.prototype.hasOwnProperty.call(item.valor, "titulo") && !campo.value.trim()) {
+        if (
+          chave === "titulo" &&
+          !Object.prototype.hasOwnProperty.call(item.valor, "titulo") &&
+          !campo.value.trim()
+        ) {
           alteracoesPendentes.delete(chaveCaminho);
           atualizarBotoesEdicao();
           atualizarComparacao();
@@ -1059,13 +1148,20 @@ function criarEditorPropriedades(item) {
 }
 
 function validarNovoId(item, novo) {
-  if (!/^[a-z][a-zA-Z0-9_]*$/.test(novo) || ["constructor", "prototype", "__proto__"].includes(novo)) {
+  if (
+    !/^[a-z][a-zA-Z0-9_]*$/.test(novo) ||
+    ["constructor", "prototype", "__proto__"].includes(novo)
+  ) {
     return "Use uma letra minúscula no início, seguida de letras sem acento, números ou sublinhado.";
   }
   const pai = obterNoCaminho(aventuraEditavel, item.caminho.slice(0, -1));
   const outros = ["cena", "etapa"].includes(item.tipo)
-    ? Object.entries(pai).filter(([id]) => id !== item.caminho.at(-1)).map(([id, valor]) => valor.__editorId ?? id)
-    : Array.isArray(pai) ? pai.filter((v) => v !== item.valor).map((v) => v.__editorId ?? v.id) : [];
+    ? Object.entries(pai)
+        .filter(([id]) => id !== item.caminho.at(-1))
+        .map(([id, valor]) => valor.__editorId ?? id)
+    : Array.isArray(pai)
+      ? pai.filter((v) => v !== item.valor).map((v) => v.__editorId ?? v.id)
+      : [];
   return outros.includes(novo) ? "Este ID já existe neste grupo." : "";
 }
 
@@ -1074,7 +1170,9 @@ function selecionarNo(noId) {
   atualizarLayoutPaineis();
   noSelecionadoId = noId;
   const item = fluxoAtual.nos.get(noId);
-  document.querySelectorAll(".no-fluxo.selecionado").forEach((no) => no.classList.remove("selecionado"));
+  document
+    .querySelectorAll(".no-fluxo.selecionado")
+    .forEach((no) => no.classList.remove("selecionado"));
   grafoAventura.querySelector(`[data-no-id="${CSS.escape(noId)}"]`)?.classList.add("selecionado");
   painelPropriedades.replaceChildren(criarLegendaStatus());
 
@@ -1096,14 +1194,23 @@ function selecionarNo(noId) {
 
   const analise = analisesCena.get(item.cenaId);
   if (analise && item.tipo === "cena") {
-    const estado = criarElemento("p", `estado-cena status-${analise.status}`,
-      analise.status === "erro" ? "Esta cena contém erros." : analise.status === "aviso" ? "Esta cena contém avisos." : "Esta cena está completa.");
+    const estado = criarElemento(
+      "p",
+      `estado-cena status-${analise.status}`,
+      analise.status === "erro"
+        ? "Esta cena contém erros."
+        : analise.status === "aviso"
+          ? "Esta cena contém avisos."
+          : "Esta cena está completa.",
+    );
     painelPropriedades.append(estado);
   }
 
   const saidas = fluxoAtual.referencias.filter((referencia) => referencia.origemId === noId);
   if (!saidas.length) {
-    painelPropriedades.append(criarElemento("p", "aviso-vazio", "Este bloco não possui conexões editáveis."));
+    painelPropriedades.append(
+      criarElemento("p", "aviso-vazio", "Este bloco não possui conexões editáveis."),
+    );
   } else {
     const lista = criarElemento("div", "lista-conexoes");
     saidas.forEach((referencia) => lista.append(criarSeletorDestino(referencia)));
@@ -1122,7 +1229,9 @@ function selecionarNo(noId) {
     if (analise?.avisos.length) {
       painelPropriedades.append(criarElemento("h3", null, "Avisos"));
       const lista = document.createElement("ul");
-      analise.avisos.forEach((aviso) => lista.append(criarElemento("li", "aviso-validacao", aviso)));
+      analise.avisos.forEach((aviso) =>
+        lista.append(criarElemento("li", "aviso-validacao", aviso)),
+      );
       painelPropriedades.append(lista);
     }
   }
@@ -1159,10 +1268,12 @@ async function enviarAlteracoesParaAventura() {
     const [arquivoHandle] = await window.showOpenFilePicker({
       id: `rpg-solo-editor-${aventuraOriginal.id}`,
       suggestedName: nomeEsperado,
-      types: [{
-        description: "Arquivo JavaScript da aventura",
-        accept: { "text/javascript": [".js"] },
-      }],
+      types: [
+        {
+          description: "Arquivo JavaScript da aventura",
+          accept: { "text/javascript": [".js"] },
+        },
+      ],
       multiple: false,
     });
     if (arquivoHandle.name !== nomeEsperado) {
@@ -1248,9 +1359,7 @@ function gerarCodigoAlteracoes() {
       `// Antes: ${JSON.stringify(original)}\n` +
       `bancoAventuras[${JSON.stringify(idAventura)}]${caminhoComoCodigo(caminho)} = ${JSON.stringify(atual)};`,
   );
-  saidaCodigo.value = linhas.length
-    ? linhas.join("\n\n")
-    : "// Nenhuma alteração foi feita.";
+  saidaCodigo.value = linhas.length ? linhas.join("\n\n") : "// Nenhuma alteração foi feita.";
   mensagemCopia.textContent = `${alteracoes.length} alteração(ões).`;
   modalCodigo.showModal();
 }
@@ -1275,29 +1384,43 @@ function atualizarComparacao() {
     const rotuloData = Number.isNaN(dataSalva.getTime())
       ? "em um momento anterior"
       : dataSalva.toLocaleString("pt-BR");
-    painelComparacao.append(criarElemento(
-      "p",
-      "aviso-vazio",
-      `Memória deste editor salva neste navegador em ${rotuloData}.`,
-    ));
+    painelComparacao.append(
+      criarElemento(
+        "p",
+        "aviso-vazio",
+        `Memória deste editor salva neste navegador em ${rotuloData}.`,
+      ),
+    );
   }
   if (alteracoesPendentes.size) {
-    painelComparacao.append(criarElemento(
-      "p",
-      "aviso-comparacao",
-      `${alteracoesPendentes.size} alteração(ões) ainda não salva(s) na memória do editor.`,
-    ));
+    painelComparacao.append(
+      criarElemento(
+        "p",
+        "aviso-comparacao",
+        `${alteracoesPendentes.size} alteração(ões) ainda não salva(s) na memória do editor.`,
+      ),
+    );
   }
   const diferencas = listarDiferencasSalvas();
   if (!diferencas.length) {
-    painelComparacao.append(criarElemento("p", "aviso-vazio", "A memória do editor ainda é igual à aventura."));
+    painelComparacao.append(
+      criarElemento("p", "aviso-vazio", "A memória do editor ainda é igual à aventura."),
+    );
     return;
   }
-  painelComparacao.append(criarElemento("p", null, `${diferencas.length} diferença(s) salva(s) na memória do editor.`));
+  painelComparacao.append(
+    criarElemento("p", null, `${diferencas.length} diferença(s) salva(s) na memória do editor.`),
+  );
   diferencas.forEach(({ caminho, original, atual }) => {
     const bloco = criarElemento("article", "diferenca-editor");
     bloco.append(
-      criarElemento("strong", null, caminho.map((parte) => parte === "__editorId" ? "ID (renomear ao enviar)" : parte).join(" › ")),
+      criarElemento(
+        "strong",
+        null,
+        caminho
+          .map((parte) => (parte === "__editorId" ? "ID (renomear ao enviar)" : parte))
+          .join(" › "),
+      ),
       criarElemento("span", null, `Na aventura: ${JSON.stringify(original)}`),
       criarElemento("span", null, `No editor: ${JSON.stringify(atual)}`),
     );
@@ -1310,9 +1433,22 @@ function salvarAlteracoesNaMemoria() {
   for (const operacao of alteracoesPendentes.values()) {
     if (operacao.caminho.at(-1) !== "__editorId") continue;
     const caminho = operacao.caminho.slice(0, -1);
-    const tipo = caminho.length === 2 ? "cena" : caminho.length === 4 && caminho[2] === "etapas" ? "etapa" : caminho.at(-1) === "teste" ? "teste" : "escolha";
-    const erro = validarNovoId({ caminho, tipo, valor: obterNoCaminho(aventuraEditavel, caminho) }, operacao.novoValor);
-    if (erro) { window.alert(erro); return; }
+    const tipo =
+      caminho.length === 2
+        ? "cena"
+        : caminho.length === 4 && caminho[2] === "etapas"
+          ? "etapa"
+          : caminho.at(-1) === "teste"
+            ? "teste"
+            : "escolha";
+    const erro = validarNovoId(
+      { caminho, tipo, valor: obterNoCaminho(aventuraEditavel, caminho) },
+      operacao.novoValor,
+    );
+    if (erro) {
+      window.alert(erro);
+      return;
+    }
   }
   const selecionado = noSelecionadoId;
   for (const [chave, operacao] of alteracoesPendentes) {
@@ -1340,14 +1476,18 @@ function desfazerAlteracoesPendentes() {
 function atualizarLayoutPaineis() {
   const ordem = ["comparacao", "teia", "narrativa"];
   layoutEditor.style.gridTemplateColumns = ordem
-    .map((painel) => paineisExpandidos.has(painel) ? "minmax(0, 1fr)" : "48px")
+    .map((painel) => (paineisExpandidos.has(painel) ? "minmax(0, 1fr)" : "48px"))
     .join(" ");
-  document.querySelectorAll("[data-area]").forEach((elemento) =>
-    elemento.classList.toggle("recolhido", !paineisExpandidos.has(elemento.dataset.area)),
-  );
-  document.querySelectorAll("[data-painel]").forEach((botao) =>
-    botao.setAttribute("aria-pressed", String(paineisExpandidos.has(botao.dataset.painel))),
-  );
+  document
+    .querySelectorAll("[data-area]")
+    .forEach((elemento) =>
+      elemento.classList.toggle("recolhido", !paineisExpandidos.has(elemento.dataset.area)),
+    );
+  document
+    .querySelectorAll("[data-painel]")
+    .forEach((botao) =>
+      botao.setAttribute("aria-pressed", String(paineisExpandidos.has(botao.dataset.painel))),
+    );
 }
 
 function carregarAventura() {
@@ -1381,26 +1521,30 @@ function iniciarEditor() {
 
 seletorAventura.addEventListener("change", carregarAventura);
 botaoReenquadrar.addEventListener("click", reenquadrarGrafo);
-rolagemGrafo.addEventListener("wheel", function alterarZoom(evento) {
-  evento.preventDefault();
-  const limiteInferior = 0.12;
-  const limiteSuperior = 1.6;
-  const novaEscala = Math.min(
-    limiteSuperior,
-    Math.max(limiteInferior, escalaAtual * (evento.deltaY < 0 ? 1.1 : 0.9)),
-  );
-  if (novaEscala === escalaAtual) return;
+rolagemGrafo.addEventListener(
+  "wheel",
+  function alterarZoom(evento) {
+    evento.preventDefault();
+    const limiteInferior = 0.12;
+    const limiteSuperior = 1.6;
+    const novaEscala = Math.min(
+      limiteSuperior,
+      Math.max(limiteInferior, escalaAtual * (evento.deltaY < 0 ? 1.1 : 0.9)),
+    );
+    if (novaEscala === escalaAtual) return;
 
-  const area = rolagemGrafo.getBoundingClientRect();
-  const cursorX = evento.clientX - area.left;
-  const cursorY = evento.clientY - area.top;
-  const pontoGrafoX = (cursorX - deslocamentoX) / escalaAtual;
-  const pontoGrafoY = (cursorY - deslocamentoY) / escalaAtual;
-  deslocamentoX = cursorX - pontoGrafoX * novaEscala;
-  deslocamentoY = cursorY - pontoGrafoY * novaEscala;
-  escalaAtual = novaEscala;
-  aplicarTransformacao();
-}, { passive: false });
+    const area = rolagemGrafo.getBoundingClientRect();
+    const cursorX = evento.clientX - area.left;
+    const cursorY = evento.clientY - area.top;
+    const pontoGrafoX = (cursorX - deslocamentoX) / escalaAtual;
+    const pontoGrafoY = (cursorY - deslocamentoY) / escalaAtual;
+    deslocamentoX = cursorX - pontoGrafoX * novaEscala;
+    deslocamentoY = cursorY - pontoGrafoY * novaEscala;
+    escalaAtual = novaEscala;
+    aplicarTransformacao();
+  },
+  { passive: false },
+);
 rolagemGrafo.addEventListener("pointerdown", function iniciarArraste(evento) {
   if (evento.button !== 0 || evento.target.closest("button, select, input, a")) return;
   arrastandoGrafo = true;

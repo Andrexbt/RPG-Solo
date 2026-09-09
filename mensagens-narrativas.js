@@ -48,44 +48,42 @@ window.mensagensNarrativas = {
     descricoesNarrativas: {
       combate: {
         arremesso: {
-        caiuAposErro: {
-          momento: "Depois que um ataque de arremesso erra e a arma cai no mapa.",
-          variaveis: ["arma", "alvo", "coluna", "linha"],
-          canais: {
-            acaoAtual: "A {arma} errou o alvo e caiu nas proximidades.",
-            solicitacao:
-              "A {arma} passou por {alvo} e caiu na coluna {coluna}, linha {linha}.",
-            historicoTitulo: "{arma} caída",
-            historicoDescricao:
-              "A arma arremessada errou {alvo} e caiu na coluna {coluna}, linha {linha}.",
+          caiuAposErro: {
+            momento: "Depois que um ataque de arremesso erra e a arma cai no mapa.",
+            variaveis: ["arma", "alvo", "coluna", "linha"],
+            canais: {
+              acaoAtual: "A {arma} errou o alvo e caiu nas proximidades.",
+              solicitacao: "A {arma} passou por {alvo} e caiu na coluna {coluna}, linha {linha}.",
+              historicoTitulo: "{arma} caída",
+              historicoDescricao:
+                "A arma arremessada errou {alvo} e caiu na coluna {coluna}, linha {linha}.",
+            },
           },
-        },
 
-        caiuAposAcerto: {
-          momento:
-            "Depois que um ataque de arremesso acerta, mas nenhum dado de dano alcança o máximo.",
-          variaveis: ["arma", "alvo", "coluna", "linha"],
-          canais: {
-            acaoAtual: "A {arma} atingiu o alvo e caiu nas proximidades.",
-            solicitacao:
-              "Após atingir {alvo}, a {arma} caiu na coluna {coluna}, linha {linha}.",
-            historicoTitulo: "{arma} caída",
-            historicoDescricao:
-              "Depois do impacto, a arma caiu na coluna {coluna}, linha {linha}.",
+          caiuAposAcerto: {
+            momento:
+              "Depois que um ataque de arremesso acerta, mas nenhum dado de dano alcança o máximo.",
+            variaveis: ["arma", "alvo", "coluna", "linha"],
+            canais: {
+              acaoAtual: "A {arma} atingiu o alvo e caiu nas proximidades.",
+              solicitacao: "Após atingir {alvo}, a {arma} caiu na coluna {coluna}, linha {linha}.",
+              historicoTitulo: "{arma} caída",
+              historicoDescricao:
+                "Depois do impacto, a arma caiu na coluna {coluna}, linha {linha}.",
+            },
           },
-        },
 
-        cravada: {
-          momento:
-            "Depois que um ataque de arremesso acerta e ao menos um dado de dano alcança o máximo.",
-          variaveis: ["arma", "alvo"],
-          canais: {
-            acaoAtual: "A {arma} ficou cravada no alvo.",
-            solicitacao: "A {arma} ficou cravada em {alvo}.",
-            historicoTitulo: "{arma} cravada",
-            historicoDescricao: "A arma ficou cravada em {alvo} após o impacto.",
+          cravada: {
+            momento:
+              "Depois que um ataque de arremesso acerta e ao menos um dado de dano alcança o máximo.",
+            variaveis: ["arma", "alvo"],
+            canais: {
+              acaoAtual: "A {arma} ficou cravada no alvo.",
+              solicitacao: "A {arma} ficou cravada em {alvo}.",
+              historicoTitulo: "{arma} cravada",
+              historicoDescricao: "A arma ficou cravada em {alvo} após o impacto.",
+            },
           },
-        },
         },
       },
     },
@@ -97,8 +95,7 @@ window.mensagensNarrativas = {
             momento: "Quando o combate começa e o jogador precisa determinar sua iniciativa.",
             variaveis: ["modificador"],
             canais: {
-              solicitacao:
-                "Role 1d20 {modificador} para definir sua posição na ordem do combate.",
+              solicitacao: "Role 1d20 {modificador} para definir sua posição na ordem do combate.",
             },
           },
         },
@@ -116,8 +113,7 @@ window.mensagensNarrativas = {
             momento: "Quando o jogador realiza uma jogada de ataque normal.",
             variaveis: ["modificador", "alvo"],
             canais: {
-              solicitacao:
-                "Role <strong>1d20 {modificador}</strong> para atacar {alvo}.",
+              solicitacao: "Role <strong>1d20 {modificador}</strong> para atacar {alvo}.",
             },
           },
 
@@ -145,8 +141,7 @@ window.mensagensNarrativas = {
             momento: "Depois de um acerto normal, antes da rolagem de dano.",
             variaveis: ["expressaoDano"],
             canais: {
-              solicitacao:
-                "O ataque acertou. Role <strong>{expressaoDano}</strong> de dano.",
+              solicitacao: "O ataque acertou. Role <strong>{expressaoDano}</strong> de dano.",
             },
           },
 
@@ -173,9 +168,7 @@ window.mensagensNarrativas = {
 
   ataque: {
     get selecionarAlvo() {
-      return obterMensagemJogabilidade(
-        "regras.combate.ataque.selecionarAlvo",
-      ).solicitacao;
+      return obterMensagemJogabilidade("regras.combate.ataque.selecionarAlvo").solicitacao;
     },
 
     pedirNormal: function (modificador, alvoNome) {
@@ -208,9 +201,7 @@ window.mensagensNarrativas = {
     },
 
     acertoCritico: function () {
-      return obterMensagemJogabilidade(
-        "regras.combate.dano.pedirCritico",
-      ).solicitacao;
+      return obterMensagemJogabilidade("regras.combate.dano.pedirCritico").solicitacao;
     },
   },
 
@@ -241,16 +232,14 @@ window.mensagensNarrativas = {
 
     escolherResultado: "Escolha qual resultado de dano utilizar.",
 
-    vexAplicado: function (
-  alvoNome,
-) {
-  return (
-    "<strong>Vex foi ativado.</strong> " +
-    `Você encontrou um ponto fraco na defesa de ${alvoNome}. ` +
-    "Você terá <strong>Vantagem no próximo ataque</strong> " +
-    "contra esse alvo antes do fim do seu próximo turno."
-  );
-},
+    vexAplicado: function (alvoNome) {
+      return (
+        "<strong>Vex foi ativado.</strong> " +
+        `Você encontrou um ponto fraco na defesa de ${alvoNome}. ` +
+        "Você terá <strong>Vantagem no próximo ataque</strong> " +
+        "contra esse alvo antes do fim do seu próximo turno."
+      );
+    },
   },
 
   dados: {
@@ -264,10 +253,7 @@ window.mensagensNarrativas = {
       const dobrado = subtotal * 2;
       const total = dobrado + (Number(modificador) || 0);
 
-      return (
-        `${subtotal} × 2 = ${dobrado} ` +
-        `${formatarSinalNarrativo(modificador)} = ${total}`
-      );
+      return `${subtotal} × 2 = ${dobrado} ` + `${formatarSinalNarrativo(modificador)} = ${total}`;
     },
   },
 
@@ -284,19 +270,11 @@ window.mensagensNarrativas = {
   },
 
   progressao: {
-    xpRecebido: function (
-      quantidade,
-      xpTotal,
-    ) {
-      return (
-        `Você recebeu ${quantidade} XP. ` +
-        `Seu total agora é ${xpTotal} XP.`
-      );
+    xpRecebido: function (quantidade, xpTotal) {
+      return `Você recebeu ${quantidade} XP. ` + `Seu total agora é ${xpTotal} XP.`;
     },
 
-    novoNivelDisponivel: function (
-      nivel,
-    ) {
+    novoNivelDisponivel: function (nivel) {
       return (
         `Você alcançou XP suficiente para o ` +
         `nível ${nivel}. ` +
@@ -304,13 +282,10 @@ window.mensagensNarrativas = {
       );
     },
 
-    erroAoConcederXp:
-      "Não foi possível registrar a recompensa de experiência.",
+    erroAoConcederXp: "Não foi possível registrar a recompensa de experiência.",
 
-      erroAoSalvarCombate:
-      "Não foi possível salvar todas as alterações causadas pelo combate.",
+    erroAoSalvarCombate: "Não foi possível salvar todas as alterações causadas pelo combate.",
   },
-
 };
 
 function aplicarRascunhoMensagensJogabilidade() {
@@ -332,10 +307,9 @@ function aplicarRascunhoMensagensJogabilidade() {
     const caminhoAtual = caminho.startsWith("combate.arremesso.")
       ? `descricoesNarrativas.${caminho}`
       : caminho;
-    const entrada = caminhoAtual.split(".").reduce(
-      (valor, parte) => valor?.[parte],
-      window.mensagensNarrativas.eventos,
-    );
+    const entrada = caminhoAtual
+      .split(".")
+      .reduce((valor, parte) => valor?.[parte], window.mensagensNarrativas.eventos);
 
     if (!entrada?.canais || !personalizacao?.canais) {
       continue;
@@ -352,10 +326,11 @@ function aplicarRascunhoMensagensJogabilidade() {
 aplicarRascunhoMensagensJogabilidade();
 
 function obterEntradaCatalogoMensagens(caminho) {
-  return caminho.split(".").reduce(
-    (entrada, parte) => entrada?.[parte],
-    window.mensagensNarrativas.eventos,
-  ) ?? null;
+  return (
+    caminho
+      .split(".")
+      .reduce((entrada, parte) => entrada?.[parte], window.mensagensNarrativas.eventos) ?? null
+  );
 }
 
 function preencherVariaveisMensagem(modelo, variaveis = {}) {
@@ -363,13 +338,8 @@ function preencherVariaveisMensagem(modelo, variaveis = {}) {
     return "";
   }
 
-  return modelo.replace(/\{([a-zA-Z0-9_]+)\}/g, function substituir(
-    marcador,
-    nomeVariavel,
-  ) {
-    return Object.hasOwn(variaveis, nomeVariavel)
-      ? String(variaveis[nomeVariavel])
-      : marcador;
+  return modelo.replace(/\{([a-zA-Z0-9_]+)\}/g, function substituir(marcador, nomeVariavel) {
+    return Object.hasOwn(variaveis, nomeVariavel) ? String(variaveis[nomeVariavel]) : marcador;
   });
 }
 

@@ -3,57 +3,35 @@
 function abrirPainelAtaquesCombate() {
   painelAtaquesCombate.hidden = false;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-    if (combate) {
-  combate.participanteSelecionadoId =
-    null;
+  if (combate) {
+    combate.participanteSelecionadoId = null;
 
-  const tokensSelecionados =
-    tabuleiroCombate.querySelectorAll(
-      ".token-selecionado",
-    );
+    const tokensSelecionados = tabuleiroCombate.querySelectorAll(".token-selecionado");
 
-  for (
-    const token of tokensSelecionados
-  ) {
-    token.classList.remove(
-      "token-selecionado",
-    );
+    for (const token of tokensSelecionados) {
+      token.classList.remove("token-selecionado");
+    }
+
+    atualizarDestaquesMovimentoCombate(combate);
   }
 
-  atualizarDestaquesMovimentoCombate(
-    combate,
+  const alvo = combate?.participantes.find(
+    (participante) => participante.id === combate.alvoSelecionadoId,
   );
-}
 
-  const alvo =
-    combate?.participantes.find(
-      (participante) =>
-        participante.id ===
-        combate.alvoSelecionadoId,
-    );
-
-    if (combate) {
-  atualizarDestaquesAlvosCombate(
-    combate,
-  );
-}
+  if (combate) {
+    atualizarDestaquesAlvosCombate(combate);
+  }
 
   if (alvo) {
-    exibirAcaoAtualCombate(
-      `Escolha um ataque contra ${alvo.nome}.`,
-    );
+    exibirAcaoAtualCombate(`Escolha um ataque contra ${alvo.nome}.`);
 
     return;
   }
 
-  exibirAcaoAtualCombate(
-    "Selecione um inimigo no campo de batalha.",
-  );
-
-  
+  exibirAcaoAtualCombate("Selecione um inimigo no campo de batalha.");
 }
 
 function reabrirPainelComandosCombate() {
@@ -78,230 +56,130 @@ function reabrirPainelComandosCombate() {
 
 function verificarNovaSolicitacaoCombate() {
   const possuiSolicitacao =
-    !solicitacaoCombate.hidden &&
-    solicitacaoCombate
-      .textContent
-      .trim() !== "";
+    !solicitacaoCombate.hidden && solicitacaoCombate.textContent.trim() !== "";
 
   if (!possuiSolicitacao) {
     return;
   }
 
-  painelAcaoAtualCombate.hidden =
-    false;
+  painelAcaoAtualCombate.hidden = false;
 }
 function fecharPainelAtaquesCombate() {
   painelAtaquesCombate.hidden = true;
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
   if (combate) {
-    atualizarDestaquesAlvosCombate(
-      combate,
-    );
+    atualizarDestaquesAlvosCombate(combate);
   }
 }
 
-function ativarEfeitoCombate(
-  participante,
-  operacao,
-) {
-  const combate =
-    estadoAtualJogo
-      .combateAtual;
+function ativarEfeitoCombate(participante, operacao) {
+  const combate = estadoAtualJogo.combateAtual;
 
-  if (
-    !combate ||
-    !operacao
-  ) {
+  if (!combate || !operacao) {
     return;
   }
 
   let custoConsumido = true;
 
-  if (
-    operacao.custo ===
-    "acao"
-  ) {
-    custoConsumido =
-      SistemaCombate
-        .consumirAcao(
-          participante,
-        );
+  if (operacao.custo === "acao") {
+    custoConsumido = SistemaCombate.consumirAcao(participante);
   }
 
-  if (
-    operacao.custo ===
-    "acaoBonus"
-  ) {
-    custoConsumido =
-      SistemaCombate
-        .consumirAcaoBonus(
-          participante,
-        );
+  if (operacao.custo === "acaoBonus") {
+    custoConsumido = SistemaCombate.consumirAcaoBonus(participante);
   }
 
-  if (
-    operacao.custo ===
-    "reacao"
-  ) {
-    custoConsumido =
-      SistemaCombate
-        .consumirReacao(
-          participante,
-        );
+  if (operacao.custo === "reacao") {
+    custoConsumido = SistemaCombate.consumirReacao(participante);
   }
 
   if (!custoConsumido) {
-    console.warn(
-      "Não foi possível consumir o custo da operação.",
-    );
+    console.warn("Não foi possível consumir o custo da operação.");
 
     return;
   }
 
-  const resultadoRecurso =
-    window.TradutorRegras
-      .consumirRecurso(
-        participante,
-        operacao,
-      );
+  const resultadoRecurso = window.TradutorRegras.consumirRecurso(participante, operacao);
 
   if (!resultadoRecurso.sucesso) {
-    console.warn(
-      "Não foi possível consumir o recurso:",
-      resultadoRecurso.motivo,
-    );
+    console.warn("Não foi possível consumir o recurso:", resultadoRecurso.motivo);
 
     return;
   }
 
-  combate.efeitoPendente =
-    structuredClone(
-      operacao,
-    );
+  combate.efeitoPendente = structuredClone(operacao);
 
-  const rolagem =
-    operacao.rolagem;
+  const rolagem = operacao.rolagem;
 
   if (!rolagem) {
-    console.warn(
-      "A operação não possui rolagem.",
-    );
+    console.warn("A operação não possui rolagem.");
 
-    combate.efeitoPendente =
-      null;
+    combate.efeitoPendente = null;
 
     return;
   }
 
-  solicitarRolagemNaCaixa(
-    rolagem.gruposDeDados,
-    rolagem.modificador,
-    operacao.origem.nome,
-  );
+  solicitarRolagemNaCaixa(rolagem.gruposDeDados, rolagem.modificador, operacao.origem.nome);
 
-  solicitacaoCombate.textContent =
-    `Role os dados para usar ` +
-    `${operacao.origem.nome}.`;
+  solicitacaoCombate.textContent = `Role os dados para usar ` + `${operacao.origem.nome}.`;
 
-  solicitacaoCombate.hidden =
-    false;
+  solicitacaoCombate.hidden = false;
 
-  atualizarInterfaceTurno(
-    combate,
-  );
+  atualizarInterfaceTurno(combate);
 }
 
-function renderizarEfeitosAtivaveisCombate(
-  participante
-) {
-  const efeitos =
-  window.TradutorRegras
-    .prepararOperacoes({
-      gatilho: "aoAtivar",
-      participante: participante,
-    });
+function renderizarEfeitosAtivaveisCombate(participante) {
+  const efeitos = window.TradutorRegras.prepararOperacoes({
+    gatilho: "aoAtivar",
+    participante: participante,
+  });
 
-  let quantidadeAcoesBonus =
-    0;
+  let quantidadeAcoesBonus = 0;
 
   for (const efeito of efeitos) {
-    const botao =
-      document.createElement(
-        "button"
-      );
+    const botao = document.createElement("button");
 
-    botao.type =
-      "button";
+    botao.type = "button";
 
-    botao.textContent =
-      efeito.origem.nome;
+    botao.textContent = efeito.origem.nome;
 
-    botao.dataset.efeitoId =
-      efeito.origem.id;
+    botao.dataset.efeitoId = efeito.origem.id;
 
-      botao.addEventListener(
-  "click",
-  function ativarEfeito() {
-    ativarEfeitoCombate(
-      participante,
-      efeito,
-    );
-  }
-);
+    botao.addEventListener("click", function ativarEfeito() {
+      ativarEfeitoCombate(participante, efeito);
+    });
 
-    if (
-      efeito.custo ===
-      "acao"
-    ) {
-      listaAcoesTurno.append(
-        botao
-      );
+    if (efeito.custo === "acao") {
+      listaAcoesTurno.append(botao);
 
       continue;
     }
 
-    if (
-      efeito.custo ===
-      "acaoBonus"
-    ) {
-      listaAcoesBonusTurno.append(
-        botao
-      );
+    if (efeito.custo === "acaoBonus") {
+      listaAcoesBonusTurno.append(botao);
 
       quantidadeAcoesBonus++;
     }
   }
 
   return {
-    quantidadeAcoesBonus:
-      quantidadeAcoesBonus
+    quantidadeAcoesBonus: quantidadeAcoesBonus,
   };
 }
 
-function ativarDesengajarCombate(
-  participante,
-) {
-  const combate =
-    estadoAtualJogo.combateAtual;
+function ativarDesengajarCombate(participante) {
+  const combate = estadoAtualJogo.combateAtual;
 
   if (!combate) {
     return;
   }
 
-  const resultado =
-    SistemaCombate.usarAcaoDesengajar(
-      combate,
-      participante.id,
-    );
+  const resultado = SistemaCombate.usarAcaoDesengajar(combate, participante.id);
 
   if (!resultado.sucesso) {
-    console.warn(
-      "Não foi possível desengajar:",
-      resultado.motivo,
-    );
+    console.warn("Não foi possível desengajar:", resultado.motivo);
 
     return;
   }
@@ -345,219 +223,128 @@ function renderizarAcoesCombate(participante) {
 
   listaAcoesTurno.append(botaoAtacar);
 
-  const botaoDesengajar =
-  document.createElement("button");
+  const botaoDesengajar = document.createElement("button");
 
-botaoDesengajar.type = "button";
+  botaoDesengajar.type = "button";
 
-botaoDesengajar.textContent =
-  participante.desengajando
-    ? "Desengajando"
-    : "Desengajar";
+  botaoDesengajar.textContent = participante.desengajando ? "Desengajando" : "Desengajar";
 
-botaoDesengajar.title =
-  "Gaste sua ação para se mover sem provocar ataques de oportunidade neste turno.";
+  botaoDesengajar.title =
+    "Gaste sua ação para se mover sem provocar ataques de oportunidade neste turno.";
 
-botaoDesengajar.disabled =
-  !participante.acaoDisponivel ||
-  participante.desengajando;
+  botaoDesengajar.disabled = !participante.acaoDisponivel || participante.desengajando;
 
-botaoDesengajar.addEventListener(
-  "click",
-  function () {
-    ativarDesengajarCombate(
-      participante,
-    );
-  },
-);
+  botaoDesengajar.addEventListener("click", function () {
+    ativarDesengajarCombate(participante);
+  });
 
-listaAcoesTurno.append(
-  botaoDesengajar,
-);
+  listaAcoesTurno.append(botaoDesengajar);
 
-  const resultadoEfeitos =
-  renderizarEfeitosAtivaveisCombate(
-    participante
-  );
+  const resultadoEfeitos = renderizarEfeitosAtivaveisCombate(participante);
 
-if (
-  resultadoEfeitos
-    .quantidadeAcoesBonus ===
-  0
-) {
-  const mensagemAcaoBonus =
-    document.createElement(
-      "p"
-    );
+  if (resultadoEfeitos.quantidadeAcoesBonus === 0) {
+    const mensagemAcaoBonus = document.createElement("p");
 
-  mensagemAcaoBonus.textContent =
-    participante
-      .acaoBonusDisponivel
+    mensagemAcaoBonus.textContent = participante.acaoBonusDisponivel
       ? "Nenhuma opção disponível."
       : "Ação bônus utilizada.";
 
-  listaAcoesBonusTurno.append(
-    mensagemAcaoBonus
-  );
-}
+    listaAcoesBonusTurno.append(mensagemAcaoBonus);
+  }
 }
 
-function formatarResultadoEscolhaRolagem(
-  rolagem,
-) {
-  const subtotal =
-    Number(rolagem.subtotal) || 0;
+function formatarResultadoEscolhaRolagem(rolagem) {
+  const subtotal = Number(rolagem.subtotal) || 0;
 
-  const modificador =
-    Number(rolagem.modificador) || 0;
+  const modificador = Number(rolagem.modificador) || 0;
 
-  const total =
-    Number(rolagem.total) ||
-    subtotal + modificador;
+  const total = Number(rolagem.total) || subtotal + modificador;
 
   if (modificador < 0) {
-    return (
-      `${subtotal} - ` +
-      `${Math.abs(modificador)} = ` +
-      `${total}`
-    );
+    return `${subtotal} - ` + `${Math.abs(modificador)} = ` + `${total}`;
   }
 
-  return (
-    `${subtotal} + ` +
-    `${modificador} = ` +
-    `${total}`
-  );
+  return `${subtotal} + ` + `${modificador} = ` + `${total}`;
 }
 
-function exibirEscolhaEntreRolagens(
-  rolagens,
-  aoEscolher,
-) {
+function exibirEscolhaEntreRolagens(rolagens, aoEscolher) {
   acoesCombate.innerHTML = "";
 
-  solicitacaoCombate.textContent =
-    "Escolha qual resultado de dano utilizar.";
+  solicitacaoCombate.textContent = "Escolha qual resultado de dano utilizar.";
 
   solicitacaoCombate.hidden = false;
 
-  if (
-    !Array.isArray(rolagens) ||
-    rolagens.length === 0
-  ) {
-    console.warn(
-      "Nenhuma rolagem disponível para escolha.",
-      rolagens,
-    );
+  if (!Array.isArray(rolagens) || rolagens.length === 0) {
+    console.warn("Nenhuma rolagem disponível para escolha.", rolagens);
 
     return;
   }
 
-  rolagens.forEach(function criarBotaoRolagem(
-    rolagem,
-    indice,
-  ) {
-    const subtotal =
-      Number(rolagem.subtotal) || 0;
+  rolagens.forEach(function criarBotaoRolagem(rolagem, indice) {
+    const subtotal = Number(rolagem.subtotal) || 0;
 
-    const modificador =
-      Number(rolagem.modificador) || 0;
+    const modificador = Number(rolagem.modificador) || 0;
 
-    const total =
-      Number.isFinite(Number(rolagem.total))
-        ? Number(rolagem.total)
-        : subtotal + modificador;
+    const total = Number.isFinite(Number(rolagem.total))
+      ? Number(rolagem.total)
+      : subtotal + modificador;
 
-    const combate =
-  estadoAtualJogo.combateAtual;
+    const combate = estadoAtualJogo.combateAtual;
 
-const critico =
-  Boolean(
-    combate?.danoPendente?.critico,
-  );
+    const critico = Boolean(combate?.danoPendente?.critico);
 
-let conta;
+    let conta;
 
-if (critico) {
-  const subtotalDobrado =
-    subtotal * 2;
+    if (critico) {
+      const subtotalDobrado = subtotal * 2;
 
-  const totalCritico =
-    subtotalDobrado + modificador;
+      const totalCritico = subtotalDobrado + modificador;
 
-  if (modificador < 0) {
-    conta =
-      `${subtotal} × 2 = ` +
-      `${subtotalDobrado} - ` +
-      `${Math.abs(modificador)} = ` +
-      `${totalCritico}`;
-  } else if (modificador > 0) {
-    conta =
-      `${subtotal} × 2 = ` +
-      `${subtotalDobrado} + ` +
-      `${modificador} = ` +
-      `${totalCritico}`;
-  } else {
-    conta =
-      `${subtotal} × 2 = ` +
-      `${subtotalDobrado}`;
-  }
-} else if (modificador < 0) {
-  conta =
-    `${subtotal} - ` +
-    `${Math.abs(modificador)} = ` +
-    `${total}`;
-} else if (modificador > 0) {
-  conta =
-    `${subtotal} + ` +
-    `${modificador} = ` +
-    `${total}`;
-} else {
-  conta =
-    String(subtotal);
-}
+      if (modificador < 0) {
+        conta =
+          `${subtotal} × 2 = ` +
+          `${subtotalDobrado} - ` +
+          `${Math.abs(modificador)} = ` +
+          `${totalCritico}`;
+      } else if (modificador > 0) {
+        conta =
+          `${subtotal} × 2 = ` + `${subtotalDobrado} + ` + `${modificador} = ` + `${totalCritico}`;
+      } else {
+        conta = `${subtotal} × 2 = ` + `${subtotalDobrado}`;
+      }
+    } else if (modificador < 0) {
+      conta = `${subtotal} - ` + `${Math.abs(modificador)} = ` + `${total}`;
+    } else if (modificador > 0) {
+      conta = `${subtotal} + ` + `${modificador} = ` + `${total}`;
+    } else {
+      conta = String(subtotal);
+    }
 
-    const botao = document.createElement(
-      "button",
-    );
+    const botao = document.createElement("button");
 
     botao.type = "button";
 
-botao.classList.add(
-  "opcao-rolagem-combate",
-);
+    botao.classList.add("opcao-rolagem-combate");
 
-const rotuloRolagem =
-  document.createElement("span");
+    const rotuloRolagem = document.createElement("span");
 
-rotuloRolagem.className =
-  "rotulo-opcao-rolagem";
+    rotuloRolagem.className = "rotulo-opcao-rolagem";
 
-rotuloRolagem.textContent =
-  `Usar rolagem ${indice + 1}`;
+    rotuloRolagem.textContent = `Usar rolagem ${indice + 1}`;
 
-const calculoRolagem =
-  document.createElement("span");
+    const calculoRolagem = document.createElement("span");
 
-calculoRolagem.className =
-  "calculo-opcao-rolagem";
+    calculoRolagem.className = "calculo-opcao-rolagem";
 
-calculoRolagem.textContent =
-  conta;
+    calculoRolagem.textContent = conta;
 
-botao.append(
-  rotuloRolagem,
-  calculoRolagem,
-);
+    botao.append(rotuloRolagem, calculoRolagem);
 
-    botao.addEventListener(
-      "click",
-      function escolherRolagem() {
-        acoesCombate.innerHTML = "";
+    botao.addEventListener("click", function escolherRolagem() {
+      acoesCombate.innerHTML = "";
 
-        aoEscolher(rolagem);
-      },
-    );
+      aoEscolher(rolagem);
+    });
 
     acoesCombate.append(botao);
   });
@@ -596,113 +383,63 @@ function renderizarListaAtaquesCombate(combate, participante) {
 
     botao.dataset.idAtaque = ataque.instanciaId ?? ataque.id;
 
-    const nomeAtaque =
-  document.createElement("span");
+    const nomeAtaque = document.createElement("span");
 
-nomeAtaque.classList.add(
-  "nome-ataque-combate",
-);
+    nomeAtaque.classList.add("nome-ataque-combate");
 
-nomeAtaque.textContent =
-  ataque.nome;
+    nomeAtaque.textContent = ataque.nome;
 
-  const detalhesAtaque =
-  document.createElement(
-    "span",
-  );
+    const detalhesAtaque = document.createElement("span");
 
-detalhesAtaque.classList.add(
-  "detalhes-ataque-combate",
-);
+    detalhesAtaque.classList.add("detalhes-ataque-combate");
 
-const grupoDano =
-  ataque
-    ?.dano
-    ?.gruposDeDados
-    ?.[0];
+    const grupoDano = ataque?.dano?.gruposDeDados?.[0];
 
-const textoDano =
-  grupoDano
-    ? `${grupoDano.quantidade}d${grupoDano.numeroDeFaces}`
-    : "";
+    const textoDano = grupoDano ? `${grupoDano.quantidade}d${grupoDano.numeroDeFaces}` : "";
 
-const modificadorDano =
-  ataque
-    ?.dano
-    ?.modificador ??
-  0;
+    const modificadorDano = ataque?.dano?.modificador ?? 0;
 
-const textoModificadorDano =
-  modificadorDano >= 0
-    ? `+ ${modificadorDano}`
-    : `- ${Math.abs(modificadorDano)}`;
+    const textoModificadorDano =
+      modificadorDano >= 0 ? `+ ${modificadorDano}` : `- ${Math.abs(modificadorDano)}`;
 
-const bonusAtaque =
-  ataque.bonusAtaque >= 0
-    ? `+${ataque.bonusAtaque}`
-    : `${ataque.bonusAtaque}`;
+    const bonusAtaque =
+      ataque.bonusAtaque >= 0 ? `+${ataque.bonusAtaque}` : `${ataque.bonusAtaque}`;
 
-detalhesAtaque.textContent =
-  `${bonusAtaque} para acertar • ` +
-  `${textoDano} ${textoModificadorDano} ` +
-  `${ataque.dano.tipo}`;
+    detalhesAtaque.textContent =
+      `${bonusAtaque} para acertar • ` +
+      `${textoDano} ${textoModificadorDano} ` +
+      `${ataque.dano.tipo}`;
 
-botao.append(
-  nomeAtaque,
-  detalhesAtaque,
-);
+    botao.append(nomeAtaque, detalhesAtaque);
 
-const dominaMaestria =
-  window.TradutorRegras
-    .participanteDominaArma(
-      participante,
-      ataque,
-    );
+    const dominaMaestria = window.TradutorRegras.participanteDominaArma(participante, ataque);
 
-if (
-  dominaMaestria &&
-  ataque.maestriaId
-) {
-  const maestria =
-    window.bancoMaestrias
-      ?.[ataque.maestriaId];
+    if (dominaMaestria && ataque.maestriaId) {
+      const maestria = window.bancoMaestrias?.[ataque.maestriaId];
 
-  if (maestria) {
-    const textoMaestria =
-      document.createElement(
-        "span",
-      );
+      if (maestria) {
+        const textoMaestria = document.createElement("span");
 
-    textoMaestria.classList.add(
-      "maestria-ataque-combate",
-    );
+        textoMaestria.classList.add("maestria-ataque-combate");
 
-    textoMaestria.textContent =
-      `Maestria: ${maestria.nome}`;
+        textoMaestria.textContent = `Maestria: ${maestria.nome}`;
 
-    botao.append(
-      textoMaestria,
-    );
-  }
-}
+        botao.append(textoMaestria);
+      }
+    }
 
-    const custoAtaque =
-  SistemaCombate.obterCustoAtaque(participante, ataque);
+    const custoAtaque = SistemaCombate.obterCustoAtaque(participante, ataque);
 
-const recursoDisponivel =
-  custoAtaque === "nenhum" ||
-  (custoAtaque === "acao" && participante.acaoDisponivel) ||
-  (custoAtaque === "acaoBonus" && participante.acaoBonusDisponivel);
+    const recursoDisponivel =
+      custoAtaque === "nenhum" ||
+      (custoAtaque === "acao" && participante.acaoDisponivel) ||
+      (custoAtaque === "acaoBonus" && participante.acaoBonusDisponivel);
 
-const equipamentoFoiArremessado =
-  ataque.equipamentoInstanciaId &&
-  participante.equipamentosArremessados?.includes(
-    ataque.equipamentoInstanciaId,
-  );
+    const equipamentoFoiArremessado =
+      ataque.equipamentoInstanciaId &&
+      participante.equipamentosArremessados?.includes(ataque.equipamentoInstanciaId);
 
-const ataqueDisponivel =
-  recursoDisponivel &&
-  !equipamentoFoiArremessado;
+    const ataqueDisponivel = recursoDisponivel && !equipamentoFoiArremessado;
 
     botao.disabled = !ataqueDisponivel;
 
@@ -730,13 +467,12 @@ const ataqueDisponivel =
   }
 
   if (!alvo) {
-  mensagemAtaquesCombate.textContent =
-    combate.ataqueSelecionadoId
+    mensagemAtaquesCombate.textContent = combate.ataqueSelecionadoId
       ? "Agora selecione um inimigo no tabuleiro."
       : "Escolha uma arma para realizar o ataque.";
 
-  return;
-}
+    return;
+  }
   if (quantidadeDisponivel === 0) {
     mensagemAtaquesCombate.textContent =
       `Aproxime-se de ${alvo.nome} ` + "para entrar no alcance de um ataque.";

@@ -27,24 +27,14 @@
   function obterNivelPorXp(xpTotal) {
     const xp = Number(xpTotal);
 
-    if (
-      !Number.isFinite(xp) ||
-      xp < 0
-    ) {
+    if (!Number.isFinite(xp) || xp < 0) {
       return null;
     }
 
     let nivelCorrespondente = 1;
 
-    for (
-      let nivel = 1;
-      nivel <= 20;
-      nivel += 1
-    ) {
-      if (
-        xp >=
-        xpNecessarioPorNivel[nivel]
-      ) {
+    for (let nivel = 1; nivel <= 20; nivel += 1) {
+      if (xp >= xpNecessarioPorNivel[nivel]) {
         nivelCorrespondente = nivel;
       }
     }
@@ -52,23 +42,15 @@
     return nivelCorrespondente;
   }
 
-  function validarRecompensaXp(
-    recompensa,
-  ) {
-    if (
-      recompensa === null ||
-      typeof recompensa !== "object"
-    ) {
+  function validarRecompensaXp(recompensa) {
+    if (recompensa === null || typeof recompensa !== "object") {
       return {
         valida: false,
         motivo: "recompensaInvalida",
       };
     }
 
-    if (
-      typeof recompensa.id !== "string" ||
-      recompensa.id.trim() === ""
-    ) {
+    if (typeof recompensa.id !== "string" || recompensa.id.trim() === "") {
       return {
         valida: false,
         motivo: "recompensaSemId",
@@ -82,13 +64,9 @@
       };
     }
 
-    const quantidade =
-      Number(recompensa.quantidade);
+    const quantidade = Number(recompensa.quantidade);
 
-    if (
-      !Number.isInteger(quantidade) ||
-      quantidade <= 0
-    ) {
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
       return {
         valida: false,
         motivo: "quantidadeXpInvalida",
@@ -102,15 +80,8 @@
     };
   }
 
-  function prepararConcessaoXp(
-    personagemOriginal,
-    recompensa,
-  ) {
-    const personagem =
-      window.PersonagemDados
-        .normalizar(
-          personagemOriginal,
-        );
+  function prepararConcessaoXp(personagemOriginal, recompensa) {
+    const personagem = window.PersonagemDados.normalizar(personagemOriginal);
 
     if (!personagem?.id) {
       return {
@@ -120,10 +91,7 @@
       };
     }
 
-    const validacao =
-      validarRecompensaXp(
-        recompensa,
-      );
+    const validacao = validarRecompensaXp(recompensa);
 
     if (!validacao.valida) {
       return {
@@ -133,66 +101,44 @@
       };
     }
 
-        const aventuraId =
-      recompensa
-        .origem
-        ?.aventuraId;
+    const aventuraId = recompensa.origem?.aventuraId;
 
     const aventuraJaVencida =
       typeof aventuraId === "string" &&
-      window.PersonagemDados
-        ?.venceuAventura?.(
-          personagem,
-          aventuraId
-        );
+      window.PersonagemDados?.venceuAventura?.(personagem, aventuraId);
 
     if (aventuraJaVencida) {
-      const xpAtual =
-        Number(personagem.xp) || 0;
+      const xpAtual = Number(personagem.xp) || 0;
 
-      const nivelAtualPorXp =
-        obterNivelPorXp(xpAtual);
+      const nivelAtualPorXp = obterNivelPorXp(xpAtual);
 
       return {
         sucesso: true,
         concedida: false,
-        motivo:
-          "aventuraJaConcluida",
+        motivo: "aventuraJaConcluida",
 
         personagem,
 
         xpAnterior: xpAtual,
         xpAtual,
 
-        nivelAnteriorPorXp:
-          nivelAtualPorXp,
+        nivelAnteriorPorXp: nivelAtualPorXp,
 
         nivelAtualPorXp,
 
-        novoNivelDisponivel:
-          false,
+        novoNivelDisponivel: false,
       };
     }
 
-    const recompensaJaRecebida =
-      personagem
-        .recompensasRecebidas
-        .some(
-          function (
-            recompensaRegistrada,
-          ) {
-            return (
-              recompensaRegistrada.id ===
-              recompensa.id
-            );
-          },
-        );
+    const recompensaJaRecebida = personagem.recompensasRecebidas.some(
+      function (recompensaRegistrada) {
+        return recompensaRegistrada.id === recompensa.id;
+      },
+    );
 
-    const xpAnterior =
-      Number(personagem.xp) || 0;
+    const xpAnterior = Number(personagem.xp) || 0;
 
-    const nivelAnteriorPorXp =
-      obterNivelPorXp(xpAnterior);
+    const nivelAnteriorPorXp = obterNivelPorXp(xpAnterior);
 
     if (recompensaJaRecebida) {
       return {
@@ -203,75 +149,49 @@
         xpAnterior,
         xpAtual: xpAnterior,
         nivelAnteriorPorXp,
-        nivelAtualPorXp:
-          nivelAnteriorPorXp,
+        nivelAtualPorXp: nivelAnteriorPorXp,
       };
     }
 
-    const personagemAtualizado =
-      structuredClone(personagem);
+    const personagemAtualizado = structuredClone(personagem);
 
     const registroRecompensa = {
       id: recompensa.id,
       tipo: "xp",
-      quantidade:
-        validacao.quantidade,
+      quantidade: validacao.quantidade,
 
-      origem:
-        structuredClone(
-          recompensa.origem ?? null,
-        ),
+      origem: structuredClone(recompensa.origem ?? null),
 
-      recebidaEm:
-        new Date().toISOString(),
+      recebidaEm: new Date().toISOString(),
     };
 
-    personagemAtualizado.xp =
-      xpAnterior +
-      validacao.quantidade;
+    personagemAtualizado.xp = xpAnterior + validacao.quantidade;
 
-    personagemAtualizado
-      .recompensasRecebidas
-      .push(registroRecompensa);
+    personagemAtualizado.recompensasRecebidas.push(registroRecompensa);
 
-    const nivelAtualPorXp =
-      obterNivelPorXp(
-        personagemAtualizado.xp,
-      );
+    const nivelAtualPorXp = obterNivelPorXp(personagemAtualizado.xp);
 
     return {
       sucesso: true,
       concedida: true,
       motivo: null,
 
-      personagem:
-        personagemAtualizado,
+      personagem: personagemAtualizado,
 
-      recompensa:
-        registroRecompensa,
+      recompensa: registroRecompensa,
 
       xpAnterior,
-      xpAtual:
-        personagemAtualizado.xp,
+      xpAtual: personagemAtualizado.xp,
 
       nivelAnteriorPorXp,
       nivelAtualPorXp,
 
-      novoNivelDisponivel:
-        nivelAtualPorXp >
-        nivelAnteriorPorXp,
+      novoNivelDisponivel: nivelAtualPorXp > nivelAnteriorPorXp,
     };
   }
 
-  function concederXp(
-    personagemOriginal,
-    recompensa,
-  ) {
-    const preparacao =
-      prepararConcessaoXp(
-        personagemOriginal,
-        recompensa,
-      );
+  function concederXp(personagemOriginal, recompensa) {
+    const preparacao = prepararConcessaoXp(personagemOriginal, recompensa);
 
     if (!preparacao.sucesso) {
       return preparacao;
@@ -281,11 +201,7 @@
       return preparacao;
     }
 
-    const personagemSalvo =
-      window.PersonagemDados
-        .atualizarSalvo(
-          preparacao.personagem,
-        );
+    const personagemSalvo = window.PersonagemDados.atualizarSalvo(preparacao.personagem);
 
     if (!personagemSalvo) {
       return {
@@ -298,15 +214,13 @@
 
     return {
       ...preparacao,
-      personagem:
-        personagemSalvo,
+      personagem: personagemSalvo,
     };
   }
 
-  window.SistemaProgressao =
-    Object.freeze({
-      obterNivelPorXp,
-      prepararConcessaoXp,
-      concederXp,
-    });
+  window.SistemaProgressao = Object.freeze({
+    obterNivelPorXp,
+    prepararConcessaoXp,
+    concederXp,
+  });
 })();

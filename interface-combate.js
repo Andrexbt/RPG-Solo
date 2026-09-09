@@ -9,7 +9,7 @@ function exibirTelaAventura() {
 
   layoutAventura.classList.remove("modo-combate");
 
-   devolverCaixaDadosParaAventura();
+  devolverCaixaDadosParaAventura();
 }
 
 function moverCaixaDadosParaCombate() {
@@ -19,9 +19,7 @@ function moverCaixaDadosParaCombate() {
 
   document.body.append(janelaDados);
 
-  janelaDados.classList.remove(
-    "janela-encaixada",
-  );
+  janelaDados.classList.remove("janela-encaixada");
 
   janelaDados.style.left = "24px";
   janelaDados.style.right = "auto";
@@ -42,10 +40,7 @@ function exibirTelaCombate() {
 }
 
 function devolverCaixaDadosParaAventura() {
-  if (
-    !janelaDados ||
-    !marcadorOriginalJanelaDados.parentNode
-  ) {
+  if (!janelaDados || !marcadorOriginalJanelaDados.parentNode) {
     return;
   }
 
@@ -54,9 +49,7 @@ function devolverCaixaDadosParaAventura() {
     marcadorOriginalJanelaDados.nextSibling,
   );
 
-  janelaDados.classList.add(
-    "janela-encaixada",
-  );
+  janelaDados.classList.add("janela-encaixada");
 
   janelaDados.style.left = "";
   janelaDados.style.right = "";
@@ -78,67 +71,31 @@ function atualizarIndicadorRecurso(elemento, disponivel) {
   elemento.dataset.disponivel = String(disponivel);
 }
 
-function atualizarPontosDeVidaFichaCombate(
-  combate,
-) {
-  const participanteJogador =
-    combate.participantes.find(
-      function encontrarJogador(
-        participante,
-      ) {
-        return (
-          participante.tipo ===
-          "jogador"
-        );
-      },
-    );
+function atualizarPontosDeVidaFichaCombate(combate) {
+  const participanteJogador = combate.participantes.find(function encontrarJogador(participante) {
+    return participante.tipo === "jogador";
+  });
 
-  if (
-    !participanteJogador ||
-    !estadoAtualJogo
-      .personagem
-      .dados
-  ) {
+  if (!participanteJogador || !estadoAtualJogo.personagem.dados) {
     return;
   }
 
-  estadoAtualJogo
-    .personagem
-    .dados
-    .combate
-    .pontosDeVida =
-    structuredClone(
-      participanteJogador
-        .pontosDeVida,
-    );
+  estadoAtualJogo.personagem.dados.combate.pontosDeVida = structuredClone(
+    participanteJogador.pontosDeVida,
+  );
 
-  const areaFicha =
-    document.getElementById(
-      "conteudoFicha",
-    );
+  const areaFicha = document.getElementById("conteudoFicha");
 
   if (!areaFicha) {
     return;
   }
 
-  window.FichaPersonagem.renderizar(
-    estadoAtualJogo
-      .personagem
-      .dados,
-    areaFicha,
-    {
-      secoes: [
-        "combate",
-      ],
-    },
-  );
+  window.FichaPersonagem.renderizar(estadoAtualJogo.personagem.dados, areaFicha, {
+    secoes: ["combate"],
+  });
 }
 
-function alvoDisponivelParaAtaque(
-  combate,
-  atacante,
-  alvo,
-) {
+function alvoDisponivelParaAtaque(combate, atacante, alvo) {
   if (
     !combate ||
     !atacante ||
@@ -150,170 +107,91 @@ function alvoDisponivelParaAtaque(
     return false;
   }
 
-  const ataques =
-    atacante.ataques ?? [];
+  const ataques = atacante.ataques ?? [];
 
-  return ataques.some(
-    function ataqueAlcancaAlvo(
-      ataque,
-    ) {
-      const resultado =
-        SistemaCombate
-          .validarSelecaoAcao(
-            atacante,
-            alvo,
-            ataque,
-            combate,
-          );
+  return ataques.some(function ataqueAlcancaAlvo(ataque) {
+    const resultado = SistemaCombate.validarSelecaoAcao(atacante, alvo, ataque, combate);
 
-      return resultado.sucesso;
-    },
-  );
+    return resultado.sucesso;
+  });
 }
 
-function atualizarDestaquesAlvosCombate(
-  combate,
-) {
-  const modoSelecaoAtivo =
-    !painelAtaquesCombate.hidden;
+function atualizarDestaquesAlvosCombate(combate) {
+  const modoSelecaoAtivo = !painelAtaquesCombate.hidden;
 
-  tabuleiroCombate.classList.toggle(
-    "selecionando-alvo",
-    modoSelecaoAtivo,
+  tabuleiroCombate.classList.toggle("selecionando-alvo", modoSelecaoAtivo);
+
+  const atacante = combate?.participantes.find(
+    (participante) => participante.id === combate.participanteAtivoId,
   );
 
-  const atacante =
-    combate?.participantes.find(
-      (participante) =>
-        participante.id ===
-        combate.participanteAtivoId,
-    );
-
-  const tokens =
-    tabuleiroCombate.querySelectorAll(
-      ".token-combate",
-    );
+  const tokens = tabuleiroCombate.querySelectorAll(".token-combate");
 
   for (const token of tokens) {
-    const participante =
-      combate?.participantes.find(
-        (item) =>
-          item.id ===
-          token.dataset.idParticipante,
-      );
+    const participante = combate?.participantes.find(
+      (item) => item.id === token.dataset.idParticipante,
+    );
 
     const alvoDisponivel =
-      modoSelecaoAtivo &&
-      alvoDisponivelParaAtaque(
-        combate,
-        atacante,
-        participante,
-      );
+      modoSelecaoAtivo && alvoDisponivelParaAtaque(combate, atacante, participante);
 
-    token.classList.toggle(
-      "token-alvo-disponivel",
-      alvoDisponivel,
-    );
+    token.classList.toggle("token-alvo-disponivel", alvoDisponivel);
   }
 }
 
-function celulaDisponivelParaMovimento(
-  combate,
-  participante,
-  coluna,
-  linha,
-) {
+function celulaDisponivelParaMovimento(combate, participante, coluna, linha) {
   if (
     !combate ||
     !participante ||
     participante.tipo !== "jogador" ||
-    combate.participanteAtivoId !==
-      participante.id
+    combate.participanteAtivoId !== participante.id
   ) {
     return false;
   }
 
-  const celulaOcupada =
-    combate.participantes.some(
-      function verificarOcupacao(
-        outroParticipante,
-      ) {
-        return (
-          outroParticipante.id !==
-            participante.id &&
-          outroParticipante.estado !==
-            "derrotado" &&
-          outroParticipante.posicao.coluna ===
-            coluna &&
-          outroParticipante.posicao.linha ===
-            linha
-        );
-      },
+  const celulaOcupada = combate.participantes.some(function verificarOcupacao(outroParticipante) {
+    return (
+      outroParticipante.id !== participante.id &&
+      outroParticipante.estado !== "derrotado" &&
+      outroParticipante.posicao.coluna === coluna &&
+      outroParticipante.posicao.linha === linha
     );
+  });
 
   if (celulaOcupada) {
     return false;
   }
 
-  const tipoTerreno =
-  SistemaCombate.obterTipoTerreno(
-    combate,
+  const tipoTerreno = SistemaCombate.obterTipoTerreno(combate, coluna, linha);
+
+  if (tipoTerreno === "bloqueado") {
+    return false;
+  }
+
+  const distanciaMinima = SistemaCombate.calcularDistancia(participante.posicao, {
     coluna,
     linha,
-  );
+  });
 
-if (tipoTerreno === "bloqueado") {
-  return false;
-}
+  if (distanciaMinima === 0 || distanciaMinima > participante.movimentoRestante) {
+    return false;
+  }
 
-  const distanciaMinima =
-  SistemaCombate.calcularDistancia(
-    participante.posicao,
-    {
-      coluna,
-      linha,
-    },
-  );
+  const resultadoCaminho = SistemaCombate.calcularCaminhoMovimento(combate, participante, {
+    coluna,
+    linha,
+  });
 
-if (
-  distanciaMinima === 0 ||
-  distanciaMinima >
-    participante.movimentoRestante
-) {
-  return false;
-}
-
-const resultadoCaminho =
-  SistemaCombate.calcularCaminhoMovimento(
-    combate,
-    participante,
-    {
-      coluna,
-      linha,
-    },
-  );
-
-return (
-  resultadoCaminho !== null &&
-  resultadoCaminho.custo <=
-    participante.movimentoRestante
-);
+  return resultadoCaminho !== null && resultadoCaminho.custo <= participante.movimentoRestante;
 }
 
 function atualizarDestaquesMovimentoCombate() {
-  tabuleiroCombate.classList.remove(
-    "selecionando-movimento",
-  );
+  tabuleiroCombate.classList.remove("selecionando-movimento");
 
-  const celulas =
-    tabuleiroCombate.querySelectorAll(
-      ".celula-movimento-disponivel",
-    );
+  const celulas = tabuleiroCombate.querySelectorAll(".celula-movimento-disponivel");
 
   for (const celula of celulas) {
-    celula.classList.remove(
-      "celula-movimento-disponivel",
-    );
+    celula.classList.remove("celula-movimento-disponivel");
   }
 }
 
@@ -329,19 +207,13 @@ function atualizarInterfaceTurno(combate) {
 
   botaoEncerrarTurno.disabled = !participanteJogadorAtivo || combate.status !== "ativo";
 
-  const estaNaIniciativa =
-  combate.fase === "iniciativa";
+  const estaNaIniciativa = combate.fase === "iniciativa";
 
-rotuloFaseCombate.textContent =
-  estaNaIniciativa
-    ? "Iniciativa"
-    : "Rodada";
+  rotuloFaseCombate.textContent = estaNaIniciativa ? "Iniciativa" : "Rodada";
 
-numeroRodadaCombate.hidden =
-  estaNaIniciativa;
+  numeroRodadaCombate.hidden = estaNaIniciativa;
 
-numeroRodadaCombate.textContent =
-  combate.rodada;
+  numeroRodadaCombate.textContent = combate.rodada;
 
   renderizarFilaIniciativa(combate);
 
@@ -373,70 +245,30 @@ numeroRodadaCombate.textContent =
 
       token.style.gridRow = participanteDoToken.posicao.linha;
 
-      renderizarCondicoesToken(
-  token,
-  participanteDoToken,
-  combate,
-);
+      renderizarCondicoesToken(token, participanteDoToken, combate);
 
-renderizarItensCravadosToken(
-  token,
-  participanteDoToken,
-);
+      renderizarItensCravadosToken(token, participanteDoToken);
 
+      if (participanteDoToken && participanteDoToken.tipo === "jogador") {
+        const pontosAtuais = Number(participanteDoToken.pontosDeVida?.atuais) || 0;
 
-      if (
-  participanteDoToken &&
-  participanteDoToken.tipo === "jogador"
-) {
-      const pontosAtuais =
-    Number(
-      participanteDoToken
-        .pontosDeVida
-        ?.atuais,
-    ) || 0;
+        const pontosMaximos = Number(participanteDoToken.pontosDeVida?.maximo) || 0;
 
-  const pontosMaximos =
-    Number(
-      participanteDoToken
-        .pontosDeVida
-        ?.maximo,
-    ) || 0;
+        const textoPontosDeVida = token.querySelector(".texto-pontos-vida-token");
 
-    const textoPontosDeVida =
-  token.querySelector(
-    ".texto-pontos-vida-token",
-  );
+        if (textoPontosDeVida) {
+          textoPontosDeVida.textContent = `${pontosAtuais} / ${pontosMaximos}`;
+        }
 
-if (textoPontosDeVida) {
-  textoPontosDeVida.textContent =
-    `${pontosAtuais} / ${pontosMaximos}`;
-}
+        const porcentagemVida =
+          pontosMaximos > 0 ? Math.max(0, Math.min(100, (pontosAtuais / pontosMaximos) * 100)) : 0;
 
-  const porcentagemVida =
-    pontosMaximos > 0
-      ? Math.max(
-          0,
-          Math.min(
-            100,
-            (
-              pontosAtuais /
-              pontosMaximos
-            ) * 100,
-          ),
-        )
-      : 0;
+        const preenchimento = token.querySelector(".preenchimento-pontos-vida-token");
 
-  const preenchimento =
-    token.querySelector(
-      ".preenchimento-pontos-vida-token",
-    );
-
-  if (preenchimento) {
-    preenchimento.style.width =
-      `${porcentagemVida}%`;
-  }
-}
+        if (preenchimento) {
+          preenchimento.style.width = `${porcentagemVida}%`;
+        }
+      }
     }
 
     token.classList.toggle(
@@ -452,17 +284,11 @@ if (textoPontosDeVida) {
     token.classList.toggle("token-derrotado", participanteDoToken?.estado === "derrotado");
   }
 
-  atualizarDestaquesAlvosCombate(
-  combate,
-);
+  atualizarDestaquesAlvosCombate(combate);
 
-atualizarDestaquesMovimentoCombate(
-  combate,
-);
+  atualizarDestaquesMovimentoCombate(combate);
 
-  atualizarPontosDeVidaFichaCombate(
-  combate,
-);
+  atualizarPontosDeVidaFichaCombate(combate);
 
   painelTurnoCombate.hidden = false;
 }

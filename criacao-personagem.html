@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <!-- =====================================================
      Arquivo: criacao-personagem.html
@@ -8,16 +8,16 @@
 
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Criação de Personagem</title>
 
-    <link rel="stylesheet" href="tema.css">
-    <link rel="stylesheet" href="ficha-personagem.css">
-    <link rel="stylesheet" href="detalhes-ficha.css">
-    <link rel="stylesheet" href="criacao-personagem.css">
-    <link rel="stylesheet" href="acabamento-tematico.css">
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="ficha-personagem.css" />
+    <link rel="stylesheet" href="detalhes-ficha.css" />
+    <link rel="stylesheet" href="criacao-personagem.css" />
+    <link rel="stylesheet" href="acabamento-tematico.css" />
 
     <script src="transicoes-paginas.js" defer></script>
   </head>
@@ -83,7 +83,7 @@
           <div class="grade-classes">
             <article class="card-classe" data-classe="guerreiro">
               <div class="imagem-classe">
-                <img src="Imagens/Classes/guerreiro-card.webp" alt="Guerreiro">
+                <img src="Imagens/Classes/guerreiro-card.webp" alt="Guerreiro" />
               </div>
 
               <h3>Guerreiro</h3>
@@ -96,7 +96,7 @@
 
             <article class="card-classe" data-classe="mago">
               <div class="imagem-classe">
-                <img src="Imagens/Classes/mago-card.webp" alt="Mago">
+                <img src="Imagens/Classes/mago-card.webp" alt="Mago" />
               </div>
 
               <h3>Mago</h3>
@@ -109,7 +109,7 @@
 
             <article class="card-classe" data-classe="ladino">
               <div class="imagem-classe">
-                <img src="Imagens/Classes/ladino-card.webp" alt="Ladino">
+                <img src="Imagens/Classes/ladino-card.webp" alt="Ladino" />
               </div>
 
               <h3>Ladino</h3>
@@ -122,7 +122,7 @@
 
             <article class="card-classe" data-classe="clerigo">
               <div class="imagem-classe">
-                <img src="Imagens/Classes/clerigo-card.webp" alt="Clérigo">
+                <img src="Imagens/Classes/clerigo-card.webp" alt="Clérigo" />
               </div>
 
               <h3>Clérigo</h3>
@@ -384,7 +384,7 @@
           <div class="layout-detalhes-personagem">
             <section class="painel-detalhes-principais">
               <h3>Nome do Personagem</h3>
-              <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem">
+              <input type="text" id="nomePersonagem" placeholder="Digite o nome do personagem" />
 
               <section class="selecao-avatar-personagem">
                 <h3>Avatar</h3>
@@ -402,6 +402,15 @@
               <select id="idioma2"></select>
 
               <h3>Equipamento</h3>
+              <button
+                type="button"
+                class="botao-escolher-equipamento"
+                id="botaoEscolherEquipamento"
+                aria-haspopup="dialog"
+                aria-controls="modalEquipamentos"
+              >
+                Escolher equipamento
+              </button>
               <div class="campo-formulario">
                 <label for="armaduraInicial">Armadura</label>
                 <select id="armaduraInicial">
@@ -525,7 +534,61 @@
         >.
       </small>
     </footer>
+    <!--
+  Modal de seleção de equipamentos
+-->
 
+    <div class="modal-overlay escondida" id="modalEquipamentos">
+      <div
+        class="modal modal-equipamentos"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Loja de equipamentos"
+      >
+        <button
+          type="button"
+          class="botao-fechar-loja"
+          id="botaoFecharModalEquipamentos"
+          aria-label="Fechar seleção de equipamentos"
+        >
+          ×
+        </button>
+
+        <div class="vistas-loja">
+          <div class="trilho-vistas-loja" id="trilhoVistasLoja">
+            <div
+              class="vitrine-equipamentos vitrine-armas vitrine-armas-compactas"
+              id="prateleiraArmasCompactas"
+            ></div>
+
+            <div
+              class="vitrine-equipamentos vitrine-armas vitrine-armas-longas"
+              id="prateleiraArmasLongas"
+            ></div>
+
+            <div class="vitrine-equipamentos vitrine-armaduras" id="vitrineArmaduras"></div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="botao-virar-loja botao-vista-anterior escondida"
+          id="botaoVistaAnteriorLoja"
+          aria-label="Ver o lado anterior da loja"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          class="botao-virar-loja botao-proxima-vista"
+          id="botaoProximaVistaLoja"
+          aria-label="Ver o próximo lado da loja"
+        >
+          ›
+        </button>
+      </div>
+    </div>
     <!-- =====================================================
        Modal de classe
        -----------------------------------------------------
@@ -544,7 +607,7 @@
               id="modalImagemClasse"
               src="Imagens/Classes/guerreiro-modal.webp"
               alt="Guerreiro"
-            >
+            />
           </div>
 
           <div class="modal-textos">
@@ -711,11 +774,7 @@
           <section class="selecao-retrato-avatar">
             <h3>Retrato</h3>
 
-            <div
-            class="filtros-avatar"
-            role="group"
-            aria-label="Filtrar avatares"
-            >
+            <div class="filtros-avatar" role="group" aria-label="Filtrar avatares">
               <button type="button" class="filtro-avatar ativo" data-genero-avatar="All">
                 Todos
               </button>
@@ -761,7 +820,10 @@
     <script src="banco-classes.js"></script>
     <script src="banco-habilidades.js"></script>
     <script src="banco-magias.js"></script>
+
     <script src="banco-equipamentos.js"></script>
+    <script src="configuracao-vitrine-equipamentos.js"></script>
+
     <script src="banco-maestrias.js"></script>
     <script src="banco-propriedades-armas.js"></script>
     <script src="banco-especies.js"></script>
@@ -773,9 +835,6 @@
     <script src="tradutor-regras.js"></script>
     <script src="regras-ficha-criacao.js"></script>
     <script src="magias-criacao.js"></script>
-    <script
-      src="inicializador-pagina-ficha.js"
-      data-controlador="criacao-personagem.js"
-    ></script>
+    <script src="inicializador-pagina-ficha.js" data-controlador="criacao-personagem.js"></script>
   </body>
 </html>

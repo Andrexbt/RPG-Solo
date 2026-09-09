@@ -337,10 +337,7 @@ select {
 .fluxo-narrativo {
   padding-bottom: 0px;
   color: var(--cor-aventura-tinta);
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -349,10 +346,7 @@ select {
   content: "";
   display: block;
   width: 100%;
-  height: var(
-    --altura-respiro-narrativo,
-    0px
-  );
+  height: var(--altura-respiro-narrativo, 0px);
   pointer-events: none;
 }
 
@@ -467,10 +461,7 @@ select {
 
 .resultado-teste {
   margin: 16px 0;
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-style: italic;
 }
 
@@ -492,12 +483,7 @@ select {
 
   padding: 24px;
 
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(35, 27, 19, 0.54),
-      rgba(10, 8, 7, 0.94)
-    );
+  background: radial-gradient(circle at center, rgba(35, 27, 19, 0.54), rgba(10, 8, 7, 0.94));
 
   backdrop-filter: blur(4px);
 }
@@ -513,12 +499,7 @@ select {
   color: #eee4d2;
   text-align: center;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(41, 34, 27, 0.98),
-      rgba(18, 16, 14, 0.99)
-    );
+  background: linear-gradient(145deg, rgba(41, 34, 27, 0.98), rgba(18, 16, 14, 0.99));
 
   border: 1px solid #94723d;
   box-shadow:
@@ -554,14 +535,12 @@ select {
   line-height: 1.65;
 }
 
-.texto-fim-aventura
-  .paragrafo-fim-aventura {
+.texto-fim-aventura .paragrafo-fim-aventura {
   display: block;
   margin: 0 0 16px;
 }
 
-.texto-fim-aventura
-  .paragrafo-fim-aventura:last-child {
+.texto-fim-aventura .paragrafo-fim-aventura:last-child {
   margin-bottom: 0;
 }
 

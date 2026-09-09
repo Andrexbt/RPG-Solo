@@ -24,6 +24,204 @@ const modalDescricaoClasse = document.getElementById("modalDescricaoClasse");
 const modalEstiloJogoClasse = document.getElementById("modalEstiloJogoClasse");
 const modalHabilidadesClasse = document.getElementById("modalHabilidadesClasse");
 
+const modalEquipamentos = document.getElementById("modalEquipamentos");
+
+const botaoEscolherEquipamento = document.getElementById("botaoEscolherEquipamento");
+
+const botaoFecharModalEquipamentos = document.getElementById("botaoFecharModalEquipamentos");
+
+const trilhoVistasLoja = document.getElementById("trilhoVistasLoja");
+
+const botaoVistaAnteriorLoja = document.getElementById("botaoVistaAnteriorLoja");
+
+const botaoProximaVistaLoja = document.getElementById("botaoProximaVistaLoja");
+
+const vistasLoja = ["compactas", "longas", "armaduras"];
+let indiceVistaLoja = 0;
+
+function mostrarVistaLoja(vista) {
+  indiceVistaLoja = Math.max(0, vistasLoja.indexOf(vista));
+
+  trilhoVistasLoja.dataset.vista = vista;
+
+  botaoVistaAnteriorLoja.classList.toggle("escondida", indiceVistaLoja === 0);
+
+  botaoProximaVistaLoja.classList.toggle("escondida", indiceVistaLoja === vistasLoja.length - 1);
+}
+
+const posicoesArmasVitrine = window.ConfiguracaoVitrineEquipamentos.armas;
+
+const posicoesArmadurasVitrine = window.ConfiguracaoVitrineEquipamentos.armaduras;
+
+function aplicarTransformacaoVitrine(elemento, posicao) {
+  elemento.style.setProperty("--escala-visual-vitrine", Number(posicao.escalaVisual ?? 1));
+
+  const propriedades = {
+    "--rotacao-arma-vitrine": posicao.rotacao,
+    "--inclinacao-horizontal-vitrine": posicao.inclinacaoHorizontal,
+    "--inclinacao-vertical-vitrine": posicao.inclinacaoVertical,
+    "--perspectiva-horizontal-vitrine": posicao.perspectivaHorizontal,
+    "--perspectiva-vertical-vitrine": posicao.perspectivaVertical,
+  };
+
+  for (const [propriedade, valor] of Object.entries(propriedades)) {
+    elemento.style.setProperty(propriedade, `${Number(valor ?? 0)}deg`);
+  }
+}
+
+function criarNomeEquipamentoVitrine(nome, posicao = {}) {
+  const rotulo = document.createElement("span");
+  const rotuloX = Number(posicao.rotuloX ?? 0);
+  const rotuloY = Number(posicao.rotuloY ?? 0);
+  const centroHorizontal = Number(posicao.x) + Number(posicao.largura) / 2;
+  const baseVertical = Number(posicao.y) + Number(posicao.altura);
+
+  rotulo.className = "nome-equipamento-vitrine";
+  rotulo.textContent = posicao.rotuloTexto ?? nome;
+  rotulo.style.left = `calc(${centroHorizontal}% + ${rotuloX}px)`;
+  rotulo.style.top = `calc(${baseVertical}% + 4px + ${rotuloY}px)`;
+
+  return rotulo;
+}
+
+function criarArmaVitrine(armaId, arma, posicao) {
+  const botao = document.createElement("button");
+
+  botao.type = "button";
+  botao.className = "arma-vitrine";
+  botao.dataset.armaId = armaId;
+  botao.setAttribute("aria-label", arma.nome);
+  botao.title = `${arma.nome} — ${arma.dano} ${arma.tipoDano}`;
+
+  botao.style.left = `${posicao.x}%`;
+  botao.style.top = `${posicao.y}%`;
+  botao.style.width = `${posicao.largura}%`;
+  botao.style.height = `${posicao.altura}%`;
+  aplicarTransformacaoVitrine(botao, posicao);
+
+  const imagem = document.createElement("img");
+
+  imagem.src = arma.visual.icone.src;
+  imagem.alt = "";
+  imagem.draggable = false;
+
+  botao.append(imagem);
+
+  return botao;
+}
+
+function preencherPrateleiraArmas() {
+  const armas = Object.entries(window.bancoEquipamentos.armas);
+
+  prateleiraArmasCompactas.replaceChildren();
+  prateleiraArmasLongas.replaceChildren();
+
+  for (const [armaId, arma] of armas) {
+    const posicao = posicoesArmasVitrine[armaId];
+
+    if (!arma.visual?.icone?.src || !posicao) {
+      continue;
+    }
+
+    const elementoArma = criarArmaVitrine(armaId, arma, posicao);
+
+    const paredeLongas = window.ConfiguracaoVitrineEquipamentos.paredesArmas.longas;
+    const prateleira = paredeLongas.includes(armaId)
+      ? prateleiraArmasLongas
+      : prateleiraArmasCompactas;
+
+    prateleira.append(elementoArma, criarNomeEquipamentoVitrine(arma.nome, posicao));
+  }
+}
+
+function criarArmaduraVitrine(armaduraId, armadura, posicao) {
+  const botao = document.createElement("button");
+
+  botao.type = "button";
+  botao.className = "arma-vitrine armadura-vitrine";
+  botao.dataset.armaduraId = armaduraId;
+  botao.setAttribute("aria-label", armadura.nome);
+  botao.title = `${armadura.nome} — CA ${armadura.caBase}`;
+  botao.style.left = `${posicao.x}%`;
+  botao.style.top = `${posicao.y}%`;
+  botao.style.width = `${posicao.largura}%`;
+  botao.style.height = `${posicao.altura}%`;
+  aplicarTransformacaoVitrine(botao, posicao);
+
+  const imagem = document.createElement("img");
+  imagem.src = armadura.visual.vitrine?.src ?? armadura.visual.icone.src;
+  imagem.alt = "";
+  imagem.draggable = false;
+  botao.append(imagem);
+
+  botao.addEventListener("click", () => {
+    armaduraInicial.value = armaduraId;
+    armaduraInicial.dispatchEvent(new Event("change"));
+
+    vitrineArmaduras
+      .querySelectorAll(".armadura-vitrine.selecionada")
+      .forEach((elemento) => elemento.classList.remove("selecionada"));
+
+    botao.classList.add("selecionada");
+  });
+
+  return botao;
+}
+
+function preencherVitrineArmaduras() {
+  vitrineArmaduras.replaceChildren();
+
+  for (const [armaduraId, armadura] of Object.entries(window.bancoEquipamentos.armaduras)) {
+    const posicao = posicoesArmadurasVitrine[armaduraId];
+
+    if (!armadura.visual?.icone?.src || !posicao) {
+      continue;
+    }
+
+    vitrineArmaduras.append(
+      criarArmaduraVitrine(armaduraId, armadura, posicao),
+      criarNomeEquipamentoVitrine(armadura.nome, posicao),
+    );
+  }
+}
+
+function abrirModalEquipamentos() {
+  modalEquipamentos.classList.remove("escondida");
+  document.body.classList.add("modal-aberta");
+  preencherPrateleiraArmas();
+  preencherVitrineArmaduras();
+  mostrarVistaLoja("compactas");
+}
+
+function fecharModalEquipamentos() {
+  modalEquipamentos.classList.add("escondida");
+  document.body.classList.remove("modal-aberta");
+}
+
+botaoEscolherEquipamento.addEventListener("click", abrirModalEquipamentos);
+
+botaoFecharModalEquipamentos.addEventListener("click", fecharModalEquipamentos);
+
+botaoProximaVistaLoja.addEventListener("click", () => {
+  mostrarVistaLoja(vistasLoja[indiceVistaLoja + 1]);
+});
+
+botaoVistaAnteriorLoja.addEventListener("click", () => {
+  mostrarVistaLoja(vistasLoja[indiceVistaLoja - 1]);
+});
+
+modalEquipamentos.addEventListener("click", (evento) => {
+  if (evento.target === modalEquipamentos) {
+    fecharModalEquipamentos();
+  }
+});
+
+const prateleiraArmasCompactas = document.getElementById("prateleiraArmasCompactas");
+
+const prateleiraArmasLongas = document.getElementById("prateleiraArmasLongas");
+
+const vitrineArmaduras = document.getElementById("vitrineArmaduras");
+
 const botaoEscolherAvatar = document.getElementById("botaoEscolherAvatar");
 
 const modalAvatar = document.getElementById("modalAvatar");
@@ -465,12 +663,11 @@ const fichaFrameAvatar = document.getElementById("fichaFrameAvatar");
 // =====================================================
 
 const personagem = {
-
   schemaVersion: 1,
   rulesVersion: "2024",
   nivel: 1,
 
-  niveisPorClasse:{},
+  niveisPorClasse: {},
 
   xp: 0,
 
@@ -566,14 +763,10 @@ function selecionarClasse() {
   personagem.classeId = classeAtualNaModal;
   personagem.classe = dados.nome;
   personagem.niveisPorClasse = {
-  [classeAtualNaModal]:
-    1
+    [classeAtualNaModal]: 1,
   };
 
-  fichaClasseNivel.textContent =
-  dados.nome +
-  " " +
-  personagem.nivel;
+  fichaClasseNivel.textContent = dados.nome + " " + personagem.nivel;
 
   personagem.periciasClasse = [];
   atualizarPericiasPersonagem();
@@ -1327,12 +1520,7 @@ function selecionarAntecedente(cardClicado) {
   atualizarMarcadoresPericias();
   atualizarPercepcaoPassiva();
   atualizarFichaTalentos();
-  atualizarFichaPersonagem([
-    "informacoesBasicas",
-    "equipamentos",
-    "talentos",
-    "marcadores",
-  ]);
+  atualizarFichaPersonagem(["informacoesBasicas", "equipamentos", "talentos", "marcadores"]);
 }
 
 cardsAntecedente.forEach(function (card) {
@@ -1901,18 +2089,15 @@ function podeAvancarDoPassoAtual() {
       return false;
     }
 
-    const validacaoEquipamentos =
-  validarCombinacaoEquipamentos();
+    const validacaoEquipamentos = validarCombinacaoEquipamentos();
 
-if (!validacaoEquipamentos.valido) {
-  if (mensagem !== null) {
-    mensagem.textContent =
-      validacaoEquipamentos
-        .erros[0];
-  }
+    if (!validacaoEquipamentos.valido) {
+      if (mensagem !== null) {
+        mensagem.textContent = validacaoEquipamentos.erros[0];
+      }
 
-  return false;
-}
+      return false;
+    }
 
     if (detalhesEstaoCompletos() === false) {
       if (mensagem !== null) {
@@ -2296,9 +2481,7 @@ function selecionarImagemAvatar(botaoClicado) {
   avatarTemporario.imagem = botaoClicado.dataset.caminhoAvatar;
 
   avatarTemporario.generoGramatical =
-  botaoClicado.dataset.generoAvatar === "Female"
-    ? "feminino"
-    : "masculino";
+    botaoClicado.dataset.generoAvatar === "Female" ? "feminino" : "masculino";
 
   atualizarBotaoConfirmarAvatar();
 
@@ -2430,9 +2613,7 @@ function abrirModalAvatar() {
   avatarTemporario = {
     imagem: personagem.avatar.imagem,
     frame: personagem.avatar.frame,
-    generoGramatical:
-    personagem.avatar.generoGramatical ??
-    null,
+    generoGramatical: personagem.avatar.generoGramatical ?? null,
   };
 
   const avataresDisponiveis = criarListaAvataresDisponiveis();
@@ -2622,16 +2803,13 @@ function calcularClasseArmaduraCriacao() {
     classeArmadura = classeArmadura + itemSecundario.bonusCA;
   }
 
-  classeArmadura +=
-  window.TradutorRegras
-    .calcularModificadorPassivo(
-      {
-        participante: personagem,
-        usandoArmadura:
-          idArmadura !== "semArmadura",
-      },
-      "modificarClasseArmadura"
-    );
+  classeArmadura += window.TradutorRegras.calcularModificadorPassivo(
+    {
+      participante: personagem,
+      usandoArmadura: idArmadura !== "semArmadura",
+    },
+    "modificarClasseArmadura",
+  );
 
   return classeArmadura;
 }
@@ -2690,33 +2868,21 @@ function atualizarPontosDeVida() {
   const modificadorConstituicao = calcularModificador(constituicao);
 
   const operacoesPontosDeVida =
-  window.TradutorRegras
-    ?.prepararOperacoes({
-      gatilho:
-        "aoCalcularPontosDeVidaMaximos",
+    window.TradutorRegras?.prepararOperacoes({
+      gatilho: "aoCalcularPontosDeVidaMaximos",
 
-      participante:
-        personagem,
+      participante: personagem,
     }) ?? [];
 
-let bonusPontosDeVida = 0;
+  let bonusPontosDeVida = 0;
 
-for (
-  const operacao of
-  operacoesPontosDeVida
-) {
-  if (
-    operacao.tipo !==
-    "aumentarPontosDeVidaMaximos"
-  ) {
-    continue;
+  for (const operacao of operacoesPontosDeVida) {
+    if (operacao.tipo !== "aumentarPontosDeVidaMaximos") {
+      continue;
+    }
+
+    bonusPontosDeVida += Number(operacao.quantidade) || 0;
   }
-
-  bonusPontosDeVida +=
-    Number(
-      operacao.quantidade,
-    ) || 0;
-}
 
   const pontosDeVidaMaximos = dadoVida + modificadorConstituicao + bonusPontosDeVida;
 
@@ -2736,56 +2902,32 @@ for (
 
 function atualizarSentidosPersonagem() {
   const operacoesSentidos =
-    window.TradutorRegras
-      ?.prepararOperacoes({
-        gatilho: "passivo",
+    window.TradutorRegras?.prepararOperacoes({
+      gatilho: "passivo",
 
-        participante:
-          personagem,
-      }) ?? [];
+      participante: personagem,
+    }) ?? [];
 
   const sentidos = {};
 
-  for (
-    const operacao of
-    operacoesSentidos
-  ) {
-    if (
-      operacao.tipo !==
-      "concederSentido"
-    ) {
+  for (const operacao of operacoesSentidos) {
+    if (operacao.tipo !== "concederSentido") {
       continue;
     }
 
-    const alcanceAtual =
-      Number(
-        sentidos[
-          operacao.sentido
-        ]?.alcance,
-      ) || 0;
+    const alcanceAtual = Number(sentidos[operacao.sentido]?.alcance) || 0;
 
-    const novoAlcance =
-      Number(
-        operacao.alcance,
-      ) || 0;
+    const novoAlcance = Number(operacao.alcance) || 0;
 
-    sentidos[
-      operacao.sentido
-    ] = {
-      alcance:
-        Math.max(
-          alcanceAtual,
-          novoAlcance,
-        ),
+    sentidos[operacao.sentido] = {
+      alcance: Math.max(alcanceAtual, novoAlcance),
     };
   }
 
-  personagem.sentidos =
-    sentidos;
+  personagem.sentidos = sentidos;
 }
 
 function atualizarValoresDerivados() {
-
   atualizarMarcadoresSalvaguardas();
   atualizarIniciativa();
   atualizarVelocidadeETamanho();
@@ -2869,13 +3011,14 @@ function detalhesEstaoCompletos() {
     equipamentos.itemSecundario !== "armaSecundaria" ||
     (equipamentos.armaSecundaria !== undefined && equipamentos.armaSecundaria !== "");
 
-    const equipamentosValidos =
-  validarCombinacaoEquipamentos()
-    .valido;
+  const equipamentosValidos = validarCombinacaoEquipamentos().valido;
 
   return (
-    nomePreenchido && idiomasPreenchidos && equipamentosPreenchidos && armaSecundariaPreenchida &&
-  equipamentosValidos
+    nomePreenchido &&
+    idiomasPreenchidos &&
+    equipamentosPreenchidos &&
+    armaSecundariaPreenchida &&
+    equipamentosValidos
   );
 }
 
@@ -2962,10 +3105,7 @@ function montarTelaRevisao() {
     tituloBasico,
     avatarBasico,
     criarParagrafoRevisao("Nome", personagem.detalhes.nome),
-    criarParagrafoRevisao("Classe",
-  personagem.classe +
-    " " +
-    personagem.nivel),
+    criarParagrafoRevisao("Classe", personagem.classe + " " + personagem.nivel),
     criarParagrafoRevisao("Antecedente", personagem.antecedente),
     criarParagrafoRevisao("Espécie", personagem.especie),
     criarParagrafoRevisao("Idiomas", personagem.idiomas.map(obterNomeIdioma).join(", ")),
@@ -3489,9 +3629,7 @@ function salvarPersonagemLocal() {
   atualizarPericiasPersonagem();
   atualizarIdiomasPersonagem();
 
-  return window.PersonagemDados.adicionarSalvo(
-    personagem,
-  );
+  return window.PersonagemDados.adicionarSalvo(personagem);
 }
 
 botaoFinalizarPersonagem.addEventListener("click", function () {
@@ -3502,18 +3640,14 @@ botaoFinalizarPersonagem.addEventListener("click", function () {
   const personagemSalvo = salvarPersonagemLocal();
 
   if (!personagemSalvo) {
-  const mensagem =
-    document.getElementById(
-      "mensagemRevisao",
-    );
+    const mensagem = document.getElementById("mensagemRevisao");
 
-  if (mensagem !== null) {
-    mensagem.textContent =
-      "Não foi possível salvar o personagem.";
+    if (mensagem !== null) {
+      mensagem.textContent = "Não foi possível salvar o personagem.";
+    }
+
+    return;
   }
-
-  return;
-}
 
   personagemJaFoiSalvo = true;
 
@@ -3919,20 +4053,12 @@ function obterAtributoAtaqueDaArma(personagemAtual, idArma) {
   return "destreza";
 }
 
-function obterDadosHabilidade(
-  idHabilidade
-) {
-  if (
-    window.bancoHabilidades
-      ?.classFeatures ===
-    undefined
-  ) {
+function obterDadosHabilidade(idHabilidade) {
+  if (window.bancoHabilidades?.classFeatures === undefined) {
     return undefined;
   }
 
-  return window.bancoHabilidades
-    .classFeatures
-    [idHabilidade];
+  return window.bancoHabilidades.classFeatures[idHabilidade];
 }
 
 function obterNomeHabilidade(idHabilidade) {
@@ -3988,10 +4114,7 @@ function atualizarRecursosHabilidadesPersonagem() {
       usosAtuais: recurso.usosMaximos,
       usosMaximos: recurso.usosMaximos,
 
-      recuperacao:
-        structuredClone(
-          recurso.recuperacao ?? null,
-        ),
+      recuperacao: structuredClone(recurso.recuperacao ?? null),
 
       efeito: recurso.efeito,
       formula: formatarFormulaRecurso(recurso.formula),

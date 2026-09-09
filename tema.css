@@ -85,6 +85,68 @@ body {
   background: transparent;
 }
 
+/* =====================================================
+   Cabeçalhos das páginas de personagem
+   -----------------------------------------------------
+   Compartilhado pela biblioteca e pela ficha salva.
+   ===================================================== */
+
+.hero-personagens,
+.hero-ver-personagem {
+  --opacidade-decoracao: 0.28;
+  --opacidade-ornamento: 0.14;
+
+  position: relative;
+  min-height: 42vh;
+  padding: clamp(44px, 5vw, 68px) max(28px, calc((100vw - var(--largura-conteudo)) / 2));
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+}
+
+.conteudo-hero-personagens,
+.conteudo-hero-ver {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+}
+
+.conteudo-hero-personagens::before,
+.conteudo-hero-ver::before {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 4px;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  background: rgba(255, 248, 235, 0.28);
+}
+
+.conteudo-hero-personagens h1,
+.conteudo-hero-ver h1 {
+  margin: 0;
+  font-size: clamp(2.25rem, 4.8vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+}
+
+.conteudo-hero-personagens p:not(.etiqueta-pagina),
+.conteudo-hero-ver p:not(.etiqueta-pagina) {
+  max-width: 620px;
+  margin: 20px 0 28px;
+  color: rgba(246, 234, 215, 0.76);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 820px) {
+  .hero-personagens,
+  .hero-ver-personagem {
+    min-height: auto;
+    padding: 48px 18px 72px;
+  }
+}
+
 main,
 section,
 article,
@@ -118,7 +180,8 @@ html::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
+  background:
+    radial-gradient(circle at 82% 10%, rgba(111, 61, 75, 0.34), transparent 30%),
     radial-gradient(circle at 18% 34%, rgba(154, 170, 117, 0.18), transparent 34%),
     radial-gradient(circle at 72% 62%, rgba(217, 118, 95, 0.16), transparent 36%),
     radial-gradient(circle at 28% 88%, rgba(215, 163, 95, 0.12), transparent 34%),
@@ -563,7 +626,8 @@ body::after {
   inset: 0;
   z-index: 99999;
   pointer-events: none;
-  background: radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
+  background:
+    radial-gradient(circle at 75% 20%, rgba(111, 61, 75, 0.42), transparent 34%),
     linear-gradient(135deg, #08070a, #24131d 52%, #100f14);
   animation: entradaCortinaPagina 420ms ease forwards;
 }

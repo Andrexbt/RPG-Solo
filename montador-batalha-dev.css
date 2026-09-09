@@ -239,7 +239,9 @@
   font-size: clamp(0.55rem, 1.1vw, 1rem);
   font-weight: 800;
   cursor: grab;
-  box-shadow: 0 0 0 2px rgba(10, 8, 6, 0.76), 0 2px 8px rgba(0, 0, 0, 0.75);
+  box-shadow:
+    0 0 0 2px rgba(10, 8, 6, 0.76),
+    0 2px 8px rgba(0, 0, 0, 0.75);
 }
 
 .token-montador-batalha-dev img {

@@ -68,15 +68,8 @@ window.NarradorAventura = (function () {
   }
 
   function obterNomePersonagem() {
-  return (
-    window.estadoJogo
-      ?.personagem
-      ?.dados
-      ?.detalhes
-      ?.nome
-    ?? "Personagem"
-  );
-}
+    return window.estadoJogo?.personagem?.dados?.detalhes?.nome ?? "Personagem";
+  }
 
   function normalizarTexto(texto) {
     if (typeof texto !== "string") {
@@ -102,25 +95,13 @@ window.NarradorAventura = (function () {
     const genero = obterGeneroGramatical();
     const nomePersonagem = obterNomePersonagem();
 
-     const textoAdaptado = texto
-    .replace(
-      /\{([^|{}]+)\|([^{}]+)\}/g,
-      function (
-        _correspondencia,
-        masculino,
-        feminino,
-      ) {
-        return genero === "feminino"
-          ? feminino
-          : masculino;
-      },
-    )
-    .replace(
-      /\{personagem\}/gi,
-      nomePersonagem,
-    );
+    const textoAdaptado = texto
+      .replace(/\{([^|{}]+)\|([^{}]+)\}/g, function (_correspondencia, masculino, feminino) {
+        return genero === "feminino" ? feminino : masculino;
+      })
+      .replace(/\{personagem\}/gi, nomePersonagem);
 
-  return normalizarTexto(textoAdaptado);
+    return normalizarTexto(textoAdaptado);
   }
 
   function separarParagrafos(texto) {
@@ -136,11 +117,7 @@ window.NarradorAventura = (function () {
       .filter(Boolean);
   }
 
-  function preencherElementoComParagrafos(
-    elemento,
-    texto,
-    classeParagrafo = "paragrafo-escolha",
-  ) {
+  function preencherElementoComParagrafos(elemento, texto, classeParagrafo = "paragrafo-escolha") {
     const paragrafos = separarParagrafos(adaptarGenero(texto));
     elemento.replaceChildren();
 
@@ -198,122 +175,88 @@ window.NarradorAventura = (function () {
   }
 
   function adicionarDivisor() {
-  const fluxo = obterFluxo();
+    const fluxo = obterFluxo();
 
-  if (!fluxo) {
-    return null;
-  }
+    if (!fluxo) {
+      return null;
+    }
 
-  const divisor = document.createElement("hr");
-  divisor.className = "divisor-narrativo";
-  fluxo.append(divisor);
+    const divisor = document.createElement("hr");
+    divisor.className = "divisor-narrativo";
+    fluxo.append(divisor);
 
-  return divisor;
+    return divisor;
   }
 
   function garantirRespiroNarrativo() {
-  const fluxo = obterFluxo();
-  const area = obterAreaRolagem();
+    const fluxo = obterFluxo();
+    const area = obterAreaRolagem();
 
-  if (!fluxo || !area) {
-    return;
-  }
+    if (!fluxo || !area) {
+      return;
+    }
 
-  const alturaRespiro =
-    Math.max(0, area.clientHeight - 50);
+    const alturaRespiro = Math.max(0, area.clientHeight - 50);
 
-  fluxo.style.setProperty(
-    "--altura-respiro-narrativo",
-    `${alturaRespiro}px`,
-  );
+    fluxo.style.setProperty("--altura-respiro-narrativo", `${alturaRespiro}px`);
   }
 
   function removerRespiroNarrativo() {
-  const fluxo = obterFluxo();
+    const fluxo = obterFluxo();
 
-  if (!fluxo) {
-    return;
-  }
-
-  fluxo.style.setProperty(
-    "--altura-respiro-narrativo",
-    "0px",
-  );
-  }
-
-  function rolarParaElemento(
-  elemento,
-  duracao = 700,
-) {
-  return new Promise(function (resolver) {
-    const area = obterAreaRolagem();
-
-    if (!area || !elemento) {
-      resolver();
+    if (!fluxo) {
       return;
     }
 
-    const areaRect =
-      area.getBoundingClientRect();
+    fluxo.style.setProperty("--altura-respiro-narrativo", "0px");
+  }
 
-    const elementoRect =
-      elemento.getBoundingClientRect();
+  function rolarParaElemento(elemento, duracao = 700) {
+    return new Promise(function (resolver) {
+      const area = obterAreaRolagem();
 
-    const inicio =
-      area.scrollTop;
-
-    const destino =
-      inicio +
-      elementoRect.top -
-      areaRect.top;
-
-    const distancia =
-      destino - inicio;
-
-    if (Math.abs(distancia) < 1) {
-      resolver();
-      return;
-    }
-
-    const inicioAnimacao =
-      performance.now();
-
-    function animar(tempoAtual) {
-      const progresso = Math.min(
-        1,
-        (
-          tempoAtual -
-          inicioAnimacao
-        ) / duracao,
-      );
-
-      const suavizado =
-        progresso < 0.5
-          ? 4 *
-            progresso *
-            progresso *
-            progresso
-          : 1 -
-            Math.pow(
-              -2 * progresso + 2,
-              3,
-            ) / 2;
-
-      area.scrollTop =
-        inicio +
-        distancia *
-          suavizado;
-
-      if (progresso < 1) {
-        requestAnimationFrame(animar);
+      if (!area || !elemento) {
+        resolver();
         return;
       }
 
-      resolver();
-    }
+      const areaRect = area.getBoundingClientRect();
 
-    requestAnimationFrame(animar);
-  });
+      const elementoRect = elemento.getBoundingClientRect();
+
+      const inicio = area.scrollTop;
+
+      const destino = inicio + elementoRect.top - areaRect.top;
+
+      const distancia = destino - inicio;
+
+      if (Math.abs(distancia) < 1) {
+        resolver();
+        return;
+      }
+
+      const inicioAnimacao = performance.now();
+
+      function animar(tempoAtual) {
+        const progresso = Math.min(1, (tempoAtual - inicioAnimacao) / duracao);
+
+        const suavizado =
+          progresso < 0.5
+            ? 4 * progresso * progresso * progresso
+            : 1 - Math.pow(-2 * progresso + 2, 3) / 2;
+
+        area.scrollTop = inicio + distancia * suavizado;
+
+        if (progresso < 1) {
+          requestAnimationFrame(animar);
+          return;
+        }
+
+        resolver();
+      }
+
+      requestAnimationFrame(animar);
+    });
   }
 
   function adicionarEscolhaRealizada(escolha) {
@@ -338,79 +281,63 @@ window.NarradorAventura = (function () {
     garantirRespiroNarrativo();
 
     if (divisor) {
-    rolarParaElemento(divisor, 700);
-  }
-  }
-
-  async function adicionarResultadoTeste({
-  sucesso,
-  nomeTeste,
-  acao,
-}) {
-  const fluxo = obterFluxo();
-
-  if (!fluxo) {
-    return;
+      rolarParaElemento(divisor, 700);
+    }
   }
 
-  /*
-   * O divisor marca o início de um novo
-   * momento narrativo após a rolagem.
-   */
-  const divisor = adicionarDivisor();
+  async function adicionarResultadoTeste({ sucesso, nomeTeste, acao }) {
+    const fluxo = obterFluxo();
 
-  /*
-   * Mantém espaço de rolagem abaixo,
-   * permitindo que o divisor chegue
-   * ao topo do pergaminho.
-   */
-  garantirRespiroNarrativo();
+    if (!fluxo) {
+      return;
+    }
 
-  /*
-   * Primeiro fazemos a transição.
-   */
-  if (divisor) {
-    await rolarParaElemento(divisor, 700);
-  }
+    /*
+     * O divisor marca o início de um novo
+     * momento narrativo após a rolagem.
+     */
+    const divisor = adicionarDivisor();
 
-  /*
-   * Pequena pausa para o jogador perceber
-   * que a resolução da ação começou.
-   */
-  await esperar(180);
+    /*
+     * Mantém espaço de rolagem abaixo,
+     * permitindo que o divisor chegue
+     * ao topo do pergaminho.
+     */
+    garantirRespiroNarrativo();
 
-  const paragrafo =
-    document.createElement("p");
+    /*
+     * Primeiro fazemos a transição.
+     */
+    if (divisor) {
+      await rolarParaElemento(divisor, 700);
+    }
 
-  paragrafo.className =
-    sucesso
-      ? "resultado-teste sucesso"
-      : "resultado-teste falha";
+    /*
+     * Pequena pausa para o jogador perceber
+     * que a resolução da ação começou.
+     */
+    await esperar(180);
 
-  fluxo.append(paragrafo);
+    const paragrafo = document.createElement("p");
 
-  const texto =
-    sucesso
+    paragrafo.className = sucesso ? "resultado-teste sucesso" : "resultado-teste falha";
+
+    fluxo.append(paragrafo);
+
+    const texto = sucesso
       ? `Sucesso no teste de ${nomeTeste}. Você conseguiu ${acao}.`
       : `Falha no teste de ${nomeTeste}. Você não conseguiu ${acao}.`;
 
-  await escreverNoElemento(
-    paragrafo,
-    adaptarGenero(texto),
-  );
+    await escreverNoElemento(paragrafo, adaptarGenero(texto));
   }
 
-    async function iniciarNovoMomentoNarrativo() {
-    const divisor =
-      adicionarDivisor();
+  async function iniciarNovoMomentoNarrativo() {
+    const divisor = adicionarDivisor();
 
     garantirRespiroNarrativo();
 
     if (divisor) {
-      await rolarParaElemento(
-        divisor,
-        700
-      );
+      await rolarParaElemento(divisor, 700);
     }
 
     await esperar(180);
@@ -434,7 +361,7 @@ window.NarradorAventura = (function () {
 
     adicionarEscolhaRealizada,
     iniciarNovoMomentoNarrativo,
-    
+
     definirVelocidade,
     obterVelocidade,
     removerRespiroNarrativo,

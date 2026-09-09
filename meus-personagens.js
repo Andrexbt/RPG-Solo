@@ -6,7 +6,6 @@
 // cards de resumo e permite abrir ou excluir uma ficha.
 // =====================================================
 
-
 const listaPersonagens = document.getElementById("listaPersonagens");
 
 function carregarPersonagensSalvos() {
@@ -172,14 +171,7 @@ function montarTelaPersonagens() {
 
     const classe = document.createElement("p");
     classe.classList.add("resumo-personagem");
-    classe.textContent =
-  textoOuTraco(
-    personagem?.classe
-  ) +
-  " " +
-  textoOuTraco(
-    personagem?.nivel
-  );
+    classe.textContent = textoOuTraco(personagem?.classe) + " " + textoOuTraco(personagem?.nivel);
 
     cabecalho.append(nome, classe);
 
@@ -220,15 +212,10 @@ function montarTelaPersonagens() {
 }
 
 function excluirPersonagem(idPersonagem) {
-  const personagemExcluido =
-    window.PersonagemDados.excluirSalvoPorId(
-      idPersonagem,
-    );
+  const personagemExcluido = window.PersonagemDados.excluirSalvoPorId(idPersonagem);
 
   if (!personagemExcluido) {
-    console.error(
-      "O personagem não pôde ser excluído.",
-    );
+    console.error("O personagem não pôde ser excluído.");
 
     return;
   }

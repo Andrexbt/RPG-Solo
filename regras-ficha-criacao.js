@@ -125,15 +125,13 @@ function calcularBonusAtaqueArma(personagemAtual, idArma) {
     bonusAtaque = bonusAtaque + calcularBonusProficiencia();
   }
 
-  bonusAtaque +=
-  window.TradutorRegras
-    .calcularModificadorPassivo(
-      {
-        participante: personagemAtual,
-        arma,
-      },
-      "modificarAtaqueArma"
-    );
+  bonusAtaque += window.TradutorRegras.calcularModificadorPassivo(
+    {
+      participante: personagemAtual,
+      arma,
+    },
+    "modificarAtaqueArma",
+  );
 
   return bonusAtaque;
 }
@@ -162,44 +160,31 @@ function calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento = null
 
   let bonusDano = modificadorAtributo;
 
-const armaEmpunhadaEmUmaMao =
-  !arma.propriedades?.includes(
-    "duasMaos"
+  const armaEmpunhadaEmUmaMao = !arma.propriedades?.includes("duasMaos");
+
+  const nenhumaOutraArmaEmpunhada = equipamentos?.itemSecundario !== "armaSecundaria";
+
+  const contextoEstilo = {
+    participante: personagemAtual,
+    arma,
+    ataqueComArmaSecundaria: ehArmaSecundaria,
+    armaEmpunhadaEmUmaMao,
+    nenhumaOutraArmaEmpunhada,
+  };
+
+  const incluiModificadorNaArmaSecundaria = window.TradutorRegras.possuiEfeitoPassivo(
+    contextoEstilo,
+    "incluirModificadorAtributoNoDano",
   );
 
-const nenhumaOutraArmaEmpunhada =
-  equipamentos?.itemSecundario
-    !== "armaSecundaria";
+  if (ehArmaSecundaria && !incluiModificadorNaArmaSecundaria) {
+    bonusDano = 0;
+  }
 
-const contextoEstilo = {
-  participante: personagemAtual,
-  arma,
-  ataqueComArmaSecundaria:
-    ehArmaSecundaria,
-  armaEmpunhadaEmUmaMao,
-  nenhumaOutraArmaEmpunhada,
-};
-
-const incluiModificadorNaArmaSecundaria =
-  window.TradutorRegras
-    .possuiEfeitoPassivo(
-      contextoEstilo,
-      "incluirModificadorAtributoNoDano"
-    );
-
-if (
-  ehArmaSecundaria
-  && !incluiModificadorNaArmaSecundaria
-) {
-  bonusDano = 0;
-}
-
-bonusDano +=
-  window.TradutorRegras
-    .calcularModificadorPassivo(
-      contextoEstilo,
-      "modificarDanoArma"
-    );
+  bonusDano += window.TradutorRegras.calcularModificadorPassivo(
+    contextoEstilo,
+    "modificarDanoArma",
+  );
 
   return bonusDano;
 }
@@ -302,6 +287,19 @@ function converterDanoArma(dano) {
   };
 }
 
+function normalizarModoUsoArma(arma, modoUso = "padrao") {
+  const possuiPropriedadeArremesso = arma?.propriedades?.includes("arremesso");
+
+  const arremessando =
+    possuiPropriedadeArremesso && (modoUso === "arremesso" || arma.categoria === "distancia");
+
+  return arremessando ? "arremesso" : modoUso;
+}
+
+window.RegrasFichaCriacao ??= {};
+
+window.RegrasFichaCriacao.normalizarModoUsoArma = normalizarModoUsoArma;
+
 function criarAtaqueCombateArma(
   personagemAtual,
   idArma,
@@ -314,12 +312,11 @@ function criarAtaqueCombateArma(
     return null;
   }
 
-    const arremessando = modoUso === "arremesso";
+  const modoUsoNormalizado = normalizarModoUsoArma(arma, modoUso);
 
-  if (
-    arremessando &&
-    !arma.propriedades?.includes("arremesso")
-  ) {
+  const arremessando = modoUsoNormalizado === "arremesso";
+
+  if (arremessando && !arma.propriedades?.includes("arremesso")) {
     return null;
   }
 
@@ -331,35 +328,27 @@ function criarAtaqueCombateArma(
 
   const bonusAtaque = calcularBonusAtaqueArma(personagemAtual, idArma);
 
-  const bonusDano = calcularBonusDanoArma(
-    personagemAtual,
-    idArma,
-    origemEquipamento,
-  );
+  const bonusDano = calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento);
 
-  const atributoAtaque = obterAtributoAtaqueDaArma(
-  personagemAtual,
-  idArma,
-);
+  const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
 
-    const ataqueDistancia =
-    arma.categoria === "distancia" || arremessando;
+  const ataqueDistancia = arma.categoria === "distancia" || arremessando;
 
   return {
     id: idArma,
 
-        instanciaId: arremessando
+    instanciaId: arremessando
       ? `${idArma}:${origemEquipamento}:arremesso`
       : `${idArma}:${origemEquipamento}`,
 
-    modoUso,
+    modoUso: modoUsoNormalizado,
+
+    arremesso: arremessando ? structuredClone(arma.arremesso ?? {}) : null,
 
     armaId: idArma,
-        equipamentoInstanciaId: `${idArma}:${origemEquipamento}`,
+    equipamentoInstanciaId: `${idArma}:${origemEquipamento}`,
 
-    nome: arremessando
-      ? `${arma.nome} (arremesso)`
-      : arma.nome,
+    nome: arremessando ? `${arma.nome} (arremesso)` : arma.nome,
 
     atributoId: atributoAtaque,
 
@@ -413,20 +402,12 @@ function atualizarAtaquesCombatePersonagem() {
 
     const modos = ["padrao"];
 
-    if (
-      arma.categoria === "corpo-a-corpo" &&
-      arma.propriedades?.includes("arremesso")
-    ) {
+    if (arma.categoria === "corpo-a-corpo" && arma.propriedades?.includes("arremesso")) {
       modos.push("arremesso");
     }
 
     for (const modo of modos) {
-      const ataque = criarAtaqueCombateArma(
-        personagem,
-        idArma,
-        origemEquipamento,
-        modo,
-      );
+      const ataque = criarAtaqueCombateArma(personagem, idArma, origemEquipamento, modo);
 
       if (ataque) {
         ataques.push(ataque);
@@ -435,16 +416,10 @@ function atualizarAtaquesCombatePersonagem() {
   }
 
   if (equipamentos) {
-    adicionarAtaquesDaArma(
-      equipamentos.armaPrincipal,
-      "armaPrincipal",
-    );
+    adicionarAtaquesDaArma(equipamentos.armaPrincipal, "armaPrincipal");
 
     if (equipamentos.itemSecundario === "armaSecundaria") {
-      adicionarAtaquesDaArma(
-        equipamentos.armaSecundaria,
-        "armaSecundaria",
-      );
+      adicionarAtaquesDaArma(equipamentos.armaSecundaria, "armaSecundaria");
     }
   }
 
@@ -493,69 +468,39 @@ function preencherSelectArmaduras() {
 }
 
 function preencherSelectArmas() {
-  preencherSelectArma(
-    armaPrincipal,
-    "Escolha uma arma",
-  );
+  preencherSelectArma(armaPrincipal, "Escolha uma arma");
 
-  preencherSelectArma(
-    armaSecundaria,
-    "Escolha uma arma secundária",
-  );
+  preencherSelectArma(armaSecundaria, "Escolha uma arma secundária");
 }
 
-function preencherSelectArma(
-  elementoSelect,
-  textoInicial,
-) {
+function preencherSelectArma(elementoSelect, textoInicial) {
   if (!elementoSelect) {
     return;
   }
 
-  const valorAnterior =
-    elementoSelect.value;
+  const valorAnterior = elementoSelect.value;
 
   elementoSelect.innerHTML = "";
 
-  const opcaoInicial =
-    document.createElement("option");
+  const opcaoInicial = document.createElement("option");
 
   opcaoInicial.value = "";
-  opcaoInicial.textContent =
-    textoInicial;
+  opcaoInicial.textContent = textoInicial;
 
-  elementoSelect.appendChild(
-    opcaoInicial,
-  );
+  elementoSelect.appendChild(opcaoInicial);
 
-  for (
-    const [idArma, arma]
-    of Object.entries(
-      window.bancoEquipamentos.armas,
-    )
-  ) {
-    const opcao =
-      document.createElement("option");
+  for (const [idArma, arma] of Object.entries(window.bancoEquipamentos.armas)) {
+    const opcao = document.createElement("option");
 
     opcao.value = idArma;
 
-    opcao.textContent =
-      typeof arma === "string"
-        ? arma
-        : arma.nome;
+    opcao.textContent = typeof arma === "string" ? arma : arma.nome;
 
-    elementoSelect.appendChild(
-      opcao,
-    );
+    elementoSelect.appendChild(opcao);
   }
 
-  if (
-    valorAnterior &&
-    window.bancoEquipamentos
-      .armas[valorAnterior]
-  ) {
-    elementoSelect.value =
-      valorAnterior;
+  if (valorAnterior && window.bancoEquipamentos.armas[valorAnterior]) {
+    elementoSelect.value = valorAnterior;
   }
 }
 
@@ -671,10 +616,7 @@ function armaTemPropriedade(idArma, propriedade) {
 }
 
 function validarCombinacaoEquipamentos() {
-  const equipamentos =
-    personagem
-      ?.detalhes
-      ?.equipamentos;
+  const equipamentos = personagem?.detalhes?.equipamentos;
 
   const resultado = {
     valido: true,
@@ -686,108 +628,55 @@ function validarCombinacaoEquipamentos() {
     return resultado;
   }
 
-  const armaPrincipalId =
-    equipamentos.armaPrincipal;
+  const armaPrincipalId = equipamentos.armaPrincipal;
 
-  const armaSecundariaId =
-    equipamentos.armaSecundaria;
+  const armaSecundariaId = equipamentos.armaSecundaria;
 
-  const itemSecundarioId =
-    equipamentos.itemSecundario;
+  const itemSecundarioId = equipamentos.itemSecundario;
 
-  const armaPrincipal =
-    obterDadosArma(
-      armaPrincipalId,
-    );
+  const armaPrincipal = obterDadosArma(armaPrincipalId);
 
   const possuiItemNaOutraMao =
     itemSecundarioId === "escudo" ||
-    (
-      itemSecundarioId ===
-        "armaSecundaria" &&
-      Boolean(armaSecundariaId)
-    );
+    (itemSecundarioId === "armaSecundaria" && Boolean(armaSecundariaId));
 
-  if (
-    armaPrincipalId &&
-    armaTemPropriedade(
-      armaPrincipalId,
-      "duasMaos",
-    ) &&
-    possuiItemNaOutraMao
-  ) {
+  if (armaPrincipalId && armaTemPropriedade(armaPrincipalId, "duasMaos") && possuiItemNaOutraMao) {
     resultado.erros.push(
       "Uma arma com a propriedade Duas mãos não pode ser combinada com escudo ou arma secundária.",
     );
   }
 
-  if (
-    itemSecundarioId ===
-      "armaSecundaria" &&
-    armaSecundariaId
-  ) {
-    const armaPrincipalEhLeve =
-      armaTemPropriedade(
-        armaPrincipalId,
-        "leve",
-      );
+  if (itemSecundarioId === "armaSecundaria" && armaSecundariaId) {
+    const armaPrincipalEhLeve = armaTemPropriedade(armaPrincipalId, "leve");
 
-    const armaSecundariaEhLeve =
-      armaTemPropriedade(
-        armaSecundariaId,
-        "leve",
-      );
+    const armaSecundariaEhLeve = armaTemPropriedade(armaSecundariaId, "leve");
 
-    if (
-      !armaPrincipalEhLeve ||
-      !armaSecundariaEhLeve
-    ) {
+    if (!armaPrincipalEhLeve || !armaSecundariaEhLeve) {
       resultado.avisos.push(
         "Esta combinação pode ser equipada, mas o ataque adicional da propriedade Leve exige duas armas Leves diferentes.",
       );
     }
   }
 
-  const estiloDeLuta =
-    personagem
-      ?.habilidades
-      ?.escolhas
-      ?.estilosDeLuta;
+  const estiloDeLuta = personagem?.habilidades?.escolhas?.estilosDeLuta;
 
-  if (
-    estiloDeLuta ===
-      "combateDuasArmas" &&
-    itemSecundarioId !==
-      "armaSecundaria"
-  ) {
+  if (estiloDeLuta === "combateDuasArmas" && itemSecundarioId !== "armaSecundaria") {
     resultado.avisos.push(
       "Combate com Duas Armas só terá efeito quando o personagem estiver usando duas armas.",
     );
   }
 
-  if (
-    estiloDeLuta === "duelismo" &&
-    itemSecundarioId ===
-      "armaSecundaria"
-  ) {
+  if (estiloDeLuta === "duelismo" && itemSecundarioId === "armaSecundaria") {
     resultado.avisos.push(
       "Duelismo não concede seu bônus enquanto outra arma estiver sendo empunhada.",
     );
   }
 
-  if (
-    estiloDeLuta === "duelismo" &&
-    armaPrincipal &&
-    armaPrincipal.categoria !==
-      "corpo-a-corpo"
-  ) {
-    resultado.avisos.push(
-      "Duelismo se aplica somente a armas corpo a corpo.",
-    );
+  if (estiloDeLuta === "duelismo" && armaPrincipal && armaPrincipal.categoria !== "corpo-a-corpo") {
+    resultado.avisos.push("Duelismo se aplica somente a armas corpo a corpo.");
   }
 
-  resultado.valido =
-    resultado.erros.length === 0;
+  resultado.valido = resultado.erros.length === 0;
 
   return resultado;
 }
@@ -797,46 +686,27 @@ function atualizarAvisosEquipamentos() {
     return;
   }
 
-  const validacao =
-    validarCombinacaoEquipamentos();
+  const validacao = validarCombinacaoEquipamentos();
 
   avisoEquipamentos.innerHTML = "";
 
-  for (
-    const mensagem of
-    validacao.erros
-  ) {
-    const linha =
-      document.createElement("div");
+  for (const mensagem of validacao.erros) {
+    const linha = document.createElement("div");
 
-    linha.classList.add(
-      "erro-equipamento",
-    );
+    linha.classList.add("erro-equipamento");
 
-    linha.textContent =
-      "✖ " + mensagem;
+    linha.textContent = "✖ " + mensagem;
 
-    avisoEquipamentos.appendChild(
-      linha,
-    );
+    avisoEquipamentos.appendChild(linha);
   }
 
-  for (
-    const mensagem of
-    validacao.avisos
-  ) {
-    const linha =
-      document.createElement("div");
+  for (const mensagem of validacao.avisos) {
+    const linha = document.createElement("div");
 
-    linha.classList.add(
-      "orientacao-equipamento",
-    );
+    linha.classList.add("orientacao-equipamento");
 
-    linha.textContent =
-      "⚠ " + mensagem;
+    linha.textContent = "⚠ " + mensagem;
 
-    avisoEquipamentos.appendChild(
-      linha,
-    );
+    avisoEquipamentos.appendChild(linha);
   }
 }

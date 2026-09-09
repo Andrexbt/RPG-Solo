@@ -85,7 +85,6 @@
   overflow: visible;
 
   color: #3b281b;
-
 }
 
 .ficha-conteudo-rolavel {
@@ -117,15 +116,10 @@
   border-radius: 5px;
 
   background:
-    linear-gradient(
-      rgba(255, 250, 226, 0.05),
-      rgba(102, 59, 27, 0.04)
-    ),
-    url("Imagens/Assets/moldura-ficha/papel.webp")
-      center top / 100% auto repeat-y;
+    linear-gradient(rgba(255, 250, 226, 0.05), rgba(102, 59, 27, 0.04)),
+    url("Imagens/Assets/moldura-ficha/papel.webp") center top / 100% auto repeat-y;
 
-  box-shadow:
-    0 18px 52px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.32);
 }
 
 /* =====================================================

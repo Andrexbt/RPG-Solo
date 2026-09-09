@@ -1,9 +1,7 @@
 "use strict";
 
 (function configurarTestesDev() {
-  const ambienteLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(
-    window.location.hostname,
-  );
+  const ambienteLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
 
   if (!ambienteLocal) {
     return;
@@ -106,9 +104,7 @@
   }
 
   function configurarParticipantes(combate, configuracao) {
-    const jogador = combate.participantes.find(
-      (participante) => participante.tipo === "jogador",
-    );
+    const jogador = combate.participantes.find((participante) => participante.tipo === "jogador");
 
     const inimigos = combate.participantes.filter(
       (participante) => participante.tipo === "inimigo",
@@ -242,36 +238,29 @@
   }
 
   function obterVariacoesEncerramento() {
-    return aventuraAtual
-      ?.cenas
-      ?.encerramentoAventura
-      ?.variacoes ?? [];
+    return aventuraAtual?.cenas?.encerramentoAventura?.variacoes ?? [];
   }
 
   function obterResultadoFinalVariacao(variacao) {
-    return variacao.escolhas
-      ?.find((escolha) => escolha.fimAventura)
-      ?.fimAventura
-      ?.resultadoId ?? "indefinido";
+    return (
+      variacao.escolhas?.find((escolha) => escolha.fimAventura)?.fimAventura?.resultadoId ??
+      "indefinido"
+    );
   }
 
   function criarRotuloVariacaoEncerramento(variacao, indice) {
     const origem = variacao.se?.veioDe ?? {};
     const resultadoFinal = obterResultadoFinalVariacao(variacao);
-    const local = [origem.cenaId, origem.etapaId]
-      .filter(Boolean)
-      .join(" / ");
-    const evento = [origem.tipo, origem.resultado]
-      .filter(Boolean)
-      .join(": ");
+    const local = [origem.cenaId, origem.etapaId].filter(Boolean).join(" / ");
+    const evento = [origem.tipo, origem.resultado].filter(Boolean).join(": ");
 
-    return `${indice + 1}. ${resultadoFinal} — ${local || "sem origem"}` +
-      (evento ? ` — ${evento}` : "");
+    return (
+      `${indice + 1}. ${resultadoFinal} — ${local || "sem origem"}` + (evento ? ` — ${evento}` : "")
+    );
   }
 
   function abrirEncerramentoAventura(indiceVariacao) {
-    const cenaEncerramento =
-      aventuraAtual?.cenas?.encerramentoAventura;
+    const cenaEncerramento = aventuraAtual?.cenas?.encerramentoAventura;
 
     if (!cenaEncerramento) {
       return exibirResultado("Abrir encerramento", {
@@ -287,8 +276,7 @@
       });
     }
 
-    const variacao =
-      cenaEncerramento.variacoes?.[indiceVariacao];
+    const variacao = cenaEncerramento.variacoes?.[indiceVariacao];
     const origem = variacao?.se?.veioDe;
 
     if (!origem) {
@@ -324,17 +312,13 @@
   }
 
   function abrirEncerramentoSelecionado() {
-    return abrirEncerramentoAventura(
-      Number(seletorEncerramento?.value ?? 0),
-    );
+    return abrirEncerramentoAventura(Number(seletorEncerramento?.value ?? 0));
   }
 
   function abrirPrimeiroEncerramentoDoTipo(resultadoId) {
-    const indice = obterVariacoesEncerramento()
-      .findIndex(
-        (variacao) =>
-          obterResultadoFinalVariacao(variacao) === resultadoId,
-      );
+    const indice = obterVariacoesEncerramento().findIndex(
+      (variacao) => obterResultadoFinalVariacao(variacao) === resultadoId,
+    );
 
     return abrirEncerramentoAventura(indice);
   }
@@ -392,10 +376,7 @@
     return seletor;
   }
 
-  function adicionarInimigoBatalha(
-    npcId = null,
-    posicao = { coluna: 1, linha: 1 },
-  ) {
+  function adicionarInimigoBatalha(npcId = null, posicao = { coluna: 1, linha: 1 }) {
     if (!listaInimigosBatalha) {
       return;
     }
@@ -426,9 +407,10 @@
   }
 
   function obterBatalhaSelecionada() {
-    return listarBatalhasDisponiveis().find(
-      (batalha) => batalha.cenaId === seletorMapaBatalha?.value,
-    ) ?? null;
+    return (
+      listarBatalhasDisponiveis().find((batalha) => batalha.cenaId === seletorMapaBatalha?.value) ??
+      null
+    );
   }
 
   function carregarPosicoesOriginaisBatalha() {
@@ -438,12 +420,8 @@
       return;
     }
 
-    colunaJogadorBatalha.value = String(
-      batalha.combate.jogador?.posicao?.coluna ?? 1,
-    );
-    linhaJogadorBatalha.value = String(
-      batalha.combate.jogador?.posicao?.linha ?? 1,
-    );
+    colunaJogadorBatalha.value = String(batalha.combate.jogador?.posicao?.coluna ?? 1);
+    linhaJogadorBatalha.value = String(batalha.combate.jogador?.posicao?.linha ?? 1);
 
     listaInimigosBatalha.innerHTML = "";
 
@@ -521,10 +499,7 @@
       });
     }
 
-    const posicaoJogador = lerPosicao(
-      colunaJogadorBatalha.value,
-      linhaJogadorBatalha.value,
-    );
+    const posicaoJogador = lerPosicao(colunaJogadorBatalha.value, linhaJogadorBatalha.value);
 
     const inimigosInformados = Array.from(
       listaInimigosBatalha.querySelectorAll("[data-inimigo-batalha-dev]"),
@@ -544,13 +519,10 @@
       });
     }
 
-    const erroPosicao = validarPosicoesBatalha(
-      batalha.combate,
-      [
-        { nome: "Jogador", posicao: posicaoJogador },
-        ...inimigosInformados,
-      ],
-    );
+    const erroPosicao = validarPosicoesBatalha(batalha.combate, [
+      { nome: "Jogador", posicao: posicaoJogador },
+      ...inimigosInformados,
+    ]);
 
     if (erroPosicao) {
       return exibirResultado("Batalha personalizada", {
@@ -656,11 +628,7 @@
 
     colunaJogadorBatalha = criarCampoNumero(1);
     linhaJogadorBatalha = criarCampoNumero(1);
-    posicaoJogador.append(
-      rotuloJogador,
-      colunaJogadorBatalha,
-      linhaJogadorBatalha,
-    );
+    posicaoJogador.append(rotuloJogador, colunaJogadorBatalha, linhaJogadorBatalha);
 
     const cabecalhoInimigos = document.createElement("div");
     cabecalhoInimigos.style.display = "flex";
@@ -677,10 +645,7 @@
     listaInimigosBatalha.style.display = "grid";
     listaInimigosBatalha.style.gap = "5px";
 
-    seletorMapaBatalha.addEventListener(
-      "change",
-      carregarPosicoesOriginaisBatalha,
-    );
+    seletorMapaBatalha.addEventListener("change", carregarPosicoesOriginaisBatalha);
 
     area.append(
       legenda,
@@ -738,13 +703,6 @@
       criarBotao("Distante", () => prepararCenario("distante")),
       criarBotao("Ameaçado", () => prepararCenario("ameacado")),
       criarBotao("Sem visão", () => prepararCenario("semLinhaDeVisao")),
-      criarBotao("Testar adagas", async function testarAdagas() {
-        const resultado = await window.testarDestinosAdagaDev?.();
-        exibirResultado("Visuais da adaga", resultado ?? {
-          sucesso: false,
-          motivo: "testeIndisponivel",
-        });
-      }),
     );
 
     const areaEncerramento = document.createElement("div");
@@ -759,16 +717,10 @@
     seletorEncerramento.style.width = "100%";
     seletorEncerramento.style.padding = "7px";
 
-    obterVariacoesEncerramento().forEach(function adicionarOpcao(
-      variacao,
-      indice,
-    ) {
+    obterVariacoesEncerramento().forEach(function adicionarOpcao(variacao, indice) {
       const opcao = document.createElement("option");
       opcao.value = String(indice);
-      opcao.textContent = criarRotuloVariacaoEncerramento(
-        variacao,
-        indice,
-      );
+      opcao.textContent = criarRotuloVariacaoEncerramento(variacao, indice);
       seletorEncerramento.append(opcao);
     });
 
@@ -800,10 +752,7 @@
     );
     document.body.append(painel);
 
-    if (
-      new URLSearchParams(window.location.search).get("ferramenta") ===
-      "montador-batalha"
-    ) {
+    if (new URLSearchParams(window.location.search).get("ferramenta") === "montador-batalha") {
       window.MontadorBatalhaDev?.abrir();
     }
   }

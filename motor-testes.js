@@ -1,12 +1,7 @@
 "use strict";
 
-function realizarRolagemComposta(
-  configuracao,
-) {
-  return window.MotorDados
-    .realizarRolagemComposta(
-      configuracao,
-    );
+function realizarRolagemComposta(configuracao) {
+  return window.MotorDados.realizarRolagemComposta(configuracao);
 }
 
 function formatarResultadoRolagem(rolagem) {
@@ -25,87 +20,63 @@ window.realizarRolagemComposta = realizarRolagemComposta;
 window.formatarResultadoRolagem = formatarResultadoRolagem;
 
 window.SistemaTestes = (function () {
-
   function obterArmaduraEquipada(entidade) {
-  const idArmadura =
-    entidade?.detalhes?.equipamentos?.armadura;
+    const idArmadura = entidade?.detalhes?.equipamentos?.armadura;
 
-  if (!idArmadura) {
-    return null;
+    if (!idArmadura) {
+      return null;
+    }
+
+    return window.bancoEquipamentos?.armaduras?.[idArmadura] ?? null;
   }
 
-  return window.bancoEquipamentos
-    ?.armaduras
-    ?.[idArmadura] ?? null;
-}
+  function armaduraCausaDesvantagemFurtividade(entidade) {
+    const armadura = obterArmaduraEquipada(entidade);
 
-function armaduraCausaDesvantagemFurtividade(entidade) {
-  const armadura = obterArmaduraEquipada(entidade);
+    return armadura?.desvantagemFurtividade === true;
+  }
 
-  return armadura?.desvantagemFurtividade === true;
-}
+  function armaduraCausaDesvantagemNado(entidade) {
+    const armadura = obterArmaduraEquipada(entidade);
 
-function armaduraCausaDesvantagemNado(entidade) {
-  const armadura = obterArmaduraEquipada(entidade);
+    if (!armadura) {
+      return false;
+    }
 
-  if (!armadura) {
+    return Number(armadura.caBase) >= 14;
+  }
+
+  function possuiDesvantagemSituacional(entidade, descritor) {
+    if (descritor?.tipo === "pericia" && descritor.periciaId === "furtividade") {
+      return armaduraCausaDesvantagemFurtividade(entidade);
+    }
+
+    if (descritor?.situacao === "nadarAguasRevoltas") {
+      return armaduraCausaDesvantagemNado(entidade);
+    }
+
     return false;
   }
 
-  return Number(armadura.caBase) >= 14;
-}
+  function combinarTipoRolagem(tipoOriginal = "normal", desvantagemAdicional = false) {
+    if (!desvantagemAdicional) {
+      return tipoOriginal;
+    }
 
-function possuiDesvantagemSituacional(entidade, descritor) {
-  if (
-    descritor?.tipo === "pericia" &&
-    descritor.periciaId === "furtividade"
-  ) {
-    return armaduraCausaDesvantagemFurtividade(entidade);
+    if (tipoOriginal === "vantagem") {
+      return "normal";
+    }
+
+    return "desvantagem";
   }
 
-  if (descritor?.situacao === "nadarAguasRevoltas") {
-    return armaduraCausaDesvantagemNado(entidade);
+  function determinarTipoRolagem(entidade, descritor, teste = descritor) {
+    const tipoOriginal = descritor?.tipoRolagem ?? teste?.tipoRolagem ?? "normal";
+
+    const desvantagemSituacional = possuiDesvantagemSituacional(entidade, descritor);
+
+    return combinarTipoRolagem(tipoOriginal, desvantagemSituacional);
   }
-
-  return false;
-}
-
-function combinarTipoRolagem(
-  tipoOriginal = "normal",
-  desvantagemAdicional = false,
-) {
-  if (!desvantagemAdicional) {
-    return tipoOriginal;
-  }
-
-  if (tipoOriginal === "vantagem") {
-    return "normal";
-  }
-
-  return "desvantagem";
-}
-
-function determinarTipoRolagem(
-  entidade,
-  descritor,
-  teste = descritor,
-) {
-  const tipoOriginal =
-    descritor?.tipoRolagem ??
-    teste?.tipoRolagem ??
-    "normal";
-
-  const desvantagemSituacional =
-    possuiDesvantagemSituacional(
-      entidade,
-      descritor,
-    );
-
-  return combinarTipoRolagem(
-    tipoOriginal,
-    desvantagemSituacional,
-  );
-}
   function calcularModificadorAtributo(valor) {
     return Math.floor((Number(valor) - 10) / 2);
   }
@@ -220,11 +191,11 @@ function determinarTipoRolagem(
 
   return {
     obterArmaduraEquipada,
-  armaduraCausaDesvantagemFurtividade,
-  armaduraCausaDesvantagemNado,
-  possuiDesvantagemSituacional,
-  combinarTipoRolagem,
-  determinarTipoRolagem,
+    armaduraCausaDesvantagemFurtividade,
+    armaduraCausaDesvantagemNado,
+    possuiDesvantagemSituacional,
+    combinarTipoRolagem,
+    determinarTipoRolagem,
     calcularModificadorAtributo,
     calcularBonusPericia,
     calcularBonusSalvaguarda,

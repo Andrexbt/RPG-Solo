@@ -7,8 +7,7 @@
 // =====================================================
 
 window.bancoEspecies = {
-  tracos:{
-
+  tracos: {
     visaoNoEscuroAnao: {
       id: "visaoNoEscuroAnao",
       nome: "Visão no Escuro",
@@ -19,115 +18,108 @@ window.bancoEspecies = {
         {
           gatilho: "passivo",
           efeito: {
-          tipo: "concederSentido",
-          sentido: "visaoNoEscuro",
-          alcance: 36,
+            tipo: "concederSentido",
+            sentido: "visaoNoEscuro",
+            alcance: 36,
           },
         },
-     ],
+      ],
     },
 
     resilienciaAna: {
-  id: "resilienciaAna",
-  nome: "Resiliência Anã",
+      id: "resilienciaAna",
+      nome: "Resiliência Anã",
 
-  descricaoCurta:
-    "Sua natureza anã torna você especialmente resistente a venenos.",
+      descricaoCurta: "Sua natureza anã torna você especialmente resistente a venenos.",
 
-  regras: [
-    {
-      gatilho: "passivo",
+      regras: [
+        {
+          gatilho: "passivo",
 
-      efeito: {
-        tipo: "concederResistenciaDano",
-        tipoDano: "veneno",
-      },
-    },
-
-    {
-      gatilho: "aoFazerSalvaguarda",
-
-      condicao: {
-        condicaoId: "envenenado",
-        finalidades: [
-          "evitar",
-          "encerrar",
-        ],
-      },
-
-      efeito: {
-        tipo: "concederVantagem",
-        rolagemAfetada: "salvaguarda",
-      },
-    },
-  ],
-},
-
-tenacidadeAna: {
-  id: "tenacidadeAna",
-  nome: "Tenacidade Anã",
-
-  descricaoCurta:
-    "Sua resistência natural aumenta seus Pontos de Vida.",
-
-  regras: [
-    {
-      gatilho: "aoCalcularPontosDeVidaMaximos",
-
-      efeito: {
-        tipo: "aumentarPontosDeVidaMaximos",
-
-        quantidade: {
-          tipo: "nivelPersonagem",
-        },
-      },
-    },
-  ],
-},
-
-conhecimentoDaPedra: {
-  id: "conhecimentoDaPedra",
-  nome: "Conhecimento da Pedra",
-
-  descricaoCurta:
-    "Ao entrar em sintonia com a pedra, você consegue perceber criaturas através de vibrações.",
-
-  regras: [
-    {
-      gatilho: "aoAtivar",
-
-      custo: "acaoBonus",
-
-      requisito: {
-        tipo: "contatoComSuperficie",
-        material: "pedra",
-      },
-
-      efeito: {
-        tipo: "concederSentidoTemporario",
-        sentido: "sentidoTremor",
-        alcance: 18,
-        duracao: {
-          quantidade: 10,
-          unidade: "minutos",
-        },
-      },
-
-      usos: {
-        quantidade: {
-          tipo: "bonusProficiencia",
+          efeito: {
+            tipo: "concederResistenciaDano",
+            tipoDano: "veneno",
+          },
         },
 
-        recarga: "descansoLongo",
-      },
-    },
-  ],
-},
+        {
+          gatilho: "aoFazerSalvaguarda",
 
+          condicao: {
+            condicaoId: "envenenado",
+            finalidades: ["evitar", "encerrar"],
+          },
+
+          efeito: {
+            tipo: "concederVantagem",
+            rolagemAfetada: "salvaguarda",
+          },
+        },
+      ],
+    },
+
+    tenacidadeAna: {
+      id: "tenacidadeAna",
+      nome: "Tenacidade Anã",
+
+      descricaoCurta: "Sua resistência natural aumenta seus Pontos de Vida.",
+
+      regras: [
+        {
+          gatilho: "aoCalcularPontosDeVidaMaximos",
+
+          efeito: {
+            tipo: "aumentarPontosDeVidaMaximos",
+
+            quantidade: {
+              tipo: "nivelPersonagem",
+            },
+          },
+        },
+      ],
+    },
+
+    conhecimentoDaPedra: {
+      id: "conhecimentoDaPedra",
+      nome: "Conhecimento da Pedra",
+
+      descricaoCurta:
+        "Ao entrar em sintonia com a pedra, você consegue perceber criaturas através de vibrações.",
+
+      regras: [
+        {
+          gatilho: "aoAtivar",
+
+          custo: "acaoBonus",
+
+          requisito: {
+            tipo: "contatoComSuperficie",
+            material: "pedra",
+          },
+
+          efeito: {
+            tipo: "concederSentidoTemporario",
+            sentido: "sentidoTremor",
+            alcance: 18,
+            duracao: {
+              quantidade: 10,
+              unidade: "minutos",
+            },
+          },
+
+          usos: {
+            quantidade: {
+              tipo: "bonusProficiencia",
+            },
+
+            recarga: "descansoLongo",
+          },
+        },
+      ],
+    },
   },
 
   especies: {
-
     humano: {
       id: "humano",
       nome: "Humano",
@@ -143,12 +135,7 @@ conhecimentoDaPedra: {
       velocidade: "9 m",
       tamanho: "Médio",
       idiomasFixos: ["anao"],
-      tracos: [
-        "visaoNoEscuroAnao",
-        "resilienciaAna",
-        "tenacidadeAna",
-        "conhecimentoDaPedra",
-      ],
+      tracos: ["visaoNoEscuroAnao", "resilienciaAna", "tenacidadeAna", "conhecimentoDaPedra"],
     },
 
     elfo: {
@@ -167,5 +154,4 @@ conhecimentoDaPedra: {
       idiomasFixos: ["halfling"],
     },
   },
-
 };

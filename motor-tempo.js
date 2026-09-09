@@ -1,11 +1,6 @@
 window.MotorTempo = (function () {
-
-  function converterParaSegundos(
-    quantidade,
-    unidade,
-  ) {
-    const valor =
-      Number(quantidade) || 0;
+  function converterParaSegundos(quantidade, unidade) {
+    const valor = Number(quantidade) || 0;
 
     if (unidade === "segundos") {
       return valor;
@@ -27,128 +22,79 @@ window.MotorTempo = (function () {
   }
 
   function obterTempoAtual() {
-    return (
-      Number(
-        window.estadoJogo
-          ?.tempo
-          ?.segundosTotais,
-      ) || 0
-    );
+    return Number(window.estadoJogo?.tempo?.segundosTotais) || 0;
   }
 
   function avancar(duracao) {
-    const segundos =
-      converterParaSegundos(
-        duracao?.quantidade,
-        duracao?.unidade,
-      );
+    const segundos = converterParaSegundos(duracao?.quantidade, duracao?.unidade);
 
     window.estadoJogo.tempo ??= {
       segundosTotais: 0,
     };
 
-    window.estadoJogo
-      .tempo
-      .segundosTotais +=
-      segundos;
+    window.estadoJogo.tempo.segundosTotais += segundos;
 
-      const efeitosAtualizados =
-  removerEfeitosExpirados();
+    const efeitosAtualizados = removerEfeitosExpirados();
 
     return {
       sucesso: true,
-      segundosAvancados:
-        segundos,
-      tempoAtual:
-        obterTempoAtual(),
+      segundosAvancados: segundos,
+      tempoAtual: obterTempoAtual(),
       efeitosExpirados: efeitosAtualizados.expirados,
     };
   }
 
-  function calcularExpiracao(
-  duracao,
-) {
-  const inicioEm =
-    obterTempoAtual();
+  function calcularExpiracao(duracao) {
+    const inicioEm = obterTempoAtual();
 
-  const duracaoSegundos =
-    converterParaSegundos(
-      duracao?.quantidade,
-      duracao?.unidade,
-    );
+    const duracaoSegundos = converterParaSegundos(duracao?.quantidade, duracao?.unidade);
 
-  return {
-    inicioEm,
+    return {
+      inicioEm,
 
-    expiraEm:
-      inicioEm +
+      expiraEm: inicioEm + duracaoSegundos,
+
       duracaoSegundos,
-
-    duracaoSegundos,
-  };
+    };
   }
 
-  function efeitoExpirou(
-  efeito,
-) {
-  if (
-    efeito?.expiraEm ===
-      undefined ||
-    efeito?.expiraEm ===
-      null
-  ) {
-    return false;
+  function efeitoExpirou(efeito) {
+    if (efeito?.expiraEm === undefined || efeito?.expiraEm === null) {
+      return false;
+    }
+
+    return obterTempoAtual() >= efeito.expiraEm;
   }
 
-  return (
-    obterTempoAtual() >=
-    efeito.expiraEm
-  );
-  }
+  function obterTempoRestante(efeito) {
+    if (efeito?.expiraEm === undefined || efeito?.expiraEm === null) {
+      return null;
+    }
 
-  function obterTempoRestante(
-  efeito,
-) {
-  if (
-    efeito?.expiraEm ===
-      undefined ||
-    efeito?.expiraEm ===
-      null
-  ) {
-    return null;
-  }
-
-  return Math.max(
-    0,
-    efeito.expiraEm -
-      obterTempoAtual(),
-  );
+    return Math.max(0, efeito.expiraEm - obterTempoAtual());
   }
 
   function removerEfeitosExpirados() {
-  const efeitos =
-    window.estadoJogo
-      ?.efeitosTemporarios ?? [];
+    const efeitos = window.estadoJogo?.efeitosTemporarios ?? [];
 
-  const ativos = [];
-  const expirados = [];
+    const ativos = [];
+    const expirados = [];
 
-  for (const efeito of efeitos) {
-    if (efeitoExpirou(efeito)) {
-      expirados.push(efeito);
-      continue;
+    for (const efeito of efeitos) {
+      if (efeitoExpirou(efeito)) {
+        expirados.push(efeito);
+        continue;
+      }
+
+      ativos.push(efeito);
     }
 
-    ativos.push(efeito);
-  }
+    window.estadoJogo.efeitosTemporarios = ativos;
 
-  window.estadoJogo
-    .efeitosTemporarios = ativos;
-
-  return {
-    ativos,
-    expirados,
-  };
+    return {
+      ativos,
+      expirados,
+    };
   }
 
   return {

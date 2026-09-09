@@ -1,20 +1,15 @@
 "use strict";
 
 (function iniciarSistemaDados() {
-
   const {
-  rolarDado,
-  
-  validarRolagem:
-    validarDadosDaRolagem,
+    rolarDado,
 
-    separarResultados:
-    separarResultadosVisuais,
+    validarRolagem: validarDadosDaRolagem,
 
-    criarResultado:
-    criarResultadoRolagem,
-    
-} = window.MotorDados;
+    separarResultados: separarResultadosVisuais,
+
+    criarResultado: criarResultadoRolagem,
+  } = window.MotorDados;
 
   const resultadoDado = document.querySelector("#resultadoDado");
   const dadosDisponiveis = document.querySelectorAll(".dado-disponivel");
@@ -38,146 +33,85 @@
 
   function limparResultadoDado() {
     if (temporizadorResultadoDado) {
-      window.clearTimeout(
-        temporizadorResultadoDado,
-      );
+      window.clearTimeout(temporizadorResultadoDado);
 
       temporizadorResultadoDado = null;
     }
 
     if (resultadoDado) {
       resultadoDado.textContent = "";
-      resultadoDado.classList.remove(
-        "resultado-rolagem-erro",
-      );
+      resultadoDado.classList.remove("resultado-rolagem-erro");
     }
   }
 
   function agendarOcultacaoResultadoDado() {
     if (temporizadorResultadoDado) {
-      window.clearTimeout(
-        temporizadorResultadoDado,
-      );
+      window.clearTimeout(temporizadorResultadoDado);
     }
 
-    temporizadorResultadoDado =
-      window.setTimeout(
-        function ocultarResultadoDado() {
-          limparResultadoDado();
-        },
-        5000,
-      );
+    temporizadorResultadoDado = window.setTimeout(function ocultarResultadoDado() {
+      limparResultadoDado();
+    }, 5000);
   }
 
   function obterSuperficieDados() {
-  const combateEstaVisivel =
-    visualizacaoCombate &&
-    !visualizacaoCombate.hidden;
+    const combateEstaVisivel = visualizacaoCombate && !visualizacaoCombate.hidden;
 
-  if (
-    combateEstaVisivel &&
-    tabuleiroDados
-  ) {
-    return tabuleiroDados;
-  }
+    if (combateEstaVisivel && tabuleiroDados) {
+      return tabuleiroDados;
+    }
 
-  return superficieAventura;
+    return superficieAventura;
   }
 
   function prepararCamadaDados() {
-  const superficieDados =
-    obterSuperficieDados();
+    const superficieDados = obterSuperficieDados();
 
-  if (
-    !camadaDadosLancados ||
-    !superficieDados
-  ) {
-    return false;
+    if (!camadaDadosLancados || !superficieDados) {
+      return false;
+    }
+
+    if (camadaDadosLancados.parentElement !== superficieDados) {
+      superficieDados.append(camadaDadosLancados);
+    }
+
+    if (resultadoDado && resultadoDado.parentElement !== camadaDadosLancados) {
+      camadaDadosLancados.append(resultadoDado);
+    }
+
+    return true;
   }
 
-  if (
-    camadaDadosLancados.parentElement !==
-    superficieDados
-  ) {
-    superficieDados.append(
-      camadaDadosLancados
-    );
-  }
+  function obterPosicaoNaSuperficie(clientX, clientY) {
+    const superficieDados = obterSuperficieDados();
 
-  if (
-    resultadoDado &&
-    resultadoDado.parentElement !==
-      camadaDadosLancados
-  ) {
-    camadaDadosLancados.append(
-      resultadoDado
-    );
-  }
+    if (!superficieDados) {
+      return {
+        x: clientX,
+        y: clientY,
+      };
+    }
 
-  return true;
-  }
+    const retangulo = superficieDados.getBoundingClientRect();
 
-  function obterPosicaoNaSuperficie(
-  clientX,
-  clientY
-) {
-  const superficieDados =
-    obterSuperficieDados();
+    const escalaX = retangulo.width / superficieDados.offsetWidth || 1;
 
-  if (!superficieDados) {
+    const escalaY = retangulo.height / superficieDados.offsetHeight || 1;
+
     return {
-      x: clientX,
-      y: clientY,
+      x: (clientX - retangulo.left) / escalaX,
+
+      y: (clientY - retangulo.top) / escalaY,
     };
   }
 
-  const retangulo =
-    superficieDados.getBoundingClientRect();
+  function formatarExpressaoResultado(subtotal, modificador, total, critico = false) {
+    if (critico) {
+      return mensagensNarrativas.dados.resultadoCritico(subtotal, modificador);
+    }
 
-  const escalaX =
-    retangulo.width /
-      superficieDados.offsetWidth ||
-    1;
-
-  const escalaY =
-    retangulo.height /
-      superficieDados.offsetHeight ||
-    1;
-
-  return {
-    x:
-      (clientX - retangulo.left) /
-      escalaX,
-
-    y:
-      (clientY - retangulo.top) /
-      escalaY,
-  };
+    return mensagensNarrativas.dados.resultadoNormal(subtotal, modificador, total);
   }
-
-  function formatarExpressaoResultado(
-  subtotal,
-  modificador,
-  total,
-  critico = false,
-) {
-  if (critico) {
-    return mensagensNarrativas
-      .dados
-      .resultadoCritico(
-        subtotal,
-        modificador,
-      );
-  }
-
-  return mensagensNarrativas
-    .dados
-    .resultadoNormal(
-      subtotal,
-      modificador,
-      total,
-    );
-}
 
   function atualizarSolicitacaoCaixaDados() {
     if (!solicitacaoCaixaDados) {
@@ -190,41 +124,24 @@
       return;
     }
 
-    const quantidadeDeRolagens =
-  solicitacaoRolagemAtual
-    .quantidadeDeRolagens ?? 1;
+    const quantidadeDeRolagens = solicitacaoRolagemAtual.quantidadeDeRolagens ?? 1;
 
-const dadosSolicitados =
-  solicitacaoRolagemAtual.gruposDeDados
-    .map(function formatarGrupo(grupo) {
-      const quantidadePorRolagem =
-        grupo.quantidade /
-        quantidadeDeRolagens;
+    const dadosSolicitados = solicitacaoRolagemAtual.gruposDeDados
+      .map(function formatarGrupo(grupo) {
+        const quantidadePorRolagem = grupo.quantidade / quantidadeDeRolagens;
 
-      return (
-        `${quantidadePorRolagem}` +
-        `d${grupo.numeroDeFaces}`
-      );
-    })
-    .join(" + ");
+        return `${quantidadePorRolagem}` + `d${grupo.numeroDeFaces}`;
+      })
+      .join(" + ");
 
     const modificador = solicitacaoRolagemAtual.modificador;
     const textoModificador =
-      modificador > 0
-        ? ` + ${modificador}`
-        : modificador < 0
-          ? ` - ${Math.abs(modificador)}`
-          : "";
+      modificador > 0 ? ` + ${modificador}` : modificador < 0 ? ` - ${Math.abs(modificador)}` : "";
 
-    const textoRepeticao =
-  quantidadeDeRolagens > 1
-    ? ` — ${quantidadeDeRolagens} vezes`
-    : "";
+    const textoRepeticao = quantidadeDeRolagens > 1 ? ` — ${quantidadeDeRolagens} vezes` : "";
 
-solicitacaoCaixaDados.textContent =
-  `${dadosSolicitados}` +
-  `${textoModificador}` +
-  `${textoRepeticao}`;
+    solicitacaoCaixaDados.textContent =
+      `${dadosSolicitados}` + `${textoModificador}` + `${textoRepeticao}`;
     solicitacaoCaixaDados.hidden = false;
   }
 
@@ -238,81 +155,51 @@ solicitacaoCaixaDados.textContent =
     }
 
     solicitacaoRolagemAtual = {
-  gruposDeDados:
-    structuredClone(
-      configuracao.gruposDeDados ?? [],
-    ),
+      gruposDeDados: structuredClone(configuracao.gruposDeDados ?? []),
 
-  modificador:
-    Number(configuracao.modificador) || 0,
+      modificador: Number(configuracao.modificador) || 0,
 
-  descricao:
-    configuracao.descricao ??
-    "Rolagem solicitada",
+      descricao: configuracao.descricao ?? "Rolagem solicitada",
 
-  quantidadeDeRolagens:
-    Math.max(
-      1,
-      Number(
-        configuracao.quantidadeDeRolagens,
-      ) || 1,
-    ),
+      quantidadeDeRolagens: Math.max(1, Number(configuracao.quantidadeDeRolagens) || 1),
 
-  critico:
-    Boolean(configuracao.critico),
+      critico: Boolean(configuracao.critico),
 
-  tipoRolagem:
-    configuracao.tipoRolagem ??
-    "normal",
-};
+      tipoRolagem: configuracao.tipoRolagem ?? "normal",
+    };
 
     atualizarSolicitacaoCaixaDados();
   }
 
   window.configurarRolagemSolicitada = configurarRolagemSolicitada;
 
-  const fantasmasLancamentos3D =
-    new Map();
+  const fantasmasLancamentos3D = new Map();
 
-  let proximoIdTransicao3D =
-    1;
+  let proximoIdTransicao3D = 1;
 
-  function criarMiniaturaDadoArraste(
-  numeroDeFaces,
-  indice,
-) {
-  const miniatura =
-    document.createElement("img");
+  function criarMiniaturaDadoArraste(numeroDeFaces, indice) {
+    const miniatura = document.createElement("img");
 
-  miniatura.className =
-    "miniatura-dado-arraste";
+    miniatura.className = "miniatura-dado-arraste";
 
-  miniatura.dataset.indice =
-    String(indice);
+    miniatura.dataset.indice = String(indice);
 
-  miniatura.src =
-    `Imagens/Assets/dados/d${numeroDeFaces}.webp`;
+    miniatura.src = `Imagens/Assets/dados/d${numeroDeFaces}.webp`;
 
-    miniatura.alt =
-      "";
+    miniatura.alt = "";
 
-    miniatura.draggable =
-      false;
+    miniatura.draggable = false;
 
-    miniatura.style.display =
-      "block";
+    miniatura.style.display = "block";
 
-    miniatura.style.visibility =
-      "visible";
+    miniatura.style.visibility = "visible";
 
-    miniatura.style.opacity =
-      "1";
+    miniatura.style.opacity = "1";
 
-  miniatura.draggable =
-    false;
+    miniatura.draggable = false;
 
-  return miniatura;
-}
+    return miniatura;
+  }
 
   function posicionarMiniaturasArraste(grupo) {
     const miniaturas = grupo.querySelectorAll(".miniatura-dado-arraste");
@@ -375,12 +262,9 @@ solicitacaoCaixaDados.textContent =
 
     if (rolagemSolicitadaEmAndamento) {
       if (resultadoDado) {
-        resultadoDado.textContent =
-          "Aguarde o resultado da rolagem solicitada.";
+        resultadoDado.textContent = "Aguarde o resultado da rolagem solicitada.";
 
-        resultadoDado.classList.add(
-          "resultado-rolagem-erro",
-        );
+        resultadoDado.classList.add("resultado-rolagem-erro");
       }
 
       return;
@@ -395,15 +279,9 @@ solicitacaoCaixaDados.textContent =
 
     evento.preventDefault();
 
-    if (
-      evento.pointerId !== undefined &&
-      typeof elementoDado.setPointerCapture ===
-        "function"
-    ) {
+    if (evento.pointerId !== undefined && typeof elementoDado.setPointerCapture === "function") {
       try {
-        elementoDado.setPointerCapture(
-          evento.pointerId,
-        );
+        elementoDado.setPointerCapture(evento.pointerId);
       } catch (erro) {
         // O arraste pelo documento continua funcionando sem captura.
       }
@@ -411,18 +289,10 @@ solicitacaoCaixaDados.textContent =
 
     limparResultadoDado();
 
-    if (
-      window.Dados3D &&
-      typeof window.Dados3D.inicializar ===
-        "function"
-    ) {
-      void window.Dados3D
-        .inicializar()
-        .catch(
-          function ignorarFalhaPreparo3D() {
-            // O fallback 2D continua disponível.
-          },
-        );
+    if (window.Dados3D && typeof window.Dados3D.inicializar === "function") {
+      void window.Dados3D.inicializar().catch(function ignorarFalhaPreparo3D() {
+        // O fallback 2D continua disponível.
+      });
     }
 
     arrasteDadoAtual = {
@@ -433,18 +303,11 @@ solicitacaoCaixaDados.textContent =
       fantasma: criarFantasmaArraste(numeroDeFaces, evento.clientX, evento.clientY),
     };
 
-    document.documentElement.dataset
-      .quantidadeDadosArraste = "1";
+    document.documentElement.dataset.quantidadeDadosArraste = "1";
 
-    document.documentElement.style.setProperty(
-      "--cursor-dado-x",
-      `${evento.clientX}px`,
-    );
+    document.documentElement.style.setProperty("--cursor-dado-x", `${evento.clientX}px`);
 
-    document.documentElement.style.setProperty(
-      "--cursor-dado-y",
-      `${evento.clientY}px`,
-    );
+    document.documentElement.style.setProperty("--cursor-dado-y", `${evento.clientY}px`);
 
     elementoDado.classList.add("dado-sendo-arrastado");
     document.body.classList.add("arrastando-dado");
@@ -455,21 +318,11 @@ solicitacaoCaixaDados.textContent =
       return;
     }
 
-    posicionarFantasmaArraste(
-      arrasteDadoAtual.fantasma,
-      evento.clientX,
-      evento.clientY,
-    );
+    posicionarFantasmaArraste(arrasteDadoAtual.fantasma, evento.clientX, evento.clientY);
 
-    document.documentElement.style.setProperty(
-      "--cursor-dado-x",
-      `${evento.clientX}px`,
-    );
+    document.documentElement.style.setProperty("--cursor-dado-x", `${evento.clientX}px`);
 
-    document.documentElement.style.setProperty(
-      "--cursor-dado-y",
-      `${evento.clientY}px`,
-    );
+    document.documentElement.style.setProperty("--cursor-dado-y", `${evento.clientY}px`);
   }
 
   function adicionarDadoAoLancamento(evento) {
@@ -482,10 +335,7 @@ solicitacaoCaixaDados.textContent =
 
     arrasteDadoAtual.quantidade += 1;
 
-    document.documentElement.dataset
-      .quantidadeDadosArraste = String(
-        arrasteDadoAtual.quantidade,
-      );
+    document.documentElement.dataset.quantidadeDadosArraste = String(arrasteDadoAtual.quantidade);
   }
 
   function cancelarArrasteManualDado() {
@@ -496,132 +346,74 @@ solicitacaoCaixaDados.textContent =
     arrasteDadoAtual.elementoOrigem.classList.remove("dado-sendo-arrastado");
     arrasteDadoAtual.fantasma.remove();
     arrasteDadoAtual = null;
-    delete document.documentElement.dataset
-      .quantidadeDadosArraste;
+    delete document.documentElement.dataset.quantidadeDadosArraste;
     document.body.classList.remove("arrastando-dado");
   }
 
-  async function concluirArrasteManualDado(
-    evento
-  ) {
-    if (
-      !arrasteDadoAtual ||
-      arrasteDadoAtual.finalizando ||
-      evento.button !== 0
-    ) {
+  async function concluirArrasteManualDado(evento) {
+    if (!arrasteDadoAtual || arrasteDadoAtual.finalizando || evento.button !== 0) {
       return;
     }
 
     evento.preventDefault();
 
-    const lancamento =
-      arrasteDadoAtual;
+    const lancamento = arrasteDadoAtual;
 
-    lancamento.finalizando =
-      true;
+    lancamento.finalizando = true;
 
     if (solicitacaoRolagemAtual) {
-  rolagemSolicitadaEmAndamento =
-    true;
+      rolagemSolicitadaEmAndamento = true;
     }
 
     if (resultadoDado) {
-      resultadoDado.classList.remove(
-        "resultado-rolagem-erro"
-      );
+      resultadoDado.classList.remove("resultado-rolagem-erro");
     }
 
-    const posicao =
-      obterPosicaoNaSuperficie(
-        evento.clientX,
-        evento.clientY
-      );
+    const posicao = obterPosicaoNaSuperficie(evento.clientX, evento.clientY);
 
-    const idTransicao3D =
-      `lancamento-estatico-${
-        proximoIdTransicao3D
-      }`;
+    const idTransicao3D = `lancamento-estatico-${proximoIdTransicao3D}`;
 
     proximoIdTransicao3D += 1;
 
-    lancamento.idTransicao3D =
-      idTransicao3D;
+    lancamento.idTransicao3D = idTransicao3D;
 
-    fantasmasLancamentos3D.set(
-      idTransicao3D,
-      lancamento.fantasma,
-    );
+    fantasmasLancamentos3D.set(idTransicao3D, lancamento.fantasma);
 
-    if (
-      window.Dados3D &&
-      typeof window.Dados3D
-        .converterPontoTela ===
-        "function"
-    ) {
+    if (window.Dados3D && typeof window.Dados3D.converterPontoTela === "function") {
       try {
-        lancamento.pontoSoltura3D =
-          await window.Dados3D
-            .converterPontoTela(
-              evento.clientX,
-              evento.clientY,
-            );
-
-      } catch (erro) {
-        console.warn(
-          "Não foi possível converter o ponto de soltura do dado.",
-          erro,
+        lancamento.pontoSoltura3D = await window.Dados3D.converterPontoTela(
+          evento.clientX,
+          evento.clientY,
         );
+      } catch (erro) {
+        console.warn("Não foi possível converter o ponto de soltura do dado.", erro);
       }
     }
 
-    arrasteDadoAtual =
-      null;
+    arrasteDadoAtual = null;
 
-    delete document.documentElement.dataset
-      .quantidadeDadosArraste;
+    delete document.documentElement.dataset.quantidadeDadosArraste;
 
-    lancamento
-      .elementoOrigem
-      .classList
-      .remove(
-        "dado-sendo-arrastado"
-      );
+    lancamento.elementoOrigem.classList.remove("dado-sendo-arrastado");
 
-    document
-      .body
-      .classList
-      .remove(
-        "arrastando-dado"
-      );
+    document.body.classList.remove("arrastando-dado");
 
-    void executarLancamentoPreparado(
-  lancamento,
-  posicao.x,
-  posicao.y,
-);
+    void executarLancamentoPreparado(lancamento, posicao.x, posicao.y);
   }
 
   document.addEventListener(
     "dado3DModeloCriado",
 
-    function trocarFantasmaPorModelo3D(
-      evento,
-    ) {
-      const idTransicao =
-        evento.detail?.idTransicao;
-      const fantasma =
-        fantasmasLancamentos3D.get(
-          idTransicao,
-        );
+    function trocarFantasmaPorModelo3D(evento) {
+      const idTransicao = evento.detail?.idTransicao;
+      const fantasma = fantasmasLancamentos3D.get(idTransicao);
 
       if (!fantasma) {
         return;
       }
 
       fantasma.remove();
-      fantasmasLancamentos3D.delete(
-        idTransicao,
-      );
+      fantasmasLancamentos3D.delete(idTransicao);
     },
   );
 
@@ -667,10 +459,7 @@ solicitacaoCaixaDados.textContent =
     elementoDado.dataset.idDado = dado.id;
     elementoDado.dataset.faces = String(dado.numeroDeFaces);
     elementoDado.textContent = `d${dado.numeroDeFaces}`;
-    elementoDado.style.setProperty(
-      "--rotacao-dado",
-      `${Math.floor(Math.random() * 81) - 40}deg`,
-    );
+    elementoDado.style.setProperty("--rotacao-dado", `${Math.floor(Math.random() * 81) - 40}deg`);
 
     elementoDado.addEventListener("pointerdown", iniciarArrasteManualDado);
     elementoDado.addEventListener("contextmenu", removerDadoLancado);
@@ -726,9 +515,7 @@ solicitacaoCaixaDados.textContent =
       return;
     }
 
-    resultadoDado.classList.remove(
-      "resultado-dado-fixo",
-    );
+    resultadoDado.classList.remove("resultado-dado-fixo");
 
     const ultimoAnel = Math.floor((Math.max(1, quantidadeTotal) - 1) / 8);
     const raio = quantidadeTotal <= 1 ? 0 : 82 + ultimoAnel * 72;
@@ -737,21 +524,13 @@ solicitacaoCaixaDados.textContent =
     resultadoDado.style.top = `${y + Math.max(84, raio + 68)}px`;
   }
 
-  function posicionarResultadoRolagemNaTela(
-    clientX,
-    clientY,
-  ) {
+  function posicionarResultadoRolagemNaTela(clientX, clientY) {
     if (!resultadoDado) {
       return;
     }
 
-    if (
-      resultadoDado.parentElement !==
-      document.body
-    ) {
-      document.body.append(
-        resultadoDado,
-      );
+    if (resultadoDado.parentElement !== document.body) {
+      document.body.append(resultadoDado);
     }
 
     const margemHorizontal = 90;
@@ -759,23 +538,15 @@ solicitacaoCaixaDados.textContent =
 
     const x = Math.min(
       window.innerWidth - margemHorizontal,
-      Math.max(
-        margemHorizontal,
-        Number(clientX) || window.innerWidth / 2,
-      ),
+      Math.max(margemHorizontal, Number(clientX) || window.innerWidth / 2),
     );
 
     const y = Math.min(
       window.innerHeight - margemInferior,
-      Math.max(
-        70,
-        (Number(clientY) || window.innerHeight / 2) + 96,
-      ),
+      Math.max(70, (Number(clientY) || window.innerHeight / 2) + 96),
     );
 
-    resultadoDado.classList.add(
-      "resultado-dado-fixo",
-    );
+    resultadoDado.classList.add("resultado-dado-fixo");
 
     resultadoDado.style.left = `${x}px`;
     resultadoDado.style.top = `${y}px`;
@@ -801,127 +572,78 @@ solicitacaoCaixaDados.textContent =
     elementoDado.remove();
 
     if (resultadoDado) {
-  resultadoDado.textContent = "";
-  resultadoDado.classList.remove(
-    "resultado-rolagem-erro",
-  );
-}
+      resultadoDado.textContent = "";
+      resultadoDado.classList.remove("resultado-rolagem-erro");
+    }
   }
 
-  
-
-  
-
-  function emitirRolagemConcluida(
-    dadosDoLancamento,
-    solicitacaoResolvida,
-  ) {
-    const validacao =
-      validarDadosDaRolagem(
-        dadosDoLancamento,
-        solicitacaoResolvida
-      );
+  function emitirRolagemConcluida(dadosDoLancamento, solicitacaoResolvida) {
+    const validacao = validarDadosDaRolagem(dadosDoLancamento, solicitacaoResolvida);
 
     if (!validacao.sucesso) {
       if (resultadoDado) {
+        resultadoDado.textContent = mensagensNarrativas.dados.erroRolagem;
 
-
-        resultadoDado.textContent =
-          mensagensNarrativas
-    .dados
-    .erroRolagem;
-
-        resultadoDado.classList.add(
-          "resultado-rolagem-erro",
-        );
+        resultadoDado.classList.add("resultado-rolagem-erro");
       }
 
-      rolagemSolicitadaEmAndamento =
-    false;
+      rolagemSolicitadaEmAndamento = false;
 
       agendarOcultacaoResultadoDado();
 
       return;
     }
 
-    const resultado =
-  criarResultadoRolagem(
-    dadosDoLancamento,
-    solicitacaoResolvida,
-  );
+    const resultado = criarResultadoRolagem(dadosDoLancamento, solicitacaoResolvida);
 
     if (resultadoDado) {
-      const quantidadeDeRolagens =
-        solicitacaoResolvida
-          ?.quantidadeDeRolagens ?? 1;
+      const quantidadeDeRolagens = solicitacaoResolvida?.quantidadeDeRolagens ?? 1;
 
-      const resultadosVisuais =
-        separarResultadosVisuais(
-          resultado.gruposRolados,
-          quantidadeDeRolagens,
-          resultado.modificador,
-        );
-
-      const tipoRolagem =
-  solicitacaoResolvida?.tipoRolagem ??
-  "normal";
-
-const grupoD20 =
-  resultado.gruposRolados.find(
-    function encontrarD20(grupo) {
-      return grupo.numeroDeFaces === 20;
-    },
-  );
-
-if (
-  (tipoRolagem === "vantagem" ||
-    tipoRolagem === "desvantagem") &&
-  grupoD20?.resultados?.length === 2
-) {
-  const resultadosD20 =
-    grupoD20.resultados;
-
-  const resultadoEscolhido =
-    tipoRolagem === "vantagem"
-      ? Math.max(...resultadosD20)
-      : Math.min(...resultadosD20);
-
-  const totalEscolhido =
-    resultadoEscolhido +
-    resultado.modificador;
-
-  const nomeTipo =
-    tipoRolagem === "vantagem"
-      ? "vantagem"
-      : "desvantagem";
-
-  resultadoDado.textContent =
-    `${resultadosD20.join(" e ")} → ` +
-    `${resultadoEscolhido} ` +
-    `${resultado.modificador >= 0 ? "+" : "-"} ` +
-    `${Math.abs(resultado.modificador)} = ` +
-    `${totalEscolhido} (${nomeTipo})`;
-} else {
-  resultadoDado.textContent =
-    resultadosVisuais
-      .map(function formatarResultado(
-        resultadoVisual,
-      ) {
-        return formatarExpressaoResultado(
-          resultadoVisual.subtotal,
-          resultadoVisual.modificador,
-          resultadoVisual.total,
-          Boolean(
-            solicitacaoResolvida?.critico,
-          ),
-        );
-      })
-      .join("\n");
-}
-
-      resultadoDado.classList.remove(
-        "resultado-rolagem-erro",
+      const resultadosVisuais = separarResultadosVisuais(
+        resultado.gruposRolados,
+        quantidadeDeRolagens,
+        resultado.modificador,
       );
+
+      const tipoRolagem = solicitacaoResolvida?.tipoRolagem ?? "normal";
+
+      const grupoD20 = resultado.gruposRolados.find(function encontrarD20(grupo) {
+        return grupo.numeroDeFaces === 20;
+      });
+
+      if (
+        (tipoRolagem === "vantagem" || tipoRolagem === "desvantagem") &&
+        grupoD20?.resultados?.length === 2
+      ) {
+        const resultadosD20 = grupoD20.resultados;
+
+        const resultadoEscolhido =
+          tipoRolagem === "vantagem" ? Math.max(...resultadosD20) : Math.min(...resultadosD20);
+
+        const totalEscolhido = resultadoEscolhido + resultado.modificador;
+
+        const nomeTipo = tipoRolagem === "vantagem" ? "vantagem" : "desvantagem";
+
+        resultadoDado.textContent =
+          `${resultadosD20.join(" e ")} → ` +
+          `${resultadoEscolhido} ` +
+          `${resultado.modificador >= 0 ? "+" : "-"} ` +
+          `${Math.abs(resultado.modificador)} = ` +
+          `${totalEscolhido} (${nomeTipo})`;
+      } else {
+        resultadoDado.textContent = resultadosVisuais
+          .map(function formatarResultado(resultadoVisual) {
+            return formatarExpressaoResultado(
+              resultadoVisual.subtotal,
+              resultadoVisual.modificador,
+              resultadoVisual.total,
+              Boolean(solicitacaoResolvida?.critico),
+            );
+          })
+          .join("\n");
+      }
+
+      resultadoDado.classList.remove("resultado-rolagem-erro");
 
       agendarOcultacaoResultadoDado();
     }
@@ -932,10 +654,7 @@ if (
       }),
     );
 
-    if (
-      solicitacaoRolagemAtual ===
-      solicitacaoResolvida
-    ) {
+    if (solicitacaoRolagemAtual === solicitacaoResolvida) {
       solicitacaoRolagemAtual = null;
     }
 
@@ -948,66 +667,43 @@ if (
     prepararCamadaDados();
     posicionarResultadoRolagem(x, y, lancamento.quantidade);
 
-    const solicitacaoDoLancamento =
-  solicitacaoRolagemAtual;
+    const solicitacaoDoLancamento = solicitacaoRolagemAtual;
 
-if (
-  window.Dados3D &&
-  typeof window.Dados3D.rolar ===
-    "function" &&
-  !lancamento.dadoExistenteId
-) {
-  try {
-    const notacao =
-      `${lancamento.quantidade}` +
-      `d${lancamento.numeroDeFaces}`;
+    if (
+      window.Dados3D &&
+      typeof window.Dados3D.rolar === "function" &&
+      !lancamento.dadoExistenteId
+    ) {
+      try {
+        const notacao = `${lancamento.quantidade}` + `d${lancamento.numeroDeFaces}`;
 
-    const lancamento3D =
-      await window.Dados3D.rolar(
-        notacao,
-        {
-          pontoSoltura:
-            lancamento.pontoSoltura3D ??
-            null,
+        const lancamento3D = await window.Dados3D.rolar(notacao, {
+          pontoSoltura: lancamento.pontoSoltura3D ?? null,
 
-          idTransicao:
-            lancamento.idTransicao3D ??
-            null,
-        },
-      );
+          idTransicao: lancamento.idTransicao3D ?? null,
+        });
 
-    if (lancamento3D.posicaoFinal) {
-      posicionarResultadoRolagemNaTela(
-        lancamento3D.posicaoFinal.clientX,
-        lancamento3D.posicaoFinal.clientY,
-      );
+        if (lancamento3D.posicaoFinal) {
+          posicionarResultadoRolagemNaTela(
+            lancamento3D.posicaoFinal.clientX,
+            lancamento3D.posicaoFinal.clientY,
+          );
+        }
+
+        emitirRolagemConcluida(lancamento3D.dados, solicitacaoDoLancamento);
+
+        return;
+      } catch (erro) {
+        if (lancamento.idTransicao3D) {
+          const fantasma = fantasmasLancamentos3D.get(lancamento.idTransicao3D);
+
+          fantasma?.remove();
+          fantasmasLancamentos3D.delete(lancamento.idTransicao3D);
+        }
+
+        console.warn("O dado 3D falhou. Usando a representação 2D.", erro);
+      }
     }
-
-    emitirRolagemConcluida(
-      lancamento3D.dados,
-      solicitacaoDoLancamento,
-    );
-
-    return;
-  } catch (erro) {
-    if (lancamento.idTransicao3D) {
-      const fantasma =
-        fantasmasLancamentos3D.get(
-          lancamento.idTransicao3D,
-        );
-
-      fantasma?.remove();
-      fantasmasLancamentos3D.delete(
-        lancamento.idTransicao3D,
-      );
-    }
-
-    console.warn(
-      "O dado 3D falhou. Usando a representação 2D.",
-      erro,
-    );
-  }
-}
 
     const dadosDoLancamento = [];
     let primeiroIndiceNovo = 0;
@@ -1044,10 +740,7 @@ if (
     }
 
     window.setTimeout(function concluirLancamento() {
-      emitirRolagemConcluida(
-        dadosDoLancamento,
-        solicitacaoDoLancamento,
-      );
+      emitirRolagemConcluida(dadosDoLancamento, solicitacaoDoLancamento);
     }, 560);
   }
 
@@ -1057,146 +750,82 @@ if (
   }
 
   document.addEventListener(
-  "dado3DRelancado",
+    "dado3DRelancado",
 
-  function concluirRelancamento3D(
-    evento,
-  ) {
-    const dados =
-      evento.detail?.dados;
+    function concluirRelancamento3D(evento) {
+      const dados = evento.detail?.dados;
 
-    if (
-      !Array.isArray(dados) ||
-      dados.length === 0
-    ) {
-      return;
-    }
+      if (!Array.isArray(dados) || dados.length === 0) {
+        return;
+      }
 
-    const solicitacaoDoLancamento =
-      solicitacaoRolagemAtual;
+      const solicitacaoDoLancamento = solicitacaoRolagemAtual;
 
-    emitirRolagemConcluida(
-      dados,
-      solicitacaoDoLancamento,
-    );
-  },
+      emitirRolagemConcluida(dados, solicitacaoDoLancamento);
+    },
   );
 
   document.addEventListener(
     "dado3DFisicoConcluido",
 
-    function concluirLancamentoFisico3D(
-      evento,
-    ) {
-      const dados =
-        evento.detail?.dados;
+    function concluirLancamentoFisico3D(evento) {
+      const dados = evento.detail?.dados;
 
-      if (
-        !Array.isArray(dados) ||
-        dados.length === 0
-      ) {
+      if (!Array.isArray(dados) || dados.length === 0) {
         return;
       }
 
-      posicionarResultadoRolagemNaTela(
-        evento.detail?.clientX,
-        evento.detail?.clientY,
-      );
+      posicionarResultadoRolagemNaTela(evento.detail?.clientX, evento.detail?.clientY);
 
-      emitirRolagemConcluida(
-        dados,
-        solicitacaoRolagemAtual,
+      emitirRolagemConcluida(dados, solicitacaoRolagemAtual);
+    },
+  );
+
+  document.addEventListener("dado3DRemovido", limparResultadoDado);
+
+  document.addEventListener("dado3DArrasteIniciado", limparResultadoDado);
+
+  document.addEventListener(
+    "dado3DPreviewLancamentoSolicitado",
+
+    function lancarPreviewDado3D(evento) {
+      const numeroDeFaces = Number(evento.detail?.numeroDeFaces);
+
+      if (!Number.isInteger(numeroDeFaces)) {
+        return;
+      }
+
+      const posicao = obterPosicaoNaSuperficie(evento.detail.clientX, evento.detail.clientY);
+
+      if (solicitacaoRolagemAtual) {
+        rolagemSolicitadaEmAndamento = true;
+      }
+
+      if (resultadoDado) {
+        resultadoDado.classList.remove("resultado-rolagem-erro");
+      }
+
+      void executarLancamentoPreparado(
+        {
+          quantidade: Math.max(1, Number(evento.detail?.quantidade) || 1),
+
+          numeroDeFaces,
+
+          dadoExistenteId: null,
+
+          pontoSoltura3D: evento.detail?.pontoSoltura ?? null,
+        },
+
+        posicao.x,
+        posicao.y,
       );
     },
   );
 
-  document.addEventListener(
-    "dado3DRemovido",
-    limparResultadoDado,
-  );
-
-  document.addEventListener(
-    "dado3DArrasteIniciado",
-    limparResultadoDado,
-  );
-
-  document.addEventListener(
-  "dado3DPreviewLancamentoSolicitado",
-
-  function lancarPreviewDado3D(
-    evento,
-  ) {
-    const numeroDeFaces =
-      Number(
-        evento.detail
-          ?.numeroDeFaces,
-      );
-
-    if (
-      !Number.isInteger(
-        numeroDeFaces,
-      )
-    ) {
-      return;
-    }
-
-    const posicao =
-      obterPosicaoNaSuperficie(
-        evento.detail.clientX,
-        evento.detail.clientY,
-      );
-
-    if (solicitacaoRolagemAtual) {
-      rolagemSolicitadaEmAndamento =
-        true;
-    }
-
-    if (resultadoDado) {
-      resultadoDado.classList.remove(
-        "resultado-rolagem-erro",
-      );
-    }
-
-    void executarLancamentoPreparado(
-      {
-        quantidade:
-          Math.max(
-            1,
-            Number(
-              evento.detail
-                ?.quantidade,
-            ) || 1,
-          ),
-
-        numeroDeFaces,
-
-        dadoExistenteId:
-          null,
-
-        pontoSoltura3D:
-          evento.detail
-            ?.pontoSoltura ??
-          null,
-      },
-
-      posicao.x,
-      posicao.y,
-    );
-  },
-);
-
   document.addEventListener("mousemove", moverArrasteManualDado);
   document.addEventListener("mouseup", concluirArrasteManualDado);
-  document.addEventListener(
-    "pointermove",
-    moverArrasteManualDado,
-    true,
-  );
-  document.addEventListener(
-    "pointerup",
-    concluirArrasteManualDado,
-    true,
-  );
+  document.addEventListener("pointermove", moverArrasteManualDado, true);
+  document.addEventListener("pointerup", concluirArrasteManualDado, true);
   document.addEventListener("keydown", function tratarTecla(evento) {
     if (evento.key === "Escape") {
       cancelarArrasteManualDado();
@@ -1204,9 +833,7 @@ if (
   });
   document.addEventListener("contextmenu", function impedirMenuDuranteArraste(evento) {
     if (arrasteDadoAtual) {
-      adicionarDadoAoLancamento(
-        evento,
-      );
+      adicionarDadoAoLancamento(evento);
     }
   });
 })();

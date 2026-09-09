@@ -18,7 +18,8 @@ window.bancoPropriedadesArmas = {
   recarga: {
     id: "recarga",
     nome: "Recarga",
-    descricaoCurta: "Limita o disparo a uma munição por ação, ação bônus ou reação usada para disparar.",
+    descricaoCurta:
+      "Limita o disparo a uma munição por ação, ação bônus ou reação usada para disparar.",
     descricaoLonga:
       "Ao usar uma ação, ação bônus ou reação para disparar esta arma, você só pode disparar uma munição, independentemente de quantos ataques normalmente poderia realizar.",
   },
@@ -43,16 +44,15 @@ window.bancoPropriedadesArmas = {
   },
 
   pesada: {
-  id: "pesada",
+    id: "pesada",
 
-  nome: "Pesada",
+    nome: "Pesada",
 
-   descricaoCurta:
-    "Exige Força 13 em armas corpo a corpo ou Destreza 13 em armas à distância.",
+    descricaoCurta: "Exige Força 13 em armas corpo a corpo ou Destreza 13 em armas à distância.",
 
-  descricaoLonga:
-    "Uma arma Pesada impõe Desvantagem nas jogadas de ataque se o personagem tiver Força menor que 13 para uma arma corpo a corpo ou Destreza menor que 13 para uma arma à distância.",
-},
+    descricaoLonga:
+      "Uma arma Pesada impõe Desvantagem nas jogadas de ataque se o personagem tiver Força menor que 13 para uma arma corpo a corpo ou Destreza menor que 13 para uma arma à distância.",
+  },
 
   duasMaos: {
     id: "duasMaos",

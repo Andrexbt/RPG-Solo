@@ -1,9 +1,7 @@
 "use strict";
 
 (function configurarMapaAventuraDev() {
-  const ambienteLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(
-    window.location.hostname,
-  );
+  const ambienteLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
 
   if (!ambienteLocal) {
     return;
@@ -178,10 +176,7 @@
   function analisarAventura(aventura) {
     const cenas = aventura?.cenas ?? {};
     const cenasAnalisadas = Object.fromEntries(
-      Object.entries(cenas).map(([cenaId, cena]) => [
-        cenaId,
-        analisarCena(cenaId, cena, cenas),
-      ]),
+      Object.entries(cenas).map(([cenaId, cena]) => [cenaId, analisarCena(cenaId, cena, cenas)]),
     );
     const arestas = [];
 
@@ -250,11 +245,7 @@
       percorrerSaidas(analiseCena.cena, chaveCena(cenaId), cenaId, true);
 
       for (const etapaId of analiseCena.etapas) {
-        percorrerSaidas(
-          analiseCena.cena.etapas[etapaId],
-          chaveEtapa(cenaId, etapaId),
-          cenaId,
-        );
+        percorrerSaidas(analiseCena.cena.etapas[etapaId], chaveEtapa(cenaId, etapaId), cenaId);
       }
     }
 
@@ -437,9 +428,7 @@
     adicionarLista(
       conteudo,
       `Etapas (${analise.etapas.length})`,
-      analise.etapas.map((id) =>
-        criarLinkInterno(id, () => mostrarDetalhes(cenaId, id)),
-      ),
+      analise.etapas.map((id) => criarLinkInterno(id, () => mostrarDetalhes(cenaId, id))),
       "Esta cena não possui etapas internas.",
     );
     adicionarLista(
@@ -503,12 +492,10 @@
     adicionarLista(conteudo, "Avisos", analise.avisos, "Nenhum aviso.");
 
     painelDetalhes.append(topo, resumo, acoes, conteudo);
-    document.querySelectorAll(".mapa-dev-no.selecionado").forEach((no) =>
-      no.classList.remove("selecionado"),
-    );
-    const noSelecionado = etapaId
-      ? `etapa:${cenaId}:${etapaId}`
-      : `cena:${cenaId}`;
+    document
+      .querySelectorAll(".mapa-dev-no.selecionado")
+      .forEach((no) => no.classList.remove("selecionado"));
+    const noSelecionado = etapaId ? `etapa:${cenaId}:${etapaId}` : `cena:${cenaId}`;
     areaGrafo
       .querySelector(`[data-no-id="${CSS.escape(noSelecionado)}"]`)
       ?.classList.add("selecionado");
@@ -539,9 +526,7 @@
     areaGrafo.append(svg);
 
     for (const [profundidade, cenas] of [...grupos.entries()].sort((a, b) => a[0] - b[0])) {
-      const grupoSemConexao = cenas.every((noId) =>
-        profundidadesCalculadas.semConexao.has(noId),
-      );
+      const grupoSemConexao = cenas.every((noId) => profundidadesCalculadas.semConexao.has(noId));
       const tituloNivel = criarElemento(
         "div",
         "mapa-dev-nivel",
@@ -595,7 +580,10 @@
       const x2 = destino.x;
       const y2 = destino.y + 32;
       const curva = Math.max(35, Math.abs(x2 - x1) / 2);
-      linha.setAttribute("d", `M ${x1} ${y1} C ${x1 + curva} ${y1}, ${x2 - curva} ${y2}, ${x2} ${y2}`);
+      linha.setAttribute(
+        "d",
+        `M ${x1} ${y1} C ${x1 + curva} ${y1}, ${x2 - curva} ${y2}, ${x2} ${y2}`,
+      );
       svg.append(linha);
     });
 
@@ -669,7 +657,10 @@
     }
   }
 
-  window.MapaAventuraDev = Object.freeze({ abrir: abrirMapa, analisar: () => analisarAventura(aventuraAtual) });
+  window.MapaAventuraDev = Object.freeze({
+    abrir: abrirMapa,
+    analisar: () => analisarAventura(aventuraAtual),
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", criarInterface, { once: true });

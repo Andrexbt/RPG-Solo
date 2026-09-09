@@ -18,18 +18,15 @@
     <link rel="stylesheet" href="mapa-aventura-dev.css?v=3" />
     <link rel="stylesheet" href="montador-batalha-dev.css" />
 
-    <link
-  rel="modulepreload"
-  href="vendor/dice-box/dist/dice-box.es.js"
-/>
+    <link rel="modulepreload" href="vendor/dice-box/dist/dice-box.es.js" />
 
-<link
-  rel="preload"
-  href="vendor/dice-box/dist/assets/ammo/ammo.wasm.wasm"
-  as="fetch"
-  type="application/wasm"
-  crossorigin="anonymous"
-/>
+    <link
+      rel="preload"
+      href="vendor/dice-box/dist/assets/ammo/ammo.wasm.wasm"
+      as="fetch"
+      type="application/wasm"
+      crossorigin="anonymous"
+    />
   </head>
 
   <body>
@@ -68,20 +65,15 @@
                 />
 
                 <div class="controle-velocidade-texto">
-  <label for="velocidadeTexto">
-    Velocidade do texto:
-  </label>
+                  <label for="velocidadeTexto"> Velocidade do texto: </label>
 
-  <select
-    id="velocidadeTexto"
-    aria-label="Velocidade do texto"
-  >
-    <option value="instantaneo">Instantâneo</option>
-    <option value="rapido">Rápido</option>
-    <option value="normal">Normal</option>
-    <option value="lento">Lento</option>
-  </select>
-</div>
+                  <select id="velocidadeTexto" aria-label="Velocidade do texto">
+                    <option value="instantaneo">Instantâneo</option>
+                    <option value="rapido">Rápido</option>
+                    <option value="normal">Normal</option>
+                    <option value="lento">Lento</option>
+                  </select>
+                </div>
 
                 <div
                   class="controles-rolagem-pergaminho"
@@ -141,8 +133,6 @@
                 </div>
               </section>
 
-              
-
               <section
                 class="janela-dados janela-flutuante janela-encaixada"
                 aria-labelledby="tituloDados"
@@ -163,140 +153,110 @@
                 </header>
 
                 <div id="conteudoDados" class="conteudo-dados">
-
                   <div class="caixa-dados">
+                    <aside id="colecaoDados" class="colecao-dados" aria-label="Dados disponíveis">
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="4"
+                        aria-label="Dado de quatro faces"
+                      >
+                        <span class="espaco-dado-estatico" aria-hidden="true"
+                          ><img
+                            class="imagem-dado-estatico"
+                            src="Imagens/Assets/dados/d4.webp"
+                            alt=""
+                            draggable="false"
+                        /></span>
 
-                    <aside
-  id="colecaoDados"
-  class="colecao-dados"
-  aria-label="Dados disponíveis"
->
-  <button
-    class="dado-disponivel"
-    type="button"
-    data-faces="4"
-    aria-label="Dado de quatro faces"
-  >
-    <span
-      class="espaco-dado-estatico"
-      aria-hidden="true"
-    ><img
-    class="imagem-dado-estatico"
-    src="Imagens/Assets/dados/d4.webp"
-    alt=""
-    draggable="false"
-  /></span>
+                        <span class="rotulo-dado-disponivel"> D4 </span>
+                      </button>
 
-    <span class="rotulo-dado-disponivel">
-      D4
-    </span>
-  </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="6"
+                        aria-label="Dado de seis faces"
+                      >
+                        <span class="espaco-dado-estatico" aria-hidden="true"
+                          ><img
+                            class="imagem-dado-estatico"
+                            src="Imagens/Assets/dados/d6.webp"
+                            alt=""
+                            draggable="false"
+                        /></span>
 
-  <button
-    class="dado-disponivel"
-    type="button"
-    data-faces="6"
-    aria-label="Dado de seis faces"
-  >
-    <span
-      class="espaco-dado-estatico"
-      aria-hidden="true"
-    ><img
-    class="imagem-dado-estatico"
-    src="Imagens/Assets/dados/d6.webp"
-    alt=""
-    draggable="false"
-  /></span>
+                        <span class="rotulo-dado-disponivel"> D6 </span>
+                      </button>
 
-    <span class="rotulo-dado-disponivel">
-      D6
-    </span>
-  </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="8"
+                        aria-label="Dado de oito faces"
+                      >
+                        <span class="espaco-dado-estatico" aria-hidden="true"
+                          ><img
+                            class="imagem-dado-estatico"
+                            src="Imagens/Assets/dados/d8.webp"
+                            alt=""
+                            draggable="false"
+                        /></span>
 
-  <button
-    class="dado-disponivel"
-    type="button"
-    data-faces="8"
-    aria-label="Dado de oito faces"
-  >
-    <span
-      class="espaco-dado-estatico"
-      aria-hidden="true"
-    ><img
-    class="imagem-dado-estatico"
-    src="Imagens/Assets/dados/d8.webp"
-    alt=""
-    draggable="false"
-  /></span>
+                        <span class="rotulo-dado-disponivel"> D8 </span>
+                      </button>
 
-    <span class="rotulo-dado-disponivel">
-      D8
-    </span>
-  </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="10"
+                        aria-label="Dado de dez faces"
+                      >
+                        <span class="espaco-dado-estatico" aria-hidden="true"
+                          ><img
+                            class="imagem-dado-estatico"
+                            src="Imagens/Assets/dados/d10.webp"
+                            alt=""
+                            draggable="false"
+                        /></span>
 
-  <button
-    class="dado-disponivel"
-    type="button"
-    data-faces="10"
-    aria-label="Dado de dez faces"
-  >
-    <span
-      class="espaco-dado-estatico"
-      aria-hidden="true"
-    ><img
-    class="imagem-dado-estatico"
-    src="Imagens/Assets/dados/d10.webp"
-    alt=""
-    draggable="false"
-  /></span>
+                        <span class="rotulo-dado-disponivel"> D10 </span>
+                      </button>
 
-    <span class="rotulo-dado-disponivel">
-      D10
-    </span>
-  </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="12"
+                        aria-label="Dado de doze faces"
+                      >
+                        <span class="espaco-dado-estatico" aria-hidden="true"
+                          ><img
+                            class="imagem-dado-estatico"
+                            src="Imagens/Assets/dados/d12.webp"
+                            alt=""
+                            draggable="false"
+                        /></span>
 
-  <button
-    class="dado-disponivel"
-    type="button"
-    data-faces="12"
-    aria-label="Dado de doze faces"
-  >
-    <span
-      class="espaco-dado-estatico"
-      aria-hidden="true"
-    ><img
-    class="imagem-dado-estatico"
-    src="Imagens/Assets/dados/d12.webp"
-    alt=""
-    draggable="false"
-  /></span>
+                        <span class="rotulo-dado-disponivel"> D12 </span>
+                      </button>
 
-    <span class="rotulo-dado-disponivel">
-      D12
-    </span>
-  </button>
+                      <button
+                        class="dado-disponivel"
+                        type="button"
+                        data-faces="20"
+                        aria-label="Dado de vinte faces"
+                      >
+                        <span class="espaco-dado-estatico" aria-hidden="true"
+                          ><img
+                            class="imagem-dado-estatico"
+                            src="Imagens/Assets/dados/d20.webp"
+                            alt=""
+                            draggable="false"
+                        /></span>
 
-  <button
-    class="dado-disponivel"
-    type="button"
-    data-faces="20"
-    aria-label="Dado de vinte faces"
-  >
-    <span
-      class="espaco-dado-estatico"
-      aria-hidden="true"
-    ><img
-    class="imagem-dado-estatico"
-    src="Imagens/Assets/dados/d20.webp"
-    alt=""
-    draggable="false"
-  /></span>
-
-    <span class="rotulo-dado-disponivel">
-      D20
-    </span>
-  </button>
-</aside>
+                        <span class="rotulo-dado-disponivel"> D20 </span>
+                      </button>
+                    </aside>
 
                     <div
                       id="bandejaDados"
@@ -315,66 +275,46 @@
           </div>
         </div>
 
-                  <section
-            id="telaFimAventura"
-            class="tela-fim-aventura"
-            aria-labelledby="tituloFimAventura"
-            hidden
-          >
-            <div class="cartao-fim-aventura">
-              <p
-                id="rotuloFimAventura"
-                class="rotulo-fim-aventura"
-              >
-                Aventura concluída
+        <section
+          id="telaFimAventura"
+          class="tela-fim-aventura"
+          aria-labelledby="tituloFimAventura"
+          hidden
+        >
+          <div class="cartao-fim-aventura">
+            <p id="rotuloFimAventura" class="rotulo-fim-aventura">Aventura concluída</p>
+
+            <h2 id="tituloFimAventura">Fim</h2>
+
+            <p id="textoFimAventura" class="texto-fim-aventura"></p>
+
+            <div id="resumoFimAventura" class="resumo-fim-aventura" hidden>
+              <p>
+                Resultado
+                <strong id="resultadoFimAventura"></strong>
               </p>
 
-              <h2 id="tituloFimAventura">
-                Fim
-              </h2>
-
-              <p
-                id="textoFimAventura"
-                class="texto-fim-aventura"
-              ></p>
-
-              <div
-                id="resumoFimAventura"
-                class="resumo-fim-aventura"
-                hidden
-              >
-                <p>
-                  Resultado
-                  <strong id="resultadoFimAventura"></strong>
-                </p>
-
-                <p id="linhaXpFimAventura">
-                  Experiência recebida
-                  <strong id="xpFimAventura"></strong>
-                </p>
-              </div>
-
-              <nav
-                class="acoes-fim-aventura"
-                aria-label="Ações após a aventura"
-              >
-                <a
-                  id="linkFichaFimAventura"
-                  class="botao-fim-aventura botao-fim-aventura-principal"
-                  href="meus-personagens.html"
-                >
-                  Ver ficha do personagem
-                </a>
-
-                <a
-                  class="botao-fim-aventura"
-                  href="aventuras-disponiveis.html"
-                >
-                  Voltar para aventuras
-                </a>
-              </nav>
+              <p id="linhaXpFimAventura">
+                Experiência recebida
+                <strong id="xpFimAventura"></strong>
+              </p>
             </div>
-          </section>
+
+            <nav class="acoes-fim-aventura" aria-label="Ações após a aventura">
+              <a
+                id="linkFichaFimAventura"
+                class="botao-fim-aventura botao-fim-aventura-principal"
+                href="meus-personagens.html"
+              >
+                Ver ficha do personagem
+              </a>
+
+              <a class="botao-fim-aventura" href="aventuras-disponiveis.html">
+                Voltar para aventuras
+              </a>
+            </nav>
+          </div>
+        </section>
 
         <section
           id="visualizacaoCombate"
@@ -382,7 +322,6 @@
           aria-label="Campo de combate"
           hidden
         >
-
           <dialog
             id="modalIntroducaoCombate"
             class="modal-introducao-combate"
@@ -418,10 +357,7 @@
               hidden
             >
               <h2 id="tituloObjetivosCombate">Objetivos</h2>
-              <ul
-                id="listaObjetivosCombate"
-                class="lista-objetivos-combate"
-              ></ul>
+              <ul id="listaObjetivosCombate" class="lista-objetivos-combate"></ul>
             </section>
 
             <div id="painelTurnoCombate" class="painel-turno-combate" hidden>
@@ -445,10 +381,7 @@
                 </button>
               </header>
 
-              <section
-                id="painelHistoricoCombate"
-                class="painel-historico-combate"
-              >
+              <section id="painelHistoricoCombate" class="painel-historico-combate">
                 <div
                   id="listaHistoricoCombate"
                   class="lista-historico-combate"
@@ -458,13 +391,9 @@
                 <div class="proximos-turnos-combate">
                   <span>Próximos</span>
 
-                  <ul
-                    id="filaIniciativaCombate"
-                    class="fila-iniciativa-combate"
-                  ></ul>
+                  <ul id="filaIniciativaCombate" class="fila-iniciativa-combate"></ul>
                 </div>
               </section>
-
             </div>
 
             <button
@@ -485,11 +414,41 @@
             >
               <h2>Legenda</h2>
               <ul>
-                <li><span class="amostra-legenda terreno-dificil"></span><span><strong>Terreno difícil</strong> — cada casa consome o dobro do deslocamento.</span></li>
-                <li><span class="amostra-legenda terreno-bloqueado"></span><span><strong>Intransponível</strong> — não é possível ocupar ou atravessar a casa.</span></li>
-                <li><span class="amostra-legenda cobertura-parcial"></span><span><strong>Meia cobertura</strong> — concede +2 na CA e em salvaguardas de Destreza.</span></li>
-                <li><span class="amostra-legenda cobertura-tres-quartos"></span><span><strong>Cobertura de 3/4</strong> — concede +5 na CA e em salvaguardas de Destreza.</span></li>
-                <li><span class="amostra-legenda bloqueio-visao"></span><span><strong>Bloqueio total</strong> — impede ataques e efeitos que exijam visão direta.</span></li>
+                <li>
+                  <span class="amostra-legenda terreno-dificil"></span
+                  ><span
+                    ><strong>Terreno difícil</strong> — cada casa consome o dobro do
+                    deslocamento.</span
+                  >
+                </li>
+                <li>
+                  <span class="amostra-legenda terreno-bloqueado"></span
+                  ><span
+                    ><strong>Intransponível</strong> — não é possível ocupar ou atravessar a
+                    casa.</span
+                  >
+                </li>
+                <li>
+                  <span class="amostra-legenda cobertura-parcial"></span
+                  ><span
+                    ><strong>Meia cobertura</strong> — concede +2 na CA e em salvaguardas de
+                    Destreza.</span
+                  >
+                </li>
+                <li>
+                  <span class="amostra-legenda cobertura-tres-quartos"></span
+                  ><span
+                    ><strong>Cobertura de 3/4</strong> — concede +5 na CA e em salvaguardas de
+                    Destreza.</span
+                  >
+                </li>
+                <li>
+                  <span class="amostra-legenda bloqueio-visao"></span
+                  ><span
+                    ><strong>Bloqueio total</strong> — impede ataques e efeitos que exijam visão
+                    direta.</span
+                  >
+                </li>
               </ul>
             </section>
           </div>
@@ -501,12 +460,7 @@
           >
             <p id="mensagemAcaoAtualCombate"></p>
 
-            <p
-              id="solicitacaoCombate"
-              class="solicitacao-combate"
-              aria-live="polite"
-              hidden
-            ></p>
+            <p id="solicitacaoCombate" class="solicitacao-combate" aria-live="polite" hidden></p>
 
             <div id="acoesCombate" class="acoes-combate"></div>
           </section>
@@ -563,127 +517,110 @@
                 </section>
               </div>
 
-        
-
-              
-
               <button id="botaoEncerrarTurno" class="botao-encerrar-turno" type="button">
                 Encerrar turno
               </button>
             </div>
-
-            
           </section>
 
           <aside
-              id="painelAtaquesCombate"
-              class="painel-ataques-combate janela-flutuante"
-              aria-labelledby="tituloAtaquesCombate"
-              hidden
-            >
-              <header class="cabecalho-painel-ataques cabecalho-janela-flutuante" data-alca-arraste>
-                <h3 id="tituloAtaquesCombate">Ataques</h3>
+            id="painelAtaquesCombate"
+            class="painel-ataques-combate janela-flutuante"
+            aria-labelledby="tituloAtaquesCombate"
+            hidden
+          >
+            <header class="cabecalho-painel-ataques cabecalho-janela-flutuante" data-alca-arraste>
+              <h3 id="tituloAtaquesCombate">Ataques</h3>
 
-                <button
-                  id="botaoFecharAtaquesCombate"
-                  type="button"
-                  aria-label="Fechar opções de ataque"
-                >
-                  ×
-                </button>
-              </header>
+              <button
+                id="botaoFecharAtaquesCombate"
+                type="button"
+                aria-label="Fechar opções de ataque"
+              >
+                ×
+              </button>
+            </header>
 
-              <p id="mensagemAtaquesCombate" class="mensagem-ataques-combate"></p>
+            <p id="mensagemAtaquesCombate" class="mensagem-ataques-combate"></p>
 
-              <div id="listaAtaquesCombate" class="lista-ataques-combate"></div>
-            </aside>
+            <div id="listaAtaquesCombate" class="lista-ataques-combate"></div>
+          </aside>
 
           <div class="campo-combate">
             <div id="cameraCombate" class="camera-combate">
               <img id="imagemMapaCombate" class="imagem-mapa-combate" alt="" />
 
               <svg
-  id="miraAtaqueCombate"
-  class="mira-ataque-combate"
-  viewBox="0 0 6720 3780"
-  aria-hidden="true"
-  hidden
->
-  <line
-  id="linhaMiraAtaqueCombate"
-  class="linha-mira-ataque-combate linha-mira-alcance-normal"
-></line>
+                id="miraAtaqueCombate"
+                class="mira-ataque-combate"
+                viewBox="0 0 6720 3780"
+                aria-hidden="true"
+                hidden
+              >
+                <line
+                  id="linhaMiraAtaqueCombate"
+                  class="linha-mira-ataque-combate linha-mira-alcance-normal"
+                ></line>
 
-<line
-  id="linhaMiraAlcanceLongoCombate"
-  class="linha-mira-ataque-combate linha-mira-alcance-longo"
-  hidden
-></line>
-<text
-  id="textoAlcanceNormalCombate"
-  class="texto-alcance-combate texto-alcance-normal"
-></text>
+                <line
+                  id="linhaMiraAlcanceLongoCombate"
+                  class="linha-mira-ataque-combate linha-mira-alcance-longo"
+                  hidden
+                ></line>
+                <text
+                  id="textoAlcanceNormalCombate"
+                  class="texto-alcance-combate texto-alcance-normal"
+                ></text>
 
-<text
-  id="textoAlcanceLongoCombate"
-  class="texto-alcance-combate texto-alcance-longo"
-  hidden
-></text>
-<text
-  id="textoCoberturaMiraCombate"
-  class="texto-cobertura-mira-combate"
-  hidden
-></text>
-</svg>
+                <text
+                  id="textoAlcanceLongoCombate"
+                  class="texto-alcance-combate texto-alcance-longo"
+                  hidden
+                ></text>
+                <text
+                  id="textoCoberturaMiraCombate"
+                  class="texto-cobertura-mira-combate"
+                  hidden
+                ></text>
+              </svg>
 
               <div id="tabuleiroCombate" class="tabuleiro-combate"></div>
             </div>
-            <div
-  id="camadaDecisaoCombate"
-  class="camada-decisao-combate"
-  hidden
->
-  <section
-    id="janelaDecisaoCombate"
-    class="janela-decisao-combate"
-    role="alertdialog"
-    aria-modal="true"
-    aria-labelledby="tituloDecisaoCombate"
-    aria-describedby="mensagemDecisaoCombate"
-    tabindex="-1"
-  >
-    <p class="rotulo-decisao-combate">
-      Decisão necessária
-    </p>
+            <div id="camadaDecisaoCombate" class="camada-decisao-combate" hidden>
+              <section
+                id="janelaDecisaoCombate"
+                class="janela-decisao-combate"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="tituloDecisaoCombate"
+                aria-describedby="mensagemDecisaoCombate"
+                tabindex="-1"
+              >
+                <p class="rotulo-decisao-combate">Decisão necessária</p>
 
-    <h2 id="tituloDecisaoCombate">
-      Ataque de Oportunidade
-    </h2>
+                <h2 id="tituloDecisaoCombate">Ataque de Oportunidade</h2>
 
-    <p
-      id="mensagemDecisaoCombate"
-      class="mensagem-decisao-combate"
-    ></p>
+                <p id="mensagemDecisaoCombate" class="mensagem-decisao-combate"></p>
 
-    <div class="acoes-decisao-combate">
-      <button
-        id="botaoConfirmarDecisaoCombate"
-        class="botao-confirmar-decisao-combate"
-        type="button"
-      >
-        Continuar
-      </button>
+                <div class="acoes-decisao-combate">
+                  <button
+                    id="botaoConfirmarDecisaoCombate"
+                    class="botao-confirmar-decisao-combate"
+                    type="button"
+                  >
+                    Continuar
+                  </button>
 
-      <button
-        id="botaoCancelarDecisaoCombate"
-        class="botao-cancelar-decisao-combate"
-        type="button"
-      >
-        Cancelar
-      </button>
-    </div>
-  </section>
-</div>
+                  <button
+                    id="botaoCancelarDecisaoCombate"
+                    class="botao-cancelar-decisao-combate"
+                    type="button"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </section>
+            </div>
           </div>
 
           <section
@@ -694,30 +631,18 @@
           >
             <div class="cartao-resultado-combate">
               <div class="conteudo-modal-resultado-combate">
-                <p
-                  id="rotuloResultadoCombate"
-                  class="rotulo-resultado-combate"
-                >
+                <p id="rotuloResultadoCombate" class="rotulo-resultado-combate">
                   Combate encerrado
                 </p>
 
                 <h2 id="tituloResultadoCombate">Vitória</h2>
 
-                <p
-                  id="textoResultadoCombate"
-                  class="texto-resultado-combate"
-                ></p>
+                <p id="textoResultadoCombate" class="texto-resultado-combate"></p>
 
-                <div
-                  id="recompensasResultadoCombate"
-                  class="recompensas-resultado-combate"
-                  hidden
-                >
+                <div id="recompensasResultadoCombate" class="recompensas-resultado-combate" hidden>
                   <span>Experiência recebida</span>
 
-                  <strong id="xpRecebidoResultadoCombate">
-                    +0 XP
-                  </strong>
+                  <strong id="xpRecebidoResultadoCombate"> +0 XP </strong>
 
                   <small id="xpAtualResultadoCombate"></small>
                 </div>
@@ -732,8 +657,6 @@
               </div>
             </div>
           </section>
-
-
         </section>
       </main>
 
@@ -780,11 +703,7 @@
 
     <div id="camadaDadosLancados" class="camada-dados-lancados" aria-live="polite"></div>
 
-    <div
-  id="camadaDados3D"
-  class="camada-dados-3d"
-  aria-hidden="true"
-></div>
+    <div id="camadaDados3D" class="camada-dados-3d" aria-hidden="true"></div>
 
     <script src="banco-idiomas.js" defer></script>
     <script src="banco-talentos.js" defer></script>
@@ -792,10 +711,7 @@
     <script src="banco-classes.js" defer></script>
     <script src="banco-equipamentos.js" defer></script>
     <script src="banco-maestrias.js" defer></script>
-    <script
-  src="banco-condicoes.js"
-  defer
-></script>
+    <script src="banco-condicoes.js" defer></script>
     <script src="banco-propriedades-armas.js" defer></script>
     <script src="banco-magias.js" defer></script>
     <script src="banco-especies.js" defer></script>
@@ -805,10 +721,7 @@
     <script src="janelas-flutuantes.js" defer></script>
     <script src="motor-dados.js" defer></script>
     <script src="dados.js" defer></script>
-    <script
-  type="module"
-  src="dados-3d.js"
-></script>
+    <script type="module" src="dados-3d.js"></script>
     <script src="banco-pericias.js" defer></script>
 
     <script src="banco-criaturas.js" defer></script>
@@ -842,8 +755,11 @@
     <script src="narrador-aventura.js" defer></script>
     <script src="motor-aventura.js" defer></script>
     <script src="interface-narrativa-aventura.js" defer></script>
+
     <script src="fluxo-combate-aventura.js" defer></script>
+    <script src="animacoes-combate.js" defer></script>
     <script src="aventuras.js" defer></script>
+
     <script src="montador-batalha-dev.js" defer></script>
     <script src="testes-dev.js" defer></script>
     <script src="mapa-aventura-dev.js?v=6" defer></script>

@@ -1,9 +1,7 @@
 "use strict";
 
 (function configurarMontadorBatalhaDev() {
-  const ambienteLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(
-    window.location.hostname,
-  );
+  const ambienteLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
 
   if (!ambienteLocal) {
     return;
@@ -56,17 +54,14 @@
 
     const agora = new Date().toISOString();
     const cenarios = lerCenariosSalvos();
-    const indiceExistente = cenarios.findIndex(
-      (cenario) => cenario.id === cenarioAtualId,
-    );
+    const indiceExistente = cenarios.findIndex((cenario) => cenario.id === cenarioAtualId);
     const cenario = {
       id: cenarioAtualId ?? `cenario-${Date.now()}`,
       nome,
       mapaCenaId: mapa.cenaId,
       posicaoJogador: structuredClone(posicaoJogador),
       inimigos: structuredClone(inimigosPosicionados),
-      criadoEm:
-        indiceExistente >= 0 ? cenarios[indiceExistente].criadoEm : agora,
+      criadoEm: indiceExistente >= 0 ? cenarios[indiceExistente].criadoEm : agora,
       atualizadoEm: agora,
     };
 
@@ -109,18 +104,14 @@
 
     if (
       valorAnterior &&
-      Array.from(seletorCenarioSalvo.options).some(
-        (opcao) => opcao.value === valorAnterior,
-      )
+      Array.from(seletorCenarioSalvo.options).some((opcao) => opcao.value === valorAnterior)
     ) {
       seletorCenarioSalvo.value = valorAnterior;
     }
   }
 
   function carregarCenarioSelecionado() {
-    const cenario = lerCenariosSalvos().find(
-      (item) => item.id === seletorCenarioSalvo?.value,
-    );
+    const cenario = lerCenariosSalvos().find((item) => item.id === seletorCenarioSalvo?.value);
 
     if (!cenario) {
       atualizarMensagemRodape("Selecione um cenário salvo para carregá-lo.");
@@ -132,9 +123,7 @@
     );
 
     if (!mapaExiste) {
-      atualizarMensagemRodape(
-        `O mapa-base “${cenario.mapaCenaId}” não existe mais na aventura.`,
-      );
+      atualizarMensagemRodape(`O mapa-base “${cenario.mapaCenaId}” não existe mais na aventura.`);
       return;
     }
 
@@ -158,9 +147,7 @@
 
   function excluirCenarioSelecionado() {
     const cenarios = lerCenariosSalvos();
-    const cenario = cenarios.find(
-      (item) => item.id === seletorCenarioSalvo?.value,
-    );
+    const cenario = cenarios.find((item) => item.id === seletorCenarioSalvo?.value);
 
     if (!cenario) {
       atualizarMensagemRodape("Selecione um cenário salvo para excluí-lo.");
@@ -220,9 +207,7 @@
         quantidade: 0,
         posicoes: [],
         grupoId: configuracaoBase?.grupoId ?? inimigo.npcId,
-        inteligencia: structuredClone(
-          configuracaoBase?.inteligencia ?? { perfil: "equilibrado" },
-        ),
+        inteligencia: structuredClone(configuracaoBase?.inteligencia ?? { perfil: "equilibrado" }),
         movimentoMaximo: configuracaoBase?.movimentoMaximo ?? 6,
         representacao: structuredClone(configuracaoBase?.representacao ?? null),
       };
@@ -285,18 +270,14 @@
   }
 
   function obterMapaSelecionado() {
-    return listarMapasDisponiveis().find(
-      (mapa) => mapa.cenaId === seletorMapa?.value,
-    ) ?? null;
+    return listarMapasDisponiveis().find((mapa) => mapa.cenaId === seletorMapa?.value) ?? null;
   }
 
   function atualizarMapaExibido() {
     const mapa = obterMapaSelecionado();
 
     imagemMapa.src = mapa?.combate?.mapa ?? "";
-    imagemMapa.alt = mapa
-      ? `Mapa de teste: ${mapa.cenaId}`
-      : "Nenhum mapa de batalha disponível";
+    imagemMapa.alt = mapa ? `Mapa de teste: ${mapa.cenaId}` : "Nenhum mapa de batalha disponível";
 
     identificadorMapa.textContent = mapa
       ? `Mapa-base: ${mapa.cenaId}`
@@ -319,10 +300,11 @@
       return;
     }
 
-    mensagemRodape.textContent = mensagem ??
+    mensagemRodape.textContent =
+      mensagem ??
       `Jogador: coluna ${posicaoJogador?.coluna ?? "—"}, ` +
-      `linha ${posicaoJogador?.linha ?? "—"}. ` +
-      `Inimigos posicionados: ${inimigosPosicionados.length}.`;
+        `linha ${posicaoJogador?.linha ?? "—"}. ` +
+        `Inimigos posicionados: ${inimigosPosicionados.length}.`;
   }
 
   function atualizarTokenJogador() {
@@ -332,8 +314,7 @@
 
     tokenJogador.style.gridColumn = String(posicaoJogador.coluna);
     tokenJogador.style.gridRow = String(posicaoJogador.linha);
-    tokenJogador.title =
-      `Jogador — coluna ${posicaoJogador.coluna}, linha ${posicaoJogador.linha}`;
+    tokenJogador.title = `Jogador — coluna ${posicaoJogador.coluna}, linha ${posicaoJogador.linha}`;
   }
 
   function criarTokenJogador() {
@@ -557,14 +538,8 @@
     const novaPosicao = obterPosicaoSoltura(evento);
 
     const instanciaIgnorada =
-      arrasteAtual.tipo === "jogador"
-        ? "jogador"
-        : arrasteAtual.instanciaId;
-    const erroPosicao = validarPosicaoNoMapa(
-      mapa,
-      novaPosicao,
-      instanciaIgnorada,
-    );
+      arrasteAtual.tipo === "jogador" ? "jogador" : arrasteAtual.instanciaId;
+    const erroPosicao = validarPosicaoNoMapa(mapa, novaPosicao, instanciaIgnorada);
 
     if (erroPosicao) {
       atualizarMensagemRodape(erroPosicao);
@@ -610,9 +585,7 @@
 
     if (
       valorAnterior &&
-      Array.from(seletorMapa.options).some(
-        (opcao) => opcao.value === valorAnterior,
-      )
+      Array.from(seletorMapa.options).some((opcao) => opcao.value === valorAnterior)
     ) {
       seletorMapa.value = valorAnterior;
     }
@@ -722,15 +695,13 @@
 
     const botaoExcluir = document.createElement("button");
     botaoExcluir.type = "button";
-    botaoExcluir.className =
-      "botao-acao-montador-batalha-dev botao-excluir-cenario-dev";
+    botaoExcluir.className = "botao-acao-montador-batalha-dev botao-excluir-cenario-dev";
     botaoExcluir.textContent = "Excluir";
     botaoExcluir.addEventListener("click", excluirCenarioSelecionado);
 
     const botaoIniciar = document.createElement("button");
     botaoIniciar.type = "button";
-    botaoIniciar.className =
-      "botao-acao-montador-batalha-dev botao-iniciar-batalha-dev";
+    botaoIniciar.className = "botao-acao-montador-batalha-dev botao-iniciar-batalha-dev";
     botaoIniciar.textContent = "Iniciar batalha";
     botaoIniciar.addEventListener("click", iniciarBatalhaMontada);
 
@@ -771,8 +742,7 @@
     tabuleiroVisual.addEventListener("dragover", function permitirSoltura(evento) {
       if (arrasteAtual) {
         evento.preventDefault();
-        evento.dataTransfer.dropEffect =
-          arrasteAtual.tipo === "novoInimigo" ? "copy" : "move";
+        evento.dataTransfer.dropEffect = arrasteAtual.tipo === "novoInimigo" ? "copy" : "move";
       }
     });
     tabuleiroVisual.addEventListener("drop", soltarTokenNoMapa);

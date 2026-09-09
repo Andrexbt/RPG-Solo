@@ -1,0 +1,455 @@
+.bancada-arremessos-dev {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  min-height: 560px;
+  overflow: hidden;
+  border: 1px solid rgba(107, 67, 37, 0.5);
+  border-radius: 16px;
+  background: rgba(29, 19, 14, 0.9);
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.38);
+}
+
+.controles-arremessos-dev {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: var(--cor-texto);
+  background: linear-gradient(rgba(48, 29, 20, 0.94), rgba(31, 20, 15, 0.96));
+}
+
+.controles-arremessos-dev label {
+  display: grid;
+  gap: 7px;
+  font-weight: 800;
+}
+
+.controles-arremessos-dev select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.5);
+  border-radius: 7px;
+  color: var(--cor-texto);
+  background: #211713;
+  font: inherit;
+}
+
+.previa-arma-dev {
+  min-height: 250px;
+  margin: 0;
+  padding: 14px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.28);
+  border-radius: 10px;
+  background: radial-gradient(circle, #4a3326 0%, #19110e 72%);
+}
+
+.previa-arma-dev img {
+  width: 100%;
+  height: 210px;
+  object-fit: contain;
+}
+
+.previa-arma-dev figcaption {
+  color: #f1d79e;
+  font-family: var(--fonte-titulos);
+  font-size: 1.25rem;
+}
+
+.controles-arremessos-dev .acao-ferramenta {
+  width: 100%;
+}
+
+#resultadoArremessoDev {
+  min-height: 42px;
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.45;
+}
+
+.campo-arremesso-dev {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(61, 42, 28, 0.18), rgba(24, 16, 12, 0.34)),
+    repeating-linear-gradient(0deg, transparent 0 63px, rgba(222, 187, 118, 0.16) 63px 64px),
+    repeating-linear-gradient(90deg, transparent 0 63px, rgba(222, 187, 118, 0.16) 63px 64px),
+    #6b553c;
+}
+
+.marcador-arremesso-dev {
+  position: absolute;
+  top: 50%;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border: 3px solid;
+  border-radius: 50%;
+  color: #fff6dc;
+  font-weight: 800;
+  transform: translateY(-50%);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.48);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.marcador-arremesso-dev.arrastando {
+  z-index: 5;
+  cursor: grabbing;
+  filter: brightness(1.18);
+}
+
+.marcador-origem-dev {
+  left: 12%;
+  border-color: #70c882;
+  background: #294e32;
+}
+
+.marcador-alvo-dev {
+  right: 12%;
+  border-color: #e46b5f;
+  background: #672c28;
+}
+
+.campo-arremesso-dev .arma-resultado-dev {
+  position: absolute;
+  right: auto;
+  margin: 0;
+  place-self: unset;
+  transform-origin: center;
+}
+
+.campo-arremesso-dev .item-no-chao-combate.arma-resultado-dev {
+  transform: translate(-50%, -50%) rotate(28deg);
+}
+
+.campo-arremesso-dev .itens-cravados-token.arma-resultado-dev {
+  transform: translate(-50%, -50%) rotate(72deg);
+}
+
+.calibracao-arma-dev {
+  margin: 0;
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(215, 163, 95, 0.28);
+  border-radius: 9px;
+}
+
+.calibracao-arma-dev legend {
+  padding: 0 7px;
+  color: #f1d79e;
+  font-weight: 800;
+}
+
+.calibracao-arma-dev label {
+  display: grid;
+  gap: 6px;
+}
+
+.calibracao-arma-dev label > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calibracao-arma-dev output {
+  color: #e6bd78;
+  font-variant-numeric: tabular-nums;
+}
+
+.calibracao-arma-dev input[type="range"] {
+  width: 100%;
+  accent-color: #d7a35f;
+}
+
+.testes-mecanicos-dev {
+  padding-top: 16px;
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid rgba(215, 163, 95, 0.28);
+}
+
+.testes-mecanicos-dev h3 {
+  margin: 0;
+  color: #f1d79e;
+  font-family: var(--fonte-titulos);
+}
+
+.testes-mecanicos-dev ul {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+  list-style: none;
+  font-size: 0.82rem;
+}
+
+.teste-dev-passou {
+  color: #93dc9e;
+}
+
+.teste-dev-falhou {
+  color: #ff8e82;
+}
+
+.editor-vitrine-dev {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1774 / 887;
+  overflow: hidden;
+  background: url("assets/criacao-personagem/loja-armas-laminas-fundo-v5.png") center / cover
+    no-repeat;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.42);
+}
+
+.arma-editor-vitrine-dev {
+  position: absolute;
+  z-index: 5;
+  scale: var(--escala-visual-editor, 1);
+  transform-origin: center;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.arma-editor-vitrine-dev.arrastando {
+  z-index: 10;
+  cursor: grabbing;
+  filter: drop-shadow(0 0 6px #ffe29a) drop-shadow(0 0 16px rgba(255, 187, 69, 0.96));
+}
+
+.arma-editor-vitrine-dev img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.82));
+  transform: perspective(600px) rotateX(var(--perspectiva-vertical-editor, 0deg))
+    rotateY(var(--perspectiva-horizontal-editor, 0deg))
+    skewX(var(--inclinacao-horizontal-editor, 0deg)) skewY(var(--inclinacao-vertical-editor, 0deg))
+    rotate(var(--rotacao-arma-editor, 0deg));
+  transform-origin: center;
+}
+
+.arma-editor-vitrine-dev:hover,
+.arma-editor-vitrine-dev:focus-visible {
+  z-index: 3;
+  filter: drop-shadow(0 0 5px #ffd778) drop-shadow(0 0 12px rgba(255, 187, 69, 0.92));
+}
+
+.estado-editor-vitrine-dev {
+  margin: 14px 0 0;
+  color: var(--cor-texto-suave);
+}
+
+.arma-editor-vitrine-dev.selecionada {
+  z-index: 8;
+  filter: drop-shadow(0 0 6px #ffe29a) drop-shadow(0 0 18px rgba(255, 187, 69, 0.98));
+}
+
+.controles-vitrine-dev {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+
+  width: min(310px, calc(100vw - 24px));
+  max-height: min(620px, calc(100vh - 24px));
+  margin: 0;
+  padding: 14px;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+
+  overflow-y: auto;
+
+  border: 1px solid rgba(215, 163, 95, 0.7);
+  border-radius: 8px;
+
+  background: linear-gradient(rgba(31, 20, 13, 0.96), rgba(17, 11, 8, 0.98));
+
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.72),
+    inset 0 0 0 1px rgba(255, 224, 157, 0.08);
+
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.controles-vitrine-dev.visivel {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.controles-vitrine-dev legend {
+  padding: 0 8px;
+  color: #f1d79e;
+  font-weight: 800;
+}
+
+.controles-vitrine-dev label {
+  display: grid;
+  gap: 8px;
+  color: var(--cor-texto);
+  font-weight: 700;
+}
+
+.controles-vitrine-dev label > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.controles-vitrine-dev output {
+  color: #e6bd78;
+}
+
+.controles-vitrine-dev input {
+  width: 100%;
+  accent-color: #d7a35f;
+}
+
+.editor-vitrine-dev.mostrando-armaduras {
+  background-image: url("assets/criacao-personagem/loja-armaduras-fundo-sem-manequins-v2.png");
+}
+
+.editor-vitrine-dev.mostrando-armas-longas {
+  background-image: url("assets/criacao-personagem/loja-armas-contundentes-fundo-v5.png");
+}
+
+.seletor-vitrine-dev {
+  margin-bottom: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.seletor-vitrine-dev .acao-ferramenta {
+  width: auto;
+}
+
+.seletor-vitrine-dev .acao-ferramenta.ativo {
+  border-color: #f0c36f;
+  color: #fff1c4;
+  box-shadow: 0 0 12px rgba(240, 174, 70, 0.35);
+}
+
+.acoes-editor-vitrine-dev {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.acoes-editor-vitrine-dev .acao-ferramenta {
+  width: auto;
+}
+
+.nome-equipamento-editor-vitrine {
+  position: absolute;
+  z-index: 2;
+  width: max-content;
+  max-width: none;
+  padding: 3px 8px;
+  border: 1px solid #3b2919;
+  border-radius: 3px;
+  color: #21150c;
+  background: linear-gradient(
+    180deg,
+    #efe0b4 0%,
+    #c2a36b 18%,
+    #806039 52%,
+    #c5a66c 78%,
+    #72502c 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 246, 207, 0.72),
+    inset 0 -1px 0 rgba(48, 28, 13, 0.75),
+    0 2px 4px rgba(0, 0, 0, 0.78);
+  font-size: 0.64rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  pointer-events: none;
+  transform: translateX(-50%);
+  text-shadow: 0 1px 0 rgba(255, 234, 183, 0.38);
+  white-space: pre-line;
+}
+
+.nome-equipamento-editor-vitrine::before,
+.nome-equipamento-editor-vitrine::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #49331e;
+  box-shadow: 0 1px 0 rgba(255, 229, 167, 0.4);
+  transform: translateY(-50%);
+}
+
+.nome-equipamento-editor-vitrine::before {
+  left: 4px;
+}
+
+.nome-equipamento-editor-vitrine::after {
+  right: 4px;
+}
+
+.botao-fechar-controles-vitrine {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(215, 163, 95, 0.55);
+  border-radius: 50%;
+
+  color: #f1d79e;
+  background: rgba(28, 17, 10, 0.9);
+
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.botao-fechar-controles-vitrine:hover,
+.botao-fechar-controles-vitrine:focus-visible {
+  color: #fff3cf;
+  border-color: #efc474;
+  background: rgba(91, 54, 25, 0.96);
+}
+
+@media (max-width: 800px) {
+  .bancada-arremessos-dev {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-arremesso-dev {
+    min-height: 420px;
+  }
+}

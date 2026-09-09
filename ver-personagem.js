@@ -359,9 +359,7 @@ function pegarIdDaUrl() {
 }
 
 function buscarPersonagemPorId(idPersonagem) {
-  return window.PersonagemDados.buscarSalvoPorId(
-    idPersonagem,
-  );
+  return window.PersonagemDados.buscarSalvoPorId(idPersonagem);
 }
 
 // =====================================================

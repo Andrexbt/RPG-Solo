@@ -123,46 +123,30 @@
     },
   };
 
-  function obterOrcamentoEncontro(
-    nivelPersonagem,
-    quantidadePersonagens = 1,
-  ) {
+  function obterOrcamentoEncontro(nivelPersonagem, quantidadePersonagens = 1) {
     const nivel = Number(nivelPersonagem);
     const quantidade = Number(quantidadePersonagens);
 
-    const orcamentoIndividual =
-      orcamentoXpPorPersonagem[nivel];
+    const orcamentoIndividual = orcamentoXpPorPersonagem[nivel];
 
     if (!orcamentoIndividual) {
       return null;
     }
 
-    if (
-      !Number.isInteger(quantidade) ||
-      quantidade < 1
-    ) {
+    if (!Number.isInteger(quantidade) || quantidade < 1) {
       return null;
     }
 
     return {
-      baixa:
-        orcamentoIndividual.baixa *
-        quantidade,
+      baixa: orcamentoIndividual.baixa * quantidade,
 
-      moderada:
-        orcamentoIndividual.moderada *
-        quantidade,
+      moderada: orcamentoIndividual.moderada * quantidade,
 
-      alta:
-        orcamentoIndividual.alta *
-        quantidade,
+      alta: orcamentoIndividual.alta * quantidade,
     };
   }
 
-  function calcularXpEncontro(
-    configuracoesInimigos,
-    catalogoNpcs,
-  ) {
+  function calcularXpEncontro(configuracoesInimigos, catalogoNpcs) {
     const resultado = {
       xpTotal: 0,
       quantidadeCriaturas: 0,
@@ -171,69 +155,48 @@
     };
 
     if (!Array.isArray(configuracoesInimigos)) {
-      resultado.erros.push(
-        "A configuração de inimigos não é uma lista.",
-      );
+      resultado.erros.push("A configuração de inimigos não é uma lista.");
 
       return resultado;
     }
 
-    for (
-      const configuracao
-      of configuracoesInimigos
-    ) {
+    for (const configuracao of configuracoesInimigos) {
       const npcId = configuracao?.npcId;
       const npc = catalogoNpcs?.[npcId];
 
       if (!npc) {
-        resultado.erros.push(
-          `NPC não encontrado: ${npcId ?? "sem ID"}.`,
-        );
+        resultado.erros.push(`NPC não encontrado: ${npcId ?? "sem ID"}.`);
 
         continue;
       }
 
-      const quantidade =
-        Number(configuracao.quantidade ?? 1);
+      const quantidade = Number(configuracao.quantidade ?? 1);
 
-      if (
-        !Number.isInteger(quantidade) ||
-        quantidade < 1
-      ) {
-        resultado.erros.push(
-          `Quantidade inválida para o NPC ${npcId}.`,
-        );
+      if (!Number.isInteger(quantidade) || quantidade < 1) {
+        resultado.erros.push(`Quantidade inválida para o NPC ${npcId}.`);
 
         continue;
       }
 
       const xpIndividual = Number(npc.xp);
 
-      if (
-        !Number.isFinite(xpIndividual) ||
-        xpIndividual < 0
-      ) {
-        resultado.erros.push(
-          `XP inválido para o NPC ${npcId}.`,
-        );
+      if (!Number.isFinite(xpIndividual) || xpIndividual < 0) {
+        resultado.erros.push(`XP inválido para o NPC ${npcId}.`);
 
         continue;
       }
 
-      const xpSubtotal =
-        xpIndividual * quantidade;
+      const xpSubtotal = xpIndividual * quantidade;
 
       resultado.xpTotal += xpSubtotal;
       resultado.quantidadeCriaturas += quantidade;
 
       resultado.criaturas.push({
         npcId,
-        blocoCriaturaId:
-          npc.blocoCriaturaId ?? null,
+        blocoCriaturaId: npc.blocoCriaturaId ?? null,
 
         quantidade,
-        nivelDesafio:
-          npc.nivelDesafio ?? null,
+        nivelDesafio: npc.nivelDesafio ?? null,
 
         xpIndividual,
         xpSubtotal,
@@ -243,22 +206,14 @@
     return resultado;
   }
 
-  function classificarDificuldadeEncontro(
-    xpTotal,
-    nivelPersonagem,
-    quantidadePersonagens = 1,
-  ) {
+  function classificarDificuldadeEncontro(xpTotal, nivelPersonagem, quantidadePersonagens = 1) {
     const xp = Number(xpTotal);
 
     if (!Number.isFinite(xp) || xp < 0) {
       return null;
     }
 
-    const orcamento =
-      obterOrcamentoEncontro(
-        nivelPersonagem,
-        quantidadePersonagens,
-      );
+    const orcamento = obterOrcamentoEncontro(nivelPersonagem, quantidadePersonagens);
 
     if (!orcamento) {
       return null;
@@ -303,24 +258,14 @@
     };
   }
 
-  function avaliarEncontro({
-    inimigos,
-    catalogoNpcs,
-    nivelPersonagem,
-    quantidadePersonagens = 1,
-  }) {
-    const experiencia =
-      calcularXpEncontro(
-        inimigos,
-        catalogoNpcs,
-      );
+  function avaliarEncontro({ inimigos, catalogoNpcs, nivelPersonagem, quantidadePersonagens = 1 }) {
+    const experiencia = calcularXpEncontro(inimigos, catalogoNpcs);
 
-    const dificuldade =
-      classificarDificuldadeEncontro(
-        experiencia.xpTotal,
-        nivelPersonagem,
-        quantidadePersonagens,
-      );
+    const dificuldade = classificarDificuldadeEncontro(
+      experiencia.xpTotal,
+      nivelPersonagem,
+      quantidadePersonagens,
+    );
 
     return {
       ...experiencia,

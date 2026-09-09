@@ -406,4 +406,3 @@ function magiasEstaoEscolhidas() {
     magiasPreparadas.length === progressao.magiasPreparadas
   );
 }
-

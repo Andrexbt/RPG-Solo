@@ -4,19 +4,11 @@
   function rolarDado(numeroDeFaces) {
     const faces = Number(numeroDeFaces);
 
-    if (
-      !Number.isInteger(faces) ||
-      faces < 2
-    ) {
-      throw new TypeError(
-        "O número de faces do dado é inválido.",
-      );
+    if (!Number.isInteger(faces) || faces < 2) {
+      throw new TypeError("O número de faces do dado é inválido.");
     }
 
-    return (
-      Math.floor(Math.random() * faces) +
-      1
-    );
+    return Math.floor(Math.random() * faces) + 1;
   }
 
   function somarResultados(resultados) {
@@ -24,20 +16,12 @@
       return 0;
     }
 
-    return resultados.reduce(
-      function somar(total, resultado) {
-        return (
-          total +
-          (Number(resultado) || 0)
-        );
-      },
-      0,
-    );
+    return resultados.reduce(function somar(total, resultado) {
+      return total + (Number(resultado) || 0);
+    }, 0);
   }
 
-  function agruparDadosPorFaces(
-    dadosDoLancamento,
-  ) {
+  function agruparDadosPorFaces(dadosDoLancamento) {
     const grupos = new Map();
 
     if (!Array.isArray(dadosDoLancamento)) {
@@ -45,123 +29,70 @@
     }
 
     for (const dado of dadosDoLancamento) {
-      const numeroDeFaces =
-        Number(dado?.numeroDeFaces);
+      const numeroDeFaces = Number(dado?.numeroDeFaces);
 
-      const resultado =
-        Number(dado?.resultado);
+      const resultado = Number(dado?.resultado);
 
-      if (
-        !Number.isInteger(numeroDeFaces) ||
-        !Number.isFinite(resultado)
-      ) {
+      if (!Number.isInteger(numeroDeFaces) || !Number.isFinite(resultado)) {
         continue;
       }
 
-      const resultados =
-        grupos.get(numeroDeFaces) ?? [];
+      const resultados = grupos.get(numeroDeFaces) ?? [];
 
       resultados.push(resultado);
 
-      grupos.set(
-        numeroDeFaces,
-        resultados,
-      );
+      grupos.set(numeroDeFaces, resultados);
     }
 
     return grupos;
   }
 
-  function validarDadosDaRolagem(
-    dadosDoLancamento,
-    solicitacao,
-  ) {
+  function validarDadosDaRolagem(dadosDoLancamento, solicitacao) {
     if (!solicitacao) {
       return {
         sucesso: true,
       };
     }
 
-    if (
-      !Array.isArray(dadosDoLancamento) ||
-      !Array.isArray(
-        solicitacao.gruposDeDados,
-      )
-    ) {
+    if (!Array.isArray(dadosDoLancamento) || !Array.isArray(solicitacao.gruposDeDados)) {
       return {
         sucesso: false,
       };
     }
 
-    const gruposLancados =
-      agruparDadosPorFaces(
-        dadosDoLancamento,
-      );
+    const gruposLancados = agruparDadosPorFaces(dadosDoLancamento);
 
-    const quantidadeEsperada =
-      solicitacao.gruposDeDados.reduce(
-        function somarQuantidade(
-          total,
-          grupo,
-        ) {
-          return (
-            total +
-            (Number(grupo.quantidade) || 0)
-          );
-        },
-        0,
-      );
-
-    if (
-      dadosDoLancamento.length !==
-      quantidadeEsperada
+    const quantidadeEsperada = solicitacao.gruposDeDados.reduce(function somarQuantidade(
+      total,
+      grupo,
     ) {
+      return total + (Number(grupo.quantidade) || 0);
+    }, 0);
+
+    if (dadosDoLancamento.length !== quantidadeEsperada) {
       return {
         sucesso: false,
       };
     }
 
-    for (
-      const grupoEsperado of
-      solicitacao.gruposDeDados
-    ) {
-      const resultados =
-        gruposLancados.get(
-          Number(
-            grupoEsperado.numeroDeFaces,
-          ),
-        ) ?? [];
+    for (const grupoEsperado of solicitacao.gruposDeDados) {
+      const resultados = gruposLancados.get(Number(grupoEsperado.numeroDeFaces)) ?? [];
 
-      if (
-        resultados.length !==
-        Number(grupoEsperado.quantidade)
-      ) {
+      if (resultados.length !== Number(grupoEsperado.quantidade)) {
         return {
           sucesso: false,
         };
       }
     }
 
-    const facesEsperadas =
-      new Set(
-        solicitacao.gruposDeDados.map(
-          function obterFaces(grupo) {
-            return Number(
-              grupo.numeroDeFaces,
-            );
-          },
-        ),
-      );
+    const facesEsperadas = new Set(
+      solicitacao.gruposDeDados.map(function obterFaces(grupo) {
+        return Number(grupo.numeroDeFaces);
+      }),
+    );
 
-    for (
-      const numeroDeFaces of
-      gruposLancados.keys()
-    ) {
-      if (
-        !facesEsperadas.has(
-          numeroDeFaces,
-        )
-      ) {
+    for (const numeroDeFaces of gruposLancados.keys()) {
+      if (!facesEsperadas.has(numeroDeFaces)) {
         return {
           sucesso: false,
         };
@@ -173,308 +104,170 @@
     };
   }
 
-  function separarResultadosPorRolagem(
-  gruposRolados,
-  quantidadeDeRolagens,
-  modificador,
-) {
-  const quantidade =
-    Math.max(
-      1,
-      Number(quantidadeDeRolagens) || 1,
-    );
+  function separarResultadosPorRolagem(gruposRolados, quantidadeDeRolagens, modificador) {
+    const quantidade = Math.max(1, Number(quantidadeDeRolagens) || 1);
 
-  const bonus =
-    Number(modificador) || 0;
+    const bonus = Number(modificador) || 0;
 
-  if (!Array.isArray(gruposRolados)) {
-    return [];
-  }
+    if (!Array.isArray(gruposRolados)) {
+      return [];
+    }
 
-  function criarResultadoUnico() {
-    const subtotal =
-      gruposRolados.reduce(
-        function somarGrupos(
-          total,
-          grupo,
-        ) {
-          return (
-            total +
-            (Number(grupo.total) || 0)
-          );
+    function criarResultadoUnico() {
+      const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
+        return total + (Number(grupo.total) || 0);
+      }, 0);
+
+      return [
+        {
+          subtotal: subtotal,
+
+          modificador: bonus,
+
+          total: subtotal + bonus,
         },
-        0,
-      );
+      ];
+    }
 
-    return [
-      {
-        subtotal:
-          subtotal,
+    if (quantidade <= 1) {
+      return criarResultadoUnico();
+    }
 
-        modificador:
-          bonus,
+    const divisaoValida = gruposRolados.every(function verificarGrupo(grupo) {
+      return Array.isArray(grupo.resultados) && grupo.resultados.length % quantidade === 0;
+    });
 
-        total:
-          subtotal + bonus,
-      },
-    ];
-  }
+    if (!divisaoValida) {
+      return criarResultadoUnico();
+    }
 
-  if (quantidade <= 1) {
-    return criarResultadoUnico();
-  }
+    const resultadosSeparados = [];
 
-  const divisaoValida =
-    gruposRolados.every(
-      function verificarGrupo(grupo) {
-        return (
-          Array.isArray(
-            grupo.resultados,
-          ) &&
-          grupo.resultados.length %
-            quantidade ===
-            0
-        );
-      },
-    );
+    for (let indiceRolagem = 0; indiceRolagem < quantidade; indiceRolagem += 1) {
+      let subtotal = 0;
 
-  if (!divisaoValida) {
-    return criarResultadoUnico();
-  }
+      for (const grupo of gruposRolados) {
+        const quantidadePorRolagem = grupo.resultados.length / quantidade;
 
-  const resultadosSeparados = [];
+        const inicio = indiceRolagem * quantidadePorRolagem;
 
-  for (
-    let indiceRolagem = 0;
-    indiceRolagem < quantidade;
-    indiceRolagem += 1
-  ) {
-    let subtotal = 0;
-
-    for (const grupo of gruposRolados) {
-      const quantidadePorRolagem =
-        grupo.resultados.length /
-        quantidade;
-
-      const inicio =
-        indiceRolagem *
-        quantidadePorRolagem;
-
-      const resultadosDestaRolagem =
-        grupo.resultados.slice(
+        const resultadosDestaRolagem = grupo.resultados.slice(
           inicio,
           inicio + quantidadePorRolagem,
         );
 
-      subtotal +=
-        somarResultados(
-          resultadosDestaRolagem,
-        );
+        subtotal += somarResultados(resultadosDestaRolagem);
+      }
+
+      resultadosSeparados.push({
+        subtotal: subtotal,
+
+        modificador: bonus,
+
+        total: subtotal + bonus,
+      });
     }
 
-    resultadosSeparados.push({
-      subtotal:
-        subtotal,
-
-      modificador:
-        bonus,
-
-      total:
-        subtotal + bonus,
-    });
+    return resultadosSeparados;
   }
 
-  return resultadosSeparados;
-}
-
-function criarResultadoRolagem(
-  dadosDoLancamento,
-  configuracao,
-) {
-  const gruposRolados =
-    Array.from(
-      agruparDadosPorFaces(
-        dadosDoLancamento,
-      ).entries(),
-    ).map(
-      function criarGrupo(
-        [numeroDeFaces, resultados],
-      ) {
+  function criarResultadoRolagem(dadosDoLancamento, configuracao) {
+    const gruposRolados = Array.from(agruparDadosPorFaces(dadosDoLancamento).entries()).map(
+      function criarGrupo([numeroDeFaces, resultados]) {
         return {
-          quantidade:
-            resultados.length,
+          quantidade: resultados.length,
 
-          numeroDeFaces:
-            numeroDeFaces,
+          numeroDeFaces: numeroDeFaces,
 
-          resultados:
-            resultados,
+          resultados: resultados,
 
-          total:
-            somarResultados(
-              resultados,
-            ),
+          total: somarResultados(resultados),
         };
       },
     );
 
-  const subtotal =
-    gruposRolados.reduce(
-      function somarGrupos(
-        total,
-        grupo,
-      ) {
-        return total + grupo.total;
+    const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
+      return total + grupo.total;
+    }, 0);
+
+    const modificador = Number(configuracao?.modificador) || 0;
+
+    return {
+      gruposRolados: gruposRolados,
+
+      subtotal: subtotal,
+
+      modificador: modificador,
+
+      total: subtotal + modificador,
+
+      contexto: {
+        descricao: configuracao?.descricao ?? null,
+
+        quantidadeDeRolagens: Math.max(1, Number(configuracao?.quantidadeDeRolagens) || 1),
+
+        critico: Boolean(configuracao?.critico),
       },
-      0,
-    );
+    };
+  }
 
-  const modificador =
-    Number(
-      configuracao?.modificador,
-    ) || 0;
-
-  return {
-    gruposRolados:
-      gruposRolados,
-
-    subtotal:
-      subtotal,
-
-    modificador:
-      modificador,
-
-    total:
-      subtotal + modificador,
-
-    contexto: {
-      descricao:
-        configuracao?.descricao ??
-        null,
-
-      quantidadeDeRolagens:
-        Math.max(
-          1,
-          Number(
-            configuracao
-              ?.quantidadeDeRolagens,
-          ) || 1,
-        ),
-
-      critico:
-        Boolean(
-          configuracao?.critico,
-        ),
-    },
-  };
-}
-
-function realizarRolagemComposta(
-  configuracao,
-) {
-  const gruposDeDados =
-    Array.isArray(
-      configuracao?.gruposDeDados,
-    )
+  function realizarRolagemComposta(configuracao) {
+    const gruposDeDados = Array.isArray(configuracao?.gruposDeDados)
       ? configuracao.gruposDeDados
       : [];
 
-  const gruposRolados =
-    gruposDeDados.map(
-      function rolarGrupo(grupo) {
-        const quantidade =
-          Math.max(
-            0,
-            Number(grupo.quantidade) ||
-              0,
-          );
+    const gruposRolados = gruposDeDados.map(function rolarGrupo(grupo) {
+      const quantidade = Math.max(0, Number(grupo.quantidade) || 0);
 
-        const numeroDeFaces =
-          Number(
-            grupo.numeroDeFaces,
-          ) || 0;
+      const numeroDeFaces = Number(grupo.numeroDeFaces) || 0;
 
-        const resultados = [];
+      const resultados = [];
 
-        for (
-          let indice = 0;
-          indice < quantidade;
-          indice += 1
-        ) {
-          resultados.push(
-            rolarDado(numeroDeFaces),
-          );
-        }
+      for (let indice = 0; indice < quantidade; indice += 1) {
+        resultados.push(rolarDado(numeroDeFaces));
+      }
 
-        return {
-          quantidade:
-            quantidade,
+      return {
+        quantidade: quantidade,
 
-          numeroDeFaces:
-            numeroDeFaces,
+        numeroDeFaces: numeroDeFaces,
 
-          resultados:
-            resultados,
+        resultados: resultados,
 
-          total:
-            somarResultados(
-              resultados,
-            ),
-        };
-      },
-    );
+        total: somarResultados(resultados),
+      };
+    });
 
-  const subtotal =
-    gruposRolados.reduce(
-      function somarGrupos(
-        total,
-        grupo,
-      ) {
-        return total + grupo.total;
-      },
-      0,
-    );
+    const subtotal = gruposRolados.reduce(function somarGrupos(total, grupo) {
+      return total + grupo.total;
+    }, 0);
 
-  const modificador =
-    Number(
-      configuracao?.modificador,
-    ) || 0;
+    const modificador = Number(configuracao?.modificador) || 0;
 
-  return {
-    gruposRolados:
-      gruposRolados,
+    return {
+      gruposRolados: gruposRolados,
 
-    subtotal:
-      subtotal,
+      subtotal: subtotal,
 
-    modificador:
-      modificador,
+      modificador: modificador,
 
-    total:
-      subtotal + modificador,
-  };
-}
+      total: subtotal + modificador,
+    };
+  }
 
   window.MotorDados = {
-    rolarDado:
-      rolarDado,
+    rolarDado: rolarDado,
 
-    somarResultados:
-      somarResultados,
+    somarResultados: somarResultados,
 
-    agruparPorFaces:
-      agruparDadosPorFaces,
+    agruparPorFaces: agruparDadosPorFaces,
 
-    validarRolagem:
-      validarDadosDaRolagem,
+    validarRolagem: validarDadosDaRolagem,
 
-      separarResultados:
-  separarResultadosPorRolagem,
+    separarResultados: separarResultadosPorRolagem,
 
-  criarResultado:
-  criarResultadoRolagem,
+    criarResultado: criarResultadoRolagem,
 
-realizarRolagemComposta:
-  realizarRolagemComposta,
+    realizarRolagemComposta: realizarRolagemComposta,
   };
 })();

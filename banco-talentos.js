@@ -47,9 +47,9 @@ window.bancoTalentos = {
 
       efeito: {
         tipo: "rolarNovamente",
-        rolagemAfetada:"danoDaArma",
+        rolagemAfetada: "danoDaArma",
         quantidadeDeRolagens: 2,
-        criterioDeEscolha:"escolhaDoJogador",
+        criterioDeEscolha: "escolhaDoJogador",
       },
 
       usos: {

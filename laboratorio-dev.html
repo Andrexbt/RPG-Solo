@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Laboratório DEV | RPG Solo</title>
+
+    <script src="acesso-area-mestre.js"></script>
+
+    <link rel="stylesheet" href="tema.css" />
+    <link rel="stylesheet" href="area-mestre.css" />
+    <link rel="stylesheet" href="combate.css" />
+    <link rel="stylesheet" href="laboratorio-dev.css" />
+
+    <script src="banco-equipamentos.js" defer></script>
+    <script src="banco-maestrias.js" defer></script>
+    <script src="configuracao-vitrine-equipamentos.js" defer></script>
+
+    <script src="regras-ficha-criacao.js" defer></script>
+    <script src="motor-testes.js" defer></script>
+    <script src="motor-efeitos.js" defer></script>
+    <script src="tradutor-regras.js" defer></script>
+    <script src="combate.js" defer></script>
+    <script src="animacoes-combate.js" defer></script>
+    <script src="laboratorio-dev.js" defer></script>
+  </head>
+
+  <body>
+    <header class="cabecalho-site cabecalho-area-mestre">
+      <a class="marca" href="area-mestre.html">
+        <span class="marca-simbolo">✦</span>
+        <span>Área do Mestre</span>
+      </a>
+
+      <nav class="menu-principal" aria-label="Navegação do Laboratório DEV">
+        <a href="area-mestre.html">Mesa de trabalho</a>
+        <a href="laboratorio-dev.html" aria-current="page"> Laboratório DEV </a>
+      </nav>
+    </header>
+
+    <main class="area-mestre">
+      <section class="apresentacao-area-mestre">
+        <div>
+          <span class="sobretitulo-area-mestre"> Ferramentas locais de desenvolvimento </span>
+
+          <h1>Laboratório DEV</h1>
+
+          <p>Execute testes visuais e mecânicos sem iniciar uma aventura.</p>
+        </div>
+
+        <aside class="nota-mesa">
+          <strong>Somente ambiente local</strong>
+          <span> Nenhum teste desta página altera uma aventura. </span>
+        </aside>
+      </section>
+
+      <section class="mesa-ferramentas" aria-labelledby="tituloTestesDev">
+        <header class="titulo-mesa">
+          <span>Bancada de testes</span>
+          <h2 id="tituloTestesDev">O que deseja testar?</h2>
+        </header>
+
+        <div class="bancada-arremessos-dev">
+          <aside class="controles-arremessos-dev">
+            <label>
+              <span>Arma</span>
+              <select id="armaArremessoDev"></select>
+            </label>
+
+            <label>
+              <span>Resultado visual</span>
+
+              <select id="destinoArremessoDev">
+                <option value="nenhum">Somente o lançamento</option>
+
+                <option value="chao">Arma caída no chão</option>
+
+                <option value="alvo">Arma cravada no alvo</option>
+              </select>
+            </label>
+
+            <fieldset class="calibracao-arma-dev">
+              <legend>Tamanho no tabuleiro</legend>
+
+              <label>
+                <span>
+                  Comprimento:
+                  <output id="valorTamanhoArmaDev">0 célula</output>
+                </span>
+
+                <input id="tamanhoArmaDev" type="range" min="0.5" max="3" step="0.25" />
+              </label>
+            </fieldset>
+
+            <figure class="previa-arma-dev">
+              <img id="previaArmaDev" alt="" />
+              <figcaption id="nomeArmaDev"></figcaption>
+            </figure>
+
+            <button id="botaoLancarArmaDev" class="acao-ferramenta" type="button">
+              Lançar arma
+            </button>
+
+            <p id="resultadoArremessoDev" aria-live="polite">Escolha uma arma para iniciar.</p>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Testes mecânicos</h3>
+
+              <button id="botaoTestarDestinosDev" class="acao-ferramenta" type="button">
+                Testar destinos
+              </button>
+
+              <ul id="resultadosTestesDestinosDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Push</h3>
+
+              <button id="botaoTestarPushDev" class="acao-ferramenta" type="button">
+                Testar Push
+              </button>
+
+              <ul id="resultadosTestesPushDev" aria-live="polite"></ul>
+            </section>
+          </aside>
+
+          <div
+            id="campoArremessoDev"
+            class="campo-arremesso-dev"
+            aria-label="Campo visual de teste"
+          >
+            <div
+              class="marcador-arremesso-dev marcador-origem-dev"
+              data-id-participante="origem-dev"
+            >
+              <span>Origem</span>
+            </div>
+
+            <div class="marcador-arremesso-dev marcador-alvo-dev" data-id-participante="alvo-dev">
+              <span>Alvo</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mesa-ferramentas" aria-labelledby="tituloEditorVitrineDev">
+        <header class="titulo-mesa">
+          <span>Ferramenta visual</span>
+
+          <h2 id="tituloEditorVitrineDev">Editor da vitrine</h2>
+        </header>
+
+        <div class="seletor-vitrine-dev" aria-label="Lado da loja">
+          <button id="botaoVitrineArmasCompactasDev" class="acao-ferramenta ativo" type="button">
+            Compactas e versáteis
+          </button>
+          <button id="botaoVitrineArmasLongasDev" class="acao-ferramenta" type="button">
+            Longas e pesadas
+          </button>
+          <button id="botaoVitrineArmadurasDev" class="acao-ferramenta" type="button">
+            Armaduras
+          </button>
+        </div>
+
+        <div class="editor-vitrine-dev" id="editorVitrineDev"></div>
+
+        <fieldset id="controlesVitrineDev" class="controles-vitrine-dev">
+          <legend id="armaSelecionadaVitrineDev">Selecione um equipamento</legend>
+
+          <button
+            id="botaoFecharControlesVitrineDev"
+            class="botao-fechar-controles-vitrine"
+            type="button"
+            aria-label="Fechar controles"
+            title="Fechar"
+          >
+            ×
+          </button>
+
+          <label>
+            <span>
+              Tamanho:
+              <output id="valorTamanhoVitrineDev">—</output>
+            </span>
+
+            <input id="tamanhoVitrineDev" type="range" min="2" max="20" step="0.25" disabled />
+          </label>
+
+          <label>
+            <span>
+              Rotação:
+              <output id="valorRotacaoVitrineDev">—</output>
+            </span>
+
+            <input id="rotacaoVitrineDev" type="range" min="-180" max="180" step="1" disabled />
+          </label>
+
+          <label>
+            <span>
+              Inclinação horizontal:
+              <output id="valorInclinacaoHorizontalVitrineDev">—</output>
+            </span>
+            <input
+              id="inclinacaoHorizontalVitrineDev"
+              type="range"
+              min="-35"
+              max="35"
+              step="1"
+              disabled
+            />
+          </label>
+
+          <label>
+            <span>
+              Inclinação vertical:
+              <output id="valorInclinacaoVerticalVitrineDev">—</output>
+            </span>
+            <input
+              id="inclinacaoVerticalVitrineDev"
+              type="range"
+              min="-35"
+              max="35"
+              step="1"
+              disabled
+            />
+          </label>
+
+          <label>
+            <span>
+              Perspectiva horizontal:
+              <output id="valorPerspectivaHorizontalVitrineDev">—</output>
+            </span>
+            <input
+              id="perspectivaHorizontalVitrineDev"
+              type="range"
+              min="-60"
+              max="60"
+              step="1"
+              disabled
+            />
+          </label>
+
+          <label>
+            <span>
+              Perspectiva vertical:
+              <output id="valorPerspectivaVerticalVitrineDev">—</output>
+            </span>
+            <input
+              id="perspectivaVerticalVitrineDev"
+              type="range"
+              min="-60"
+              max="60"
+              step="1"
+              disabled
+            />
+          </label>
+
+          <label>
+            <span>
+              Label horizontal:
+              <output id="valorRotuloXVitrineDev">—</output>
+            </span>
+
+            <input id="rotuloXVitrineDev" type="range" min="0" max="100" step="0.25" disabled />
+          </label>
+
+          <label>
+            <span>
+              Label vertical:
+              <output id="valorRotuloYVitrineDev">—</output>
+            </span>
+
+            <input id="rotuloYVitrineDev" type="range" min="0" max="100" step="0.25" disabled />
+          </label>
+        </fieldset>
+
+        <div class="acoes-editor-vitrine-dev">
+          <button id="botaoDesfazerVitrineDev" class="acao-ferramenta" type="button">
+            Desfazer
+          </button>
+
+          <button id="botaoRestaurarArmaVitrineDev" class="acao-ferramenta" type="button">
+            Restaurar equipamento
+          </button>
+
+          <button id="botaoRestaurarTudoVitrineDev" class="acao-ferramenta" type="button">
+            Restaurar tudo
+          </button>
+
+          <button id="botaoSalvarVitrineDev" class="acao-ferramenta" type="button">
+            Salvar rascunho
+          </button>
+
+          <button id="botaoGerarConfiguracaoVitrineDev" class="acao-ferramenta" type="button">
+            Copiar configuração
+          </button>
+        </div>
+
+        <p class="estado-editor-vitrine-dev" id="estadoEditorVitrineDev" aria-live="polite">
+          As alterações ainda não serão salvas.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

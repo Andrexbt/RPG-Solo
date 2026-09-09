@@ -39,6 +39,10 @@ window.bancoEquipamentos = {
       precoPO: 5,
       tempoVestirMinutos: 1,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/acolchoada.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/acolchoada.png" },
+      },
     },
     couro: {
       nome: "Armadura de Couro",
@@ -52,6 +56,10 @@ window.bancoEquipamentos = {
       precoPO: 10,
       tempoVestirMinutos: 1,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/couro.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/couro.png" },
+      },
     },
     couroBatido: {
       nome: "Armadura de Couro Batido",
@@ -65,6 +73,10 @@ window.bancoEquipamentos = {
       precoPO: 45,
       tempoVestirMinutos: 1,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/couro-batido.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/couro-batido.png" },
+      },
     },
     gibaoDePeles: {
       nome: "Gibão de Peles",
@@ -78,6 +90,10 @@ window.bancoEquipamentos = {
       precoPO: 10,
       tempoVestirMinutos: 5,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/gibao-de-peles.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/gibao-de-peles.png" },
+      },
     },
     camisaDeMalha: {
       nome: "Camisa de Malha",
@@ -91,6 +107,10 @@ window.bancoEquipamentos = {
       precoPO: 50,
       tempoVestirMinutos: 5,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/camisa-de-malha.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/camisa-de-malha.png" },
+      },
     },
     brunea: {
       nome: "Brunea",
@@ -104,6 +124,10 @@ window.bancoEquipamentos = {
       precoPO: 50,
       tempoVestirMinutos: 5,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/brunea.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/brunea.png" },
+      },
     },
     peitoral: {
       nome: "Peitoral",
@@ -117,6 +141,10 @@ window.bancoEquipamentos = {
       precoPO: 400,
       tempoVestirMinutos: 5,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/peitoral.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/peitoral.png" },
+      },
     },
     meiaArmadura: {
       nome: "Meia Armadura",
@@ -130,6 +158,10 @@ window.bancoEquipamentos = {
       precoPO: 750,
       tempoVestirMinutos: 5,
       tempoRemoverMinutos: 1,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/meia-armadura.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/meia-armadura.png" },
+      },
     },
     cotaDeAneis: {
       nome: "Cota de Anéis",
@@ -143,6 +175,10 @@ window.bancoEquipamentos = {
       precoPO: 30,
       tempoVestirMinutos: 10,
       tempoRemoverMinutos: 5,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/cota-de-aneis.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/cota-de-aneis.png" },
+      },
     },
     cotaDeMalha: {
       nome: "Cota de Malha",
@@ -156,6 +192,10 @@ window.bancoEquipamentos = {
       precoPO: 75,
       tempoVestirMinutos: 10,
       tempoRemoverMinutos: 5,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/cota-de-malha.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/cota-de-malha.png" },
+      },
     },
     cotaDeTalas: {
       nome: "Cota de Talas",
@@ -169,6 +209,10 @@ window.bancoEquipamentos = {
       precoPO: 200,
       tempoVestirMinutos: 10,
       tempoRemoverMinutos: 5,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/cota-de-talas.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/cota-de-talas.png" },
+      },
     },
     placas: {
       nome: "Armadura de Placas",
@@ -182,6 +226,10 @@ window.bancoEquipamentos = {
       precoPO: 1500,
       tempoVestirMinutos: 10,
       tempoRemoverMinutos: 5,
+      visual: {
+        icone: { src: "assets/equipamentos/armaduras/placas.png" },
+        vitrine: { src: "assets/equipamentos/armaduras/vitrine/placas.png" },
+      },
     },
   },
 
@@ -198,6 +246,11 @@ window.bancoEquipamentos = {
       pesoLb: 2,
       precoPO: 0.1,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/clava.png",
+        },
+      },
     },
     adaga: {
       nome: "Adaga",
@@ -212,17 +265,19 @@ window.bancoEquipamentos = {
       precoPO: 2,
       alcanceCorpoACorpoPes: 5,
       alcanceDistanciaPes: { normal: 20, longo: 60 },
+      arremesso: {
+        podeFicarCravada: true,
+      },
       visual: {
         icone: {
           src: "assets/equipamentos/armas/adaga.png",
         },
         arremesso: {
           src: "assets/equipamentos/armas/adaga.png",
-          larguraPx: 64,
-          comprimentoPx: 96,
+          tamanhoEmCelulas: 1,
           anguloBase: 90,
           rotacoesDuranteVoo: 1,
-          duracaoMs: 700
+          duracaoMs: 700,
         },
       },
     },
@@ -238,6 +293,11 @@ window.bancoEquipamentos = {
       pesoLb: 10,
       precoPO: 0.2,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/clava-grande-v2.png",
+        },
+      },
     },
     machadinha: {
       nome: "Machadinha",
@@ -255,12 +315,14 @@ window.bancoEquipamentos = {
         normal: 20,
         longo: 60,
       },
+      arremesso: {
+        podeFicarCravada: true,
+      },
       visual: {
         icone: { src: "assets/equipamentos/armas/machadinha.png" },
         arremesso: {
           src: "assets/equipamentos/armas/machadinha.png",
-          larguraPx: 72,
-          comprimentoPx: 108,
+          tamanhoEmCelulas: 1.5,
           anguloBase: 90,
           rotacoesDuranteVoo: 2,
           duracaoMs: 800,
@@ -283,12 +345,14 @@ window.bancoEquipamentos = {
         normal: 30,
         longo: 120,
       },
+      arremesso: {
+        podeFicarCravada: true,
+      },
       visual: {
-        icone: { src: "assets/equipamentos/armas/azagaia.png" },
+        icone: { src: "assets/equipamentos/armas/azagaia-v3.png" },
         arremesso: {
-          src: "assets/equipamentos/armas/azagaia.png",
-          larguraPx: 48,
-          comprimentoPx: 160,
+          src: "assets/equipamentos/armas/azagaia-v3.png",
+          tamanhoEmCelulas: 1.5,
           anguloBase: 90,
           rotacoesDuranteVoo: 0,
           duracaoMs: 700,
@@ -311,12 +375,14 @@ window.bancoEquipamentos = {
         normal: 20,
         longo: 60,
       },
+      arremesso: {
+        podeFicarCravada: false,
+      },
       visual: {
-        icone: { src: "assets/equipamentos/armas/martelo-leve.png" },
+        icone: { src: "assets/equipamentos/armas/martelo-leve-v3.png" },
         arremesso: {
-          src: "assets/equipamentos/armas/martelo-leve.png",
-          larguraPx: 68,
-          comprimentoPx: 104,
+          src: "assets/equipamentos/armas/martelo-leve-v3.png",
+          tamanhoEmCelulas: 1.5,
           anguloBase: 90,
           rotacoesDuranteVoo: 2,
           duracaoMs: 800,
@@ -335,6 +401,11 @@ window.bancoEquipamentos = {
       pesoLb: 4,
       precoPO: 5,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/maca-v2.png",
+        },
+      },
     },
     bordao: {
       nome: "Bordão",
@@ -349,6 +420,11 @@ window.bancoEquipamentos = {
       precoPO: 0.2,
       alcanceCorpoACorpoPes: 5,
       danoVersatil: "1d8",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/bordao-v2.png",
+        },
+      },
     },
     foice: {
       nome: "Foice",
@@ -362,6 +438,11 @@ window.bancoEquipamentos = {
       pesoLb: 2,
       precoPO: 1,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/foice.png",
+        },
+      },
     },
     lanca: {
       nome: "Lança",
@@ -380,12 +461,14 @@ window.bancoEquipamentos = {
         longo: 60,
       },
       danoVersatil: "1d8",
+      arremesso: {
+        podeFicarCravada: true,
+      },
       visual: {
-        icone: { src: "assets/equipamentos/armas/lanca.png" },
+        icone: { src: "assets/equipamentos/armas/lanca-v4.png" },
         arremesso: {
-          src: "assets/equipamentos/armas/lanca.png",
-          larguraPx: 52,
-          comprimentoPx: 192,
+          src: "assets/equipamentos/armas/lanca-v4.png",
+          tamanhoEmCelulas: 2,
           anguloBase: 90,
           rotacoesDuranteVoo: 0,
           duracaoMs: 780,
@@ -407,12 +490,14 @@ window.bancoEquipamentos = {
         normal: 20,
         longo: 60,
       },
+      arremesso: {
+        podeFicarCravada: true,
+      },
       visual: {
-        icone: { src: "assets/equipamentos/armas/dardo.png" },
+        icone: { src: "assets/equipamentos/armas/dardos-conjunto-v2.png" },
         arremesso: {
           src: "assets/equipamentos/armas/dardo.png",
-          larguraPx: 40,
-          comprimentoPx: 80,
+          tamanhoEmCelulas: 1,
           anguloBase: 90,
           rotacoesDuranteVoo: 0,
           duracaoMs: 560,
@@ -435,6 +520,11 @@ window.bancoEquipamentos = {
         longo: 320,
       },
       municaoId: "virote",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/besta-leve.png",
+        },
+      },
     },
     arcoCurto: {
       nome: "Arco Curto",
@@ -452,6 +542,11 @@ window.bancoEquipamentos = {
         longo: 320,
       },
       municaoId: "flecha",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/arco-curto.png",
+        },
+      },
     },
     funda: {
       nome: "Funda",
@@ -469,6 +564,11 @@ window.bancoEquipamentos = {
         longo: 120,
       },
       municaoId: "balaFunda",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/funda.png",
+        },
+      },
     },
     machadoDeBatalha: {
       nome: "Machado de Batalha",
@@ -483,6 +583,11 @@ window.bancoEquipamentos = {
       precoPO: 10,
       alcanceCorpoACorpoPes: 5,
       danoVersatil: "1d10",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/machado-de-batalha.png",
+        },
+      },
     },
     mangual: {
       nome: "Mangual",
@@ -496,6 +601,11 @@ window.bancoEquipamentos = {
       pesoLb: 2,
       precoPO: 10,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/mangual.png",
+        },
+      },
     },
     glaive: {
       nome: "Glaive",
@@ -509,6 +619,11 @@ window.bancoEquipamentos = {
       pesoLb: 6,
       precoPO: 20,
       alcanceCorpoACorpoPes: 10,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/glaive-v2.png",
+        },
+      },
     },
     machadoGrande: {
       nome: "Machado Grande",
@@ -522,6 +637,11 @@ window.bancoEquipamentos = {
       pesoLb: 7,
       precoPO: 30,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/machado-grande.png",
+        },
+      },
     },
     espadaGrande: {
       nome: "Espada Grande",
@@ -535,6 +655,11 @@ window.bancoEquipamentos = {
       pesoLb: 6,
       precoPO: 50,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/espada-grande-v2.png",
+        },
+      },
     },
     alabarda: {
       nome: "Alabarda",
@@ -548,6 +673,11 @@ window.bancoEquipamentos = {
       pesoLb: 6,
       precoPO: 20,
       alcanceCorpoACorpoPes: 10,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/alabarda-v2.png",
+        },
+      },
     },
     lancaDeMontaria: {
       nome: "Lança de Montaria",
@@ -562,6 +692,7 @@ window.bancoEquipamentos = {
       precoPO: 10,
       alcanceCorpoACorpoPes: 10,
       duasMaosExcetoMontado: true,
+      visual: { icone: { src: "assets/equipamentos/armas/lanca-de-montaria.png" } },
     },
     espadaLonga: {
       nome: "Espada Longa",
@@ -576,6 +707,11 @@ window.bancoEquipamentos = {
       precoPO: 15,
       alcanceCorpoACorpoPes: 5,
       danoVersatil: "1d10",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/espada-longa.png",
+        },
+      },
     },
     malho: {
       nome: "Malho",
@@ -589,6 +725,11 @@ window.bancoEquipamentos = {
       pesoLb: 10,
       precoPO: 10,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/malho-v3.png",
+        },
+      },
     },
     macaEstrela: {
       nome: "Maça-Estrela",
@@ -602,6 +743,11 @@ window.bancoEquipamentos = {
       pesoLb: 4,
       precoPO: 15,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/maca-estrela-v2.png",
+        },
+      },
     },
     pique: {
       nome: "Pique",
@@ -615,6 +761,11 @@ window.bancoEquipamentos = {
       pesoLb: 18,
       precoPO: 5,
       alcanceCorpoACorpoPes: 10,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/pique-v3.png",
+        },
+      },
     },
     rapieira: {
       nome: "Rapieira",
@@ -628,6 +779,11 @@ window.bancoEquipamentos = {
       pesoLb: 2,
       precoPO: 25,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/rapieira.png",
+        },
+      },
     },
     cimitarra: {
       nome: "Cimitarra",
@@ -641,6 +797,11 @@ window.bancoEquipamentos = {
       pesoLb: 3,
       precoPO: 25,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/cimitarra.png",
+        },
+      },
     },
     espadaCurta: {
       nome: "Espada Curta",
@@ -654,6 +815,11 @@ window.bancoEquipamentos = {
       pesoLb: 2,
       precoPO: 10,
       alcanceCorpoACorpoPes: 5,
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/espada-curta.png",
+        },
+      },
     },
     tridente: {
       nome: "Tridente",
@@ -672,12 +838,14 @@ window.bancoEquipamentos = {
         longo: 60,
       },
       danoVersatil: "1d10",
+      arremesso: {
+        podeFicarCravada: true,
+      },
       visual: {
-        icone: { src: "assets/equipamentos/armas/tridente.png" },
+        icone: { src: "assets/equipamentos/armas/tridente-v2.png" },
         arremesso: {
-          src: "assets/equipamentos/armas/tridente.png",
-          larguraPx: 64,
-          comprimentoPx: 192,
+          src: "assets/equipamentos/armas/tridente-v2.png",
+          tamanhoEmCelulas: 2,
           anguloBase: 90,
           rotacoesDuranteVoo: 0,
           duracaoMs: 820,
@@ -697,6 +865,11 @@ window.bancoEquipamentos = {
       precoPO: 15,
       alcanceCorpoACorpoPes: 5,
       danoVersatil: "1d10",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/martelo-de-guerra-v3.png",
+        },
+      },
     },
     picaretaDeGuerra: {
       nome: "Picareta de Guerra",
@@ -711,6 +884,11 @@ window.bancoEquipamentos = {
       precoPO: 5,
       alcanceCorpoACorpoPes: 5,
       danoVersatil: "1d10",
+      visual: {
+        icone: {
+          src: "assets/equipamentos/armas/picareta-de-guerra-v2.png",
+        },
+      },
     },
     chicote: {
       nome: "Chicote",
@@ -724,6 +902,7 @@ window.bancoEquipamentos = {
       pesoLb: 3,
       precoPO: 2,
       alcanceCorpoACorpoPes: 10,
+      visual: { icone: { src: "assets/equipamentos/armas/chicote.png" } },
     },
     zarabatana: {
       nome: "Zarabatana",
@@ -741,6 +920,7 @@ window.bancoEquipamentos = {
         longo: 100,
       },
       municaoId: "agulha",
+      visual: { icone: { src: "assets/equipamentos/armas/zarabatana-v3.png" } },
     },
     bestaDeMao: {
       nome: "Besta de Mão",
@@ -758,6 +938,7 @@ window.bancoEquipamentos = {
         longo: 120,
       },
       municaoId: "virote",
+      visual: { icone: { src: "assets/equipamentos/armas/besta-de-mao-v2.png" } },
     },
     bestaPesada: {
       nome: "Besta Pesada",
@@ -775,6 +956,7 @@ window.bancoEquipamentos = {
         longo: 400,
       },
       municaoId: "virote",
+      visual: { icone: { src: "assets/equipamentos/armas/besta-pesada.png" } },
     },
     arcoLongo: {
       nome: "Arco Longo",
@@ -792,6 +974,7 @@ window.bancoEquipamentos = {
         longo: 600,
       },
       municaoId: "flecha",
+      visual: { icone: { src: "assets/equipamentos/armas/arco-longo.png" } },
     },
     mosquete: {
       nome: "Mosquete",
@@ -809,6 +992,7 @@ window.bancoEquipamentos = {
         longo: 120,
       },
       municaoId: "balaArmaFogo",
+      visual: { icone: { src: "assets/equipamentos/armas/mosquete-v2.png" } },
     },
     pistola: {
       nome: "Pistola",
@@ -826,6 +1010,7 @@ window.bancoEquipamentos = {
         longo: 90,
       },
       municaoId: "balaArmaFogo",
+      visual: { icone: { src: "assets/equipamentos/armas/pistola.png" } },
     },
   },
 

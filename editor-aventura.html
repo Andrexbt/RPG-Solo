@@ -30,12 +30,21 @@
     </header>
 
     <main class="layout-editor-aventura">
-      <aside id="painelComparacao" class="painel-editor painel-comparacao recolhido" data-area="comparacao">
+      <aside
+        id="painelComparacao"
+        class="painel-editor painel-comparacao recolhido"
+        data-area="comparacao"
+      >
         <h2>Comparação</h2>
         <p>As diferenças salvas na memória do editor aparecerão aqui.</p>
       </aside>
 
-      <section id="rolagemGrafo" class="rolagem-grafo painel-editor" data-area="teia" aria-label="Fluxo da aventura">
+      <section
+        id="rolagemGrafo"
+        class="rolagem-grafo painel-editor"
+        data-area="teia"
+        aria-label="Fluxo da aventura"
+      >
         <nav class="barra-editor-aventura" aria-label="Controles do editor">
           <div class="grupo-controles">
             <button id="botaoReenquadrar" type="button">Reenquadrar</button>
@@ -52,15 +61,22 @@
         <div class="acoes-edicao">
           <button id="botaoSalvarAlteracoes" type="button">Salvar alterações</button>
           <button id="botaoDesfazerAlteracoes" type="button">Desfazer alterações</button>
-          <button id="botaoEnviarAventura" type="button" disabled title="A gravação segura no arquivo será implementada na próxima etapa.">Enviar para aventura</button>
+          <button
+            id="botaoEnviarAventura"
+            type="button"
+            disabled
+            title="A gravação segura no arquivo será implementada na próxima etapa."
+          >
+            Enviar para aventura
+          </button>
         </div>
         <div id="painelPropriedades" class="painel-propriedades">
-        <div class="legenda-status" aria-label="Legenda de validação">
-          <span>Completo</span>
-          <span class="aviso">Com avisos</span>
-          <span class="erro">Com erros</span>
-        </div>
-        <p>Selecione uma cena ou etapa no mapa.</p>
+          <div class="legenda-status" aria-label="Legenda de validação">
+            <span>Completo</span>
+            <span class="aviso">Com avisos</span>
+            <span class="erro">Com erros</span>
+          </div>
+          <p>Selecione uma cena ou etapa no mapa.</p>
         </div>
       </aside>
     </main>
@@ -74,7 +90,8 @@
         <button id="botaoFecharCodigo" type="button">Fechar</button>
       </header>
       <p>
-        Este código contém somente as conexões modificadas. Revise-o antes de aplicar ao arquivo da aventura.
+        Este código contém somente as conexões modificadas. Revise-o antes de aplicar ao arquivo da
+        aventura.
       </p>
       <textarea id="saidaCodigo" readonly spellcheck="false"></textarea>
       <footer>

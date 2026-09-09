@@ -8,9 +8,7 @@ window.narracaoCombate = {
         "{alvo} é mais ágil do que você previa e consegue escapar do ataque.",
       ],
 
-      derrotou: [
-        "{alvo} perde as forças e cai.",
-      ],
+      derrotou: ["{alvo} perde as forças e cai."],
     },
 
     humanoide: {
@@ -19,9 +17,7 @@ window.narracaoCombate = {
         "{alvo} consegue se proteger no último instante.",
       ],
 
-      derrotou: [
-        "{alvo} não consegue continuar lutando e cai.",
-      ],
+      derrotou: ["{alvo} não consegue continuar lutando e cai."],
     },
   },
 
@@ -118,9 +114,7 @@ window.narracaoCombate = {
   },
 
   fallbacks: {
-    acertou: [
-      "{atacante} atinge {alvo} com {ataque}, causando {dano} de dano.",
-    ],
+    acertou: ["{atacante} atinge {alvo} com {ataque}, causando {dano} de dano."],
 
     critico: [
       "{atacante} encontra uma abertura decisiva e atinge {alvo} com {ataque}, causando {dano} de dano.",
@@ -137,27 +131,19 @@ function aplicarRascunhoNarracoesCombate() {
     return;
   }
 
-  const chaveRascunho =
-    "rpg-solo:mensagens-jogabilidade:rascunho:v1";
+  const chaveRascunho = "rpg-solo:mensagens-jogabilidade:rascunho:v1";
 
   let rascunho;
 
   try {
-    rascunho = JSON.parse(
-      localStorage.getItem(chaveRascunho),
-    );
+    rascunho = JSON.parse(localStorage.getItem(chaveRascunho));
   } catch (erro) {
-    console.warn(
-      "Não foi possível ler o rascunho das narrações de combate.",
-      erro,
-    );
+    console.warn("Não foi possível ler o rascunho das narrações de combate.", erro);
 
     return;
   }
 
-  for (const [caminho, personalizacao] of Object.entries(
-    rascunho ?? {},
-  )) {
+  for (const [caminho, personalizacao] of Object.entries(rascunho ?? {})) {
     const partes = caminho.split(".");
 
     if (partes[0] !== "narracoes" || partes[1] !== "combate") {
@@ -287,9 +273,7 @@ function gerarNarracaoPorAtaque(tipoNarrativo, evento, contexto) {
 }
 
 function gerarNarracaoFallback(evento, contexto) {
-  const textoEscolhido = escolherVariacaoNarrativa(
-    window.narracaoCombate.fallbacks?.[evento],
-  );
+  const textoEscolhido = escolherVariacaoNarrativa(window.narracaoCombate.fallbacks?.[evento]);
 
   if (!textoEscolhido) {
     return null;
@@ -299,13 +283,7 @@ function gerarNarracaoFallback(evento, contexto) {
 }
 
 function gerarNarracaoCombate(configuracao) {
-  const {
-    atacante,
-    alvo,
-    ataque,
-    evento,
-    dano,
-  } = configuracao;
+  const { atacante, alvo, ataque, evento, dano } = configuracao;
 
   const fonteAtacante = obterFonteNarrativaParticipante(atacante);
   const fonteAlvo = obterFonteNarrativaParticipante(alvo);
@@ -317,38 +295,26 @@ function gerarNarracaoCombate(configuracao) {
     dano: dano ?? "",
   };
 
-  const tipoNarrativoConfigurado =
-    fonteAtacante?.narracao?.ataques?.[ataque?.id]?.tipoNarrativo;
+  const tipoNarrativoConfigurado = fonteAtacante?.narracao?.ataques?.[ataque?.id]?.tipoNarrativo;
 
   const tipoNarrativoAtaque =
-    tipoNarrativoConfigurado ??
-    (window.narracaoCombate.ataques?.[ataque?.id] ? ataque.id : null);
+    tipoNarrativoConfigurado ?? (window.narracaoCombate.ataques?.[ataque?.id] ? ataque.id : null);
 
   if (
     tipoNarrativoAtaque &&
     (evento === "acertou" || evento === "critico" || evento === "derrotou")
   ) {
-    const narracaoAtaque = gerarNarracaoPorAtaque(
-      tipoNarrativoAtaque,
-      evento,
-      contexto,
-    );
+    const narracaoAtaque = gerarNarracaoPorAtaque(tipoNarrativoAtaque, evento, contexto);
 
     if (narracaoAtaque) {
       return narracaoAtaque;
     }
   }
 
-  const categoriaNarrativa =
-    fonteAlvo?.narracao?.categoria ??
-    fonteAtacante?.narracao?.categoria;
+  const categoriaNarrativa = fonteAlvo?.narracao?.categoria ?? fonteAtacante?.narracao?.categoria;
 
   if (categoriaNarrativa) {
-    const narracaoCategoria = gerarNarracaoPorCategoria(
-      categoriaNarrativa,
-      evento,
-      contexto,
-    );
+    const narracaoCategoria = gerarNarracaoPorCategoria(categoriaNarrativa, evento, contexto);
 
     if (narracaoCategoria) {
       return narracaoCategoria;
@@ -371,9 +337,7 @@ function obterDadosAtaquePendente(combate, ataquePendente) {
     (participante) => participante.id === ataquePendente.alvoId,
   );
 
-  const ataque = atacante?.ataques?.find(
-    (item) => item.id === ataquePendente.ataqueId,
-  );
+  const ataque = atacante?.ataques?.find((item) => item.id === ataquePendente.ataqueId);
 
   if (!atacante || !alvo || !ataque) {
     return null;
@@ -462,21 +426,14 @@ function exibirNarracaoIntegrada(texto, combate) {
     }
 
     const foiDerrotado = snapshot.alvo.estado === "derrotado";
-    const evento = foiDerrotado
-      ? "derrotou"
-      : snapshot.critico
-        ? "critico"
-        : "acertou";
+    const evento = foiDerrotado ? "derrotou" : snapshot.critico ? "critico" : "acertou";
 
     let dano = Number(danoInformado);
 
     if (!Number.isFinite(dano)) {
       const pontosAtuais = snapshot.alvo.pontosDeVida?.atuais;
 
-      if (
-        Number.isFinite(snapshot.pontosDeVidaAntes) &&
-        Number.isFinite(pontosAtuais)
-      ) {
+      if (Number.isFinite(snapshot.pontosDeVidaAntes) && Number.isFinite(pontosAtuais)) {
         dano = Math.max(0, snapshot.pontosDeVidaAntes - pontosAtuais);
       } else {
         dano = 0;
@@ -551,10 +508,7 @@ function exibirNarracaoIntegrada(texto, combate) {
       }
 
       window.queueMicrotask(function narrarDepoisDaEscolha() {
-        concluirNarracaoDano(
-          estadoIntegracao.danoPendente,
-          estadoIntegracao.danoEscolhido,
-        );
+        concluirNarracaoDano(estadoIntegracao.danoPendente, estadoIntegracao.danoEscolhido);
       });
     },
     true,

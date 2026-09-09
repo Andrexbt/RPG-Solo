@@ -20,10 +20,7 @@ if (!aventuraAtual) {
   throw new Error(`Aventura não encontrada: ${idAventuraSelecionada}`);
 }
 
-const personagemSelecionado =
-  window.PersonagemDados.buscarSalvoPorId(
-    idPersonagemSelecionado,
-  );
+const personagemSelecionado = window.PersonagemDados.buscarSalvoPorId(idPersonagemSelecionado);
 
 const estadoAtualJogo = window.estadoJogo;
 
@@ -33,42 +30,28 @@ estadoAtualJogo.personagem.dados = personagemSelecionado
   ? structuredClone(personagemSelecionado)
   : null;
 
-
 function renderizarFichaDaAventura() {
-  const areaFicha =
-    document.getElementById("conteudoFicha");
+  const areaFicha = document.getElementById("conteudoFicha");
 
-  const personagemAtual =
-    estadoAtualJogo.personagem.dados;
+  const personagemAtual = estadoAtualJogo.personagem.dados;
 
   if (!personagemAtual) {
-    areaFicha.innerHTML =
-      "<p>Nenhum personagem foi selecionado.</p>";
+    areaFicha.innerHTML = "<p>Nenhum personagem foi selecionado.</p>";
 
     return;
   }
 
-  window.FichaPersonagem.renderizar(
-    personagemAtual,
-    areaFicha
-  );
+  window.FichaPersonagem.renderizar(personagemAtual, areaFicha);
 }
 
-document.addEventListener(
-  "personagemAtualizado",
-  renderizarFichaDaAventura
-);
+document.addEventListener("personagemAtualizado", renderizarFichaDaAventura);
 
-window.FichaPersonagem
-  .iniciarComponente()
+window.FichaPersonagem.iniciarComponente()
   .then(function () {
     renderizarFichaDaAventura();
   })
   .catch(function (erro) {
-    console.error(
-      "Não foi possível carregar a ficha do personagem.",
-      erro,
-    );
+    console.error("Não foi possível carregar a ficha do personagem.", erro);
   });
 
 const idCenaInicial = aventuraAtual.cenaInicial;
@@ -80,42 +63,22 @@ let tokenArrastado = null;
 let inicioArraste = null;
 let escolhasAtuais = [];
 
-const miraAtaqueCombate =
-  document.querySelector(
-    "#miraAtaqueCombate",
-  );
+const miraAtaqueCombate = document.querySelector("#miraAtaqueCombate");
 
-const linhaMiraAtaqueCombate =
-  document.querySelector(
-    "#linhaMiraAtaqueCombate",
-  );
+const linhaMiraAtaqueCombate = document.querySelector("#linhaMiraAtaqueCombate");
 
-  const linhaMiraAlcanceLongoCombate =
-  document.querySelector(
-    "#linhaMiraAlcanceLongoCombate",
-  );
+const linhaMiraAlcanceLongoCombate = document.querySelector("#linhaMiraAlcanceLongoCombate");
 
-  const textoAlcanceNormalCombate =
-  document.querySelector(
-    "#textoAlcanceNormalCombate",
-  );
+const textoAlcanceNormalCombate = document.querySelector("#textoAlcanceNormalCombate");
 
-const textoAlcanceLongoCombate =
-  document.querySelector(
-    "#textoAlcanceLongoCombate",
-  );
+const textoAlcanceLongoCombate = document.querySelector("#textoAlcanceLongoCombate");
 
-  const textoCoberturaMiraCombate =
-  document.querySelector(
-    "#textoCoberturaMiraCombate",
-  );
+const textoCoberturaMiraCombate = document.querySelector("#textoCoberturaMiraCombate");
 
 const tabuleiroCombate = document.querySelector("#tabuleiroCombate");
-const cameraCombateElemento =
-  document.querySelector("#cameraCombate");
+const cameraCombateElemento = document.querySelector("#cameraCombate");
 
-const imagemMapaCombate =
-  document.querySelector("#imagemMapaCombate");
+const imagemMapaCombate = document.querySelector("#imagemMapaCombate");
 const painelTurnoCombate = document.querySelector("#painelTurnoCombate");
 const painelComandosCombate = document.querySelector("#painelComandosCombate");
 
@@ -132,35 +95,17 @@ const listaAcoesTurno = document.querySelector("#listaAcoesTurno");
 
 const listaAcoesBonusTurno = document.querySelector("#listaAcoesBonusTurno");
 
-const camadaDecisaoCombate =
-  document.querySelector(
-    "#camadaDecisaoCombate",
-  );
+const camadaDecisaoCombate = document.querySelector("#camadaDecisaoCombate");
 
-const janelaDecisaoCombate =
-  document.querySelector(
-    "#janelaDecisaoCombate",
-  );
+const janelaDecisaoCombate = document.querySelector("#janelaDecisaoCombate");
 
-const tituloDecisaoCombate =
-  document.querySelector(
-    "#tituloDecisaoCombate",
-  );
+const tituloDecisaoCombate = document.querySelector("#tituloDecisaoCombate");
 
-const mensagemDecisaoCombate =
-  document.querySelector(
-    "#mensagemDecisaoCombate",
-  );
+const mensagemDecisaoCombate = document.querySelector("#mensagemDecisaoCombate");
 
-const botaoConfirmarDecisaoCombate =
-  document.querySelector(
-    "#botaoConfirmarDecisaoCombate",
-  );
+const botaoConfirmarDecisaoCombate = document.querySelector("#botaoConfirmarDecisaoCombate");
 
-const botaoCancelarDecisaoCombate =
-  document.querySelector(
-    "#botaoCancelarDecisaoCombate",
-  );
+const botaoCancelarDecisaoCombate = document.querySelector("#botaoCancelarDecisaoCombate");
 
 const painelAtaquesCombate = document.querySelector("#painelAtaquesCombate");
 
@@ -195,75 +140,50 @@ const visualizacaoAventura = document.querySelector("#visualizacaoAventura");
 
 const visualizacaoCombate = document.querySelector("#visualizacaoCombate");
 
-const botaoAlternarTerrenoCombate =
-  document.querySelector("#botaoAlternarTerrenoCombate");
-const legendaTerrenoCombate =
-  document.querySelector("#legendaTerrenoCombate");
+const botaoAlternarTerrenoCombate = document.querySelector("#botaoAlternarTerrenoCombate");
+const legendaTerrenoCombate = document.querySelector("#legendaTerrenoCombate");
 
-const telaResultadoCombate =
-  document.querySelector("#telaResultadoCombate");
+const telaResultadoCombate = document.querySelector("#telaResultadoCombate");
 
-const rotuloResultadoCombate =
-  document.querySelector("#rotuloResultadoCombate");
+const rotuloResultadoCombate = document.querySelector("#rotuloResultadoCombate");
 
-const tituloResultadoCombate =
-  document.querySelector("#tituloResultadoCombate");
+const tituloResultadoCombate = document.querySelector("#tituloResultadoCombate");
 
-const textoResultadoCombate =
-  document.querySelector("#textoResultadoCombate");
+const textoResultadoCombate = document.querySelector("#textoResultadoCombate");
 
-const recompensasResultadoCombate =
-  document.querySelector("#recompensasResultadoCombate");
+const recompensasResultadoCombate = document.querySelector("#recompensasResultadoCombate");
 
-const xpRecebidoResultadoCombate =
-  document.querySelector("#xpRecebidoResultadoCombate");
+const xpRecebidoResultadoCombate = document.querySelector("#xpRecebidoResultadoCombate");
 
-const xpAtualResultadoCombate =
-  document.querySelector("#xpAtualResultadoCombate");
+const xpAtualResultadoCombate = document.querySelector("#xpAtualResultadoCombate");
 
-const botaoContinuarResultadoCombate =
-  document.querySelector("#botaoContinuarResultadoCombate");
+const botaoContinuarResultadoCombate = document.querySelector("#botaoContinuarResultadoCombate");
 
-  const telaFimAventura =
-  document.querySelector("#telaFimAventura");
+const telaFimAventura = document.querySelector("#telaFimAventura");
 
-const rotuloFimAventura =
-  document.querySelector("#rotuloFimAventura");
+const rotuloFimAventura = document.querySelector("#rotuloFimAventura");
 
-const tituloFimAventura =
-  document.querySelector("#tituloFimAventura");
+const tituloFimAventura = document.querySelector("#tituloFimAventura");
 
-const textoFimAventura =
-  document.querySelector("#textoFimAventura");
+const textoFimAventura = document.querySelector("#textoFimAventura");
 
-const resumoFimAventura =
-  document.querySelector("#resumoFimAventura");
+const resumoFimAventura = document.querySelector("#resumoFimAventura");
 
-const resultadoFimAventura =
-  document.querySelector("#resultadoFimAventura");
+const resultadoFimAventura = document.querySelector("#resultadoFimAventura");
 
-const linhaXpFimAventura =
-  document.querySelector("#linhaXpFimAventura");
+const linhaXpFimAventura = document.querySelector("#linhaXpFimAventura");
 
-const xpFimAventura =
-  document.querySelector("#xpFimAventura");
+const xpFimAventura = document.querySelector("#xpFimAventura");
 
-const linkFichaFimAventura =
-  document.querySelector("#linkFichaFimAventura");
+const linkFichaFimAventura = document.querySelector("#linkFichaFimAventura");
 
-const janelaDados =
-  document.querySelector(".janela-dados");
+const janelaDados = document.querySelector(".janela-dados");
 
-const adendosAventura =
-  document.querySelector(".adendos-aventura");
+const adendosAventura = document.querySelector(".adendos-aventura");
 
-const marcadorOriginalJanelaDados =
-  document.createComment("janela-dados-original");
+const marcadorOriginalJanelaDados = document.createComment("janela-dados-original");
 
-janelaDados.parentNode.insertBefore(
-  marcadorOriginalJanelaDados,
-  janelaDados,
-);
+janelaDados.parentNode.insertBefore(marcadorOriginalJanelaDados, janelaDados);
 
 const solicitacaoCombate = document.querySelector("#solicitacaoCombate");
 
@@ -271,79 +191,57 @@ const areaEscolhas = document.querySelector(".area-escolhas");
 
 const painelAcaoAtualCombate = document.querySelector("#painelAcaoAtualCombate");
 
-const modalIntroducaoCombate =
-  document.querySelector("#modalIntroducaoCombate");
+const modalIntroducaoCombate = document.querySelector("#modalIntroducaoCombate");
 
-const tituloIntroducaoCombate =
-  document.querySelector("#tituloIntroducaoCombate");
+const tituloIntroducaoCombate = document.querySelector("#tituloIntroducaoCombate");
 
-const descricaoIntroducaoCombate =
-  document.querySelector("#descricaoIntroducaoCombate");
+const descricaoIntroducaoCombate = document.querySelector("#descricaoIntroducaoCombate");
 
-const listaObjetivosModalCombate =
-  document.querySelector("#listaObjetivosModalCombate");
+const listaObjetivosModalCombate = document.querySelector("#listaObjetivosModalCombate");
 
-const botaoContinuarIntroducaoCombate =
-  document.querySelector("#botaoContinuarIntroducaoCombate");
+const botaoContinuarIntroducaoCombate = document.querySelector("#botaoContinuarIntroducaoCombate");
 
 let introducaoCombateConfirmada = false;
 
 function abrirIntroducaoCombate() {
-  botaoContinuarIntroducaoCombate.textContent =
-    introducaoCombateConfirmada
-      ? "Voltar à batalha"
-      : "Continuar para a batalha";
+  botaoContinuarIntroducaoCombate.textContent = introducaoCombateConfirmada
+    ? "Voltar à batalha"
+    : "Continuar para a batalha";
 
   if (!modalIntroducaoCombate.open) {
     modalIntroducaoCombate.showModal();
   }
 }
 
-botaoContinuarIntroducaoCombate.addEventListener(
-  "click",
-  function continuarParaBatalha() {
-    const primeiraConfirmacao =
-      !introducaoCombateConfirmada;
+botaoContinuarIntroducaoCombate.addEventListener("click", function continuarParaBatalha() {
+  const primeiraConfirmacao = !introducaoCombateConfirmada;
 
-    introducaoCombateConfirmada = true;
-    modalIntroducaoCombate.close();
+  introducaoCombateConfirmada = true;
+  modalIntroducaoCombate.close();
 
-    if (!primeiraConfirmacao) {
-      return;
-    }
+  if (!primeiraConfirmacao) {
+    return;
+  }
 
-    const combate =
-      estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-    if (
-      !combate ||
-      combate.status !== "ativo"
-    ) {
-      return;
-    }
+  if (!combate || combate.status !== "ativo") {
+    return;
+  }
 
-    iniciarEtapaIniciativaCombate(
-      combate,
-    );
-  },
-);
+  iniciarEtapaIniciativaCombate(combate);
+});
 
-painelObjetivosCombate.addEventListener(
-  "click",
-  abrirIntroducaoCombate,
-);
+painelObjetivosCombate.addEventListener("click", abrirIntroducaoCombate);
 
-painelObjetivosCombate.addEventListener(
-  "keydown",
-  function abrirObjetivosPeloTeclado(evento) {
-    if (evento.key !== "Enter" && evento.key !== " ") {
-      return;
-    }
+painelObjetivosCombate.addEventListener("keydown", function abrirObjetivosPeloTeclado(evento) {
+  if (evento.key !== "Enter" && evento.key !== " ") {
+    return;
+  }
 
-    evento.preventDefault();
-    abrirIntroducaoCombate();
-  },
-);
+  evento.preventDefault();
+  abrirIntroducaoCombate();
+});
 
 const mensagemAcaoAtualCombate = document.querySelector("#mensagemAcaoAtualCombate");
 
@@ -436,228 +334,12 @@ async function animarMovimentoInimigo(participante, caminho) {
   }
 }
 
-async function animarArremessoArma(
-  atacanteId,
-  alvoId,
-  armaId,
-) {
-  const configuracao =
-    window.bancoEquipamentos?.armas?.[armaId]?.visual?.arremesso;
-
-  if (!configuracao?.src) {
-    return false;
-  }
-
-  const tokenAtacante = tabuleiroCombate.querySelector(
-    `[data-id-participante="${atacanteId}"]`,
-  );
-
-  const tokenAlvo = tabuleiroCombate.querySelector(
-    `[data-id-participante="${alvoId}"]`,
-  );
-
-  if (!tokenAtacante || !tokenAlvo) {
-    return false;
-  }
-
-  const origem = tokenAtacante.getBoundingClientRect();
-  const destino = tokenAlvo.getBoundingClientRect();
-
-  const origemX = origem.left + origem.width / 2;
-  const origemY = origem.top + origem.height / 2;
-  const destinoX = destino.left + destino.width / 2;
-  const destinoY = destino.top + destino.height / 2;
-
-  const deslocamentoX = destinoX - origemX;
-  const deslocamentoY = destinoY - origemY;
-
-  const anguloTrajetoria =
-    Math.atan2(deslocamentoY, deslocamentoX) *
-    (180 / Math.PI);
-
-  const anguloInicial =
-    anguloTrajetoria +
-    (Number(configuracao.anguloBase) || 0);
-
-  const rotacoes =
-    Number(configuracao.rotacoesDuranteVoo) || 0;
-
-  const anguloFinal =
-    anguloInicial + rotacoes * 360;
-
-  const projetil = document.createElement("img");
-  projetil.className = "projetil-arma-arremessada-combate";
-  projetil.src = configuracao.src;
-  projetil.alt = "";
-  projetil.draggable = false;
-
-  projetil.style.left = `${origemX}px`;
-  projetil.style.top = `${origemY}px`;
-
-  const zoomAtual =
-  Number(cameraCombate.zoom) || 1;
-
-const larguraProjetil =
-  (Number(configuracao.larguraPx) || 64) *
-  zoomAtual;
-
-const comprimentoProjetil =
-  (Number(configuracao.comprimentoPx) || 96) *
-  zoomAtual;
-
-projetil.style.width =
-  `${larguraProjetil}px`;
-
-projetil.style.height =
-  `${comprimentoProjetil}px`;
-
-  document.body.append(projetil);
-
-  const reduzirMovimento = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-
-  const animacao = projetil.animate(
-    [
-      {
-        transform:
-          `translate(-50%, -50%) ` +
-          `rotate(${anguloInicial}deg)`,
-      },
-      {
-        transform:
-          `translate(calc(-50% + ${deslocamentoX}px), ` +
-          `calc(-50% + ${deslocamentoY}px)) ` +
-          `rotate(${anguloFinal}deg)`,
-      },
-    ],
-    {
-      duration: reduzirMovimento ? 1 : Number(configuracao.duracaoMs) || 700,
-      easing: "cubic-bezier(0.3, 0.7, 0.25, 1)",
-      fill: "forwards",
-    },
-  );
-
-  await animacao.finished.catch(() => null);
-  projetil.remove();
-
-  return true;
+function animarArremessoArma(atacanteId, alvoId, armaId) {
+  return window.AnimacoesCombate.animarArremessoArma(atacanteId, alvoId, armaId, {
+    raiz: tabuleiroCombate,
+    zoom: cameraCombate.zoom || 1,
+  });
 }
-
-window.animarArremessoAdagaDev = function testarArremessoAdaga() {
-  const combate = estadoAtualJogo.combateAtual;
-  const jogador = combate?.participantes.find(
-    (participante) => participante.tipo === "jogador",
-  );
-  const inimigo = combate?.participantes.find(
-    (participante) =>
-      participante.tipo === "inimigo" && participante.estado !== "derrotado",
-  );
-
-  return animarArremessoArma(
-  jogador?.id,
-  inimigo?.id,
-  "adaga",
-);
-};
-
-window.testarDestinosAdagaDev = async function testarDestinosAdaga() {
-  const combate = estadoAtualJogo.combateAtual;
-  const jogador = combate?.participantes.find(
-    (participante) => participante.tipo === "jogador",
-  );
-  const inimigos = combate?.participantes.filter(
-    (participante) =>
-      participante.tipo === "inimigo" && participante.estado !== "derrotado",
-  );
-
-  if (!combate || !jogador || !inimigos?.length) {
-    return {
-      sucesso: false,
-      motivo: "batalhaSemJogadorOuInimigo",
-    };
-  }
-
-  const idsTeste = new Set([
-    "adaga:teste-visual-chao",
-    "adaga:teste-visual-cravada",
-  ]);
-
-  combate.itensNoChao = (combate.itensNoChao ?? []).filter(
-    (item) => !idsTeste.has(item.equipamentoInstanciaId),
-  );
-
-  for (const participante of combate.participantes) {
-    participante.itensCravados = (participante.itensCravados ?? []).filter(
-      (item) => !idsTeste.has(item.equipamentoInstanciaId),
-    );
-  }
-
-  atualizarInterfaceTurno(combate);
-
-  const alvoChao = inimigos[0];
-  const alvoCravado = inimigos[1] ?? inimigos[0];
-  const ataqueBase = {
-    armaId: "adaga",
-    modoUso: "arremesso",
-    nome: "Adaga (arremesso)",
-  };
-
-  await animarArremessoArma(
-  jogador.id,
-  alvoChao.id,
-  "adaga",
-);
-  const resultadoChao = SistemaCombate.registrarArmaArremessadaNoChao(
-    combate,
-    jogador,
-    {
-      ...ataqueBase,
-      equipamentoInstanciaId: "adaga:teste-visual-chao",
-    },
-    alvoChao.posicao,
-  );
-  atualizarInterfaceTurno(combate);
-  apresentarDestinoArmaArremessada({
-    ...resultadoChao,
-    aplicavel: true,
-    destino: "chao",
-  }, {
-    acertou: false,
-    alvoNome: alvoChao.nome,
-  });
-
-  await esperar(650);
-  await animarArremessoArma(
-  jogador.id,
-  alvoCravado.id,
-  "adaga",
-);
-  const resultadoCravado = SistemaCombate.registrarArmaCravadaNoAlvo(
-    combate,
-    jogador,
-    alvoCravado,
-    {
-      ...ataqueBase,
-      equipamentoInstanciaId: "adaga:teste-visual-cravada",
-    },
-  );
-  atualizarInterfaceTurno(combate);
-  apresentarDestinoArmaArremessada({
-    ...resultadoCravado,
-    aplicavel: true,
-    destino: "alvo",
-  }, {
-    acertou: true,
-    alvoNome: alvoCravado.nome,
-  });
-
-  return {
-    sucesso: resultadoChao.sucesso && resultadoCravado.sucesso,
-    resultadoChao,
-    resultadoCravado,
-  };
-};
 
 function esperar(milissegundos) {
   return new Promise(function (resolve) {
@@ -775,22 +457,17 @@ function selecionarTokenJogador(evento) {
 
   token.classList.add("token-selecionado");
 
-  atualizarDestaquesMovimentoCombate(
-  combate,
-);
+  atualizarDestaquesMovimentoCombate(combate);
 
-exibirAcaoAtualCombate(
-  participante.movimentoRestante > 0
-    ? "Escolha uma célula alcançável para se movimentar."
-    : "Seu movimento deste turno já foi utilizado.",
-);
+  exibirAcaoAtualCombate(
+    participante.movimentoRestante > 0
+      ? "Escolha uma célula alcançável para se movimentar."
+      : "Seu movimento deste turno já foi utilizado.",
+  );
 }
 
-function atualizarMiraAtaqueCombate(
-  evento,
-) {
-  const combate =
-    estadoAtualJogo.combateAtual;
+function atualizarMiraAtaqueCombate(evento) {
+  const combate = estadoAtualJogo.combateAtual;
 
   if (
     !combate?.ataqueSelecionadoId ||
@@ -799,581 +476,301 @@ function atualizarMiraAtaqueCombate(
     !linhaMiraAlcanceLongoCombate
   ) {
     if (miraAtaqueCombate) {
-      miraAtaqueCombate.setAttribute(
-        "hidden",
-        "",
-      );
+      miraAtaqueCombate.setAttribute("hidden", "");
     }
 
     return;
   }
 
-  const atacante =
-    combate.participantes.find(
-      (participante) =>
-        participante.id ===
-        combate.participanteAtivoId,
-    );
+  const atacante = combate.participantes.find(
+    (participante) => participante.id === combate.participanteAtivoId,
+  );
 
-  if (
-    !atacante ||
-    atacante.tipo !== "jogador"
-  ) {
-    miraAtaqueCombate.setAttribute(
-      "hidden",
-      "",
-    );
+  if (!atacante || atacante.tipo !== "jogador") {
+    miraAtaqueCombate.setAttribute("hidden", "");
 
     return;
   }
 
-  const ataque =
-    atacante.ataques?.find(
-      (ataqueAtual) =>
-        (
-          ataqueAtual.instanciaId ??
-          ataqueAtual.id
-        ) === combate.ataqueSelecionadoId,
-    );
+  const ataque = atacante.ataques?.find(
+    (ataqueAtual) => (ataqueAtual.instanciaId ?? ataqueAtual.id) === combate.ataqueSelecionadoId,
+  );
 
   if (!ataque) {
-    miraAtaqueCombate.setAttribute(
-      "hidden",
-      "",
-    );
+    miraAtaqueCombate.setAttribute("hidden", "");
 
     return;
   }
 
   const tamanhoCelula = 140;
 
-  const origemX =
-    (atacante.posicao.coluna - 0.5) *
-    tamanhoCelula;
+  const origemX = (atacante.posicao.coluna - 0.5) * tamanhoCelula;
 
-  const origemY =
-    (atacante.posicao.linha - 0.5) *
-    tamanhoCelula;
+  const origemY = (atacante.posicao.linha - 0.5) * tamanhoCelula;
 
-  const celulaApontada =
-  evento.target.closest(
-    ".celula-combate",
-  );
+  const celulaApontada = evento.target.closest(".celula-combate");
 
-const tokenApontado =
-  evento.target.closest(
-    ".token-combate",
-  );
+  const tokenApontado = evento.target.closest(".token-combate");
 
-let posicaoApontada = null;
+  let posicaoApontada = null;
 
-if (tokenApontado) {
-  const participanteApontado =
-    combate.participantes.find(
-      (participante) =>
-        participante.id ===
-        tokenApontado.dataset.idParticipante,
+  if (tokenApontado) {
+    const participanteApontado = combate.participantes.find(
+      (participante) => participante.id === tokenApontado.dataset.idParticipante,
     );
 
-  posicaoApontada =
-    participanteApontado?.posicao ?? null;
-} else if (celulaApontada) {
-  posicaoApontada = {
-    coluna:
-      Number(
-        celulaApontada.dataset.coluna,
-      ),
+    posicaoApontada = participanteApontado?.posicao ?? null;
+  } else if (celulaApontada) {
+    posicaoApontada = {
+      coluna: Number(celulaApontada.dataset.coluna),
 
-    linha:
-      Number(
-        celulaApontada.dataset.linha,
-      ),
-  };
-}
+      linha: Number(celulaApontada.dataset.linha),
+    };
+  }
 
-if (!posicaoApontada) {
-  miraAtaqueCombate.setAttribute(
-    "hidden",
-    "",
-  );
+  if (!posicaoApontada) {
+    miraAtaqueCombate.setAttribute("hidden", "");
 
-  return;
-}
+    return;
+  }
 
-const resultadoLinhaVisao =
-  SistemaCombate.verificarLinhaVisao(
+  const resultadoLinhaVisao = SistemaCombate.verificarLinhaVisao(
     combate,
     atacante.posicao,
     posicaoApontada,
   );
 
-const linhaBloqueada =
-  resultadoLinhaVisao.sucesso &&
-  !resultadoLinhaVisao.linhaLivre;
+  const linhaBloqueada = resultadoLinhaVisao.sucesso && !resultadoLinhaVisao.linhaLivre;
 
-miraAtaqueCombate.classList.toggle(
-  "mira-bloqueada",
-  linhaBloqueada,
-);
+  miraAtaqueCombate.classList.toggle("mira-bloqueada", linhaBloqueada);
 
-const cobertura =
-  resultadoLinhaVisao.cobertura;
+  const cobertura = resultadoLinhaVisao.cobertura;
 
-let textoCobertura = "";
+  let textoCobertura = "";
 
-if (
-  !linhaBloqueada &&
-  cobertura === "coberturaParcial"
-) {
-  textoCobertura =
-    "Meia cobertura · +2 CA";
-} else if (
-  !linhaBloqueada &&
-  cobertura ===
-    "coberturaTresQuartos"
-) {
-  textoCobertura =
-    "Cobertura 3/4 · +5 CA";
-}
+  if (!linhaBloqueada && cobertura === "coberturaParcial") {
+    textoCobertura = "Meia cobertura · +2 CA";
+  } else if (!linhaBloqueada && cobertura === "coberturaTresQuartos") {
+    textoCobertura = "Cobertura 3/4 · +5 CA";
+  }
 
-if (textoCobertura) {
-  textoCoberturaMiraCombate.textContent =
-    textoCobertura;
+  if (textoCobertura) {
+    textoCoberturaMiraCombate.textContent = textoCobertura;
 
-  textoCoberturaMiraCombate.setAttribute(
-    "x",
-    (
-      posicaoApontada.coluna -
-      0.5
-    ) *
-      tamanhoCelula,
-  );
+    textoCoberturaMiraCombate.setAttribute("x", (posicaoApontada.coluna - 0.5) * tamanhoCelula);
 
-  textoCoberturaMiraCombate.setAttribute(
-    "y",
-    posicaoApontada.linha <= 2
-      ? (posicaoApontada.linha - 0.5) * tamanhoCelula + 90
-      : (posicaoApontada.linha - 0.5) * tamanhoCelula - 90,
-  );
-
-  textoCoberturaMiraCombate.removeAttribute(
-    "hidden",
-  );
-} else {
-  textoCoberturaMiraCombate.setAttribute(
-    "hidden",
-    "",
-  );
-}
-
-const ponteiroX =
-  (posicaoApontada.coluna - 0.5) *
-  tamanhoCelula;
-
-const ponteiroY =
-  (posicaoApontada.linha - 0.5) *
-  tamanhoCelula;
-
-  const direcaoX =
-    ponteiroX - origemX;
-
-  const direcaoY =
-    ponteiroY - origemY;
-
-  const maiorDeslocamento =
-    Math.max(
-      Math.abs(direcaoX),
-      Math.abs(direcaoY),
+    textoCoberturaMiraCombate.setAttribute(
+      "y",
+      posicaoApontada.linha <= 2
+        ? (posicaoApontada.linha - 0.5) * tamanhoCelula + 90
+        : (posicaoApontada.linha - 0.5) * tamanhoCelula - 90,
     );
+
+    textoCoberturaMiraCombate.removeAttribute("hidden");
+  } else {
+    textoCoberturaMiraCombate.setAttribute("hidden", "");
+  }
+
+  const ponteiroX = (posicaoApontada.coluna - 0.5) * tamanhoCelula;
+
+  const ponteiroY = (posicaoApontada.linha - 0.5) * tamanhoCelula;
+
+  const direcaoX = ponteiroX - origemX;
+
+  const direcaoY = ponteiroY - origemY;
+
+  const maiorDeslocamento = Math.max(Math.abs(direcaoX), Math.abs(direcaoY));
 
   if (maiorDeslocamento === 0) {
-    miraAtaqueCombate.setAttribute(
-      "hidden",
-      "",
-    );
+    miraAtaqueCombate.setAttribute("hidden", "");
 
     return;
   }
 
-  const alcanceNormal =
-    Number(
-      ataque.selecao?.alcance?.normal,
-    ) || 0;
+  const alcanceNormal = Number(ataque.selecao?.alcance?.normal) || 0;
 
-  const alcanceLongo =
-    Number(
-      ataque.selecao?.alcance?.longo,
-    ) || alcanceNormal;
+  const alcanceLongo = Number(ataque.selecao?.alcance?.longo) || alcanceNormal;
 
-  const fatorAlcanceNormal =
-    (
-      alcanceNormal *
-      tamanhoCelula
-    ) /
-    maiorDeslocamento;
+  const fatorAlcanceNormal = (alcanceNormal * tamanhoCelula) / maiorDeslocamento;
 
-  const fatorAlcanceLongo =
-    (
-      alcanceLongo *
-      tamanhoCelula
-    ) /
-    maiorDeslocamento;
+  const fatorAlcanceLongo = (alcanceLongo * tamanhoCelula) / maiorDeslocamento;
 
-  const fimNormalX =
-    origemX +
-    direcaoX * fatorAlcanceNormal;
+  const fimNormalX = origemX + direcaoX * fatorAlcanceNormal;
 
-  const fimNormalY =
-    origemY +
-    direcaoY * fatorAlcanceNormal;
+  const fimNormalY = origemY + direcaoY * fatorAlcanceNormal;
 
-  const fimLongoX =
-    origemX +
-    direcaoX * fatorAlcanceLongo;
+  const fimLongoX = origemX + direcaoX * fatorAlcanceLongo;
 
-  const fimLongoY =
-    origemY +
-    direcaoY * fatorAlcanceLongo;
+  const fimLongoY = origemY + direcaoY * fatorAlcanceLongo;
 
-    const formatarAlcanceMetros = (
-  alcanceCelulas,
-) => {
-  const alcanceMetros =
-    alcanceCelulas * 1.5;
+  const formatarAlcanceMetros = (alcanceCelulas) => {
+    const alcanceMetros = alcanceCelulas * 1.5;
 
-  return `${alcanceMetros.toLocaleString(
-    "pt-BR",
-    {
+    return `${alcanceMetros.toLocaleString("pt-BR", {
       maximumFractionDigits: 1,
-    },
-  )} m`;
-};
+    })} m`;
+  };
 
-textoAlcanceNormalCombate.textContent =
-  formatarAlcanceMetros(
-    alcanceNormal,
-  );
+  textoAlcanceNormalCombate.textContent = formatarAlcanceMetros(alcanceNormal);
 
-textoAlcanceNormalCombate.setAttribute(
-  "x",
-  fimNormalX,
-);
+  textoAlcanceNormalCombate.setAttribute("x", fimNormalX);
 
-textoAlcanceNormalCombate.setAttribute(
-  "y",
-  fimNormalY - 38,
-);
+  textoAlcanceNormalCombate.setAttribute("y", fimNormalY - 38);
 
-  linhaMiraAtaqueCombate.setAttribute(
-    "x1",
-    origemX,
-  );
+  linhaMiraAtaqueCombate.setAttribute("x1", origemX);
 
-  linhaMiraAtaqueCombate.setAttribute(
-    "y1",
-    origemY,
-  );
+  linhaMiraAtaqueCombate.setAttribute("y1", origemY);
 
-  linhaMiraAtaqueCombate.setAttribute(
-    "x2",
-    fimNormalX,
-  );
+  linhaMiraAtaqueCombate.setAttribute("x2", fimNormalX);
 
-  linhaMiraAtaqueCombate.setAttribute(
-    "y2",
-    fimNormalY,
-  );
+  linhaMiraAtaqueCombate.setAttribute("y2", fimNormalY);
 
   if (alcanceLongo > alcanceNormal) {
-    linhaMiraAlcanceLongoCombate.setAttribute(
-      "x1",
-      fimNormalX,
-    );
+    linhaMiraAlcanceLongoCombate.setAttribute("x1", fimNormalX);
 
-    linhaMiraAlcanceLongoCombate.setAttribute(
-      "y1",
-      fimNormalY,
-    );
+    linhaMiraAlcanceLongoCombate.setAttribute("y1", fimNormalY);
 
-    linhaMiraAlcanceLongoCombate.setAttribute(
-      "x2",
-      fimLongoX,
-    );
+    linhaMiraAlcanceLongoCombate.setAttribute("x2", fimLongoX);
 
-    linhaMiraAlcanceLongoCombate.setAttribute(
-      "y2",
-      fimLongoY,
-    );
+    linhaMiraAlcanceLongoCombate.setAttribute("y2", fimLongoY);
 
-    linhaMiraAlcanceLongoCombate.removeAttribute(
-      "hidden",
-    );
+    linhaMiraAlcanceLongoCombate.removeAttribute("hidden");
 
-    textoAlcanceLongoCombate.textContent =
-  formatarAlcanceMetros(
-    alcanceLongo,
-  );
+    textoAlcanceLongoCombate.textContent = formatarAlcanceMetros(alcanceLongo);
 
-textoAlcanceLongoCombate.setAttribute(
-  "x",
-  fimLongoX,
-);
+    textoAlcanceLongoCombate.setAttribute("x", fimLongoX);
 
-textoAlcanceLongoCombate.setAttribute(
-  "y",
-  fimLongoY - 38,
-);
+    textoAlcanceLongoCombate.setAttribute("y", fimLongoY - 38);
 
-textoAlcanceLongoCombate.removeAttribute(
-  "hidden",
-);
-  }
+    textoAlcanceLongoCombate.removeAttribute("hidden");
+  } else {
+    linhaMiraAlcanceLongoCombate.setAttribute("hidden", "");
 
-  else {
-    linhaMiraAlcanceLongoCombate.setAttribute(
-      "hidden",
-      "",
-    );
-
-    textoAlcanceLongoCombate.setAttribute(
-  "hidden",
-  "",
-);
+    textoAlcanceLongoCombate.setAttribute("hidden", "");
   }
   let pontoBloqueio = null;
 
-if (
-  linhaBloqueada &&
-  resultadoLinhaVisao.celulaBloqueada
-) {
-  pontoBloqueio = {
-    x:
-      (
-        resultadoLinhaVisao
-          .celulaBloqueada.coluna -
-        0.5
-      ) *
-      tamanhoCelula,
+  if (linhaBloqueada && resultadoLinhaVisao.celulaBloqueada) {
+    pontoBloqueio = {
+      x: (resultadoLinhaVisao.celulaBloqueada.coluna - 0.5) * tamanhoCelula,
 
-    y:
-      (
-        resultadoLinhaVisao
-          .celulaBloqueada.linha -
-        0.5
-      ) *
-      tamanhoCelula,
-  };
-} else if (
-  linhaBloqueada &&
-  resultadoLinhaVisao.barreira?.tipo ===
-    "bloqueioTotal"
-) {
-  const barreira =
-    resultadoLinhaVisao.barreira;
+      y: (resultadoLinhaVisao.celulaBloqueada.linha - 0.5) * tamanhoCelula,
+    };
+  } else if (linhaBloqueada && resultadoLinhaVisao.barreira?.tipo === "bloqueioTotal") {
+    const barreira = resultadoLinhaVisao.barreira;
 
-  const centroX =
-    (
-      Number(barreira.coluna) -
-      0.5
-    ) *
-    tamanhoCelula;
+    const centroX = (Number(barreira.coluna) - 0.5) * tamanhoCelula;
 
-  const centroY =
-    (
-      Number(barreira.linha) -
-      0.5
-    ) *
-    tamanhoCelula;
+    const centroY = (Number(barreira.linha) - 0.5) * tamanhoCelula;
 
-  pontoBloqueio = {
-    x: centroX,
-    y: centroY,
-  };
+    pontoBloqueio = {
+      x: centroX,
+      y: centroY,
+    };
 
-  if (barreira.lado === "norte") {
-    pontoBloqueio.y =
-      (
-        Number(barreira.linha) -
-        1
-      ) *
-      tamanhoCelula;
-  } else if (
-    barreira.lado === "sul"
-  ) {
-    pontoBloqueio.y =
-      Number(barreira.linha) *
-      tamanhoCelula;
-  } else if (
-    barreira.lado === "oeste"
-  ) {
-    pontoBloqueio.x =
-      (
-        Number(barreira.coluna) -
-        1
-      ) *
-      tamanhoCelula;
-  } else if (
-    barreira.lado === "leste"
-  ) {
-    pontoBloqueio.x =
-      Number(barreira.coluna) *
-      tamanhoCelula;
+    if (barreira.lado === "norte") {
+      pontoBloqueio.y = (Number(barreira.linha) - 1) * tamanhoCelula;
+    } else if (barreira.lado === "sul") {
+      pontoBloqueio.y = Number(barreira.linha) * tamanhoCelula;
+    } else if (barreira.lado === "oeste") {
+      pontoBloqueio.x = (Number(barreira.coluna) - 1) * tamanhoCelula;
+    } else if (barreira.lado === "leste") {
+      pontoBloqueio.x = Number(barreira.coluna) * tamanhoCelula;
+    }
   }
-}
 
-if (pontoBloqueio) {
-  linhaMiraAtaqueCombate.setAttribute(
-    "x2",
-    pontoBloqueio.x,
-  );
+  if (pontoBloqueio) {
+    linhaMiraAtaqueCombate.setAttribute("x2", pontoBloqueio.x);
 
-  linhaMiraAtaqueCombate.setAttribute(
-    "y2",
-    pontoBloqueio.y,
-  );
+    linhaMiraAtaqueCombate.setAttribute("y2", pontoBloqueio.y);
 
-  linhaMiraAlcanceLongoCombate.setAttribute(
-    "hidden",
-    "",
-  );
+    linhaMiraAlcanceLongoCombate.setAttribute("hidden", "");
 
-  textoAlcanceNormalCombate.setAttribute(
-    "hidden",
-    "",
-  );
+    textoAlcanceNormalCombate.setAttribute("hidden", "");
 
-  textoAlcanceLongoCombate.setAttribute(
-    "hidden",
-    "",
-  );
-} else {
-  textoAlcanceNormalCombate.removeAttribute(
-    "hidden",
-  );
+    textoAlcanceLongoCombate.setAttribute("hidden", "");
+  } else {
+    textoAlcanceNormalCombate.removeAttribute("hidden");
+  }
 
-
-}
-
-  miraAtaqueCombate.removeAttribute(
-    "hidden",
-  );
+  miraAtaqueCombate.removeAttribute("hidden");
 }
 
 function ocultarMiraAtaqueCombate() {
   if (miraAtaqueCombate) {
-    miraAtaqueCombate.setAttribute(
-      "hidden",
-      "",
-    );
+    miraAtaqueCombate.setAttribute("hidden", "");
   }
 }
 
 function selecionarAlvoCombate(evento) {
-  const token = evento.target.closest(
-    ".token-combate",
-  );
+  const token = evento.target.closest(".token-combate");
 
   if (!token) {
     return;
   }
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
   if (!combate) {
     return;
   }
 
-  const participanteAtivo =
-    combate.participantes.find(
-      (participante) =>
-        participante.id ===
-        combate.participanteAtivoId,
-    );
+  const participanteAtivo = combate.participantes.find(
+    (participante) => participante.id === combate.participanteAtivoId,
+  );
 
-  if (
-    !participanteAtivo ||
-    participanteAtivo.tipo !== "jogador"
-  ) {
+  if (!participanteAtivo || participanteAtivo.tipo !== "jogador") {
     return;
   }
 
-  const alvo =
-    combate.participantes.find(
-      (participante) =>
-        participante.id ===
-        token.dataset.idParticipante,
-    );
+  const alvo = combate.participantes.find(
+    (participante) => participante.id === token.dataset.idParticipante,
+  );
 
-  if (
-    !alvo ||
-    alvo.tipo !== "inimigo"
-  ) {
+  if (!alvo || alvo.tipo !== "inimigo") {
     return;
   }
 
   if (!combate.ataqueSelecionadoId) {
-    exibirAcaoAtualCombate(
-      "Escolha uma arma antes de selecionar o alvo.",
-    );
+    exibirAcaoAtualCombate("Escolha uma arma antes de selecionar o alvo.");
 
     return;
   }
 
-  const resultado =
-    SistemaCombate.prepararAtaque(
-      combate,
-      participanteAtivo.id,
-      alvo.id,
-      combate.ataqueSelecionadoId,
-    );
+  const resultado = SistemaCombate.prepararAtaque(
+    combate,
+    participanteAtivo.id,
+    alvo.id,
+    combate.ataqueSelecionadoId,
+  );
 
   if (!resultado.sucesso) {
-    if (
-      resultado.motivo ===
-      "alvoForaDoAlcance"
-    ) {
-      exibirAcaoAtualCombate(
-        `${alvo.nome} está fora do alcance desta arma.`,
-      );
+    if (resultado.motivo === "alvoForaDoAlcance") {
+      exibirAcaoAtualCombate(`${alvo.nome} está fora do alcance desta arma.`);
 
       return;
     }
 
-    if (
-      resultado.motivo ===
-      "semLinhaDeVisao"
-    ) {
-      exibirAcaoAtualCombate(
-        `${alvo.nome} não está na sua linha de visão.`,
-      );
+    if (resultado.motivo === "semLinhaDeVisao") {
+      exibirAcaoAtualCombate(`${alvo.nome} não está na sua linha de visão.`);
 
       return;
     }
 
-    console.warn(
-      "Ataque recusado:",
-      resultado.motivo,
-    );
+    console.warn("Ataque recusado:", resultado.motivo);
 
-    exibirAcaoAtualCombate(
-      "Este ataque não pode ser realizado agora.",
-    );
+    exibirAcaoAtualCombate("Este ataque não pode ser realizado agora.");
 
     return;
   }
 
-  combate.alvoSelecionadoId =
-    alvo.id;
+  combate.alvoSelecionadoId = alvo.id;
 
-  combate.ataqueSelecionadoId =
-    null;
+  combate.ataqueSelecionadoId = null;
 
   atualizarInterfaceTurno(combate);
 
-  iniciarRolagemAtaquePreparado(
-    resultado,
-  );
+  iniciarRolagemAtaquePreparado(resultado);
 }
 
 function iniciarRolagemAtaquePreparado(resultado) {
@@ -1404,9 +801,7 @@ function iniciarRolagemAtaquePreparado(resultado) {
 
   if (resultado.bonusCobertura > 0) {
     const nomeCobertura =
-      resultado.cobertura === "coberturaTresQuartos"
-        ? "cobertura de 3/4"
-        : "meia cobertura";
+      resultado.cobertura === "coberturaTresQuartos" ? "cobertura de 3/4" : "meia cobertura";
 
     mensagemAtaque +=
       ` ${resultado.alvo.nome} possui ${nomeCobertura} e recebe ` +
@@ -1434,9 +829,7 @@ function iniciarRolagemAtaquePreparado(resultado) {
 }
 
 function selecionarAtaqueCombate(evento) {
-  const botao = evento.target.closest(
-    ".botao-ataque-combate",
-  );
+  const botao = evento.target.closest(".botao-ataque-combate");
 
   if (!botao || botao.disabled) {
     return;
@@ -1448,16 +841,13 @@ function selecionarAtaqueCombate(evento) {
     return;
   }
 
-  combate.ataqueSelecionadoId =
-    botao.dataset.idAtaque;
+  combate.ataqueSelecionadoId = botao.dataset.idAtaque;
 
   combate.alvoSelecionadoId = null;
 
   atualizarInterfaceTurno(combate);
 
-  exibirAcaoAtualCombate(
-    "Arma selecionada. Escolha um alvo.",
-  );
+  exibirAcaoAtualCombate("Arma selecionada. Escolha um alvo.");
 }
 
 function criarParticipanteJogadorCombate(configuracao) {
@@ -1518,10 +908,7 @@ function criarParticipantesNpcsCombate(configuracoes) {
 
         tipo: npc.tipo,
         grupoId: configuracao.grupoId ?? configuracao.npcId,
-                inteligencia: structuredClone(
-          configuracao.inteligencia ??
-          null,
-        ),
+        inteligencia: structuredClone(configuracao.inteligencia ?? null),
 
         posicao: posicao,
 
@@ -1540,24 +927,20 @@ function criarParticipantesNpcsCombate(configuracoes) {
 }
 
 function aplicarMapaCombate(caminhoImagem) {
-  imagemMapaCombate.src =
-    caminhoImagem ?? "";
+  imagemMapaCombate.src = caminhoImagem ?? "";
 }
 
 function preencherIntroducaoCombate(configuracao) {
   const introducao = configuracao.introducao ?? {};
 
-  tituloIntroducaoCombate.textContent =
-    introducao.titulo ?? "Início da batalha";
+  tituloIntroducaoCombate.textContent = introducao.titulo ?? "Início da batalha";
 
-  descricaoIntroducaoCombate.textContent =
-    introducao.descricao ?? "";
+  descricaoIntroducaoCombate.textContent = introducao.descricao ?? "";
 
   listaObjetivosModalCombate.innerHTML = "";
 
   const objetivos =
-    Array.isArray(configuracao.objetivos) &&
-    configuracao.objetivos.length > 0
+    Array.isArray(configuracao.objetivos) && configuracao.objetivos.length > 0
       ? configuracao.objetivos
       : [
           {
@@ -1570,27 +953,19 @@ function preencherIntroducaoCombate(configuracao) {
     const itemObjetivo = document.createElement("li");
 
     const tituloObjetivo = document.createElement("strong");
-    tituloObjetivo.textContent =
-      objetivo.titulo ?? "Objetivo";
+    tituloObjetivo.textContent = objetivo.titulo ?? "Objetivo";
 
     const descricaoObjetivo = document.createElement("p");
-    descricaoObjetivo.textContent =
-      objetivo.descricao ?? "";
+    descricaoObjetivo.textContent = objetivo.descricao ?? "";
 
-    itemObjetivo.append(
-      tituloObjetivo,
-      descricaoObjetivo,
-    );
+    itemObjetivo.append(tituloObjetivo, descricaoObjetivo);
 
     listaObjetivosModalCombate.append(itemObjetivo);
   }
 }
 
 function iniciarEtapaIniciativaCombate(combate) {
-  const jogador = combate.participantes.find(
-    (participante) =>
-      participante.tipo === "jogador",
-  );
+  const jogador = combate.participantes.find((participante) => participante.tipo === "jogador");
 
   if (!jogador) {
     return;
@@ -1598,15 +973,11 @@ function iniciarEtapaIniciativaCombate(combate) {
 
   combate.iniciativaPendenteId = jogador.id;
 
-  SistemaCombate.rolarIniciativasInimigos(
-    combate,
-  );
+  SistemaCombate.rolarIniciativasInimigos(combate);
 
   exibirMensagemNarrativa(
     solicitacaoCombate,
-    mensagensNarrativas.iniciativa.pedir(
-      jogador.bonusIniciativa,
-    ),
+    mensagensNarrativas.iniciativa.pedir(jogador.bonusIniciativa),
   );
 
   solicitarRolagemNaCaixa(
@@ -1654,8 +1025,6 @@ function iniciarCombateDaAventura(configuracao) {
 
   const combate = SistemaCombate.iniciarCombate(configuracaoCombate);
 
-  
-
   renderizarTabuleiroCombate(combate);
 
   atualizarInterfaceTurno(combate);
@@ -1665,8 +1034,7 @@ function iniciarCombateDaAventura(configuracao) {
   preencherIntroducaoCombate(configuracao);
   abrirIntroducaoCombate();
 
-  cameraCombate.zoomMinimo =
-    obterZoomMinimoVisivel();
+  cameraCombate.zoomMinimo = obterZoomMinimoVisivel();
 
   enquadrarParticipantesCombate(combate);
 }
@@ -1674,343 +1042,210 @@ function iniciarCombateDaAventura(configuracao) {
 function fecharDecisaoCombate() {
   camadaDecisaoCombate.hidden = true;
 
-  janelaDecisaoCombate.style.left =
-  "";
+  janelaDecisaoCombate.style.left = "";
 
-janelaDecisaoCombate.style.top =
-  "";
+  janelaDecisaoCombate.style.top = "";
 
-  tituloDecisaoCombate.textContent =
-    "";
+  tituloDecisaoCombate.textContent = "";
 
-  mensagemDecisaoCombate.textContent =
-    "";
+  mensagemDecisaoCombate.textContent = "";
 }
 
-function posicionarDecisaoProximaAoParticipante(
-  participanteId,
-) {
-  const token =
-    tabuleiroCombate.querySelector(
-      `[data-id-participante="${participanteId}"]`,
-    );
+function posicionarDecisaoProximaAoParticipante(participanteId) {
+  const token = tabuleiroCombate.querySelector(`[data-id-participante="${participanteId}"]`);
 
   if (!token) {
-    janelaDecisaoCombate.style.left =
-      "50%";
+    janelaDecisaoCombate.style.left = "50%";
 
-    janelaDecisaoCombate.style.top =
-      "50%";
+    janelaDecisaoCombate.style.top = "50%";
 
     return;
   }
 
-  const retanguloToken =
-    token.getBoundingClientRect();
+  const retanguloToken = token.getBoundingClientRect();
 
-  const retanguloJanela =
-    janelaDecisaoCombate
-      .getBoundingClientRect();
+  const retanguloJanela = janelaDecisaoCombate.getBoundingClientRect();
 
   const margemTela = 16;
   const distanciaToken = 18;
 
-  const metadeLarguraJanela =
-    retanguloJanela.width / 2;
+  const metadeLarguraJanela = retanguloJanela.width / 2;
 
-  const metadeAlturaJanela =
-    retanguloJanela.height / 2;
+  const metadeAlturaJanela = retanguloJanela.height / 2;
 
-  let centroHorizontal =
-    retanguloToken.right +
-    distanciaToken +
-    metadeLarguraJanela;
+  let centroHorizontal = retanguloToken.right + distanciaToken + metadeLarguraJanela;
 
-  const ultrapassaDireita =
-    centroHorizontal +
-      metadeLarguraJanela >
-    window.innerWidth -
-      margemTela;
+  const ultrapassaDireita = centroHorizontal + metadeLarguraJanela > window.innerWidth - margemTela;
 
   if (ultrapassaDireita) {
-    centroHorizontal =
-      retanguloToken.left -
-      distanciaToken -
-      metadeLarguraJanela;
+    centroHorizontal = retanguloToken.left - distanciaToken - metadeLarguraJanela;
   }
 
-  centroHorizontal =
-    Math.max(
-      margemTela +
-        metadeLarguraJanela,
+  centroHorizontal = Math.max(
+    margemTela + metadeLarguraJanela,
 
-      Math.min(
-        window.innerWidth -
-          margemTela -
-          metadeLarguraJanela,
+    Math.min(
+      window.innerWidth - margemTela - metadeLarguraJanela,
 
-        centroHorizontal,
-      ),
-    );
+      centroHorizontal,
+    ),
+  );
 
-  let centroVertical =
-    retanguloToken.top +
-    retanguloToken.height / 2;
+  let centroVertical = retanguloToken.top + retanguloToken.height / 2;
 
-  centroVertical =
-    Math.max(
-      margemTela +
-        metadeAlturaJanela,
+  centroVertical = Math.max(
+    margemTela + metadeAlturaJanela,
 
-      Math.min(
-        window.innerHeight -
-          margemTela -
-          metadeAlturaJanela,
+    Math.min(
+      window.innerHeight - margemTela - metadeAlturaJanela,
 
-        centroVertical,
-      ),
-    );
+      centroVertical,
+    ),
+  );
 
-  janelaDecisaoCombate.style.left =
-    `${centroHorizontal}px`;
+  janelaDecisaoCombate.style.left = `${centroHorizontal}px`;
 
-  janelaDecisaoCombate.style.top =
-    `${centroVertical}px`;
+  janelaDecisaoCombate.style.top = `${centroVertical}px`;
 }
 
-function abrirConfirmacaoSaidaZona(
-  decisao,
-) {
-  const nomesAmeacadores =
-    decisao.ameacadores.map(
-      function (ameacador) {
-        return ameacador.nome;
-      },
-    );
+function abrirConfirmacaoSaidaZona(decisao) {
+  const nomesAmeacadores = decisao.ameacadores.map(function (ameacador) {
+    return ameacador.nome;
+  });
 
   const textoAmeacadores =
-    nomesAmeacadores.length === 1
-      ? nomesAmeacadores[0]
-      : nomesAmeacadores.join(", ");
+    nomesAmeacadores.length === 1 ? nomesAmeacadores[0] : nomesAmeacadores.join(", ");
 
-  tituloDecisaoCombate.textContent =
-    "Sair da zona de influência?";
+  tituloDecisaoCombate.textContent = "Sair da zona de influência?";
 
   mensagemDecisaoCombate.textContent =
     `Você está saindo do alcance de um inimigo sem desengajar. ` +
     "Se continuar, poderá sofrer um ataque de oportunidade.";
 
-  botaoConfirmarDecisaoCombate.textContent =
-    "Continuar";
+  botaoConfirmarDecisaoCombate.textContent = "Continuar";
 
-  botaoCancelarDecisaoCombate.textContent =
-    "Cancelar";
+  botaoCancelarDecisaoCombate.textContent = "Cancelar";
 
-  camadaDecisaoCombate.hidden =
-    false;
+  camadaDecisaoCombate.hidden = false;
 
-  window.requestAnimationFrame(
-  function exibirDecisaoProximaAoPersonagem() {
-    posicionarDecisaoProximaAoParticipante(
-      decisao.participanteId,
-    );
+  window.requestAnimationFrame(function exibirDecisaoProximaAoPersonagem() {
+    posicionarDecisaoProximaAoParticipante(decisao.participanteId);
 
     botaoCancelarDecisaoCombate.focus();
-  },
-);
+  });
 }
 
-function abrirOfertaAtaqueOportunidade(
-  decisao,
-) {
-  const combate =
-    estadoAtualJogo.combateAtual;
+function abrirOfertaAtaqueOportunidade(decisao) {
+  const combate = estadoAtualJogo.combateAtual;
 
-  const alvo =
-    combate?.participantes.find(
-      function (participante) {
-        return (
-          participante.id ===
-          decisao.alvoId
-        );
-      },
-    );
+  const alvo = combate?.participantes.find(function (participante) {
+    return participante.id === decisao.alvoId;
+  });
 
-  const nomeAlvo =
-    alvo?.nome ?? "O inimigo";
+  const nomeAlvo = alvo?.nome ?? "O inimigo";
 
-  tituloDecisaoCombate.textContent =
-    "Ataque de oportunidade";
+  tituloDecisaoCombate.textContent = "Ataque de oportunidade";
 
   mensagemDecisaoCombate.textContent =
     `Um inimigo está saindo do seu alcance. ` +
     "Deseja gastar sua reação para realizar um ataque de oportunidade?";
 
-  botaoConfirmarDecisaoCombate.textContent =
-    "Realizar ataque";
+  botaoConfirmarDecisaoCombate.textContent = "Realizar ataque";
 
-  botaoCancelarDecisaoCombate.textContent =
-    "Deixar passar";
+  botaoCancelarDecisaoCombate.textContent = "Deixar passar";
 
-  camadaDecisaoCombate.hidden =
-    false;
+  camadaDecisaoCombate.hidden = false;
 
-  window.requestAnimationFrame(
-    function exibirOfertaProximaAoPersonagem() {
-      posicionarDecisaoProximaAoParticipante(
-        decisao.participanteId,
-      );
+  window.requestAnimationFrame(function exibirOfertaProximaAoPersonagem() {
+    posicionarDecisaoProximaAoParticipante(decisao.participanteId);
 
-      botaoCancelarDecisaoCombate.focus();
-    },
-  );
+    botaoCancelarDecisaoCombate.focus();
+  });
 }
 
-function abrirDecisaoPendenteCombate(
-  decisao,
-) {
+function abrirDecisaoPendenteCombate(decisao) {
   if (!decisao) {
     return false;
   }
 
-  if (
-    decisao.tipo ===
-    "confirmarSaidaZona"
-  ) {
-    abrirConfirmacaoSaidaZona(
-      decisao,
-    );
+  if (decisao.tipo === "confirmarSaidaZona") {
+    abrirConfirmacaoSaidaZona(decisao);
 
     return true;
   }
 
-  if (
-    decisao.tipo ===
-    "oferecerAtaqueOportunidade"
-  ) {
-    abrirOfertaAtaqueOportunidade(
-      decisao,
-    );
+  if (decisao.tipo === "oferecerAtaqueOportunidade") {
+    abrirOfertaAtaqueOportunidade(decisao);
 
     return true;
   }
 
-  console.warn(
-    "Tipo de decisão não reconhecido:",
-    decisao.tipo,
-  );
+  console.warn("Tipo de decisão não reconhecido:", decisao.tipo);
 
   return false;
 }
 
 async function confirmarDecisaoCombate() {
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-  const decisao =
-    combate?.decisaoPendente;
+  const decisao = combate?.decisaoPendente;
 
-    if (
-  decisao?.tipo ===
-  "oferecerAtaqueOportunidade"
-) {
-  const inimigo =
-    combate.participantes.find(
-      function (participante) {
-        return (
-          participante.id ===
-          decisao.alvoId
-        );
-      },
-    );
+  if (decisao?.tipo === "oferecerAtaqueOportunidade") {
+    const inimigo = combate.participantes.find(function (participante) {
+      return participante.id === decisao.alvoId;
+    });
 
-  if (!inimigo) {
-    combate.decisaoPendente = null;
+    if (!inimigo) {
+      combate.decisaoPendente = null;
 
-    fecharDecisaoCombate();
+      fecharDecisaoCombate();
 
-    return;
-  }
-
-  const destino =
-    structuredClone(
-      decisao.destino,
-    );
-
-      const posicaoInicial =
-    structuredClone(
-      inimigo.posicao,
-    );
-
-  const caminhoPlanejado =
-    SistemaCombate.calcularCaminhoMovimento(
-      combate,
-      inimigo,
-      destino,
-    )?.caminho ?? [];
-
-  fecharDecisaoCombate();
-
-    const movimentoConcluido = moverParticipante(
-    inimigo,
-    destino.coluna,
-    destino.linha,
-    {
-      reacaoJogador: "usar",
-    },
-  );
-
-    if (movimentoConcluido) {
-    const token =
-      tabuleiroCombate.querySelector(
-        `[data-id-participante="${inimigo.id}"]`,
-      );
-
-    if (token) {
-      token.style.gridColumn =
-        posicaoInicial.coluna;
-
-      token.style.gridRow =
-        posicaoInicial.linha;
+      return;
     }
 
-    await animarMovimentoInimigo(
-      inimigo,
-      caminhoPlanejado,
-    );
+    const destino = structuredClone(decisao.destino);
 
-    atualizarInterfaceTurno(combate);
+    const posicaoInicial = structuredClone(inimigo.posicao);
+
+    const caminhoPlanejado =
+      SistemaCombate.calcularCaminhoMovimento(combate, inimigo, destino)?.caminho ?? [];
+
+    fecharDecisaoCombate();
+
+    const movimentoConcluido = moverParticipante(inimigo, destino.coluna, destino.linha, {
+      reacaoJogador: "usar",
+    });
+
+    if (movimentoConcluido) {
+      const token = tabuleiroCombate.querySelector(`[data-id-participante="${inimigo.id}"]`);
+
+      if (token) {
+        token.style.gridColumn = posicaoInicial.coluna;
+
+        token.style.gridRow = posicaoInicial.linha;
+      }
+
+      await animarMovimentoInimigo(inimigo, caminhoPlanejado);
+
+      atualizarInterfaceTurno(combate);
+    }
+
+    if (movimentoConcluido && combate.status === "ativo") {
+      processarTurnoAtual(combate);
+    }
+
+    return;
   }
 
-  if (
-    movimentoConcluido &&
-    combate.status === "ativo"
-  ) {
-    processarTurnoAtual(combate);
-  }
-
-  return;
-}
-
-  if (
-    !decisao ||
-    decisao.tipo !==
-      "confirmarSaidaZona"
-  ) {
+  if (!decisao || decisao.tipo !== "confirmarSaidaZona") {
     fecharDecisaoCombate();
 
     return;
   }
 
-  const participante =
-    combate.participantes.find(
-      function (participanteAtual) {
-        return (
-          participanteAtual.id ===
-          decisao.participanteId
-        );
-      },
-    );
+  const participante = combate.participantes.find(function (participanteAtual) {
+    return participanteAtual.id === decisao.participanteId;
+  });
 
   if (!participante) {
     combate.decisaoPendente = null;
@@ -2020,111 +1255,66 @@ async function confirmarDecisaoCombate() {
     return;
   }
 
-  const destino =
-    structuredClone(
-      decisao.destino,
-    );
+  const destino = structuredClone(decisao.destino);
 
   fecharDecisaoCombate();
 
-  moverParticipante(
-    participante,
-    destino.coluna,
-    destino.linha,
-    {
-      confirmarSaidaZona: true,
-    },
-  );
+  moverParticipante(participante, destino.coluna, destino.linha, {
+    confirmarSaidaZona: true,
+  });
 }
 
 async function cancelarDecisaoCombate() {
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-    const decisao =
-  combate?.decisaoPendente;
+  const decisao = combate?.decisaoPendente;
 
-if (
-  decisao?.tipo ===
-  "oferecerAtaqueOportunidade"
-) {
-  const inimigo =
-    combate.participantes.find(
-      function (participante) {
-        return (
-          participante.id ===
-          decisao.alvoId
-        );
-      },
-    );
+  if (decisao?.tipo === "oferecerAtaqueOportunidade") {
+    const inimigo = combate.participantes.find(function (participante) {
+      return participante.id === decisao.alvoId;
+    });
 
-  if (!inimigo) {
-    combate.decisaoPendente = null;
+    if (!inimigo) {
+      combate.decisaoPendente = null;
+
+      fecharDecisaoCombate();
+
+      return;
+    }
+
+    const destino = structuredClone(decisao.destino);
+
+    const posicaoInicial = structuredClone(inimigo.posicao);
+
+    const caminhoPlanejado =
+      SistemaCombate.calcularCaminhoMovimento(combate, inimigo, destino)?.caminho ?? [];
 
     fecharDecisaoCombate();
 
-    return;
-  }
-
-  const destino =
-    structuredClone(
-      decisao.destino,
-    );
-
-      const posicaoInicial =
-    structuredClone(
-      inimigo.posicao,
-    );
-
-  const caminhoPlanejado =
-    SistemaCombate.calcularCaminhoMovimento(
-      combate,
-      inimigo,
-      destino,
-    )?.caminho ?? [];
-
-  fecharDecisaoCombate();
-
-      const movimentoConcluido = moverParticipante(
-    inimigo,
-    destino.coluna,
-    destino.linha,
-    {
+    const movimentoConcluido = moverParticipante(inimigo, destino.coluna, destino.linha, {
       reacaoJogador: "ignorar",
-    },
-  );
+    });
 
-  if (movimentoConcluido) {
-    const token =
-      tabuleiroCombate.querySelector(
-        `[data-id-participante="${inimigo.id}"]`,
-      );
+    if (movimentoConcluido) {
+      const token = tabuleiroCombate.querySelector(`[data-id-participante="${inimigo.id}"]`);
 
-    if (token) {
-      token.style.gridColumn =
-        posicaoInicial.coluna;
+      if (token) {
+        token.style.gridColumn = posicaoInicial.coluna;
 
-      token.style.gridRow =
-        posicaoInicial.linha;
+        token.style.gridRow = posicaoInicial.linha;
+      }
+
+      await animarMovimentoInimigo(inimigo, caminhoPlanejado);
+
+      atualizarInterfaceTurno(combate);
     }
 
-    await animarMovimentoInimigo(
-      inimigo,
-      caminhoPlanejado,
-    );
+    if (movimentoConcluido && combate.status === "ativo") {
+      processarTurnoAtual(combate);
+    }
 
-    atualizarInterfaceTurno(combate);
+    return;
   }
-
-  if (
-    movimentoConcluido &&
-    combate.status === "ativo"
-  ) {
-    processarTurnoAtual(combate);
-  }
-
-  return;
-}
 
   if (combate) {
     combate.decisaoPendente = null;
@@ -2132,74 +1322,54 @@ if (
 
   fecharDecisaoCombate();
 
-  exibirAcaoAtualCombate(
-    "Ação Cancelada",
-  );
+  exibirAcaoAtualCombate("Ação Cancelada");
 }
 
-function moverParticipante(participante, coluna, linha,opcoes = {}) {
+function moverParticipante(participante, coluna, linha, opcoes = {}) {
   const combate = estadoAtualJogo.combateAtual;
 
-  const resultadoMovimento =
-    SistemaCombate.movimentarParticipante(
-      combate,
-      participante.id,
-      coluna,
-      linha,
-      opcoes,
-    );
+  const resultadoMovimento = SistemaCombate.movimentarParticipante(
+    combate,
+    participante.id,
+    coluna,
+    linha,
+    opcoes,
+  );
 
   if (!resultadoMovimento.sucesso) {
-  if (
-    resultadoMovimento
-      .confirmacaoNecessaria &&
-    resultadoMovimento.decisao
-      ?.tipo ===
-      "confirmarSaidaZona"
-  ) {
-    abrirDecisaoPendenteCombate(
-  resultadoMovimento.decisao,
-);
+    if (
+      resultadoMovimento.confirmacaoNecessaria &&
+      resultadoMovimento.decisao?.tipo === "confirmarSaidaZona"
+    ) {
+      abrirDecisaoPendenteCombate(resultadoMovimento.decisao);
+
+      return false;
+    }
+
+    console.warn("Movimento recusado:", resultadoMovimento.motivo);
 
     return false;
   }
 
-  console.warn(
-    "Movimento recusado:",
-    resultadoMovimento.motivo,
-  );
-
-  return false;
-}
-
   const mensagensOportunidade = [];
 
-  for (
-    const ataqueExecutado of
-    resultadoMovimento.ataquesOportunidade
-  ) {
-    const resultado =
-      ataqueExecutado.resultado;
+  for (const ataqueExecutado of resultadoMovimento.ataquesOportunidade) {
+    const resultado = ataqueExecutado.resultado;
 
     if (!resultado.sucesso) {
       continue;
     }
 
-    const nomeAmeacador =
-      resultado.ameacador.nome;
+    const nomeAmeacador = resultado.ameacador.nome;
 
-    const nomeAtaque =
-      resultado.ataque.nome;
+    const nomeAtaque = resultado.ataque.nome;
 
     let mensagem;
 
     if (!resultado.resultadoAtaque.acertou) {
-      mensagem =
-        `${nomeAmeacador} desfere um ataque de oportunidade, ` +
-        `mas erra.`;
+      mensagem = `${nomeAmeacador} desfere um ataque de oportunidade, ` + `mas erra.`;
     } else {
-      const dano =
-        resultado.resultadoDano?.dano ?? 0;
+      const dano = resultado.resultadoDano?.dano ?? 0;
 
       mensagem =
         `${nomeAmeacador} acerta um ataque de oportunidade ` +
@@ -2208,49 +1378,29 @@ function moverParticipante(participante, coluna, linha,opcoes = {}) {
 
     mensagensOportunidade.push(mensagem);
 
-    adicionarEventoHistoricoCombate(
-      "Ataque de oportunidade",
-      mensagem,
-    );
+    adicionarEventoHistoricoCombate("Ataque de oportunidade", mensagem);
   }
 
   if (participante.tipo === "jogador") {
-    let mensagemMovimento =
-      "Você se moveu.";
+    let mensagemMovimento = "Você se moveu.";
 
-    if (
-      resultadoMovimento.movimentoInterrompido
-    ) {
-      mensagemMovimento =
-        "Seu movimento foi interrompido.";
-    } else if (
-      mensagensOportunidade.length > 0
-    ) {
-      mensagemMovimento =
-        mensagensOportunidade.join(" ");
+    if (resultadoMovimento.movimentoInterrompido) {
+      mensagemMovimento = "Seu movimento foi interrompido.";
+    } else if (mensagensOportunidade.length > 0) {
+      mensagemMovimento = mensagensOportunidade.join(" ");
     }
 
-    adicionarEventoHistoricoCombate(
-      `${participante.nome} se moveu.`,
-      mensagemMovimento,
-    );
+    adicionarEventoHistoricoCombate(`${participante.nome} se moveu.`, mensagemMovimento);
 
-    exibirAcaoAtualCombate(
-      mensagemMovimento,
-    );
+    exibirAcaoAtualCombate(mensagemMovimento);
   }
 
-  const token =
-    tabuleiroCombate.querySelector(
-      `[data-id-participante="${participante.id}"]`,
-    );
+  const token = tabuleiroCombate.querySelector(`[data-id-participante="${participante.id}"]`);
 
   if (token) {
-    token.style.gridColumn =
-      resultadoMovimento.posicaoFinal.coluna;
+    token.style.gridColumn = resultadoMovimento.posicaoFinal.coluna;
 
-    token.style.gridRow =
-      resultadoMovimento.posicaoFinal.linha;
+    token.style.gridRow = resultadoMovimento.posicaoFinal.linha;
   }
 
   atualizarInterfaceTurno(combate);
@@ -2261,10 +1411,7 @@ function moverParticipante(participante, coluna, linha,opcoes = {}) {
     return true;
   }
 
-  const resultadoObjetivo =
-    SistemaCombate.verificarObjetivosCombate(
-      combate,
-    );
+  const resultadoObjetivo = SistemaCombate.verificarObjetivosCombate(combate);
 
   if (resultadoObjetivo) {
     notificarFimCombate(combate);
@@ -2312,26 +1459,17 @@ function iniciarArrasteToken(evento) {
 }
 
 function continuarArrasteToken(evento) {
-  if (
-    !tokenArrastado ||
-    evento.pointerId !== inicioArraste.ponteiroId
-  ) {
+  if (!tokenArrastado || evento.pointerId !== inicioArraste.ponteiroId) {
     return;
   }
 
-  const zoom =
-    cameraCombate.zoom || 1;
+  const zoom = cameraCombate.zoom || 1;
 
-  const deslocamentoX =
-    (evento.clientX - inicioArraste.x) /
-    zoom;
+  const deslocamentoX = (evento.clientX - inicioArraste.x) / zoom;
 
-  const deslocamentoY =
-    (evento.clientY - inicioArraste.y) /
-    zoom;
+  const deslocamentoY = (evento.clientY - inicioArraste.y) / zoom;
 
-  tokenArrastado.style.translate =
-    `${deslocamentoX}px ${deslocamentoY}px`;
+  tokenArrastado.style.translate = `${deslocamentoX}px ${deslocamentoY}px`;
 }
 
 function finalizarArrasteToken(evento) {
@@ -2361,7 +1499,7 @@ function finalizarArrasteToken(evento) {
     moverParticipante(participante, coluna, linha);
   }
 
-    tokenArrastado.style.translate = "";
+  tokenArrastado.style.translate = "";
 
   tokenArrastado.classList.remove("token-arrastando");
 
@@ -2373,83 +1511,53 @@ function finalizarArrasteToken(evento) {
 }
 
 async function moverTokenSelecionado(evento) {
-  const celula =
-    evento.target.closest(".celula-combate");
+  const celula = evento.target.closest(".celula-combate");
 
   if (!celula) {
     return;
   }
 
-  const combate =
-    estadoAtualJogo.combateAtual;
+  const combate = estadoAtualJogo.combateAtual;
 
-  if (
-    !combate ||
-    !combate.participanteSelecionadoId
-  ) {
+  if (!combate || !combate.participanteSelecionadoId) {
     return;
   }
 
-  const participante =
-    combate.participantes.find(
-      (participante) =>
-        participante.id ===
-        combate.participanteSelecionadoId,
-    );
+  const participante = combate.participantes.find(
+    (participante) => participante.id === combate.participanteSelecionadoId,
+  );
 
   if (!participante) {
     return;
   }
 
-  const coluna =
-    Number(celula.dataset.coluna);
+  const coluna = Number(celula.dataset.coluna);
 
-  const linha =
-    Number(celula.dataset.linha);
+  const linha = Number(celula.dataset.linha);
 
-  const posicaoInicial =
-    structuredClone(
-      participante.posicao,
-    );
+  const posicaoInicial = structuredClone(participante.posicao);
 
   const caminho =
-    SistemaCombate.calcularCaminhoMovimento(
-      combate,
-      participante,
-      {
-        coluna,
-        linha,
-      },
-    )?.caminho ?? [];
-
-  const movimentoConcluido =
-    moverParticipante(
-      participante,
+    SistemaCombate.calcularCaminhoMovimento(combate, participante, {
       coluna,
       linha,
-    );
+    })?.caminho ?? [];
+
+  const movimentoConcluido = moverParticipante(participante, coluna, linha);
 
   if (!movimentoConcluido) {
     return;
   }
 
-  const token =
-    tabuleiroCombate.querySelector(
-      `[data-id-participante="${participante.id}"]`,
-    );
+  const token = tabuleiroCombate.querySelector(`[data-id-participante="${participante.id}"]`);
 
   if (token) {
-    token.style.gridColumn =
-      posicaoInicial.coluna;
+    token.style.gridColumn = posicaoInicial.coluna;
 
-    token.style.gridRow =
-      posicaoInicial.linha;
+    token.style.gridRow = posicaoInicial.linha;
   }
 
-  await animarMovimentoInimigo(
-    participante,
-    caminho,
-  );
+  await animarMovimentoInimigo(participante, caminho);
 
   atualizarInterfaceTurno(combate);
 }
@@ -2625,22 +1733,13 @@ function obterGruposDanoParaRolagem(ataque, critico, multiplicador = 1) {
   });
 }
 
-function oferecerGrazeAposErro(
-  combate,
-  resultadoAtaque,
-) {
-  const operacao =
-    resultadoAtaque
-      .efeitosAposErro
-      ?.find(
-        efeito =>
-          efeito.tipo ===
-            "causarDanoSemAcerto" &&
-          efeito.origem?.tipo ===
-            "maestria" &&
-          efeito.origem?.id ===
-            "graze",
-      );
+function oferecerGrazeAposErro(combate, resultadoAtaque) {
+  const operacao = resultadoAtaque.efeitosAposErro?.find(
+    (efeito) =>
+      efeito.tipo === "causarDanoSemAcerto" &&
+      efeito.origem?.tipo === "maestria" &&
+      efeito.origem?.id === "graze",
+  );
 
   if (!operacao) {
     return false;
@@ -2648,101 +1747,74 @@ function oferecerGrazeAposErro(
 
   acoesCombate.innerHTML = "";
 
-  const botaoUsar =
-    document.createElement("button");
+  const botaoUsar = document.createElement("button");
 
   botaoUsar.type = "button";
-  botaoUsar.textContent =
-    "Usar Graze";
+  botaoUsar.textContent = "Usar Graze";
 
-  const botaoIgnorar =
-    document.createElement("button");
+  const botaoIgnorar = document.createElement("button");
 
   botaoIgnorar.type = "button";
-  botaoIgnorar.textContent =
-    "Ignorar";
+  botaoIgnorar.textContent = "Ignorar";
 
-  botaoUsar.addEventListener(
-    "click",
-    function usarGraze() {
-      const resultadoDano =
-        SistemaCombate
-          .aplicarDanoSemAcerto(
-            combate,
-            operacao,
-          );
+  botaoUsar.addEventListener("click", function usarGraze() {
+    const resultadoDano = SistemaCombate.aplicarDanoSemAcerto(combate, operacao);
 
-      if (!resultadoDano.sucesso) {
-        console.warn(
-          "Não foi possível aplicar Graze:",
-          resultadoDano.motivo,
-        );
+    if (!resultadoDano.sucesso) {
+      console.warn("Não foi possível aplicar Graze:", resultadoDano.motivo);
 
-        return;
-      }
+      return;
+    }
 
-      acoesCombate.innerHTML = "";
+    acoesCombate.innerHTML = "";
 
-      adicionarEventoHistoricoCombate(
-        resultadoDano.foiDerrotado
-          ? `${resultadoDano.alvo.nome} foi derrotado`
-          : `${resultadoDano.alvo.nome} sofreu dano de Graze`,
+    adicionarEventoHistoricoCombate(
+      resultadoDano.foiDerrotado
+        ? `${resultadoDano.alvo.nome} foi derrotado`
+        : `${resultadoDano.alvo.nome} sofreu dano de Graze`,
 
-        resultadoDano.foiDerrotado
-          ? `Graze derrotou ${resultadoDano.alvo.nome}.`
-          : `Graze causou ${resultadoDano.dano} de dano.`,
-      );
+      resultadoDano.foiDerrotado
+        ? `Graze derrotou ${resultadoDano.alvo.nome}.`
+        : `Graze causou ${resultadoDano.dano} de dano.`,
+    );
 
-      exibirAcaoAtualCombate(
-        resultadoDano.foiDerrotado
-          ? `Graze derrotou ${resultadoDano.alvo.nome}.`
-          : `Graze causou ${resultadoDano.dano} de dano.`,
-      );
+    exibirAcaoAtualCombate(
+      resultadoDano.foiDerrotado
+        ? `Graze derrotou ${resultadoDano.alvo.nome}.`
+        : `Graze causou ${resultadoDano.dano} de dano.`,
+    );
 
-      atualizarInterfaceTurno(combate);
+    atualizarInterfaceTurno(combate);
 
-      if (resultadoDano.resultadoCombate) {
-        notificarFimCombate(combate);
-      }
+    if (resultadoDano.resultadoCombate) {
+      notificarFimCombate(combate);
+    }
 
-      solicitacaoCombate.textContent =
-        resultadoDano.foiDerrotado
-          ? `${resultadoDano.alvo.nome} foi derrotado.`
-          : `${resultadoDano.alvo.nome} sofreu ${resultadoDano.dano} de dano de Graze.`;
+    solicitacaoCombate.textContent = resultadoDano.foiDerrotado
+      ? `${resultadoDano.alvo.nome} foi derrotado.`
+      : `${resultadoDano.alvo.nome} sofreu ${resultadoDano.dano} de dano de Graze.`;
 
-      solicitacaoCombate.hidden = false;
-    },
-  );
+    solicitacaoCombate.hidden = false;
+  });
 
-  botaoIgnorar.addEventListener(
-    "click",
-    function ignorarGraze() {
-      acoesCombate.innerHTML = "";
+  botaoIgnorar.addEventListener("click", function ignorarGraze() {
+    acoesCombate.innerHTML = "";
 
-      solicitacaoCombate.textContent =
-        "O ataque errou e Graze não foi utilizado.";
+    solicitacaoCombate.textContent = "O ataque errou e Graze não foi utilizado.";
 
-      solicitacaoCombate.hidden = false;
-    },
-  );
+    solicitacaoCombate.hidden = false;
+  });
 
-  acoesCombate.append(
-    botaoUsar,
-    botaoIgnorar,
-  );
+  acoesCombate.append(botaoUsar, botaoIgnorar);
 
-  solicitacaoCombate.textContent =
-    `O ataque errou. Usar Graze para causar ${operacao.quantidade} de dano?`;
+  solicitacaoCombate.textContent = `O ataque errou. Usar Graze para causar ${operacao.quantidade} de dano?`;
 
   solicitacaoCombate.hidden = false;
 
   return true;
 }
 
-function apresentarDestinoArmaArremessada(
-  resultadoDestino,
-  { acertou, alvoNome },
-) {
+function apresentarDestinoArmaArremessada(resultadoDestino, { acertou, alvoNome }) {
   if (!resultadoDestino?.sucesso || !resultadoDestino.aplicavel) {
     return false;
   }
@@ -2774,15 +1846,13 @@ async function resolverAtaqueJogador(resultadoRolagem) {
     return;
   }
 
-  if (
-  resultadoAtaque.ataque.modoUso === "arremesso"
-) {
-  await animarArremessoArma(
-    resultadoAtaque.atacante.id,
-    resultadoAtaque.alvo.id,
-    resultadoAtaque.ataque.armaId,
-  );
-}
+  if (resultadoAtaque.ataque.modoUso === "arremesso") {
+    await animarArremessoArma(
+      resultadoAtaque.atacante.id,
+      resultadoAtaque.alvo.id,
+      resultadoAtaque.ataque.armaId,
+    );
+  }
 
   atualizarInterfaceTurno(combate);
 
@@ -2796,27 +1866,20 @@ async function resolverAtaqueJogador(resultadoRolagem) {
 
     exibirAcaoAtualCombate("Você errou o ataque.");
 
-    const grazeFoiOferecido =
-  oferecerGrazeAposErro(
-    combate,
-    resultadoAtaque,
-  );
+    const grazeFoiOferecido = oferecerGrazeAposErro(combate, resultadoAtaque);
 
-if (grazeFoiOferecido) {
-  return;
-}
+    if (grazeFoiOferecido) {
+      return;
+    }
 
     solicitacaoCombate.textContent = "O ataque errou.";
 
     solicitacaoCombate.hidden = false;
 
-    apresentarDestinoArmaArremessada(
-      resultadoAtaque.destinoArmaArremessada,
-      {
-        acertou: false,
-        alvoNome: resultadoAtaque.alvo.nome,
-      },
-    );
+    apresentarDestinoArmaArremessada(resultadoAtaque.destinoArmaArremessada, {
+      acertou: false,
+      alvoNome: resultadoAtaque.alvo.nome,
+    });
 
     return;
   }
@@ -2895,10 +1958,7 @@ function aplicarCriticoNaRolagem(resultadoRolagem, critico) {
   };
 }
 
-function oferecerCleaveAposDano(
-  combate,
-  resultadoDano,
-) {
+function oferecerCleaveAposDano(combate, resultadoDano) {
   const operacao = resultadoDano.efeitosDisponiveis?.find(
     (efeito) =>
       efeito.tipo === "permitirAtaqueAdicional" &&
@@ -2963,35 +2023,23 @@ function oferecerCleaveAposDano(
   });
 
   acoesCombate.append(botaoIgnorar);
-  solicitacaoCombate.textContent =
-    "Cleave permite atacar outra criatura próxima ao primeiro alvo.";
+  solicitacaoCombate.textContent = "Cleave permite atacar outra criatura próxima ao primeiro alvo.";
   solicitacaoCombate.hidden = false;
 
   return true;
 }
 
-function oferecerToppleAposDano(
-  combate,
-  resultadoDano,
-) {
+function oferecerToppleAposDano(combate, resultadoDano) {
   if (resultadoDano.foiDerrotado) {
     return false;
   }
 
-  const operacao =
-    resultadoDano
-      .efeitosDisponiveis
-      ?.find(
-        efeito =>
-          efeito.tipo ===
-            "solicitarSalvaguarda" &&
-
-          efeito.origem?.tipo ===
-            "maestria" &&
-
-          efeito.origem?.id ===
-            "topple",
-      );
+  const operacao = resultadoDano.efeitosDisponiveis?.find(
+    (efeito) =>
+      efeito.tipo === "solicitarSalvaguarda" &&
+      efeito.origem?.tipo === "maestria" &&
+      efeito.origem?.id === "topple",
+  );
 
   if (!operacao) {
     return false;
@@ -2999,135 +2047,88 @@ function oferecerToppleAposDano(
 
   acoesCombate.innerHTML = "";
 
-  const botaoUsar =
-    document.createElement("button");
+  const botaoUsar = document.createElement("button");
 
   botaoUsar.type = "button";
-  botaoUsar.textContent =
-    "Usar Topple";
+  botaoUsar.textContent = "Usar Topple";
 
-  const botaoIgnorar =
-    document.createElement("button");
+  const botaoIgnorar = document.createElement("button");
 
   botaoIgnorar.type = "button";
-  botaoIgnorar.textContent =
-    "Ignorar";
+  botaoIgnorar.textContent = "Ignorar";
 
-  botaoUsar.addEventListener(
-    "click",
-    function usarTopple() {
-      const resultado =
-        SistemaCombate
-          .resolverSalvaguardaCombate(
-            combate,
-            operacao,
-          );
+  botaoUsar.addEventListener("click", function usarTopple() {
+    const resultado = SistemaCombate.resolverSalvaguardaCombate(combate, operacao);
 
-      if (!resultado.sucesso) {
-        console.warn(
-          "Não foi possível resolver Topple:",
-          resultado.motivo,
-        );
+    if (!resultado.sucesso) {
+      console.warn("Não foi possível resolver Topple:", resultado.motivo);
 
-        return;
-      }
+      return;
+    }
 
-      acoesCombate.innerHTML = "";
+    acoesCombate.innerHTML = "";
 
-      const total =
-        resultado
-          .resultadoTeste
-          .total;
+    const total = resultado.resultadoTeste.total;
 
-      if (resultado.passou) {
-        adicionarEventoHistoricoCombate(
-          `${resultadoDano.alvo.nome} resistiu a Topple`,
+    if (resultado.passou) {
+      adicionarEventoHistoricoCombate(
+        `${resultadoDano.alvo.nome} resistiu a Topple`,
 
-          `${resultadoDano.alvo.nome} obteve ${total} contra CD ${resultado.dificuldade} e permaneceu de pé.`,
-        );
-
-        exibirAcaoAtualCombate(
-          `${resultadoDano.alvo.nome} resistiu a Topple.`,
-        );
-
-        solicitacaoCombate.textContent =
-          `Salvaguarda: ${total} contra CD ${resultado.dificuldade}. Sucesso.`;
-      } else {
-        adicionarEventoHistoricoCombate(
-          `${resultadoDano.alvo.nome} caiu`,
-
-          `${resultadoDano.alvo.nome} obteve ${total} contra CD ${resultado.dificuldade} e ficou Caído.`,
-        );
-
-        exibirAcaoAtualCombate(
-          `${resultadoDano.alvo.nome} ficou Caído.`,
-        );
-
-        solicitacaoCombate.textContent =
-          `Salvaguarda: ${total} contra CD ${resultado.dificuldade}. O alvo ficou Caído.`;
-      }
-
-      atualizarInterfaceTurno(
-        combate,
+        `${resultadoDano.alvo.nome} obteve ${total} contra CD ${resultado.dificuldade} e permaneceu de pé.`,
       );
 
-      if (resultado.resultadoCombate) {
-        notificarFimCombate(combate);
-      }
+      exibirAcaoAtualCombate(`${resultadoDano.alvo.nome} resistiu a Topple.`);
 
-      solicitacaoCombate.hidden =
-        false;
-    },
-  );
+      solicitacaoCombate.textContent = `Salvaguarda: ${total} contra CD ${resultado.dificuldade}. Sucesso.`;
+    } else {
+      adicionarEventoHistoricoCombate(
+        `${resultadoDano.alvo.nome} caiu`,
 
-  botaoIgnorar.addEventListener(
-    "click",
-    function ignorarTopple() {
-      acoesCombate.innerHTML = "";
+        `${resultadoDano.alvo.nome} obteve ${total} contra CD ${resultado.dificuldade} e ficou Caído.`,
+      );
 
-      solicitacaoCombate.textContent =
-        "Topple não foi utilizado.";
+      exibirAcaoAtualCombate(`${resultadoDano.alvo.nome} ficou Caído.`);
 
-      solicitacaoCombate.hidden =
-        false;
-    },
-  );
+      solicitacaoCombate.textContent = `Salvaguarda: ${total} contra CD ${resultado.dificuldade}. O alvo ficou Caído.`;
+    }
 
-  acoesCombate.append(
-    botaoUsar,
-    botaoIgnorar,
-  );
+    atualizarInterfaceTurno(combate);
 
-  solicitacaoCombate.textContent =
-    `Usar Topple? O alvo fará uma salvaguarda de Constituição contra CD ${operacao.dificuldade}.`;
+    if (resultado.resultadoCombate) {
+      notificarFimCombate(combate);
+    }
+
+    solicitacaoCombate.hidden = false;
+  });
+
+  botaoIgnorar.addEventListener("click", function ignorarTopple() {
+    acoesCombate.innerHTML = "";
+
+    solicitacaoCombate.textContent = "Topple não foi utilizado.";
+
+    solicitacaoCombate.hidden = false;
+  });
+
+  acoesCombate.append(botaoUsar, botaoIgnorar);
+
+  solicitacaoCombate.textContent = `Usar Topple? O alvo fará uma salvaguarda de Constituição contra CD ${operacao.dificuldade}.`;
 
   solicitacaoCombate.hidden = false;
 
   return true;
 }
 
-function oferecerPushAposDano(
-  combate,
-  resultadoDano,
-) {
+function oferecerPushAposDano(combate, resultadoDano) {
   if (resultadoDano.foiDerrotado) {
     return false;
   }
 
-  const operacao =
-    resultadoDano
-      .efeitosDisponiveis
-      ?.find(
-        efeito =>
-          efeito.tipo ===
-            "deslocarAlvo" &&
-
-          efeito.origem?.tipo ===
-            "maestria" &&
-
-          efeito.origem?.id ===
-            "push",
-      );
+  const operacao = resultadoDano.efeitosDisponiveis?.find(
+    (efeito) =>
+      efeito.tipo === "deslocarAlvo" &&
+      efeito.origem?.tipo === "maestria" &&
+      efeito.origem?.id === "push",
+  );
 
   if (!operacao) {
     return false;
@@ -3135,124 +2136,82 @@ function oferecerPushAposDano(
 
   acoesCombate.innerHTML = "";
 
-  const botaoUsar =
-    document.createElement("button");
+  const botaoUsar = document.createElement("button");
 
   botaoUsar.type = "button";
-  botaoUsar.textContent =
-    "Usar Push";
+  botaoUsar.textContent = "Usar Push";
 
-  const botaoIgnorar =
-    document.createElement("button");
+  const botaoIgnorar = document.createElement("button");
 
   botaoIgnorar.type = "button";
-  botaoIgnorar.textContent =
-    "Ignorar";
+  botaoIgnorar.textContent = "Ignorar";
 
-  botaoUsar.addEventListener(
-    "click",
-    function usarPush() {
-      const resultado =
-        SistemaCombate
-          .aplicarDeslocamentoForcado(
-            combate,
-            operacao,
-          );
+  botaoUsar.addEventListener("click", function usarPush() {
+    const resultado = SistemaCombate.aplicarDeslocamentoForcado(combate, operacao);
 
-      if (!resultado.sucesso) {
-        console.warn(
-          "Não foi possível aplicar Push:",
-          resultado.motivo,
-        );
+    if (!resultado.sucesso) {
+      console.warn("Não foi possível aplicar Push:", resultado.motivo);
 
-        return;
-      }
+      return;
+    }
 
-      acoesCombate.innerHTML = "";
+    acoesCombate.innerHTML = "";
 
-      atualizarInterfaceTurno(
-        combate,
+    atualizarInterfaceTurno(combate);
+
+    if (resultado.resultadoCombate) {
+      notificarFimCombate(combate);
+    }
+
+    if (resultado.aplicado) {
+      adicionarEventoHistoricoCombate(
+        `${resultadoDano.alvo.nome} foi empurrado`,
+
+        `${resultadoDano.alvo.nome} foi afastado em ${resultado.distanciaPercorrida} célula(s).`,
       );
 
-      if (resultado.resultadoCombate) {
-        notificarFimCombate(combate);
-      }
+      exibirAcaoAtualCombate(
+        `${resultadoDano.alvo.nome} foi empurrado em ${resultado.distanciaPercorrida} célula(s).`,
+      );
 
-      if (resultado.aplicado) {
-        adicionarEventoHistoricoCombate(
-          `${resultadoDano.alvo.nome} foi empurrado`,
+      solicitacaoCombate.textContent = `Push deslocou o alvo em ${resultado.distanciaPercorrida} célula(s).`;
+    } else {
+      exibirAcaoAtualCombate(`${resultadoDano.alvo.nome} não pôde ser empurrado.`);
 
-          `${resultadoDano.alvo.nome} foi afastado em ${resultado.distanciaPercorrida} célula(s).`,
-        );
+      solicitacaoCombate.textContent = "O caminho estava bloqueado e Push não deslocou o alvo.";
+    }
 
-        exibirAcaoAtualCombate(
-          `${resultadoDano.alvo.nome} foi empurrado em ${resultado.distanciaPercorrida} célula(s).`,
-        );
+    solicitacaoCombate.hidden = false;
+  });
 
-        solicitacaoCombate.textContent =
-          `Push deslocou o alvo em ${resultado.distanciaPercorrida} célula(s).`;
-      } else {
-        exibirAcaoAtualCombate(
-          `${resultadoDano.alvo.nome} não pôde ser empurrado.`,
-        );
+  botaoIgnorar.addEventListener("click", function ignorarPush() {
+    acoesCombate.innerHTML = "";
 
-        solicitacaoCombate.textContent =
-          "O caminho estava bloqueado e Push não deslocou o alvo.";
-      }
+    solicitacaoCombate.textContent = "Push não foi utilizado.";
 
-      solicitacaoCombate.hidden =
-        false;
-    },
-  );
+    solicitacaoCombate.hidden = false;
+  });
 
-  botaoIgnorar.addEventListener(
-    "click",
-    function ignorarPush() {
-      acoesCombate.innerHTML = "";
+  acoesCombate.append(botaoUsar, botaoIgnorar);
 
-      solicitacaoCombate.textContent =
-        "Push não foi utilizado.";
-
-      solicitacaoCombate.hidden =
-        false;
-    },
-  );
-
-  acoesCombate.append(
-    botaoUsar,
-    botaoIgnorar,
-  );
-
-  solicitacaoCombate.textContent =
-    "Usar Push para afastar o alvo em até 2 células?";
+  solicitacaoCombate.textContent = "Usar Push para afastar o alvo em até 2 células?";
 
   solicitacaoCombate.hidden = false;
 
   return true;
 }
 
-function oferecerSlowAposDano(
-  combate,
-  resultadoDano,
-) {
+function oferecerSlowAposDano(combate, resultadoDano) {
   if (resultadoDano.foiDerrotado) {
     return false;
   }
 
-  const operacao =
-    resultadoDano
-      .efeitosDisponiveis
-      ?.find(
-        efeito =>
-          efeito.tipo ===
-            "modificarDeslocamento" &&
-
-          efeito.origem?.tipo ===
-            "maestria" &&
-
-          efeito.origem?.id ===
-            "slow",
-      );
+  const operacao = resultadoDano.efeitosDisponiveis?.find(
+    (efeito) =>
+      efeito.tipo === "modificarDeslocamento" &&
+      efeito.origem?.tipo === "maestria" &&
+      efeito.origem?.id === "slow",
+  );
 
   if (!operacao) {
     return false;
@@ -3260,91 +2219,59 @@ function oferecerSlowAposDano(
 
   acoesCombate.innerHTML = "";
 
-  const botaoUsar =
-    document.createElement("button");
+  const botaoUsar = document.createElement("button");
 
   botaoUsar.type = "button";
-  botaoUsar.textContent =
-    "Usar Slow";
+  botaoUsar.textContent = "Usar Slow";
 
-  const botaoIgnorar =
-    document.createElement("button");
+  const botaoIgnorar = document.createElement("button");
 
   botaoIgnorar.type = "button";
-  botaoIgnorar.textContent =
-    "Ignorar";
+  botaoIgnorar.textContent = "Ignorar";
 
-  botaoUsar.addEventListener(
-    "click",
-    function usarSlow() {
-      const resultado =
-        SistemaCombate
-          .aplicarModificadorDeslocamentoTemporario(
-            combate,
-            operacao,
-          );
+  botaoUsar.addEventListener("click", function usarSlow() {
+    const resultado = SistemaCombate.aplicarModificadorDeslocamentoTemporario(combate, operacao);
 
-      if (!resultado.sucesso) {
-        console.warn(
-          "Não foi possível aplicar Slow:",
-          resultado.motivo,
-        );
+    if (!resultado.sucesso) {
+      console.warn("Não foi possível aplicar Slow:", resultado.motivo);
 
-        return;
-      }
+      return;
+    }
 
-      acoesCombate.innerHTML = "";
+    acoesCombate.innerHTML = "";
 
-      if (resultado.aplicado) {
-        adicionarEventoHistoricoCombate(
-          `Slow afetou ${resultadoDano.alvo.nome}`,
+    if (resultado.aplicado) {
+      adicionarEventoHistoricoCombate(
+        `Slow afetou ${resultadoDano.alvo.nome}`,
 
-          `${resultadoDano.alvo.nome} teve seu deslocamento reduzido em 2 células.`,
-        );
-
-        exibirAcaoAtualCombate(
-          `${resultadoDano.alvo.nome} teve seu deslocamento reduzido.`,
-        );
-      } else {
-        exibirAcaoAtualCombate(
-          "Slow já estava afetando esse alvo.",
-        );
-      }
-
-      atualizarInterfaceTurno(
-        combate,
+        `${resultadoDano.alvo.nome} teve seu deslocamento reduzido em 2 células.`,
       );
 
-      solicitacaoCombate.textContent =
-        resultado.aplicado
-          ? "Slow foi aplicado."
-          : "Slow não se acumula.";
+      exibirAcaoAtualCombate(`${resultadoDano.alvo.nome} teve seu deslocamento reduzido.`);
+    } else {
+      exibirAcaoAtualCombate("Slow já estava afetando esse alvo.");
+    }
 
-      solicitacaoCombate.hidden =
-        false;
-    },
-  );
+    atualizarInterfaceTurno(combate);
 
-  botaoIgnorar.addEventListener(
-    "click",
-    function ignorarSlow() {
-      acoesCombate.innerHTML = "";
+    solicitacaoCombate.textContent = resultado.aplicado
+      ? "Slow foi aplicado."
+      : "Slow não se acumula.";
 
-      solicitacaoCombate.textContent =
-        "Slow não foi utilizado.";
+    solicitacaoCombate.hidden = false;
+  });
 
-      solicitacaoCombate.hidden =
-        false;
-    },
-  );
+  botaoIgnorar.addEventListener("click", function ignorarSlow() {
+    acoesCombate.innerHTML = "";
 
-  acoesCombate.append(
-    botaoUsar,
-    botaoIgnorar,
-  );
+    solicitacaoCombate.textContent = "Slow não foi utilizado.";
 
-  solicitacaoCombate.textContent =
-    "Usar Slow para reduzir o deslocamento do alvo em 2 células?";
+    solicitacaoCombate.hidden = false;
+  });
+
+  acoesCombate.append(botaoUsar, botaoIgnorar);
+
+  solicitacaoCombate.textContent = "Usar Slow para reduzir o deslocamento do alvo em 2 células?";
 
   solicitacaoCombate.hidden = false;
 
@@ -3399,52 +2326,34 @@ function concluirDanoJogador(combate, resultadoRolagem) {
       `${resultadoDano.alvo.nome} sofreu ` + `${resultadoDano.dano} de dano.`;
   }
 
-  apresentarDestinoArmaArremessada(
-    resultadoDano.destinoArmaArremessada,
-    {
-      acertou: true,
-      alvoNome: resultadoDano.alvo.nome,
-    },
-  );
+  apresentarDestinoArmaArremessada(resultadoDano.destinoArmaArremessada, {
+    acertou: true,
+    alvoNome: resultadoDano.alvo.nome,
+  });
 
-  const cleaveFoiOferecido = oferecerCleaveAposDano(
-    combate,
-    resultadoDano,
-  );
+  const cleaveFoiOferecido = oferecerCleaveAposDano(combate, resultadoDano);
 
   if (cleaveFoiOferecido) {
     return;
   }
 
-  const toppleFoiOferecido =
-  oferecerToppleAposDano(
-    combate,
-    resultadoDano,
-  );
+  const toppleFoiOferecido = oferecerToppleAposDano(combate, resultadoDano);
 
-if (toppleFoiOferecido) {
-  return;
-}
+  if (toppleFoiOferecido) {
+    return;
+  }
 
-  const pushFoiOferecido =
-  oferecerPushAposDano(
-    combate,
-    resultadoDano,
-  );
+  const pushFoiOferecido = oferecerPushAposDano(combate, resultadoDano);
 
-if (pushFoiOferecido) {
-  return;
-}
+  if (pushFoiOferecido) {
+    return;
+  }
 
-  const slowFoiOferecido =
-  oferecerSlowAposDano(
-    combate,
-    resultadoDano,
-  );
+  const slowFoiOferecido = oferecerSlowAposDano(combate, resultadoDano);
 
-if (slowFoiOferecido) {
-  return;
-}
+  if (slowFoiOferecido) {
+    return;
+  }
 
   const vexAplicado = resultadoDano.efeitosAplicados?.find(function encontrarVex(efeito) {
     return efeito.origem?.tipo === "maestria" && efeito.origem?.id === "vex";
@@ -3650,24 +2559,17 @@ listaAtaquesCombate.addEventListener("click", selecionarAtaqueCombate);
 
 botaoEncerrarTurno.addEventListener("click", encerrarTurnoAtual);
 
-botaoAlternarTerrenoCombate.addEventListener(
-  "click",
-  function alternarVisualizacaoTerreno() {
-    const exibindoTerreno =
-      tabuleiroCombate.classList.toggle("exibindo-terreno");
+botaoAlternarTerrenoCombate.addEventListener("click", function alternarVisualizacaoTerreno() {
+  const exibindoTerreno = tabuleiroCombate.classList.toggle("exibindo-terreno");
 
-    botaoAlternarTerrenoCombate.setAttribute(
-      "aria-pressed",
-      String(exibindoTerreno),
-    );
+  botaoAlternarTerrenoCombate.setAttribute("aria-pressed", String(exibindoTerreno));
 
-    legendaTerrenoCombate.hidden = !exibindoTerreno;
+  legendaTerrenoCombate.hidden = !exibindoTerreno;
 
-    botaoAlternarTerrenoCombate.title = exibindoTerreno
-      ? "Ocultar terreno e cobertura"
-      : "Mostrar terreno e cobertura";
-  },
-);
+  botaoAlternarTerrenoCombate.title = exibindoTerreno
+    ? "Ocultar terreno e cobertura"
+    : "Mostrar terreno e cobertura";
+});
 
 NarradorAventura.limpar();
 
@@ -3675,18 +2577,13 @@ void exibirCena(aventuraAtual, cenaAtual);
 
 document.addEventListener("rolagemConcluida", receberResultadoRolagem);
 
-botaoContinuarResultadoCombate.addEventListener(
-  "click",
-  continuarAposResultadoCombate
-);
+botaoContinuarResultadoCombate.addEventListener("click", continuarAposResultadoCombate);
 
 document.addEventListener("combateEncerrado", processarResultadoCombate);
 
 painelHistoricoCombate.addEventListener(
   "wheel",
-  function impedirZoomAoRolarLinhaTempo(
-    evento,
-  ) {
+  function impedirZoomAoRolarLinhaTempo(evento) {
     evento.stopPropagation();
   },
   {
@@ -3700,12 +2597,9 @@ visualizacaoCombate.addEventListener("wheel", controlarZoomCombate, {
 
 visualizacaoCombate.addEventListener("pointerdown", iniciarArrasteCamera);
 
-visualizacaoCombate.addEventListener(
-  "contextmenu",
-  function bloquearMenuContexto(evento) {
-    evento.preventDefault();
-  },
-);
+visualizacaoCombate.addEventListener("contextmenu", function bloquearMenuContexto(evento) {
+  evento.preventDefault();
+});
 
 visualizacaoCombate.addEventListener("pointermove", continuarArrasteCamera);
 
@@ -3713,43 +2607,25 @@ visualizacaoCombate.addEventListener("pointerup", finalizarArrasteCamera);
 
 visualizacaoCombate.addEventListener("pointercancel", finalizarArrasteCamera);
 
+cameraCombateElemento.addEventListener("pointermove", atualizarMiraAtaqueCombate);
 
-cameraCombateElemento.addEventListener(
-  "pointermove",
-  atualizarMiraAtaqueCombate,
-);
-
-cameraCombateElemento.addEventListener(
-  "pointerleave",
-  ocultarMiraAtaqueCombate,
-);
+cameraCombateElemento.addEventListener("pointerleave", ocultarMiraAtaqueCombate);
 
 window.addEventListener("resize", function () {
-  cameraCombate.zoomMinimo =
-    obterZoomMinimoVisivel();
+  cameraCombate.zoomMinimo = obterZoomMinimoVisivel();
 
-  cameraCombate.zoom =
-    Math.min(
-      cameraCombate.zoomMaximo,
-      Math.max(
-        cameraCombate.zoomMinimo,
-        cameraCombate.zoom,
-      ),
-    );
+  cameraCombate.zoom = Math.min(
+    cameraCombate.zoomMaximo,
+    Math.max(cameraCombate.zoomMinimo, cameraCombate.zoom),
+  );
 
   limitarCameraCombate();
   atualizarCameraCombate();
 });
 
-botaoConfirmarDecisaoCombate.addEventListener(
-  "click",
-  confirmarDecisaoCombate,
-);
+botaoConfirmarDecisaoCombate.addEventListener("click", confirmarDecisaoCombate);
 
-botaoCancelarDecisaoCombate.addEventListener(
-  "click",
-  cancelarDecisaoCombate,
-);
+botaoCancelarDecisaoCombate.addEventListener("click", cancelarDecisaoCombate);
 
 botaoFecharAtaquesCombate.addEventListener("click", fecharPainelAtaquesCombate);
 

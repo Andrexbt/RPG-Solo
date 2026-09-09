@@ -1,3 +1,3 @@
 "use strict";
 
-const bancoAventuras = window.bancoAventuras = {};
+const bancoAventuras = (window.bancoAventuras = {});

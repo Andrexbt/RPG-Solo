@@ -234,7 +234,7 @@ window.InteligenciaInimigos = (function () {
       },
       ataque: avaliacaoAtaque,
 
-defesa: avaliacaoDefesa,
+      defesa: avaliacaoDefesa,
     };
   }
 
@@ -352,296 +352,201 @@ defesa: avaliacaoDefesa,
     };
   }
 
-  function planejarAproximacaoAoAlvo(
-  combate,
-  inimigo,
-  alvo,
-) {
-  const perfil =
-    obterPerfilTatico(inimigo);
+  function planejarAproximacaoAoAlvo(combate, inimigo, alvo) {
+    const perfil = obterPerfilTatico(inimigo);
 
-  if (perfil.valorAproximacao <= 0) {
-    return {
-      sucesso: false,
-      motivo: "perfilNaoBuscaAproximacao",
-      melhorPosicao: null,
-    };
-  }
-
-  const distanciaInicial =
-    SistemaCombate.calcularDistancia(
-      inimigo.posicao,
-      alvo.posicao,
-    );
-
-  const posicoesAlcancaveis =
-    listarPosicoesAlcancaveis(
-      combate,
-      inimigo,
-    );
-
-  let melhorPosicao = null;
-
-  for (const posicao of posicoesAlcancaveis) {
-    const distanciaFinal =
-      SistemaCombate.calcularDistancia(
-        posicao,
-        alvo.posicao,
-      );
-
-    const reducaoDistancia =
-      distanciaInicial - distanciaFinal;
-
-    if (reducaoDistancia <= 0) {
-      continue;
+    if (perfil.valorAproximacao <= 0) {
+      return {
+        sucesso: false,
+        motivo: "perfilNaoBuscaAproximacao",
+        melhorPosicao: null,
+      };
     }
 
-    const pontuacao =
-      100 +
-      perfil.bonusCorpoACorpo +
-      reducaoDistancia *
-        perfil.valorAproximacao;
+    const distanciaInicial = SistemaCombate.calcularDistancia(inimigo.posicao, alvo.posicao);
 
-    const avaliacao = {
-      posicao: {
-        coluna: posicao.coluna,
-        linha: posicao.linha,
-      },
+    const posicoesAlcancaveis = listarPosicoesAlcancaveis(combate, inimigo);
 
-      custoMovimento: posicao.custo,
+    let melhorPosicao = null;
 
-      caminho:
-        structuredClone(posicao.caminho),
+    for (const posicao of posicoesAlcancaveis) {
+      const distanciaFinal = SistemaCombate.calcularDistancia(posicao, alvo.posicao);
 
-      distanciaInicial,
-      distanciaFinal,
-      reducaoDistancia,
-      pontuacao,
-      perfilId: perfil.id,
-    };
+      const reducaoDistancia = distanciaInicial - distanciaFinal;
 
-    const possuiPontuacaoMaior =
-      melhorPosicao === null ||
-      avaliacao.pontuacao >
-        melhorPosicao.pontuacao;
+      if (reducaoDistancia <= 0) {
+        continue;
+      }
 
-    const possuiMesmaPontuacao =
-      melhorPosicao !== null &&
-      avaliacao.pontuacao ===
-        melhorPosicao.pontuacao;
+      const pontuacao = 100 + perfil.bonusCorpoACorpo + reducaoDistancia * perfil.valorAproximacao;
 
-    const possuiMenorCusto =
-      melhorPosicao !== null &&
-      avaliacao.custoMovimento <
-        melhorPosicao.custoMovimento;
+      const avaliacao = {
+        posicao: {
+          coluna: posicao.coluna,
+          linha: posicao.linha,
+        },
 
-    if (
-      possuiPontuacaoMaior ||
-      (
-        possuiMesmaPontuacao &&
-        possuiMenorCusto
-      )
-    ) {
-      melhorPosicao = avaliacao;
+        custoMovimento: posicao.custo,
+
+        caminho: structuredClone(posicao.caminho),
+
+        distanciaInicial,
+        distanciaFinal,
+        reducaoDistancia,
+        pontuacao,
+        perfilId: perfil.id,
+      };
+
+      const possuiPontuacaoMaior =
+        melhorPosicao === null || avaliacao.pontuacao > melhorPosicao.pontuacao;
+
+      const possuiMesmaPontuacao =
+        melhorPosicao !== null && avaliacao.pontuacao === melhorPosicao.pontuacao;
+
+      const possuiMenorCusto =
+        melhorPosicao !== null && avaliacao.custoMovimento < melhorPosicao.custoMovimento;
+
+      if (possuiPontuacaoMaior || (possuiMesmaPontuacao && possuiMenorCusto)) {
+        melhorPosicao = avaliacao;
+      }
     }
-  }
 
-  if (!melhorPosicao) {
+    if (!melhorPosicao) {
+      return {
+        sucesso: false,
+        motivo: "nenhumaAproximacaoPossivel",
+        melhorPosicao: null,
+      };
+    }
+
     return {
-      sucesso: false,
-      motivo: "nenhumaAproximacaoPossivel",
-      melhorPosicao: null,
+      sucesso: true,
+      motivo: null,
+      melhorPosicao,
     };
   }
 
-  return {
-    sucesso: true,
-    motivo: null,
-    melhorPosicao,
-  };
-}
+  function planejarAtaqueEPosicao(combate, inimigo, alvo) {
+    if (!Array.isArray(inimigo?.ataques) || inimigo.ataques.length === 0) {
+      return {
+        sucesso: false,
+        motivo: "inimigoSemAtaques",
+        planosAvaliados: [],
+        melhorPlano: null,
+      };
+    }
 
-  function planejarAtaqueEPosicao(
-  combate,
-  inimigo,
-  alvo,
-) {
-  if (
-    !Array.isArray(inimigo?.ataques) ||
-    inimigo.ataques.length === 0
-  ) {
-    return {
-      sucesso: false,
-      motivo: "inimigoSemAtaques",
-      planosAvaliados: [],
-      melhorPlano: null,
-    };
-  }
+    const planosAvaliados = [];
 
-  const planosAvaliados = [];
+    for (const ataque of inimigo.ataques) {
+      const plano = planejarPosicaoParaAtaque(combate, inimigo, alvo, ataque);
 
-  for (const ataque of inimigo.ataques) {
-    const plano =
-      planejarPosicaoParaAtaque(
-        combate,
-        inimigo,
-        alvo,
+      if (!plano.sucesso) {
+        continue;
+      }
+
+      planosAvaliados.push({
         ataque,
-      );
+        plano,
 
-    if (!plano.sucesso) {
-      continue;
+        pontuacao: plano.melhorPosicao.pontuacao,
+
+        custoMovimento: plano.melhorPosicao.custoMovimento,
+      });
     }
 
-    planosAvaliados.push({
-      ataque,
-      plano,
+    if (planosAvaliados.length === 0) {
+      return {
+        sucesso: false,
+        motivo: "nenhumAtaquePossivel",
+        planosAvaliados,
+        melhorPlano: null,
+      };
+    }
 
-      pontuacao:
-        plano.melhorPosicao.pontuacao,
+    planosAvaliados.sort((planoA, planoB) => {
+      const diferencaPontuacao = planoB.pontuacao - planoA.pontuacao;
 
-      custoMovimento:
-        plano.melhorPosicao
-          .custoMovimento,
+      if (diferencaPontuacao !== 0) {
+        return diferencaPontuacao;
+      }
+
+      return planoA.custoMovimento - planoB.custoMovimento;
     });
-  }
 
-  if (planosAvaliados.length === 0) {
     return {
-      sucesso: false,
-      motivo: "nenhumAtaquePossivel",
+      sucesso: true,
+      motivo: null,
       planosAvaliados,
-      melhorPlano: null,
+      melhorPlano: planosAvaliados[0],
     };
   }
 
-  planosAvaliados.sort(
-    (planoA, planoB) => {
-      const diferencaPontuacao =
-        planoB.pontuacao -
-        planoA.pontuacao;
+  function planejarTurnoTatico(combate, inimigo, alvo) {
+    const opcoes = [];
+
+    const planoAtaque = planejarAtaqueEPosicao(combate, inimigo, alvo);
+
+    if (planoAtaque.sucesso) {
+      opcoes.push({
+        tipo: "atacar",
+
+        pontuacao: planoAtaque.melhorPlano.pontuacao,
+
+        custoMovimento: planoAtaque.melhorPlano.custoMovimento,
+
+        ataque: planoAtaque.melhorPlano.ataque,
+
+        posicao: planoAtaque.melhorPlano.plano.melhorPosicao,
+
+        detalhes: planoAtaque,
+      });
+    }
+
+    const planoAproximacao = planejarAproximacaoAoAlvo(combate, inimigo, alvo);
+
+    if (planoAproximacao.sucesso) {
+      opcoes.push({
+        tipo: "aproximar",
+
+        pontuacao: planoAproximacao.melhorPosicao.pontuacao,
+
+        custoMovimento: planoAproximacao.melhorPosicao.custoMovimento,
+
+        ataque: null,
+
+        posicao: planoAproximacao.melhorPosicao,
+
+        detalhes: planoAproximacao,
+      });
+    }
+
+    if (opcoes.length === 0) {
+      return {
+        sucesso: false,
+        motivo: "nenhumPlanoDisponivel",
+        opcoes: [],
+        planoEscolhido: null,
+      };
+    }
+
+    opcoes.sort((opcaoA, opcaoB) => {
+      const diferencaPontuacao = opcaoB.pontuacao - opcaoA.pontuacao;
 
       if (diferencaPontuacao !== 0) {
         return diferencaPontuacao;
       }
 
-      return (
-        planoA.custoMovimento -
-        planoB.custoMovimento
-      );
-    },
-  );
-
-  return {
-    sucesso: true,
-    motivo: null,
-    planosAvaliados,
-    melhorPlano: planosAvaliados[0],
-  };
-}
-
-function planejarTurnoTatico(
-  combate,
-  inimigo,
-  alvo,
-) {
-  const opcoes = [];
-
-  const planoAtaque =
-    planejarAtaqueEPosicao(
-      combate,
-      inimigo,
-      alvo,
-    );
-
-  if (planoAtaque.sucesso) {
-    opcoes.push({
-      tipo: "atacar",
-
-      pontuacao:
-        planoAtaque.melhorPlano
-          .pontuacao,
-
-      custoMovimento:
-        planoAtaque.melhorPlano
-          .custoMovimento,
-
-      ataque:
-        planoAtaque.melhorPlano
-          .ataque,
-
-      posicao:
-        planoAtaque.melhorPlano
-          .plano.melhorPosicao,
-
-      detalhes: planoAtaque,
+      return opcaoA.custoMovimento - opcaoB.custoMovimento;
     });
-  }
 
-  const planoAproximacao =
-    planejarAproximacaoAoAlvo(
-      combate,
-      inimigo,
-      alvo,
-    );
-
-  if (planoAproximacao.sucesso) {
-    opcoes.push({
-      tipo: "aproximar",
-
-      pontuacao:
-        planoAproximacao
-          .melhorPosicao
-          .pontuacao,
-
-      custoMovimento:
-        planoAproximacao
-          .melhorPosicao
-          .custoMovimento,
-
-      ataque: null,
-
-      posicao:
-        planoAproximacao
-          .melhorPosicao,
-
-      detalhes: planoAproximacao,
-    });
-  }
-
-  if (opcoes.length === 0) {
     return {
-      sucesso: false,
-      motivo: "nenhumPlanoDisponivel",
-      opcoes: [],
-      planoEscolhido: null,
+      sucesso: true,
+      motivo: null,
+      opcoes,
+      planoEscolhido: opcoes[0],
     };
   }
-
-  opcoes.sort(
-    (opcaoA, opcaoB) => {
-      const diferencaPontuacao =
-        opcaoB.pontuacao -
-        opcaoA.pontuacao;
-
-      if (diferencaPontuacao !== 0) {
-        return diferencaPontuacao;
-      }
-
-      return (
-        opcaoA.custoMovimento -
-        opcaoB.custoMovimento
-      );
-    },
-  );
-
-  return {
-    sucesso: true,
-    motivo: null,
-    opcoes,
-    planoEscolhido: opcoes[0],
-  };
-}
 
   function escolherPosicaoComMelhorCobertura(combate, posicoesCandidatas, posicaoAtacante) {
     if (!Array.isArray(posicoesCandidatas) || posicoesCandidatas.length === 0) {

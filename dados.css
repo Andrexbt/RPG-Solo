@@ -43,60 +43,27 @@
   border: 0;
   border-radius: 0;
 
-  background-color: var(
-  --cor-principal-dados,
-  #79552f
-);
+  background-color: var(--cor-principal-dados, #79552f);
 
-background-image:
-  linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.3),
-    transparent 38%,
-    rgba(0, 0, 0, 0.35)
-  ),
-  var(
-    --textura-resultado-dados
-  );
+  background-image:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.3), transparent 38%, rgba(0, 0, 0, 0.35)),
+    var(--textura-resultado-dados);
 
-background-blend-mode:
-  screen,
-  normal;
+  background-blend-mode: screen, normal;
 
-color: var(
-  --cor-numeros-dados,
-  #f4ead2
-);
+  color: var(--cor-numeros-dados, #f4ead2);
 
-text-shadow:
-  0 1px 1px
-    var(
-      --cor-sombra-dados,
-      #1b1009
-    ),
-  0 0 3px
-    var(
-      --cor-sombra-dados,
-      #1b1009
-    );
+  text-shadow:
+    0 1px 1px var(--cor-sombra-dados, #1b1009),
+    0 0 3px var(--cor-sombra-dados, #1b1009);
 
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.88rem;
   font-weight: 800;
   cursor: grab;
 
-  filter:
-  drop-shadow(
-    0 1px 1px
-    var(
-      --cor-sombra-dados,
-      #1b1009
-    )
-  )
-  drop-shadow(
-    0 4px 3px
-    rgba(0, 0, 0, 0.7)
-  );
+  filter: drop-shadow(0 1px 1px var(--cor-sombra-dados, #1b1009))
+    drop-shadow(0 4px 3px rgba(0, 0, 0, 0.7));
 
   transition:
     transform 120ms ease,
@@ -107,38 +74,17 @@ text-shadow:
 }
 
 .dado-disponivel:hover {
-  transform:
-    translateY(-3px)
-    scale(1.07);
+  transform: translateY(-3px) scale(1.07);
 
-  filter:
-    brightness(1.18)
-    drop-shadow(
-      0 2px 2px
-      var(
-        --cor-sombra-dados,
-        #1b1009
-      )
-    )
-    drop-shadow(
-      0 5px 4px
-      rgba(0, 0, 0, 0.8)
-    );
+  filter: brightness(1.18) drop-shadow(0 2px 2px var(--cor-sombra-dados, #1b1009))
+    drop-shadow(0 5px 4px rgba(0, 0, 0, 0.8));
 }
 
 .dado-disponivel::before {
   content: "";
   position: absolute;
   inset: 5px;
-  border: 1px solid
-    color-mix(
-      in srgb,
-      var(
-        --cor-numeros-dados,
-        #f4ead2
-      ) 32%,
-      transparent
-    );
+  border: 1px solid color-mix(in srgb, var(--cor-numeros-dados, #f4ead2) 32%, transparent);
   clip-path: inherit;
   opacity: 0.75;
   pointer-events: none;
@@ -149,29 +95,15 @@ text-shadow:
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(
-      35deg,
-      transparent 47%,
-      rgba(255, 255, 255, 0.2) 49%,
-      transparent 52%
-    ),
-    linear-gradient(
-      145deg,
-      transparent 48%,
-      rgba(0, 0, 0, 0.25) 50%,
-      transparent 53%
-    );
+    linear-gradient(35deg, transparent 47%, rgba(255, 255, 255, 0.2) 49%, transparent 52%),
+    linear-gradient(145deg, transparent 48%, rgba(0, 0, 0, 0.25) 50%, transparent 53%);
   opacity: 0.65;
   pointer-events: none;
 }
 
 /* d4: tetraedro visto como triângulo. */
 .dado-disponivel[data-faces="4"] {
-  clip-path: polygon(
-    50% 3%,
-    97% 94%,
-    3% 94%
-  );
+  clip-path: polygon(50% 3%, 97% 94%, 3% 94%);
   padding-top: 16px;
 }
 
@@ -180,61 +112,27 @@ text-shadow:
   width: 47px;
   height: 47px;
   margin: 2px 3px 1px;
-  clip-path: polygon(
-    3% 3%,
-    97% 3%,
-    97% 97%,
-    3% 97%
-  );
+  clip-path: polygon(3% 3%, 97% 3%, 97% 97%, 3% 97%);
 }
 
 /* d8: octaedro. */
 .dado-disponivel[data-faces="8"] {
-  clip-path: polygon(
-    50% 1%,
-    96% 50%,
-    50% 99%,
-    4% 50%
-  );
+  clip-path: polygon(50% 1%, 96% 50%, 50% 99%, 4% 50%);
 }
 
 /* d10: formato alongado. */
 .dado-disponivel[data-faces="10"] {
-  clip-path: polygon(
-    50% 0%,
-    84% 18%,
-    98% 51%,
-    50% 100%,
-    2% 51%,
-    16% 18%
-  );
+  clip-path: polygon(50% 0%, 84% 18%, 98% 51%, 50% 100%, 2% 51%, 16% 18%);
 }
 
 /* d12: poliedro de doze faces. */
 .dado-disponivel[data-faces="12"] {
-  clip-path: polygon(
-    50% 0%,
-    83% 10%,
-    100% 38%,
-    91% 75%,
-    63% 98%,
-    28% 93%,
-    4% 65%,
-    7% 29%
-  );
+  clip-path: polygon(50% 0%, 83% 10%, 100% 38%, 91% 75%, 63% 98%, 28% 93%, 4% 65%, 7% 29%);
 }
 
 /* d20: icosaedro. */
 .dado-disponivel[data-faces="20"] {
-  clip-path: polygon(
-    50% 0%,
-    90% 20%,
-    100% 61%,
-    72% 94%,
-    32% 100%,
-    3% 70%,
-    8% 27%
-  );
+  clip-path: polygon(50% 0%, 90% 20%, 100% 61%, 72% 94%, 32% 100%, 3% 70%, 8% 27%);
 }
 
 .dado-disponivel.dado-sendo-arrastado {
@@ -304,7 +202,7 @@ text-shadow:
   position: absolute;
   left: 0;
   top: 0;
-    width: 86px;
+  width: 86px;
   height: 86px;
   padding: 0;
   border: 0;
@@ -312,15 +210,9 @@ text-shadow:
   background: transparent;
   object-fit: contain;
   box-shadow: none;
-  filter:
-    drop-shadow(
-      0 7px 7px
-      rgba(0, 0, 0, 0.55)
-    );
-  transform:
-    translate(calc(-50% + var(--miniatura-x, 0px)), calc(-50% + var(--miniatura-y, 0px)))
-    rotate(var(--miniatura-rotacao, 0deg))
-    scale(0.88);
+  filter: drop-shadow(0 7px 7px rgba(0, 0, 0, 0.55));
+  transform: translate(calc(-50% + var(--miniatura-x, 0px)), calc(-50% + var(--miniatura-y, 0px)))
+    rotate(var(--miniatura-rotacao, 0deg)) scale(0.88);
   cursor: grabbing;
   transition:
     transform 120ms ease-out,
@@ -362,19 +254,11 @@ text-shadow:
   min-height: 0;
   margin: 0;
   padding: 6px 10px;
-  border: 1px solid
-    color-mix(
-      in srgb,
-      var(--cor-resultado-dados, #dbbd83) 55%,
-      transparent
-    );
+  border: 1px solid color-mix(in srgb, var(--cor-resultado-dados, #dbbd83) 55%, transparent);
   border-radius: 3px;
   background: rgba(16, 12, 9, 0.86);
 
-  color: var(
-  --cor-resultado-dados,
-  #dbbd83
-);
+  color: var(--cor-resultado-dados, #dbbd83);
 
   -webkit-text-fill-color: currentColor;
 
@@ -385,20 +269,10 @@ text-shadow:
   white-space: pre-line;
 
   text-shadow:
-    0 1px 1px
-      var(
-        --cor-sombra-dados,
-        #1b1009
-      ),
-    0 2px 3px
-      rgba(0, 0, 0, 0.85);
+    0 1px 1px var(--cor-sombra-dados, #1b1009),
+    0 2px 3px rgba(0, 0, 0, 0.85);
 
-  -webkit-text-stroke:
-    0.65px
-    var(
-      --cor-sombra-dados,
-      #1b1009
-    );
+  -webkit-text-stroke: 0.65px var(--cor-sombra-dados, #1b1009);
 
   transform: translateX(-50%);
   pointer-events: none;
@@ -447,27 +321,21 @@ html.arrastando-dado-3d * {
   background: transparent;
 }
 
-html.previews-dados-3d-prontos
-  .dado-disponivel {
+html.previews-dados-3d-prontos .dado-disponivel {
   background: transparent;
   color: transparent;
   text-shadow: none;
   filter: none;
 }
 
-html.previews-dados-3d-prontos
-  .dado-disponivel::before,
-html.previews-dados-3d-prontos
-  .dado-disponivel::after {
+html.previews-dados-3d-prontos .dado-disponivel::before,
+html.previews-dados-3d-prontos .dado-disponivel::after {
   opacity: 0;
 }
 
 .janela-dados.janela-flutuante {
   box-sizing: border-box;
-  width: min(
-  220px,
-  calc(100vw - 24px)
-);
+  width: min(220px, calc(100vw - 24px));
 }
 
 .janela-dados .colecao-dados {
@@ -483,17 +351,14 @@ html.previews-dados-3d-prontos
   box-shadow: none;
 }
 
-.janela-dados
-  .colecao-dados
-  .dado-disponivel[data-faces] {
+.janela-dados .colecao-dados .dado-disponivel[data-faces] {
   width: 56px;
   height: 78px;
   min-height: 0;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-rows:
-    58px 18px;
+  grid-template-rows: 58px 18px;
   align-items: center;
   justify-items: center;
   border: 0;
@@ -505,10 +370,8 @@ html.previews-dados-3d-prontos
   overflow: visible;
 }
 
-.janela-dados
-  .dado-disponivel::before,
-.janela-dados
-  .dado-disponivel::after {
+.janela-dados .dado-disponivel::before,
+.janela-dados .dado-disponivel::after {
   display: none;
 }
 
@@ -516,27 +379,15 @@ html.previews-dados-3d-prontos
   width: 58px;
   height: 58px;
   display: block;
-  border: 1px solid
-    color-mix(
-      in srgb,
-      var(--cor-principal-dados) 52%,
-      #0b0806
-    );
+  border: 1px solid color-mix(in srgb, var(--cor-principal-dados) 52%, #0b0806);
   border-radius: 50%;
   background:
-    radial-gradient(
-      circle at 50% 46%,
-      rgba(255, 255, 255, 0.035),
-      transparent 38%
-    ),
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.035), transparent 38%),
     rgba(7, 5, 4, 0.74);
   box-shadow:
-    inset 0 6px 9px
-      rgba(0, 0, 0, 0.94),
-    inset 0 -2px 3px
-      rgba(195, 154, 88, 0.12),
-    0 0 0 1px
-      rgba(0, 0, 0, 0.48);
+    inset 0 6px 9px rgba(0, 0, 0, 0.94),
+    inset 0 -2px 3px rgba(195, 154, 88, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.48);
   pointer-events: none;
 }
 
@@ -545,19 +396,10 @@ html.previews-dados-3d-prontos
   height: 56px;
   display: grid;
   place-items: center;
-  border: 1px solid
-    color-mix(
-      in srgb,
-      var(--cor-principal-dados) 52%,
-      #0b0806
-    );
+  border: 1px solid color-mix(in srgb, var(--cor-principal-dados) 52%, #0b0806);
   border-radius: 50%;
   background:
-    radial-gradient(
-      circle at 50% 45%,
-      rgba(255, 255, 255, 0.04),
-      transparent 42%
-    ),
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.04), transparent 42%),
     rgba(7, 5, 4, 0.78);
   box-shadow:
     inset 0 6px 9px rgba(0, 0, 0, 0.94),
@@ -587,85 +429,51 @@ html.previews-dados-3d-prontos
   padding: 0 5px;
   border: 1px solid #8f6a31;
   border-radius: 2px;
-  background:
-    linear-gradient(
-      180deg,
-      #c69a50 0%,
-      #8d642c 48%,
-      #68451e 100%
-    );
+  background: linear-gradient(180deg, #c69a50 0%, #8d642c 48%, #68451e 100%);
   box-shadow:
     inset 0 1px rgba(255, 232, 174, 0.3),
     0 2px 3px rgba(0, 0, 0, 0.65);
   color: #24170d;
-  
+
   font-size: 0.64rem;
-  
+
   line-height: 15px;
   letter-spacing: 0.06em;
   text-align: center;
   font-family: Georgia, "Times New Roman", serif;
-font-weight: 700;
-color: #24170d;
-text-shadow: 0 1px rgba(232, 195, 125, 0.28);
+  font-weight: 700;
+  color: #24170d;
+  text-shadow: 0 1px rgba(232, 195, 125, 0.28);
   pointer-events: none;
 }
 
-html.previews-dados-3d-prontos
-  .rotulo-dado-disponivel {
+html.previews-dados-3d-prontos .rotulo-dado-disponivel {
   color: #24170d;
-  -webkit-text-fill-color:
-    currentColor;
+  -webkit-text-fill-color: currentColor;
 }
 
-.janela-dados
-  .dado-disponivel:hover {
-  transform:
-    translateY(-2px);
-  filter:
-    brightness(1.12);
+.janela-dados .dado-disponivel:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
 }
 
-.janela-dados
-  .dado-disponivel:hover
-  .espaco-dado-3d {
-  border-color: var(
-    --cor-resultado-dados,
-    #dbbd83
-  );
+.janela-dados .dado-disponivel:hover .espaco-dado-3d {
+  border-color: var(--cor-resultado-dados, #dbbd83);
 }
 
 html[data-quantidade-dados-arraste]::after {
-  content:
-    "×"
-    attr(
-      data-quantidade-dados-arraste
-    );
+  content: "×" attr(data-quantidade-dados-arraste);
   position: fixed;
   z-index: 70;
-  left: var(
-    --cursor-dado-x,
-    0px
-  );
-  top: var(
-    --cursor-dado-y,
-    0px
-  );
+  left: var(--cursor-dado-x, 0px);
+  top: var(--cursor-dado-y, 0px);
   padding: 4px 7px;
-  border: 1px solid
-    var(
-      --cor-resultado-dados,
-      #dbbd83
-    );
+  border: 1px solid var(--cor-resultado-dados, #dbbd83);
   border-radius: 50%;
   background: #17120e;
-  color: var(
-    --cor-resultado-dados,
-    #dbbd83
-  );
+  color: var(--cor-resultado-dados, #dbbd83);
   font-weight: 800;
-  transform:
-    translate(34px, -34px);
+  transform: translate(34px, -34px);
   pointer-events: none;
 }
 
@@ -674,9 +482,7 @@ html[data-quantidade-dados-arraste]::after {
   z-index: 65;
 }
 
-html[
-  data-quantidade-dados-arraste="1"
-]::after {
+html[data-quantidade-dados-arraste="1"]::after {
   display: none;
 }
 
@@ -687,7 +493,6 @@ html[
     bottom: 8px;
     width: auto;
   }
-
 
   #resultadoDado {
     font-size: 1.6rem;

@@ -7,11 +7,7 @@ window.SistemaCombate = (function () {
       nome: configuracao.nome ?? entidade.nome,
       tipo: configuracao.tipo ?? entidade.tipo,
       grupoId: configuracao.grupoId ?? null,
-            inteligencia: structuredClone(
-        configuracao.inteligencia ??
-        entidade.inteligencia ??
-        null,
-      ),
+      inteligencia: structuredClone(configuracao.inteligencia ?? entidade.inteligencia ?? null),
 
       tamanho:
         (Array.isArray(entidade.tamanho) ? entidade.tamanho[0] : entidade.tamanho) ?? "medio",
@@ -221,21 +217,19 @@ window.SistemaCombate = (function () {
     return participanteAInimigo !== participanteBInimigo;
   }
 
-    function equipamentoFoiArremessado(participante, ataque) {
+  function equipamentoFoiArremessado(participante, ataque) {
     const equipamentoId = ataque?.equipamentoInstanciaId;
 
     return Boolean(
-      equipamentoId &&
-      participante?.equipamentosArremessados?.includes(equipamentoId)
+      equipamentoId && participante?.equipamentosArremessados?.includes(equipamentoId),
     );
   }
 
   function obterAlcanceAmeaca(participante) {
-        const ataquesCorpoACorpo =
+    const ataquesCorpoACorpo =
       participante?.ataques?.filter(
         (ataque) =>
-          ataque.categoria === "corpoACorpo" &&
-          !equipamentoFoiArremessado(participante, ataque)
+          ataque.categoria === "corpoACorpo" && !equipamentoFoiArremessado(participante, ataque),
       ) ?? [];
 
     return ataquesCorpoACorpo.reduce(
@@ -330,10 +324,7 @@ window.SistemaCombate = (function () {
 
     return (
       ameacador.ataques?.find((ataque) => {
-                if (
-          ataque.categoria !== "corpoACorpo" ||
-          equipamentoFoiArremessado(ameacador, ataque)
-        ) {
+        if (ataque.categoria !== "corpoACorpo" || equipamentoFoiArremessado(ameacador, ataque)) {
           return false;
         }
 
@@ -895,7 +886,7 @@ window.SistemaCombate = (function () {
   }
 
   function validarSelecaoAcao(atacante, alvo, acao, combate = null) {
-            if (equipamentoFoiArremessado(atacante, acao)) {
+    if (equipamentoFoiArremessado(atacante, acao)) {
       return {
         sucesso: false,
         motivo: "armaArremessada",
@@ -1284,270 +1275,222 @@ window.SistemaCombate = (function () {
   }
 
   function listarCelulasAdjacentesLivres(combate, posicaoCentral) {
-  const celulas = [];
+    const celulas = [];
 
-  for (let deslocamentoLinha = -1; deslocamentoLinha <= 1; deslocamentoLinha++) {
-    for (
-      let deslocamentoColuna = -1;
-      deslocamentoColuna <= 1;
-      deslocamentoColuna++
-    ) {
-      if (deslocamentoColuna === 0 && deslocamentoLinha === 0) {
-        continue;
-      }
+    for (let deslocamentoLinha = -1; deslocamentoLinha <= 1; deslocamentoLinha++) {
+      for (let deslocamentoColuna = -1; deslocamentoColuna <= 1; deslocamentoColuna++) {
+        if (deslocamentoColuna === 0 && deslocamentoLinha === 0) {
+          continue;
+        }
 
-      const posicao = {
-        coluna: posicaoCentral.coluna + deslocamentoColuna,
-        linha: posicaoCentral.linha + deslocamentoLinha,
-      };
+        const posicao = {
+          coluna: posicaoCentral.coluna + deslocamentoColuna,
+          linha: posicaoCentral.linha + deslocamentoLinha,
+        };
 
-      const foraDoMapa =
-        posicao.coluna < 1 ||
-        posicao.coluna > combate.tabuleiro.colunas ||
-        posicao.linha < 1 ||
-        posicao.linha > combate.tabuleiro.linhas;
+        const foraDoMapa =
+          posicao.coluna < 1 ||
+          posicao.coluna > combate.tabuleiro.colunas ||
+          posicao.linha < 1 ||
+          posicao.linha > combate.tabuleiro.linhas;
 
-      if (foraDoMapa) {
-        continue;
-      }
+        if (foraDoMapa) {
+          continue;
+        }
 
-      const terrenoBloqueado =
-        obterTipoTerreno(combate, posicao.coluna, posicao.linha) ===
-        "bloqueado";
+        const terrenoBloqueado =
+          obterTipoTerreno(combate, posicao.coluna, posicao.linha) === "bloqueado";
 
-      if (terrenoBloqueado) {
-        continue;
-      }
+        if (terrenoBloqueado) {
+          continue;
+        }
 
-      const participanteNaCelula = combate.participantes.some(
-        (participante) =>
-          participante.estado !== "derrotado" &&
-          participante.posicao.coluna === posicao.coluna &&
-          participante.posicao.linha === posicao.linha,
-      );
+        const participanteNaCelula = combate.participantes.some(
+          (participante) =>
+            participante.estado !== "derrotado" &&
+            participante.posicao.coluna === posicao.coluna &&
+            participante.posicao.linha === posicao.linha,
+        );
 
-      const itemNaCelula = combate.itensNoChao.some(
-        (item) =>
-          item.posicao.coluna === posicao.coluna &&
-          item.posicao.linha === posicao.linha,
-      );
+        const itemNaCelula = combate.itensNoChao.some(
+          (item) => item.posicao.coluna === posicao.coluna && item.posicao.linha === posicao.linha,
+        );
 
-      if (!participanteNaCelula && !itemNaCelula) {
-        celulas.push(posicao);
+        if (!participanteNaCelula && !itemNaCelula) {
+          celulas.push(posicao);
+        }
       }
     }
+
+    return celulas;
   }
 
-  return celulas;
-}
+  function sortearCelulaAdjacenteLivre(combate, posicaoCentral, gerarAleatorio = Math.random) {
+    const celulasLivres = listarCelulasAdjacentesLivres(combate, posicaoCentral);
 
-function sortearCelulaAdjacenteLivre(
-  combate,
-  posicaoCentral,
-  gerarAleatorio = Math.random,
-) {
-  const celulasLivres = listarCelulasAdjacentesLivres(
-    combate,
-    posicaoCentral,
-  );
+    if (celulasLivres.length === 0) {
+      return null;
+    }
 
-  if (celulasLivres.length === 0) {
-    return null;
+    const indiceSorteado = Math.floor(gerarAleatorio() * celulasLivres.length);
+
+    return structuredClone(celulasLivres[indiceSorteado]);
   }
 
-  const indiceSorteado = Math.floor(
-    gerarAleatorio() * celulasLivres.length,
-  );
-
-  return structuredClone(celulasLivres[indiceSorteado]);
-}
-
-function algumDadoRolouMaximo(resultadoRolagem) {
-  return resultadoRolagem?.gruposRolados?.some(
-    (grupo) =>
-      grupo.resultados?.some(
-        (resultado) =>
-          Number(resultado) ===
-          Number(grupo.numeroDeFaces),
-      ),
-  ) ?? false;
-}
-
-function registrarArmaArremessadaNoChao(
-  combate,
-  atacante,
-  ataque,
-  posicaoReferencia,
-) {
-  if (
-    !combate ||
-    !atacante ||
-    !ataque ||
-    !posicaoReferencia
-  ) {
-    return {
-      sucesso: false,
-      motivo: "dadosInvalidos",
-    };
-  }
-
-  if (ataque.modoUso !== "arremesso") {
-    return {
-      sucesso: false,
-      motivo: "ataqueNaoEhArremesso",
-    };
-  }
-
-  const equipamentoInstanciaId =
-    ataque.equipamentoInstanciaId;
-
-  if (!equipamentoInstanciaId) {
-    return {
-      sucesso: false,
-      motivo: "equipamentoSemIdentidade",
-    };
-  }
-
-  const itemJaRegistrado =
-    combate.itensNoChao.some(
-      (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
-    ) ||
-    combate.participantes.some((participante) =>
-      participante.itensCravados?.some(
-        (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
-      ),
+  function algumDadoRolouMaximo(resultadoRolagem) {
+    return (
+      resultadoRolagem?.gruposRolados?.some((grupo) =>
+        grupo.resultados?.some((resultado) => Number(resultado) === Number(grupo.numeroDeFaces)),
+      ) ?? false
     );
+  }
 
-  if (itemJaRegistrado) {
+  function registrarArmaArremessadaNoChao(combate, atacante, ataque, posicaoReferencia) {
+    if (!combate || !atacante || !ataque || !posicaoReferencia) {
+      return {
+        sucesso: false,
+        motivo: "dadosInvalidos",
+      };
+    }
+
+    if (ataque.modoUso !== "arremesso") {
+      return {
+        sucesso: false,
+        motivo: "ataqueNaoEhArremesso",
+      };
+    }
+
+    const equipamentoInstanciaId = ataque.equipamentoInstanciaId;
+
+    if (!equipamentoInstanciaId) {
+      return {
+        sucesso: false,
+        motivo: "equipamentoSemIdentidade",
+      };
+    }
+
+    const itemJaRegistrado =
+      combate.itensNoChao.some((item) => item.equipamentoInstanciaId === equipamentoInstanciaId) ||
+      combate.participantes.some((participante) =>
+        participante.itensCravados?.some(
+          (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
+        ),
+      );
+
+    if (itemJaRegistrado) {
+      return {
+        sucesso: false,
+        motivo: "itemJaEstaNoChao",
+      };
+    }
+
+    const posicao = sortearCelulaAdjacenteLivre(combate, posicaoReferencia);
+
+    if (!posicao) {
+      return {
+        sucesso: false,
+        motivo: "nenhumaCelulaAdjacenteLivre",
+      };
+    }
+
+    const item = {
+      id: equipamentoInstanciaId,
+      tipo: "arma",
+      armaId: ataque.armaId,
+      equipamentoInstanciaId,
+      nome: ataque.nome.replace(/\s*\(arremesso\)$/i, ""),
+      origemParticipanteId: atacante.id,
+      posicao,
+    };
+
+    combate.itensNoChao.push(item);
+
     return {
-      sucesso: false,
-      motivo: "itemJaEstaNoChao",
+      sucesso: true,
+      motivo: null,
+      item: structuredClone(item),
     };
   }
 
-  const posicao = sortearCelulaAdjacenteLivre(
-    combate,
-    posicaoReferencia,
-  );
+  function registrarArmaCravadaNoAlvo(combate, atacante, alvo, ataque) {
+    if (!combate || !atacante || !alvo || !ataque) {
+      return { sucesso: false, motivo: "dadosInvalidos" };
+    }
 
-  if (!posicao) {
+    if (ataque.modoUso !== "arremesso") {
+      return { sucesso: false, motivo: "ataqueNaoEhArremesso" };
+    }
+
+    const equipamentoInstanciaId = ataque.equipamentoInstanciaId;
+
+    if (!equipamentoInstanciaId) {
+      return { sucesso: false, motivo: "equipamentoSemIdentidade" };
+    }
+
+    const itemJaRegistrado =
+      combate.itensNoChao.some((item) => item.equipamentoInstanciaId === equipamentoInstanciaId) ||
+      combate.participantes.some((participante) =>
+        participante.itensCravados?.some(
+          (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
+        ),
+      );
+
+    if (itemJaRegistrado) {
+      return { sucesso: false, motivo: "itemJaFoiRegistrado" };
+    }
+
+    const item = {
+      id: equipamentoInstanciaId,
+      tipo: "arma",
+      armaId: ataque.armaId,
+      equipamentoInstanciaId,
+      nome: ataque.nome.replace(/\s*\(arremesso\)$/i, ""),
+      origemParticipanteId: atacante.id,
+      alvoId: alvo.id,
+    };
+
+    alvo.itensCravados ??= [];
+    alvo.itensCravados.push(item);
+
     return {
-      sucesso: false,
-      motivo: "nenhumaCelulaAdjacenteLivre",
+      sucesso: true,
+      motivo: null,
+      item: structuredClone(item),
     };
   }
 
-  const item = {
-    id: equipamentoInstanciaId,
-    tipo: "arma",
-    armaId: ataque.armaId,
-    equipamentoInstanciaId,
-    nome: ataque.nome.replace(
-      /\s*\(arremesso\)$/i,
-      "",
-    ),
-    origemParticipanteId: atacante.id,
-    posicao,
-  };
-
-  combate.itensNoChao.push(item);
-
-  return {
-    sucesso: true,
-    motivo: null,
-    item: structuredClone(item),
-  };
-}
-
-function registrarArmaCravadaNoAlvo(combate, atacante, alvo, ataque) {
-  if (!combate || !atacante || !alvo || !ataque) {
-    return { sucesso: false, motivo: "dadosInvalidos" };
-  }
-
-  if (ataque.modoUso !== "arremesso") {
-    return { sucesso: false, motivo: "ataqueNaoEhArremesso" };
-  }
-
-  const equipamentoInstanciaId = ataque.equipamentoInstanciaId;
-
-  if (!equipamentoInstanciaId) {
-    return { sucesso: false, motivo: "equipamentoSemIdentidade" };
-  }
-
-  const itemJaRegistrado =
-    combate.itensNoChao.some(
-      (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
-    ) ||
-    combate.participantes.some((participante) =>
-      participante.itensCravados?.some(
-        (item) => item.equipamentoInstanciaId === equipamentoInstanciaId,
-      ),
-    );
-
-  if (itemJaRegistrado) {
-    return { sucesso: false, motivo: "itemJaFoiRegistrado" };
-  }
-
-  const item = {
-    id: equipamentoInstanciaId,
-    tipo: "arma",
-    armaId: ataque.armaId,
-    equipamentoInstanciaId,
-    nome: ataque.nome.replace(/\s*\(arremesso\)$/i, ""),
-    origemParticipanteId: atacante.id,
-    alvoId: alvo.id,
-  };
-
-  alvo.itensCravados ??= [];
-  alvo.itensCravados.push(item);
-
-  return {
-    sucesso: true,
-    motivo: null,
-    item: structuredClone(item),
-  };
-}
-
-function resolverDestinoArmaArremessada({
-  combate,
-  atacante,
-  alvo,
-  ataque,
-  acertou,
-  resultadoRolagemDano = null,
-}) {
-  if (ataque?.modoUso !== "arremesso") {
-    return { sucesso: true, aplicavel: false, destino: null };
-  }
-
-  if (!acertou || !algumDadoRolouMaximo(resultadoRolagemDano)) {
-    const resultado = registrarArmaArremessadaNoChao(
-      combate,
-      atacante,
-      ataque,
-      alvo.posicao,
-    );
-
-    return { ...resultado, aplicavel: true, destino: "chao" };
-  }
-
-  const resultado = registrarArmaCravadaNoAlvo(
+  function resolverDestinoArmaArremessada({
     combate,
     atacante,
     alvo,
     ataque,
-  );
+    acertou,
+    resultadoRolagemDano = null,
+  }) {
+    if (ataque?.modoUso !== "arremesso") {
+      return { sucesso: true, aplicavel: false, destino: null };
+    }
 
-  return { ...resultado, aplicavel: true, destino: "alvo" };
-}
+    const podeFicarCravada = ataque.arremesso?.podeFicarCravada !== false;
 
-    function registrarArremesso(participante, ataque) {
-        const usaArremesso =
+    const deveCairNoChao =
+      !acertou || !algumDadoRolouMaximo(resultadoRolagemDano) || !podeFicarCravada;
+
+    if (deveCairNoChao) {
+      const resultado = registrarArmaArremessadaNoChao(combate, atacante, ataque, alvo.posicao);
+
+      return { ...resultado, aplicavel: true, destino: "chao" };
+    }
+
+    const resultado = registrarArmaCravadaNoAlvo(combate, atacante, alvo, ataque);
+
+    return { ...resultado, aplicavel: true, destino: "alvo" };
+  }
+
+  function registrarArremesso(participante, ataque) {
+    const usaArremesso =
       ataque?.propriedades?.includes("arremesso") &&
-      (
-        ataque.modoUso === "arremesso" ||
-        ataque.categoria === "distancia"
-      );
+      (ataque.modoUso === "arremesso" || ataque.categoria === "distancia");
 
     if (!usaArremesso) {
       return false;
@@ -1561,9 +1504,7 @@ function resolverDestinoArmaArremessada({
 
     participante.equipamentosArremessados ??= [];
 
-    if (
-      participante.equipamentosArremessados.includes(equipamentoId)
-    ) {
+    if (participante.equipamentosArremessados.includes(equipamentoId)) {
       return false;
     }
 
@@ -1587,21 +1528,17 @@ function resolverDestinoArmaArremessada({
     const identificadorAtaque = obterIdentificadorAtaque(ataque);
     const ataqueEhLeve = ataque?.propriedades?.includes("leve") ?? false;
 
-        const ataqueAnterior = ataqueHabilitador
+    const ataqueAnterior = ataqueHabilitador
       ? encontrarAtaque(participante, ataqueHabilitador.ataqueId)
       : null;
 
     const equipamentoAnterior =
-      ataqueAnterior?.equipamentoInstanciaId ??
-      obterIdentificadorAtaque(ataqueAnterior);
+      ataqueAnterior?.equipamentoInstanciaId ?? obterIdentificadorAtaque(ataqueAnterior);
 
-    const equipamentoAtual =
-      ataque?.equipamentoInstanciaId ?? identificadorAtaque;
+    const equipamentoAtual = ataque?.equipamentoInstanciaId ?? identificadorAtaque;
 
     const ehAtaqueAdicionalLeve =
-      ataqueEhLeve &&
-      ataqueAnterior &&
-      equipamentoAnterior !== equipamentoAtual;
+      ataqueEhLeve && ataqueAnterior && equipamentoAnterior !== equipamentoAtual;
 
     if (!ehAtaqueAdicionalLeve) {
       return ataque?.custoPadrao ?? "acao";
@@ -2436,21 +2373,13 @@ function resolverDestinoArmaArremessada({
       };
     }
 
-    const planoTatico = InteligenciaInimigos.planejarTurnoTatico(
-      combate,
-      inimigo,
-      alvo,
-    );
+    const planoTatico = InteligenciaInimigos.planejarTurnoTatico(combate, inimigo, alvo);
 
-    const movimentoPlanejado = planoTatico.sucesso
-      ? planoTatico.planoEscolhido?.posicao
-      : null;
+    const movimentoPlanejado = planoTatico.sucesso ? planoTatico.planoEscolhido?.posicao : null;
 
     let resultadoMovimento = null;
 
-    if (
-      movimentoPlanejado?.caminho?.length > 0
-    ) {
+    if (movimentoPlanejado?.caminho?.length > 0) {
       const movimentoExecutado = movimentarParticipante(
         combate,
         inimigo.id,
@@ -2461,11 +2390,10 @@ function resolverDestinoArmaArremessada({
       resultadoMovimento = {
         ...movimentoExecutado,
 
-        celulasPercorridas:
-          movimentoExecutado.distancia ?? 0,
+        celulasPercorridas: movimentoExecutado.distancia ?? 0,
       };
 
-            if (movimentoExecutado.reacaoPendente) {
+      if (movimentoExecutado.reacaoPendente) {
         return {
           sucesso: true,
 
@@ -2481,45 +2409,31 @@ function resolverDestinoArmaArremessada({
       }
     }
 
-            const planoParaAtaque =
-      resultadoMovimento?.sucesso
-        ? InteligenciaInimigos.planejarTurnoTatico(
-            combate,
-            {
-              ...inimigo,
+    const planoParaAtaque = resultadoMovimento?.sucesso
+      ? InteligenciaInimigos.planejarTurnoTatico(
+          combate,
+          {
+            ...inimigo,
 
-              movimentoRestante: 0,
-            },
-            alvo,
-          )
-        : planoTatico;
+            movimentoRestante: 0,
+          },
+          alvo,
+        )
+      : planoTatico;
 
     const ataquePlanejado =
-      planoParaAtaque.sucesso &&
-      planoParaAtaque.planoEscolhido?.tipo === "atacar"
+      planoParaAtaque.sucesso && planoParaAtaque.planoEscolhido?.tipo === "atacar"
         ? planoParaAtaque.planoEscolhido.ataque
         : null;
 
-    let ataque =
-      ataquePlanejado;
+    let ataque = ataquePlanejado;
 
-    if (
-      !ataque &&
-      !planoParaAtaque.sucesso
-    ) {
-      ataque = escolherAtaqueInimigo(
-        combate,
-        inimigo,
-        alvo,
-      );
+    if (!ataque && !planoParaAtaque.sucesso) {
+      ataque = escolherAtaqueInimigo(combate, inimigo, alvo);
     }
 
     if (!ataque && !resultadoMovimento?.sucesso) {
-      resultadoMovimento = moverInimigoEmDirecaoAoAlvo(
-        combate,
-        inimigo,
-        alvo,
-      );
+      resultadoMovimento = moverInimigoEmDirecaoAoAlvo(combate, inimigo, alvo);
 
       if (resultadoMovimento?.turnoPausado) {
         return {
@@ -2538,11 +2452,7 @@ function resolverDestinoArmaArremessada({
         };
       }
 
-      ataque = escolherAtaqueInimigo(
-        combate,
-        inimigo,
-        alvo,
-      );
+      ataque = escolherAtaqueInimigo(combate, inimigo, alvo);
     }
 
     if (!ataque) {
@@ -3526,6 +3436,7 @@ function resolverDestinoArmaArremessada({
 
     validarSelecaoCriatura,
     validarSelecaoAcao,
+    participanteDominaArma,
     obterCustoAtaque,
     listarAlvosCleave,
     prepararAtaqueCleave,

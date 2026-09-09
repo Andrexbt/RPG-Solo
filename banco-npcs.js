@@ -1,9 +1,7 @@
 "use strict";
 
 window.bancoNpcs = {
-
   aFuga: {
-
     ned: {
       id: "ned",
       nome: "Ned",
@@ -154,8 +152,7 @@ window.bancoNpcs = {
     lagartoBronze: {
       id: "lagartoBronze",
 
-      nome:
-        "Lagarto de Bronze",
+      nome: "Lagarto de Bronze",
 
       tipo: "inimigo",
 
@@ -166,32 +163,27 @@ window.bancoNpcs = {
       // Sobrescreve apenas a identidade
       // visual do bloco oficial.
       avatar: {
-        imagem:
-          "Imagens/Avatares/npcs/lagartoBronze.webp",
+        imagem: "Imagens/Avatares/npcs/lagartoBronze.webp",
 
-        frame:
-          "Imagens/Avatares/frame/frame-01.webp",
+        frame: "Imagens/Avatares/frame/frame-01.webp",
       },
 
       narracao: {
         categoria: "humanoide",
 
         termos: {
-          sujeito:
-            "o Lagarto de Bronze",
+          sujeito: "o Lagarto de Bronze",
         },
 
         // Os ids precisam corresponder
         // aos ataques do bloco Bandido.
         ataques: {
           cimitarra: {
-            tipoNarrativo:
-              "cimitarra",
+            tipoNarrativo: "cimitarra",
           },
 
           bestaLeve: {
-            tipoNarrativo:
-              "bestaLeve",
+            tipoNarrativo: "bestaLeve",
           },
         },
       },

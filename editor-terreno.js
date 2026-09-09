@@ -107,9 +107,7 @@ function obterTipoConfigurado(terreno, coluna, linha) {
 }
 
 function possuiBloqueioVisaoConfigurado(visao, coluna, linha) {
-  return (visao?.bloqueios ?? []).some((regiao) =>
-    celulaPertenceRegiao(coluna, linha, regiao),
-  );
+  return (visao?.bloqueios ?? []).some((regiao) => celulaPertenceRegiao(coluna, linha, regiao));
 }
 
 function chaveBarreira(barreira) {
@@ -163,9 +161,7 @@ function criarGrid() {
 }
 
 function atualizarCelulaVisual(coluna, linha) {
-  const celula = gridEditor.querySelector(
-    `[data-coluna="${coluna}"][data-linha="${linha}"]`,
-  );
+  const celula = gridEditor.querySelector(`[data-coluna="${coluna}"][data-linha="${linha}"]`);
 
   if (!celula) {
     return;
@@ -174,10 +170,7 @@ function atualizarCelulaVisual(coluna, linha) {
   const tipo = tiposCelulas.get(chaveCelula(coluna, linha)) ?? "normal";
   celula.classList.toggle("tipo-dificil", tipo === "dificil");
   celula.classList.toggle("tipo-bloqueado", tipo === "bloqueado");
-  celula.classList.toggle(
-    "tipo-bloqueio-visao",
-    bloqueiosVisao.has(chaveCelula(coluna, linha)),
-  );
+  celula.classList.toggle("tipo-bloqueio-visao", bloqueiosVisao.has(chaveCelula(coluna, linha)));
 }
 
 const classesBarreiras = [
@@ -285,7 +278,6 @@ function carregarBatalhaSelecionada() {
       if (possuiBloqueioVisaoConfigurado(item.cena.combate.visao, coluna, linha)) {
         bloqueiosVisao.add(chaveCelula(coluna, linha));
       }
-
     }
   }
 
@@ -334,9 +326,7 @@ function selecionarModoVisao(evento) {
 }
 
 function selecionarPincel(evento) {
-  const botao = evento.target.closest(
-    "[data-tipo], [data-tipo-visao-casa], [data-tipo-barreira]",
-  );
+  const botao = evento.target.closest("[data-tipo], [data-tipo-visao-casa], [data-tipo-barreira]");
 
   if (!botao) {
     return;
@@ -378,8 +368,8 @@ function obterLadoMaisProximo(celula, evento) {
     sul: Math.abs(retangulo.bottom - evento.clientY),
   };
 
-  return Object.entries(distancias).sort(([, distanciaA], [, distanciaB]) =>
-    distanciaA - distanciaB,
+  return Object.entries(distancias).sort(
+    ([, distanciaA], [, distanciaB]) => distanciaA - distanciaB,
   )[0][0];
 }
 
@@ -604,10 +594,7 @@ function obterRegioesCompactadas(tipo, conjunto = null) {
 
       const colunaInicial = coluna;
 
-      while (
-        coluna < COLUNAS_TABULEIRO &&
-        celulaEstaAtiva(coluna + 1, linha)
-      ) {
+      while (coluna < COLUNAS_TABULEIRO && celulaEstaAtiva(coluna + 1, linha)) {
         coluna++;
       }
 
@@ -648,10 +635,7 @@ function obterRegioesCompactadas(tipo, conjunto = null) {
 }
 
 function formatarRegiao(regiao) {
-  if (
-    regiao.colunaInicial === regiao.colunaFinal &&
-    regiao.linhaInicial === regiao.linhaFinal
-  ) {
+  if (regiao.colunaInicial === regiao.colunaFinal && regiao.linhaInicial === regiao.linhaFinal) {
     return `    { coluna: ${regiao.colunaInicial}, linha: ${regiao.linhaInicial} },`;
   }
 
@@ -707,13 +691,9 @@ function gerarCodigo() {
     "},",
   ].join("\n");
 
-  mensagemEditor.textContent =
-    `Código gerado em ${
-      bloqueadas.length +
-        dificeis.length +
-        bloqueiosVisuais.length +
-        barreiras.length
-    } regiões compactadas.`;
+  mensagemEditor.textContent = `Código gerado em ${
+    bloqueadas.length + dificeis.length + bloqueiosVisuais.length + barreiras.length
+  } regiões compactadas.`;
 }
 
 async function copiarCodigo() {

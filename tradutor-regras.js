@@ -400,39 +400,18 @@ window.TradutorRegras = (function () {
     }
 
     if (requisito.tamanhoMaximoAlvo) {
-  const ordemTamanhos = [
-    "miudo",
-    "pequeno",
-    "medio",
-    "grande",
-    "enorme",
-    "gigantesco",
-  ];
+      const ordemTamanhos = ["miudo", "pequeno", "medio", "grande", "enorme", "gigantesco"];
 
-  const tamanhoAlvo =
-    Array.isArray(
-      contexto?.alvo?.tamanho,
-    )
-      ? contexto.alvo.tamanho[0]
-      : contexto?.alvo?.tamanho ??
-        "medio";
+      const tamanhoAlvo = Array.isArray(contexto?.alvo?.tamanho)
+        ? contexto.alvo.tamanho[0]
+        : (contexto?.alvo?.tamanho ?? "medio");
 
-  const indiceAlvo =
-    ordemTamanhos.indexOf(
-      tamanhoAlvo,
-    );
+      const indiceAlvo = ordemTamanhos.indexOf(tamanhoAlvo);
 
-  const indiceMaximo =
-    ordemTamanhos.indexOf(
-      requisito.tamanhoMaximoAlvo,
-    );
+      const indiceMaximo = ordemTamanhos.indexOf(requisito.tamanhoMaximoAlvo);
 
-  return (
-    indiceAlvo >= 0 &&
-    indiceMaximo >= 0 &&
-    indiceAlvo <= indiceMaximo
-  );
-}
+      return indiceAlvo >= 0 && indiceMaximo >= 0 && indiceAlvo <= indiceMaximo;
+    }
 
     if (requisito.tipo === "contatoComSuperficie") {
       const superficie = contexto?.ambiente?.superficieContato;
@@ -450,25 +429,16 @@ window.TradutorRegras = (function () {
 
     if (
       requisito.propriedadeArma &&
-      !contexto?.ataque?.propriedades?.includes(
-        requisito.propriedadeArma,
-      )
+      !contexto?.ataque?.propriedades?.includes(requisito.propriedadeArma)
     ) {
       return false;
     }
 
-    if (
-      requisito.ataqueCorpoACorpo === true &&
-      contexto?.ataque?.categoria !== "corpoACorpo"
-    ) {
+    if (requisito.ataqueCorpoACorpo === true && contexto?.ataque?.categoria !== "corpoACorpo") {
       return false;
     }
 
-    if (
-      requisito.propriedadeArma ||
-      requisito.ataqueCorpoACorpo ||
-      requisito.segundoAlvo
-    ) {
+    if (requisito.propriedadeArma || requisito.ataqueCorpoACorpo || requisito.segundoAlvo) {
       return true;
     }
 
@@ -711,13 +681,9 @@ window.TradutorRegras = (function () {
 
         origem: structuredClone(ordem.origem),
 
-        opcional:
-  ordem.opcional,
+        opcional: ordem.opcional,
 
-limite:
-  structuredClone(
-    ordem.limite ?? null
-  ),
+        limite: structuredClone(ordem.limite ?? null),
 
         custo: ordem.custo,
 

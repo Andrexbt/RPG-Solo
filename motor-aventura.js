@@ -11,17 +11,12 @@ window.MotorAventura = (function () {
   }
 
   function obterEntidadeDoTeste(teste) {
-  if (teste?.tipo === "npc") {
-    return (
-      window.estadoJogo
-        ?.npcs
-        ?.[teste.npcId]
-      ?? null
-    );
-  }
+    if (teste?.tipo === "npc") {
+      return window.estadoJogo?.npcs?.[teste.npcId] ?? null;
+    }
 
-  return obterPersonagem();
-}
+    return obterPersonagem();
+  }
 
   function obterNomeAtributo(idAtributo) {
     const nomes = {
@@ -50,9 +45,7 @@ window.MotorAventura = (function () {
     }
 
     if (descritor.tipo === "atributo") {
-      return SistemaTestes.calcularModificadorAtributo(
-        entidade.atributos?.[descritor.atributoId],
-      );
+      return SistemaTestes.calcularModificadorAtributo(entidade.atributos?.[descritor.atributoId]);
     }
 
     return 0;
@@ -77,11 +70,7 @@ window.MotorAventura = (function () {
 
   function obterNomeTeste(teste) {
     const descritor =
-  teste.tipo === "oposto"
-    ? teste.jogador
-    : teste.tipo === "npc"
-      ? teste.teste
-      : teste;
+      teste.tipo === "oposto" ? teste.jogador : teste.tipo === "npc" ? teste.teste : teste;
 
     if (descritor.tipo === "pericia") {
       return window.bancoPericias?.[descritor.periciaId]?.nome ?? descritor.periciaId;
@@ -98,25 +87,15 @@ window.MotorAventura = (function () {
   function prepararRolagem(teste) {
     const entidade = obterEntidadeDoTeste(teste);
 
-if (!entidade || !teste) {
-  return null;
-}
+    if (!entidade || !teste) {
+      return null;
+    }
 
     const descritor =
-  teste.tipo === "oposto"
-    ? teste.jogador
-    : teste.tipo === "npc"
-      ? teste.teste
-      : teste;
+      teste.tipo === "oposto" ? teste.jogador : teste.tipo === "npc" ? teste.teste : teste;
     const modificador = calcularBonusDescritor(entidade, descritor);
-    const tipoRolagem =
-  SistemaTestes.determinarTipoRolagem(
-    entidade,
-    descritor,
-    teste,
-  );
-    const quantidadeD20 =
-      tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
+    const tipoRolagem = SistemaTestes.determinarTipoRolagem(entidade, descritor, teste);
+    const quantidadeD20 = tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
 
     return {
       gruposDeDados: [
@@ -137,14 +116,8 @@ if (!entidade || !teste) {
     const descritor = teste.tipo === "oposto" ? teste.jogador : teste;
     const entidade = obterEntidadeDoTeste(teste);
 
-const tipoRolagem =
-  SistemaTestes.determinarTipoRolagem(
-    entidade,
-    descritor,
-    teste,
-  );
-    const quantidadeD20 =
-      tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
+    const tipoRolagem = SistemaTestes.determinarTipoRolagem(entidade, descritor, teste);
+    const quantidadeD20 = tipoRolagem === "vantagem" || tipoRolagem === "desvantagem" ? 2 : 1;
     const aviso =
       tipoRolagem === "vantagem"
         ? ", use o maior"
@@ -226,9 +199,7 @@ const tipoRolagem =
     }
 
     if (teste.tipo === "npc") {
-      return resolverTesteNpc(
-      configuracao
-      );
+      return resolverTesteNpc(configuracao);
     }
 
     if (teste.tipo === "periciaEscolha") {
@@ -250,20 +221,15 @@ const tipoRolagem =
       return false;
     }
 
-    const descritorJogador =
-  teste.tipo === "oposto"
-    ? teste.jogador
-    : teste;
+    const descritorJogador = teste.tipo === "oposto" ? teste.jogador : teste;
 
-const entidadeJogador =
-  obterEntidadeDoTeste(teste);
+    const entidadeJogador = obterEntidadeDoTeste(teste);
 
-const tipoRolagemJogador =
-  SistemaTestes.determinarTipoRolagem(
-    entidadeJogador,
-    descritorJogador,
-    teste,
-  );
+    const tipoRolagemJogador = SistemaTestes.determinarTipoRolagem(
+      entidadeJogador,
+      descritorJogador,
+      teste,
+    );
 
     let resultadoOponente = null;
 
@@ -275,14 +241,10 @@ const tipoRolagemJogador =
         return false;
       }
 
-      const tipoRolagemOponente =
-    teste.oponente.tipoRolagem ?? "normal";
+      const tipoRolagemOponente = teste.oponente.tipoRolagem ?? "normal";
 
-  const quantidadeD20Oponente =
-    tipoRolagemOponente === "vantagem" ||
-    tipoRolagemOponente === "desvantagem"
-      ? 2
-      : 1;
+      const quantidadeD20Oponente =
+        tipoRolagemOponente === "vantagem" || tipoRolagemOponente === "desvantagem" ? 2 : 1;
 
       resultadoOponente = realizarRolagemComposta({
         gruposDeDados: [
@@ -295,16 +257,12 @@ const tipoRolagemJogador =
       });
 
       if (tipoRolagemOponente !== "normal") {
-    resultadoOponente = {
-      ...resultadoOponente,
+        resultadoOponente = {
+          ...resultadoOponente,
 
-      total:
-        SistemaTestes.calcularTotalTesteD20(
-          resultadoOponente,
-          tipoRolagemOponente,
-        ),
-    };
-  }
+          total: SistemaTestes.calcularTotalTesteD20(resultadoOponente, tipoRolagemOponente),
+        };
+      }
     }
 
     estado.testeAtivo = {
@@ -336,555 +294,431 @@ const tipoRolagemJogador =
   }
 
   async function resolverTesteNpc(configuracao) {
-  const teste = configuracao?.teste;
+    const teste = configuracao?.teste;
 
-  if (!teste || teste.tipo !== "npc") {
-    return false;
-  }
+    if (!teste || teste.tipo !== "npc") {
+      return false;
+    }
 
-  const npc =
-    window.estadoJogo
-      ?.npcs
-      ?.[teste.npcId];
+    const npc = window.estadoJogo?.npcs?.[teste.npcId];
 
-  if (!npc) {
-    console.warn(
-      "NPC do teste não encontrado:",
-      teste.npcId,
-    );
-    return false;
-  }
+    if (!npc) {
+      console.warn("NPC do teste não encontrado:", teste.npcId);
+      return false;
+    }
 
-  const rolagem = prepararRolagem(teste);
+    const rolagem = prepararRolagem(teste);
 
-  if (!rolagem) {
-    console.warn(
-      "Não foi possível preparar o teste do NPC:",
-      teste,
-    );
-    return false;
-  }
+    if (!rolagem) {
+      console.warn("Não foi possível preparar o teste do NPC:", teste);
+      return false;
+    }
 
-  const resultadoRolagem =
-    realizarRolagemComposta(rolagem);
+    const resultadoRolagem = realizarRolagemComposta(rolagem);
 
-  const descritor =
-    teste.teste;
+    const descritor = teste.teste;
 
-  const tipoRolagem =
-    descritor?.tipoRolagem ??
-    teste.tipoRolagem ??
-    "normal";
+    const tipoRolagem = descritor?.tipoRolagem ?? teste.tipoRolagem ?? "normal";
 
-  const resultadoTeste =
-    SistemaTestes.resolverTesteContraCd(
+    const resultadoTeste = SistemaTestes.resolverTesteContraCd(
       resultadoRolagem,
       teste.dificuldade,
       tipoRolagem,
     );
 
-  const consequencia =
-    configuracao.resultados?.[
-      resultadoTeste.sucesso
-        ? "sucesso"
-        : "fracasso"
-    ];
-
-  registrarEventoNarrativo({
-    tipo: "teste",
-    resultado: resultadoTeste.sucesso
-      ? "sucesso"
-      : "fracasso",
-  });
-
-  await aplicarConsequencia(
-    consequencia
-  );
-
-  return true;
-}
-
-function normalizarTipoRolagemAtaque(tipoRolagem) {
-  if (tipoRolagem === "vantagem" || tipoRolagem === "desvantagem") {
-    return tipoRolagem;
-  }
-
-  return "normal";
-}
-
-function resolverAtaqueNpcIndividual(ataque, personagem, configuracao = {}) {
-  const tipoRolagem = normalizarTipoRolagemAtaque(configuracao.tipoRolagem);
-  const quantidadeD20 = tipoRolagem === "normal" ? 1 : 2;
-  const resultadoRolagem = realizarRolagemComposta({
-    gruposDeDados: [
-      {
-        quantidade: quantidadeD20,
-        numeroDeFaces: 20,
-      },
-    ],
-
-    modificador: ataque.bonusAtaque ?? 0,
-  });
-
-  const grupoD20 = resultadoRolagem.gruposRolados.find(
-    (grupo) => grupo.numeroDeFaces === 20,
-  );
-  const resultadosD20 = grupoD20?.resultados ?? [];
-  const resultadoNatural = SistemaTestes.selecionarResultadoD20(
-    resultadosD20,
-    tipoRolagem,
-  );
-  const totalAtaque = resultadoNatural + (Number(ataque.bonusAtaque) || 0);
-  const classeArmadura = personagem.combate?.classeArmadura ?? 10;
-  const acertoCritico = resultadoNatural === 20;
-  const falhaAutomatica = resultadoNatural === 1;
-  const acertou =
-    !falhaAutomatica && (acertoCritico || totalAtaque >= classeArmadura);
-
-  let dano = 0;
-
-  if (acertou) {
-    const modificadorDano =
-      configuracao.dano?.substituirModificador ?? ataque.dano?.modificador ?? 0;
-    const resultadoDano = realizarRolagemComposta({
-      gruposDeDados: ataque.dano?.gruposDeDados ?? [],
-      modificador: modificadorDano,
-    });
-    const subtotal = Number(resultadoDano.subtotal) || 0;
-    const modificador = Number(resultadoDano.modificador) || 0;
-
-    dano = acertoCritico ? subtotal * 2 + modificador : subtotal + modificador;
-    dano = Math.max(configuracao.dano?.minimo ?? 0, dano);
-  }
-
-  return {
-    acertou,
-    acertoCritico,
-    falhaAutomatica,
-    tipoRolagem,
-    resultadosD20,
-    resultadoNatural,
-    totalAtaque,
-    dano,
-  };
-}
-
-function aplicarDanoNarrativo(personagem, dano) {
-  const pontosDeVida = personagem.combate?.pontosDeVida;
-
-  if (!pontosDeVida || dano <= 0) {
-    return;
-  }
-
-  pontosDeVida.atuais = Math.max(0, pontosDeVida.atuais - dano);
-}
-
-function personagemEstaSemPontosDeVida() {
-  const pontosDeVida =
-    window.estadoJogo
-      ?.personagem
-      ?.dados
-      ?.combate
-      ?.pontosDeVida;
-
-  if (!pontosDeVida) {
-    return false;
-  }
-
-  return Number(pontosDeVida.atuais) <= 0;
-}
-
-async function encaminharParaFimDerrotaSeNecessario() {
-  if (!personagemEstaSemPontosDeVida()) {
-    return false;
-  }
-
-  await aplicarConsequencia({
-    proximaCena: "encerramentoAventura",
-  });
-
-  return true;
-}
-
-function obterAtaqueNpc(configuracao) {
-  const npc = window.estadoJogo?.npcs?.[configuracao.npcId];
-  const ataque = npc?.ataques?.find((item) => item.id === configuracao.ataqueId);
-
-  return {
-    npc,
-    ataque,
-    personagem: window.estadoJogo?.personagem?.dados,
-  };
-}
-
-async function resolverAtaqueNpc(configuracao) {
-  const { npc, ataque, personagem } = obterAtaqueNpc(configuracao);
-
-  if (!npc || !personagem) {
-    console.warn(
-      "NPC ou personagem não encontrado para ataque narrativo.",
-    );
-
-    return false;
-  }
-
-  if (!ataque) {
-    console.warn(
-      "Ataque do NPC não encontrado:",
-      configuracao.ataqueId,
-    );
-
-    return false;
-  }
-
-  const resultado = resolverAtaqueNpcIndividual(ataque, personagem, configuracao);
-
-  aplicarDanoNarrativo(personagem, resultado.dano);
-
-  if (resultado.dano > 0) {
-    await exibirContexto(
-      `Você sofreu ${resultado.dano} pontos de dano.`,
-    );
-  }
-
-  const consequencia =
-    configuracao.resultados?.[resultado.acertou ? "acerto" : "erro"];
+    const consequencia = configuracao.resultados?.[resultadoTeste.sucesso ? "sucesso" : "fracasso"];
 
     registrarEventoNarrativo({
-  tipo: "ataqueNpc",
-  resultado: resultado.acertou
-    ? "acerto"
-    : "erro",
-  quantidadeAcertos: resultado.acertou ? 1 : 0,
-});
+      tipo: "teste",
+      resultado: resultadoTeste.sucesso ? "sucesso" : "fracasso",
+    });
 
-if (
-  await encaminharParaFimDerrotaSeNecessario()
-) {
-  return true;
-}
+    await aplicarConsequencia(consequencia);
 
-  await aplicarConsequencia(consequencia);
-
-  return true;
-}
-
-async function resolverAtaquesNpc(configuracao) {
-  const { npc, ataque, personagem } = obterAtaqueNpc(configuracao);
-
-  if (!npc || !personagem) {
-    console.warn("NPC ou personagem não encontrado para ataques narrativos.");
-    return false;
+    return true;
   }
 
-  if (!ataque) {
-    console.warn("Ataque do NPC não encontrado:", configuracao.ataqueId);
-    return false;
+  function normalizarTipoRolagemAtaque(tipoRolagem) {
+    if (tipoRolagem === "vantagem" || tipoRolagem === "desvantagem") {
+      return tipoRolagem;
+    }
+
+    return "normal";
   }
 
-  const quantidade = Math.max(1, Math.floor(Number(configuracao.quantidade) || 1));
-  const ataques = Array.from({ length: quantidade }, function () {
-    return resolverAtaqueNpcIndividual(ataque, personagem, configuracao);
-  });
-  const quantidadeAcertos = ataques.filter((resultado) => resultado.acertou).length;
-  const quantidadeErros = quantidade - quantidadeAcertos;
-  const quantidadeCriticos = ataques.filter(
-    (resultado) => resultado.acertoCritico,
-  ).length;
-  const danoTotal = ataques.reduce((total, resultado) => total + resultado.dano, 0);
+  function resolverAtaqueNpcIndividual(ataque, personagem, configuracao = {}) {
+    const tipoRolagem = normalizarTipoRolagemAtaque(configuracao.tipoRolagem);
+    const quantidadeD20 = tipoRolagem === "normal" ? 1 : 2;
+    const resultadoRolagem = realizarRolagemComposta({
+      gruposDeDados: [
+        {
+          quantidade: quantidadeD20,
+          numeroDeFaces: 20,
+        },
+      ],
 
-  aplicarDanoNarrativo(personagem, danoTotal);
+      modificador: ataque.bonusAtaque ?? 0,
+    });
 
-  if (danoTotal > 0) {
-    await exibirContexto(`Você sofreu ${danoTotal} pontos de dano.`);
+    const grupoD20 = resultadoRolagem.gruposRolados.find((grupo) => grupo.numeroDeFaces === 20);
+    const resultadosD20 = grupoD20?.resultados ?? [];
+    const resultadoNatural = SistemaTestes.selecionarResultadoD20(resultadosD20, tipoRolagem);
+    const totalAtaque = resultadoNatural + (Number(ataque.bonusAtaque) || 0);
+    const classeArmadura = personagem.combate?.classeArmadura ?? 10;
+    const acertoCritico = resultadoNatural === 20;
+    const falhaAutomatica = resultadoNatural === 1;
+    const acertou = !falhaAutomatica && (acertoCritico || totalAtaque >= classeArmadura);
+
+    let dano = 0;
+
+    if (acertou) {
+      const modificadorDano =
+        configuracao.dano?.substituirModificador ?? ataque.dano?.modificador ?? 0;
+      const resultadoDano = realizarRolagemComposta({
+        gruposDeDados: ataque.dano?.gruposDeDados ?? [],
+        modificador: modificadorDano,
+      });
+      const subtotal = Number(resultadoDano.subtotal) || 0;
+      const modificador = Number(resultadoDano.modificador) || 0;
+
+      dano = acertoCritico ? subtotal * 2 + modificador : subtotal + modificador;
+      dano = Math.max(configuracao.dano?.minimo ?? 0, dano);
+    }
+
+    return {
+      acertou,
+      acertoCritico,
+      falhaAutomatica,
+      tipoRolagem,
+      resultadosD20,
+      resultadoNatural,
+      totalAtaque,
+      dano,
+    };
   }
 
-  const consequencia = configuracao.resultadosPorAcertos?.[quantidadeAcertos];
+  function aplicarDanoNarrativo(personagem, dano) {
+    const pontosDeVida = personagem.combate?.pontosDeVida;
 
-  registrarEventoNarrativo({
-    tipo: "ataquesNpc",
-    resultado: quantidadeAcertos > 0
-      ? "acerto"
-      : "erro",
-    quantidadeAcertos,
-  });
+    if (!pontosDeVida || dano <= 0) {
+      return;
+    }
 
-  if (
-  await encaminharParaFimDerrotaSeNecessario()
-) {
-  return {
-    quantidadeAtaques: quantidade,
-    quantidadeAcertos,
-    quantidadeErros,
-    quantidadeCriticos,
-    danoTotal,
-    ataques,
-    personagemDerrotado: true,
-  };
-}
+    pontosDeVida.atuais = Math.max(0, pontosDeVida.atuais - dano);
+  }
 
-  await aplicarConsequencia(consequencia);
+  function personagemEstaSemPontosDeVida() {
+    const pontosDeVida = window.estadoJogo?.personagem?.dados?.combate?.pontosDeVida;
 
-  return {
-    quantidadeAtaques: quantidade,
-    quantidadeAcertos,
-    quantidadeErros,
-    quantidadeCriticos,
-    danoTotal,
-    ataques,
-  };
-}
+    if (!pontosDeVida) {
+      return false;
+    }
 
-async function resolverDescansoCurto(configuracao = {}) {
-    const resultadoInicial =
-        window.SistemaDescansos?.iniciarDescansoCurto?.();
+    return Number(pontosDeVida.atuais) <= 0;
+  }
+
+  async function encaminharParaFimDerrotaSeNecessario() {
+    if (!personagemEstaSemPontosDeVida()) {
+      return false;
+    }
+
+    await aplicarConsequencia({
+      proximaCena: "encerramentoAventura",
+    });
+
+    return true;
+  }
+
+  function obterAtaqueNpc(configuracao) {
+    const npc = window.estadoJogo?.npcs?.[configuracao.npcId];
+    const ataque = npc?.ataques?.find((item) => item.id === configuracao.ataqueId);
+
+    return {
+      npc,
+      ataque,
+      personagem: window.estadoJogo?.personagem?.dados,
+    };
+  }
+
+  async function resolverAtaqueNpc(configuracao) {
+    const { npc, ataque, personagem } = obterAtaqueNpc(configuracao);
+
+    if (!npc || !personagem) {
+      console.warn("NPC ou personagem não encontrado para ataque narrativo.");
+
+      return false;
+    }
+
+    if (!ataque) {
+      console.warn("Ataque do NPC não encontrado:", configuracao.ataqueId);
+
+      return false;
+    }
+
+    const resultado = resolverAtaqueNpcIndividual(ataque, personagem, configuracao);
+
+    aplicarDanoNarrativo(personagem, resultado.dano);
+
+    if (resultado.dano > 0) {
+      await exibirContexto(`Você sofreu ${resultado.dano} pontos de dano.`);
+    }
+
+    const consequencia = configuracao.resultados?.[resultado.acertou ? "acerto" : "erro"];
+
+    registrarEventoNarrativo({
+      tipo: "ataqueNpc",
+      resultado: resultado.acertou ? "acerto" : "erro",
+      quantidadeAcertos: resultado.acertou ? 1 : 0,
+    });
+
+    if (await encaminharParaFimDerrotaSeNecessario()) {
+      return true;
+    }
+
+    await aplicarConsequencia(consequencia);
+
+    return true;
+  }
+
+  async function resolverAtaquesNpc(configuracao) {
+    const { npc, ataque, personagem } = obterAtaqueNpc(configuracao);
+
+    if (!npc || !personagem) {
+      console.warn("NPC ou personagem não encontrado para ataques narrativos.");
+      return false;
+    }
+
+    if (!ataque) {
+      console.warn("Ataque do NPC não encontrado:", configuracao.ataqueId);
+      return false;
+    }
+
+    const quantidade = Math.max(1, Math.floor(Number(configuracao.quantidade) || 1));
+    const ataques = Array.from({ length: quantidade }, function () {
+      return resolverAtaqueNpcIndividual(ataque, personagem, configuracao);
+    });
+    const quantidadeAcertos = ataques.filter((resultado) => resultado.acertou).length;
+    const quantidadeErros = quantidade - quantidadeAcertos;
+    const quantidadeCriticos = ataques.filter((resultado) => resultado.acertoCritico).length;
+    const danoTotal = ataques.reduce((total, resultado) => total + resultado.dano, 0);
+
+    aplicarDanoNarrativo(personagem, danoTotal);
+
+    if (danoTotal > 0) {
+      await exibirContexto(`Você sofreu ${danoTotal} pontos de dano.`);
+    }
+
+    const consequencia = configuracao.resultadosPorAcertos?.[quantidadeAcertos];
+
+    registrarEventoNarrativo({
+      tipo: "ataquesNpc",
+      resultado: quantidadeAcertos > 0 ? "acerto" : "erro",
+      quantidadeAcertos,
+    });
+
+    if (await encaminharParaFimDerrotaSeNecessario()) {
+      return {
+        quantidadeAtaques: quantidade,
+        quantidadeAcertos,
+        quantidadeErros,
+        quantidadeCriticos,
+        danoTotal,
+        ataques,
+        personagemDerrotado: true,
+      };
+    }
+
+    await aplicarConsequencia(consequencia);
+
+    return {
+      quantidadeAtaques: quantidade,
+      quantidadeAcertos,
+      quantidadeErros,
+      quantidadeCriticos,
+      danoTotal,
+      ataques,
+    };
+  }
+
+  async function resolverDescansoCurto(configuracao = {}) {
+    const resultadoInicial = window.SistemaDescansos?.iniciarDescansoCurto?.();
 
     if (!resultadoInicial?.sucesso) {
-        console.warn(
-            "Não foi possível iniciar o descanso curto:",
-            resultadoInicial
-        );
+      console.warn("Não foi possível iniciar o descanso curto:", resultadoInicial);
 
-        await exibirContexto(
-            "Você não pode realizar um descanso curto neste momento."
-        );
+      await exibirContexto("Você não pode realizar um descanso curto neste momento.");
 
-        return;
+      return;
     }
 
-    await exibirContexto(
-        "Após uma hora de repouso, você conclui um descanso curto."
-    );
+    await exibirContexto("Após uma hora de repouso, você conclui um descanso curto.");
 
     async function mostrarDecisoesDoDescanso() {
-        const personagem =
-            window.estadoJogo?.personagem?.dados;
+      const personagem = window.estadoJogo?.personagem?.dados;
 
-        const pontosDeVida =
-            personagem?.combate?.pontosDeVida;
+      const pontosDeVida = personagem?.combate?.pontosDeVida;
 
-        const vidaAtual =
-            Number(pontosDeVida?.atuais ?? 0);
+      const vidaAtual = Number(pontosDeVida?.atuais ?? 0);
 
-        const vidaMaxima =
-            Number(pontosDeVida?.maximo ?? vidaAtual);
+      const vidaMaxima = Number(pontosDeVida?.maximo ?? vidaAtual);
 
-        const dadosUsados =
-            Number(pontosDeVida?.dadosVidaUsados ?? 0);
+      const dadosUsados = Number(pontosDeVida?.dadosVidaUsados ?? 0);
 
-        const dadosMaximos =
-            Math.max(1, Number(personagem?.nivel) || 1);
+      const dadosMaximos = Math.max(1, Number(personagem?.nivel) || 1);
 
-        const escolhas = [];
+      const escolhas = [];
 
-        if (
-            vidaAtual < vidaMaxima
-            && dadosUsados < dadosMaximos
-        ) {
-            escolhas.push({
-                id: "descanso-curto-gastar-dado-vida",
-                texto: `Gastar um Dado de Vida (${dadosUsados}/${dadosMaximos} usados)`,
-                registrarNarrativa: false,
+      if (vidaAtual < vidaMaxima && dadosUsados < dadosMaximos) {
+        escolhas.push({
+          id: "descanso-curto-gastar-dado-vida",
+          texto: `Gastar um Dado de Vida (${dadosUsados}/${dadosMaximos} usados)`,
+          registrarNarrativa: false,
 
-                __acaoMotor: async function gastarDadoVidaNoDescanso() {
-    const preparacao =
-        window.SistemaDescansos
-            .prepararGastoDadoVida();
+          __acaoMotor: async function gastarDadoVidaNoDescanso() {
+            const preparacao = window.SistemaDescansos.prepararGastoDadoVida();
 
-    if (!preparacao?.sucesso) {
-        console.warn(
-            "Não foi possível preparar o Dado de Vida:",
-            preparacao
-        );
+            if (!preparacao?.sucesso) {
+              console.warn("Não foi possível preparar o Dado de Vida:", preparacao);
 
-        await exibirContexto(
-            "Você não pode gastar outro Dado de Vida."
-        );
+              await exibirContexto("Você não pode gastar outro Dado de Vida.");
 
-        await mostrarDecisoesDoDescanso();
-        return;
-    }
+              await mostrarDecisoesDoDescanso();
+              return;
+            }
 
-    if (
-        typeof window.configurarRolagemSolicitada
-        !== "function"
-    ) {
-        console.warn(
-            "A caixa de dados não está disponível."
-        );
+            if (typeof window.configurarRolagemSolicitada !== "function") {
+              console.warn("A caixa de dados não está disponível.");
 
-        return;
-    }
+              return;
+            }
 
-    exibirEscolhas([]);
+            exibirEscolhas([]);
 
-    await NarradorAventura.adicionarTeste(
-        `Lance ${preparacao.dado} para recuperar pontos de vida.`
-    );
+            await NarradorAventura.adicionarTeste(
+              `Lance ${preparacao.dado} para recuperar pontos de vida.`,
+            );
 
-    estado.descansoCurtoPendente = {
-        resolver: async function resolverDadoVida(
-            resultadoRolagem
-        ) {
-            const resultado =
-                window.SistemaDescansos
-                    .aplicarResultadoDadoVida(
-                        resultadoRolagem
-                    );
+            estado.descansoCurtoPendente = {
+              resolver: async function resolverDadoVida(resultadoRolagem) {
+                const resultado =
+                  window.SistemaDescansos.aplicarResultadoDadoVida(resultadoRolagem);
 
-            if (!resultado?.sucesso) {
-                console.warn(
-                    "Não foi possível aplicar o Dado de Vida:",
-                    resultado
-                );
+                if (!resultado?.sucesso) {
+                  console.warn("Não foi possível aplicar o Dado de Vida:", resultado);
+
+                  await exibirContexto("Não foi possível aplicar o resultado do Dado de Vida.");
+
+                  await mostrarDecisoesDoDescanso();
+                  return;
+                }
+
+                const dados = resultado.resultado;
+
+                const sinalModificador = dados.modificadorConstituicao >= 0 ? "+" : "";
 
                 await exibirContexto(
-                    "Não foi possível aplicar o resultado do Dado de Vida."
+                  `Você rolou ${dados.dado}: ` +
+                    `${dados.resultadoDado} ` +
+                    `${sinalModificador}` +
+                    `${dados.modificadorConstituicao} ` +
+                    `de Constituição e recuperou ` +
+                    `${dados.curaAplicada} pontos de vida. ` +
+                    `Seus PV agora são ` +
+                    `${dados.vidaAtual}/${dados.vidaMaxima}.`,
                 );
 
                 await mostrarDecisoesDoDescanso();
-                return;
-            }
+              },
+            };
 
-            const dados = resultado.resultado;
-
-            const sinalModificador =
-                dados.modificadorConstituicao >= 0
-                    ? "+"
-                    : "";
-
-            await exibirContexto(
-                `Você rolou ${dados.dado}: `
-                + `${dados.resultadoDado} `
-                + `${sinalModificador}`
-                + `${dados.modificadorConstituicao} `
-                + `de Constituição e recuperou `
-                + `${dados.curaAplicada} pontos de vida. `
-                + `Seus PV agora são `
-                + `${dados.vidaAtual}/${dados.vidaMaxima}.`
-            );
-
-            await mostrarDecisoesDoDescanso();
-        }
-    };
-
-    window.configurarRolagemSolicitada(
-        preparacao.solicitacao
-    );
-}
-            });
-        }
-
-        escolhas.push({
-            id: "descanso-curto-encerrar",
-            texto: "Continuar a aventura",
-            registrarNarrativa: false,
-
-            __acaoMotor: async function encerrarDescansoCurtoNarrativo() {
-                const resultado =
-                    window.SistemaDescansos.encerrarDescansoCurto();
-
-                if (!resultado?.sucesso) {
-                    console.warn(
-                        "Não foi possível encerrar o descanso curto:",
-                        resultado
-                    );
-
-                    return;
-                }
-
-                exibirEscolhas([]);
-
-                if (configuracao.aoConcluir) {
-                    await aplicarConsequencia(
-                        configuracao.aoConcluir
-                    );
-                }
-            }
+            window.configurarRolagemSolicitada(preparacao.solicitacao);
+          },
         });
+      }
 
-        exibirEscolhas(escolhas);
+      escolhas.push({
+        id: "descanso-curto-encerrar",
+        texto: "Continuar a aventura",
+        registrarNarrativa: false,
+
+        __acaoMotor: async function encerrarDescansoCurtoNarrativo() {
+          const resultado = window.SistemaDescansos.encerrarDescansoCurto();
+
+          if (!resultado?.sucesso) {
+            console.warn("Não foi possível encerrar o descanso curto:", resultado);
+
+            return;
+          }
+
+          exibirEscolhas([]);
+
+          if (configuracao.aoConcluir) {
+            await aplicarConsequencia(configuracao.aoConcluir);
+          }
+        },
+      });
+
+      exibirEscolhas(escolhas);
     }
 
     await mostrarDecisoesDoDescanso();
-}
+  }
 
-async function resolverDescansoLongo(configuracao = {}) {
-    const resultado =
-        window.SistemaDescansos
-            ?.realizarDescansoLongo?.();
+  async function resolverDescansoLongo(configuracao = {}) {
+    const resultado = window.SistemaDescansos?.realizarDescansoLongo?.();
 
     if (!resultado?.sucesso) {
-        const mensagensPorMotivo = {
-            personagemAusente:
-                "Nenhum personagem está disponível para descansar.",
+      const mensagensPorMotivo = {
+        personagemAusente: "Nenhum personagem está disponível para descansar.",
 
-            combateAtivo:
-                "Você não pode realizar um descanso longo durante um combate.",
+        combateAtivo: "Você não pode realizar um descanso longo durante um combate.",
 
-            personagemSemPontosDeVida:
-                "Você precisa ter pelo menos 1 ponto de vida para iniciar um descanso longo.",
+        personagemSemPontosDeVida:
+          "Você precisa ter pelo menos 1 ponto de vida para iniciar um descanso longo.",
 
-            intervaloDescansoLongo:
-                "Ainda não passou tempo suficiente desde seu último descanso longo.",
+        intervaloDescansoLongo:
+          "Ainda não passou tempo suficiente desde seu último descanso longo.",
 
-            erroAoSalvarPersonagem:
-                "Não foi possível salvar os efeitos do descanso longo."
-        };
+        erroAoSalvarPersonagem: "Não foi possível salvar os efeitos do descanso longo.",
+      };
 
-        await exibirContexto(
-            mensagensPorMotivo[resultado?.motivo]
-            ?? "Você não pode realizar um descanso longo neste momento."
-        );
+      await exibirContexto(
+        mensagensPorMotivo[resultado?.motivo] ??
+          "Você não pode realizar um descanso longo neste momento.",
+      );
 
-        console.warn(
-            "Não foi possível realizar o descanso longo:",
-            resultado
-        );
+      console.warn("Não foi possível realizar o descanso longo:", resultado);
 
-        return;
+      return;
     }
 
     const recuperacao = resultado.recuperacao;
 
     const partesMensagem = [
-        "Após oito horas de repouso, você conclui um descanso longo.",
-        `Seus pontos de vida foram restaurados para ${
-            recuperacao.pontosDeVida.atual
-        }.`
+      "Após oito horas de repouso, você conclui um descanso longo.",
+      `Seus pontos de vida foram restaurados para ${recuperacao.pontosDeVida.atual}.`,
     ];
 
     if (recuperacao.dadosVidaRecuperados > 0) {
-        partesMensagem.push(
-            `Você recuperou ${
-                recuperacao.dadosVidaRecuperados
-            } Dado(s) de Vida.`
-        );
+      partesMensagem.push(`Você recuperou ${recuperacao.dadosVidaRecuperados} Dado(s) de Vida.`);
     }
 
     if (recuperacao.recursos.length > 0) {
-        const nomesRecursos =
-            recuperacao.recursos
-                .map(function (recurso) {
-                    return recurso.nome;
-                })
-                .join(", ");
+      const nomesRecursos = recuperacao.recursos
+        .map(function (recurso) {
+          return recurso.nome;
+        })
+        .join(", ");
 
-        partesMensagem.push(
-            `Recursos recuperados: ${nomesRecursos}.`
-        );
+      partesMensagem.push(`Recursos recuperados: ${nomesRecursos}.`);
     }
 
-    await exibirContexto(
-        partesMensagem.join(" ")
-    );
+    await exibirContexto(partesMensagem.join(" "));
 
     if (configuracao.aoConcluir) {
-        await aplicarConsequencia(
-            configuracao.aoConcluir
-        );
+      await aplicarConsequencia(configuracao.aoConcluir);
     }
-}
+  }
 
   async function aplicarConsequencia(consequencia) {
     if (!consequencia) {
@@ -901,48 +735,35 @@ async function resolverDescansoLongo(configuracao = {}) {
     }
 
     if (consequencia.queda) {
-  const resultadoQueda =
-    SistemaQueda.aplicarDanoQueda(
-      window.estadoJogo.personagem.dados,
-      consequencia.queda.distanciaMetros,
-    );
+      const resultadoQueda = SistemaQueda.aplicarDanoQueda(
+        window.estadoJogo.personagem.dados,
+        consequencia.queda.distanciaMetros,
+      );
 
-  if (resultadoQueda?.dano > 0) {
-    await exibirContexto(
-      `Você sofreu ${resultadoQueda.dano} pontos de dano.`,
-    );
-  }
+      if (resultadoQueda?.dano > 0) {
+        await exibirContexto(`Você sofreu ${resultadoQueda.dano} pontos de dano.`);
+      }
 
-  if (resultadoQueda?.dano > 0) {
-  await exibirContexto(
-    `Você sofreu ${resultadoQueda.dano} pontos de dano.`,
-  );
+      if (resultadoQueda?.dano > 0) {
+        await exibirContexto(`Você sofreu ${resultadoQueda.dano} pontos de dano.`);
 
-  registrarEventoNarrativo({
-    tipo: "queda",
-    resultado: personagemEstaSemPontosDeVida()
-      ? "derrota"
-      : "sobreviveu",
-  });
+        registrarEventoNarrativo({
+          tipo: "queda",
+          resultado: personagemEstaSemPontosDeVida() ? "derrota" : "sobreviveu",
+        });
 
-  if (
-    await encaminharParaFimDerrotaSeNecessario()
-  ) {
-    return;
-  }
-}
-}
+        if (await encaminharParaFimDerrotaSeNecessario()) {
+          return;
+        }
+      }
+    }
 
-if (consequencia.memorias) {
-  registrarMemorias(
-    consequencia.memorias
-  );
-}
+    if (consequencia.memorias) {
+      registrarMemorias(consequencia.memorias);
+    }
 
     if (consequencia.fimAventura) {
-      exibirTelaFimAventura(
-        consequencia.fimAventura
-      );
+      exibirTelaFimAventura(consequencia.fimAventura);
 
       return;
     }
@@ -958,33 +779,28 @@ if (consequencia.memorias) {
     }
 
     if (consequencia.ataqueNpc) {
-  await resolverAtaqueNpc(
-    consequencia.ataqueNpc,
-  );
+      await resolverAtaqueNpc(consequencia.ataqueNpc);
 
-  return;
-}
-
-if (consequencia.descanso) {
-    const descanso = consequencia.descanso;
-
-    if (descanso.tipo === "curto") {
-        await resolverDescansoCurto(descanso);
-        return;
+      return;
     }
 
-    if (descanso.tipo === "longo") {
-    await resolverDescansoLongo(descanso);
-    return;
-}
+    if (consequencia.descanso) {
+      const descanso = consequencia.descanso;
 
-    console.warn(
-        "Tipo de descanso desconhecido.",
-        descanso.tipo
-    );
+      if (descanso.tipo === "curto") {
+        await resolverDescansoCurto(descanso);
+        return;
+      }
 
-    return;
-}
+      if (descanso.tipo === "longo") {
+        await resolverDescansoLongo(descanso);
+        return;
+      }
+
+      console.warn("Tipo de descanso desconhecido.", descanso.tipo);
+
+      return;
+    }
 
     if (consequencia.teste) {
       await iniciarTeste({
@@ -1026,17 +842,11 @@ if (consequencia.descanso) {
       return;
     }
 
-    if (
-  consequencia.texto !== undefined
-  || consequencia.contexto !== undefined
-) {
-  return;
-}
+    if (consequencia.texto !== undefined || consequencia.contexto !== undefined) {
+      return;
+    }
 
-console.warn(
-  "Consequência sem destino executável:",
-  consequencia
-);
+    console.warn("Consequência sem destino executável:", consequencia);
   }
 
   async function resolverResultadoTeste(resultadoRolagem) {
@@ -1048,48 +858,29 @@ console.warn(
 
     const teste = ativo.teste;
 
-const tipoRolagem =
-  ativo.tipoRolagemJogador ?? "normal";
+    const tipoRolagem = ativo.tipoRolagemJogador ?? "normal";
 
-const resultadoRolagemAjustado =
-  tipoRolagem === "normal"
-    ? resultadoRolagem
-    : {
-        ...resultadoRolagem,
-        total:
-          SistemaTestes.calcularTotalTesteD20(
-            resultadoRolagem,
-            tipoRolagem,
-          ),
-      };
+    const resultadoRolagemAjustado =
+      tipoRolagem === "normal"
+        ? resultadoRolagem
+        : {
+            ...resultadoRolagem,
+            total: SistemaTestes.calcularTotalTesteD20(resultadoRolagem, tipoRolagem),
+          };
 
-const resultadoTeste =
-  teste.tipo === "oposto"
-    ? SistemaTestes.resolverTesteOposto(
-        resultadoRolagemAjustado,
-        ativo.resultadoOponente,
-      )
-    : SistemaTestes.resolverTesteContraCd(
-        resultadoRolagem,
-        teste.dificuldade,
-        tipoRolagem,
-      );
+    const resultadoTeste =
+      teste.tipo === "oposto"
+        ? SistemaTestes.resolverTesteOposto(resultadoRolagemAjustado, ativo.resultadoOponente)
+        : SistemaTestes.resolverTesteContraCd(resultadoRolagem, teste.dificuldade, tipoRolagem);
 
-    const consequencia = ativo.resultados[
-      resultadoTeste.sucesso ? "sucesso" : "fracasso"
-    ];
+    const consequencia = ativo.resultados[resultadoTeste.sucesso ? "sucesso" : "fracasso"];
 
     registrarEventoNarrativo({
-  tipo: "teste",
-  resultado: resultadoTeste.sucesso
-    ? "sucesso"
-    : "fracasso",
-});
+      tipo: "teste",
+      resultado: resultadoTeste.sucesso ? "sucesso" : "fracasso",
+    });
 
-    const acao =
-      ativo.instrucao
-        ?.replace(/^para\s+/i, "")
-        .replace(/\.$/, "") || "realizar a ação";
+    const acao = ativo.instrucao?.replace(/^para\s+/i, "").replace(/\.$/, "") || "realizar a ação";
 
     await NarradorAventura.adicionarResultadoTeste({
       sucesso: resultadoTeste.sucesso,
@@ -1102,55 +893,40 @@ const resultadoTeste =
   }
 
   document.addEventListener(
-  "rolagemConcluida",
-  function (evento) {
-    const combate =
-      window.estadoJogo?.combateAtual;
+    "rolagemConcluida",
+    function (evento) {
+      const combate = window.estadoJogo?.combateAtual;
 
-    const rolagemPertenceAoCombate =
-      Boolean(
+      const rolagemPertenceAoCombate = Boolean(
         combate &&
-          (
-            combate.efeitoPendente ||
+          (combate.efeitoPendente ||
             combate.iniciativaPendenteId ||
             combate.ataquePendente ||
-            combate.danoPendente
-          ),
+            combate.danoPendente),
       );
 
-      if (
-  estado.descansoCurtoPendente
-  && !rolagemPertenceAoCombate
-) {
-  evento.stopImmediatePropagation();
+      if (estado.descansoCurtoPendente && !rolagemPertenceAoCombate) {
+        evento.stopImmediatePropagation();
 
-  const pendencia =
-    estado.descansoCurtoPendente;
+        const pendencia = estado.descansoCurtoPendente;
 
-  estado.descansoCurtoPendente = null;
+        estado.descansoCurtoPendente = null;
 
-  void pendencia.resolver(
-    evento.detail
+        void pendencia.resolver(evento.detail);
+
+        return;
+      }
+
+      if (!estado.testeAtivo || rolagemPertenceAoCombate) {
+        return;
+      }
+
+      evento.stopImmediatePropagation();
+
+      void resolverResultadoTeste(evento.detail);
+    },
+    true,
   );
-
-  return;
-}
-
-    if (
-      !estado.testeAtivo ||
-      rolagemPertenceAoCombate
-    ) {
-      return;
-    }
-
-    evento.stopImmediatePropagation();
-
-    void resolverResultadoTeste(
-      evento.detail,
-    );
-  },
-  true,
-);
 
   return {
     iniciarTeste,

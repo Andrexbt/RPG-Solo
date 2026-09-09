@@ -22,7 +22,7 @@ window.bancoHabilidades = {
         recurso: {
           tipo: "habilidade",
           id: "segundoFolego",
-       },
+        },
 
         efeito: {
           tipo: "curar",
@@ -30,15 +30,15 @@ window.bancoHabilidades = {
           rolagem: {
             gruposDeDados: [
               {
-              quantidade: 1,
-              numeroDeFaces: 10,
+                quantidade: 1,
+                numeroDeFaces: 10,
               },
-           ],
+            ],
 
             modificador: {
               tipo: "nivelClasse",
               classeId: "guerreiro",
-           },
+            },
           },
         },
       },
@@ -136,93 +136,89 @@ window.bancoHabilidades = {
       quantidadeEscolhas: 1,
 
       opcoes: [
-  {
-    id: "arquearia",
-    nome: "Arquearia",
+        {
+          id: "arquearia",
+          nome: "Arquearia",
 
-    regra: {
-      tipo: "modificadorPassivo",
+          regra: {
+            tipo: "modificadorPassivo",
 
-      efeito: {
-        tipo: "modificarAtaqueArma",
-        valor: 2,
-      },
+            efeito: {
+              tipo: "modificarAtaqueArma",
+              valor: 2,
+            },
 
-      condicao: {
-        categoriaArma: "distancia",
-      },
-    },
+            condicao: {
+              categoriaArma: "distancia",
+            },
+          },
 
-    descricaoCurta:
-      "Você recebe +2 nas jogadas de ataque feitas com armas à distância.",
-  },
+          descricaoCurta: "Você recebe +2 nas jogadas de ataque feitas com armas à distância.",
+        },
 
-  {
-    id: "defesa",
-    nome: "Defesa",
+        {
+          id: "defesa",
+          nome: "Defesa",
 
-    regra: {
-      tipo: "modificadorPassivo",
+          regra: {
+            tipo: "modificadorPassivo",
 
-      efeito: {
-        tipo: "modificarClasseArmadura",
-        valor: 1,
-      },
+            efeito: {
+              tipo: "modificarClasseArmadura",
+              valor: 1,
+            },
 
-      condicao: {
-        usandoArmadura: true,
-      },
-    },
+            condicao: {
+              usandoArmadura: true,
+            },
+          },
 
-    descricaoCurta:
-      "Enquanto estiver usando armadura, você recebe +1 na Classe de Armadura.",
-  },
+          descricaoCurta: "Enquanto estiver usando armadura, você recebe +1 na Classe de Armadura.",
+        },
 
-  {
-    id: "duelismo",
-    nome: "Duelismo",
+        {
+          id: "duelismo",
+          nome: "Duelismo",
 
-    regra: {
-      tipo: "modificadorPassivo",
+          regra: {
+            tipo: "modificadorPassivo",
 
-      efeito: {
-        tipo: "modificarDanoArma",
-        valor: 2,
-      },
+            efeito: {
+              tipo: "modificarDanoArma",
+              valor: 2,
+            },
 
-      condicao: {
-        categoriaArma: "corpo-a-corpo",
-        armaEmpunhadaEmUmaMao: true,
-        nenhumaOutraArmaEmpunhada: true,
-      },
-    },
+            condicao: {
+              categoriaArma: "corpo-a-corpo",
+              armaEmpunhadaEmUmaMao: true,
+              nenhumaOutraArmaEmpunhada: true,
+            },
+          },
 
-    descricaoCurta:
-      "Ao empunhar uma arma corpo a corpo em uma mão e nenhuma outra arma, você recebe +2 no dano dessa arma.",
-  },
+          descricaoCurta:
+            "Ao empunhar uma arma corpo a corpo em uma mão e nenhuma outra arma, você recebe +2 no dano dessa arma.",
+        },
 
-  {
-    id: "combateDuasArmas",
-    nome: "Combate com Duas Armas",
+        {
+          id: "combateDuasArmas",
+          nome: "Combate com Duas Armas",
 
-    regra: {
-      tipo: "modificadorPassivo",
+          regra: {
+            tipo: "modificadorPassivo",
 
-      efeito: {
-        tipo:
-          "incluirModificadorAtributoNoDano",
-      },
+            efeito: {
+              tipo: "incluirModificadorAtributoNoDano",
+            },
 
-      condicao: {
-        ataqueComArmaSecundaria: true,
-      },
-    },
+            condicao: {
+              ataqueComArmaSecundaria: true,
+            },
+          },
 
-    descricaoCurta:
-      "Ao realizar o ataque adicional com uma arma leve, você pode acrescentar o modificador do atributo ao dano.",
-  },
-],
-
+          descricaoCurta:
+            "Ao realizar o ataque adicional com uma arma leve, você pode acrescentar o modificador do atributo ao dano.",
+        },
+      ],
     },
 
     maestriasArmas: {

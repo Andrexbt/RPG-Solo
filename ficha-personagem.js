@@ -339,17 +339,15 @@
       bonusAtaque = bonusAtaque + calcularBonusProficiencia();
     }
 
-    const modificadorEstilo =
-  window.TradutorRegras
-    .calcularModificadorPassivo(
+    const modificadorEstilo = window.TradutorRegras.calcularModificadorPassivo(
       {
         participante: personagemAtual,
         arma,
       },
-      "modificarAtaqueArma"
+      "modificarAtaqueArma",
     );
 
-bonusAtaque += modificadorEstilo;
+    bonusAtaque += modificadorEstilo;
     return bonusAtaque;
   }
 
@@ -385,43 +383,30 @@ bonusAtaque += modificadorEstilo;
 
     let bonusDano = modificadorAtributo;
 
-const armaEmpunhadaEmUmaMao =
-  !arma.propriedades?.includes(
-    "duasMaos"
-  );
+    const armaEmpunhadaEmUmaMao = !arma.propriedades?.includes("duasMaos");
 
-const nenhumaOutraArmaEmpunhada =
-  equipamentos?.itemSecundario
-    !== "armaSecundaria";
+    const nenhumaOutraArmaEmpunhada = equipamentos?.itemSecundario !== "armaSecundaria";
 
-const contextoEstilo = {
-  participante: personagemAtual,
-  arma,
-  ataqueComArmaSecundaria:
-    ehArmaSecundaria,
-  armaEmpunhadaEmUmaMao,
-  nenhumaOutraArmaEmpunhada,
-};
+    const contextoEstilo = {
+      participante: personagemAtual,
+      arma,
+      ataqueComArmaSecundaria: ehArmaSecundaria,
+      armaEmpunhadaEmUmaMao,
+      nenhumaOutraArmaEmpunhada,
+    };
 
-const incluiModificadorNaArmaSecundaria =
-  window.TradutorRegras
-    .possuiEfeitoPassivo(
+    const incluiModificadorNaArmaSecundaria = window.TradutorRegras.possuiEfeitoPassivo(
       contextoEstilo,
-      "incluirModificadorAtributoNoDano"
+      "incluirModificadorAtributoNoDano",
     );
 
-if (
-  ehArmaSecundaria
-  && !incluiModificadorNaArmaSecundaria
-) {
-  bonusDano = 0;
-}
+    if (ehArmaSecundaria && !incluiModificadorNaArmaSecundaria) {
+      bonusDano = 0;
+    }
 
-bonusDano +=
-  window.TradutorRegras
-    .calcularModificadorPassivo(
+    bonusDano += window.TradutorRegras.calcularModificadorPassivo(
       contextoEstilo,
-      "modificarDanoArma"
+      "modificarDanoArma",
     );
 
     return bonusDano;
@@ -630,17 +615,13 @@ bonusDano +=
       }
     }
 
-    classeArmadura +=
-  window.TradutorRegras
-    .calcularModificadorPassivo(
+    classeArmadura += window.TradutorRegras.calcularModificadorPassivo(
       {
         participante: personagemAtual,
-        usandoArmadura:
-          idArmadura !== "semArmadura",
+        usandoArmadura: idArmadura !== "semArmadura",
       },
-      "modificarClasseArmadura"
+      "modificarClasseArmadura",
     );
-    
 
     return classeArmadura;
   }
@@ -649,21 +630,13 @@ bonusDano +=
   // 6. Habilidades, recursos e escolhas de classe
   // =====================================================
 
-  function obterDadosHabilidade(
-  idHabilidade
-) {
-  if (
-    window.bancoHabilidades
-      ?.classFeatures ===
-    undefined
-  ) {
-    return undefined;
-  }
+  function obterDadosHabilidade(idHabilidade) {
+    if (window.bancoHabilidades?.classFeatures === undefined) {
+      return undefined;
+    }
 
-  return window.bancoHabilidades
-    .classFeatures
-    [idHabilidade];
-}
+    return window.bancoHabilidades.classFeatures[idHabilidade];
+  }
 
   function formatarFormulaRecurso(formula) {
     if (formula === undefined || formula === "") {
@@ -715,10 +688,7 @@ bonusDano +=
         usosAtuais: recurso.usosMaximos,
         usosMaximos: recurso.usosMaximos,
 
-        recuperacao:
-          structuredClone(
-            recurso.recuperacao ?? null,
-          ),
+        recuperacao: structuredClone(recurso.recuperacao ?? null),
 
         efeito: recurso.efeito,
         formula: formatarFormulaRecurso(recurso.formula),

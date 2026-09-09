@@ -139,130 +139,122 @@ window.bancoMaestrias = {
   },
 
   sap: {
-  id: "sap",
-  nome: "Sap",
+    id: "sap",
+    nome: "Sap",
 
-  regra: {
-    gatilho: "aposAcertarAtaque",
+    regra: {
+      gatilho: "aposAcertarAtaque",
 
-    efeito: {
-      tipo: "concederDesvantagem",
+      efeito: {
+        tipo: "concederDesvantagem",
 
-      rolagemAfetada: "ataque",
-      quantidadeDeUsos: 1,
+        rolagemAfetada: "ataque",
+        quantidadeDeUsos: 1,
 
-      expiracao:
-        "inicioDoProximoTurnoDoAtacante",
+        expiracao: "inicioDoProximoTurnoDoAtacante",
+      },
     },
+
+    descricaoCurta: "A criatura atingida tem Desvantagem em sua próxima jogada de ataque.",
+
+    descricaoLonga:
+      "Ao ser atingida por esta arma, a criatura recebe Desvantagem em sua próxima jogada de ataque antes do início do seu próximo turno.",
   },
-
-  descricaoCurta:
-    "A criatura atingida tem Desvantagem em sua próxima jogada de ataque.",
-
-  descricaoLonga:
-    "Ao ser atingida por esta arma, a criatura recebe Desvantagem em sua próxima jogada de ataque antes do início do seu próximo turno.",
-},
 
   slow: {
-  id: "slow",
-  nome: "Slow",
+    id: "slow",
+    nome: "Slow",
 
-  regra: {
-    gatilho: "aposCausarDano",
-    opcional: true,
+    regra: {
+      gatilho: "aposCausarDano",
+      opcional: true,
 
-    efeito: {
-      tipo: "modificarDeslocamento",
+      efeito: {
+        tipo: "modificarDeslocamento",
 
-      valorCelulas: -2,
+        valorCelulas: -2,
 
-      acumulacao: {
-        chave: "slow",
-        limiteTotalCelulas: -2,
+        acumulacao: {
+          chave: "slow",
+          limiteTotalCelulas: -2,
+        },
+
+        expiracao: "inicioDoProximoTurnoDoAtacante",
       },
-
-      expiracao:
-        "inicioDoProximoTurnoDoAtacante",
     },
+
+    descricaoCurta: "Ao causar dano, você pode reduzir o deslocamento do alvo em 2 células.",
+
+    descricaoLonga:
+      "Ao acertar e causar dano com esta arma, você pode reduzir o deslocamento da criatura em 2 células, equivalentes a 10 pés, até o início do seu próximo turno. Vários acertos com Slow não aumentam essa redução.",
   },
 
-  descricaoCurta:
-    "Ao causar dano, você pode reduzir o deslocamento do alvo em 2 células.",
-
-  descricaoLonga:
-    "Ao acertar e causar dano com esta arma, você pode reduzir o deslocamento da criatura em 2 células, equivalentes a 10 pés, até o início do seu próximo turno. Vários acertos com Slow não aumentam essa redução.",
-},
-
   topple: {
-  id: "topple",
-  nome: "Topple",
+    id: "topple",
+    nome: "Topple",
 
-  regra: {
-    gatilho: "aposAcertarAtaque",
-    opcional: true,
+    regra: {
+      gatilho: "aposAcertarAtaque",
+      opcional: true,
 
-    efeito: {
-      tipo: "solicitarSalvaguarda",
+      efeito: {
+        tipo: "solicitarSalvaguarda",
 
-      atributoId: "constituicao",
+        atributoId: "constituicao",
 
-      dificuldade: {
-        base: 8,
-        adicionar:
-          [
+        dificuldade: {
+          base: 8,
+          adicionar: [
             {
-              tipo:
-                "modificadorAtributoAtaque",
+              tipo: "modificadorAtributoAtaque",
             },
 
             {
-              tipo:
-                "bonusProficiencia",
+              tipo: "bonusProficiencia",
             },
           ],
-      },
+        },
 
-      resultados: {
-        sucesso: null,
+        resultados: {
+          sucesso: null,
 
-        fracasso: {
-          tipo: "aplicarCondicao",
-          condicaoId: "caido",
+          fracasso: {
+            tipo: "aplicarCondicao",
+            condicaoId: "caido",
+          },
         },
       },
     },
+
+    descricaoCurta:
+      "Ao acertar, você pode forçar uma salvaguarda de Constituição para derrubar o alvo.",
+
+    descricaoLonga:
+      "Ao acertar uma criatura com esta arma, você pode exigir uma salvaguarda de Constituição. A dificuldade é 8 mais o modificador do atributo usado no ataque e o bônus de proficiência. Em caso de fracasso, a criatura fica Caída.",
   },
-
-  descricaoCurta:
-    "Ao acertar, você pode forçar uma salvaguarda de Constituição para derrubar o alvo.",
-
-  descricaoLonga:
-    "Ao acertar uma criatura com esta arma, você pode exigir uma salvaguarda de Constituição. A dificuldade é 8 mais o modificador do atributo usado no ataque e o bônus de proficiência. Em caso de fracasso, a criatura fica Caída.",
-},
 
   vex: {
-  id: "vex",
-  nome: "Vex",
+    id: "vex",
+    nome: "Vex",
 
-  regra: {
-    gatilho: "aposCausarDano",
+    regra: {
+      gatilho: "aposCausarDano",
 
-    efeito: {
-      tipo: "concederVantagem",
+      efeito: {
+        tipo: "concederVantagem",
 
-      rolagemAfetada: "ataque",
-      alvo: "mesmoAlvo",
-      quantidadeDeUsos: 1,
+        rolagemAfetada: "ataque",
+        alvo: "mesmoAlvo",
+        quantidadeDeUsos: 1,
 
-      expiracao:
-        "fimDoProximoTurnoDoAtacante",
+        expiracao: "fimDoProximoTurnoDoAtacante",
+      },
     },
+
+    descricaoCurta:
+      "Ao causar dano, você recebe Vantagem no próximo ataque contra a mesma criatura.",
+
+    descricaoLonga:
+      "Ao acertar e causar dano com esta arma, você recebe Vantagem em sua próxima jogada de ataque contra a mesma criatura antes do fim do seu próximo turno.",
   },
-
-  descricaoCurta:
-    "Ao causar dano, você recebe Vantagem no próximo ataque contra a mesma criatura.",
-
-  descricaoLonga:
-    "Ao acertar e causar dano com esta arma, você recebe Vantagem em sua próxima jogada de ataque contra a mesma criatura antes do fim do seu próximo turno.",
-},
 };

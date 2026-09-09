@@ -73,43 +73,25 @@ function criarTokenCombate(participante) {
     token.append(barraPontosDeVida);
   }
 
-  const areaCondicoes =
-  document.createElement("span");
+  const areaCondicoes = document.createElement("span");
 
-areaCondicoes.className =
-  "condicoes-token-combate";
+  areaCondicoes.className = "condicoes-token-combate";
 
-areaCondicoes.setAttribute(
-  "aria-hidden",
-  "true",
-);
+  areaCondicoes.setAttribute("aria-hidden", "true");
 
-token.append(areaCondicoes);
+  token.append(areaCondicoes);
 
-renderizarCondicoesToken(
-  token,
-  participante,
-);
+  renderizarCondicoesToken(token, participante);
 
-renderizarItensCravadosToken(
-  token,
-  participante,
-);
+  renderizarItensCravadosToken(token, participante);
 
   token.setAttribute("aria-label", participante.id);
 
   return token;
 }
 
-function renderizarCondicoesToken(
-  token,
-  participante,
-  combate = null,
-) {
-  const areaCondicoes =
-    token.querySelector(
-      ".condicoes-token-combate",
-    );
+function renderizarCondicoesToken(token, participante, combate = null) {
+  const areaCondicoes = token.querySelector(".condicoes-token-combate");
 
   if (!areaCondicoes) {
     return;
@@ -117,135 +99,79 @@ function renderizarCondicoesToken(
 
   areaCondicoes.innerHTML = "";
 
-  const condicoes =
-    participante.condicoes ?? [];
+  const condicoes = participante.condicoes ?? [];
 
-  const condicoesConhecidas =
-    condicoes
-      .map(
-        (condicao) =>
-          window.bancoCondicoes?.[
-            condicao.id
-          ],
-      )
-      .filter(Boolean);
+  const condicoesConhecidas = condicoes
+    .map((condicao) => window.bancoCondicoes?.[condicao.id])
+    .filter(Boolean);
 
-  const efeitosTemporarios =
-    combate?.efeitosTemporarios ?? [];
+  const efeitosTemporarios = combate?.efeitosTemporarios ?? [];
 
-  const possuiLentidao =
-    efeitosTemporarios.some(
-      function encontrarLentidao(
-        efeito,
-      ) {
-        return (
-          efeito.tipo ===
-            "modificadorDeslocamento" &&
-          efeito.participanteId ===
-            participante.id &&
-          Number(efeito.valorCelulas) < 0
-        );
-      },
+  const possuiLentidao = efeitosTemporarios.some(function encontrarLentidao(efeito) {
+    return (
+      efeito.tipo === "modificadorDeslocamento" &&
+      efeito.participanteId === participante.id &&
+      Number(efeito.valorCelulas) < 0
     );
+  });
 
   const efeitosVisuais = [];
 
   if (possuiLentidao) {
-    efeitosVisuais.push(
-      window.bancoEfeitosVisuais
-        ?.lentidao,
-    );
+    efeitosVisuais.push(window.bancoEfeitosVisuais?.lentidao);
   }
 
-  const indicadoresVisuais = [
-    ...condicoesConhecidas,
-    ...efeitosVisuais.filter(Boolean),
-  ];
+  const indicadoresVisuais = [...condicoesConhecidas, ...efeitosVisuais.filter(Boolean)];
 
   const limiteVisivel = 3;
 
-  for (
-    const condicao of
-      indicadoresVisuais.slice(
-        0,
-        limiteVisivel,
-      )
-  ) {
-    const marcador =
-      document.createElement("span");
+  for (const condicao of indicadoresVisuais.slice(0, limiteVisivel)) {
+    const marcador = document.createElement("span");
 
-    marcador.className =
-      "icone-condicao-token";
+    marcador.className = "icone-condicao-token";
 
-    marcador.title =
-      condicao.nome;
+    marcador.title = condicao.nome;
 
-    const imagem =
-      document.createElement("img");
+    const imagem = document.createElement("img");
 
-    imagem.src =
-      condicao.icone;
+    imagem.src = condicao.icone;
 
     imagem.alt = "";
 
     marcador.append(imagem);
 
-    areaCondicoes.append(
-      marcador,
-    );
+    areaCondicoes.append(marcador);
   }
 
-  const quantidadeOculta =
-    indicadoresVisuais.length -
-    limiteVisivel;
+  const quantidadeOculta = indicadoresVisuais.length - limiteVisivel;
 
   if (quantidadeOculta > 0) {
-    const excedentes =
-      document.createElement("span");
+    const excedentes = document.createElement("span");
 
-    excedentes.className =
-      "quantidade-condicoes-token";
+    excedentes.className = "quantidade-condicoes-token";
 
-    excedentes.textContent =
-      `+${quantidadeOculta}`;
+    excedentes.textContent = `+${quantidadeOculta}`;
 
-    excedentes.title =
-      indicadoresVisuais
-        .slice(limiteVisivel)
-        .map(
-          (condicao) =>
-            condicao.nome,
-        )
-        .join(", ");
+    excedentes.title = indicadoresVisuais
+      .slice(limiteVisivel)
+      .map((condicao) => condicao.nome)
+      .join(", ");
 
-    areaCondicoes.append(
-      excedentes,
-    );
+    areaCondicoes.append(excedentes);
   }
 
-  const nomesCondicoes =
-    indicadoresVisuais
-      .map(
-        (condicao) =>
-          condicao.nome,
-      )
-      .join(", ");
+  const nomesCondicoes = indicadoresVisuais.map((condicao) => condicao.nome).join(", ");
 
   token.setAttribute(
     "aria-label",
-    nomesCondicoes
-      ? `${participante.nome}. Estados: ${nomesCondicoes}.`
-      : participante.nome,
+    nomesCondicoes ? `${participante.nome}. Estados: ${nomesCondicoes}.` : participante.nome,
   );
 }
 
 function obterVisualArmaCombate(armaId) {
-  const visual =
-    window.bancoEquipamentos?.armas?.[armaId]?.visual;
+  const visual = window.bancoEquipamentos?.armas?.[armaId]?.visual;
 
-  const src =
-    visual?.icone?.src ??
-    visual?.arremesso?.src;
+  const src = visual?.icone?.src ?? visual?.arremesso?.src;
 
   if (!src) {
     return null;
@@ -253,23 +179,14 @@ function obterVisualArmaCombate(armaId) {
 
   return {
     src,
-    larguraPx:
-      Number(visual?.arremesso?.larguraPx) || 64,
-    comprimentoPx:
-      Number(visual?.arremesso?.comprimentoPx) || 96,
+    comprimentoPx: 64 * (Number(visual?.arremesso?.tamanhoEmCelulas) || 1),
   };
 }
 
-function renderizarItensCravadosToken(
-  token,
-  participante,
-) {
-  token
-    .querySelector(".itens-cravados-token")
-    ?.remove();
+function renderizarItensCravadosToken(token, participante) {
+  token.querySelector(".itens-cravados-token")?.remove();
 
-  const itensCravados =
-    participante.itensCravados ?? [];
+  const itensCravados = participante.itensCravados ?? [];
 
   if (itensCravados.length === 0) {
     return;
@@ -278,39 +195,30 @@ function renderizarItensCravadosToken(
   const indicador = document.createElement("span");
 
   indicador.className = "itens-cravados-token";
-  indicador.title = itensCravados
-    .map((item) => item.nome)
-    .join(", ");
+  indicador.title = itensCravados.map((item) => item.nome).join(", ");
 
   const itemRepresentado = itensCravados[0];
-const visualArma = obterVisualArmaCombate(
-  itemRepresentado.armaId,
-);
+  const visualArma = obterVisualArmaCombate(itemRepresentado.armaId);
 
-if (!visualArma) {
-  return;
-}
+  if (!visualArma) {
+    return;
+  }
 
-const imagem = document.createElement("img");
+  const imagem = document.createElement("img");
 
-imagem.src = visualArma.src;
-indicador.style.width =
-  `${visualArma.larguraPx}px`;
-
-indicador.style.height =
-  `${visualArma.comprimentoPx}px`;
-imagem.alt = "";
+  imagem.src = visualArma.src;
+  indicador.style.width = "auto";
+  indicador.style.height = `${visualArma.comprimentoPx}px`;
+  imagem.alt = "";
 
   indicador.append(imagem);
 
   if (itensCravados.length > 1) {
     const quantidade = document.createElement("span");
 
-    quantidade.className =
-      "quantidade-itens-cravados-token";
+    quantidade.className = "quantidade-itens-cravados-token";
 
-    quantidade.textContent =
-      String(itensCravados.length);
+    quantidade.textContent = String(itensCravados.length);
 
     indicador.append(quantidade);
   }
@@ -367,34 +275,29 @@ function renderizarParticipantesCombate(participantes) {
 }
 
 function renderizarItensNoChaoCombate(combate) {
-  const itensAnteriores = tabuleiroCombate.querySelectorAll(
-    ".item-no-chao-combate",
-  );
+  const itensAnteriores = tabuleiroCombate.querySelectorAll(".item-no-chao-combate");
 
   for (const itemAnterior of itensAnteriores) {
     itemAnterior.remove();
   }
 
   for (const item of combate.itensNoChao ?? []) {
-  const visualArma = obterVisualArmaCombate(
-  item.armaId,
-);
+    const visualArma = obterVisualArmaCombate(item.armaId);
 
-if (!visualArma) {
-  continue;
-}
+    if (!visualArma) {
+      continue;
+    }
 
-  const imagem = document.createElement("img");
+    const imagem = document.createElement("img");
 
-  imagem.className = "item-no-chao-combate";
-  imagem.src = visualArma.src;
-  imagem.style.width = `${visualArma.larguraPx}px`;
-  imagem.style.height = `${visualArma.comprimentoPx}px`;
+    imagem.className = "item-no-chao-combate";
+    imagem.src = visualArma.src;
+    imagem.style.width = "auto";
+    imagem.style.height = `${visualArma.comprimentoPx}px`;
 
     imagem.alt = `${item.nome} caída`;
     imagem.title =
-      `${item.nome} caída — coluna ${item.posicao.coluna}, ` +
-      `linha ${item.posicao.linha}`;
+      `${item.nome} caída — coluna ${item.posicao.coluna}, ` + `linha ${item.posicao.linha}`;
 
     imagem.dataset.idItem = item.id;
     imagem.style.gridColumn = item.posicao.coluna;
@@ -423,45 +326,26 @@ function celulaPertenceAreaCombate(coluna, linha, area) {
 }
 
 function renderizarTerrenosCombate(combate) {
-  const celulas =
-    tabuleiroCombate.querySelectorAll(
-      ".celula-combate",
-    );
+  const celulas = tabuleiroCombate.querySelectorAll(".celula-combate");
 
   for (const celula of celulas) {
-    const coluna =
-      Number(celula.dataset.coluna);
+    const coluna = Number(celula.dataset.coluna);
 
-    const linha =
-      Number(celula.dataset.linha);
+    const linha = Number(celula.dataset.linha);
 
-    const tipoTerreno =
-      SistemaCombate.obterTipoTerreno(
-        combate,
-        coluna,
-        linha,
-      );
+    const tipoTerreno = SistemaCombate.obterTipoTerreno(combate, coluna, linha);
 
     if (tipoTerreno === "normal") {
       continue;
     }
 
-    celula.classList.add(
-      `celula-terreno-${tipoTerreno}`,
-    );
+    celula.classList.add(`celula-terreno-${tipoTerreno}`);
 
-    const descricao =
-      tipoTerreno === "bloqueado"
-        ? "Terreno intransponível"
-        : "Terreno difícil";
+    const descricao = tipoTerreno === "bloqueado" ? "Terreno intransponível" : "Terreno difícil";
 
-    celula.setAttribute(
-      "aria-label",
-      `Coluna ${coluna}, linha ${linha}. ${descricao}.`,
-    );
+    celula.setAttribute("aria-label", `Coluna ${coluna}, linha ${linha}. ${descricao}.`);
 
-    celula.title =
-      `Coluna ${coluna}, linha ${linha}. ${descricao}.`;
+    celula.title = `Coluna ${coluna}, linha ${linha}. ${descricao}.`;
   }
 }
 
@@ -477,8 +361,16 @@ function renderizarVisaoCombate(combate) {
     const linhaInicial = Number(regiao.linhaInicial ?? regiao.linha);
     const linhaFinal = Number(regiao.linhaFinal ?? regiao.linha);
 
-    for (let linha = Math.min(linhaInicial, linhaFinal); linha <= Math.max(linhaInicial, linhaFinal); linha++) {
-      for (let coluna = Math.min(colunaInicial, colunaFinal); coluna <= Math.max(colunaInicial, colunaFinal); coluna++) {
+    for (
+      let linha = Math.min(linhaInicial, linhaFinal);
+      linha <= Math.max(linhaInicial, linhaFinal);
+      linha++
+    ) {
+      for (
+        let coluna = Math.min(colunaInicial, colunaFinal);
+        coluna <= Math.max(colunaInicial, colunaFinal);
+        coluna++
+      ) {
         obterCelula(coluna, linha)?.classList.add("celula-bloqueio-visao");
       }
     }
@@ -496,9 +388,7 @@ function renderizarVisaoCombate(combate) {
 }
 
 function renderizarAreasObjetivoCombate(combate) {
-  const areas = Object.entries(combate.areas ?? {}).filter(
-    ([, area]) => area.visivel !== false,
-  );
+  const areas = Object.entries(combate.areas ?? {}).filter(([, area]) => area.visivel !== false);
 
   if (areas.length === 0) {
     return;
@@ -519,10 +409,7 @@ function renderizarAreasObjetivoCombate(combate) {
       celula.dataset.areaObjetivo = areaId;
 
       const rotulo = area.rotulo ?? "Área de objetivo";
-      celula.setAttribute(
-        "aria-label",
-        `Coluna ${coluna}, linha ${linha}. ${rotulo}.`,
-      );
+      celula.setAttribute("aria-label", `Coluna ${coluna}, linha ${linha}. ${rotulo}.`);
     }
   }
 }

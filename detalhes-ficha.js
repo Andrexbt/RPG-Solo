@@ -12,21 +12,13 @@
   // 1. Busca dos dados que podem aparecer em detalhes
   // =====================================================
 
-  function obterDetalheHabilidade(
-  idHabilidade
-) {
-  if (
-    window.bancoHabilidades
-      ?.classFeatures ===
-    undefined
-  ) {
-    return undefined;
-  }
+  function obterDetalheHabilidade(idHabilidade) {
+    if (window.bancoHabilidades?.classFeatures === undefined) {
+      return undefined;
+    }
 
-  return window.bancoHabilidades
-    .classFeatures
-    [idHabilidade];
-}
+    return window.bancoHabilidades.classFeatures[idHabilidade];
+  }
 
   function obterDetalheFicha(tipo, id) {
     if (tipo === "habilidade") {
@@ -99,172 +91,93 @@
     container.appendChild(paragrafo);
   }
 
-  function formatarRolagemEfeito(
-  rolagem
-) {
-  if (!rolagem) {
-    return "";
-  }
-
-  const gruposDeDados =
-    rolagem.gruposDeDados ?? [];
-
-  const partesDaFormula = [];
-
-  for (
-    const grupoDeDados of
-    gruposDeDados
-  ) {
-    partesDaFormula.push(
-      `${grupoDeDados.quantidade}` +
-      `d${grupoDeDados.numeroDeFaces}`
-    );
-  }
-
-  const modificador =
-    rolagem.modificador;
-
-  if (
-    typeof modificador ===
-    "number" &&
-    modificador !== 0
-  ) {
-    partesDaFormula.push(
-      String(modificador)
-    );
-  }
-
-  if (
-    modificador?.tipo ===
-    "nivelClasse"
-  ) {
-    partesDaFormula.push(
-      "nível da classe"
-    );
-  }
-
-  return partesDaFormula.join(
-    " + "
-  );
-}
-
-  function preencherMecanicaHabilidade(
-  container,
-  id,
-  contexto
-) {
-  const recurso =
-    contexto
-      ?.recursos
-      ?.[id];
-
-  if (recurso) {
-    adicionarParagrafoMecanica(
-      container,
-      "Usos",
-      recurso.usosAtuais +
-      " / " +
-      recurso.usosMaximos
-    );
-
-        const textosRecuperacao = [];
-
-    const recuperacaoCurta =
-      recurso
-        .recuperacao
-        ?.descansoCurto;
-
-    const recuperacaoLonga =
-      recurso
-        .recuperacao
-        ?.descansoLongo;
-
-    if (
-      recuperacaoCurta
-        ?.restaurarTodos
-    ) {
-      textosRecuperacao.push(
-        "todos os usos no descanso curto",
-      );
-    } else if (
-      Number.isInteger(
-        recuperacaoCurta
-          ?.quantidade,
-      )
-    ) {
-      textosRecuperacao.push(
-        recuperacaoCurta.quantidade === 1
-          ? "1 uso no descanso curto"
-          : `${recuperacaoCurta.quantidade} usos no descanso curto`,
-      );
+  function formatarRolagemEfeito(rolagem) {
+    if (!rolagem) {
+      return "";
     }
 
-    if (
-      recuperacaoLonga
-        ?.restaurarTodos
-    ) {
-      textosRecuperacao.push(
-        "todos os usos no descanso longo",
-      );
-    } else if (
-      Number.isInteger(
-        recuperacaoLonga
-          ?.quantidade,
-      )
-    ) {
-      textosRecuperacao.push(
-        recuperacaoLonga.quantidade === 1
-          ? "1 uso no descanso longo"
-          : `${recuperacaoLonga.quantidade} usos no descanso longo`,
-      );
+    const gruposDeDados = rolagem.gruposDeDados ?? [];
+
+    const partesDaFormula = [];
+
+    for (const grupoDeDados of gruposDeDados) {
+      partesDaFormula.push(`${grupoDeDados.quantidade}` + `d${grupoDeDados.numeroDeFaces}`);
     }
 
-    adicionarParagrafoMecanica(
-      container,
-      "Recuperação",
-      textosRecuperacao.join("; ") ||
-        "não definida",
-    );
+    const modificador = rolagem.modificador;
+
+    if (typeof modificador === "number" && modificador !== 0) {
+      partesDaFormula.push(String(modificador));
+    }
+
+    if (modificador?.tipo === "nivelClasse") {
+      partesDaFormula.push("nível da classe");
+    }
+
+    return partesDaFormula.join(" + ");
   }
 
-  const habilidade =
-    obterDetalheHabilidade(
-      id
-    );
+  function preencherMecanicaHabilidade(container, id, contexto) {
+    const recurso = contexto?.recursos?.[id];
 
-  const efeitosIds =
-    habilidade?.efeitos ?? [];
-
-  for (
-    const efeitoId of
-    efeitosIds
-  ) {
-    const efeito =
-      window.bancoEfeitos
-        ?.[efeitoId];
-
-    if (!efeito) {
-      continue;
-    }
-
-    const formula =
-      formatarRolagemEfeito(
-        efeito.operacao
-          ?.rolagem
-      );
-
-    if (
-      efeito.tipo ===
-      "cura"
-    ) {
+    if (recurso) {
       adicionarParagrafoMecanica(
         container,
-        "Cura",
-        formula
+        "Usos",
+        recurso.usosAtuais + " / " + recurso.usosMaximos,
+      );
+
+      const textosRecuperacao = [];
+
+      const recuperacaoCurta = recurso.recuperacao?.descansoCurto;
+
+      const recuperacaoLonga = recurso.recuperacao?.descansoLongo;
+
+      if (recuperacaoCurta?.restaurarTodos) {
+        textosRecuperacao.push("todos os usos no descanso curto");
+      } else if (Number.isInteger(recuperacaoCurta?.quantidade)) {
+        textosRecuperacao.push(
+          recuperacaoCurta.quantidade === 1
+            ? "1 uso no descanso curto"
+            : `${recuperacaoCurta.quantidade} usos no descanso curto`,
+        );
+      }
+
+      if (recuperacaoLonga?.restaurarTodos) {
+        textosRecuperacao.push("todos os usos no descanso longo");
+      } else if (Number.isInteger(recuperacaoLonga?.quantidade)) {
+        textosRecuperacao.push(
+          recuperacaoLonga.quantidade === 1
+            ? "1 uso no descanso longo"
+            : `${recuperacaoLonga.quantidade} usos no descanso longo`,
+        );
+      }
+
+      adicionarParagrafoMecanica(
+        container,
+        "Recuperação",
+        textosRecuperacao.join("; ") || "não definida",
       );
     }
+
+    const habilidade = obterDetalheHabilidade(id);
+
+    const efeitosIds = habilidade?.efeitos ?? [];
+
+    for (const efeitoId of efeitosIds) {
+      const efeito = window.bancoEfeitos?.[efeitoId];
+
+      if (!efeito) {
+        continue;
+      }
+
+      const formula = formatarRolagemEfeito(efeito.operacao?.rolagem);
+
+      if (efeito.tipo === "cura") {
+        adicionarParagrafoMecanica(container, "Cura", formula);
+      }
+    }
   }
-}
 
   function preencherMecanicaDetalhe(container, tipo, id, detalhe, contexto) {
     adicionarParagrafoMecanica(container, "Tipo", obterTipoLegivelDetalhe(tipo, detalhe));

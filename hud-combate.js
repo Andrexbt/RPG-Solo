@@ -5,7 +5,6 @@ const estadoLinhaTempoCombate = {
   iniciativaRegistrada: false,
   participanteAtivoId: null,
   blocoTurnoAtual: null,
-  
 };
 
 function reiniciarLinhaTempoCombate() {
@@ -41,19 +40,15 @@ function adicionarEventoHistoricoCombate(titulo, descricao) {
   }
 
   const destino =
-    estadoLinhaTempoCombate.blocoTurnoAtual?.querySelector(
-      ".eventos-turno-linha-tempo",
-    ) ?? listaHistoricoCombate;
+    estadoLinhaTempoCombate.blocoTurnoAtual?.querySelector(".eventos-turno-linha-tempo") ??
+    listaHistoricoCombate;
 
   destino.append(evento);
   rolarLinhaTempoParaAtual();
 }
 
 function apresentarMensagemCombate(caminho, variaveis = {}) {
-  const mensagem = window.obterMensagemJogabilidade?.(
-    caminho,
-    variaveis,
-  );
+  const mensagem = window.obterMensagemJogabilidade?.(caminho, variaveis);
 
   if (!mensagem) {
     console.warn("Mensagem de jogabilidade não encontrada:", caminho);
@@ -70,10 +65,7 @@ function apresentarMensagemCombate(caminho, variaveis = {}) {
   }
 
   if (mensagem.historicoTitulo) {
-    adicionarEventoHistoricoCombate(
-      mensagem.historicoTitulo,
-      mensagem.historicoDescricao,
-    );
+    adicionarEventoHistoricoCombate(mensagem.historicoTitulo, mensagem.historicoDescricao);
   }
 
   return true;
@@ -85,9 +77,7 @@ function alternarHistoricoCombate() {
 
 function rolarLinhaTempoParaAtual(comportamento = "auto") {
   window.requestAnimationFrame(function () {
-    const alvo =
-      estadoLinhaTempoCombate.blocoTurnoAtual ??
-      listaHistoricoCombate.lastElementChild;
+    const alvo = estadoLinhaTempoCombate.blocoTurnoAtual ?? listaHistoricoCombate.lastElementChild;
 
     if (!alvo) {
       return;
@@ -96,9 +86,7 @@ function rolarLinhaTempoParaAtual(comportamento = "auto") {
     painelHistoricoCombate.scrollTo({
       top: Math.max(
         0,
-        alvo.offsetTop -
-          painelHistoricoCombate.clientHeight / 2 +
-          alvo.offsetHeight / 2,
+        alvo.offsetTop - painelHistoricoCombate.clientHeight / 2 + alvo.offsetHeight / 2,
       ),
       behavior: comportamento,
     });
@@ -185,27 +173,21 @@ function criarAvatarIniciativa(participante) {
 }
 
 function renderizarFilaIniciativa(combate) {
-  if (
-    estadoLinhaTempoCombate.rodada === null &&
-    listaHistoricoCombate.childElementCount === 0
-  ) {
+  if (estadoLinhaTempoCombate.rodada === null && listaHistoricoCombate.childElementCount === 0) {
     adicionarMarcadorLinhaTempo("Início da batalha", "inicio-batalha");
   }
 
   if (combate.fase === "iniciativa") {
-  if (!estadoLinhaTempoCombate.iniciativaRegistrada) {
-    adicionarMarcadorLinhaTempo(
-      "Iniciativa",
-      "iniciativa-combate",
-    );
+    if (!estadoLinhaTempoCombate.iniciativaRegistrada) {
+      adicionarMarcadorLinhaTempo("Iniciativa", "iniciativa-combate");
 
-    estadoLinhaTempoCombate.iniciativaRegistrada = true;
+      estadoLinhaTempoCombate.iniciativaRegistrada = true;
+    }
+
+    filaIniciativaCombate.innerHTML = "";
+
+    return;
   }
-
-  filaIniciativaCombate.innerHTML = "";
-
-  return;
-}
 
   if (estadoLinhaTempoCombate.rodada !== combate.rodada) {
     adicionarMarcadorLinhaTempo(`Rodada ${combate.rodada}`);
@@ -213,14 +195,11 @@ function renderizarFilaIniciativa(combate) {
   }
 
   if (estadoLinhaTempoCombate.participanteAtivoId !== combate.participanteAtivoId) {
-    estadoLinhaTempoCombate.blocoTurnoAtual?.classList.remove(
-      "turno-atual-linha-tempo",
-    );
+    estadoLinhaTempoCombate.blocoTurnoAtual?.classList.remove("turno-atual-linha-tempo");
 
-    const estadoAnterior =
-      estadoLinhaTempoCombate.blocoTurnoAtual?.querySelector(
-        ".estado-turno-linha-tempo",
-      );
+    const estadoAnterior = estadoLinhaTempoCombate.blocoTurnoAtual?.querySelector(
+      ".estado-turno-linha-tempo",
+    );
 
     if (estadoAnterior) {
       estadoAnterior.textContent = "Turno encerrado";
@@ -231,79 +210,44 @@ function renderizarFilaIniciativa(combate) {
     );
 
     if (participanteAtivo) {
-      estadoLinhaTempoCombate.blocoTurnoAtual =
-        criarBlocoTurnoLinhaTempo(participanteAtivo);
+      estadoLinhaTempoCombate.blocoTurnoAtual = criarBlocoTurnoLinhaTempo(participanteAtivo);
     }
 
-    estadoLinhaTempoCombate.participanteAtivoId =
-      combate.participanteAtivoId;
+    estadoLinhaTempoCombate.participanteAtivoId = combate.participanteAtivoId;
 
     rolarLinhaTempoParaAtual("smooth");
   }
 
   filaIniciativaCombate.innerHTML = "";
 
-  const ordemVisivel =
-  combate.ordemTurnos.filter(
-    function participanteContinuaNaFila(
-      participanteId,
-    ) {
-      const participante =
-        combate.participantes.find(
-          (item) =>
-            item.id === participanteId,
-        );
+  const ordemVisivel = combate.ordemTurnos.filter(
+    function participanteContinuaNaFila(participanteId) {
+      const participante = combate.participantes.find((item) => item.id === participanteId);
 
-      return (
-        participante &&
-        participante.estado !== "derrotado"
-      );
+      return participante && participante.estado !== "derrotado";
     },
   );
 
-const indiceAtivo =
-  ordemVisivel.indexOf(
-    combate.participanteAtivoId,
-  );
+  const indiceAtivo = ordemVisivel.indexOf(combate.participanteAtivoId);
 
-for (
-  let deslocamento = 1;
-  deslocamento <= ordemVisivel.length;
-  deslocamento += 1
-) {
-  const indiceAbsoluto =
-    indiceAtivo + deslocamento;
+  for (let deslocamento = 1; deslocamento <= ordemVisivel.length; deslocamento += 1) {
+    const indiceAbsoluto = indiceAtivo + deslocamento;
 
-  const indiceParticipante =
-    indiceAbsoluto %
-    ordemVisivel.length;
+    const indiceParticipante = indiceAbsoluto % ordemVisivel.length;
 
-  const rodadaDoParticipante =
-    combate.rodada +
-    Math.floor(
-      indiceAbsoluto /
-      ordemVisivel.length,
-    );
+    const rodadaDoParticipante = combate.rodada + Math.floor(indiceAbsoluto / ordemVisivel.length);
 
-  if (
-    indiceParticipante === 0
-  ) {
-    const marcadorRodada =
-      document.createElement("li");
+    if (indiceParticipante === 0) {
+      const marcadorRodada = document.createElement("li");
 
-    marcadorRodada.className =
-      "marcador-proxima-rodada";
+      marcadorRodada.className = "marcador-proxima-rodada";
 
-    marcadorRodada.textContent =
-      `Rodada ${rodadaDoParticipante}`;
+      marcadorRodada.textContent = `Rodada ${rodadaDoParticipante}`;
 
-    filaIniciativaCombate.append(
-      marcadorRodada,
-    );
-  }
+      filaIniciativaCombate.append(marcadorRodada);
+    }
 
-  const participanteId =
-    ordemVisivel[indiceParticipante];
+    const participanteId = ordemVisivel[indiceParticipante];
     const participante = combate.participantes.find(
       (participante) => participante.id === participanteId,
     );

@@ -57,18 +57,9 @@
 
     definirTexto(raiz, "#fichaNome", personagem.detalhes?.nome);
 
-    const classeENivel =
-  personagem.classe
-    ? personagem.classe +
-      " " +
-      personagem.nivel
-    : "";
+    const classeENivel = personagem.classe ? personagem.classe + " " + personagem.nivel : "";
 
-definirTexto(
-  raiz,
-  "#fichaClasseNivel",
-  classeENivel
-);
+    definirTexto(raiz, "#fichaClasseNivel", classeENivel);
 
     definirTexto(raiz, "#fichaAntecedente", personagem.antecedente);
     definirTexto(raiz, "#fichaEspecie", personagem.especie);
@@ -103,7 +94,8 @@ definirTexto(
   }
 
   function preencherCombate(raiz, personagem) {
-    const pontosDeVida = personagem.combate?.pontosDeVida ?? personagem.detalhes?.pontosDeVida ?? {};
+    const pontosDeVida =
+      personagem.combate?.pontosDeVida ?? personagem.detalhes?.pontosDeVida ?? {};
     const especie = obterDadosEspecie(personagem);
     const destreza = personagem.atributos?.destreza;
 
@@ -371,8 +363,14 @@ definirTexto(
     raiz.querySelectorAll("[data-pericia]").forEach(function (linha) {
       const id = linha.dataset.pericia;
 
-      linha.classList.toggle("proficiente", window.personagemTemProficienciaEmPericia(personagem, id));
-      linha.classList.toggle("especializada", window.personagemTemEspecializacaoEmPericia(personagem, id));
+      linha.classList.toggle(
+        "proficiente",
+        window.personagemTemProficienciaEmPericia(personagem, id),
+      );
+      linha.classList.toggle(
+        "especializada",
+        window.personagemTemEspecializacaoEmPericia(personagem, id),
+      );
     });
 
     const salvaguardas = window.bancoClasses?.[personagem.classeId]?.salvaguardas ?? [];

@@ -39,7 +39,6 @@ window.bancoCriaturas = {
   },
 
   blocos: {
-
     guarda: {
       id: "guarda",
       nome: "Guarda",
@@ -87,11 +86,7 @@ window.bancoCriaturas = {
 
       idiomas: ["comum"],
 
-      equipamentos: [
-        "camisaoDeMalha",
-        "escudo",
-        "lanca",
-      ],
+      equipamentos: ["camisaoDeMalha", "escudo", "lanca"],
 
       combate: {
         classeArmadura: 16,
@@ -172,8 +167,6 @@ window.bancoCriaturas = {
           },
         },
       ],
-
-
     },
 
     bandido: {
@@ -221,16 +214,9 @@ window.bancoCriaturas = {
         percepcaoPassiva: 10,
       },
 
-      idiomas: [
-        "comum",
-        "cantLadroes",
-      ],
+      idiomas: ["comum", "cantLadroes"],
 
-      equipamentos: [
-        "armaduraDeCouro",
-        "bestaLeve",
-        "cimitarra",
-      ],
+      equipamentos: ["armaduraDeCouro", "bestaLeve", "cimitarra"],
 
       combate: {
         classeArmadura: 12,
@@ -310,6 +296,5 @@ window.bancoCriaturas = {
         },
       ],
     },
-
   },
 };

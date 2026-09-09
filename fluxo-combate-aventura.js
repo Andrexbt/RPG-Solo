@@ -47,10 +47,7 @@ function resolverEfeitoPendente(resultadoRolagem) {
     return true;
   }
 
-  const resultadoCura = SistemaCombate.aplicarCura(
-    participante,
-    resultadoRolagem.total,
-  );
+  const resultadoCura = SistemaCombate.aplicarCura(participante, resultadoRolagem.total);
 
   if (!resultadoCura.sucesso) {
     console.warn("Não foi possível aplicar a cura:", resultadoCura.motivo);
@@ -123,10 +120,8 @@ function processarTurnoAtual(combate) {
 
       const resultado = SistemaCombate.executarTurnoInimigo(combate);
 
-            if (resultado.turnoPausado) {
-        abrirDecisaoPendenteCombate(
-          resultado.decisao,
-        );
+      if (resultado.turnoPausado) {
+        abrirDecisaoPendenteCombate(resultado.decisao);
 
         atualizarInterfaceTurno(combate);
 
@@ -136,9 +131,7 @@ function processarTurnoAtual(combate) {
       await registrarResultadoTurnoInimigo(resultado, participanteAtivo);
       atualizarInterfaceTurno(combate);
     } catch (erro) {
-      exibirAcaoAtualCombate(
-        mensagensNarrativas.turno.erroInimigo(participanteAtivo.nome),
-      );
+      exibirAcaoAtualCombate(mensagensNarrativas.turno.erroInimigo(participanteAtivo.nome));
 
       await esperar(1200);
     }
@@ -186,9 +179,7 @@ function notificarFimCombate(combate) {
   acoesCombate.innerHTML = "";
 
   solicitacaoCombate.textContent =
-    combate.status === "vitoria"
-      ? "Combate encerrado: vitória."
-      : "Combate encerrado: derrota.";
+    combate.status === "vitoria" ? "Combate encerrado: vitória." : "Combate encerrado: derrota.";
 
   solicitacaoCombate.hidden = false;
 
@@ -204,13 +195,8 @@ function notificarFimCombate(combate) {
   );
 }
 
-function persistirPersonagemAposCombate(
-  combate,
-) {
-  const personagemAtual =
-    estadoAtualJogo
-      .personagem
-      .dados;
+function persistirPersonagemAposCombate(combate) {
+  const personagemAtual = estadoAtualJogo.personagem.dados;
 
   if (!personagemAtual?.id) {
     return {
@@ -219,77 +205,36 @@ function persistirPersonagemAposCombate(
     };
   }
 
-  const participanteJogador =
-    combate
-      ?.participantes
-      ?.find(
-        function (participante) {
-          return (
-            participante.tipo ===
-            "jogador"
-          );
-        },
-      );
+  const participanteJogador = combate?.participantes?.find(function (participante) {
+    return participante.tipo === "jogador";
+  });
 
   if (!participanteJogador) {
     return {
       sucesso: false,
-      motivo:
-        "participanteJogadorNaoEncontrado",
+      motivo: "participanteJogadorNaoEncontrado",
     };
   }
 
-  const personagemAtualizado =
-    structuredClone(
-      personagemAtual,
-    );
+  const personagemAtualizado = structuredClone(personagemAtual);
 
-  if (
-    !personagemAtualizado.combate ||
-    typeof personagemAtualizado.combate !==
-      "object"
-  ) {
+  if (!personagemAtualizado.combate || typeof personagemAtualizado.combate !== "object") {
     personagemAtualizado.combate = {};
   }
 
-  personagemAtualizado
-    .combate
-    .pontosDeVida =
-      structuredClone(
-        participanteJogador
-          .pontosDeVida,
-      );
+  personagemAtualizado.combate.pontosDeVida = structuredClone(participanteJogador.pontosDeVida);
 
-  if (
-    participanteJogador
-      .habilidades
-      ?.recursos
-  ) {
-    if (
-      !personagemAtualizado
-        .habilidades ||
-      typeof personagemAtualizado
-        .habilidades !== "object"
-    ) {
-      personagemAtualizado
-        .habilidades = {};
+  if (participanteJogador.habilidades?.recursos) {
+    if (!personagemAtualizado.habilidades || typeof personagemAtualizado.habilidades !== "object") {
+      personagemAtualizado.habilidades = {};
     }
 
-    personagemAtualizado
-      .habilidades
-      .recursos =
-        structuredClone(
-          participanteJogador
-            .habilidades
-            .recursos,
-        );
+    personagemAtualizado.habilidades.recursos = structuredClone(
+      participanteJogador.habilidades.recursos,
+    );
   }
 
-  const personagemSalvo =
-    window.PersonagemDados
-      .atualizarSalvo(
-        personagemAtualizado,
-      );
+  const personagemSalvo = window.PersonagemDados.atualizarSalvo(personagemAtualizado);
 
   if (!personagemSalvo) {
     return {
@@ -298,67 +243,34 @@ function persistirPersonagemAposCombate(
     };
   }
 
-  estadoAtualJogo
-    .personagem
-    .dados =
-      personagemSalvo;
+  estadoAtualJogo.personagem.dados = personagemSalvo;
 
   const resultado = {
     sucesso: true,
     motivo: null,
 
-    personagem:
-      personagemSalvo,
+    personagem: personagemSalvo,
 
-    pontosDeVida:
-      structuredClone(
-        personagemSalvo
-          .combate
-          .pontosDeVida,
-      ),
+    pontosDeVida: structuredClone(personagemSalvo.combate.pontosDeVida),
 
-    recursos:
-      structuredClone(
-        personagemSalvo
-          .habilidades
-          ?.recursos
-          ?? {},
-      ),
+    recursos: structuredClone(personagemSalvo.habilidades?.recursos ?? {}),
   };
 
-  combate.persistenciaPersonagem =
-    {
-      sucesso: true,
+  combate.persistenciaPersonagem = {
+    sucesso: true,
 
-      pontosDeVida:
-        structuredClone(
-          resultado.pontosDeVida,
-        ),
+    pontosDeVida: structuredClone(resultado.pontosDeVida),
 
-      recursos:
-        structuredClone(
-          resultado.recursos,
-        ),
-    };
+    recursos: structuredClone(resultado.recursos),
+  };
 
   return resultado;
 }
 
-function concederXpDaVitoria(
-  combate,
-) {
-  const personagem =
-    estadoAtualJogo
-      .personagem
-      .dados;
+function concederXpDaVitoria(combate) {
+  const personagem = estadoAtualJogo.personagem.dados;
 
-  const xpEncontro =
-    Number(
-      combate
-        ?.encontro
-        ?.avaliacao
-        ?.xpTotal,
-    );
+  const xpEncontro = Number(combate?.encontro?.avaliacao?.xpTotal);
 
   if (!personagem?.id) {
     return {
@@ -368,10 +280,7 @@ function concederXpDaVitoria(
     };
   }
 
-  if (
-    !Number.isInteger(xpEncontro) ||
-    xpEncontro <= 0
-  ) {
+  if (!Number.isInteger(xpEncontro) || xpEncontro <= 0) {
     return {
       sucesso: false,
       concedida: false,
@@ -380,86 +289,52 @@ function concederXpDaVitoria(
   }
 
   const resultadoId = combate.resultadoId ?? "vitoria";
-  const recompensaId =
-    `combate:${combate.id}:${resultadoId}:xp`;
+  const recompensaId = `combate:${combate.id}:${resultadoId}:xp`;
 
-  const resultadoXp =
-    window.SistemaProgressao
-      .concederXp(
-        personagem,
-        {
-          id: recompensaId,
-          tipo: "xp",
-          quantidade: xpEncontro,
+  const resultadoXp = window.SistemaProgressao.concederXp(personagem, {
+    id: recompensaId,
+    tipo: "xp",
+    quantidade: xpEncontro,
 
-          origem: {
-            tipo: "combate",
-            aventuraId:
-              aventuraAtual.id,
+    origem: {
+      tipo: "combate",
+      aventuraId: aventuraAtual.id,
 
-            cenaId:
-              estadoAtualJogo
-                .progresso
-                .cenaId,
+      cenaId: estadoAtualJogo.progresso.cenaId,
 
-            combateId:
-              combate.id,
+      combateId: combate.id,
 
-            resultado: resultadoId,
-          },
-        },
-      );
+      resultado: resultadoId,
+    },
+  });
 
-  if (
-    resultadoXp.sucesso &&
-    resultadoXp.personagem
-  ) {
-    estadoAtualJogo
-      .personagem
-      .dados =
-        resultadoXp.personagem;
+  if (resultadoXp.sucesso && resultadoXp.personagem) {
+    estadoAtualJogo.personagem.dados = resultadoXp.personagem;
   }
 
   combate.recompensaXp = {
     id: recompensaId,
-    sucesso:
-      resultadoXp.sucesso,
+    sucesso: resultadoXp.sucesso,
 
-    concedida:
-      resultadoXp.concedida,
+    concedida: resultadoXp.concedida,
 
-    motivo:
-      resultadoXp.motivo,
+    motivo: resultadoXp.motivo,
 
-    quantidade:
-      xpEncontro,
+    quantidade: xpEncontro,
 
-    xpAnterior:
-      resultadoXp.xpAnterior,
+    xpAnterior: resultadoXp.xpAnterior,
 
-    xpAtual:
-      resultadoXp.xpAtual,
+    xpAtual: resultadoXp.xpAtual,
 
-    novoNivelDisponivel:
-      resultadoXp
-        .novoNivelDisponivel
-        ?? false,
+    novoNivelDisponivel: resultadoXp.novoNivelDisponivel ?? false,
 
-    nivelAtualPorXp:
-      resultadoXp
-        .nivelAtualPorXp
-        ?? null,
+    nivelAtualPorXp: resultadoXp.nivelAtualPorXp ?? null,
   };
 
   return resultadoXp;
 }
 
-function consolidarResultadoCombate({
-  combate,
-  resultadoId,
-  categoriaResultado,
-  consequencia,
-}) {
+function consolidarResultadoCombate({ combate, resultadoId, categoriaResultado, consequencia }) {
   if (!combate || !resultadoId || !consequencia) {
     return {
       sucesso: false,
@@ -468,8 +343,7 @@ function consolidarResultadoCombate({
     };
   }
 
-  const consolidacaoExistente =
-    combate.consolidacaoResultado;
+  const consolidacaoExistente = combate.consolidacaoResultado;
 
   if (consolidacaoExistente?.concluida) {
     return {
@@ -477,10 +351,7 @@ function consolidarResultadoCombate({
       motivo: "resultadoJaConsolidado",
       repetida: true,
       deveAplicarConsequencia: false,
-      consolidacao:
-        structuredClone(
-          consolidacaoExistente
-        ),
+      consolidacao: structuredClone(consolidacaoExistente),
     };
   }
 
@@ -499,25 +370,16 @@ function consolidarResultadoCombate({
     resultadoId,
   };
 
-  const contexto = Array.isArray(
-    consequencia.contexto
-  )
+  const contexto = Array.isArray(consequencia.contexto)
     ? [...consequencia.contexto]
     : consequencia.contexto
       ? [consequencia.contexto]
       : [];
 
-  const persistencia =
-    persistirPersonagemAposCombate(
-      combate
-    );
+  const persistencia = persistirPersonagemAposCombate(combate);
 
   if (!persistencia.sucesso) {
-    contexto.push(
-      mensagensNarrativas
-        .progressao
-        .erroAoSalvarCombate
-    );
+    contexto.push(mensagensNarrativas.progressao.erroAoSalvarCombate);
 
     combate.consolidacaoResultado = {
       emAndamento: false,
@@ -538,57 +400,33 @@ function consolidarResultadoCombate({
   let resultadoXp = null;
 
   if (categoriaResultado === "vitoria") {
-    resultadoXp =
-      concederXpDaVitoria(
-        combate
-      );
+    resultadoXp = concederXpDaVitoria(combate);
 
     if (!resultadoXp.sucesso) {
-      contexto.push(
-        mensagensNarrativas
-          .progressao
-          .erroAoConcederXp
-      );
+      contexto.push(mensagensNarrativas.progressao.erroAoConcederXp);
     } else if (resultadoXp.concedida) {
       contexto.push(
-        mensagensNarrativas
-          .progressao
-          .xpRecebido(
-            resultadoXp
-              .recompensa
-              .quantidade,
+        mensagensNarrativas.progressao.xpRecebido(
+          resultadoXp.recompensa.quantidade,
 
-            resultadoXp.xpAtual
-          )
+          resultadoXp.xpAtual,
+        ),
       );
 
-      if (
-        resultadoXp.novoNivelDisponivel
-      ) {
+      if (resultadoXp.novoNivelDisponivel) {
         contexto.push(
-          mensagensNarrativas
-            .progressao
-            .novoNivelDisponivel(
-              resultadoXp
-                .nivelAtualPorXp
-            )
+          mensagensNarrativas.progressao.novoNivelDisponivel(resultadoXp.nivelAtualPorXp),
         );
       }
     }
   }
 
   document.dispatchEvent(
-    new CustomEvent(
-      "personagemAtualizado",
-      {
-        detail: {
-          personagem:
-            estadoAtualJogo
-              .personagem
-              .dados,
-        },
-      }
-    )
+    new CustomEvent("personagemAtualizado", {
+      detail: {
+        personagem: estadoAtualJogo.personagem.dados,
+      },
+    }),
   );
 
   const consequenciaFinal = {
@@ -603,47 +441,26 @@ function consolidarResultadoCombate({
     resultadoId,
 
     persistencia: {
-      sucesso:
-        persistencia.sucesso,
+      sucesso: persistencia.sucesso,
 
-      pontosDeVida:
-        structuredClone(
-          persistencia.pontosDeVida
-        ),
+      pontosDeVida: structuredClone(persistencia.pontosDeVida),
 
-      recursos:
-        structuredClone(
-          persistencia.recursos
-        ),
+      recursos: structuredClone(persistencia.recursos),
     },
 
     xp: resultadoXp
       ? {
-          sucesso:
-            resultadoXp.sucesso,
+          sucesso: resultadoXp.sucesso,
 
-          concedida:
-            resultadoXp.concedida,
+          concedida: resultadoXp.concedida,
 
-          quantidade:
-            resultadoXp
-              .recompensa
-              ?.quantidade
-              ?? 0,
+          quantidade: resultadoXp.recompensa?.quantidade ?? 0,
 
-          xpAtual:
-            resultadoXp.xpAtual
-              ?? null,
+          xpAtual: resultadoXp.xpAtual ?? null,
 
-                        novoNivelDisponivel:
-            resultadoXp
-              .novoNivelDisponivel
-              ?? false,
+          novoNivelDisponivel: resultadoXp.novoNivelDisponivel ?? false,
 
-          nivelAtualPorXp:
-            resultadoXp
-              .nivelAtualPorXp
-              ?? null,
+          nivelAtualPorXp: resultadoXp.nivelAtualPorXp ?? null,
         }
       : null,
   };
@@ -655,26 +472,16 @@ function consolidarResultadoCombate({
     deveAplicarConsequencia: true,
     consequencia: consequenciaFinal,
 
-    consolidacao:
-      structuredClone(
-        combate.consolidacaoResultado
-      ),
+    consolidacao: structuredClone(combate.consolidacaoResultado),
   };
 }
 
 let resultadoCombatePendente = null;
 
-function obterTextoTelaResultado(
-  categoriaResultado,
-  consequencia
-) {
-  const textoConfigurado =
-    consequencia.tela?.texto;
+function obterTextoTelaResultado(categoriaResultado, consequencia) {
+  const textoConfigurado = consequencia.tela?.texto;
 
-  if (
-    typeof textoConfigurado === "string" &&
-    textoConfigurado.trim() !== ""
-  ) {
+  if (typeof textoConfigurado === "string" && textoConfigurado.trim() !== "") {
     return textoConfigurado;
   }
 
@@ -692,68 +499,45 @@ function exibirTelaResultadoCombate({
   consequencia,
   combate,
 }) {
-  const vitoria =
-    categoriaResultado === "vitoria";
+  const vitoria = categoriaResultado === "vitoria";
 
-  const configuracaoTela =
-    consequencia.tela ?? {};
+  const configuracaoTela = consequencia.tela ?? {};
 
-    rotuloResultadoCombate.textContent =
-    NarradorAventura.adaptarGenero(
-      configuracaoTela.rotulo ??
-      "Combate encerrado"
-    );
+  rotuloResultadoCombate.textContent = NarradorAventura.adaptarGenero(
+    configuracaoTela.rotulo ?? "Combate encerrado",
+  );
 
-  tituloResultadoCombate.textContent =
-    NarradorAventura.adaptarGenero(
-      configuracaoTela.titulo ??
-      (
-        vitoria
-          ? "Vitória"
-          : "Derrota"
-      )
-    );
+  tituloResultadoCombate.textContent = NarradorAventura.adaptarGenero(
+    configuracaoTela.titulo ?? (vitoria ? "Vitória" : "Derrota"),
+  );
 
-  NarradorAventura
-    .preencherElementoComParagrafos(
-      textoResultadoCombate,
+  NarradorAventura.preencherElementoComParagrafos(
+    textoResultadoCombate,
 
-      obterTextoTelaResultado(
-        categoriaResultado,
-        consequencia
-      ),
+    obterTextoTelaResultado(categoriaResultado, consequencia),
 
-      "paragrafo-resultado-combate"
-    );
+    "paragrafo-resultado-combate",
+  );
 
-  telaResultadoCombate.dataset.resultado =
-    resultadoId;
+  telaResultadoCombate.dataset.resultado = resultadoId;
 
-  const xp =
-    resultado.consolidacao?.xp;
+  const xp = resultado.consolidacao?.xp;
 
-  const recebeuXp =
-    vitoria &&
-    xp?.sucesso &&
-    xp?.concedida;
+  const recebeuXp = vitoria && xp?.sucesso && xp?.concedida;
 
-  recompensasResultadoCombate.hidden =
-    !recebeuXp;
+  recompensasResultadoCombate.hidden = !recebeuXp;
 
   if (recebeuXp) {
-    xpRecebidoResultadoCombate.textContent =
-      `+${xp.quantidade} XP`;
+    xpRecebidoResultadoCombate.textContent = `+${xp.quantidade} XP`;
 
-    xpAtualResultadoCombate.textContent =
-      xp.novoNivelDisponivel
-        ? `Total: ${xp.xpAtual} XP — novo nível disponível`
-        : `Total: ${xp.xpAtual} XP`;
+    xpAtualResultadoCombate.textContent = xp.novoNivelDisponivel
+      ? `Total: ${xp.xpAtual} XP — novo nível disponível`
+      : `Total: ${xp.xpAtual} XP`;
   }
 
   resultadoCombatePendente = {
     combate,
-    consequencia:
-      resultado.consequencia,
+    consequencia: resultado.consequencia,
   };
 
   telaResultadoCombate.hidden = false;
@@ -765,10 +549,7 @@ async function continuarAposResultadoCombate() {
     return;
   }
 
-  const {
-    combate,
-    consequencia,
-  } = resultadoCombatePendente;
+  const { combate, consequencia } = resultadoCombatePendente;
 
   resultadoCombatePendente = null;
   telaResultadoCombate.hidden = true;
@@ -776,42 +557,27 @@ async function continuarAposResultadoCombate() {
   exibirTelaAventura();
   ocultarEscolhas();
 
-  await NarradorAventura
-    .iniciarNovoMomentoNarrativo();
+  await NarradorAventura.iniciarNovoMomentoNarrativo();
 
-  await window.MotorAventura
-    .aplicarConsequencia(
-      consequencia
-    );
+  await window.MotorAventura.aplicarConsequencia(consequencia);
 
   combate.resultadoProcessado = true;
 }
 
-function processarResultadoCombate(
-  evento
-) {
-  const resultadoId =
-    evento.detail?.resultado;
+function processarResultadoCombate(evento) {
+  const resultadoId = evento.detail?.resultado;
 
-  const combate =
-    evento.detail?.combate;
+  const combate = evento.detail?.combate;
 
   const categoriaEvento =
     evento.detail?.categoria ??
     combate?.status ??
     (resultadoId === "derrota" ? "derrota" : "vitoria");
 
-  const consequencia =
-    cenaAtual
-      .combate
-      ?.resultados
-      ?.[resultadoId];
+  const consequencia = cenaAtual.combate?.resultados?.[resultadoId];
 
   if (!consequencia) {
-    console.warn(
-      "Consequência de combate não encontrada:",
-      resultadoId
-    );
+    console.warn("Consequência de combate não encontrada:", resultadoId);
 
     return;
   }
@@ -823,31 +589,22 @@ function processarResultadoCombate(
         ? "vitoria"
         : categoriaEvento;
 
-  const resultado =
-    consolidarResultadoCombate({
-      combate,
-      resultadoId,
-      categoriaResultado,
-      consequencia,
-    });
+  const resultado = consolidarResultadoCombate({
+    combate,
+    resultadoId,
+    categoriaResultado,
+    consequencia,
+  });
 
   if (!resultado.sucesso) {
-    if (
-      resultado.motivo !==
-      "resultadoEmAndamento"
-    ) {
-      console.error(
-        "Não foi possível consolidar o resultado do combate:",
-        resultado
-      );
+    if (resultado.motivo !== "resultadoEmAndamento") {
+      console.error("Não foi possível consolidar o resultado do combate:", resultado);
     }
 
     return;
   }
 
-  if (
-    !resultado.deveAplicarConsequencia
-  ) {
+  if (!resultado.deveAplicarConsequencia) {
     return;
   }
 
@@ -858,7 +615,7 @@ function processarResultadoCombate(
     objetivoId: combate.objetivoConcluidoId ?? null,
   });
 
-    exibirTelaResultadoCombate({
+  exibirTelaResultadoCombate({
     resultadoId,
     categoriaResultado,
     resultado,
@@ -872,9 +629,7 @@ function verificarCombateDaCena(cena) {
     return;
   }
 
-  const errosObjetivos = SistemaCombate.validarConfiguracaoObjetivos(
-    cena.combate,
-  );
+  const errosObjetivos = SistemaCombate.validarConfiguracaoObjetivos(cena.combate);
 
   for (const objetivo of cena.combate.objetivos ?? []) {
     if (
@@ -884,7 +639,7 @@ function verificarCombateDaCena(cena) {
     ) {
       errosObjetivos.push(
         `O objetivo "${objetivo.id}" aponta para o resultado inexistente ` +
-        `"${objetivo.resultadoId}".`,
+          `"${objetivo.resultadoId}".`,
       );
     }
   }
@@ -894,90 +649,53 @@ function verificarCombateDaCena(cena) {
     return;
   }
 
-    const nivelPersonagem =
-    Number(
-      estadoAtualJogo
-        .personagem
-        .dados
-        ?.nivel,
-    ) || 1;
+  const nivelPersonagem = Number(estadoAtualJogo.personagem.dados?.nivel) || 1;
 
-  const avaliacaoEncontro =
-    window.SistemaEncontros
-      ?.avaliarEncontro({
-        inimigos:
-          cena.combate.inimigos,
+  const avaliacaoEncontro = window.SistemaEncontros?.avaliarEncontro({
+    inimigos: cena.combate.inimigos,
 
-        catalogoNpcs:
-          estadoAtualJogo.npcs,
+    catalogoNpcs: estadoAtualJogo.npcs,
 
-        nivelPersonagem,
+    nivelPersonagem,
 
-        quantidadePersonagens: 1,
-      });
+    quantidadePersonagens: 1,
+  });
 
   if (!avaliacaoEncontro) {
-    console.error(
-      "Não foi possível avaliar o encontro.",
-    );
+    console.error("Não foi possível avaliar o encontro.");
 
     return;
   }
 
   if (avaliacaoEncontro.erros.length > 0) {
-    console.error(
-      "A configuração do encontro possui erros:",
-      avaliacaoEncontro.erros,
-    );
+    console.error("A configuração do encontro possui erros:", avaliacaoEncontro.erros);
 
     return;
   }
 
-  const dificuldadePretendida =
-    cena.combate
-      .dificuldadePretendida
-      ?? null;
+  const dificuldadePretendida = cena.combate.dificuldadePretendida ?? null;
 
-  const dificuldadeCalculada =
-    avaliacaoEncontro
-      .dificuldade
-      ?.categoria
-      ?? null;
+  const dificuldadeCalculada = avaliacaoEncontro.dificuldade?.categoria ?? null;
 
   if (!dificuldadePretendida) {
-    console.warn(
-      "A batalha não declara uma dificuldade pretendida.",
-    );
-  } else if (
-    dificuldadePretendida !==
-    dificuldadeCalculada
-  ) {
-    console.warn(
-      "A dificuldade calculada não corresponde à pretendida:",
-      {
-        pretendida:
-          dificuldadePretendida,
+    console.warn("A batalha não declara uma dificuldade pretendida.");
+  } else if (dificuldadePretendida !== dificuldadeCalculada) {
+    console.warn("A dificuldade calculada não corresponde à pretendida:", {
+      pretendida: dificuldadePretendida,
 
-        calculada:
-          dificuldadeCalculada,
+      calculada: dificuldadeCalculada,
 
-        xpTotal:
-          avaliacaoEncontro.xpTotal,
-      },
-    );
+      xpTotal: avaliacaoEncontro.xpTotal,
+    });
   }
 
-  const participanteJogador = criarParticipanteJogadorCombate(
-    cena.combate.jogador,
-  );
+  const participanteJogador = criarParticipanteJogadorCombate(cena.combate.jogador);
 
   if (!participanteJogador) {
     return;
   }
 
-  const participantesInimigos = criarParticipantesNpcsCombate(
-    cena.combate.inimigos,
-  );
+  const participantesInimigos = criarParticipantesNpcsCombate(cena.combate.inimigos);
 
   iniciarCombateDaAventura({
     id: `${aventuraAtual.id}-${estadoAtualJogo.progresso.cenaId}`,

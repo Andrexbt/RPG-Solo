@@ -5,6 +5,8 @@ Documento consolidado e editável.
 - Documento-base e suplementos 1.0 a 3.0: convertidos do PDF de 18 de agosto de 2026.
 - Suplemento 4.0: atualizado em 19 de agosto de 2026.
 - Suplemento 5.0: atualizado em 24 de agosto de 2026.
+- Suplemento 6.0: atualizado em 2 de setembro de 2026.
+- Suplemento 7.0: atualizado em 9 de setembro de 2026.
 - O código atual continua sendo a fonte de verdade sobre a implementação.
 
 ---
@@ -1883,3 +1885,105 @@ Próxima etapa futura: **concluir a arquitetura da Central de Textos**, separand
 Os textos próprios das cenas, etapas, escolhas e testes devem permanecer sob responsabilidade do **Editor de Aventuras**, sem serem duplicados na Central de Textos. Da mesma forma, centralização não significa juntar armas, criaturas, aventuras e mensagens em um único objeto: cada domínio conserva seu banco canônico, enquanto as ferramentas oferecem pontos de autoria consistentes.
 
 Esta reorganização deve ser retomada depois das prioridades imediatas de jogabilidade. O ponto atual pode permanecer em uso sem bloquear o trabalho de completar a experiência do Guerreiro, começando pela continuação das armas de arremesso.
+
+---
+
+## Suplemento 7.0 — Estado em 9 de setembro de 2026
+
+Este suplemento substitui o ponto exato de retomada dos suplementos anteriores. O código continua sendo a fonte de verdade. A marcação histórica de **Guerreiro nível 1 concluído** não deve ser usada como aceite atual sem a nova auditoria descrita abaixo.
+
+### 1. Mudança de prioridade
+
+O usuário pausou temporariamente a escrita de “A Fuga” por cansaço criativo e decidiu avançar nas classes do MVP. A ordem permanece:
+
+1. Guerreiro nível 1;
+2. Mago nível 1;
+3. Ladino nível 1;
+4. Clérigo nível 1.
+
+A exigência atual é mais rigorosa que o aceite histórico: o Guerreiro precisa reproduzir integralmente a experiência de nível 1 de D&D 2024 dentro do recorte público e licenciado do projeto. As regras oficiais disponíveis na pasta do projeto devem ser consultadas antes de confirmar cada comportamento. Tudo que faltar para essa experiência, inclusive dependências gerais de combate, tem prioridade.
+
+### 2. Frente de equipamentos encerrada para esta retomada
+
+O cadastro e a produção visual das armas foram considerados concluídos para permitir o retorno ao Guerreiro. O trabalho recente incluiu:
+
+- ampliação do banco de armas e armaduras;
+- alcance normal e longo em metros na interface;
+- seleção da arma antes do alvo e visualização de alcance e linha de visão;
+- fluxo de armas arremessadas, incluindo saída do equipamento, animação, destino no chão ou no alvo e testes mecânicos no Laboratório DEV;
+- regra própria do projeto para arma cravada quando pelo menos um dado de dano apresenta o valor máximo;
+- assets realistas das armas, versões compactadas sem margens transparentes excessivas e configuração visual de tamanho;
+- vitrine de equipamentos na criação de personagem, com paredes de armas, armaduras, labels independentes e editor visual no Laboratório DEV;
+- Área do Mestre e Laboratório DEV como destinos independentes de uma aventura específica para testes e autoria.
+
+Os assets ainda precisam de registro de autoria, origem e licença antes de distribuição pública. Ajustes estéticos futuros não devem impedir a auditoria mecânica do Guerreiro.
+
+### 3. Estado que não deve ser presumido
+
+A checklist de 2 de setembro contém evidências históricas de criação, Segundo Fôlego, estilos, armas e oito maestrias. Desde então, o combate, os equipamentos, a interface e o fluxo de testes mudaram bastante. Portanto:
+
+- não presumir que uma propriedade cadastrada produz seu efeito correto;
+- não presumir que todas as escolhas legais e somente elas são oferecidas;
+- não considerar teste antigo suficiente quando a dependência foi alterada;
+- não reduzir a auditoria a verificar se o nome aparece na ficha;
+- não marcar o Guerreiro como concluído até banco, criação, ficha, regra, interface, persistência e testes aplicáveis funcionarem juntos.
+
+### 4. Próximo passo obrigatório
+
+O próximo trabalho é criar e executar uma **auditoria automatizada do Guerreiro nível 1 no Laboratório DEV**, comparando o projeto com as regras oficiais de D&D 2024 disponíveis localmente.
+
+A primeira execução deve produzir uma lista objetiva de requisitos com estados **completo**, **parcial** ou **pendente**, cobrindo ao menos:
+
+1. proficiências, salvaguardas, perícias, PV, Dado de Vida e equipamento inicial;
+2. cálculo de CA com e sem armadura e escudo;
+3. Estilo de Luta: escolha legal, efeito, exibição e persistência;
+4. Segundo Fôlego: usos, ação bônus, rolagem, cura, limite de PV, recarga e persistência;
+5. Maestria em Armas: quantidade de escolhas, restrições, troca quando permitida, reconhecimento da arma e efeito mecânico;
+6. economia do turno: movimento, ação, ação bônus e reação;
+7. ataques corpo a corpo, à distância e arremessados;
+8. propriedades de armas usadas pelo Guerreiro, incluindo acuidade, alcance, arremesso, munição, pesada, duas mãos e versátil;
+9. linha de visão, cobertura, alcance normal, alcance longo, vantagem e desvantagem;
+10. ataque de oportunidade, saque, troca, armazenamento, perda e recuperação de armas;
+11. projeção para combate, atualização da ficha e persistência após recarregar;
+12. ausência de erros no console e execução dos testes sem comandos manuais.
+
+### 5. Primeira implementação após a auditoria
+
+Depois de gerar a lista de lacunas, começar pelo primeiro requisito central que falhar. A prioridade presumida é **Maestria em Armas**, pois o banco já associa maestrias às armas, mas todos os efeitos, escolhas e momentos de aplicação precisam ser novamente comprovados.
+
+O trabalho deve começar verificando:
+
+- quantas maestrias o Guerreiro de nível 1 escolhe nas regras adotadas;
+- quais armas podem ser escolhidas;
+- onde a escolha é salva no personagem canônico;
+- como o combate confirma que o personagem domina a maestria daquela arma;
+- quais efeitos já existem no motor genérico e quais ainda são específicos ou incompletos;
+- se cada maestria possui teste automatizado e cenário real no Laboratório DEV.
+
+### 6. Critério de conclusão vigente
+
+O Guerreiro nível 1 só volta ao estado **concluído** quando:
+
+- a auditoria estiver 100% satisfeita para o recorte oferecido;
+- cada item possuir evidência verificável no código e no Laboratório DEV;
+- os fluxos principais funcionarem pela interface, sem console;
+- criação, ficha, combate e persistência concordarem sobre os mesmos dados;
+- um teste de ponta a ponta confirmar criação, entrada em batalha, uso das características e retorno com estado preservado.
+
+Somente depois disso o desenvolvimento deve seguir para o Mago nível 1.
+
+### 7. Forma de colaboração
+
+- Quando a implementação envolver uma lógica ou conceito novo relevante, explicar o código e deixar o usuário implementá-lo.
+- Quando o trabalho for repetitivo, cadastro mecânico, ajuste em lote ou correção já compreendida, o assistente pode assumir a execução.
+- O assistente só deve editar diretamente uma parte didática nova quando o usuário pedir explicitamente.
+- Testes repetitivos devem migrar para o Laboratório DEV; o console não é o fluxo normal de validação.
+- Preservar todas as mudanças locais. Não executar commit, push, merge ou limpeza destrutiva sem autorização explícita.
+
+### 8. Estado local observado
+
+Na atualização deste suplemento, a branch é `main`, o último commit observado é `04f60a6 Criação do espaço do mestre e implementação de armas arremessáveis` e há muitas mudanças locais ainda não consolidadas, incluindo código, Laboratório DEV, configuração de vitrine e assets. Uma nova conversa deve executar `git status` antes de editar e não deve restaurar, substituir ou descartar arquivos locais do usuário.
+
+### 9. Pendência arquitetural preservada
+
+A Central de Textos continua funcional, mas arquiteturalmente intermediária. Sua reorganização futura permanece necessária conforme descrito no suplemento 6.0. Ela não deve interromper a auditoria atual do Guerreiro.

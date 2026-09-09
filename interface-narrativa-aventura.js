@@ -14,10 +14,7 @@ function exibirEscolhas(escolhas = []) {
     botaoEscolha.className = "botao-escolha";
     botaoEscolha.dataset.idEscolha = escolha.id;
 
-    NarradorAventura.preencherElementoComParagrafos(
-      botaoEscolha,
-      escolha.texto ?? "",
-    );
+    NarradorAventura.preencherElementoComParagrafos(botaoEscolha, escolha.texto ?? "");
 
     listaEscolhas.append(botaoEscolha);
   }
@@ -33,24 +30,17 @@ function ocultarEscolhas() {
 }
 
 async function exibirContexto(contexto) {
-  if (
-    contexto === undefined ||
-    contexto === null ||
-    contexto === ""
-  ) {
+  if (contexto === undefined || contexto === null || contexto === "") {
     return;
   }
 
-  const trechos =
-    resolverTrechosNarrativos(contexto);
+  const trechos = resolverTrechosNarrativos(contexto);
 
   if (trechos.length === 0) {
     return;
   }
 
-  await NarradorAventura.adicionarNarracao(
-    trechos,
-  );
+  await NarradorAventura.adicionarNarracao(trechos);
 }
 
 function condicaoNarrativaAtendida(condicao) {
@@ -63,11 +53,7 @@ function condicaoNarrativaAtendida(condicao) {
   if (condicao.flag) {
     possuiCondicaoReconhecida = true;
 
-    const valorFlag =
-      estadoAtualJogo
-        ?.progresso
-        ?.flags
-        ?.[condicao.flag];
+    const valorFlag = estadoAtualJogo?.progresso?.flags?.[condicao.flag];
 
     if (valorFlag !== condicao.igualA) {
       return false;
@@ -77,17 +63,9 @@ function condicaoNarrativaAtendida(condicao) {
   if (condicao.veioDe) {
     possuiCondicaoReconhecida = true;
 
-    const transicao =
-      estadoAtualJogo
-        ?.progresso
-        ?.ultimaTransicao;
+    const transicao = estadoAtualJogo?.progresso?.ultimaTransicao;
 
-    if (
-      !transicaoAtendeCondicao(
-        transicao,
-        condicao.veioDe,
-      )
-    ) {
+    if (!transicaoAtendeCondicao(transicao, condicao.veioDe)) {
       return false;
     }
   }
@@ -95,17 +73,10 @@ function condicaoNarrativaAtendida(condicao) {
   if (condicao.historicoContem) {
     possuiCondicaoReconhecida = true;
 
-    const historico =
-      estadoAtualJogo
-        ?.progresso
-        ?.historicoTransicoes ?? [];
+    const historico = estadoAtualJogo?.progresso?.historicoTransicoes ?? [];
 
-    const encontrou = historico.some(
-      (transicao) =>
-        transicaoAtendeCondicao(
-          transicao,
-          condicao.historicoContem,
-        ),
+    const encontrou = historico.some((transicao) =>
+      transicaoAtendeCondicao(transicao, condicao.historicoContem),
     );
 
     if (!encontrou) {
@@ -113,29 +84,14 @@ function condicaoNarrativaAtendida(condicao) {
     }
   }
 
-  if (
-    Object.hasOwn(
-      condicao,
-      "desvantagemNadoAguasRevoltas",
-    )
-  ) {
+  if (Object.hasOwn(condicao, "desvantagemNadoAguasRevoltas")) {
     possuiCondicaoReconhecida = true;
 
-    const personagem =
-      window.estadoJogo
-        ?.personagem
-        ?.dados;
+    const personagem = window.estadoJogo?.personagem?.dados;
 
-    const possuiDesvantagem =
-      SistemaTestes
-        .armaduraCausaDesvantagemNado(
-          personagem,
-        );
+    const possuiDesvantagem = SistemaTestes.armaduraCausaDesvantagemNado(personagem);
 
-    if (
-      possuiDesvantagem !==
-      condicao.desvantagemNadoAguasRevoltas
-    ) {
+    if (possuiDesvantagem !== condicao.desvantagemNadoAguasRevoltas) {
       return false;
     }
   }
@@ -166,10 +122,7 @@ function transicaoAtendeCondicao(transicao, condicao = {}) {
 }
 
 function resolverTrechosNarrativos(contexto) {
-  const trechos =
-    Array.isArray(contexto)
-      ? contexto
-      : [contexto];
+  const trechos = Array.isArray(contexto) ? contexto : [contexto];
 
   const trechosResolvidos = [];
 
@@ -179,11 +132,7 @@ function resolverTrechosNarrativos(contexto) {
       continue;
     }
 
-    if (
-      !trecho ||
-      typeof trecho !== "object" ||
-      !Object.hasOwn(trecho, "texto")
-    ) {
+    if (!trecho || typeof trecho !== "object" || !Object.hasOwn(trecho, "texto")) {
       continue;
     }
 
@@ -227,11 +176,7 @@ function obterContextoCena(cena) {
 
 function obterEscolhasCena(cena) {
   for (const variacao of cena.variacoes ?? []) {
-    if (
-      !condicaoNarrativaAtendida(
-        variacao.se,
-      )
-    ) {
+    if (!condicaoNarrativaAtendida(variacao.se)) {
       continue;
     }
 
@@ -240,40 +185,25 @@ function obterEscolhasCena(cena) {
     }
   }
 
-  return Array.isArray(cena.escolhas)
-    ? cena.escolhas
-    : [];
+  return Array.isArray(cena.escolhas) ? cena.escolhas : [];
 }
 
-function exibirConfirmacaoInicioCombate(
-  cena
-) {
-  const textoBotao =
-    cena.combate
-      ?.textoBotaoInicio ??
-    "Iniciar combate";
+function exibirConfirmacaoInicioCombate(cena) {
+  const textoBotao = cena.combate?.textoBotaoInicio ?? "Iniciar combate";
 
   exibirEscolhas([
     {
-      id:
-        `iniciarCombate:${
-          estadoAtualJogo
-            .progresso
-            .cenaId
-        }`,
+      id: `iniciarCombate:${estadoAtualJogo.progresso.cenaId}`,
 
       texto: textoBotao,
 
       registrarNarrativa: false,
 
-      __acaoMotor:
-        async function iniciarCombateConfirmado() {
-          ocultarEscolhas();
+      __acaoMotor: async function iniciarCombateConfirmado() {
+        ocultarEscolhas();
 
-          verificarCombateDaCena(
-            cena
-          );
-        },
+        verificarCombateDaCena(cena);
+      },
     },
   ]);
 }
@@ -285,10 +215,8 @@ async function exibirCena(aventura, cena) {
 
   await exibirContexto(obterContextoCena(cena));
 
-    if (cena.combate) {
-    exibirConfirmacaoInicioCombate(
-      cena
-    );
+  if (cena.combate) {
+    exibirConfirmacaoInicioCombate(cena);
 
     return;
   }
@@ -299,11 +227,8 @@ async function exibirCena(aventura, cena) {
   }
 
   exibirEscolhas(
-  obterEscolhasDisponiveis(
-    estadoAtualJogo.progresso.cenaId,
-    obterEscolhasCena(cena),
-  ),
-);
+    obterEscolhasDisponiveis(estadoAtualJogo.progresso.cenaId, obterEscolhasCena(cena)),
+  );
 }
 
 async function iniciarEtapa(idEtapa) {
@@ -394,195 +319,133 @@ async function confirmarEscolhaVisualmente(botaoEscolha) {
   areaEscolhas.classList.remove("area-escolhas-saindo");
 
   for (const botao of botoes) {
-    botao.classList.remove(
-      "escolha-confirmada",
-      "escolha-descartada",
-    );
+    botao.classList.remove("escolha-confirmada", "escolha-descartada");
   }
 }
 
 function obterXpDoUltimoCombate() {
-  const xp =
-    estadoAtualJogo
-      .combateAtual
-      ?.consolidacaoResultado
-      ?.xp;
+  const xp = estadoAtualJogo.combateAtual?.consolidacaoResultado?.xp;
 
-  if (
-    !xp?.sucesso ||
-    !xp?.concedida
-  ) {
+  if (!xp?.sucesso || !xp?.concedida) {
     return 0;
   }
 
   return Number(xp.quantidade) || 0;
 }
 
-function recuperarEFinalizarPersonagem(
-  configuracao
-) {
-  const recuperacao =
-    window.SistemaDescansos
-      .recuperarPersonagemFimAventura();
+function recuperarEFinalizarPersonagem(configuracao) {
+  const recuperacao = window.SistemaDescansos.recuperarPersonagemFimAventura();
 
   if (!recuperacao.sucesso) {
     return {
       sucesso: false,
-      motivo:
-        recuperacao.motivo,
+      motivo: recuperacao.motivo,
     };
   }
 
-  let personagemFinal =
-    recuperacao.personagem;
+  let personagemFinal = recuperacao.personagem;
 
-  if (
-    configuracao.resultadoId ===
-    "vitoria"
-  ) {
-    const registro =
-      window.PersonagemDados
-        .registrarVitoriaAventura(
-          personagemFinal,
-          aventuraAtual.id
-        );
+  if (configuracao.resultadoId === "vitoria") {
+    const registro = window.PersonagemDados.registrarVitoriaAventura(
+      personagemFinal,
+      aventuraAtual.id,
+    );
 
     if (!registro.sucesso) {
       return {
         sucesso: false,
-        motivo:
-          registro.motivo,
+        motivo: registro.motivo,
       };
     }
 
-    personagemFinal =
-      registro.personagem;
+    personagemFinal = registro.personagem;
   }
 
-  estadoAtualJogo
-    .personagem
-    .dados =
-      personagemFinal;
+  estadoAtualJogo.personagem.dados = personagemFinal;
 
   return {
     sucesso: true,
-    personagem:
-      personagemFinal,
+    personagem: personagemFinal,
 
-    recuperacao:
-      recuperacao.recuperacao,
+    recuperacao: recuperacao.recuperacao,
   };
 }
 
 function limparEstadoTemporarioAventura() {
-  const estadoInicial =
-    criarEstadoInicialJogo();
+  const estadoInicial = criarEstadoInicialJogo();
 
   MotorAventura.cancelarTeste();
 
-  MotorAventura.estado
-    .descansoCurtoPendente = null;
+  MotorAventura.estado.descansoCurtoPendente = null;
 
   estadoAtualJogo.aventuraId = null;
 
-  estadoAtualJogo.progresso =
-    estadoInicial.progresso;
+  estadoAtualJogo.progresso = estadoInicial.progresso;
 
   estadoAtualJogo.npcs = {};
 
-  estadoAtualJogo.testePendente =
-    null;
+  estadoAtualJogo.testePendente = null;
 
-  estadoAtualJogo.combateAtual =
-    null;
+  estadoAtualJogo.combateAtual = null;
 
-  estadoAtualJogo.tempo =
-    estadoInicial.tempo;
+  estadoAtualJogo.tempo = estadoInicial.tempo;
 
-  estadoAtualJogo.descansos =
-    estadoInicial.descansos;
+  estadoAtualJogo.descansos = estadoInicial.descansos;
 
-  estadoAtualJogo
-    .efeitosTemporarios = [];
+  estadoAtualJogo.efeitosTemporarios = [];
 
   estadoAtualJogo.diario = [];
 
-  estadoAtualJogo
-    .personagem
-    .condicoes = [];
+  estadoAtualJogo.personagem.condicoes = [];
 }
 
-function exibirTelaFimAventura(
-  configuracao = {}
-) {
-  const xpRecebido =
-    Number.isFinite(
-      Number(configuracao.xpRecebido)
-    )
-      ? Number(configuracao.xpRecebido)
-      : obterXpDoUltimoCombate();
+function exibirTelaFimAventura(configuracao = {}) {
+  const xpRecebido = Number.isFinite(Number(configuracao.xpRecebido))
+    ? Number(configuracao.xpRecebido)
+    : obterXpDoUltimoCombate();
 
-  const finalizacao =
-    recuperarEFinalizarPersonagem(
-      configuracao
-    );
+  const finalizacao = recuperarEFinalizarPersonagem(configuracao);
 
   if (!finalizacao.sucesso) {
-    console.error(
-      "Não foi possível finalizar a aventura:",
-      finalizacao.motivo
-    );
+    console.error("Não foi possível finalizar a aventura:", finalizacao.motivo);
 
     return;
   }
 
-  const personagemId =
-    finalizacao.personagem?.id;
+  const personagemId = finalizacao.personagem?.id;
 
-    rotuloFimAventura.textContent =
-    NarradorAventura.adaptarGenero(
-      configuracao.rotulo ??
-      "Aventura concluída"
-    );
+  rotuloFimAventura.textContent = NarradorAventura.adaptarGenero(
+    configuracao.rotulo ?? "Aventura concluída",
+  );
 
-  tituloFimAventura.textContent =
-    NarradorAventura.adaptarGenero(
-      configuracao.titulo ??
-      "Fim da aventura"
-    );
+  tituloFimAventura.textContent = NarradorAventura.adaptarGenero(
+    configuracao.titulo ?? "Fim da aventura",
+  );
 
-  NarradorAventura
-    .preencherElementoComParagrafos(
-      textoFimAventura,
+  NarradorAventura.preencherElementoComParagrafos(
+    textoFimAventura,
 
-      configuracao.texto ??
-      "Sua jornada chegou ao fim.",
+    configuracao.texto ?? "Sua jornada chegou ao fim.",
 
-      "paragrafo-fim-aventura"
-    );
+    "paragrafo-fim-aventura",
+  );
 
-    resultadoFimAventura.textContent =
-    NarradorAventura.adaptarGenero(
-      configuracao.resultado ??
-      "Concluída"
-    );
+  resultadoFimAventura.textContent = NarradorAventura.adaptarGenero(
+    configuracao.resultado ?? "Concluída",
+  );
 
-  xpFimAventura.textContent =
-    `${xpRecebido} XP`;
+  xpFimAventura.textContent = `${xpRecebido} XP`;
 
   resumoFimAventura.hidden = false;
 
   if (personagemId) {
-    const parametros =
-      new URLSearchParams({
-        id: personagemId,
-      });
+    const parametros = new URLSearchParams({
+      id: personagemId,
+    });
 
-    linkFichaFimAventura.href =
-      `ver-personagem.html?${parametros.toString()}`;
+    linkFichaFimAventura.href = `ver-personagem.html?${parametros.toString()}`;
   } else {
-    linkFichaFimAventura.href =
-      "meus-personagens.html";
+    linkFichaFimAventura.href = "meus-personagens.html";
   }
 
   limparEstadoTemporarioAventura();
@@ -656,13 +519,10 @@ async function selecionarEscolha(evento) {
     return;
   }
 
-    if (escolhaSelecionada.fimAventura) {
-    await MotorAventura
-      .aplicarConsequencia({
-        fimAventura:
-          escolhaSelecionada
-            .fimAventura,
-      });
+  if (escolhaSelecionada.fimAventura) {
+    await MotorAventura.aplicarConsequencia({
+      fimAventura: escolhaSelecionada.fimAventura,
+    });
 
     return;
   }

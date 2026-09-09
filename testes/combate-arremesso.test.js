@@ -80,10 +80,7 @@ combateComRestricoes.itensNoChao.push({
   posicao: { coluna: 11, linha: 9 },
 });
 
-const celulasFiltradas = listarCelulasAdjacentesLivres(
-  combateComRestricoes,
-  centro,
-);
+const celulasFiltradas = listarCelulasAdjacentesLivres(combateComRestricoes, centro);
 
 assert.equal(celulasFiltradas.length, 5, "deve retirar terreno, participante e item");
 assert.equal(
@@ -100,12 +97,7 @@ const adaga = {
   modoUso: "arremesso",
   nome: "Adaga (arremesso)",
 };
-const registro = registrarArmaArremessadaNoChao(
-  combateRegistro,
-  atacante,
-  adaga,
-  centro,
-);
+const registro = registrarArmaArremessadaNoChao(combateRegistro, atacante, adaga, centro);
 
 assert.equal(registro.sucesso, true, "deve registrar a adaga arremessada");
 assert.equal(combateRegistro.itensNoChao.length, 1, "deve criar somente um item");
@@ -120,12 +112,7 @@ assert.equal(
 );
 
 assert.equal(
-  registrarArmaArremessadaNoChao(
-    combateRegistro,
-    atacante,
-    adaga,
-    centro,
-  ).motivo,
+  registrarArmaArremessadaNoChao(combateRegistro, atacante, adaga, centro).motivo,
   "itemJaEstaNoChao",
   "não deve registrar a mesma arma duas vezes",
 );
@@ -196,11 +183,7 @@ const destinoDanoMaximo = resolverDestinoArmaArremessada({
     gruposRolados: [{ numeroDeFaces: 4, resultados: [4] }],
   },
 });
-assert.equal(
-  destinoDanoMaximo.destino,
-  "alvo",
-  "um acerto com valor máximo deve cravar a adaga",
-);
+assert.equal(destinoDanoMaximo.destino, "alvo", "um acerto com valor máximo deve cravar a adaga");
 assert.equal(contextoDanoMaximo.combate.itensNoChao.length, 0);
 assert.equal(contextoDanoMaximo.alvo.itensCravados.length, 1);
 assert.equal(
