@@ -26,9 +26,77 @@ const modalHabilidadesClasse = document.getElementById("modalHabilidadesClasse")
 
 const modalEquipamentos = document.getElementById("modalEquipamentos");
 
+const modalConfiguracaoEquipamento = document.getElementById(
+  "modalConfiguracaoEquipamento",
+);
+
+const botaoFecharConfiguracaoEquipamento = document.getElementById(
+  "botaoFecharConfiguracaoEquipamento",
+);
+
+const tituloModalConfiguracaoEquipamento = document.getElementById(
+  "tituloModalConfiguracaoEquipamento",
+);
+
+const descricaoModalConfiguracaoEquipamento = document.getElementById(
+  "descricaoModalConfiguracaoEquipamento",
+);
+
+const listaConfiguracaoEquipamento = document.getElementById(
+  "listaConfiguracaoEquipamento",
+);
+
+const botaoEsvaziarSlotEquipamento = document.getElementById(
+  "botaoEsvaziarSlotEquipamento",
+);
+
+const botaoConfigurarArmadura = document.getElementById(
+  "botaoConfigurarArmadura",
+);
+
+const botaoConfigurarMao1 = document.getElementById(
+  "botaoConfigurarMao1",
+);
+
+const botaoConfigurarMao2 = document.getElementById(
+  "botaoConfigurarMao2",
+);
+
+const nomeArmaduraConfigurada = document.getElementById(
+  "nomeArmaduraConfigurada",
+);
+
+const nomeEquipamentoMao1 = document.getElementById(
+  "nomeEquipamentoMao1",
+);
+
+const nomeEquipamentoMao2 = document.getElementById(
+  "nomeEquipamentoMao2",
+);
+
 const botaoEscolherEquipamento = document.getElementById("botaoEscolherEquipamento");
 
 const botaoFecharModalEquipamentos = document.getElementById("botaoFecharModalEquipamentos");
+
+const detalheArmaLoja = document.getElementById("detalheArmaLoja");
+const botaoFecharDetalheArma = document.getElementById("botaoFecharDetalheArma");
+const imagemDetalheEquipamento = document.getElementById("imagemDetalheEquipamento");
+const nomeDetalheEquipamento = document.getElementById("nomeDetalheEquipamento");
+const dadosDetalheEquipamento = document.getElementById("dadosDetalheEquipamento");
+const estadoCompatibilidadeEquipamento = document.getElementById(
+  "estadoCompatibilidadeEquipamento",
+);
+const botaoAdicionarEquipamentoLoja = document.getElementById("botaoAdicionarEquipamentoLoja");
+const botaoEquiparEquipamentoLoja = document.getElementById("botaoEquiparEquipamentoLoja");
+const botaoRemoverEquipamentoLoja = document.getElementById("botaoRemoverEquipamentoLoja");
+const mensagemDetalheEquipamento = document.getElementById("mensagemDetalheEquipamento");
+const orcamentoTotalLoja = document.getElementById("orcamentoTotalLoja");
+const saldoOrcamentoLoja = document.getElementById("saldoOrcamentoLoja");
+const ouroRetidoLoja = document.getElementById("ouroRetidoLoja");
+
+let equipamentoDetalhado = null;
+
+let slotConfiguracaoAtual = null;
 
 const trilhoVistasLoja = document.getElementById("trilhoVistasLoja");
 
@@ -69,14 +137,30 @@ function aplicarTransformacaoVitrine(elemento, posicao) {
   }
 }
 
-function criarNomeEquipamentoVitrine(nome, posicao = {}) {
-  const rotulo = document.createElement("span");
+function criarNomeEquipamentoVitrine(
+  nome,
+  posicao = {},
+  estadoCompatibilidade = "",
+  categoria = "",
+  itemId = "",
+) {
+  const interativo = Boolean(categoria && itemId);
+  const rotulo = document.createElement(interativo ? "button" : "span");
   const rotuloX = Number(posicao.rotuloX ?? 0);
   const rotuloY = Number(posicao.rotuloY ?? 0);
   const centroHorizontal = Number(posicao.x) + Number(posicao.largura) / 2;
   const baseVertical = Number(posicao.y) + Number(posicao.altura);
 
   rotulo.className = "nome-equipamento-vitrine";
+  if (interativo) {
+    rotulo.type = "button";
+    rotulo.dataset.categoriaEquipamento = categoria;
+    rotulo.dataset.itemId = itemId;
+    rotulo.setAttribute("aria-label", `Ver detalhes de ${nome}`);
+  }
+  if (estadoCompatibilidade) {
+    rotulo.classList.add(`proficiencia-${estadoCompatibilidade}`);
+  }
   rotulo.textContent = posicao.rotuloTexto ?? nome;
   rotulo.style.left = `calc(${centroHorizontal}% + ${rotuloX}px)`;
   rotulo.style.top = `calc(${baseVertical}% + 4px + ${rotuloY}px)`;
@@ -92,6 +176,11 @@ function criarArmaVitrine(armaId, arma, posicao) {
   botao.dataset.armaId = armaId;
   botao.setAttribute("aria-label", arma.nome);
   botao.title = `${arma.nome} — ${arma.dano} ${arma.tipoDano}`;
+
+  const avaliacao = window.RegrasEquipamentos.avaliarUsoArma(personagem, armaId);
+  botao.dataset.categoriaEquipamento = "armas";
+  botao.dataset.itemId = armaId;
+  botao.dataset.adequado = String(avaliacao.adequado);
 
   botao.style.left = `${posicao.x}%`;
   botao.style.top = `${posicao.y}%`;
@@ -124,14 +213,283 @@ function preencherPrateleiraArmas() {
     }
 
     const elementoArma = criarArmaVitrine(armaId, arma, posicao);
+    const estadoCompatibilidade = window.RegrasEquipamentos.avaliarUsoArma(
+      personagem,
+      armaId,
+    ).adequado
+      ? "permitida"
+      : "nao-permitida";
 
     const paredeLongas = window.ConfiguracaoVitrineEquipamentos.paredesArmas.longas;
     const prateleira = paredeLongas.includes(armaId)
       ? prateleiraArmasLongas
       : prateleiraArmasCompactas;
 
-    prateleira.append(elementoArma, criarNomeEquipamentoVitrine(arma.nome, posicao));
+    prateleira.append(
+      elementoArma,
+      criarNomeEquipamentoVitrine(
+        arma.nome,
+        posicao,
+        estadoCompatibilidade,
+        "armas",
+        armaId,
+      ),
+    );
   }
+}
+
+function adicionarDadoDetalheEquipamento(rotulo, valor) {
+  const termo = document.createElement("dt");
+  termo.textContent = rotulo;
+
+  const descricao = document.createElement("dd");
+  descricao.textContent = valor || "—";
+
+  dadosDetalheEquipamento.append(termo, descricao);
+}
+
+function formatarAlcanceArma(arma) {
+  if (arma.alcanceDistanciaPes) {
+    const normal = arma.alcanceDistanciaPes.normal;
+    const longo = arma.alcanceDistanciaPes.longo;
+    return `${normal / 5} / ${longo / 5} células (${normal} / ${longo} pés)`;
+  }
+
+  return `${(arma.alcanceCorpoACorpoPes ?? 5) / 5} célula(s)`;
+}
+
+function obterQuantidadeNoInventario(categoria, id) {
+  return (personagem.inventario?.itens ?? []).reduce(
+    (total, item) =>
+      item.categoria === categoria && item.id === id ? total + (item.quantidade ?? 0) : total,
+    0,
+  );
+}
+
+function sincronizarBeneficiosIniciaisPersonagem() {
+  const classe = window.bancoClasses?.[personagem.classeId] ?? null;
+  const antecedente = window.bancoAntecedentes?.[personagem.antecedenteId] ?? null;
+
+  window.PersonagemDados.sincronizarBeneficiosIniciais(personagem, {
+    classe,
+    antecedente,
+  });
+}
+
+function atualizarMarcacaoEquipamentosSelecionados() {
+  document.querySelectorAll("[data-categoria-equipamento][data-item-id]").forEach(function (elemento) {
+    const selecionada =
+      obterQuantidadeNoInventario(
+        elemento.dataset.categoriaEquipamento,
+        elemento.dataset.itemId,
+      ) > 0;
+
+    elemento.classList.toggle("selecionada", selecionada);
+  });
+}
+
+function formatarMoeda(valor) {
+  return `${Number(valor ?? 0).toLocaleString("pt-BR", { maximumFractionDigits: 2 })} PO`;
+}
+
+function obterDadosEquipamentoDetalhado() {
+  if (!equipamentoDetalhado) {
+    return null;
+  }
+
+  return window.bancoEquipamentos[equipamentoDetalhado.categoria]?.[equipamentoDetalhado.id] ?? null;
+}
+
+function atualizarResumoOrcamentoLoja() {
+  const economia = personagem.economiaCriacao ?? {};
+  orcamentoTotalLoja.textContent = formatarMoeda(economia.orcamentoEquipamentos);
+  saldoOrcamentoLoja.textContent = formatarMoeda(economia.saldoOrcamentoEquipamentos);
+  ouroRetidoLoja.textContent = `${formatarMoeda(economia.ouroRetidoOrcamento)} (${
+    economia.percentualRetencao ?? 0
+  }%)`;
+
+  const equipamento = obterDadosEquipamentoDetalhado();
+  const quantidadeNoInventario = equipamentoDetalhado
+  ? obterQuantidadeNoInventario(
+      equipamentoDetalhado.categoria,
+      equipamentoDetalhado.id,
+    )
+  : 0;
+  const quantidadeComprada = (personagem.inventario?.itens ?? [])
+    .filter(
+      (item) =>
+        item.categoria === equipamentoDetalhado?.categoria &&
+        item.id === equipamentoDetalhado?.id &&
+        item.origem === "compraInicial",
+    )
+    .reduce((total, item) => total + item.quantidade, 0);
+
+  botaoAdicionarEquipamentoLoja.disabled =
+    !equipamento ||
+    Number(equipamento.precoPO ?? 0) > Number(economia.saldoOrcamentoEquipamentos ?? 0);
+  botaoRemoverEquipamentoLoja.disabled = quantidadeComprada === 0;
+}
+
+function abrirDetalheArmaLoja(armaId) {
+  const arma = window.bancoEquipamentos.armas[armaId];
+
+  if (!arma) {
+    return;
+  }
+
+  equipamentoDetalhado = { categoria: "armas", id: armaId };
+  const avaliacao = window.RegrasEquipamentos.avaliarUsoArma(personagem, armaId);
+
+  imagemDetalheEquipamento.src = arma.visual?.icone?.src ?? "";
+  imagemDetalheEquipamento.alt = arma.nome;
+  nomeDetalheEquipamento.textContent = arma.nome;
+  dadosDetalheEquipamento.replaceChildren();
+
+  adicionarDadoDetalheEquipamento("Categoria", `${arma.tipo ?? ""} — ${arma.categoria ?? ""}`);
+  adicionarDadoDetalheEquipamento("Dano", `${arma.dano} ${arma.tipoDano}`);
+  adicionarDadoDetalheEquipamento(
+    "Propriedades",
+    (arma.propriedades ?? [])
+      .map((id) => window.bancoPropriedadesArmas?.[id]?.nome ?? id)
+      .join(", "),
+  );
+  adicionarDadoDetalheEquipamento("Alcance", formatarAlcanceArma(arma));
+  adicionarDadoDetalheEquipamento(
+    "Maestria",
+    window.bancoMaestrias?.[arma.maestria]?.nome ?? arma.maestria,
+  );
+  adicionarDadoDetalheEquipamento("Preço", `${arma.precoPO ?? 0} PO`);
+  adicionarDadoDetalheEquipamento(
+    "No equipamento",
+    String(obterQuantidadeNoInventario("armas", armaId)),
+  );
+
+  estadoCompatibilidadeEquipamento.textContent = avaliacao.adequado
+    ? "Uso sem penalidades."
+    : "Esta arma possui ressalvas para o personagem.";
+  estadoCompatibilidadeEquipamento.className = `estado-proficiencia-arma ${
+    avaliacao.adequado ? "proficiencia-permitida" : "proficiencia-nao-permitida"
+  }`;
+  mensagemDetalheEquipamento.textContent =
+    avaliacao.problemas.length > 0
+      ? avaliacao.problemas.join(" ")
+      : "Nenhuma penalidade identificada para o uso desta arma.";
+
+  detalheArmaLoja.classList.remove("escondida");
+  atualizarResumoOrcamentoLoja();
+}
+
+function abrirDetalheArmaduraLoja(armaduraId) {
+  const armadura = window.bancoEquipamentos.armaduras[armaduraId];
+
+  if (!armadura) {
+    return;
+  }
+
+  equipamentoDetalhado = { categoria: "armaduras", id: armaduraId };
+  const avaliacao = window.RegrasEquipamentos.avaliarUsoArmadura(personagem, armaduraId);
+
+  imagemDetalheEquipamento.src = armadura.visual?.vitrine?.src ?? armadura.visual?.icone?.src ?? "";
+  imagemDetalheEquipamento.alt = armadura.nome;
+  nomeDetalheEquipamento.textContent = armadura.nome;
+  dadosDetalheEquipamento.replaceChildren();
+
+  adicionarDadoDetalheEquipamento("Categoria", armadura.categoria);
+  adicionarDadoDetalheEquipamento("Classe de Armadura", String(armadura.caBase));
+  adicionarDadoDetalheEquipamento(
+    "Destreza",
+    armadura.usaDestreza
+      ? armadura.limiteDestreza === null
+        ? "Modificador completo"
+        : `Modificador limitado a +${armadura.limiteDestreza}`
+      : "Não adiciona o modificador",
+  );
+  adicionarDadoDetalheEquipamento(
+    "Furtividade",
+    armadura.desvantagemFurtividade ? "Desvantagem" : "Sem penalidade",
+  );
+  adicionarDadoDetalheEquipamento(
+    "Força mínima",
+    armadura.forcaMinima ? String(armadura.forcaMinima) : "Nenhuma",
+  );
+  adicionarDadoDetalheEquipamento("Peso", `${armadura.pesoLb ?? 0} lb`);
+  adicionarDadoDetalheEquipamento("Preço", `${armadura.precoPO ?? 0} PO`);
+  adicionarDadoDetalheEquipamento(
+    "Vestir / remover",
+    `${armadura.tempoVestirMinutos ?? 0} / ${armadura.tempoRemoverMinutos ?? 0} minuto(s)`,
+  );
+  adicionarDadoDetalheEquipamento(
+    "No equipamento",
+    String(obterQuantidadeNoInventario("armaduras", armaduraId)),
+  );
+
+  estadoCompatibilidadeEquipamento.textContent = avaliacao.adequado
+    ? "Uso sem penalidades."
+    : "Esta armadura possui ressalvas para o personagem.";
+  estadoCompatibilidadeEquipamento.className = `estado-proficiencia-arma ${
+    avaliacao.adequado ? "proficiencia-permitida" : "proficiencia-nao-permitida"
+  }`;
+  mensagemDetalheEquipamento.textContent =
+    avaliacao.problemas.length > 0
+      ? avaliacao.problemas.join(" ")
+      : "Nenhuma penalidade identificada para o uso desta armadura.";
+
+  detalheArmaLoja.classList.remove("escondida");
+  atualizarResumoOrcamentoLoja();
+}
+
+function fecharDetalheArmaLoja() {
+  detalheArmaLoja.classList.add("escondida");
+  equipamentoDetalhado = null;
+}
+
+function adicionarEquipamentoPelaLoja() {
+  if (!equipamentoDetalhado) {
+    return;
+  }
+
+  const equipamento = obterDadosEquipamentoDetalhado();
+  const resultado = window.PersonagemDados.comprarEquipamentoInicial(personagem, {
+    ...equipamentoDetalhado,
+    precoPO: equipamento?.precoPO ?? 0,
+    quantidade: 1,
+  });
+
+  if (!resultado.sucesso) {
+    mensagemDetalheEquipamento.textContent = "Orçamento insuficiente para esta compra.";
+    return;
+  }
+
+  atualizarMarcacaoEquipamentosSelecionados();
+  atualizarResumoOrcamentoLoja();
+  mensagemDetalheEquipamento.textContent = `Compra adicionada. Quantidade comprada: ${resultado.item.quantidade}.`;
+}
+
+function removerEquipamentoPelaLoja() {
+  if (!equipamentoDetalhado) {
+    return;
+  }
+
+  const resultado = window.PersonagemDados.devolverEquipamentoInicial(personagem, {
+    ...equipamentoDetalhado,
+    quantidade: 1,
+  });
+
+  if (!resultado.sucesso) {
+    mensagemDetalheEquipamento.textContent = "Este item não foi comprado na loja inicial.";
+    return;
+  }
+
+  sincronizarConfiguracaoComInventario(
+  equipamentoDetalhado.categoria,
+  equipamentoDetalhado.id,
+);
+
+  atualizarMarcacaoEquipamentosSelecionados();
+  atualizarResumoOrcamentoLoja();
+  mensagemDetalheEquipamento.textContent = `Item devolvido. Reembolso: ${formatarMoeda(
+    resultado.reembolso,
+  )}.`;
 }
 
 function criarArmaduraVitrine(armaduraId, armadura, posicao) {
@@ -140,6 +498,11 @@ function criarArmaduraVitrine(armaduraId, armadura, posicao) {
   botao.type = "button";
   botao.className = "arma-vitrine armadura-vitrine";
   botao.dataset.armaduraId = armaduraId;
+  botao.dataset.categoriaEquipamento = "armaduras";
+  botao.dataset.itemId = armaduraId;
+  botao.dataset.adequado = String(
+    window.RegrasEquipamentos.avaliarUsoArmadura(personagem, armaduraId).adequado,
+  );
   botao.setAttribute("aria-label", armadura.nome);
   botao.title = `${armadura.nome} — CA ${armadura.caBase}`;
   botao.style.left = `${posicao.x}%`;
@@ -154,17 +517,6 @@ function criarArmaduraVitrine(armaduraId, armadura, posicao) {
   imagem.draggable = false;
   botao.append(imagem);
 
-  botao.addEventListener("click", () => {
-    armaduraInicial.value = armaduraId;
-    armaduraInicial.dispatchEvent(new Event("change"));
-
-    vitrineArmaduras
-      .querySelectorAll(".armadura-vitrine.selecionada")
-      .forEach((elemento) => elemento.classList.remove("selecionada"));
-
-    botao.classList.add("selecionada");
-  });
-
   return botao;
 }
 
@@ -178,11 +530,356 @@ function preencherVitrineArmaduras() {
       continue;
     }
 
+    const estadoCompatibilidade = window.RegrasEquipamentos.avaliarUsoArmadura(
+      personagem,
+      armaduraId,
+    ).adequado
+      ? "permitida"
+      : "nao-permitida";
+
     vitrineArmaduras.append(
       criarArmaduraVitrine(armaduraId, armadura, posicao),
-      criarNomeEquipamentoVitrine(armadura.nome, posicao),
+      criarNomeEquipamentoVitrine(
+        armadura.nome,
+        posicao,
+        estadoCompatibilidade,
+        "armaduras",
+        armaduraId,
+      ),
     );
   }
+}
+
+function obterItensDisponiveisParaSlot(slot) {
+  const categoriasPermitidas =
+    slot === "armadura"
+      ? ["armaduras"]
+      : ["armas", "itensSecundarios"];
+
+  const itensAgrupados = new Map();
+
+  for (const item of personagem.inventario?.itens ?? []) {
+    if (!categoriasPermitidas.includes(item.categoria)) {
+      continue;
+    }
+
+    if (
+      item.categoria === "itensSecundarios" &&
+      item.id !== "escudo"
+    ) {
+      continue;
+    }
+
+    const chave = `${item.categoria}:${item.id}`;
+    const itemExistente = itensAgrupados.get(chave);
+
+    if (itemExistente) {
+      itemExistente.quantidade += item.quantidade ?? 0;
+      continue;
+    }
+
+    itensAgrupados.set(chave, {
+      categoria: item.categoria,
+      id: item.id,
+      quantidade: item.quantidade ?? 0,
+    });
+  }
+
+  return Array.from(itensAgrupados.values());
+}
+
+function contarUnidadesUsadasEmOutrasMaos(item, slotIgnorado) {
+  const configuracao = personagem.configuracaoInicialCombate;
+  let quantidadeUsada = 0;
+
+  for (const slot of ["mao1", "mao2"]) {
+    if (slot === slotIgnorado) {
+      continue;
+    }
+
+    const itemEquipado = configuracao[slot];
+
+    if (
+      itemEquipado &&
+      !itemEquipado.ocupadaPor &&
+      itemEquipado.categoria === item.categoria &&
+      itemEquipado.id === item.id
+    ) {
+      quantidadeUsada += 1;
+    }
+  }
+
+  return quantidadeUsada;
+}
+
+function obterNomeItemConfigurado(item) {
+  if (!item) {
+    return "Vazia";
+  }
+
+  if (item.ocupadaPor) {
+    const itemResponsavel =
+      personagem.configuracaoInicialCombate[item.ocupadaPor];
+
+    const equipamentoResponsavel =
+      window.bancoEquipamentos[
+        itemResponsavel?.categoria
+      ]?.[itemResponsavel?.id];
+
+    return equipamentoResponsavel
+      ? `Ocupada por ${equipamentoResponsavel.nome}`
+      : "Ocupada";
+  }
+
+  return (
+    window.bancoEquipamentos[item.categoria]?.[item.id]?.nome ??
+    item.id
+  );
+}
+
+function atualizarPainelConfiguracaoInicial() {
+  const configuracao = personagem.configuracaoInicialCombate;
+  const armadura = configuracao.armadura;
+
+  nomeArmaduraConfigurada.textContent = armadura
+    ? window.bancoEquipamentos[armadura.categoria]?.[armadura.id]
+        ?.nome ?? armadura.id
+    : "Nenhuma";
+
+  nomeEquipamentoMao1.textContent =
+    obterNomeItemConfigurado(configuracao.mao1);
+
+  nomeEquipamentoMao2.textContent =
+    obterNomeItemConfigurado(configuracao.mao2);
+}
+
+function preencherListaConfiguracaoEquipamento() {
+  listaConfiguracaoEquipamento.replaceChildren();
+
+  const itensDisponiveis =
+    obterItensDisponiveisParaSlot(slotConfiguracaoAtual);
+
+  if (itensDisponiveis.length === 0) {
+    const mensagem = document.createElement("p");
+
+    mensagem.textContent =
+      slotConfiguracaoAtual === "armadura"
+        ? "Nenhuma armadura foi comprada."
+        : "Nenhuma arma ou escudo foi comprado.";
+
+    listaConfiguracaoEquipamento.appendChild(mensagem);
+    return;
+  }
+
+  for (const item of itensDisponiveis) {
+    const equipamento =
+      window.bancoEquipamentos[item.categoria]?.[item.id];
+
+    if (!equipamento) {
+      continue;
+    }
+
+    const botao = document.createElement("button");
+    const quantidadeUsada =
+      slotConfiguracaoAtual === "armadura"
+        ? 0
+        : contarUnidadesUsadasEmOutrasMaos(
+            item,
+            slotConfiguracaoAtual,
+          );
+
+    botao.type = "button";
+    botao.className = "opcao-configuracao-equipamento";
+    botao.dataset.categoria = item.categoria;
+    botao.dataset.itemId = item.id;
+    botao.disabled = quantidadeUsada >= item.quantidade;
+
+    const quantidadeDisponivel =
+      item.quantidade - quantidadeUsada;
+
+    botao.textContent =
+      item.quantidade > 1
+        ? `${equipamento.nome} — ${quantidadeDisponivel} disponível`
+        : equipamento.nome;
+
+    listaConfiguracaoEquipamento.appendChild(botao);
+  }
+}
+
+function obterOutroSlotMao(slot) {
+  return slot === "mao1" ? "mao2" : "mao1";
+}
+
+function liberarSlotConfiguracao(slot) {
+  const configuracao = personagem.configuracaoInicialCombate;
+  const itemAtual = configuracao[slot];
+
+  if (itemAtual?.ocupadaPor) {
+    configuracao[itemAtual.ocupadaPor] = null;
+  }
+
+  const outroSlot = obterOutroSlotMao(slot);
+
+  if (configuracao[outroSlot]?.ocupadaPor === slot) {
+    configuracao[outroSlot] = null;
+  }
+
+  configuracao[slot] = null;
+}
+
+function sincronizarConfiguracaoComInventario(categoria, itemId) {
+  const configuracao = personagem.configuracaoInicialCombate;
+  const quantidadePossuida =
+    obterQuantidadeNoInventario(categoria, itemId);
+
+  if (
+    configuracao.armadura?.categoria === categoria &&
+    configuracao.armadura?.id === itemId &&
+    quantidadePossuida === 0
+  ) {
+    configuracao.armadura = null;
+  }
+
+  const slotsComItem = ["mao1", "mao2"].filter(function (slot) {
+    const itemEquipado = configuracao[slot];
+
+    return (
+      itemEquipado &&
+      !itemEquipado.ocupadaPor &&
+      itemEquipado.categoria === categoria &&
+      itemEquipado.id === itemId
+    );
+  });
+
+  while (slotsComItem.length > quantidadePossuida) {
+    const slotRemovido = slotsComItem.pop();
+
+    liberarSlotConfiguracao(slotRemovido);
+  }
+
+  atualizarEquipamentos();
+  atualizarPainelConfiguracaoInicial();
+}
+
+function selecionarItemConfiguracao(categoria, itemId) {
+  const configuracao = personagem.configuracaoInicialCombate;
+
+  if (slotConfiguracaoAtual === "armadura") {
+    configuracao.armadura = {
+      categoria,
+      id: itemId,
+    };
+
+    atualizarEquipamentos();
+    atualizarPainelConfiguracaoInicial();
+    fecharModalConfiguracaoEquipamento();
+    return;
+  }
+
+  if (
+    slotConfiguracaoAtual !== "mao1" &&
+    slotConfiguracaoAtual !== "mao2"
+  ) {
+    return;
+  }
+
+  const slotEscolhido = slotConfiguracaoAtual;
+  const outroSlot = obterOutroSlotMao(slotEscolhido);
+  const equipamento =
+    window.bancoEquipamentos[categoria]?.[itemId];
+
+  liberarSlotConfiguracao(slotEscolhido);
+
+  const exigeDuasMaos =
+    categoria === "armas" &&
+    equipamento?.propriedades?.includes("duasMaos");
+
+  if (exigeDuasMaos) {
+    liberarSlotConfiguracao(outroSlot);
+
+    configuracao[slotEscolhido] = {
+      categoria,
+      id: itemId,
+    };
+
+    configuracao[outroSlot] = {
+      ocupadaPor: slotEscolhido,
+    };
+  } else {
+    configuracao[slotEscolhido] = {
+      categoria,
+      id: itemId,
+    };
+  }
+
+  atualizarEquipamentos();
+  atualizarPainelConfiguracaoInicial();
+  fecharModalConfiguracaoEquipamento();
+}
+
+function esvaziarSlotConfiguracaoAtual() {
+  const configuracao = personagem.configuracaoInicialCombate;
+
+  if (slotConfiguracaoAtual === "armadura") {
+    configuracao.armadura = null;
+  } else if (
+    slotConfiguracaoAtual === "mao1" ||
+    slotConfiguracaoAtual === "mao2"
+  ) {
+    liberarSlotConfiguracao(slotConfiguracaoAtual);
+  }
+
+  atualizarEquipamentos();
+  atualizarPainelConfiguracaoInicial();
+  fecharModalConfiguracaoEquipamento();
+}
+
+const configuracoesSlotsEquipamento = {
+  armadura: {
+    titulo: "Escolher armadura",
+    descricao: "Selecione uma armadura presente no inventário.",
+  },
+
+  mao1: {
+    titulo: "Configurar Mão 1",
+    descricao: "Selecione uma arma ou escudo presente no inventário.",
+  },
+
+  mao2: {
+    titulo: "Configurar Mão 2",
+    descricao: "Selecione uma arma ou escudo presente no inventário.",
+  },
+};
+
+function abrirModalConfiguracaoEquipamento(slot) {
+  const configuracao = configuracoesSlotsEquipamento[slot];
+
+  if (!configuracao) {
+    return;
+  }
+
+  slotConfiguracaoAtual = slot;
+
+  tituloModalConfiguracaoEquipamento.textContent =
+    configuracao.titulo;
+
+  descricaoModalConfiguracaoEquipamento.textContent =
+    configuracao.descricao;
+
+  listaConfiguracaoEquipamento.replaceChildren();
+
+  preencherListaConfiguracaoEquipamento();
+
+  modalConfiguracaoEquipamento.classList.remove("escondida");
+  document.body.classList.add("modal-aberta");
+}
+
+function fecharModalConfiguracaoEquipamento() {
+  modalConfiguracaoEquipamento.classList.add("escondida");
+  document.body.classList.remove("modal-aberta");
+
+  slotConfiguracaoAtual = null;
+  listaConfiguracaoEquipamento.replaceChildren();
 }
 
 function abrirModalEquipamentos() {
@@ -191,6 +888,9 @@ function abrirModalEquipamentos() {
   preencherPrateleiraArmas();
   preencherVitrineArmaduras();
   mostrarVistaLoja("compactas");
+  fecharDetalheArmaLoja();
+  atualizarMarcacaoEquipamentosSelecionados();
+  atualizarResumoOrcamentoLoja();
 }
 
 function fecharModalEquipamentos() {
@@ -202,6 +902,34 @@ botaoEscolherEquipamento.addEventListener("click", abrirModalEquipamentos);
 
 botaoFecharModalEquipamentos.addEventListener("click", fecharModalEquipamentos);
 
+botaoFecharDetalheArma.addEventListener("click", fecharDetalheArmaLoja);
+botaoAdicionarEquipamentoLoja.addEventListener("click", adicionarEquipamentoPelaLoja);
+
+listaConfiguracaoEquipamento.addEventListener(
+  "click",
+  function (evento) {
+    const botao = evento.target.closest(
+      ".opcao-configuracao-equipamento",
+    );
+
+    if (!botao || botao.disabled) {
+      return;
+    }
+
+    selecionarItemConfiguracao(
+      botao.dataset.categoria,
+      botao.dataset.itemId,
+    );
+  },
+);
+
+botaoEsvaziarSlotEquipamento.addEventListener(
+  "click",
+  esvaziarSlotConfiguracaoAtual,
+);
+
+botaoRemoverEquipamentoLoja.addEventListener("click", removerEquipamentoPelaLoja);
+
 botaoProximaVistaLoja.addEventListener("click", () => {
   mostrarVistaLoja(vistasLoja[indiceVistaLoja + 1]);
 });
@@ -211,8 +939,48 @@ botaoVistaAnteriorLoja.addEventListener("click", () => {
 });
 
 modalEquipamentos.addEventListener("click", (evento) => {
+  const equipamentoSelecionado = evento.target.closest(
+    "[data-categoria-equipamento][data-item-id]",
+  );
+
+  if (equipamentoSelecionado) {
+    const categoria = equipamentoSelecionado.dataset.categoriaEquipamento;
+    const itemId = equipamentoSelecionado.dataset.itemId;
+
+    if (categoria === "armas") {
+      abrirDetalheArmaLoja(itemId);
+    } else if (categoria === "armaduras") {
+      abrirDetalheArmaduraLoja(itemId);
+    }
+
+    return;
+  }
+
   if (evento.target === modalEquipamentos) {
     fecharModalEquipamentos();
+  }
+});
+
+botaoConfigurarArmadura.addEventListener("click", function () {
+  abrirModalConfiguracaoEquipamento("armadura");
+});
+
+botaoConfigurarMao1.addEventListener("click", function () {
+  abrirModalConfiguracaoEquipamento("mao1");
+});
+
+botaoConfigurarMao2.addEventListener("click", function () {
+  abrirModalConfiguracaoEquipamento("mao2");
+});
+
+botaoFecharConfiguracaoEquipamento.addEventListener(
+  "click",
+  fecharModalConfiguracaoEquipamento,
+);
+
+modalConfiguracaoEquipamento.addEventListener("click", function (evento) {
+  if (evento.target === modalConfiguracaoEquipamento) {
+    fecharModalConfiguracaoEquipamento();
   }
 });
 
@@ -564,9 +1332,6 @@ const resultadosAtributos = document.querySelectorAll("#resultadosAtributos span
 let atributosRolados = [];
 let rolando = false;
 const seletoresAtributos = document.querySelectorAll("[data-atributo]");
-const armaduraInicial = document.getElementById("armaduraInicial");
-const armaPrincipal = document.getElementById("armaPrincipal");
-const itemSecundario = document.getElementById("itemSecundario");
 const proficienciasClasse = document.getElementById("proficienciasClasse");
 const fichaItensAntecedente = document.getElementById("fichaItensAntecedente");
 
@@ -633,9 +1398,6 @@ let personagemJaFoiSalvo = false;
 const botaoFinalizarPersonagem = document.getElementById("botaoFinalizarPersonagem");
 const acoesPersonagemSalvo = document.getElementById("acoesPersonagemSalvo");
 
-const grupoArmaSecundaria = document.getElementById("grupoArmaSecundaria");
-const armaSecundaria = document.getElementById("armaSecundaria");
-
 const avisoEquipamentos = document.getElementById("avisoEquipamentos");
 
 const modalDetalheFicha = document.getElementById("modalDetalheFicha");
@@ -662,74 +1424,9 @@ const fichaFrameAvatar = document.getElementById("fichaFrameAvatar");
 // Objeto principal atualizado durante toda a criação.
 // =====================================================
 
-const personagem = {
-  schemaVersion: 1,
-  rulesVersion: "2024",
-  nivel: 1,
+const personagem = window.PersonagemDados.criarInicial();
 
-  niveisPorClasse: {},
-
-  xp: 0,
-
-  classeId: "",
-  classe: "",
-
-  atributosBase: {},
-  bonusAtributosAntecedente: {},
-  atributos: {},
-
-  combate: {
-    classeArmadura: null,
-    pontosDeVida: { atuais: null, temporarios: 0, maximo: null, dadoVida: "", dadosVidaUsados: 0 },
-
-    ataques: [],
-  },
-
-  antecedenteId: "",
-  antecedente: "",
-  equipamentoAntecedenteId: "",
-  equipamentoAntecedente: null,
-
-  especieId: "",
-  especie: "",
-
-  avatar: { imagem: "", frame: "" },
-
-  idiomasBase: ["comum"],
-  idiomasEspecie: [],
-  idiomasAntecedente: [],
-  idiomasEscolhidos: [],
-  idiomas: [],
-
-  periciasClasse: [],
-  periciasAntecedente: [],
-  pericias: [],
-
-  ferramentasAntecedente: [],
-  ferramentas: [],
-
-  talentos: [],
-  configuracoesTalentos: {},
-
-  habilidades: {
-    escolhas: {},
-    recursos: {},
-  },
-
-  magias: {},
-
-  detalhes: {
-    nome: "",
-    historia: "",
-    personalidade: "",
-    equipamentos: {
-      armadura: "...",
-      armaPrincipal: "...",
-      itemSecundario: "...",
-      armaSecundaria: "...",
-    },
-  },
-};
+atualizarPainelConfiguracaoInicial();
 
 function atualizarFichaPersonagem(secoes) {
   const raizFicha = document.querySelector("[data-ficha-personagem]");
@@ -738,10 +1435,6 @@ function atualizarFichaPersonagem(secoes) {
     secoes: secoes,
   });
 }
-
-preencherSelectArmaduras();
-preencherSelectArmas();
-atualizarVisibilidadeArmaSecundaria();
 
 // =====================================================
 // 5. SELEÇÃO DE CLASSE
@@ -765,6 +1458,8 @@ function selecionarClasse() {
   personagem.niveisPorClasse = {
     [classeAtualNaModal]: 1,
   };
+
+  sincronizarBeneficiosIniciaisPersonagem();
 
   fichaClasseNivel.textContent = dados.nome + " " + personagem.nivel;
 
@@ -1493,6 +2188,8 @@ function selecionarAntecedente(cardClicado) {
   personagem.ferramentasAntecedente = [...ferramentasAntecedente];
 
   personagem.ferramentas = [...ferramentasAntecedente];
+
+  sincronizarBeneficiosIniciaisPersonagem();
 
   personagem.talentos = [];
 
@@ -2721,14 +3418,57 @@ atualizarFichaIdiomas();
 // Também recalcula CA, ataques e avisos de equipamento.
 // =====================================================
 
-function atualizarEquipamentos() {
-  personagem.detalhes.equipamentos = {
-    armadura: armaduraInicial.value,
-    armaPrincipal: armaPrincipal.value,
-    itemSecundario: itemSecundario.value,
-    armaSecundaria: armaSecundaria.value,
-    proficiencias: proficienciasPorClasse[personagem.classeId] || [],
+function sincronizarConfiguracaoInicialComCombate() {
+  const configuracao = personagem.configuracaoInicialCombate ?? {
+    armadura: null,
+    mao1: null,
+    mao2: null,
   };
+
+  const itensNasMaos = [
+    configuracao.mao1,
+    configuracao.mao2,
+  ].filter(function (item) {
+    return item && !item.ocupadaPor;
+  });
+
+  const armasEmpunhadas = itensNasMaos.filter(function (item) {
+    return item.categoria === "armas";
+  });
+
+  const escudoEmpunhado = itensNasMaos.some(function (item) {
+    return (
+      item.categoria === "itensSecundarios" &&
+      item.id === "escudo"
+    );
+  });
+
+  const primeiraArma = armasEmpunhadas[0] ?? null;
+  const segundaArma = armasEmpunhadas[1] ?? null;
+
+  personagem.detalhes.equipamentos = {
+    armadura:
+      configuracao.armadura?.id ?? "semArmadura",
+
+    armaPrincipal:
+      primeiraArma?.id ?? "",
+
+    itemSecundario: escudoEmpunhado
+      ? "escudo"
+      : segundaArma
+        ? "armaSecundaria"
+        : "nada",
+
+    armaSecundaria:
+      segundaArma?.id ?? "",
+
+    proficiencias:
+      proficienciasPorClasse[personagem.classeId] || [],
+  };
+}
+
+function atualizarEquipamentos() {
+  sincronizarConfiguracaoInicialComCombate();
 
   atualizarFichaEquipamentos();
   atualizarClasseArmadura();
@@ -2751,67 +3491,10 @@ function atualizarFichaEquipamentos() {
   atualizarFichaPersonagem(["equipamentos"]);
 }
 
-armaduraInicial.addEventListener("change", function () {
-  atualizarEquipamentos();
-});
-
-armaPrincipal.addEventListener("change", function () {
-  atualizarEquipamentos();
-});
-
-itemSecundario.addEventListener("change", function () {
-  atualizarVisibilidadeArmaSecundaria();
-  atualizarEquipamentos();
-});
-
-armaSecundaria.addEventListener("change", function () {
-  atualizarEquipamentos();
-});
-
 function calcularClasseArmaduraCriacao() {
-  const equipamentos = personagem.detalhes.equipamentos;
+  const classeArmadura = window.calcularClasseArmadura(personagem);
 
-  if (equipamentos === undefined) {
-    return "";
-  }
-
-  const idArmadura = equipamentos.armadura;
-  const idItemSecundario = equipamentos.itemSecundario;
-
-  const armadura = window.bancoEquipamentos.armaduras[idArmadura];
-  const itemSecundario = window.bancoEquipamentos.itensSecundarios[idItemSecundario];
-
-  if (armadura === undefined) {
-    return "";
-  }
-
-  let classeArmadura = armadura.caBase;
-
-  const destreza = personagem.atributos.destreza;
-
-  if (armadura.usaDestreza === true && destreza !== undefined && destreza !== "") {
-    const modificadorDestreza = calcularModificador(destreza);
-
-    if (armadura.limiteDestreza === null) {
-      classeArmadura = classeArmadura + modificadorDestreza;
-    } else {
-      classeArmadura = classeArmadura + Math.min(modificadorDestreza, armadura.limiteDestreza);
-    }
-  }
-
-  if (itemSecundario !== undefined && itemSecundario.bonusCA !== undefined) {
-    classeArmadura = classeArmadura + itemSecundario.bonusCA;
-  }
-
-  classeArmadura += window.TradutorRegras.calcularModificadorPassivo(
-    {
-      participante: personagem,
-      usandoArmadura: idArmadura !== "semArmadura",
-    },
-    "modificarClasseArmadura",
-  );
-
-  return classeArmadura;
+  return classeArmadura === "-" ? "" : classeArmadura;
 }
 
 function atualizarClasseArmadura() {
@@ -2865,8 +3548,6 @@ function atualizarPontosDeVida() {
     return;
   }
 
-  const modificadorConstituicao = calcularModificador(constituicao);
-
   const operacoesPontosDeVida =
     window.TradutorRegras?.prepararOperacoes({
       gatilho: "aoCalcularPontosDeVidaMaximos",
@@ -2884,7 +3565,18 @@ function atualizarPontosDeVida() {
     bonusPontosDeVida += Number(operacao.quantidade) || 0;
   }
 
-  const pontosDeVidaMaximos = dadoVida + modificadorConstituicao + bonusPontosDeVida;
+  const pontosDeVidaMaximos = window.PersonagemDados.calcularPontosDeVidaIniciais({
+    dadoVida,
+    constituicao,
+    bonus: bonusPontosDeVida,
+  });
+
+  if (pontosDeVidaMaximos === null) {
+    pvAtuais.textContent = "";
+    pvMaximo.textContent = "";
+    atualizarFichaPersonagem(["combate"]);
+    return;
+  }
 
   pvMaximo.textContent = pontosDeVidaMaximos;
   pvAtuais.textContent = pontosDeVidaMaximos;
@@ -2992,32 +3684,18 @@ function avatarEstaEscolhido() {
 
 function detalhesEstaoCompletos() {
   const nomePreenchido =
-    personagem.detalhes.nome !== undefined && personagem.detalhes.nome.trim() !== "";
+    personagem.detalhes.nome !== undefined &&
+    personagem.detalhes.nome.trim() !== "";
 
-  const idiomasPreenchidos = personagem.idiomasEscolhidos.length >= 2;
+  const idiomasPreenchidos =
+    personagem.idiomasEscolhidos.length >= 2;
 
-  const equipamentos = personagem.detalhes.equipamentos;
-
-  const equipamentosPreenchidos =
-    equipamentos !== undefined &&
-    equipamentos.armadura !== undefined &&
-    equipamentos.armadura !== "" &&
-    equipamentos.armaPrincipal !== undefined &&
-    equipamentos.armaPrincipal !== "" &&
-    equipamentos.itemSecundario !== undefined &&
-    equipamentos.itemSecundario !== "";
-
-  const armaSecundariaPreenchida =
-    equipamentos.itemSecundario !== "armaSecundaria" ||
-    (equipamentos.armaSecundaria !== undefined && equipamentos.armaSecundaria !== "");
-
-  const equipamentosValidos = validarCombinacaoEquipamentos().valido;
+  const equipamentosValidos =
+    validarCombinacaoEquipamentos().valido;
 
   return (
     nomePreenchido &&
     idiomasPreenchidos &&
-    equipamentosPreenchidos &&
-    armaSecundariaPreenchida &&
     equipamentosValidos
   );
 }
@@ -3300,6 +3978,93 @@ function adicionarEquipamentoAntecedenteRevisao(bloco) {
   bloco.appendChild(criarParagrafoRevisao("Moedas iniciais", `${quantidadeOuro} peças de ouro`));
 }
 
+function adicionarEquipamentoClasseRevisao(bloco) {
+  const equipamentoClasse = personagem.equipamentoClasse;
+
+  if (!equipamentoClasse) {
+    return;
+  }
+
+  const subtitulo = document.createElement("h4");
+  subtitulo.textContent = "Equipamento da classe";
+  bloco.appendChild(subtitulo);
+
+  bloco.appendChild(criarParagrafoRevisao("Escolha", equipamentoClasse.nome));
+
+  const itens = equipamentoClasse.itens ?? [];
+
+  if (itens.length > 0) {
+    const lista = document.createElement("ul");
+    lista.classList.add("lista-equipamento-antecedente-revisao");
+
+    for (const item of itens) {
+      const nomeItem = obterNomeEquipamento(item.id);
+      const quantidade = item.quantidade ?? 1;
+      const linha = document.createElement("li");
+      linha.textContent = quantidade > 1 ? `${quantidade}× ${nomeItem}` : nomeItem;
+      lista.appendChild(linha);
+    }
+
+    bloco.appendChild(lista);
+  }
+
+  bloco.appendChild(
+    criarParagrafoRevisao(
+      "Moedas da classe",
+      `${equipamentoClasse.moedas?.ouro ?? 0} peças de ouro`,
+    ),
+  );
+}
+
+function adicionarMaoConfiguradaRevisao(
+  bloco,
+  slot,
+  rotulo,
+) {
+  const item =
+    personagem.configuracaoInicialCombate?.[slot];
+
+  if (!item) {
+    bloco.appendChild(
+      criarParagrafoRevisao(rotulo, "Vazia"),
+    );
+    return;
+  }
+
+  if (item.ocupadaPor) {
+    const itemResponsavel =
+      personagem.configuracaoInicialCombate[
+        item.ocupadaPor
+      ];
+
+    const nomeItemResponsavel =
+      obterNomeItemConfigurado(itemResponsavel);
+
+    bloco.appendChild(
+      criarParagrafoRevisao(
+        rotulo,
+        `Ocupada por ${nomeItemResponsavel}`,
+      ),
+    );
+
+    return;
+  }
+
+  if (item.categoria === "armas") {
+    bloco.appendChild(
+      criarLinhaArmaRevisao(item.id, rotulo),
+    );
+    return;
+  }
+
+  bloco.appendChild(
+    criarParagrafoRevisao(
+      rotulo,
+      obterNomeItemConfigurado(item),
+    ),
+  );
+}
+
 function montarRevisaoEquipamentos() {
   const bloco = document.createElement("section");
   bloco.classList.add("bloco-revisao");
@@ -3308,37 +4073,80 @@ function montarRevisaoEquipamentos() {
   titulo.textContent = "Equipamentos e Valores";
   bloco.appendChild(titulo);
 
-  adicionarEquipamentoAntecedenteRevisao(bloco);
+  const economia = personagem.economiaCriacao ?? {};
+  const ouroProjetado =
+    (economia.ouroFixoClasse ?? 0) +
+    (economia.ouroFixoAntecedente ?? 0) +
+    (economia.ouroRetidoOrcamento ?? 0);
 
-  const equipamentos = personagem.detalhes.equipamentos;
-
-  if (equipamentos === undefined) {
-    bloco.appendChild(criarParagrafoRevisao("Equipamentos", "Nenhum equipamento selecionado."));
-    areaRevisao.appendChild(bloco);
-    return;
-  }
-
-  const armadura = window.bancoEquipamentos.armaduras[equipamentos.armadura];
-  const itemSecundario = window.bancoEquipamentos.itensSecundarios[equipamentos.itemSecundario];
-
-  bloco.appendChild(criarParagrafoRevisao("Armadura", armadura !== undefined ? armadura.nome : ""));
-
-  if (equipamentos.armaPrincipal !== undefined && equipamentos.armaPrincipal !== "") {
-    bloco.appendChild(criarLinhaArmaRevisao(equipamentos.armaPrincipal, "Arma principal"));
-  }
-
-  if (equipamentos.itemSecundario === "armaSecundaria") {
-    if (equipamentos.armaSecundaria !== undefined && equipamentos.armaSecundaria !== "") {
-      bloco.appendChild(criarLinhaArmaRevisao(equipamentos.armaSecundaria, "Arma secundária"));
-    }
-  } else {
-    bloco.appendChild(
-      criarParagrafoRevisao(
-        "Item secundário",
-        itemSecundario !== undefined ? itemSecundario.nome : "",
+  bloco.append(
+    criarParagrafoRevisao(
+      "Orçamento gasto",
+      formatarMoeda(
+        (economia.orcamentoEquipamentos ?? 0) -
+          (economia.saldoOrcamentoEquipamentos ?? 0),
       ),
-    );
+    ),
+    criarParagrafoRevisao(
+      "Saldo do orçamento",
+      formatarMoeda(economia.saldoOrcamentoEquipamentos),
+    ),
+    criarParagrafoRevisao(
+      `Parcela guardada (${economia.percentualRetencao ?? 0}%)`,
+      formatarMoeda(economia.ouroRetidoOrcamento),
+    ),
+    criarParagrafoRevisao("Moedas ao iniciar a aventura", formatarMoeda(ouroProjetado)),
+  );
+
+  const itensInventario = personagem.inventario?.itens ?? [];
+
+  if (itensInventario.length > 0) {
+    const subtituloInventario = document.createElement("h4");
+    subtituloInventario.textContent = "Inventário inicial";
+    const listaInventario = document.createElement("ul");
+    listaInventario.classList.add("lista-equipamento-antecedente-revisao");
+
+    for (const item of itensInventario) {
+      const linha = document.createElement("li");
+      const nome = obterNomeEquipamento(item.id);
+      linha.textContent = item.quantidade > 1 ? `${item.quantidade}× ${nome}` : nome;
+      listaInventario.appendChild(linha);
+    }
+
+    bloco.append(subtituloInventario, listaInventario);
   }
+
+  const configuracao =
+  personagem.configuracaoInicialCombate;
+
+const armaduraConfigurada =
+  configuracao?.armadura;
+
+const nomeArmadura = armaduraConfigurada
+  ? window.bancoEquipamentos[
+      armaduraConfigurada.categoria
+    ]?.[armaduraConfigurada.id]?.nome ??
+    armaduraConfigurada.id
+  : "Nenhuma";
+
+bloco.appendChild(
+  criarParagrafoRevisao(
+    "Armadura",
+    nomeArmadura,
+  ),
+);
+
+adicionarMaoConfiguradaRevisao(
+  bloco,
+  "mao1",
+  "Arma Principal",
+);
+
+adicionarMaoConfiguradaRevisao(
+  bloco,
+  "mao2",
+  "Arma Secundária",
+);
 
   bloco.appendChild(criarParagrafoRevisao("Classe de Armadura", fichaClasseArmadura.textContent));
 
@@ -3629,7 +4437,10 @@ function salvarPersonagemLocal() {
   atualizarPericiasPersonagem();
   atualizarIdiomasPersonagem();
 
-  return window.PersonagemDados.adicionarSalvo(personagem);
+  const personagemParaSalvar = structuredClone(personagem);
+  window.PersonagemDados.finalizarEconomiaCriacao(personagemParaSalvar);
+
+  return window.PersonagemDados.adicionarSalvo(personagemParaSalvar);
 }
 
 botaoFinalizarPersonagem.addEventListener("click", function () {

@@ -1047,6 +1047,12 @@ window.bancoEquipamentos = {
   // objetos concedidos durante a criação do personagem.
   // =====================================================
   itensGerais: {
+    equipamentoAventura: {
+      nome: "Equipamento de Aventura",
+      descricao:
+        "Conjunto inicial comum a todo aventureiro. Seu conteúdo será detalhado em uma etapa futura.",
+    },
+
     virote: {
       nome: "Virote de Besta",
     },
@@ -1117,6 +1123,10 @@ window.bancoEquipamentos = {
 
     aljava: {
       nome: "Aljava",
+    },
+
+    pacoteExploradorSubterraneo: {
+      nome: "Pacote de Explorador Subterrâneo",
     },
   },
 };

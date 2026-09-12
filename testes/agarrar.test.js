@@ -12,12 +12,18 @@ global.document = {
   },
 };
 
+require("../motor-dados.js");
+require("../banco-pericias.js");
+require("../motor-testes.js");
+require("../banco-maestrias.js");
+require("../motor-efeitos.js");
+require("../tradutor-regras.js");
 require("../combate.js");
 require("../testes-dev.js");
 
-test("armas arremessáveis, queda e arma cravada", async () => {
+test("Ataque Desarmado: opção Agarrar", async () => {
   const resultado = await global.TestesDev.executarTeste(
-    "guerreiro.armas-arremessaveis",
+    "guerreiro.ataque-desarmado.agarrar",
   );
 
   assert.equal(

@@ -43,6 +43,65 @@ window.bancoClasses = {
     maestriasArmas: {
       quantidade: 3,
     },
+
+    // Economia própria da criação do RPG Solo.
+    // O ouro fixo segue a opção monetária oficial da classe.
+    // O orçamento só pode ser usado na loja de equipamentos iniciais.
+    economiaInicial: {
+      ouroFixo: 155,
+      orcamentoEquipamentos: 2015,
+      percentualRetencao: 5,
+    },
+
+    // Conjuntos oferecidos ao Guerreiro criado no nível 1.
+    // Fonte: SRD 5.2.1, página 47.
+    equipamentosIniciais: [
+      {
+        id: "a",
+        nome: "Conjunto A",
+        itens: [
+          { categoria: "armaduras", id: "cotaDeMalha", quantidade: 1 },
+          { categoria: "armas", id: "espadaGrande", quantidade: 1 },
+          { categoria: "armas", id: "mangual", quantidade: 1 },
+          { categoria: "armas", id: "azagaia", quantidade: 8 },
+          { categoria: "itensGerais", id: "pacoteExploradorSubterraneo", quantidade: 1 },
+        ],
+        equipados: {
+          armadura: "cotaDeMalha",
+          armaPrincipal: "espadaGrande",
+          itemSecundario: "nada",
+          armaSecundaria: "",
+        },
+        moedas: { ouro: 4 },
+      },
+      {
+        id: "b",
+        nome: "Conjunto B",
+        itens: [
+          { categoria: "armaduras", id: "couroBatido", quantidade: 1 },
+          { categoria: "armas", id: "cimitarra", quantidade: 1 },
+          { categoria: "armas", id: "espadaCurta", quantidade: 1 },
+          { categoria: "armas", id: "arcoLongo", quantidade: 1 },
+          { categoria: "itensGerais", id: "flecha", quantidade: 20 },
+          { categoria: "itensGerais", id: "aljava", quantidade: 1 },
+          { categoria: "itensGerais", id: "pacoteExploradorSubterraneo", quantidade: 1 },
+        ],
+        equipados: {
+          armadura: "couroBatido",
+          armaPrincipal: "cimitarra",
+          itemSecundario: "armaSecundaria",
+          armaSecundaria: "espadaCurta",
+        },
+        moedas: { ouro: 11 },
+      },
+      {
+        id: "c",
+        nome: "155 peças de ouro",
+        itens: [],
+        requerCompra: true,
+        moedas: { ouro: 155 },
+      },
+    ],
   },
 
   // =====================================================

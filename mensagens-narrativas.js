@@ -33,6 +33,24 @@ function formatarExpressaoDanoNarrativa(ataque) {
   return `${dados} ${formatarSinalNarrativo(modificador)}`;
 }
 
+function formatarExpressaoRolagemNarrativa(rolagem) {
+  const grupos = rolagem?.gruposDeDados ?? [];
+
+  const dados = grupos
+    .map(function formatarGrupo(grupo) {
+      return `${grupo.quantidade}d${grupo.numeroDeFaces}`;
+    })
+    .join(" + ");
+
+  const modificador = Number(rolagem?.modificador) || 0;
+
+  if (modificador === 0) {
+    return dados || "dados";
+  }
+
+  return `${dados} ${formatarSinalNarrativo(modificador)}`;
+}
+
 function exibirMensagemNarrativa(elemento, mensagem) {
   if (!elemento) {
     return;
@@ -42,6 +60,9 @@ function exibirMensagemNarrativa(elemento, mensagem) {
 }
 
 window.exibirMensagemNarrativa = exibirMensagemNarrativa;
+
+window.formatarExpressaoRolagemNarrativa =
+  formatarExpressaoRolagemNarrativa;
 
 window.mensagensNarrativas = {
   eventos: {
@@ -145,6 +166,8 @@ window.mensagensNarrativas = {
             },
           },
 
+          
+
           pedirCritico: {
             momento: "Depois de um acerto crítico, antes da rolagem de dano.",
             variaveis: [],
@@ -154,6 +177,19 @@ window.mensagensNarrativas = {
             },
           },
         },
+
+        habilidades: {
+  pedirCura: {
+    momento:
+      "Quando o jogador ativa uma habilidade que exige uma rolagem de cura.",
+    variaveis: ["habilidade", "expressaoCura"],
+    canais: {
+      solicitacao:
+        "Role <strong>{expressaoCura}</strong> para recuperar pontos de vida com {habilidade}.",
+    },
+  },
+},
+
       },
     },
   },
@@ -204,6 +240,18 @@ window.mensagensNarrativas = {
       return obterMensagemJogabilidade("regras.combate.dano.pedirCritico").solicitacao;
     },
   },
+
+  habilidades: {
+  pedirCura: function (nomeHabilidade, expressaoCura) {
+    return obterMensagemJogabilidade(
+      "regras.combate.habilidades.pedirCura",
+      {
+        habilidade: nomeHabilidade,
+        expressaoCura,
+      },
+    ).solicitacao;
+  },
+},
 
   efeitos: {
     disponivel: function (nome) {

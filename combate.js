@@ -16,6 +16,8 @@ window.SistemaCombate = (function () {
 
       salvaguardas: structuredClone(entidade.salvaguardas ?? []),
 
+      pericias: structuredClone(entidade.pericias ?? []),
+
       bonusProficiencia:
         Number(entidade.bonusProficiencia) ||
         2 + Math.floor((Math.max(1, Number(entidade.nivel) || 1) - 1) / 4),
@@ -31,6 +33,14 @@ window.SistemaCombate = (function () {
       pontosDeVida: structuredClone(entidade.combate.pontosDeVida),
 
       ataques: structuredClone(entidade.ataques),
+
+      configuracaoEquipamentos: structuredClone(
+        entidade.configuracaoInicialCombate ?? {
+          armadura: null,
+          mao1: null,
+          mao2: null,
+        },
+      ),
 
       talentos: structuredClone(entidade.talentos ?? []),
 
@@ -52,6 +62,434 @@ window.SistemaCombate = (function () {
       representacao: structuredClone(configuracao.representacao ?? entidade.avatar ?? null),
     };
   }
+
+  function participantePossuiMaoLivre(participante) {
+    const configuracao = participante?.configuracaoEquipamentos;
+
+    if (!configuracao) {
+      return false;
+    }
+
+    return ["mao1", "mao2"].some(function (slot) {
+      return configuracao[slot] === null || configuracao[slot] === undefined;
+    });
+  }
+
+  function alvoPodeSerAgarrado(atacante, alvo) {
+    const ordemTamanhos = ["miudo", "pequeno", "medio", "grande", "enorme", "gigantesco"];
+
+    const indiceAtacante = ordemTamanhos.indexOf(atacante?.tamanho ?? "medio");
+    const indiceAlvo = ordemTamanhos.indexOf(alvo?.tamanho ?? "medio");
+
+    if (indiceAtacante === -1 || indiceAlvo === -1) {
+      return false;
+    }
+
+    return indiceAlvo <= indiceAtacante + 1;
+  }
+
+  function prepararAgarrar(combate, idAtacante, idAlvo, atributoSalvaguarda) {
+    if (!combate) {
+      return {
+        sucesso: false,
+        motivo: "combateInexistente",
+      };
+    }
+
+    const atacante = combate.participantes.find(function (participante) {
+      return participante.id === idAtacante;
+    });
+
+    if (!atacante) {
+      return {
+        sucesso: false,
+        motivo: "atacanteInexistente",
+      };
+    }
+
+    const alvo = combate.participantes.find(function (participante) {
+      return participante.id === idAlvo;
+    });
+
+    if (!alvo) {
+      return {
+        sucesso: false,
+        motivo: "alvoInexistente",
+      };
+    }
+
+    if (!participantePossuiMaoLivre(atacante)) {
+      return {
+        sucesso: false,
+        motivo: "semMaoLivre",
+        atacante,
+        alvo,
+      };
+    }
+
+    if (!alvoPodeSerAgarrado(atacante, alvo)) {
+      return {
+        sucesso: false,
+        motivo: "alvoMuitoGrande",
+        atacante,
+        alvo,
+      };
+    }
+
+    const distancia = calcularDistancia(atacante.posicao, alvo.posicao);
+
+    if (distancia > 1) {
+      return {
+        sucesso: false,
+        motivo: "alvoForaDeAlcance",
+        atacante,
+        alvo,
+        distancia,
+      };
+    }
+
+    const atributosPermitidos = ["forca", "destreza"];
+
+    if (!atributosPermitidos.includes(atributoSalvaguarda)) {
+      return {
+        sucesso: false,
+        motivo: "atributoSalvaguardaInvalido",
+        atributosPermitidos,
+      };
+    }
+
+    const modificadorForca = window.SistemaTestes.calcularModificadorAtributo(
+      atacante.atributos?.forca,
+    );
+
+    const dificuldade = 8 + modificadorForca + (Number(atacante.bonusProficiencia) || 0);
+
+    return {
+      sucesso: true,
+
+      atacante,
+      alvo,
+
+      operacao: {
+        tipo: "solicitarSalvaguarda",
+        participanteId: atacante.id,
+        alvoId: alvo.id,
+        atributoId: atributoSalvaguarda,
+        dificuldade,
+
+        resultados: {
+          sucesso: null,
+
+          fracasso: {
+            tipo: "aplicarCondicao",
+            condicaoId: "agarrado",
+          },
+        },
+
+        origem: {
+          tipo: "ataqueDesarmado",
+          opcao: "agarrar",
+        },
+      },
+    };
+  }
+
+  function resolverAgarrar(combate, operacao, resultadoRolagem = null, opcoes = {}) {
+    if (operacao?.origem?.tipo !== "ataqueDesarmado" || operacao?.origem?.opcao !== "agarrar") {
+      return {
+        sucesso: false,
+        motivo: "operacaoAgarrarInvalida",
+      };
+    }
+
+    const atacante = combate?.participantes.find(function (participante) {
+      return participante.id === operacao.participanteId;
+    });
+
+    if (!atacante) {
+      return {
+        sucesso: false,
+        motivo: "atacanteInexistente",
+      };
+    }
+
+    const custo = opcoes.custo ?? "acao";
+    const custosPermitidos = ["acao", "reacao", "nenhum"];
+
+    if (!custosPermitidos.includes(custo)) {
+      return {
+        sucesso: false,
+        motivo: "custoInvalido",
+      };
+    }
+
+    if (!opcoes.ignorarTurno && combate.participanteAtivoId !== atacante.id) {
+      return {
+        sucesso: false,
+        motivo: "foraDoTurno",
+      };
+    }
+
+    if (atacante.estado === "derrotado") {
+      return {
+        sucesso: false,
+        motivo: "participanteDerrotado",
+      };
+    }
+
+    if (custo === "acao" && !atacante.acaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "acaoIndisponivel",
+      };
+    }
+
+    if (custo === "reacao" && !atacante.reacaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "reacaoIndisponivel",
+      };
+    }
+
+    const preparacaoAtual = prepararAgarrar(
+      combate,
+      operacao.participanteId,
+      operacao.alvoId,
+      operacao.atributoId,
+    );
+
+    if (!preparacaoAtual.sucesso) {
+      return preparacaoAtual;
+    }
+
+    const resultado = resolverSalvaguardaCombate(
+      combate,
+      preparacaoAtual.operacao,
+      resultadoRolagem,
+    );
+
+    if (!resultado.sucesso) {
+      return resultado;
+    }
+
+    if (custo === "acao") {
+      consumirAcao(atacante);
+    } else if (custo === "reacao") {
+      consumirReacao(atacante);
+    }
+
+    return {
+      ...resultado,
+      custo,
+    };
+  }
+
+  function resolverEscaparAgarrar(
+  combate,
+  idParticipante,
+  periciaId,
+  resultadoRolagem = null,
+) {
+  const participante = combate?.participantes.find(function (
+    participanteCombate,
+  ) {
+    return participanteCombate.id === idParticipante;
+  });
+
+  if (!participante) {
+    return {
+      sucesso: false,
+      mmotivo: "participanteInexistente",
+    };
+  }
+
+  if (combate.participanteAtivoId !== participante.id) {
+    return {
+      sucesso: false,
+      motivo: "foraDoTurno",
+    };
+  }
+
+  if (participante.estado === "derrotado") {
+    return {
+      sucesso: false,
+      motivo: "participanteDerrotado",
+    };
+  }
+
+  if (!participante.acaoDisponivel) {
+    return {
+      sucesso: false,
+      motivo: "acaoIndisponivel",
+    };
+  }
+
+  const indiceCondicao = participante.condicoes?.findIndex(function (
+    condicao,
+  ) {
+    return condicao.id === "agarrado";
+  }) ?? -1;
+
+  if (indiceCondicao === -1) {
+    return {
+      sucesso: false,
+      motivo: "participanteNaoAgarrado",
+    };
+  }
+
+  const periciasPermitidas = ["atletismo", "acrobacia"];
+
+  if (!periciasPermitidas.includes(periciaId)) {
+    return {
+      sucesso: false,
+      motivo: "periciaInvalida",
+      periciasPermitidas,
+    };
+  }
+
+  const condicaoAgarrado = participante.condicoes[indiceCondicao];
+  const dificuldade = Number(condicaoAgarrado.dificuldade);
+
+  if (!Number.isFinite(dificuldade)) {
+    return {
+      sucesso: false,
+      motivo: "dificuldadeInvalida",
+    };
+  }
+
+  const bonusPericia =
+    window.SistemaTestes.calcularBonusPericia(
+      participante,
+      periciaId,
+    );
+
+  const rolagem =
+    resultadoRolagem ??
+    realizarRolagemComposta({
+      gruposDeDados: [
+        {
+          quantidade: 1,
+          numeroDeFaces: 20,
+        },
+      ],
+
+      modificador: bonusPericia,
+    });
+
+  const resultadoTeste =
+    window.SistemaTestes.resolverTesteContraCd(
+      rolagem,
+      dificuldade,
+    );
+
+  consumirAcao(participante);
+
+  if (resultadoTeste.sucesso) {
+    participante.condicoes.splice(indiceCondicao, 1);
+  }
+
+  return {
+    sucesso: true,
+    participante,
+    periciaId,
+    bonusPericia,
+    dificuldade,
+    rolagem,
+    resultadoTeste,
+    escapou: resultadoTeste.sucesso,
+  };
+}
+
+  function encerrarAgarramentosInvalidos(combate) {
+    if (!combate?.participantes) {
+      return {
+        sucesso: false,
+        motivo: "combateInvalido",
+        encerrados: 0,
+      };
+    }
+
+    let encerrados = 0;
+
+    for (const alvo of combate.participantes) {
+      if (!Array.isArray(alvo.condicoes)) {
+        continue;
+      }
+
+      alvo.condicoes = alvo.condicoes.filter(function (condicao) {
+        if (condicao.id !== "agarrado") {
+          return true;
+        }
+
+        const agarrador = combate.participantes.find(function (participante) {
+          return participante.id === condicao.aplicadoPorId;
+        });
+
+        const agarradorIncapacitado =
+          agarrador?.condicoes?.some(function (condicaoAgarrador) {
+            return condicaoAgarrador.id === "incapacitado";
+          }) ?? false;
+
+        const agarradorInvalido =
+          !agarrador || agarrador.estado === "derrotado" || agarradorIncapacitado;
+
+        const distancia = agarrador ? calcularDistancia(agarrador.posicao, alvo.posicao) : Infinity;
+
+        const foraDoAlcance = distancia > 1;
+
+        const deveEncerrar = agarradorInvalido || foraDoAlcance;
+
+        if (deveEncerrar) {
+          encerrados++;
+        }
+
+        return !deveEncerrar;
+      });
+    }
+
+    return {
+      sucesso: true,
+      encerrados,
+    };
+  }
+
+  function liberarAlvoAgarrado(combate, idAgarrador, idAlvo) {
+  const alvo = combate?.participantes.find(function (participante) {
+    return participante.id === idAlvo;
+  });
+
+  if (!alvo) {
+    return {
+      sucesso: false,
+      motivo: "alvoInexistente",
+    };
+  }
+
+  const indiceCondicao =
+    alvo.condicoes?.findIndex(function (condicao) {
+      return (
+        condicao.id === "agarrado" &&
+        condicao.aplicadoPorId === idAgarrador
+      );
+    }) ?? -1;
+
+  if (indiceCondicao === -1) {
+    return {
+      sucesso: false,
+      motivo: "agarramentoInexistente",
+    };
+  }
+
+  const [condicaoRemovida] =
+    alvo.condicoes.splice(indiceCondicao, 1);
+
+  return {
+    sucesso: true,
+    alvo,
+    condicaoRemovida,
+    custo: "nenhum",
+  };
+}
 
   function criarEstadoCombate(configuracao) {
     const participantes = structuredClone(configuracao.participantes);
@@ -350,6 +788,12 @@ window.SistemaCombate = (function () {
       const ameacador = saida.ameacador;
 
       if (!ameacador.reacaoDisponivel || ameacadoresPreparados.has(ameacador.id)) {
+        continue;
+      }
+
+      const resultadoLinhaVisao = verificarLinhaVisao(combate, ameacador.posicao, saida.origem);
+
+      if (!resultadoLinhaVisao.sucesso || !resultadoLinhaVisao.linhaLivre) {
         continue;
       }
 
@@ -928,6 +1372,19 @@ window.SistemaCombate = (function () {
       };
     }
 
+    const estaAgarrado =
+      participante.condicoes?.some(function (condicao) {
+        return condicao.id === "agarrado";
+      }) ?? false;
+
+    if (estaAgarrado) {
+      return {
+        sucesso: false,
+        motivo: "participanteAgarrado",
+        participante,
+      };
+    }
+
     const destinoForaDoTabuleiro =
       coluna < 1 ||
       coluna > combate.tabuleiro.colunas ||
@@ -1159,6 +1616,8 @@ window.SistemaCombate = (function () {
       });
     }
 
+    const resultadoAgarramentos = encerrarAgarramentosInvalidos(combate);
+
     const destinoAlcancado =
       participante.posicao.coluna === coluna && participante.posicao.linha === linha;
 
@@ -1174,6 +1633,8 @@ window.SistemaCombate = (function () {
       ataquesOportunidade,
 
       movimentoInterrompido,
+
+      agarramentosEncerrados: resultadoAgarramentos.encerrados,
 
       destinoAlcancado,
 
@@ -1513,6 +1974,77 @@ window.SistemaCombate = (function () {
     return true;
   }
 
+  function recuperarArmaDoChao(
+  combate,
+  idParticipante,
+  equipamentoInstanciaId,
+) {
+  const participante = combate?.participantes.find(function (
+    participanteCombate,
+  ) {
+    return participanteCombate.id === idParticipante;
+  });
+
+  if (!participante) {
+    return {
+      sucesso: false,
+      motivo: "participanteInexistente",
+    };
+  }
+
+  const indiceItem =
+    combate.itensNoChao?.findIndex(function (item) {
+      return (
+        item.tipo === "arma" &&
+        item.equipamentoInstanciaId === equipamentoInstanciaId
+      );
+    }) ?? -1;
+
+  if (indiceItem === -1) {
+    return {
+      sucesso: false,
+      motivo: "armaNaoEncontrada",
+    };
+  }
+
+  const arma = combate.itensNoChao[indiceItem];
+
+  if (arma.origemParticipanteId !== participante.id) {
+    return {
+      sucesso: false,
+      motivo: "armaPertenceAOutroParticipante",
+       };
+  }
+
+  const estaNaMesmaCelula =
+    participante.posicao.coluna === arma.posicao.coluna &&
+    participante.posicao.linha === arma.posicao.linha;
+
+  if (!estaNaMesmaCelula) {
+    return {
+      sucesso: false,
+      motivo: "armaForaDeAlcance",
+      arma,
+    };
+  }
+
+   const [armaRecuperada] =
+    combate.itensNoChao.splice(indiceItem, 1);
+
+  participante.equipamentosArremessados =
+    (participante.equipamentosArremessados ?? []).filter(
+      function (idEquipamento) {
+        return idEquipamento !== equipamentoInstanciaId;
+      },
+    );
+
+  return {
+    sucesso: true,
+    participante,
+    armaRecuperada,
+  };
+}
+
   function obterIdentificadorAtaque(ataque) {
     return ataque?.instanciaId ?? ataque?.id ?? null;
   }
@@ -1542,6 +2074,12 @@ window.SistemaCombate = (function () {
 
     if (!ehAtaqueAdicionalLeve) {
       return ataque?.custoPadrao ?? "acao";
+    }
+
+    const nickJaUtilizado = (participante.maestriasUsadasTurno ?? []).includes("nick");
+
+    if (nickJaUtilizado) {
+      return "acaoBonus";
     }
 
     const operacaoNick = window.TradutorRegras.prepararOperacoes({
@@ -1592,6 +2130,9 @@ window.SistemaCombate = (function () {
 
     const custoAtaque = opcoes.custo ?? obterCustoAtaque(atacante, ataque);
 
+    const usaNick =
+      opcoes.custo === undefined && opcoes.tipoEspecial === undefined && custoAtaque === "nenhum";
+
     if (custoAtaque === "acao" && !atacante.acaoDisponivel) {
       return {
         sucesso: false,
@@ -1621,6 +2162,15 @@ window.SistemaCombate = (function () {
 
     const atacanteEstaCaido =
       atacante.condicoes?.some((condicao) => condicao.id === "caido") ?? false;
+
+      const condicaoAgarrado =
+  atacante.condicoes?.find(function (condicao) {
+    return condicao.id === "agarrado";
+  }) ?? null;
+
+const ataqueContraOutroEnquantoAgarrado =
+  condicaoAgarrado !== null &&
+  condicaoAgarrado.aplicadoPorId !== alvo.id;
 
     const alvoEstaCaido = alvo.condicoes?.some((condicao) => condicao.id === "caido") ?? false;
 
@@ -1670,7 +2220,8 @@ window.SistemaCombate = (function () {
         possuiDesvantagemTemporaria ||
         atacanteEstaCaido ||
         ataqueDistanteContraCaido ||
-        naoAtendeRequisitoArmaPesada,
+        naoAtendeRequisitoArmaPesada ||
+        ataqueContraOutroEnquantoAgarrado,
     });
 
     combate.ataquePendente = {
@@ -1678,7 +2229,7 @@ window.SistemaCombate = (function () {
       alvoId: alvo.id,
       ataqueId: obterIdentificadorAtaque(ataque),
       custo: custoAtaque,
-      tipoEspecial: opcoes.tipoEspecial ?? null,
+      tipoEspecial: opcoes.tipoEspecial ?? (usaNick ? "nick" : null),
       tipoRolagem: tipoRolagem,
       cobertura: resultadoSelecao.cobertura ?? null,
       bonusCobertura: Number(resultadoSelecao.bonusCobertura) || 0,
@@ -1697,6 +2248,38 @@ window.SistemaCombate = (function () {
       cobertura: resultadoSelecao.cobertura ?? null,
       bonusCobertura: Number(resultadoSelecao.bonusCobertura) || 0,
     };
+  }
+
+  function ajustarDanoAtaqueAdicionalLeve(participante, ataque, ataquePendente) {
+    const possuiAtaqueLeveHabilitador = Boolean(participante?.ataqueAdicionalLeve);
+
+    const ehAtaqueAdicionalLeve =
+      possuiAtaqueLeveHabilitador &&
+      (ataquePendente.custo === "acaoBonus" || ataquePendente.tipoEspecial === "nick");
+
+    if (!ehAtaqueAdicionalLeve) {
+      return ataque;
+    }
+
+    const possuiCombateComDuasArmas = window.TradutorRegras.possuiEfeitoPassivo(
+      {
+        participante,
+        ataqueComArmaSecundaria: true,
+      },
+      "incluirModificadorAtributoNoDano",
+    );
+
+    if (possuiCombateComDuasArmas) {
+      return ataque;
+    }
+
+    const ataqueAjustado = structuredClone(ataque);
+
+    const modificadorAtributo = Number(ataqueAjustado.dano.modificadorAtributo) || 0;
+
+    ataqueAjustado.dano.modificador -= Math.max(0, modificadorAtributo);
+
+    return ataqueAjustado;
   }
 
   function resolverAtaque(combate, resultadoRolagem) {
@@ -1727,6 +2310,8 @@ window.SistemaCombate = (function () {
         motivo: "dadosDoAtaqueInvalidos",
       };
     }
+
+    const ataqueResolvido = ajustarDanoAtaqueAdicionalLeve(atacante, ataque, ataquePendente);
 
     const grupoD20 = resultadoRolagem.gruposRolados.find((grupo) => grupo.numeroDeFaces === 20);
 
@@ -1778,6 +2363,14 @@ window.SistemaCombate = (function () {
     const identificadorAtaque = obterIdentificadorAtaque(ataque);
     const ataqueEhLeve = ataque.propriedades?.includes("leve") ?? false;
 
+    if (ataquePendente.tipoEspecial === "nick") {
+      atacante.maestriasUsadasTurno ??= [];
+
+      if (!atacante.maestriasUsadasTurno.includes("nick")) {
+        atacante.maestriasUsadasTurno.push("nick");
+      }
+    }
+
     if (ataquePendente.tipoEspecial === "cleave") {
       atacante.maestriasUsadasTurno ??= [];
 
@@ -1798,17 +2391,19 @@ window.SistemaCombate = (function () {
     combate.ataquePendente = null;
 
     if (ataquePendente.vantagemTemporaria) {
-      const efeito = combate.efeitosTemporarios?.find(function encontrarVantagem(efeito) {
-        return (
-          efeito.tipo === "vantagem" &&
-          efeito.participanteId === atacante.id &&
-          efeito.alvoId === alvo.id &&
-          efeito.rolagemAfetada === "ataque" &&
-          efeito.usosRestantes > 0
-        );
-      });
+      const efeitosAplicados = (combate.efeitosTemporarios ?? []).filter(
+        function encontrarVantagensAplicadas(efeito) {
+          return (
+            efeito.tipo === "vantagem" &&
+            efeito.participanteId === atacante.id &&
+            efeito.alvoId === alvo.id &&
+            efeito.rolagemAfetada === "ataque" &&
+            efeito.usosRestantes > 0
+          );
+        },
+      );
 
-      if (efeito) {
+      for (const efeito of efeitosAplicados) {
         efeito.usosRestantes -= 1;
       }
 
@@ -1818,16 +2413,18 @@ window.SistemaCombate = (function () {
     }
 
     if (ataquePendente.desvantagemTemporaria) {
-      const efeito = combate.efeitosTemporarios?.find(function encontrarDesvantagem(efeito) {
-        return (
-          efeito.tipo === "desvantagem" &&
-          efeito.participanteId === atacante.id &&
-          efeito.rolagemAfetada === "ataque" &&
-          efeito.usosRestantes > 0
-        );
-      });
+      const efeitosAplicados = (combate.efeitosTemporarios ?? []).filter(
+        function encontrarDesvantagensAplicadas(efeito) {
+          return (
+            efeito.tipo === "desvantagem" &&
+            efeito.participanteId === atacante.id &&
+            efeito.rolagemAfetada === "ataque" &&
+            efeito.usosRestantes > 0
+          );
+        },
+      );
 
-      if (efeito) {
+      for (const efeito of efeitosAplicados) {
         efeito.usosRestantes -= 1;
       }
 
@@ -1910,10 +2507,11 @@ window.SistemaCombate = (function () {
       destinoArmaArremessada,
       atacante,
       alvo,
+
       ataque:
         ataquePendente.tipoEspecial === "cleave"
           ? (() => {
-              const ataqueCleave = structuredClone(ataque);
+              const ataqueCleave = structuredClone(ataqueResolvido);
               const modificadorAtributo = SistemaTestes.calcularModificadorAtributo(
                 atacante.atributos?.[ataque.atributoId],
               );
@@ -1922,7 +2520,8 @@ window.SistemaCombate = (function () {
 
               return ataqueCleave;
             })()
-          : ataque,
+          : ataqueResolvido,
+
       efeitosAposErro,
     };
   }
@@ -2554,14 +3153,21 @@ window.SistemaCombate = (function () {
       aplicadoPorId: dados.aplicadoPorId ?? null,
 
       rodadaAplicacao: dados.rodadaAplicacao ?? null,
+
+      dificuldade: dados.dificuldade ?? null,
     };
 
     participante.condicoes.push(condicao);
+
+    const resultadoAgarramentos = dados.combate
+      ? encerrarAgarramentosInvalidos(dados.combate)
+      : null;
 
     return {
       sucesso: true,
       aplicada: true,
       condicao,
+      agarramentosEncerrados: resultadoAgarramentos?.encerrados ?? 0,
     };
   }
 
@@ -2652,11 +3258,15 @@ window.SistemaCombate = (function () {
 
     if (efeitoDoResultado?.tipo === "aplicarCondicao") {
       resultadoCondicao = aplicarCondicaoCombate(alvo, efeitoDoResultado.condicaoId, {
+        combate,
+        
         origem: operacao.origem,
 
         aplicadoPorId: operacao.participanteId,
 
         rodadaAplicacao: combate.rodada,
+
+        dificuldade: operacao.dificuldade,
       });
     }
 
@@ -2771,6 +3381,8 @@ window.SistemaCombate = (function () {
       distanciaPercorrida++;
     }
 
+    const resultadoAgarramentos = encerrarAgarramentosInvalidos(combate);
+
     const resultadoCombate = verificarObjetivosCombate(combate);
 
     return {
@@ -2781,6 +3393,8 @@ window.SistemaCombate = (function () {
       distanciaPercorrida,
 
       alvo,
+
+      agarramentosEncerrados: resultadoAgarramentos.encerrados,
 
       posicaoFinal: structuredClone(alvo.posicao),
 
@@ -3084,6 +3698,8 @@ window.SistemaCombate = (function () {
 
     if (foiDerrotado) {
       alvo.estado = "derrotado";
+
+      encerrarAgarramentosInvalidos(combate);
 
       removerParticipanteDaOrdem(combate, alvo.id);
 
@@ -3411,12 +4027,22 @@ window.SistemaCombate = (function () {
     algumDadoRolouMaximo,
     registrarArmaArremessadaNoChao,
     registrarArmaCravadaNoAlvo,
+    recuperarArmaDoChao,
     resolverDestinoArmaArremessada,
     registrarArremesso,
 
     criarParticipanteCombate,
+    participantePossuiMaoLivre,
+    alvoPodeSerAgarrado,
+    prepararAgarrar,
+    resolverAgarrar,
+    resolverEscaparAgarrar,
+    liberarAlvoAgarrado,
+    encerrarAgarramentosInvalidos,
+
     criarEstadoCombate,
     iniciarCombate,
+
     registrarIniciativa,
     rolarIniciativasInimigos,
     calcularDistancia,

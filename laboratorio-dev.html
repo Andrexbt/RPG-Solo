@@ -13,16 +13,23 @@
     <link rel="stylesheet" href="combate.css" />
     <link rel="stylesheet" href="laboratorio-dev.css" />
 
+    <script src="banco-classes.js" defer></script>
+    <script src="banco-habilidades.js" defer></script>
+    <script src="personagem-dados.js" defer></script>
     <script src="banco-equipamentos.js" defer></script>
+    <script src="regras-equipamentos.js" defer></script>
     <script src="banco-maestrias.js" defer></script>
     <script src="configuracao-vitrine-equipamentos.js" defer></script>
 
     <script src="regras-ficha-criacao.js" defer></script>
     <script src="motor-testes.js" defer></script>
     <script src="motor-efeitos.js" defer></script>
+
     <script src="tradutor-regras.js" defer></script>
-    <script src="combate.js" defer></script>
+    <script src="ficha-personagem.js" defer></script>
+    <script src="combate.js?v=2" defer></script>
     <script src="animacoes-combate.js" defer></script>
+    <script src="testes-dev.js" defer></script>
     <script src="laboratorio-dev.js" defer></script>
   </head>
 
@@ -54,6 +61,103 @@
           <span> Nenhum teste desta página altera uma aventura. </span>
         </aside>
       </section>
+
+      <section class="mesa-ferramentas laboratorio-turno-dev" aria-labelledby="tituloTurnoDev">
+  <header class="titulo-mesa">
+    <span>Arena interativa</span>
+    <h2 id="tituloTurnoDev">Testar um mini turno</h2>
+  </header>
+
+  <div class="seletor-cenario-turno-dev">
+    <label>
+      <span>Área</span>
+
+      <select id="areaTesteTurnoDev">
+        <option value="guerreiro-n1">Guerreiro — nível 1</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Cenário</span>
+
+      <select id="cenarioTurnoDev">
+        <option value="nick">Nick com duas armas Leves</option>
+      </select>
+    </label>
+
+    <button id="botaoMontarTurnoDev" class="acao-ferramenta" type="button">
+      Montar cenário
+    </button>
+  </div>
+
+  <section
+    id="arenaTurnoDev"
+    class="arena-turno-dev"
+    aria-labelledby="tituloArenaTurnoDev"
+    hidden
+  >
+    <header class="cabecalho-arena-turno-dev">
+      <div>
+        <span>Cenário ativo</span>
+        <h3 id="tituloArenaTurnoDev">Nick com duas armas Leves</h3>
+      </div>
+
+      <button id="botaoReiniciarTurnoDev" class="acao-ferramenta" type="button">
+        Reiniciar
+      </button>
+    </header>
+
+    <div class="estado-turno-dev" aria-label="Economia do turno">
+      <p>
+        <span>Movimento</span>
+        <strong id="movimentoTurnoDev">6 células</strong>
+      </p>
+
+      <p>
+        <span>Ação</span>
+        <strong id="acaoTurnoDev">Disponível</strong>
+      </p>
+
+      <p>
+        <span>Ação bônus</span>
+        <strong id="acaoBonusTurnoDev">Disponível</strong>
+      </p>
+
+      <p>
+        <span>Reação</span>
+        <strong id="reacaoTurnoDev">Disponível</strong>
+      </p>
+    </div>
+
+    <div class="palco-turno-dev">
+      <div
+        id="tabuleiroTurnoDev"
+        class="tabuleiro-turno-dev"
+        aria-label="Tabuleiro do mini turno"
+      ></div>
+
+      <aside class="comandos-turno-dev" aria-labelledby="tituloComandosTurnoDev">
+        <h3 id="tituloComandosTurnoDev">O que deseja fazer?</h3>
+
+        <p id="instrucaoTurnoDev" aria-live="polite">
+          Monte o cenário para começar.
+        </p>
+
+        <div id="acoesTurnoDev" class="acoes-turno-dev"></div>
+      </aside>
+    </div>
+
+    <section class="observador-turno-dev" aria-labelledby="tituloObservadorTurnoDev">
+      <h3 id="tituloObservadorTurnoDev">O que está sendo comprovado?</h3>
+
+      <ul id="resultadosTurnoDev" aria-live="polite">
+        <li>○ Faça o primeiro ataque com a Espada Curta.</li>
+        <li>○ Faça o ataque adicional com a Cimitarra.</li>
+        <li>○ Confirme que a ação bônus continua disponível.</li>
+      </ul>
+    </section>
+  </section>
+</section>
 
       <section class="mesa-ferramentas" aria-labelledby="tituloTestesDev">
         <header class="titulo-mesa">
@@ -107,6 +211,36 @@
             <section class="testes-mecanicos-dev">
               <h3>Testes mecânicos</h3>
 
+              <section class="testes-mecanicos-dev">
+                <h3>Formação do Guerreiro N1</h3>
+
+                <button id="botaoTestarFormacaoGuerreiroDev" class="acao-ferramenta" type="button">
+                  Validar classe e personagem
+                </button>
+
+                <ul id="resultadosFormacaoGuerreiroDev" aria-live="polite"></ul>
+              </section>
+
+              <section class="testes-mecanicos-dev">
+                <h3>Classe de Armadura</h3>
+
+                <button id="botaoTestarClasseArmaduraDev" class="acao-ferramenta" type="button">
+                  Validar armaduras e escudo
+                </button>
+
+                <ul id="resultadosClasseArmaduraDev" aria-live="polite"></ul>
+              </section>
+
+              <section class="testes-mecanicos-dev">
+                <h3>Equipamento inicial do Guerreiro</h3>
+
+                <button id="botaoTestarEquipamentoInicialDev" class="acao-ferramenta" type="button">
+                  Validar conjuntos iniciais
+                </button>
+
+                <ul id="resultadosEquipamentoInicialDev" aria-live="polite"></ul>
+              </section>
+
               <button id="botaoTestarDestinosDev" class="acao-ferramenta" type="button">
                 Testar destinos
               </button>
@@ -122,6 +256,84 @@
               </button>
 
               <ul id="resultadosTestesPushDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Sap</h3>
+
+              <button id="botaoPrepararSapDev" class="acao-ferramenta" type="button">
+                Preparar Sap
+              </button>
+
+              <button id="botaoAtacarSapDev" class="acao-ferramenta" type="button">
+                Executar ataque do alvo
+              </button>
+
+              <button id="botaoTestarSapDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesSapDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Vex</h3>
+
+              <button id="botaoTestarVexDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesVexDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Slow</h3>
+
+              <button id="botaoTestarSlowDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesSlowDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Topple</h3>
+
+              <button id="botaoTestarToppleDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesToppleDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Cleave</h3>
+
+              <button id="botaoTestarCleaveDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesCleaveDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Graze</h3>
+
+              <button id="botaoTestarGrazeDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesGrazeDev" aria-live="polite"></ul>
+            </section>
+
+            <section class="testes-mecanicos-dev">
+              <h3>Maestria Nick</h3>
+
+              <button id="botaoTestarNickDev" class="acao-ferramenta" type="button">
+                Executar teste completo
+              </button>
+
+              <ul id="resultadosTestesNickDev" aria-live="polite"></ul>
             </section>
           </aside>
 

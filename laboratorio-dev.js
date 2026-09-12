@@ -31,6 +31,340 @@
 
   const listaResultadosPush = document.querySelector("#resultadosTestesPushDev");
 
+  const botaoPrepararSap = document.querySelector("#botaoPrepararSapDev");
+
+  const botaoAtacarSap = document.querySelector("#botaoAtacarSapDev");
+
+  const botaoTestarSap = document.querySelector("#botaoTestarSapDev");
+
+  const listaResultadosSap = document.querySelector("#resultadosTestesSapDev");
+
+  const botaoTestarVex = document.querySelector("#botaoTestarVexDev");
+
+  const listaResultadosVex = document.querySelector("#resultadosTestesVexDev");
+
+  const botaoTestarSlow = document.querySelector("#botaoTestarSlowDev");
+
+  const listaResultadosSlow = document.querySelector("#resultadosTestesSlowDev");
+
+  const botaoTestarTopple = document.querySelector("#botaoTestarToppleDev");
+
+  const listaResultadosTopple = document.querySelector("#resultadosTestesToppleDev");
+
+  const botaoTestarCleave = document.querySelector("#botaoTestarCleaveDev");
+
+  const listaResultadosCleave = document.querySelector("#resultadosTestesCleaveDev");
+
+  const botaoTestarGraze = document.querySelector("#botaoTestarGrazeDev");
+
+  const listaResultadosGraze = document.querySelector("#resultadosTestesGrazeDev");
+
+  const botaoTestarNick = document.querySelector("#botaoTestarNickDev");
+
+  const listaResultadosNick = document.querySelector("#resultadosTestesNickDev");
+
+  const botaoTestarFormacaoGuerreiro = document.querySelector(
+    "#botaoTestarFormacaoGuerreiroDev",
+  );
+
+  const listaResultadosFormacaoGuerreiro = document.querySelector(
+    "#resultadosFormacaoGuerreiroDev",
+  );
+
+  const botaoTestarClasseArmadura = document.querySelector("#botaoTestarClasseArmaduraDev");
+
+  const listaResultadosClasseArmadura = document.querySelector(
+    "#resultadosClasseArmaduraDev",
+  );
+
+  const botaoTestarEquipamentoInicial = document.querySelector(
+    "#botaoTestarEquipamentoInicialDev",
+  );
+
+  const listaResultadosEquipamentoInicial = document.querySelector(
+    "#resultadosEquipamentoInicialDev",
+  );
+
+  const seletorAreaTurno = document.querySelector("#areaTesteTurnoDev");
+
+  const seletorCenarioTurno = document.querySelector("#cenarioTurnoDev");
+
+  const botaoMontarTurno = document.querySelector("#botaoMontarTurnoDev");
+
+  const botaoReiniciarTurno = document.querySelector("#botaoReiniciarTurnoDev");
+
+  const arenaTurno = document.querySelector("#arenaTurnoDev");
+
+  const tituloArenaTurno = document.querySelector("#tituloArenaTurnoDev");
+
+  const movimentoTurno = document.querySelector("#movimentoTurnoDev");
+
+  const acaoTurno = document.querySelector("#acaoTurnoDev");
+
+  const acaoBonusTurno = document.querySelector("#acaoBonusTurnoDev");
+
+  const reacaoTurno = document.querySelector("#reacaoTurnoDev");
+
+  const tabuleiroTurno = document.querySelector("#tabuleiroTurnoDev");
+
+  const instrucaoTurno = document.querySelector("#instrucaoTurnoDev");
+
+  const acoesTurno = document.querySelector("#acoesTurnoDev");
+
+  const resultadosTurno = document.querySelector("#resultadosTurnoDev");
+
+  const catalogoCenariosTurno = Object.freeze({
+    "guerreiro-n1": Object.freeze({
+      nome: "Guerreiro — nível 1",
+
+      cenarios: Object.freeze({
+        nick: Object.freeze({
+          id: "nick",
+          nome: "Nick com duas armas Leves",
+
+          descricao:
+            "Faça um ataque com a Espada Curta e depois use a Cimitarra sem consumir a ação bônus.",
+
+          criarEstado() {
+            return window.TestesDev.criarEstadoCenarioNick();
+          },
+
+          etapas: Object.freeze([
+            "Faça o primeiro ataque com a Espada Curta.",
+            "Faça o ataque adicional com a Cimitarra.",
+            "Confirme que a ação bônus continua disponível.",
+          ]),
+        }),
+      }),
+    }),
+  });
+
+  let contextoTurnoAtual = null;
+
+  let progressoTurnoAtual = null;
+
+  function obterCenarioTurnoSelecionado() {
+    const area = catalogoCenariosTurno[seletorAreaTurno.value];
+
+    if (!area) {
+      return null;
+    }
+
+    return area.cenarios[seletorCenarioTurno.value] ?? null;
+  }
+
+  function renderizarEtapasTurno(cenario) {
+    resultadosTurno.innerHTML = "";
+
+    for (const [indice, etapa] of cenario.etapas.entries()) {
+      const item = document.createElement("li");
+      const concluida = progressoTurnoAtual?.etapas?.[indice] ?? false;
+
+      item.className = concluida ? "etapa-turno-dev concluida" : "etapa-turno-dev";
+      item.textContent = `${concluida ? "✓" : "○"} ${etapa}`;
+
+      resultadosTurno.append(item);
+    }
+  }
+
+  function atualizarProgressoTurno(ataqueId) {
+    if (!contextoTurnoAtual || !progressoTurnoAtual) {
+      return;
+    }
+
+    const { guerreiro, ataquePrincipal, ataqueNick } = contextoTurnoAtual;
+
+    if (ataqueId === ataquePrincipal.id) {
+      progressoTurnoAtual.etapas[0] = true;
+    }
+
+    if (ataqueId === ataqueNick.id && guerreiro.maestriasUsadasTurno.includes("nick")) {
+      progressoTurnoAtual.etapas[1] = true;
+      progressoTurnoAtual.etapas[2] = guerreiro.acaoBonusDisponivel;
+    }
+
+    renderizarEtapasTurno(obterCenarioTurnoSelecionado());
+  }
+
+  function formatarDisponibilidade(disponivel) {
+    return disponivel ? "Disponível" : "Utilizada";
+  }
+
+  function atualizarEconomiaTurno() {
+    const guerreiro = contextoTurnoAtual?.guerreiro;
+
+    if (!guerreiro) {
+      movimentoTurno.textContent = "—";
+      acaoTurno.textContent = "—";
+      acaoBonusTurno.textContent = "—";
+      reacaoTurno.textContent = "—";
+
+      return;
+    }
+
+    movimentoTurno.textContent = `${guerreiro.movimentoRestante} células`;
+    acaoTurno.textContent = formatarDisponibilidade(guerreiro.acaoDisponivel);
+    acaoBonusTurno.textContent = formatarDisponibilidade(guerreiro.acaoBonusDisponivel);
+    reacaoTurno.textContent = formatarDisponibilidade(guerreiro.reacaoDisponivel);
+  }
+
+  function criarTokenTurno(participante) {
+    const token = document.createElement("button");
+
+    token.type = "button";
+    token.className = `token-turno-dev token-${participante.tipo}-turno-dev`;
+    token.dataset.participanteId = participante.id;
+    token.style.gridColumn = participante.posicao.coluna;
+    token.style.gridRow = participante.posicao.linha;
+    token.setAttribute(
+      "aria-label",
+      participante.pontosDeVida
+        ? `${participante.nome}, ${participante.pontosDeVida.atuais} de ${participante.pontosDeVida.maximo} pontos de vida`
+        : participante.nome,
+    );
+
+    const nome = document.createElement("span");
+    nome.className = "nome-token-turno-dev";
+    nome.textContent = participante.nome;
+
+    token.append(nome);
+
+    if (participante.pontosDeVida) {
+      const pontosDeVida = document.createElement("span");
+
+      pontosDeVida.className = "pv-token-turno-dev";
+      pontosDeVida.textContent =
+        `${participante.pontosDeVida.atuais}/${participante.pontosDeVida.maximo} PV`;
+
+      token.append(pontosDeVida);
+    }
+
+    return token;
+  }
+
+  function renderizarTabuleiroTurno() {
+    tabuleiroTurno.innerHTML = "";
+
+    const participantes = contextoTurnoAtual?.combate?.participantes ?? [];
+
+    for (const participante of participantes) {
+      tabuleiroTurno.append(criarTokenTurno(participante));
+    }
+  }
+
+  function executarAtaqueTurno(ataqueId) {
+    if (!contextoTurnoAtual) {
+      return;
+    }
+
+    const { combate, guerreiro, alvo } = contextoTurnoAtual;
+
+    const preparacao = window.SistemaCombate.prepararAtaque(
+      combate,
+      guerreiro.id,
+      alvo.id,
+      ataqueId,
+    );
+
+    if (!preparacao.sucesso) {
+      instrucaoTurno.textContent = `Ataque indisponível: ${preparacao.motivo}.`;
+
+      return;
+    }
+
+    const resultadoAtaque = window.SistemaCombate.resolverAtaque(combate, {
+      gruposRolados: [
+        {
+          numeroDeFaces: 20,
+          resultados: [15],
+        },
+      ],
+      modificador: preparacao.ataque.bonusAtaque,
+    });
+
+    let danoCausado = 0;
+
+    if (resultadoAtaque.acertou) {
+      const resultadoDado = 4;
+      const modificadorDano = Number(resultadoAtaque.ataque.dano.modificador) || 0;
+
+      danoCausado = Math.max(0, resultadoDado + modificadorDano);
+
+      window.SistemaCombate.resolverDano(combate, {
+        total: danoCausado,
+      });
+    }
+
+    atualizarEconomiaTurno();
+    atualizarProgressoTurno(ataqueId);
+    renderizarTabuleiroTurno();
+    renderizarAcoesTurno();
+
+    instrucaoTurno.textContent = resultadoAtaque.acertou
+      ? `${resultadoAtaque.ataque.nome} acertou e causou ${danoCausado} de dano.`
+      : `${resultadoAtaque.ataque.nome} errou o ataque.`;
+  }
+
+  function renderizarAcoesTurno() {
+    acoesTurno.innerHTML = "";
+
+    const ataques = contextoTurnoAtual?.guerreiro?.ataques ?? [];
+
+    for (const ataque of ataques) {
+      const botao = document.createElement("button");
+      const custo = window.SistemaCombate.obterCustoAtaque(
+        contextoTurnoAtual.guerreiro,
+        ataque,
+      );
+      const disponivel =
+        custo === "nenhum" ||
+        (custo === "acao" && contextoTurnoAtual.guerreiro.acaoDisponivel) ||
+        (custo === "acaoBonus" && contextoTurnoAtual.guerreiro.acaoBonusDisponivel) ||
+        (custo === "reacao" && contextoTurnoAtual.guerreiro.reacaoDisponivel);
+
+      botao.type = "button";
+      botao.className = "acao-ferramenta acao-turno-dev";
+      botao.disabled = !disponivel;
+      botao.textContent = `Atacar com ${ataque.nome}`;
+      botao.title = disponivel
+        ? `Custo: ${custo === "nenhum" ? "sem ação" : custo}`
+        : `Indisponível: ${custo}`;
+
+      botao.addEventListener("click", function executarAtaqueSelecionado() {
+        executarAtaqueTurno(ataque.id);
+      });
+
+      acoesTurno.append(botao);
+    }
+  }
+
+  function montarCenarioTurno() {
+    const cenario = obterCenarioTurnoSelecionado();
+
+    if (!cenario) {
+      console.warn("O cenário selecionado não foi encontrado.");
+
+      return;
+    }
+
+    tituloArenaTurno.textContent = cenario.nome;
+    instrucaoTurno.textContent = cenario.descricao;
+
+    contextoTurnoAtual = cenario.criarEstado();
+    progressoTurnoAtual = {
+      etapas: cenario.etapas.map(() => false),
+    };
+
+    atualizarEconomiaTurno();
+    renderizarTabuleiroTurno();
+
+    renderizarAcoesTurno();
+
+    renderizarEtapasTurno(cenario);
+
+    arenaTurno.hidden = false;
+  }
+
   const editorVitrine = document.querySelector("#editorVitrineDev");
 
   const estadoEditorVitrine = document.querySelector("#estadoEditorVitrineDev");
@@ -470,6 +804,231 @@
       item.className = teste.passou ? "teste-dev-passou" : "teste-dev-falhou";
       item.textContent = `${teste.passou ? "✓" : "✕"} ${teste.nome}`;
       listaResultadosPush.append(item);
+    }
+  }
+
+  function exibirResultadoSap(resultado) {
+    listaResultadosSap.innerHTML = "";
+
+    const resumo = document.createElement("li");
+    resumo.className = resultado.passou ? "teste-dev-passou" : "teste-dev-falhou";
+    resumo.textContent = resultado.passou ? "✓ Etapa concluída" : "✕ Etapa falhou";
+    listaResultadosSap.append(resumo);
+
+    for (const detalhe of resultado.detalhes ?? []) {
+      const item = document.createElement("li");
+      item.textContent = detalhe;
+      listaResultadosSap.append(item);
+    }
+  }
+
+  function prepararSapDev() {
+    exibirResultadoSap(window.TestesDev.prepararCenarioSap());
+  }
+
+  function executarAtaqueSapDev() {
+    exibirResultadoSap(window.TestesDev.executarAtaqueCenarioSap());
+  }
+
+  async function executarTesteCompletoSapDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.sap");
+
+    exibirResultadoSap({
+      passou: resultado.status === "aprovado",
+      detalhes:
+        resultado.detalhes?.length > 0
+          ? resultado.detalhes
+          : [resultado.mensagem ?? "O teste não retornou detalhes."],
+    });
+  }
+
+  async function executarTesteCompletoVexDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.vex");
+
+    listaResultadosVex.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Teste completo aprovado" : "✕ Teste completo falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+      item.textContent = texto;
+      listaResultadosVex.append(item);
+    }
+  }
+
+  async function executarTesteCompletoSlowDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.slow");
+
+    listaResultadosSlow.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Teste completo aprovado" : "✕ Teste completo falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+      item.textContent = texto;
+      listaResultadosSlow.append(item);
+    }
+  }
+
+  async function executarTesteCompletoToppleDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.topple");
+
+    listaResultadosTopple.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Teste completo aprovado" : "✕ Teste completo falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+      item.textContent = texto;
+      listaResultadosTopple.append(item);
+    }
+  }
+
+  async function executarTesteCompletoCleaveDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.cleave");
+
+    listaResultadosCleave.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Teste completo aprovado" : "✕ Teste completo falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+      item.textContent = texto;
+      listaResultadosCleave.append(item);
+    }
+  }
+
+  async function executarTesteCompletoGrazeDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.graze");
+
+    listaResultadosGraze.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Teste completo aprovado" : "✕ Teste completo falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+      item.textContent = texto;
+      listaResultadosGraze.append(item);
+    }
+  }
+
+  async function executarTesteCompletoNickDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.maestria.nick");
+
+    listaResultadosNick.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Teste completo aprovado" : "✕ Teste completo falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+      item.textContent = texto;
+      listaResultadosNick.append(item);
+    }
+  }
+
+  async function executarTesteFormacaoGuerreiroDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.formacao.nivel1");
+
+    listaResultadosFormacaoGuerreiro.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado"
+        ? "✓ Contrato básico aprovado"
+        : "✕ Contrato básico falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+
+      item.textContent = texto;
+      listaResultadosFormacaoGuerreiro.append(item);
+    }
+  }
+
+  async function executarTesteClasseArmaduraDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.classeArmadura");
+
+    listaResultadosClasseArmadura.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado" ? "✓ Matriz de CA aprovada" : "✕ Matriz de CA falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+
+      item.textContent = texto;
+      listaResultadosClasseArmadura.append(item);
+    }
+  }
+
+  async function executarTesteEquipamentoInicialDev() {
+    const resultado = await window.TestesDev.executarTeste("guerreiro.equipamentoInicial");
+
+    listaResultadosEquipamentoInicial.innerHTML = "";
+
+    const linhas = [
+      resultado.status === "aprovado"
+        ? "✓ Cadastro dos conjuntos aprovado"
+        : "✕ Cadastro dos conjuntos falhou",
+      ...(resultado.detalhes ?? [resultado.mensagem ?? "O teste não retornou detalhes."]),
+    ];
+
+    for (const [indice, texto] of linhas.entries()) {
+      const item = document.createElement("li");
+
+      if (indice === 0) {
+        item.className = resultado.status === "aprovado" ? "teste-dev-passou" : "teste-dev-falhou";
+      }
+
+      item.textContent = texto;
+      listaResultadosEquipamentoInicial.append(item);
     }
   }
 
@@ -1214,9 +1773,37 @@
     }
   });
 
+  botaoMontarTurno.addEventListener("click", montarCenarioTurno);
+
+  botaoReiniciarTurno.addEventListener("click", montarCenarioTurno);
+
   botaoTestarDestinos.addEventListener("click", executarTestesDestinos);
 
   botaoTestarPush.addEventListener("click", executarTestesPush);
+
+  botaoPrepararSap.addEventListener("click", prepararSapDev);
+
+  botaoAtacarSap.addEventListener("click", executarAtaqueSapDev);
+
+  botaoTestarSap.addEventListener("click", executarTesteCompletoSapDev);
+
+  botaoTestarVex.addEventListener("click", executarTesteCompletoVexDev);
+
+  botaoTestarSlow.addEventListener("click", executarTesteCompletoSlowDev);
+
+  botaoTestarTopple.addEventListener("click", executarTesteCompletoToppleDev);
+
+  botaoTestarCleave.addEventListener("click", executarTesteCompletoCleaveDev);
+
+  botaoTestarGraze.addEventListener("click", executarTesteCompletoGrazeDev);
+
+  botaoTestarNick.addEventListener("click", executarTesteCompletoNickDev);
+
+  botaoTestarFormacaoGuerreiro.addEventListener("click", executarTesteFormacaoGuerreiroDev);
+
+  botaoTestarClasseArmadura.addEventListener("click", executarTesteClasseArmaduraDev);
+
+  botaoTestarEquipamentoInicial.addEventListener("click", executarTesteEquipamentoInicialDev);
   atualizarVistaEditorVitrine();
   atualizarPrevia();
 })();

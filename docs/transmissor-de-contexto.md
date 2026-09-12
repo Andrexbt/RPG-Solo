@@ -1901,7 +1901,7 @@ O usuário pausou temporariamente a escrita de “A Fuga” por cansaço criativ
 3. Ladino nível 1;
 4. Clérigo nível 1.
 
-A exigência atual é mais rigorosa que o aceite histórico: o Guerreiro precisa reproduzir integralmente a experiência de nível 1 de D&D 2024 dentro do recorte público e licenciado do projeto. As regras oficiais disponíveis na pasta do projeto devem ser consultadas antes de confirmar cada comportamento. Tudo que faltar para essa experiência, inclusive dependências gerais de combate, tem prioridade.
+A exigência atual é mais rigorosa que o aceite histórico: o Guerreiro precisa reproduzir integralmente a experiência de nível 1 de D&D 2024 adotada pelo projeto. A auditoria de regras não deve ser limitada ao SRD: todos os livros básicos oficiais disponibilizados pelo usuário na pasta de fontes devem ser consultados antes de confirmar cada comportamento. O SRD continua sendo a referência para licenciamento e conteúdo publicável, não o limite mecânico usado no desenvolvimento. Tudo que faltar para essa experiência, inclusive dependências gerais de combate, tem prioridade.
 
 ### 2. Frente de equipamentos encerrada para esta retomada
 
@@ -1930,7 +1930,7 @@ A checklist de 2 de setembro contém evidências históricas de criação, Segun
 
 ### 4. Próximo passo obrigatório
 
-O próximo trabalho é criar e executar uma **auditoria automatizada do Guerreiro nível 1 no Laboratório DEV**, comparando o projeto com as regras oficiais de D&D 2024 disponíveis localmente.
+O próximo trabalho é criar e executar uma **auditoria automatizada do Guerreiro nível 1 no Laboratório DEV**, comparando o projeto com todos os livros básicos oficiais de D&D 2024 disponíveis localmente, e não apenas com o SRD.
 
 A primeira execução deve produzir uma lista objetiva de requisitos com estados **completo**, **parcial** ou **pendente**, cobrindo ao menos:
 
@@ -1987,3 +1987,17 @@ Na atualização deste suplemento, a branch é `main`, o último commit observad
 ### 9. Pendência arquitetural preservada
 
 A Central de Textos continua funcional, mas arquiteturalmente intermediária. Sua reorganização futura permanece necessária conforme descrito no suplemento 6.0. Ela não deve interromper a auditoria atual do Guerreiro.
+
+### 10. Adendo de continuidade — 11 de setembro de 2026
+
+**Correção sobre as fontes:** além do SRD presente na pasta local, os demais livros básicos oficiais estão anexados às fontes deste projeto no ChatGPT sob o nome **“RPG Solo - Fontes do Projeto”**. As auditorias de regras devem consultar também essa coleção. A ausência desses livros no workspace local não significa que estejam indisponíveis, e não é necessário solicitar que sejam copiados para o repositório. Esta correção substitui qualquer orientação posterior deste adendo que afirme o contrário.
+
+A validação automatizada do Guerreiro avançou e a suíte local alcançou 48 testes aprovados sem falhas. Criação, CA, equipamentos, Estilos de Luta, Segundo Fôlego, economia de turno, ataques de oportunidade, armas arremessáveis, dano fixo, persistência e as oito Maestrias em Armas possuem cobertura automatizada específica.
+
+O Ataque Desarmado possui dano e uma implementação parcial de Agarrar. Já funcionam CD, salvaguarda escolhida pelo alvo, mão livre, limite de tamanho, alcance, condição Agarrado, bloqueio de movimento voluntário, ação Escapar, liberação voluntária, encerramento por afastamento, incapacitação ou derrota e desvantagem contra alvos diferentes do agarrador. A conclusão de Agarrar ficou adiada junto com Empurrar. Permanecem pendentes principalmente arrastar ou carregar o alvo, Empurrar, interface normal de combate, integração completa com ataques de oportunidade e persistência específica no meio do combate.
+
+Também ficou adiada para uma próxima etapa a validação profunda de ponta a ponta pela interface, cobrindo criação → ficha → combate → continuidade e ausência de erros no console. O usuário já realizou verificações manuais desses elementos e os considera funcionais no estado atual; isso permite continuar as demais validações, mas não equivale ao aceite automatizado final exigido para declarar o Guerreiro concluído.
+
+Para economizar contexto sem perder qualidade, evitar reler documentos extensos a cada alteração pequena. Preferir leituras direcionadas e testes específicos; reservar releitura integral, suíte completa e percurso visual para marcos ou mudanças de maior risco. Antes de uma tarefa com consumo considerável de tokens, avisar o usuário e apresentar alternativas mais econômicas.
+
+O escopo mecânico adotado pelo usuário inclui todos os livros básicos oficiais, inclusive opções que não aparecem no SRD, como outros Estilos de Luta. Não remover nem reclassificar uma opção apenas por ela estar ausente do SRD. Em 11 de setembro de 2026, a cópia local acessível ao assistente mostrava somente `Fontes/srd-5.2.1.pdf`; antes de uma comparação integral com os livros básicos, confirmar que os demais arquivos estejam efetivamente disponíveis no workspace ou solicitar sua disponibilização.

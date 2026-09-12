@@ -616,6 +616,7 @@
   }
 
   window.SistemaDescansos = {
+    aplicarRecuperacaoDeRecursos,
     validarDescansoCurto,
     iniciarDescansoCurto,
     prepararGastoDadoVida,

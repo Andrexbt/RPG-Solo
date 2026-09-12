@@ -255,6 +255,10 @@ window.TradutorRegras = (function () {
       return false;
     }
 
+    if (condicao.propriedadeArma && !arma?.propriedades?.includes(condicao.propriedadeArma)) {
+      return false;
+    }
+
     if (
       condicao.usandoArmadura !== undefined &&
       Boolean(contexto?.usandoArmadura) !== condicao.usandoArmadura

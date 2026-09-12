@@ -12,17 +12,21 @@ global.document = {
   },
 };
 
+require("../banco-maestrias.js");
+require("../motor-testes.js");
+require("../motor-efeitos.js");
+require("../tradutor-regras.js");
 require("../combate.js");
 require("../testes-dev.js");
 
-test("armas arremessáveis, queda e arma cravada", async () => {
+test("economia completa do turno do Guerreiro", async () => {
   const resultado = await global.TestesDev.executarTeste(
-    "guerreiro.armas-arremessaveis",
+    "guerreiro.economia-turno",
   );
 
   assert.equal(
     resultado.status,
     "aprovado",
-    `${resultado.mensagem}\n${resultado.detalhes?.join("\n") ?? ""}`,
+    `${resultado.mensagem}\n${resultado.detalhes.join("\n")}`,
   );
 });

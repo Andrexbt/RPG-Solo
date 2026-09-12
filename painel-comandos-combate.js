@@ -123,7 +123,21 @@ function ativarEfeitoCombate(participante, operacao) {
 
   solicitarRolagemNaCaixa(rolagem.gruposDeDados, rolagem.modificador, operacao.origem.nome);
 
-  solicitacaoCombate.textContent = `Role os dados para usar ` + `${operacao.origem.nome}.`;
+  const expressaoRolagem =
+  window.formatarExpressaoRolagemNarrativa(rolagem);
+
+const mensagemRolagem =
+  operacao.tipo === "curar"
+    ? mensagensNarrativas.habilidades.pedirCura(
+        operacao.origem.nome,
+        expressaoRolagem,
+      )
+    : `Role os dados para usar ${operacao.origem.nome}.`;
+
+exibirMensagemNarrativa(
+  solicitacaoCombate,
+  mensagemRolagem,
+);
 
   solicitacaoCombate.hidden = false;
 
@@ -134,6 +148,7 @@ function renderizarEfeitosAtivaveisCombate(participante) {
   const efeitos = window.TradutorRegras.prepararOperacoes({
     gatilho: "aoAtivar",
     participante: participante,
+    modo: "combate",
   });
 
   let quantidadeAcoesBonus = 0;

@@ -75,34 +75,7 @@ function obterDadosArma(idArma) {
 }
 
 function personagemTemProficienciaComArma(personagemAtual, idArma) {
-  const arma = obterDadosArma(idArma);
-
-  if (arma === undefined) {
-    return false;
-  }
-
-  const dadosClasse = window.bancoClasses[personagemAtual.classeId];
-
-  if (dadosClasse === undefined || dadosClasse.proficiencias === undefined) {
-    return false;
-  }
-
-  const proficienciasArmas = dadosClasse.proficiencias.armas || [];
-  const armasEspecificas = dadosClasse.proficiencias.armasEspecificas || [];
-
-  if (armasEspecificas.includes(idArma)) {
-    return true;
-  }
-
-  if (arma.tipo === "simples" && proficienciasArmas.includes("Armas simples")) {
-    return true;
-  }
-
-  if (arma.tipo === "marcial" && proficienciasArmas.includes("Armas marciais")) {
-    return true;
-  }
-
-  return false;
+  return window.RegrasEquipamentos.personagemTemProficienciaComArma(personagemAtual, idArma);
 }
 
 function calcularBonusAtaqueArma(personagemAtual, idArma) {
@@ -171,15 +144,6 @@ function calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento = null
     armaEmpunhadaEmUmaMao,
     nenhumaOutraArmaEmpunhada,
   };
-
-  const incluiModificadorNaArmaSecundaria = window.TradutorRegras.possuiEfeitoPassivo(
-    contextoEstilo,
-    "incluirModificadorAtributoNoDano",
-  );
-
-  if (ehArmaSecundaria && !incluiModificadorNaArmaSecundaria) {
-    bonusDano = 0;
-  }
 
   bonusDano += window.TradutorRegras.calcularModificadorPassivo(
     contextoEstilo,
@@ -332,6 +296,10 @@ function criarAtaqueCombateArma(
 
   const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
 
+  const modificadorAtributo = calcularModificador(
+  personagemAtual.atributos[atributoAtaque],
+);
+
   const ataqueDistancia = arma.categoria === "distancia" || arremessando;
 
   return {
@@ -380,6 +348,8 @@ function criarAtaqueCombateArma(
 
       modificador: bonusDano === "" ? 0 : bonusDano,
 
+      modificadorAtributo,
+
       tipo: arma.tipoDano,
     },
 
@@ -389,9 +359,92 @@ function criarAtaqueCombateArma(
   };
 }
 
+window.RegrasFichaCriacao.criarAtaqueCombateArma =
+  criarAtaqueCombateArma;
+
+  function criarAtaqueCombateDesarmado(personagemAtual) {
+  const forcaInformada =
+  personagemAtual?.atributos?.forca;
+
+if (
+  forcaInformada === undefined ||
+  forcaInformada === null ||
+  forcaInformada === ""
+) {
+  return null;
+}
+
+const valorForca = Number(forcaInformada);
+
+if (!Number.isFinite(valorForca)) {
+  return null;
+}
+
+  const modificadorForca =
+    calcularModificador(valorForca);
+
+  const bonusAtaque =
+    modificadorForca + calcularBonusProficiencia();
+
+  const danoFixo = Math.max(
+    0,
+    1 + modificadorForca,
+  );
+
+  return {
+    id: "ataqueDesarmado",
+    instanciaId: "ataqueDesarmado",
+    armaId: null,
+    equipamentoInstanciaId: null,
+
+    nome: "Ataque Desarmado",
+
+    atributoId: "forca",
+    origemEquipamento: "corpo",
+    modoUso: "padrao",
+    arremesso: null,
+
+    custoPadrao: "acao",
+    categoria: "corpoACorpo",
+
+    selecao: {
+      tipo: "criatura",
+
+      alcance: {
+        normal: 1,
+        longo: null,
+      },
+
+      area: null,
+    },
+
+    bonusAtaque,
+
+    dano: {
+      gruposDeDados: [],
+      fixo: danoFixo,
+      modificador: danoFixo,
+      modificadorAtributo: modificadorForca,
+      tipo: "contundente",
+    },
+
+    maestriaId: null,
+    propriedades: [],
+  };
+}
+
+window.RegrasFichaCriacao.criarAtaqueCombateDesarmado =
+  criarAtaqueCombateDesarmado;
+  
 function atualizarAtaquesCombatePersonagem() {
   const equipamentos = personagem.detalhes.equipamentos;
   const ataques = [];
+  const ataqueDesarmado =
+  criarAtaqueCombateDesarmado(personagem);
+
+if (ataqueDesarmado) {
+  ataques.push(ataqueDesarmado);
+}
 
   function adicionarAtaquesDaArma(idArma, origemEquipamento) {
     const arma = obterDadosArma(idArma);
@@ -443,78 +496,6 @@ function obterNomeArma(idArma) {
   }
 
   return arma.nome;
-}
-
-function preencherSelectArmaduras() {
-  const selecaoAnterior = armaduraInicial.value;
-
-  armaduraInicial.replaceChildren();
-
-  const opcaoInicial = document.createElement("option");
-  opcaoInicial.value = "";
-  opcaoInicial.textContent = "Escolha";
-  armaduraInicial.append(opcaoInicial);
-
-  for (const [id, armadura] of Object.entries(window.bancoEquipamentos.armaduras)) {
-    const opcao = document.createElement("option");
-
-    opcao.value = id;
-    opcao.textContent = armadura.nome;
-
-    armaduraInicial.append(opcao);
-  }
-
-  armaduraInicial.value = selecaoAnterior;
-}
-
-function preencherSelectArmas() {
-  preencherSelectArma(armaPrincipal, "Escolha uma arma");
-
-  preencherSelectArma(armaSecundaria, "Escolha uma arma secundária");
-}
-
-function preencherSelectArma(elementoSelect, textoInicial) {
-  if (!elementoSelect) {
-    return;
-  }
-
-  const valorAnterior = elementoSelect.value;
-
-  elementoSelect.innerHTML = "";
-
-  const opcaoInicial = document.createElement("option");
-
-  opcaoInicial.value = "";
-  opcaoInicial.textContent = textoInicial;
-
-  elementoSelect.appendChild(opcaoInicial);
-
-  for (const [idArma, arma] of Object.entries(window.bancoEquipamentos.armas)) {
-    const opcao = document.createElement("option");
-
-    opcao.value = idArma;
-
-    opcao.textContent = typeof arma === "string" ? arma : arma.nome;
-
-    elementoSelect.appendChild(opcao);
-  }
-
-  if (valorAnterior && window.bancoEquipamentos.armas[valorAnterior]) {
-    elementoSelect.value = valorAnterior;
-  }
-}
-
-function atualizarVisibilidadeArmaSecundaria() {
-  if (grupoArmaSecundaria === null || armaSecundaria === null) {
-    return;
-  }
-
-  if (itemSecundario.value === "armaSecundaria") {
-    grupoArmaSecundaria.classList.remove("escondida");
-  } else {
-    grupoArmaSecundaria.classList.add("escondida");
-    armaSecundaria.value = "";
-  }
 }
 
 function criarLinhaAtaque(resumo) {

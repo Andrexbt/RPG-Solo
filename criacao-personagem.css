@@ -1781,6 +1781,21 @@ label,
   aspect-ratio: 1774 / 887;
 }
 
+.resumo-orcamento-loja {
+  position: absolute;
+  z-index: 12;
+  top: 1rem;
+  left: 50%;
+  display: flex;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  color: #f7ead0;
+  background: rgb(24 17 12 / 88%);
+  border: 1px solid rgb(211 170 91 / 70%);
+  border-radius: 0.65rem;
+  transform: translateX(-50%);
+}
+
 .modal-equipamentos::before,
 .modal-equipamentos::after {
   display: none;
@@ -1961,6 +1976,19 @@ label,
   white-space: pre-line;
 }
 
+button.nome-equipamento-vitrine {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+button.nome-equipamento-vitrine:hover,
+button.nome-equipamento-vitrine:focus-visible {
+  color: #fff5d5;
+  filter: brightness(1.16);
+  outline: 2px solid #ffe3a0;
+  outline-offset: 2px;
+}
+
 .nome-equipamento-vitrine::before,
 .nome-equipamento-vitrine::after {
   content: "";
@@ -1980,6 +2008,127 @@ label,
 
 .nome-equipamento-vitrine::after {
   right: 4px;
+}
+
+.nome-equipamento-vitrine.proficiencia-permitida {
+  border: 2px solid #3fcf72;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 246, 207, 0.72),
+    inset 0 -1px 0 rgba(48, 28, 13, 0.75),
+    0 0 8px rgba(63, 207, 114, 0.9);
+}
+
+.nome-equipamento-vitrine.proficiencia-nao-permitida {
+  border: 2px solid #d94b4b;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 246, 207, 0.72),
+    inset 0 -1px 0 rgba(48, 28, 13, 0.75),
+    0 0 8px rgba(217, 75, 75, 0.9);
+}
+
+.detalhe-arma-loja {
+  position: absolute;
+  inset: 6% 8%;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(280px, 1.2fr);
+  gap: clamp(18px, 4vw, 52px);
+  align-items: center;
+  padding: clamp(22px, 4vw, 56px);
+  border: 2px solid #9e7644;
+  border-radius: 10px;
+  color: #f5e7c5;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(118, 74, 35, 0.35), transparent 38%),
+    linear-gradient(145deg, rgba(24, 15, 10, 0.98), rgba(48, 29, 16, 0.98));
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.75);
+}
+
+.detalhe-arma-loja > img {
+  width: 100%;
+  max-height: 62vh;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.8));
+}
+
+.botao-fechar-detalhe-arma {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #9e7644;
+  color: #ffe4aa;
+  background: rgba(20, 12, 8, 0.8);
+  font: 700 2rem/1 serif;
+  cursor: pointer;
+}
+
+.conteudo-detalhe-arma h2 {
+  margin: 6px 0 18px;
+  color: #ffe5a8;
+  font-family: Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+}
+
+.estado-proficiencia-arma {
+  display: inline-block;
+  margin: 0;
+  padding: 5px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.estado-proficiencia-arma.proficiencia-permitida {
+  color: #70e696;
+}
+
+.estado-proficiencia-arma.proficiencia-nao-permitida {
+  color: #ff7d75;
+}
+
+#dadosDetalheEquipamento {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 18px;
+  margin: 0 0 20px;
+}
+
+#dadosDetalheEquipamento dt {
+  color: #d9b97d;
+  font-weight: 800;
+}
+
+#dadosDetalheEquipamento dd {
+  margin: 0;
+}
+
+.acoes-detalhe-arma {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.acoes-detalhe-arma button {
+  padding: 10px 14px;
+  border: 1px solid #c99a55;
+  color: #21150c;
+  background: linear-gradient(#f2d99f, #b98b4e);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.acoes-detalhe-arma button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1) brightness(0.65);
+}
+
+.mensagem-detalhe-arma {
+  min-height: 1.4em;
+  margin-bottom: 0;
+  color: #d7c39d;
 }
 
 .arma-vitrine:hover,

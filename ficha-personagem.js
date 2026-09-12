@@ -231,38 +231,7 @@
   }
 
   function personagemTemProficienciaComArma(personagemAtual, idArma) {
-    const arma = obterDadosArma(idArma);
-
-    if (arma === undefined || typeof arma === "string") {
-      return false;
-    }
-
-    if (window.bancoClasses === undefined) {
-      return false;
-    }
-
-    const dadosClasse = window.bancoClasses[personagemAtual.classeId];
-
-    if (dadosClasse === undefined || dadosClasse.proficiencias === undefined) {
-      return false;
-    }
-
-    const proficienciasArmas = dadosClasse.proficiencias.armas || [];
-    const armasEspecificas = dadosClasse.proficiencias.armasEspecificas || [];
-
-    if (armasEspecificas.includes(idArma)) {
-      return true;
-    }
-
-    if (arma.tipo === "simples" && proficienciasArmas.includes("Armas simples")) {
-      return true;
-    }
-
-    if (arma.tipo === "marcial" && proficienciasArmas.includes("Armas marciais")) {
-      return true;
-    }
-
-    return false;
+    return window.RegrasEquipamentos.personagemTemProficienciaComArma(personagemAtual, idArma);
   }
 
   function personagemTemEstiloDeLuta(personagemAtual, idEstilo) {

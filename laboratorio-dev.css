@@ -444,7 +444,247 @@
   background: rgba(91, 54, 25, 0.96);
 }
 
+.laboratorio-turno-dev {
+  display: grid;
+  gap: 18px;
+}
+
+.seletor-cenario-turno-dev {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr)) auto;
+  align-items: end;
+  gap: 14px;
+}
+
+.seletor-cenario-turno-dev label {
+  display: grid;
+  gap: 7px;
+  color: var(--cor-texto);
+  font-weight: 800;
+}
+
+.seletor-cenario-turno-dev select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.5);
+  border-radius: 7px;
+  color: var(--cor-texto);
+  background: #211713;
+  font: inherit;
+}
+
+.arena-turno-dev {
+  min-width: 0;
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+  overflow-x: auto;
+  border: 1px solid rgba(215, 163, 95, 0.42);
+  border-radius: 14px;
+  background: linear-gradient(rgba(45, 29, 21, 0.96), rgba(25, 17, 13, 0.98));
+}
+
+.arena-turno-dev[hidden] {
+  display: none;
+}
+
+.cabecalho-arena-turno-dev {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cabecalho-arena-turno-dev span {
+  color: #d7a35f;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cabecalho-arena-turno-dev h3 {
+  margin: 3px 0 0;
+  color: #fff1c4;
+}
+
+.estado-turno-dev {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.estado-turno-dev p {
+  margin: 0;
+  padding: 10px 12px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(215, 163, 95, 0.25);
+  border-radius: 8px;
+  background: rgba(15, 10, 8, 0.42);
+}
+
+.estado-turno-dev span {
+  color: var(--cor-texto-suave);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.estado-turno-dev strong {
+  color: #f1d79e;
+}
+
+.comandos-turno-dev,
+.observador-turno-dev {
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(215, 163, 95, 0.25);
+  border-radius: 10px;
+  background: rgba(18, 12, 9, 0.48);
+}
+
+.comandos-turno-dev h3,
+.observador-turno-dev h3,
+.comandos-turno-dev p {
+  margin: 0;
+}
+
+.acoes-turno-dev {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.acao-turno-dev:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.75);
+  opacity: 0.48;
+}
+
+.resultados-turno-dev {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.etapa-turno-dev {
+  color: var(--cor-texto-suave);
+}
+
+.etapa-turno-dev.concluida {
+  color: #9ce2aa;
+  font-weight: 800;
+}
+
+.tabuleiro-turno-dev {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(48px, 1fr));
+  grid-template-rows: repeat(12, minmax(48px, 1fr));
+  min-width: 720px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid rgba(215, 163, 95, 0.65);
+  border-radius: 12px;
+  background:
+    linear-gradient(rgba(42, 31, 23, 0.18), rgba(24, 17, 13, 0.34)),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 calc(100% / 12 - 1px),
+      rgba(232, 204, 148, 0.18) calc(100% / 12 - 1px) calc(100% / 12)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 calc(100% / 12 - 1px),
+      rgba(232, 204, 148, 0.18) calc(100% / 12 - 1px) calc(100% / 12)
+    ),
+    #594832;
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.32),
+    0 16px 32px rgba(0, 0, 0, 0.3);
+}
+
+.token-turno-dev {
+  position: relative;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  margin: auto;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  justify-self: center;
+  border: 3px solid;
+  border-radius: 50%;
+  color: #fff8df;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.48),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+.token-jogador-turno-dev {
+  border-color: #8bdda0;
+  background: radial-gradient(circle at 35% 30%, #477d52, #203c27 75%);
+}
+
+.token-inimigo-turno-dev {
+  border-color: #ef8a7f;
+  background: radial-gradient(circle at 35% 30%, #95463f, #52221f 75%);
+}
+
+.nome-token-turno-dev {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  width: max-content;
+  max-width: 110px;
+  padding: 2px 6px;
+  overflow: hidden;
+  border-radius: 4px;
+  color: #fff4d2;
+  background: rgba(22, 14, 10, 0.88);
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.pv-token-turno-dev {
+  font-size: 0.58rem;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.token-turno-dev:focus-visible {
+  outline: 3px solid #f0c36f;
+  outline-offset: 3px;
+}
+
 @media (max-width: 800px) {
+  .seletor-cenario-turno-dev {
+    grid-template-columns: 1fr;
+  }
+
+  .cabecalho-arena-turno-dev {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .estado-turno-dev {
+    grid-template-columns: repeat(2, minmax(110px, 1fr));
+  }
+
+  .tabuleiro-turno-dev {
+    min-width: 600px;
+  }
+
   .bancada-arremessos-dev {
     grid-template-columns: 1fr;
   }

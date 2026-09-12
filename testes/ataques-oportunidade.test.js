@@ -12,17 +12,22 @@ global.document = {
   },
 };
 
+require("../motor-dados.js");
+require("../motor-testes.js");
+require("../banco-maestrias.js");
+require("../motor-efeitos.js");
+require("../tradutor-regras.js");
 require("../combate.js");
 require("../testes-dev.js");
 
-test("armas arremessáveis, queda e arma cravada", async () => {
+test("regras completas dos ataques de oportunidade", async () => {
   const resultado = await global.TestesDev.executarTeste(
-    "guerreiro.armas-arremessaveis",
+    "guerreiro.ataques-oportunidade",
   );
 
   assert.equal(
     resultado.status,
     "aprovado",
-    `${resultado.mensagem}\n${resultado.detalhes?.join("\n") ?? ""}`,
+    `${resultado.mensagem}\n${resultado.detalhes.join("\n")}`,
   );
 });

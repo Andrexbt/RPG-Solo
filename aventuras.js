@@ -1896,6 +1896,30 @@ async function resolverAtaqueJogador(resultadoRolagem) {
     resultadoAtaque.acertoCritico ? "Você conseguiu um acerto crítico." : "Você acertou o ataque.",
   );
 
+  const valorDanoFixo =
+  resultadoAtaque.ataque.dano?.fixo;
+
+const possuiDanoFixo =
+  valorDanoFixo !== undefined &&
+  valorDanoFixo !== null &&
+  Number.isFinite(Number(valorDanoFixo));
+
+if (possuiDanoFixo) {
+  const danoFixo = Math.max(
+    0,
+    Number(valorDanoFixo),
+  );
+
+  concluirDanoJogador(combate, {
+    gruposRolados: [],
+    subtotal: 0,
+    modificador: danoFixo,
+    total: danoFixo,
+  });
+
+  return;
+}
+
   const textoDano = formatarRolagemDano(resultadoAtaque.ataque);
 
   const gruposDano = obterGruposDanoParaRolagem(

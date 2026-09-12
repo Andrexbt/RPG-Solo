@@ -411,39 +411,48 @@
               >
                 Escolher equipamento
               </button>
-              <div class="campo-formulario">
-                <label for="armaduraInicial">Armadura</label>
-                <select id="armaduraInicial">
-                  <option value="">Escolha</option>
-                  <option value="semArmadura">Sem armadura</option>
-                  <option value="couro">Armadura de couro</option>
-                  <option value="cotaDeMalha">Cota de malha</option>
-                </select>
-              </div>
+              
+              <section
+  class="configuracao-inicial-equipamentos"
+  aria-labelledby="tituloConfiguracaoInicial"
+>
+  <h4 id="tituloConfiguracaoInicial">
+    Equipamento Inicial
+  </h4>
 
-              <div class="campo-formulario">
-                <label for="armaPrincipal">Arma principal</label>
-                <select id="armaPrincipal">
-                  <option value="">Escolha</option>
-                </select>
-              </div>
+  <p>
+    Escolha seus equipamentos iniciais e configure-os para o combate.
+  </p>
 
-              <div class="campo-formulario">
-                <label for="itemSecundario">Item secundário</label>
-                <select id="itemSecundario">
-                  <option value="">Escolha</option>
-                  <option value="escudo">Escudo</option>
-                  <option value="armaSecundaria">Arma secundária</option>
-                  <option value="nada">Nada</option>
-                </select>
-              </div>
+  <div class="slots-configuracao-equipamentos">
+    <button
+      type="button"
+      class="slot-configuracao-equipamento"
+      id="botaoConfigurarArmadura"
+    >
+      <span class="rotulo-slot-equipamento">Armadura</span>
+      <strong id="nomeArmaduraConfigurada">Nenhuma</strong>
+    </button>
 
-              <div class="campo-formulario escondida" id="grupoArmaSecundaria">
-                <label for="armaSecundaria">Escolha a arma secundária</label>
-                <select id="armaSecundaria">
-                  <option value="">Escolha uma arma</option>
-                </select>
-              </div>
+    <button
+      type="button"
+      class="slot-configuracao-equipamento"
+      id="botaoConfigurarMao1"
+    >
+      <span class="rotulo-slot-equipamento">Arma Principal</span>
+      <strong id="nomeEquipamentoMao1">Vazia</strong>
+    </button>
+
+    <button
+      type="button"
+      class="slot-configuracao-equipamento"
+      id="botaoConfigurarMao2"
+    >
+      <span class="rotulo-slot-equipamento">Arma Secundária</span>
+      <strong id="nomeEquipamentoMao2">Vazia</strong>
+    </button>
+  </div>
+</section>
 
               <p class="aviso-equipamentos" id="avisoEquipamentos"></p>
             </section>
@@ -545,6 +554,12 @@
         aria-modal="true"
         aria-label="Loja de equipamentos"
       >
+        <aside class="resumo-orcamento-loja" aria-live="polite">
+          <span>Orçamento: <strong id="orcamentoTotalLoja">0 PO</strong></span>
+          <span>Disponível: <strong id="saldoOrcamentoLoja">0 PO</strong></span>
+          <span>Guardado: <strong id="ouroRetidoLoja">0 PO</strong></span>
+        </aside>
+
         <button
           type="button"
           class="botao-fechar-loja"
@@ -553,6 +568,37 @@
         >
           ×
         </button>
+
+        <section class="detalhe-arma-loja escondida" id="detalheArmaLoja" aria-live="polite">
+          <button
+            type="button"
+            class="botao-fechar-detalhe-arma"
+            id="botaoFecharDetalheArma"
+            aria-label="Voltar para a loja"
+          >
+            ×
+          </button>
+
+          <img id="imagemDetalheEquipamento" alt="" />
+
+          <div class="conteudo-detalhe-arma">
+            <p class="estado-proficiencia-arma" id="estadoCompatibilidadeEquipamento"></p>
+            <h2 id="nomeDetalheEquipamento"></h2>
+            <dl id="dadosDetalheEquipamento"></dl>
+
+            <div class="acoes-detalhe-arma">
+              <button type="button" id="botaoAdicionarEquipamentoLoja">
+                Comprar
+              </button>
+              
+              <button type="button" id="botaoRemoverEquipamentoLoja">
+                Devolver
+              </button>
+            </div>
+
+            <p class="mensagem-detalhe-arma" id="mensagemDetalheEquipamento"></p>
+          </div>
+        </section>
 
         <div class="vistas-loja">
           <div class="trilho-vistas-loja" id="trilhoVistasLoja">
@@ -589,6 +635,47 @@
         </button>
       </div>
     </div>
+
+    <div
+  class="modal-overlay escondida"
+  id="modalConfiguracaoEquipamento"
+>
+  <section
+    class="modal modal-configuracao-equipamento"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tituloModalConfiguracaoEquipamento"
+  >
+    <button
+      type="button"
+      class="botao-fechar-modal"
+      id="botaoFecharConfiguracaoEquipamento"
+      aria-label="Fechar configuração"
+    >
+      ×
+    </button>
+
+    <h2 id="tituloModalConfiguracaoEquipamento">
+      Escolher equipamento
+    </h2>
+
+    <p id="descricaoModalConfiguracaoEquipamento">
+      Escolha um item do inventário.
+    </p>
+
+    <div
+      class="lista-configuracao-equipamento"
+      id="listaConfiguracaoEquipamento"
+    ></div>
+
+    <button
+      type="button"
+      id="botaoEsvaziarSlotEquipamento"
+    >
+      Deixar vazio
+    </button>
+  </section>
+</div>
     <!-- =====================================================
        Modal de classe
        -----------------------------------------------------
@@ -822,6 +909,7 @@
     <script src="banco-magias.js"></script>
 
     <script src="banco-equipamentos.js"></script>
+    <script src="regras-equipamentos.js"></script>
     <script src="configuracao-vitrine-equipamentos.js"></script>
 
     <script src="banco-maestrias.js"></script>

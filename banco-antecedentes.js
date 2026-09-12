@@ -11,6 +11,7 @@ window.bancoAntecedentes = {
   acolito: {
     id: "acolito",
     nome: "Acólito",
+    ouroInicial: 8,
     descricaoCurta:
       "Você viveu parte da sua vida em um templo, ou vários, se dedicando ao estudo de algum deus ou religião.",
 
@@ -90,6 +91,7 @@ window.bancoAntecedentes = {
   soldado: {
     id: "soldado",
     nome: "Soldado",
+    ouroInicial: 14,
     descricaoCurta:
       "Assim que atingiu a maioridade, você começou a se dedicar ao treinamento militar, aprendendo técnicas marciais e adquirindo experiência em combate.",
 
@@ -190,6 +192,7 @@ window.bancoAntecedentes = {
   sabio: {
     id: "sabio",
     nome: "Sábio",
+    ouroInicial: 8,
     descricaoCurta:
       "Você dedicou sua vida à busca por conhecimento, estivesse ele odne estivesse. E você sabe que há ainda mais a aprender.",
 
@@ -284,6 +287,7 @@ window.bancoAntecedentes = {
   criminoso: {
     id: "criminoso",
     nome: "Criminoso",
+    ouroInicial: 16,
     descricaoCurta:
       "Você aprendeu a sobreviver à margem da lei e da sociedade, fazendo o que fosse preciso para sobreviver até o dia seguinte.",
 
