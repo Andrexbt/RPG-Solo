@@ -395,9 +395,16 @@ async function registrarResultadoTurnoInimigo(resultado, participante) {
   exibirAcaoAtualCombate(`${participante.nome} acertou o ataque.`);
 
   if (resultado.alvo.tipo === "jogador") {
+    const reducao = Number(
+  resultado.resultadoDano.reducaoInterceptacao,
+) || 0;
+
+const textoInterceptacao = reducao > 0
+  ? `Interceptação reduziu o dano em ${reducao}. `
+  : "";
     adicionarEventoHistoricoCombate(
       `${participante.nome} acertou o ataque`,
-      `Você sofreu ` +
+      textoInterceptacao + `Você sofreu ` +
         `${resultado.resultadoDano.dano} de dano. ` +
         `Seus pontos de vida restantes são ` +
         `${resultado.resultadoDano.pontosDeVidaRestantes}.`,
@@ -1163,6 +1170,30 @@ function abrirOfertaAtaqueOportunidade(decisao) {
   });
 }
 
+function abrirOfertaInterceptacao(decisao) {
+  const atacante = decisao.resultadoAtaque?.atacante;
+  const alvo = decisao.resultadoAtaque?.alvo;
+  const interceptadorId = decisao.participantesIds?.[0];
+
+  tituloDecisaoCombate.textContent = "Interceptação";
+
+  mensagemDecisaoCombate.textContent =
+    `${atacante?.nome ?? "Uma criatura"} acertou ` +
+    `${alvo?.nome ?? "o alvo"}. ` +
+    "Deseja gastar sua reação para reduzir o dano em 1d10 " +
+    "mais seu bônus de proficiência?";
+
+  botaoConfirmarDecisaoCombate.textContent = "Interceptar";
+  botaoCancelarDecisaoCombate.textContent = "Deixar passar";
+
+  camadaDecisaoCombate.hidden = false;
+
+  window.requestAnimationFrame(() => {
+    posicionarDecisaoProximaAoParticipante(interceptadorId);
+    botaoCancelarDecisaoCombate.focus();
+  });
+}
+
 function abrirDecisaoPendenteCombate(decisao) {
   if (!decisao) {
     return false;
@@ -1180,6 +1211,11 @@ function abrirDecisaoPendenteCombate(decisao) {
     return true;
   }
 
+  if (decisao.tipo === "oferecerInterceptacao") {
+  abrirOfertaInterceptacao(decisao);
+  return true;
+}
+
   console.warn("Tipo de decisão não reconhecido:", decisao.tipo);
 
   return false;
@@ -1189,6 +1225,38 @@ async function confirmarDecisaoCombate() {
   const combate = estadoAtualJogo.combateAtual;
 
   const decisao = combate?.decisaoPendente;
+
+  if (decisao?.tipo === "oferecerInterceptacao") {
+  const participanteId = decisao.participantesIds?.[0];
+
+  const ativacao = SistemaCombate.ativarInterceptacao(
+    combate,
+    decisao.resultadoAtaque,
+    participanteId,
+  );
+
+  if (!ativacao.sucesso) {
+    console.warn(
+      "Não foi possível usar Interceptação:",
+      ativacao.motivo,
+    );
+    return;
+  }
+
+  fecharDecisaoCombate();
+  atualizarInterfaceTurno(combate);
+
+  solicitarRolagemNaCaixa(
+    ativacao.interceptacao.gruposDeDados,
+    ativacao.interceptacao.modificador,
+    "Redução de dano da Interceptação",
+  );
+
+  solicitacaoCombate.textContent =
+    "Role 1d10 para reduzir o dano; seu bônus de proficiência será somado.";
+  solicitacaoCombate.hidden = false;
+  return;
+}
 
   if (decisao?.tipo === "oferecerAtaqueOportunidade") {
     const inimigo = combate.participantes.find(function (participante) {
@@ -1264,10 +1332,55 @@ async function confirmarDecisaoCombate() {
   });
 }
 
+async function concluirDecisaoInterceptacao(combate, decisao) {
+  const resultado = SistemaCombate.concluirDanoTurnoInimigo(
+    combate,
+    decisao.resultadoAtaque,
+  );
+
+  if (!resultado.sucesso) {
+    console.warn(
+      "Não foi possível concluir o dano inimigo:",
+      resultado.motivo,
+    );
+    return false;
+  }
+
+  combate.decisaoPendente = null;
+  fecharDecisaoCombate();
+
+  solicitacaoCombate.textContent = "";
+  solicitacaoCombate.hidden = true;
+
+  await registrarResultadoTurnoInimigo(
+    resultado,
+    resultado.inimigo,
+  );
+
+  atualizarInterfaceTurno(combate);
+
+  if (combate.status !== "ativo") {
+    notificarFimCombate(combate);
+    return true;
+  }
+
+  if (combate.participanteAtivoId === resultado.inimigo.id) {
+    SistemaCombate.encerrarTurno(combate);
+    processarTurnoAtual(combate);
+  }
+
+  return true;
+}
+
 async function cancelarDecisaoCombate() {
   const combate = estadoAtualJogo.combateAtual;
 
   const decisao = combate?.decisaoPendente;
+
+  if (decisao?.tipo === "oferecerInterceptacao") {
+  await concluirDecisaoInterceptacao(combate, decisao);
+  return;
+}
 
   if (decisao?.tipo === "oferecerAtaqueOportunidade") {
     const inimigo = combate.participantes.find(function (participante) {

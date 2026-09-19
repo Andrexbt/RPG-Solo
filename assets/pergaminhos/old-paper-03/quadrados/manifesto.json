@@ -1,0 +1,138 @@
+{
+  "source": "assets/recursos/old-paper-03.webp",
+  "layout": "quadrados",
+  "rows": 4,
+  "columns": 4,
+  "width": 1280,
+  "height": 1280,
+  "pieces": [
+    {
+      "number": 1,
+      "file": "recomponiveis/p01.png",
+      "x": 5,
+      "y": 8,
+      "width": 324,
+      "height": 322
+    },
+    {
+      "number": 2,
+      "file": "recomponiveis/p02.png",
+      "x": 303,
+      "y": 3,
+      "width": 346,
+      "height": 318
+    },
+    {
+      "number": 3,
+      "file": "recomponiveis/p03.png",
+      "x": 615,
+      "y": 9,
+      "width": 357,
+      "height": 312
+    },
+    {
+      "number": 4,
+      "file": "recomponiveis/p04.png",
+      "x": 954,
+      "y": 10,
+      "width": 321,
+      "height": 319
+    },
+    {
+      "number": 5,
+      "file": "recomponiveis/p05.png",
+      "x": 6,
+      "y": 312,
+      "width": 320,
+      "height": 353
+    },
+    {
+      "number": 6,
+      "file": "recomponiveis/p06.png",
+      "x": 317,
+      "y": 313,
+      "width": 332,
+      "height": 329
+    },
+    {
+      "number": 7,
+      "file": "recomponiveis/p07.png",
+      "x": 628,
+      "y": 316,
+      "width": 338,
+      "height": 328
+    },
+    {
+      "number": 8,
+      "file": "recomponiveis/p08.png",
+      "x": 949,
+      "y": 304,
+      "width": 329,
+      "height": 358
+    },
+    {
+      "number": 9,
+      "file": "recomponiveis/p09.png",
+      "x": 2,
+      "y": 630,
+      "width": 325,
+      "height": 338
+    },
+    {
+      "number": 10,
+      "file": "recomponiveis/p10.png",
+      "x": 314,
+      "y": 629,
+      "width": 335,
+      "height": 335
+    },
+    {
+      "number": 11,
+      "file": "recomponiveis/p11.png",
+      "x": 637,
+      "y": 640,
+      "width": 335,
+      "height": 330
+    },
+    {
+      "number": 12,
+      "file": "recomponiveis/p12.png",
+      "x": 950,
+      "y": 632,
+      "width": 330,
+      "height": 331
+    },
+    {
+      "number": 13,
+      "file": "recomponiveis/p13.png",
+      "x": 5,
+      "y": 956,
+      "width": 324,
+      "height": 317
+    },
+    {
+      "number": 14,
+      "file": "recomponiveis/p14.png",
+      "x": 314,
+      "y": 958,
+      "width": 349,
+      "height": 316
+    },
+    {
+      "number": 15,
+      "file": "recomponiveis/p15.png",
+      "x": 635,
+      "y": 950,
+      "width": 332,
+      "height": 327
+    },
+    {
+      "number": 16,
+      "file": "recomponiveis/p16.png",
+      "x": 954,
+      "y": 948,
+      "width": 315,
+      "height": 324
+    }
+  ]
+}

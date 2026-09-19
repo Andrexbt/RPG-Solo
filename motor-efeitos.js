@@ -184,6 +184,40 @@ function prepararOperacaoGenerica(efeito, contexto = {}) {
     };
   }
 
+  if (efeito.tipo === "solicitarReducaoDano") {
+    return {
+      sucesso: true,
+      tipo: "solicitarReducaoDano",
+
+      participanteId: contexto?.participante?.id ?? null,
+      alvoId: contexto?.alvo?.id ?? null,
+
+      gruposDeDados: structuredClone(efeito.gruposDeDados ?? []),
+
+      modificador: efeito.adicionarBonusProficiencia
+        ? Number(contexto?.participante?.bonusProficiencia) || 0
+        : 0,
+    };
+  }
+
+  if (efeito.tipo === "solicitarDanoSemAcerto") {
+    return {
+      sucesso: true,
+
+      tipo: "solicitarDanoSemAcerto",
+
+      participanteId: contexto?.participante?.id ?? null,
+
+      alvoId: contexto?.alvo?.id ?? null,
+
+      gruposDeDados: structuredClone(efeito.gruposDeDados ?? []),
+
+      modificador: Number(efeito.modificador) || 0,
+
+      tipoDano: efeito.tipoDano ?? null,
+    };
+  }
+
   if (efeito.tipo === "causarDanoSemAcerto") {
     const atributoId = contexto?.ataque?.atributoId;
 

@@ -109,8 +109,13 @@ function calcularBonusAtaqueArma(personagemAtual, idArma) {
   return bonusAtaque;
 }
 
-function calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento = null) {
+function calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento = null, modoUso = "padrao",) {
   const arma = obterDadosArma(idArma);
+
+  const modoUsoNormalizado = normalizarModoUsoArma(arma, modoUso);
+
+const ataqueADistancia =
+  arma?.categoria === "distancia" || modoUsoNormalizado === "arremesso";
 
   if (arma === undefined) {
     return "";
@@ -143,6 +148,7 @@ function calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento = null
     ataqueComArmaSecundaria: ehArmaSecundaria,
     armaEmpunhadaEmUmaMao,
     nenhumaOutraArmaEmpunhada,
+    ataqueADistancia,
   };
 
   bonusDano += window.TradutorRegras.calcularModificadorPassivo(
@@ -280,19 +286,54 @@ function criarAtaqueCombateArma(
 
   const arremessando = modoUsoNormalizado === "arremesso";
 
+  const usandoVersatilDuasMaos =
+  modoUsoNormalizado === "versatilDuasMaos";
+
   if (arremessando && !arma.propriedades?.includes("arremesso")) {
     return null;
   }
 
-  const grupoDano = converterDanoArma(arma.dano);
+  if (
+  usandoVersatilDuasMaos &&
+  (!arma.propriedades?.includes("versatil") || !arma.danoVersatil)
+) {
+  return null;
+}
+
+const empunhadaComDuasMaos =
+  arma.propriedades?.includes("duasMaos") ||
+  usandoVersatilDuasMaos;
+
+const equipamentos = personagemAtual?.detalhes?.equipamentos;
+
+const outraMaoOcupada =
+  origemEquipamento === "armaPrincipal"
+    ? ["armaSecundaria", "escudo"].includes(
+        equipamentos?.itemSecundario,
+      )
+    : origemEquipamento === "armaSecundaria"
+      ? Boolean(equipamentos?.armaPrincipal)
+      : false;
+
+if (empunhadaComDuasMaos && outraMaoOcupada) {
+  return null;
+}
+
+  const danoUsado = usandoVersatilDuasMaos
+  ? arma.danoVersatil
+  : arma.dano;
+
+const grupoDano = converterDanoArma(danoUsado);
 
   if (!grupoDano) {
     return null;
   }
 
+  grupoDano.origem = "arma";
+
   const bonusAtaque = calcularBonusAtaqueArma(personagemAtual, idArma);
 
-  const bonusDano = calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento);
+  const bonusDano = calcularBonusDanoArma(personagemAtual, idArma, origemEquipamento, modoUsoNormalizado,);
 
   const atributoAtaque = obterAtributoAtaqueDaArma(personagemAtual, idArma);
 
@@ -305,18 +346,24 @@ function criarAtaqueCombateArma(
   return {
     id: idArma,
 
-    instanciaId: arremessando
-      ? `${idArma}:${origemEquipamento}:arremesso`
-      : `${idArma}:${origemEquipamento}`,
+    instanciaId: usandoVersatilDuasMaos
+  ? `${idArma}:${origemEquipamento}:versatilDuasMaos`
+  : arremessando
+    ? `${idArma}:${origemEquipamento}:arremesso`
+    : `${idArma}:${origemEquipamento}`,
 
-    modoUso: modoUsoNormalizado,
+    modoUso: modoUsoNormalizado, empunhadaComDuasMaos,
 
     arremesso: arremessando ? structuredClone(arma.arremesso ?? {}) : null,
 
     armaId: idArma,
     equipamentoInstanciaId: `${idArma}:${origemEquipamento}`,
 
-    nome: arremessando ? `${arma.nome} (arremesso)` : arma.nome,
+    nome: usandoVersatilDuasMaos
+  ? `${arma.nome} (duas mãos)`
+  : arremessando
+    ? `${arma.nome} (arremesso)`
+    : arma.nome,
 
     atributoId: atributoAtaque,
 
@@ -386,6 +433,29 @@ if (!Number.isFinite(valorForca)) {
   const bonusAtaque =
     modificadorForca + calcularBonusProficiencia();
 
+      const efeitoCombateDesarmado =
+    window.TradutorRegras?.obterEfeitosPassivos(
+      {
+        participante: personagemAtual,
+      },
+      "substituirDanoAtaqueDesarmado",
+    )?.[0]?.efeito ?? null;
+
+  const configuracao =
+    personagemAtual?.configuracaoInicialCombate;
+
+  const semArmaOuEscudo =
+    Boolean(configuracao) &&
+    !configuracao.mao1 &&
+    !configuracao.mao2;
+
+  const facesDadoCombateDesarmado =
+    efeitoCombateDesarmado
+      ? semArmaOuEscudo
+        ? efeitoCombateDesarmado.dadoSemArmaOuEscudo
+        : efeitoCombateDesarmado.dadoPadrao
+      : null;
+
   const danoFixo = Math.max(
     0,
     1 + modificadorForca,
@@ -421,12 +491,29 @@ if (!Number.isFinite(valorForca)) {
     bonusAtaque,
 
     dano: {
-      gruposDeDados: [],
-      fixo: danoFixo,
-      modificador: danoFixo,
-      modificadorAtributo: modificadorForca,
-      tipo: "contundente",
-    },
+  gruposDeDados: efeitoCombateDesarmado
+    ? [
+        {
+          quantidade: 1,
+          numeroDeFaces: Number(
+            facesDadoCombateDesarmado,
+          ),
+          origem: "ataqueDesarmado",
+        },
+      ]
+    : [],
+
+  fixo: efeitoCombateDesarmado
+    ? null
+    : danoFixo,
+
+  modificador: efeitoCombateDesarmado
+    ? modificadorForca
+    : danoFixo,
+
+  modificadorAtributo: modificadorForca,
+  tipo: "contundente",
+},
 
     maestriaId: null,
     propriedades: [],
@@ -458,6 +545,10 @@ if (ataqueDesarmado) {
     if (arma.categoria === "corpo-a-corpo" && arma.propriedades?.includes("arremesso")) {
       modos.push("arremesso");
     }
+
+    if (arma.propriedades?.includes("versatil") && arma.danoVersatil) {
+  modos.push("versatilDuasMaos");
+}
 
     for (const modo of modos) {
       const ataque = criarAtaqueCombateArma(personagem, idArma, origemEquipamento, modo);

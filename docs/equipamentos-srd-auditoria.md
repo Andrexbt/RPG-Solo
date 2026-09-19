@@ -1,6 +1,6 @@
 # Cadastro de equipamentos — SRD 5.2.1
 
-Referência: `Fontes/srd-5.2.1.pdf`, páginas 89–92. Cadastro atualizado em 6 de setembro de 2026.
+Referência: `fontes/srd-5.2.1.pdf`, páginas 89–92. Cadastro atualizado em 6 de setembro de 2026.
 
 ## Escopo cadastrado
 

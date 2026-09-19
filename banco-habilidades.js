@@ -157,6 +157,23 @@ window.bancoHabilidades = {
         },
 
         {
+          id: "combateAsCegas",
+          nome: "Combate às Cegas",
+
+          regra: {
+            gatilho: "passivo",
+
+            efeito: {
+              tipo: "concederSentido",
+              sentido: "visaoAsCegas",
+              alcance: 3,
+            },
+          },
+
+          descricaoCurta: "Você possui Visão às Cegas com alcance de 3 metros.",
+        },
+
+        {
           id: "defesa",
           nome: "Defesa",
 
@@ -200,6 +217,85 @@ window.bancoHabilidades = {
         },
 
         {
+          id: "combateArmasGrandes",
+          nome: "Combate com Armas Grandes",
+
+          regra: {
+            tipo: "modificadorPassivo",
+
+            efeito: {
+              tipo: "ajustarDadosDanoArma",
+              resultadosSubstituidos: [1, 2],
+              resultadoMinimo: 3,
+            },
+
+            condicao: {
+              ataqueADistancia: false,
+              empunhadaComDuasMaos: true,
+            },
+          },
+
+          descricaoCurta:
+            "Ao rolar o dano de um ataque com uma arma corpo a corpo empunhada com duas mãos, resultados 1 ou 2 nos dados de dano da arma são tratados como 3.",
+        },
+
+        {
+  id: "interceptacao",
+  nome: "Interceptação",
+
+  regra: {
+    tipo: "gatilho",
+    gatilho: "aposAcertoAntesDoDano",
+    opcional: true,
+    custo: "reacao",
+
+    alvo: "criaturaAtingida",
+
+    requisito: {
+      alcanceAlvoCelulas: 1,
+      precisaPerceberAtacante: true,
+      precisaEmpunharEscudoOuArma: true,
+    },
+
+    efeito: {
+      tipo: "solicitarReducaoDano",
+      gruposDeDados: [
+        {
+          quantidade: 1,
+          numeroDeFaces: 10,
+        },
+      ],
+      adicionarBonusProficiencia: true,
+    },
+  },
+
+  descricaoCurta:
+    "Quando uma criatura que você pode ver acerta outra criatura a até 1,5 metro de você, você pode usar sua Reação para reduzir o dano em 1d10 mais seu Bônus de Proficiência. Você precisa estar empunhando um escudo ou uma arma simples ou marcial.",
+},
+
+        {
+          id: "combateArmasArremessaveis",
+          nome: "Combate com Armas Arremessáveis",
+
+          regra: {
+            tipo: "modificadorPassivo",
+
+            efeito: {
+              tipo: "modificarDanoArma",
+              valor: 2,
+            },
+
+            condicao: {
+              propriedadeArma: "arremesso",
+              ataqueADistancia: true,
+            },
+          },
+
+          descricaoCurta:
+            "Quando você acerta com um ataque à distância usando uma arma com a propriedade Arremesso, recebe +2 na jogada de dano.",
+        },
+
+        {
           id: "combateDuasArmas",
           nome: "Combate com Duas Armas",
 
@@ -217,6 +313,45 @@ window.bancoHabilidades = {
 
           descricaoCurta:
             "Ao realizar o ataque adicional com uma arma leve, você pode acrescentar o modificador do atributo ao dano.",
+        },
+
+        {
+          id: "combateDesarmado",
+          nome: "Combate Desarmado",
+
+          regras: [
+            {
+              tipo: "modificadorPassivo",
+
+              efeito: {
+                tipo: "substituirDanoAtaqueDesarmado",
+                dadoPadrao: 6,
+                dadoSemArmaOuEscudo: 8,
+              },
+            },
+
+            {
+              tipo: "gatilho",
+              gatilho: "inicioTurno",
+              opcional: true,
+
+              alvo: "criaturaAgarradaPeloParticipante",
+
+              efeito: {
+                tipo: "solicitarDanoSemAcerto",
+                gruposDeDados: [
+                  {
+                    quantidade: 1,
+                    numeroDeFaces: 4,
+                  },
+                ],
+                tipoDano: "contundente",
+              },
+            },
+          ],
+
+          descricaoCurta:
+            "Seus Ataques Desarmados podem causar 1d6 mais seu modificador de Força. Se você não estiver empunhando armas nem escudo, o d6 torna-se d8. No início de cada turno, você pode causar 1d4 de dano contundente a uma criatura agarrada por você.",
         },
       ],
     },

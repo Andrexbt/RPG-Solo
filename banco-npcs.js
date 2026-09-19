@@ -8,9 +8,9 @@ window.bancoNpcs = {
       tipo: "aliado",
 
       avatar: {
-        imagem: "Imagens/Avatares/npcs/ned.webp",
+        imagem: "assets/avatares/npcs/ned.webp",
 
-        frame: "Imagens/Avatares/frame/frame-08.webp",
+        frame: "assets/avatares/frame/frame-08.webp",
       },
 
       atributos: {
@@ -125,9 +125,9 @@ window.bancoNpcs = {
       blocoCriaturaId: "bandido",
 
       avatar: {
-        imagem: "Imagens/Avatares/npcs/guardaConde.webp",
+        imagem: "assets/avatares/npcs/guardaconde.webp",
 
-        frame: "Imagens/Avatares/frame/frame-07.webp",
+        frame: "assets/avatares/frame/frame-07.webp",
       },
 
       narracao: {
@@ -163,9 +163,9 @@ window.bancoNpcs = {
       // Sobrescreve apenas a identidade
       // visual do bloco oficial.
       avatar: {
-        imagem: "Imagens/Avatares/npcs/lagartoBronze.webp",
+        imagem: "assets/avatares/npcs/lagartobronze.webp",
 
-        frame: "Imagens/Avatares/frame/frame-01.webp",
+        frame: "assets/avatares/frame/frame-01.webp",
       },
 
       narracao: {

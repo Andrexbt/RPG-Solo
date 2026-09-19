@@ -3,7 +3,7 @@ const ação = document.getElementById("ação");
 const resposta = document.getElementById("resposta");
 const botãoD20 = document.getElementById("botãoD20");
 const resultadoD20 = document.getElementById("resultadoD20");
-const somD20 = new Audio("D20.mp3");
+const somD20 = new Audio("d20.mp3");
 
 botãoEnviar.addEventListener("click", function () {
   const acao = ação.value;

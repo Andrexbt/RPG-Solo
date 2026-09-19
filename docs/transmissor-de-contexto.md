@@ -280,7 +280,7 @@ Uma funcionalidade está pronta quando sua estrutura de dados, regra, interface,
 funcionam juntas, sem erro no console e sem depender de comandos manuais. Implementação parcial deve
 permanecer marcada como parcial.
 Cuidados legais e de conteúdo
-- O MVP usa material do SRD 5.2.1 sob CC BY 4.0, com atribuição registrada em CREDITS.md.
+- O MVP usa material do SRD 5.2.1 sob CC BY 4.0, com atribuição registrada em credits.md.
 - Recursos visuais ainda precisam de origem, autoria e licença documentadas antes de distribuição ampla.
 - Livros de referência servem para estudo e desenho interno; conteúdo não autorizado não deve ser presumido
 como publicável.
@@ -337,7 +337,7 @@ Mudanças locais na main, ainda sem consolidação registrada neste documento.
 conversa
 - Ler este PDF por completo.
 - Confirmar pasta do projeto, branch e alterações locais.
-- Ler README.md e CREDITS.md quando a tarefa tocar escopo público ou licenças.
+- Ler readme.md e credits.md quando a tarefa tocar escopo público ou licenças.
 - Consultar a versão mais recente da checklist MVP e sua data-base.
 - Localizar os arquivos da frente e buscar funções/estruturas existentes antes de propor código.
 - Confirmar com o usuário se a conversa ensinará mudanças ou editará arquivos diretamente.
@@ -350,7 +350,7 @@ funcional em estágio intermediário. A prioridade imediata é estabilizar a cai
 nível 1 de ponta a ponta. Depois vêm persistência e XP, seguidos de Mago, Ladino e Clérigo.
 Fontes consultadas nesta versão
 - Repositório local RPG Solo, branch main, estado observado em 4 de agosto de 2026.
-- README.md e CREDITS.md do projeto.
+- readme.md e credits.md do projeto.
 - RPG Solo MVP Checklist - progresso integrado.xlsx, atualização de 3 de agosto de 2026.
 - Histórico consolidado de decisões da conversa de desenvolvimento.
 Fim da versão 1.0 - atualizar ao fim de cada semana de desenvolvimento.
@@ -551,7 +551,7 @@ A tela de combate evoluiu de um grid grande e quase autônomo para uma batalha v
 mínima, `batalha1ruas`, foi criada para testar mapa, grid, jogador, dois guardas, câmera e transição narrativa.
 Configuração por batalha
 combate: {
-mapa: "Imagens/Mapas/A Fuga/batalha1ruasn.webp",
+mapa: "assets/mapas/a fuga/batalha1ruasn.webp",
 jogador: { posicao: { coluna: 25, linha: 22 } },
 inimigos: [{
 npcId: "guardaConde", quantidade: 2,
@@ -794,7 +794,7 @@ Tokens continuam referenciando coluna e linha; alcance, movimento e posições n
 uma célula ocupa 64, 128 ou 173 pixels. Apenas a interface converte a célula lógica para a fração correspondente do mundo.
 Mapa configurável
 mapa: {
-imagem: "Imagens/Mapas/A Fuga/batalha1ruas.webp",
+imagem: "assets/mapas/a fuga/batalha1ruas.webp",
 largura: 6144,
 altura: 3456,
 colunas: 48,
@@ -1609,7 +1609,7 @@ Foi criado `banco-condicoes.js` com as quinze condições do SRD 5.2.1 usadas co
 - Atordoado;
 - Inconsciente.
 
-Cada condição possui identificador, nome e ícone SVG em `Imagens/Assets/icones-condicoes/`. O token mostra até três ícones e agrupa excedentes com contador e descrição. **Caído** já possui integração mecânica por Topple, ataques e custo para levantar. **Lentidão** é apresentada como efeito visual de maestria, sem ser confundida com uma condição oficial.
+Cada condição possui identificador, nome e ícone SVG em `assets/recursos/icones-condicoes/`. O token mostra até três ícones e agrupa excedentes com contador e descrição. **Caído** já possui integração mecânica por Topple, ataques e custo para levantar. **Lentidão** é apresentada como efeito visual de maestria, sem ser confundida com uma condição oficial.
 
 O catálogo não significa que todas as condições estejam mecanicamente concluídas. A estratégia aprovada é implementar seus efeitos sob demanda, conforme forem exigidos por “A Fuga” ou por uma opção real do MVP.
 
@@ -2000,4 +2000,4 @@ Também ficou adiada para uma próxima etapa a validação profunda de ponta a p
 
 Para economizar contexto sem perder qualidade, evitar reler documentos extensos a cada alteração pequena. Preferir leituras direcionadas e testes específicos; reservar releitura integral, suíte completa e percurso visual para marcos ou mudanças de maior risco. Antes de uma tarefa com consumo considerável de tokens, avisar o usuário e apresentar alternativas mais econômicas.
 
-O escopo mecânico adotado pelo usuário inclui todos os livros básicos oficiais, inclusive opções que não aparecem no SRD, como outros Estilos de Luta. Não remover nem reclassificar uma opção apenas por ela estar ausente do SRD. Em 11 de setembro de 2026, a cópia local acessível ao assistente mostrava somente `Fontes/srd-5.2.1.pdf`; antes de uma comparação integral com os livros básicos, confirmar que os demais arquivos estejam efetivamente disponíveis no workspace ou solicitar sua disponibilização.
+O escopo mecânico adotado pelo usuário inclui todos os livros básicos oficiais, inclusive opções que não aparecem no SRD, como outros Estilos de Luta. Não remover nem reclassificar uma opção apenas por ela estar ausente do SRD. Em 11 de setembro de 2026, a cópia local acessível ao assistente mostrava somente `fontes/srd-5.2.1.pdf`; antes de uma comparação integral com os livros básicos, confirmar que os demais arquivos estejam efetivamente disponíveis no workspace ou solicitar sua disponibilização.

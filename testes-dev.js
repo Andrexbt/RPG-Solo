@@ -1977,6 +1977,262 @@
       "armaPrincipal",
     )?.dano.modificador;
 
+    const especialistaArremesso = criarGuerreiro({
+      estilo: "combateArmasArremessaveis",
+      armaPrincipal: "adaga",
+    });
+    const danoAdagaArremessada = criarAtaque?.(
+      especialistaArremesso,
+      "adaga",
+      "armaPrincipal",
+      "arremesso",
+    )?.dano.modificador;
+    const danoAdagaCorpoACorpo = criarAtaque?.(
+      especialistaArremesso,
+      "adaga",
+      "armaPrincipal",
+    )?.dano.modificador;
+    const danoArcoSemArremesso = criarAtaque?.(
+      especialistaArremesso,
+      "arcoLongo",
+      "armaPrincipal",
+    )?.dano.modificador;
+
+    const versatilComMaoLivre = criarGuerreiro({
+      estilo: "duelismo",
+      armaPrincipal: "espadaLonga",
+    });
+    const versatilComEscudo = criarGuerreiro({
+      estilo: "duelismo",
+      armaPrincipal: "espadaLonga",
+      itemSecundario: "escudo",
+    });
+    const ataqueVersatilUmaMao = criarAtaque?.(
+      versatilComMaoLivre,
+      "espadaLonga",
+      "armaPrincipal",
+    );
+    const ataqueVersatilDuasMaos = criarAtaque?.(
+      versatilComMaoLivre,
+      "espadaLonga",
+      "armaPrincipal",
+      "versatilDuasMaos",
+    );
+    const ataqueVersatilDuasMaosComEscudo = criarAtaque?.(
+      versatilComEscudo,
+      "espadaLonga",
+      "armaPrincipal",
+      "versatilDuasMaos",
+    );
+
+    function resolverCasoArmasGrandes({
+      estilo = "combateArmasGrandes",
+      categoria = "corpoACorpo",
+      empunhadaComDuasMaos = true,
+    } = {}) {
+      const ataque = {
+        id: "ataque-armas-grandes-dev",
+        instanciaId: "ataque-armas-grandes-dev",
+        categoria,
+        empunhadaComDuasMaos,
+        dano: { tipo: "cortante" },
+      };
+      const atacante = {
+        id: "guerreiro-armas-grandes-dev",
+        classeId: "guerreiro",
+        habilidades: { escolhas: { estilosDeLuta: estilo } },
+        ataques: [ataque],
+      };
+      const alvo = {
+        id: "alvo-armas-grandes-dev",
+        estado: "ativo",
+        pontosDeVida: { atuais: 20, maximo: 20, temporarios: 0 },
+        habilidades: { escolhas: {} },
+      };
+      const combate = {
+        status: "ativo",
+        participantes: [atacante, alvo],
+        efeitosTemporarios: [],
+        objetivos: [],
+        danoPendente: {
+          atacanteId: atacante.id,
+          alvoId: alvo.id,
+          ataqueId: ataque.instanciaId,
+          efeitos: [],
+        },
+      };
+
+      const resultado = window.SistemaCombate.resolverDano(combate, {
+        gruposRolados: [
+          {
+            origem: "arma",
+            numeroDeFaces: 6,
+            resultados: [1, 2],
+            total: 3,
+          },
+          {
+            origem: "adicional",
+            numeroDeFaces: 4,
+            resultados: [1],
+            total: 1,
+          },
+        ],
+        subtotal: 4,
+        modificador: 3,
+        total: 7,
+      });
+
+      return resultado?.dano;
+    }
+
+    const danoArmasGrandes = resolverCasoArmasGrandes();
+    const danoArmasGrandesSemEstilo = resolverCasoArmasGrandes({ estilo: "defesa" });
+    const danoArmasGrandesUmaMao = resolverCasoArmasGrandes({
+      empunhadaComDuasMaos: false,
+    });
+    const danoArmasGrandesDistancia = resolverCasoArmasGrandes({
+      categoria: "distancia",
+    });
+
+    const alcanceVisaoAsCegas = window.SistemaCombate.obterAlcanceSentidoEmCelulas(
+      { sentidos: { visaoAsCegas: { alcance: 3 } } },
+      "visaoAsCegas",
+    );
+    const alcanceVisaoNoEscuro = window.SistemaCombate.obterAlcanceSentidoEmCelulas(
+      { sentidos: { visaoNoEscuro: { alcance: 36 } } },
+      "visaoNoEscuro",
+    );
+    const alcanceSentidoAusente = window.SistemaCombate.obterAlcanceSentidoEmCelulas(
+      { sentidos: {} },
+      "visaoAsCegas",
+    );
+    const entidadeComSentido = {
+      id: "entidade-sentido-dev",
+      nome: "Guerreiro",
+      tipo: "jogador",
+      atributos: { destreza: 10 },
+      combate: {
+        classeArmadura: 10,
+        pontosDeVida: { atuais: 10, maximo: 10, temporarios: 0 },
+      },
+      ataques: [],
+      sentidos: { visaoAsCegas: { alcance: 3 } },
+      habilidades: { escolhas: { estilosDeLuta: "combateAsCegas" } },
+    };
+    const participanteComSentido = window.SistemaCombate.criarParticipanteCombate(
+      entidadeComSentido,
+      { id: entidadeComSentido.id, posicao: { coluna: 1, linha: 1 } },
+    );
+    participanteComSentido.sentidos.visaoAsCegas.alcance = 6;
+    const observadorVisaoAsCegas = {
+      posicao: { coluna: 1, linha: 1 },
+      sentidos: { visaoAsCegas: { alcance: 3 } },
+    };
+    const percebeAdjacente = window.SistemaCombate.participantePercebeAlvoSemVisao(
+      observadorVisaoAsCegas,
+      { posicao: { coluna: 2, linha: 1 } },
+    );
+    const percebeNoLimite = window.SistemaCombate.participantePercebeAlvoSemVisao(
+      observadorVisaoAsCegas,
+      { posicao: { coluna: 3, linha: 1 } },
+    );
+    const percebeForaDoLimite = window.SistemaCombate.participantePercebeAlvoSemVisao(
+      observadorVisaoAsCegas,
+      { posicao: { coluna: 4, linha: 1 } },
+    );
+    const percebeSemSentido = window.SistemaCombate.participantePercebeAlvoSemVisao(
+      { posicao: { coluna: 1, linha: 1 }, sentidos: {} },
+      { posicao: { coluna: 2, linha: 1 } },
+    );
+
+    function prepararCasoVisao({
+      distancia = 1,
+      condicoesAtacante = [],
+      condicoesAlvo = [],
+      visaoAtacante = false,
+      visaoAlvo = false,
+    } = {}) {
+      const ataque = {
+        id: "ataque-visao-dev",
+        instanciaId: "ataque-visao-dev",
+        categoria: "corpoACorpo",
+        custoPadrao: "acao",
+        propriedades: [],
+        selecao: { tipo: "criatura", alcance: { normal: 10, longo: null } },
+      };
+      const atacante = {
+        id: "atacante-visao-dev",
+        tipo: "jogador",
+        grupoId: "jogadores",
+        estado: "ativo",
+        posicao: { coluna: 1, linha: 1 },
+        atributos: { forca: 16 },
+        condicoes: structuredClone(condicoesAtacante),
+        sentidos: visaoAtacante ? { visaoAsCegas: { alcance: 3 } } : {},
+        acaoDisponivel: true,
+        acaoBonusDisponivel: true,
+        reacaoDisponivel: true,
+        ataques: [ataque],
+        habilidades: { escolhas: {} },
+      };
+      const alvo = {
+        id: "alvo-visao-dev",
+        tipo: "inimigo",
+        grupoId: "inimigos",
+        estado: "ativo",
+        posicao: { coluna: 1 + distancia, linha: 1 },
+        condicoes: structuredClone(condicoesAlvo),
+        sentidos: visaoAlvo ? { visaoAsCegas: { alcance: 3 } } : {},
+        habilidades: { escolhas: {} },
+      };
+      const combate = {
+        status: "ativo",
+        participanteAtivoId: atacante.id,
+        participantes: [atacante, alvo],
+        tabuleiro: { colunas: 12, linhas: 12 },
+        terreno: { bloqueado: [], dificil: [] },
+        visao: { bloqueios: [], barreiras: [] },
+        efeitosTemporarios: [],
+        objetivos: [],
+      };
+
+      return window.SistemaCombate.prepararAtaque(
+        combate,
+        atacante.id,
+        alvo.id,
+        ataque.instanciaId,
+      );
+    }
+
+    const ataqueContraInvisivel = prepararCasoVisao({
+      condicoesAlvo: [{ id: "invisivel" }],
+    });
+    const ataqueContraInvisivelPercebido = prepararCasoVisao({
+      condicoesAlvo: [{ id: "invisivel" }],
+      visaoAtacante: true,
+      distancia: 2,
+    });
+    const ataqueContraInvisivelDistante = prepararCasoVisao({
+      condicoesAlvo: [{ id: "invisivel" }],
+      visaoAtacante: true,
+      distancia: 3,
+    });
+    const ataqueCegoComPercepcao = prepararCasoVisao({
+      condicoesAtacante: [{ id: "cego" }],
+      visaoAtacante: true,
+    });
+    const ataqueInvisivel = prepararCasoVisao({
+      condicoesAtacante: [{ id: "invisivel" }],
+    });
+    const ataqueInvisivelPercebido = prepararCasoVisao({
+      condicoesAtacante: [{ id: "invisivel" }],
+      visaoAlvo: true,
+    });
+    const ataqueEntreInvisiveis = prepararCasoVisao({
+      condicoesAtacante: [{ id: "invisivel" }],
+      condicoesAlvo: [{ id: "invisivel" }],
+    });
+
     const resultadoDuasArmas = executarCenarioPropriedadeLeve();
 
     const verificacoes = [
@@ -1990,6 +2246,46 @@
       ["Duelo acrescenta +2 com uma arma", danoDueloLivre === 5],
       ["Duelo permite o uso de escudo", danoDueloComEscudo === 5],
       ["Duelo não funciona com outra arma", danoDueloComOutraArma === 3],
+      ["Arma arremessada recebe +2 no dano", danoAdagaArremessada === 5],
+      ["A mesma arma corpo a corpo não recebe +2", danoAdagaCorpoACorpo === 3],
+      ["Arma à distância sem Arremesso não recebe +2", danoArcoSemArremesso === 3],
+      [
+        "Arma Versátil usa o dado normal com uma mão",
+        ataqueVersatilUmaMao?.dano?.gruposDeDados?.[0]?.numeroDeFaces === 8,
+      ],
+      [
+        "Arma Versátil usa o dado maior com duas mãos",
+        ataqueVersatilDuasMaos?.dano?.gruposDeDados?.[0]?.numeroDeFaces === 10 &&
+          ataqueVersatilDuasMaos?.empunhadaComDuasMaos === true,
+      ],
+      [
+        "Arma Versátil não usa duas mãos com escudo",
+        ataqueVersatilDuasMaosComEscudo === null,
+      ],
+      ["Armas Grandes transforma 1 e 2 da arma em 3", danoArmasGrandes === 10],
+      ["Armas Grandes não altera dados adicionais", danoArmasGrandes === 10],
+      ["Sem o estilo, os dados permanecem iguais", danoArmasGrandesSemEstilo === 7],
+      ["Armas Grandes não funciona com uma mão", danoArmasGrandesUmaMao === 7],
+      ["Armas Grandes não funciona à distância", danoArmasGrandesDistancia === 7],
+      ["Visão às Cegas de 3 metros alcança 2 células", alcanceVisaoAsCegas === 2],
+      ["Sentidos usam a conversão central de metros", alcanceVisaoNoEscuro === 24],
+      ["Sentido ausente possui alcance zero", alcanceSentidoAusente === 0],
+      [
+        "Os sentidos do combate não compartilham referência com a ficha",
+        entidadeComSentido.sentidos.visaoAsCegas.alcance === 3 &&
+          participanteComSentido.sentidos.visaoAsCegas.alcance === 6,
+      ],
+      ["Visão às Cegas percebe alvo adjacente", percebeAdjacente],
+      ["Visão às Cegas percebe alvo exatamente no limite", percebeNoLimite],
+      ["Visão às Cegas não percebe além do alcance", !percebeForaDoLimite],
+      ["Sem Visão às Cegas não há percepção alternativa", !percebeSemSentido],
+      ["Atacar alvo invisível não percebido impõe desvantagem", ataqueContraInvisivel?.tipoRolagem === "desvantagem"],
+      ["Visão às Cegas percebe alvo invisível no alcance", ataqueContraInvisivelPercebido?.tipoRolagem === "normal"],
+      ["Visão às Cegas não percebe alvo invisível distante", ataqueContraInvisivelDistante?.tipoRolagem === "desvantagem"],
+      ["Visão às Cegas compensa a condição Cego no alcance", ataqueCegoComPercepcao?.tipoRolagem === "normal"],
+      ["Atacante invisível não percebido recebe vantagem", ataqueInvisivel?.tipoRolagem === "vantagem"],
+      ["Visão às Cegas impede vantagem de atacante invisível", ataqueInvisivelPercebido?.tipoRolagem === "normal"],
+      ["Vantagem e desvantagem por invisibilidade se anulam", ataqueEntreInvisiveis?.tipoRolagem === "normal"],
       [
         "Combate com Duas Armas mantém o modificador no ataque adicional",
         resultadoDuasArmas.passou,
@@ -2005,6 +2301,9 @@
         `Arquearia — distância ${ataqueArco?.bonusAtaque}; corpo a corpo ${ataqueCorpoArqueiro?.bonusAtaque}.`,
         `Defesa — com armadura ${caDefesaComArmadura}; sem armadura ${caDefesaSemArmadura}.`,
         `Duelo — livre ${danoDueloLivre}; com escudo ${danoDueloComEscudo}; com outra arma ${danoDueloComOutraArma}.`,
+        `Arremesso — adaga lançada ${danoAdagaArremessada}; adaga corpo a corpo ${danoAdagaCorpoACorpo}; arco ${danoArcoSemArremesso}.`,
+        `Versátil — uma mão d${ataqueVersatilUmaMao?.dano?.gruposDeDados?.[0]?.numeroDeFaces}; duas mãos d${ataqueVersatilDuasMaos?.dano?.gruposDeDados?.[0]?.numeroDeFaces}; com escudo ${ataqueVersatilDuasMaosComEscudo === null ? "bloqueado" : "permitido"}.`,
+        `Armas Grandes — válido ${danoArmasGrandes}; sem estilo ${danoArmasGrandesSemEstilo}; uma mão ${danoArmasGrandesUmaMao}; distância ${danoArmasGrandesDistancia}.`,
       ],
     };
   }
@@ -2015,6 +2314,551 @@
     categoria: "guerreiro-n1",
     executar: executarAuditoriaEstilosLutaGuerreiro,
   });
+
+  function executarContratoInterceptacao() {
+    const interceptador = {
+      id: "guerreiro-interceptacao-dev",
+      classeId: "guerreiro",
+      bonusProficiencia: 2,
+      reacaoDisponivel: true,
+      habilidades: { escolhas: { estilosDeLuta: "interceptacao" } },
+    };
+    const atacante = { id: "atacante-interceptacao-dev" };
+    const alvo = { id: "alvo-interceptacao-dev" };
+    const contexto = {
+      gatilho: "aposAcertoAntesDoDano",
+      modo: "combate",
+      participante: interceptador,
+      alvo,
+      atacante,
+      distanciaAlvoCelulas: 1,
+      percebeAtacante: true,
+      empunhaEscudoOuArma: true,
+    };
+    const preparar = (alteracoes = {}) =>
+      window.TradutorRegras.prepararOperacoes({ ...contexto, ...alteracoes });
+    const operacao = preparar()[0];
+    const empunha = window.SistemaCombate?.participanteEmpunhaEscudoOuArma;
+    const configurarMaos = (mao1, mao2 = null, equipamentosArremessados = []) => ({
+      configuracaoEquipamentos: { mao1, mao2 },
+      equipamentosArremessados,
+    });
+    const adaga = { categoria: "armas", id: "adaga" };
+    const escudo = { categoria: "itensSecundarios", id: "escudo" };
+    const percebe = window.SistemaCombate?.participantePercebeAtacanteParaInterceptacao;
+    const observador = { posicao: { coluna: 1, linha: 1 }, condicoes: [], sentidos: {} };
+    const agressor = { posicao: { coluna: 2, linha: 1 }, condicoes: [] };
+    const combateVisivel = { visao: { bloqueios: [], barreiras: [] } };
+    const combateBloqueado = { visao: {
+      bloqueios: [],
+      barreiras: [{ coluna: 2, linha: 1, lado: "oeste", tipo: "bloqueioTotal" }],
+    } };
+    const visaoAsCegas = { visaoAsCegas: { alcance: 3 } };
+    const listarInterceptacoes = window.SistemaCombate?.listarInterceptacoesAposAcerto;
+    function criarCenarioLista(opcoes = {}) {
+      const defensor = {
+        ...interceptador,
+        ...configurarMaos(adaga),
+        posicao: { coluna: 2, linha: 2 },
+        estado: "ativo",
+        ...(opcoes.defensor ?? {}),
+      };
+      const protegido = {
+        ...alvo,
+        posicao: opcoes.proprioAlvo
+          ? defensor.posicao
+          : { coluna: 3, linha: 2 },
+      };
+      const agressorLista = {
+        ...atacante,
+        posicao: { coluna: 4, linha: 2 },
+        ...(opcoes.atacante ?? {}),
+      };
+      const alvoAtaque = opcoes.proprioAlvo ? defensor : protegido;
+      const combate = {
+        participantes: [agressorLista, defensor, ...(
+          opcoes.proprioAlvo ? [] : [protegido]
+        )],
+        visao: opcoes.visao ?? { bloqueios: [], barreiras: [] },
+      };
+      const resultadoAtaque = {
+        acertou: opcoes.acertou ?? true,
+        atacante: agressorLista,
+        alvo: alvoAtaque,
+        ataque: { id: "adaga" },
+      };
+      return listarInterceptacoes?.(combate, resultadoAtaque) ?? [];
+    }
+    function resolverAtaqueComInterceptador(resultadoNatural, opcoes = {}) {
+      const ataque = {
+        id: "golpe-interceptacao-dev",
+        instanciaId: "golpe-interceptacao-dev",
+        nome: "Golpe de teste",
+        categoria: "corpoACorpo",
+        bonusAtaque: 3,
+        dano: {
+          gruposDeDados: [{ quantidade: 1, numeroDeFaces: 6 }],
+          modificador: 1,
+          tipo: opcoes.tipoDano ?? "contundente",
+        },
+        propriedades: [],
+      };
+      const agressorAtaque = {
+        id: "agressor-ataque-interceptacao-dev",
+        posicao: { coluna: 4, linha: 2 },
+        ataques: [ataque],
+        acaoDisponivel: true,
+        habilidades: { escolhas: {} },
+      };
+      const protegidoAtaque = {
+        id: "protegido-ataque-interceptacao-dev",
+        posicao: { coluna: 3, linha: 2 },
+        classeArmadura: 12,
+        pontosDeVida: { atuais: 20, maximo: 20 },
+        especieId: opcoes.especieAlvo ?? null,
+      };
+      const defensorAtaque = {
+        ...interceptador,
+        ...configurarMaos(adaga),
+        posicao: { coluna: 2, linha: 2 },
+      };
+      const combate = {
+        participantes: [agressorAtaque, protegidoAtaque, defensorAtaque],
+        ataquePendente: {
+          atacanteId: agressorAtaque.id,
+          alvoId: protegidoAtaque.id,
+          ataqueId: ataque.instanciaId,
+          custo: "acao",
+        },
+        visao: { bloqueios: [], barreiras: [] },
+        efeitosTemporarios: [],
+      };
+      const resultadoAtaque = window.SistemaCombate.resolverAtaque(combate, {
+        gruposRolados: [{ numeroDeFaces: 20, resultados: [resultadoNatural] }],
+        modificador: ataque.bonusAtaque,
+      });
+      return opcoes.retornarContexto
+        ? { combate, resultadoAtaque, defensorAtaque, protegidoAtaque }
+        : resultadoAtaque;
+    }
+    const ataqueRealAcertou = resolverAtaqueComInterceptador(15);
+    const ataqueRealErrou = resolverAtaqueComInterceptador(2);
+    const casoAtivacao = resolverAtaqueComInterceptador(15, { retornarContexto: true });
+    const ativar = window.SistemaCombate?.ativarInterceptacao;
+    const resultadoAtivacao = ativar?.(
+      casoAtivacao.combate,
+      casoAtivacao.resultadoAtaque,
+      casoAtivacao.defensorAtaque.id,
+    );
+    const resultadoDanoPausado = window.SistemaCombate.resolverDano(
+      casoAtivacao.combate,
+      { total: 7 },
+    );
+    const resultadoAtivacaoRepetida = ativar?.(
+      casoAtivacao.combate,
+      casoAtivacao.resultadoAtaque,
+      casoAtivacao.defensorAtaque.id,
+    );
+    const casoErroAtivacao = resolverAtaqueComInterceptador(2, { retornarContexto: true });
+    const resultadoAtivacaoErro = ativar?.(
+      casoErroAtivacao.combate,
+      casoErroAtivacao.resultadoAtaque,
+      casoErroAtivacao.defensorAtaque.id,
+    );
+    const registrarRolagem = window.SistemaCombate?.registrarRolagemInterceptacao;
+    function prepararRolagemInterceptacao(valorDado) {
+      const caso = resolverAtaqueComInterceptador(15, { retornarContexto: true });
+      ativar?.(caso.combate, caso.resultadoAtaque, caso.defensorAtaque.id);
+      const resultado = registrarRolagem?.(caso.combate, {
+        gruposRolados: [{ numeroDeFaces: 10, resultados: [valorDado] }],
+        total: 999,
+      });
+      return { caso, resultado };
+    }
+    const rolagemMinima = prepararRolagemInterceptacao(1);
+    const rolagemMaxima = prepararRolagemInterceptacao(10);
+    const rolagemInvalida = prepararRolagemInterceptacao(0);
+    const rolagemRepetida = registrarRolagem?.(rolagemMinima.caso.combate, {
+      gruposRolados: [{ numeroDeFaces: 10, resultados: [10] }],
+    });
+    function resolverDanoInterceptado({ valorDado, danoOriginal, tipoDano, especieAlvo } = {}) {
+      const caso = resolverAtaqueComInterceptador(15, {
+        retornarContexto: true,
+        tipoDano,
+        especieAlvo,
+      });
+      ativar?.(caso.combate, caso.resultadoAtaque, caso.defensorAtaque.id);
+      registrarRolagem?.(caso.combate, {
+        gruposRolados: [{ numeroDeFaces: 10, resultados: [valorDado] }],
+      });
+      const resultado = window.SistemaCombate.resolverDano(caso.combate, {
+        gruposRolados: [],
+        subtotal: 0,
+        modificador: danoOriginal,
+        total: danoOriginal,
+      });
+      return { caso, resultado };
+    }
+    const danoParcialInterceptado = resolverDanoInterceptado({
+      valorDado: 2,
+      danoOriginal: 9,
+    });
+    const danoTotalInterceptado = resolverDanoInterceptado({
+      valorDado: 10,
+      danoOriginal: 7,
+    });
+    const danoResistenteInterceptado = resolverDanoInterceptado({
+      valorDado: 2,
+      danoOriginal: 15,
+      tipoDano: "veneno",
+      especieAlvo: "anao",
+    });
+    const verificacoes = [
+      ["Interceptação prepara 1d10 mais proficiência", operacao?.tipo === "solicitarReducaoDano" &&
+        operacao?.gruposDeDados?.[0]?.quantidade === 1 &&
+        operacao?.gruposDeDados?.[0]?.numeroDeFaces === 10 &&
+        operacao?.modificador === 2],
+      ["A operação identifica interceptador e protegido", operacao?.participanteId === interceptador.id &&
+        operacao?.alvoId === alvo.id && operacao?.custo === "reacao" && operacao?.opcional === true],
+      ["Sem reação não há Interceptação", preparar({ participante: { ...interceptador, reacaoDisponivel: false } }).length === 0],
+      ["Fora do alcance não há Interceptação", preparar({ distanciaAlvoCelulas: 2 }).length === 0],
+      ["Distância ausente não é aceita como zero", preparar({ distanciaAlvoCelulas: null }).length === 0],
+      ["Sem perceber o atacante não há Interceptação", preparar({ percebeAtacante: false }).length === 0],
+      ["Sem arma ou escudo empunhado não há Interceptação", preparar({ empunhaEscudoOuArma: false }).length === 0],
+      ["Outro estilo não prepara Interceptação", preparar({ participante: {
+        ...interceptador,
+        habilidades: { escolhas: { estilosDeLuta: "defesa" } },
+      } }).length === 0],
+      ["Escudo empunhado satisfaz o requisito", empunha?.(configurarMaos(escudo)) === true],
+      ["Arma simples empunhada satisfaz o requisito", empunha?.(configurarMaos(adaga)) === true],
+      ["Arma arremessada não satisfaz o requisito", empunha?.(configurarMaos(
+        adaga, null, ["adaga:armaPrincipal"],
+      )) === false],
+      ["Segunda arma ainda serve após arremessar a primeira", empunha?.(configurarMaos(
+        adaga, { categoria: "armas", id: "clava" }, ["adaga:armaPrincipal"],
+      )) === true],
+      ["Mãos vazias não satisfazem o requisito", empunha?.(configurarMaos(null)) === false],
+      ["Inventário sem arma empunhada não satisfaz o requisito", empunha?.({
+        ...configurarMaos(null),
+        inventario: { armas: ["adaga"] },
+      }) === false],
+      ["Interceptador vê atacante com linha livre", percebe?.(
+        combateVisivel, observador, agressor,
+      ) === true],
+      ["Cobertura total impede perceber atacante", percebe?.(
+        combateBloqueado, observador, agressor,
+      ) === false],
+      ["Atacante invisível exige percepção alternativa", percebe?.(
+        combateVisivel, observador, { ...agressor, condicoes: [{ id: "invisivel" }] },
+      ) === false],
+      ["Visão às Cegas percebe atacante invisível próximo", percebe?.(
+        combateVisivel, { ...observador, sentidos: visaoAsCegas },
+        { ...agressor, condicoes: [{ id: "invisivel" }] },
+      ) === true],
+      ["Interceptador cego exige percepção alternativa", percebe?.(
+        combateVisivel, { ...observador, condicoes: [{ id: "cego" }] }, agressor,
+      ) === false],
+      ["Visão às Cegas compensa cegueira no alcance", percebe?.(
+        combateVisivel, { ...observador, condicoes: [{ id: "cego" }], sentidos: visaoAsCegas },
+        agressor,
+      ) === true],
+      ["Visão às Cegas não atravessa cobertura total", percebe?.(
+        combateBloqueado, { ...observador, sentidos: visaoAsCegas },
+        { ...agressor, condicoes: [{ id: "invisivel" }] },
+      ) === false],
+      ["Acerto oferece Interceptação ao Guerreiro próximo", criarCenarioLista().length === 1],
+      ["Erro de ataque não oferece Interceptação", criarCenarioLista({ acertou: false }).length === 0],
+      ["Guerreiro atingido pode interceptar o próprio dano", criarCenarioLista({
+        proprioAlvo: true,
+      })[0]?.alvoId === interceptador.id],
+      ["Guerreiro distante não pode interceptar", criarCenarioLista({
+        defensor: { posicao: { coluna: 1, linha: 5 } },
+      }).length === 0],
+      ["Sem reação não aparece opção de Interceptação", criarCenarioLista({
+        defensor: { reacaoDisponivel: false },
+      }).length === 0],
+      ["Arma arremessada remove opção de Interceptação", criarCenarioLista({
+        defensor: { equipamentosArremessados: ["adaga:armaPrincipal"] },
+      }).length === 0],
+      ["Atacante invisível não percebido remove opção", criarCenarioLista({
+        atacante: { condicoes: [{ id: "invisivel" }] },
+      }).length === 0],
+      ["Resultado de ataque real expõe Interceptação após acerto",
+        ataqueRealAcertou.acertou === true &&
+        ataqueRealAcertou.interceptacoesDisponiveis?.length === 1 &&
+        ataqueRealAcertou.interceptacoesDisponiveis[0].participanteId === interceptador.id],
+      ["Resultado de ataque real não expõe Interceptação após erro",
+        ataqueRealErrou.acertou === false &&
+        ataqueRealErrou.interceptacoesDisponiveis?.length === 0],
+      ["Ativar Interceptação consome exatamente a reação do Guerreiro",
+        resultadoAtivacao?.sucesso === true &&
+        casoAtivacao.defensorAtaque.reacaoDisponivel === false &&
+        casoAtivacao.combate.danoPendente?.interceptacao?.modificador === 2],
+      ["Dano aguarda a rolagem de Interceptação sem reduzir PV",
+        resultadoDanoPausado.motivo === "interceptacaoPendente" &&
+        casoAtivacao.protegidoAtaque.pontosDeVida.atuais === 20 &&
+        casoAtivacao.combate.danoPendente !== null],
+      ["Intercepção não pode ser ativada duas vezes no mesmo dano",
+        resultadoAtivacaoRepetida?.motivo === "interceptacaoJaAtiva"],
+      ["Erro de ataque não consome reação de Interceptação",
+        resultadoAtivacaoErro?.sucesso === false &&
+        casoErroAtivacao.defensorAtaque.reacaoDisponivel === true],
+      ["Resultado mínimo do d10 reduz 1 mais proficiência",
+        rolagemMinima.resultado?.reducao === 3],
+      ["Resultado máximo do d10 reduz 10 mais proficiência",
+        rolagemMaxima.resultado?.reducao === 12],
+      ["Total externo não duplica o bônus de proficiência",
+        rolagemMaxima.resultado?.reducao === 12],
+      ["Resultado inválido não resolve a Interceptação",
+        rolagemInvalida.resultado?.motivo === "d10Invalido" &&
+        rolagemInvalida.caso.combate.danoPendente?.interceptacao?.reducao === null],
+      ["Rolagem de Interceptação não pode ser registrada duas vezes",
+        rolagemRepetida?.motivo === "interceptacaoNaoPendente"],
+      ["Interceptação parcial reduz o dano antes de afetar PV",
+        danoParcialInterceptado.resultado?.danoOriginal === 9 &&
+        danoParcialInterceptado.resultado?.reducaoInterceptacao === 4 &&
+        danoParcialInterceptado.resultado?.danoAposInterceptacao === 5 &&
+        danoParcialInterceptado.resultado?.dano === 5 &&
+        danoParcialInterceptado.caso.protegidoAtaque.pontosDeVida.atuais === 15],
+      ["Interceptação acima do dano zera a perda de PV",
+        danoTotalInterceptado.resultado?.danoOriginal === 7 &&
+        danoTotalInterceptado.resultado?.danoAposInterceptacao === 0 &&
+        danoTotalInterceptado.resultado?.dano === 0 &&
+        danoTotalInterceptado.caso.protegidoAtaque.pontosDeVida.atuais === 20],
+      ["Resistência é aplicada após a redução da Interceptação",
+        danoResistenteInterceptado.resultado?.resistenciaAplicada === true &&
+        danoResistenteInterceptado.resultado?.danoAposInterceptacao === 11 &&
+        danoResistenteInterceptado.resultado?.dano === 5],
+    ];
+    return {
+      passou: verificacoes.every(([, passou]) => passou),
+      detalhes: [
+        ...verificacoes.map(([descricao, passou]) =>
+          `${passou ? "✓" : "✗"} ${descricao}.`),
+        `Dano parcial: ${JSON.stringify(danoParcialInterceptado.resultado)}; PV ${danoParcialInterceptado.caso.protegidoAtaque.pontosDeVida.atuais}.`,
+        `Dano zerado: ${JSON.stringify(danoTotalInterceptado.resultado)}; PV ${danoTotalInterceptado.caso.protegidoAtaque.pontosDeVida.atuais}.`,
+        `Dano resistente: ${JSON.stringify(danoResistenteInterceptado.resultado)}.`,
+      ],
+    };
+  }
+
+  registrarTeste({
+    id: "guerreiro.interceptacao-contrato",
+    nome: "Interceptação — contrato da reação",
+    categoria: "guerreiro-n1",
+    executar: executarContratoInterceptacao,
+  });
+
+  function executarPausaInterceptacaoTurnoInimigo() {
+    const inteligenciaOriginal = window.InteligenciaInimigos;
+    const aleatorioOriginal = Math.random;
+
+    function executarCenario(estilo) {
+      const ataque = {
+        id: "golpe-inimigo-interceptacao-dev",
+        instanciaId: "golpe-inimigo-interceptacao-dev",
+        nome: "Golpe inimigo",
+        categoria: "corpoACorpo",
+        selecao: { tipo: "criatura", alcance: { normal: 1 }, area: null },
+        bonusAtaque: 4,
+        dano: {
+          gruposDeDados: [{ quantidade: 1, numeroDeFaces: 6 }],
+          modificador: 2,
+          tipo: "contundente",
+        },
+        propriedades: [],
+      };
+      const inimigo = {
+        id: "inimigo-interceptacao-dev",
+        nome: "Inimigo",
+        tipo: "inimigo",
+        estado: "ativo",
+        posicao: { coluna: 2, linha: 1 },
+        ataques: [ataque],
+        atributos: { forca: 14, destreza: 10 },
+        acaoDisponivel: true,
+        acaoBonusDisponivel: true,
+        reacaoDisponivel: true,
+        movimentoRestante: 6,
+        habilidades: { escolhas: {} },
+      };
+      const jogador = {
+        id: "guerreiro-interceptacao-inimigo-dev",
+        nome: "Guerreiro",
+        tipo: "jogador",
+        classeId: "guerreiro",
+        estado: "ativo",
+        posicao: { coluna: 1, linha: 1 },
+        atributos: { forca: 16, destreza: 10 },
+        classeArmadura: 12,
+        pontosDeVida: { atuais: 20, maximo: 20 },
+        bonusProficiencia: 2,
+        reacaoDisponivel: true,
+        configuracaoEquipamentos: {
+          armadura: null,
+          mao1: { categoria: "armas", id: "adaga" },
+          mao2: null,
+        },
+        habilidades: { escolhas: { estilosDeLuta: estilo } },
+        ataques: [],
+      };
+      const combate = {
+        status: "ativo",
+        participantes: [inimigo, jogador],
+        participanteAtivoId: inimigo.id,
+        ordemTurnos: [inimigo.id, jogador.id],
+        tabuleiro: { colunas: 8, linhas: 8 },
+        terreno: { bloqueado: [], dificil: [] },
+        visao: { bloqueios: [], barreiras: [] },
+        efeitosTemporarios: [],
+        objetivos: [],
+      };
+      const resultado = window.SistemaCombate.executarTurnoInimigo(combate);
+      return { combate, inimigo, jogador, resultado };
+    }
+
+    try {
+      window.InteligenciaInimigos = {
+        planejarTurnoTatico() { return { sucesso: false }; },
+      };
+      Math.random = () => 0.75;
+      const comInterceptacao = executarCenario("interceptacao");
+      const semInterceptacao = executarCenario("defesa");
+      const ignorado = executarCenario("interceptacao");
+      const resultadoIgnorado = window.SistemaCombate.concluirDanoTurnoInimigo(
+        ignorado.combate,
+        ignorado.resultado.decisao.resultadoAtaque,
+      );
+      const usado = executarCenario("interceptacao");
+      const ativacao = window.SistemaCombate.ativarInterceptacao(
+        usado.combate,
+        usado.resultado.decisao.resultadoAtaque,
+        usado.jogador.id,
+      );
+      const resultadoAntesD10 = window.SistemaCombate.concluirDanoTurnoInimigo(
+        usado.combate,
+        usado.resultado.decisao.resultadoAtaque,
+      );
+      const rolagemReducao = window.SistemaCombate.registrarRolagemInterceptacao(
+        usado.combate,
+        { gruposRolados: [{ numeroDeFaces: 10, resultados: [10] }] },
+      );
+      const resultadoUsado = window.SistemaCombate.concluirDanoTurnoInimigo(
+        usado.combate,
+        usado.resultado.decisao.resultadoAtaque,
+      );
+      const resultadoRepetido = window.SistemaCombate.concluirDanoTurnoInimigo(
+        usado.combate,
+        usado.resultado.decisao.resultadoAtaque,
+      );
+      const verificacoes = [
+        ["Acerto inimigo pausa antes do dano para oferecer Interceptação",
+          comInterceptacao.resultado?.turnoPausado === true &&
+          comInterceptacao.resultado?.decisao?.tipo === "oferecerInterceptacao" &&
+          comInterceptacao.combate.danoPendente !== null],
+        ["A pausa mantém os PV e a reação do Guerreiro",
+          comInterceptacao.jogador.pontosDeVida.atuais === 20 &&
+          comInterceptacao.jogador.reacaoDisponivel === true],
+        ["A decisão identifica o interceptador e guarda o acerto",
+          comInterceptacao.resultado?.decisao?.participantesIds?.includes(
+            comInterceptacao.jogador.id,
+          ) && comInterceptacao.resultado?.decisao?.resultadoAtaque?.acertou === true],
+        ["Sem o estilo, o inimigo resolve o dano sem pausa",
+          semInterceptacao.resultado?.turnoPausado !== true &&
+          semInterceptacao.resultado?.resultadoDano?.sucesso === true &&
+          semInterceptacao.jogador.pontosDeVida.atuais < 20],
+        ["Ignorar Interceptação conclui só o dano pendente",
+          resultadoIgnorado?.sucesso === true &&
+          ignorado.jogador.pontosDeVida.atuais < 20 &&
+          ignorado.jogador.reacaoDisponivel === true &&
+          ignorado.combate.danoPendente === null],
+        ["Usar Interceptação aguarda o d10 antes do dano",
+          ativacao?.sucesso === true &&
+          resultadoAntesD10?.motivo === "interceptacaoPendente" &&
+          usado.jogador.pontosDeVida.atuais === 20],
+        ["D10 conclui o dano sem repetir o d20",
+          rolagemReducao?.sucesso === true &&
+          resultadoUsado?.sucesso === true &&
+          resultadoUsado?.resultadoDano?.dano === 0 &&
+          usado.jogador.pontosDeVida.atuais === 20 &&
+          usado.jogador.reacaoDisponivel === false],
+        ["Dano do turno inimigo não pode ser concluído duas vezes",
+          resultadoRepetido?.motivo === "danoInimigoNaoPendente"],
+      ];
+      return {
+        passou: verificacoes.every(([, passou]) => passou),
+        detalhes: verificacoes.map(([descricao, passou]) =>
+          `${passou ? "✓" : "✗"} ${descricao}.`),
+      };
+    } finally {
+      window.InteligenciaInimigos = inteligenciaOriginal;
+      Math.random = aleatorioOriginal;
+    }
+  }
+
+  registrarTeste({
+    id: "guerreiro.interceptacao-turno-inimigo",
+    nome: "Interceptação — pausa no turno inimigo",
+    categoria: "guerreiro-n1",
+    executar: executarPausaInterceptacaoTurnoInimigo,
+  });
+
+  if (window.location.pathname?.endsWith("/laboratorio-dev.html")) {
+    async function executarRoteamentoRolagemInterceptacao() {
+      const estadoAnterior = window.estadoAtualJogo;
+      const concluirAnterior = window.concluirDecisaoInterceptacao;
+      const danoComumAnterior = window.resolverDanoJogador;
+      let finalizacoes = 0;
+      let rolagensDanoComum = 0;
+      const combate = {
+        decisaoPendente: { tipo: "oferecerInterceptacao" },
+        danoPendente: {
+          interceptacao: { reducao: null, modificador: 2 },
+        },
+      };
+
+      try {
+        window.estadoAtualJogo = { combateAtual: combate };
+        window.concluirDecisaoInterceptacao = async function concluirTeste() {
+          finalizacoes += 1;
+          return true;
+        };
+        window.resolverDanoJogador = function danoComumTeste() {
+          rolagensDanoComum += 1;
+        };
+
+        window.receberResultadoRolagem({
+          detail: {
+            gruposRolados: [{ numeroDeFaces: 10, resultados: [3] }],
+          },
+        });
+        await Promise.resolve();
+
+        const verificacoes = [
+          ["D10 de Interceptação registra 3 mais proficiência",
+            combate.danoPendente.interceptacao.reducao === 5],
+          ["D10 chama a finalização da decisão uma vez", finalizacoes === 1],
+          ["D10 não chega ao resolvedor de dano comum", rolagensDanoComum === 0],
+        ];
+        return {
+          passou: verificacoes.every(([, passou]) => passou),
+          detalhes: verificacoes.map(([descricao, passou]) =>
+            `${passou ? "✓" : "✗"} ${descricao}.`),
+        };
+      } finally {
+        window.estadoAtualJogo = estadoAnterior;
+        window.concluirDecisaoInterceptacao = concluirAnterior;
+        window.resolverDanoJogador = danoComumAnterior;
+      }
+    }
+
+    registrarTeste({
+      id: "guerreiro.interceptacao-roteamento-d10",
+      nome: "Interceptação — encaminhamento do d10",
+      categoria: "guerreiro-n1",
+      executar: executarRoteamentoRolagemInterceptacao,
+    });
+  }
 
   function executarAuditoriaSegundoFolegoBasica() {
     const guerreiro = {
@@ -2881,18 +3725,41 @@
   });
 
   function executarAuditoriaAtaqueDesarmado() {
-    const criarPersonagem = (forca) => ({
+    const criarPersonagem = (
+      forca,
+      { estilo = null, mao1 = null, mao2 = null } = {},
+    ) => ({
       classeId: "guerreiro",
       nivel: 1,
       atributos: { forca },
-      habilidades: { escolhas: {} },
+      habilidades: { escolhas: { estilosDeLuta: estilo } },
       detalhes: { equipamentos: {} },
+      configuracaoInicialCombate: {
+        armadura: null,
+        mao1,
+        mao2,
+      },
     });
     const criarAtaque =
       window.RegrasFichaCriacao?.criarAtaqueCombateDesarmado;
     const ataqueForca16 = criarAtaque?.(criarPersonagem(16));
     const ataqueForca8 = criarAtaque?.(criarPersonagem(8));
     const ataqueSemForca = criarAtaque?.(criarPersonagem(""));
+    const ataqueDesarmadoSemItens = criarAtaque?.(
+      criarPersonagem(16, { estilo: "combateDesarmado" }),
+    );
+    const ataqueDesarmadoComArma = criarAtaque?.(
+      criarPersonagem(16, {
+        estilo: "combateDesarmado",
+        mao1: { categoria: "armas", id: "espadaLonga" },
+      }),
+    );
+    const ataqueDesarmadoComEscudo = criarAtaque?.(
+      criarPersonagem(16, {
+        estilo: "combateDesarmado",
+        mao2: { categoria: "escudos", id: "escudo" },
+      }),
+    );
 
     const contextoOportunidade = criarCenarioAtaqueOportunidade();
     contextoOportunidade.ameacador.ataques = [
@@ -2903,6 +3770,94 @@
       contextoOportunidade.alvo.id,
       5,
       2,
+    );
+
+    function prepararInicioTurnoCombateDesarmado({
+      estilo = "combateDesarmado",
+      aplicadoPorId = "guerreiro-combate-desarmado-dev",
+      incluirAgarramento = true,
+    } = {}) {
+      const guerreiro = {
+        id: "guerreiro-combate-desarmado-dev",
+        classeId: "guerreiro",
+        estado: "ativo",
+        movimentoMaximo: 6,
+        condicoes: [],
+        habilidades: { escolhas: { estilosDeLuta: estilo } },
+      };
+      const alvo = {
+        id: "alvo-combate-desarmado-dev",
+        estado: "ativo",
+        condicoes: incluirAgarramento
+          ? [{ id: "agarrado", aplicadoPorId }]
+          : [],
+      };
+      const combate = {
+        participantes: [guerreiro, alvo],
+        ordemTurnos: [guerreiro.id, alvo.id],
+        indiceTurno: 0,
+        rodada: 1,
+        efeitosTemporarios: [],
+      };
+
+      window.SistemaCombate.iniciarTurnoAtual(combate);
+
+      return combate.operacoesInicioTurnoDisponiveis ?? [];
+    }
+
+    const operacoesAgarramentoProprio = prepararInicioTurnoCombateDesarmado();
+    const operacoesSemAgarramento = prepararInicioTurnoCombateDesarmado({
+      incluirAgarramento: false,
+    });
+    const operacoesAgarramentoAlheio = prepararInicioTurnoCombateDesarmado({
+      aplicadoPorId: "outra-criatura-dev",
+    });
+    const operacoesSemEstilo = prepararInicioTurnoCombateDesarmado({
+      estilo: "defesa",
+    });
+    const operacaoDanoAgarrado = operacoesAgarramentoProprio[0];
+
+    const atacanteDanoAgarrado = {
+      id: "guerreiro-combate-desarmado-dev",
+      classeId: "guerreiro",
+      estado: "ativo",
+      acaoDisponivel: true,
+      acaoBonusDisponivel: true,
+      reacaoDisponivel: true,
+      habilidades: { escolhas: { estilosDeLuta: "combateDesarmado" } },
+      ataques: [],
+    };
+    const alvoDanoAgarrado = {
+      id: "alvo-combate-desarmado-dev",
+      estado: "ativo",
+      pontosDeVida: { atuais: 10, maximo: 10, temporarios: 0 },
+      habilidades: { escolhas: {} },
+    };
+    const combateDanoAgarrado = {
+      status: "ativo",
+      participantes: [atacanteDanoAgarrado, alvoDanoAgarrado],
+      efeitosTemporarios: [],
+      objetivos: [],
+    };
+    const preparacaoDanoAgarrado =
+      window.SistemaCombate.prepararDanoRoladoSemAcerto(
+        combateDanoAgarrado,
+        operacaoDanoAgarrado,
+      );
+    const resultadoDanoAgarrado = window.SistemaCombate.resolverDano(
+      combateDanoAgarrado,
+      {
+        gruposRolados: [
+          {
+            numeroDeFaces: 4,
+            resultados: [3],
+            total: 3,
+          },
+        ],
+        subtotal: 3,
+        modificador: 0,
+        total: 3,
+      },
     );
 
     const verificacoes = [
@@ -2921,6 +3876,58 @@
       [
         "A criação incompleta não gera Ataque Desarmado inválido",
         ataqueSemForca === null,
+      ],
+      [
+        "Combate Desarmado usa d8 sem armas nem escudo",
+        ataqueDesarmadoSemItens?.dano?.gruposDeDados?.[0]?.numeroDeFaces === 8 &&
+          ataqueDesarmadoSemItens?.dano?.modificador === 3 &&
+          ataqueDesarmadoSemItens?.dano?.fixo === null,
+      ],
+      [
+        "Combate Desarmado usa d6 quando empunha uma arma",
+        ataqueDesarmadoComArma?.dano?.gruposDeDados?.[0]?.numeroDeFaces === 6,
+      ],
+      [
+        "Combate Desarmado usa d6 quando empunha um escudo",
+        ataqueDesarmadoComEscudo?.dano?.gruposDeDados?.[0]?.numeroDeFaces === 6,
+      ],
+      [
+        "O dado desarmado não é identificado como dado de arma",
+        ataqueDesarmadoSemItens?.dano?.gruposDeDados?.[0]?.origem ===
+          "ataqueDesarmado",
+      ],
+      [
+        "O início do turno oferece 1d4 contra alvo agarrado pelo Guerreiro",
+        operacoesAgarramentoProprio.length === 1 &&
+          operacaoDanoAgarrado?.tipo === "solicitarDanoSemAcerto" &&
+          operacaoDanoAgarrado?.alvoId === "alvo-combate-desarmado-dev" &&
+          operacaoDanoAgarrado?.gruposDeDados?.[0]?.quantidade === 1 &&
+          operacaoDanoAgarrado?.gruposDeDados?.[0]?.numeroDeFaces === 4,
+      ],
+      [
+        "Sem alvo agarrado não há dano opcional no início do turno",
+        operacoesSemAgarramento.length === 0,
+      ],
+      [
+        "Agarramento feito por outra criatura não oferece a operação",
+        operacoesAgarramentoAlheio.length === 0,
+      ],
+      [
+        "Sem Combate Desarmado não há operação no início do turno",
+        operacoesSemEstilo.length === 0,
+      ],
+      [
+        "O dano opcional preparado usa o sistema normal de rolagem",
+        preparacaoDanoAgarrado?.sucesso === true &&
+          preparacaoDanoAgarrado?.rolagem?.gruposDeDados?.[0]?.numeroDeFaces === 4 &&
+          resultadoDanoAgarrado?.dano === 3 &&
+          alvoDanoAgarrado.pontosDeVida.atuais === 7,
+      ],
+      [
+        "O dano no agarramento não consome ação, ação bônus ou reação",
+        atacanteDanoAgarrado.acaoDisponivel === true &&
+          atacanteDanoAgarrado.acaoBonusDisponivel === true &&
+          atacanteDanoAgarrado.reacaoDisponivel === true,
       ],
       [
         "O ataque criado pode ameaçar uma saída de alcance",

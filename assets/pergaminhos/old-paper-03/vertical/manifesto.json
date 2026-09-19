@@ -1,0 +1,74 @@
+{
+  "source": "assets/recursos/old-paper-03.webp",
+  "layout": "vertical",
+  "rows": 2,
+  "columns": 4,
+  "width": 1280,
+  "height": 1280,
+  "pieces": [
+    {
+      "number": 1,
+      "file": "recomponiveis/p01.png",
+      "x": 5,
+      "y": 8,
+      "width": 324,
+      "height": 657
+    },
+    {
+      "number": 2,
+      "file": "recomponiveis/p02.png",
+      "x": 303,
+      "y": 3,
+      "width": 346,
+      "height": 639
+    },
+    {
+      "number": 3,
+      "file": "recomponiveis/p03.png",
+      "x": 615,
+      "y": 9,
+      "width": 357,
+      "height": 635
+    },
+    {
+      "number": 4,
+      "file": "recomponiveis/p04.png",
+      "x": 949,
+      "y": 10,
+      "width": 329,
+      "height": 652
+    },
+    {
+      "number": 5,
+      "file": "recomponiveis/p05.png",
+      "x": 2,
+      "y": 630,
+      "width": 327,
+      "height": 643
+    },
+    {
+      "number": 6,
+      "file": "recomponiveis/p06.png",
+      "x": 314,
+      "y": 629,
+      "width": 349,
+      "height": 645
+    },
+    {
+      "number": 7,
+      "file": "recomponiveis/p07.png",
+      "x": 635,
+      "y": 640,
+      "width": 337,
+      "height": 637
+    },
+    {
+      "number": 8,
+      "file": "recomponiveis/p08.png",
+      "x": 950,
+      "y": 632,
+      "width": 330,
+      "height": 640
+    }
+  ]
+}

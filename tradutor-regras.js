@@ -118,21 +118,21 @@ window.TradutorRegras = (function () {
       return opcao.id === estiloId;
     });
 
-    if (!estilo?.regra) {
-      return [];
-    }
+    const regras =
+  estilo?.regras ??
+  (estilo?.regra ? [estilo.regra] : []);
 
-    return [
-      {
-        origem: {
-          tipo: "estiloDeLuta",
-          id: estilo.id,
-          nome: estilo.nome,
-        },
+return regras.map(function prepararRegraEstilo(regra) {
+  return {
+    origem: {
+      tipo: "estiloDeLuta",
+      id: estilo.id,
+      nome: estilo.nome,
+    },
 
-        regra: structuredClone(estilo.regra),
-      },
-    ];
+    regra: structuredClone(regra),
+  };
+});
   }
 
   function participanteDominaArma(participante, ataque) {
@@ -259,9 +259,25 @@ window.TradutorRegras = (function () {
       return false;
     }
 
+
+    if (
+      condicao.ataqueADistancia !== undefined &&
+      Boolean(contexto?.ataqueADistancia) !== condicao.ataqueADistancia
+    ) {
+      return false;
+    }
+
     if (
       condicao.usandoArmadura !== undefined &&
       Boolean(contexto?.usandoArmadura) !== condicao.usandoArmadura
+    ) {
+      return false;
+    }
+
+        if (
+      condicao.empunhadaComDuasMaos !== undefined &&
+      Boolean(contexto?.empunhadaComDuasMaos) !==
+        condicao.empunhadaComDuasMaos
     ) {
       return false;
     }
@@ -442,11 +458,44 @@ window.TradutorRegras = (function () {
       return false;
     }
 
-    if (requisito.propriedadeArma || requisito.ataqueCorpoACorpo || requisito.segundoAlvo) {
-      return true;
-    }
 
+    if (requisito.alcanceAlvoCelulas !== undefined) {
+  const distancia =
+  contexto?.distanciaAlvoCelulas === undefined ||
+  contexto?.distanciaAlvoCelulas === null
+    ? NaN
+    : Number(contexto.distanciaAlvoCelulas);
+
+  if (
+    !Number.isFinite(distancia) ||
+    distancia > requisito.alcanceAlvoCelulas
+  ) {
     return false;
+  }
+}
+
+if (
+  requisito.precisaPerceberAtacante &&
+  contexto?.percebeAtacante !== true
+) {
+  return false;
+}
+
+if (
+  requisito.precisaEmpunharEscudoOuArma &&
+  contexto?.empunhaEscudoOuArma !== true
+) {
+  return false;
+}
+
+    return Boolean(
+  requisito.propriedadeArma ||
+  requisito.ataqueCorpoACorpo ||
+  requisito.segundoAlvo ||
+  requisito.alcanceAlvoCelulas !== undefined ||
+  requisito.precisaPerceberAtacante ||
+  requisito.precisaEmpunharEscudoOuArma
+);
   }
 
   function recursoEstaDisponivel(participante, ordem) {

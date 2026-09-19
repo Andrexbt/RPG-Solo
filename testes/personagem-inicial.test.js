@@ -49,3 +49,28 @@ test("cada chamada cria um estado completamente independente", () => {
   assert.deepEqual(segundo.habilidades.escolhas, {});
   assert.equal(segundo.detalhes.equipamentos.armadura, "...");
 });
+
+test("personagens antigos mantêm seus avatares após a mudança de pasta", () => {
+  const personagem = global.PersonagemDados.criarInicial();
+  personagem.avatar.imagem = "Imagens/Avatares/aasimar/Female/Aasimar_Female_Cleric.webp";
+  personagem.avatar.frame = "Imagens/Avatares/frame/frame-01.webp";
+
+  const normalizado = global.PersonagemDados.normalizar(personagem);
+
+  assert.equal(
+    normalizado.avatar.imagem,
+    "assets/avatares/aasimar/female/aasimar_female_cleric.webp",
+  );
+  assert.equal(normalizado.avatar.frame, "assets/avatares/frame/frame-01.webp");
+  assert.equal(personagem.avatar.frame, "Imagens/Avatares/frame/frame-01.webp");
+});
+
+test("personagens salvos com nomes antigos de avatar passam para minúsculas", () => {
+  const personagem = global.PersonagemDados.criarInicial();
+  personagem.avatar.imagem = "assets/avatares/aasimar/Male/Aasimar_Male_Wizard.webp";
+
+  const normalizado = global.PersonagemDados.normalizar(personagem);
+
+  assert.equal(normalizado.avatar.imagem, "assets/avatares/aasimar/male/aasimar_male_wizard.webp");
+  assert.equal(normalizado.avatar.generoGramatical, "masculino");
+});

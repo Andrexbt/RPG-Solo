@@ -1,4 +1,4 @@
-﻿// =====================================================
+// =====================================================
 // 1. ELEMENTOS DO HTML
 // -----------------------------------------------------
 // Referências aos elementos da página usados pelo JavaScript.
@@ -1079,14 +1079,14 @@ function criarListaAvataresDisponiveis() {
 
   for (const genero of generos) {
     for (const arquetipo of arquetiposAvatar) {
-      const nomeArquivo = prefixoEspecie + "_" + genero + "_" + arquetipo + ".webp";
+      const nomeArquivo = (prefixoEspecie + "_" + genero + "_" + arquetipo + ".webp").toLowerCase();
 
       avataresDisponiveis.push({
         genero: genero,
 
         arquetipo: arquetipo,
 
-        caminho: "Imagens/Avatares/" + especieId + "/" + genero + "/" + nomeArquivo,
+        caminho: "assets/avatares/" + especieId + "/" + genero.toLowerCase() + "/" + nomeArquivo,
       });
     }
   }
@@ -1106,7 +1106,7 @@ const dadosClasses = {
   guerreiro: {
     nome: "Guerreiro",
     dadoVida: 10,
-    imagem: "Imagens/Classes/guerreiro-modal.webp",
+    imagem: "assets/classes/guerreiro-modal.webp",
     funcionamento:
       "O Guerreiro é uma classe voltada ao domínio do combate físico. Ele se destaca pelo uso de armas, armaduras e treinamento marcial, podendo atuar como linha de frente, defensor ou atacante principal.",
     estilo:
@@ -1118,7 +1118,7 @@ const dadosClasses = {
   mago: {
     nome: "Mago",
     dadoVida: 6,
-    imagem: "Imagens/Classes/mago-modal.webp",
+    imagem: "assets/classes/mago-modal.webp",
     funcionamento:
       "O Mago é uma classe voltada ao domínio da magia. Ele se destaca pelo estudo e manipulação de feitiços, podendo atuar como suporte, controlador de campo ou atacante mágico.",
     estilo:
@@ -1130,7 +1130,7 @@ const dadosClasses = {
   ladino: {
     nome: "Ladino",
     dadoVida: 8,
-    imagem: "Imagens/Classes/ladino-modal.webp",
+    imagem: "assets/classes/ladino-modal.webp",
     funcionamento:
       "O Ladino é uma classe voltada ao roubo, intrusão e combate desarmado. Ele se destaca pela agilidade, precisão e habilidades de furtividade, podendo atuar como explorador, assasino ou ladrão.",
     estilo:
@@ -1142,7 +1142,7 @@ const dadosClasses = {
   clerigo: {
     nome: "Clérigo",
     dadoVida: 8,
-    imagem: "Imagens/Classes/clerigo-modal.webp",
+    imagem: "assets/classes/clerigo-modal.webp",
     funcionamento:
       "O Clérigo é uma classe voltada ao domínio da fé e da cura. Ele se destaca pela capacidade de canalizar os poderes de sua divindade, podendo atuar como curandeiro, defensor ou atacante divino.",
     estilo:
@@ -3231,7 +3231,7 @@ function renderizarFramesAvatar() {
   for (let numeroFrame = 1; numeroFrame <= quantidadeFrames; numeroFrame += 1) {
     const numeroFormatado = String(numeroFrame).padStart(2, "0");
 
-    const caminhoFrame = "Imagens/Avatares/frame/" + "frame-" + numeroFormatado + ".webp";
+    const caminhoFrame = "assets/avatares/frame/" + "frame-" + numeroFormatado + ".webp";
 
     const botaoFrame = document.createElement("button");
 

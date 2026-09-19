@@ -232,6 +232,8 @@
 
         numeroDeFaces: numeroDeFaces,
 
+        origem: grupo.origem ?? null,
+
         resultados: resultados,
 
         total: somarResultados(resultados),

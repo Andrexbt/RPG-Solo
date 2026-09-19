@@ -17,7 +17,7 @@ var u = (t, e, o, n) => ({
     return s(t, e, n);
   }
 });
-import { D as C } from "./Dice.js";
+import { D as C } from "./dice.js";
 import "./dice-box.es.js";
 var v, i, d, a, m, f;
 class P {

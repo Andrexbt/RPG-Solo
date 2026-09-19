@@ -1,140 +1,144 @@
 <!doctype html>
-
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Projeto RPG Solo</title>
+    <title>Taverna da Esfinge</title>
+    <link rel="icon" type="image/svg+xml" href="assets/home/logo-caneca-esfinge.svg" />
     <link rel="stylesheet" href="tema.css" />
     <link rel="stylesheet" href="home.css" />
-    <link rel="stylesheet" href="acabamento-tematico.css" />
     <script src="transicoes-paginas.js"></script>
     <script src="acesso-area-mestre.js"></script>
+    <script src="home.js" defer></script>
   </head>
 
   <body>
     <header class="cabecalho-site">
       <a class="marca" href="index.html">
-        <span class="marca-simbolo">✦</span>
-        <span>Projeto RPG Solo</span>
-      </a>
+  <img src="assets/home/logo-caneca-esfinge.svg" alt="" width="32" height="32" />
+  <span>Taverna da Esfinge</span>
+</a>
 
       <nav class="menu-principal" aria-label="Navegação principal">
-        <a href="#inicio"> Início </a>
-
-        <a href="criacao-personagem.html"> Criar personagem </a>
-
-        <a href="meus-personagens.html"> Meus personagens </a>
-
-        <a href="aventuras-disponiveis.html"> Aventuras </a>
-
-        <a href="area-mestre.html" data-acesso-area-mestre hidden> Área do Mestre </a>
+        <a href="#inicio">Início</a>
+        <a href="criacao-personagem.html">Criar personagem</a>
+        <a href="meus-personagens.html">Meus personagens</a>
+        <a href="aventuras-disponiveis.html">Aventuras</a>
+        <a href="area-mestre.html" data-acesso-area-mestre hidden>Área do Mestre</a>
       </nav>
+
+      <div class="perfil-reservado" aria-label="Espaço reservado para o perfil do usuário">
+        Perfil · em breve
+      </div>
     </header>
 
     <main id="inicio" class="home-page">
-      <section class="apresentacao-home" aria-label="Destaques do RPG Solo">
-        <section id="destaques" class="vitrine-home" aria-labelledby="tituloDestaque">
-          <div class="vitrine-conteudo">
-            <p id="etiquetaDestaque" class="vitrine-etiqueta">Aventura em destaque</p>
+      <div class="grade-home">
+        <section class="boas-vindas-esfinge" aria-labelledby="tituloBoasVindas">
+          <h1 id="tituloBoasVindas" class="titulo-visualmente-oculto">Bem-vindo à Taverna</h1>
+          <img
+            class="imagem-esfinge"
+            src="assets/home/esfinge-taverneira-balcao-esquerda-v1.png"
+            alt="Esfinge taverneira sorridente atrás do balcão, oferecendo uma caneca de cerveja e convidando a explorar os destaques."
+            width="1216"
+            height="1293"
+            fetchpriority="high"
+          />
+        </section>
 
-            <h2 id="tituloDestaque">A Fuga</h2>
+        <section class="vitrine-home" aria-labelledby="tituloExperiencias">
+          <h2 id="tituloExperiencias">Destaques</h2>
 
-            <p id="textoDestaque">
-              Encontre uma maneira de escapar da cidade enquanto diferentes forças disputam o
-              controle das ruas.
-            </p>
+          <div class="palco-destaques">
+            <div class="lista-experiencias">
+              <a class="experiencia" href="aventuras-disponiveis.html">
+  <h3>A Fuga</h3>
+  <p>Conheça a aventura e escolha como começar sua história.</p>
+</a>
 
-            <a id="linkDestaque" class="botao botao-principal" href="aventuras-disponiveis.html">
-              Ver aventura
-            </a>
-          </div>
+<a class="experiencia" href="criacao-personagem.html">
+  <h3>Criar Personagem</h3>
+  <p>Monte seu aventureiro e prepare a ficha para suas próximas histórias.</p>
+</a>
 
-          <div class="vitrine-controles" role="group" aria-label="Controles dos destaques">
-            <button id="botaoDestaqueAnterior" type="button" aria-label="Mostrar destaque anterior">
-              ←
-            </button>
+<a class="experiencia" href="nossa-missao.html">
+  <h3>Nossa Missão</h3>
+  <p>Descubra a ideia por trás da Taverna da Esfinge.</p>
+</a>
 
-            <div
-              id="indicadoresDestaque"
-              class="indicadores-destaque"
-              role="group"
-              aria-label="Posição do destaque"
-            >
-              <button
-                class="indicador-destaque indicador-ativo"
-                type="button"
-                aria-label="Mostrar primeiro destaque"
-                aria-current="true"
-              ></button>
-
-              <button
-                class="indicador-destaque"
-                type="button"
-                aria-label="Mostrar segundo destaque"
-              ></button>
-
-              <button
-                class="indicador-destaque"
-                type="button"
-                aria-label="Mostrar terceiro destaque"
-              ></button>
+<a class="experiencia" href="atualizacoes-desenvolvimento.html">
+  <h3>Atualizações de desenvolvimento</h3>
+  <p>Acompanhe o que mudou e o que está sendo preparado na Taverna.</p>
+</a>
             </div>
 
-            <button id="botaoProximoDestaque" type="button" aria-label="Mostrar próximo destaque">
-              →
-            </button>
+            <div class="vitrine-controles" aria-label="Controles dos destaques">
+              <button id="botaoDestaqueAnterior" type="button" aria-label="Destaque anterior">
+                ←
+              </button>
+
+              <div class="indicadores-destaque" role="group" aria-label="Escolher destaque">
+                <button
+                  type="button"
+                  data-destaque="0"
+                  aria-label="Mostrar A Fuga"
+                  aria-current="true"
+                ></button>
+                <button
+                  type="button"
+                  data-destaque="1"
+                  aria-label="Mostrar Criar Personagem"
+                ></button>
+                <button type="button" data-destaque="2" aria-label="Mostrar Nossa Missão"></button>
+                <button type="button" data-destaque="3" aria-label="Mostrar Atualizações"></button>
+              </div>
+
+              <button id="botaoDestaqueProximo" type="button" aria-label="Próximo destaque">
+                →
+              </button>
+            </div>
           </div>
         </section>
 
-        <aside class="destaque-lateral" aria-labelledby="tituloDestaqueLateral">
-          <p class="destaque-lateral-etiqueta">Seus personagens</p>
+        <div class="inicio-home">
+          <h2>Comece por Aqui</h2>
 
-          <h2 id="tituloDestaqueLateral">Continue sua jornada</h2>
+          <section class="janela-home" aria-labelledby="tituloTutoriais">
+            <h2 id="tituloTutoriais">Tutoriais</h2>
+            <p>Em breve, a Esfinge ajudará você a descobrir as regras e dar os primeiros passos.</p>
+          </section>
 
-          <p>Consulte seus personagens salvos e escolha quem participará da próxima aventura.</p>
-
-          <a class="botao botao-secundario" href="meus-personagens.html"> Ver personagens </a>
-        </aside>
-      </section>
-
-      <section id="recursos" class="recursos-home" aria-labelledby="tituloRecursos">
-        <header class="cabecalho-recursos">
-          <h2 id="tituloRecursos">O que você deseja fazer?</h2>
-        </header>
-
-        <div class="grade-recursos">
-          <article class="card-recurso">
-            <h3>Criar personagem</h3>
-
-            <p>
-              Monte um novo personagem escolhendo atributos, espécie, classe, habilidades e
-              equipamentos.
-            </p>
-
-            <a class="botao botao-secundario" href="criacao-personagem.html"> Criar personagem </a>
-          </article>
-
-          <article class="card-recurso">
-            <h3>Meus personagens</h3>
-
-            <p>
-              Consulte seus personagens salvos, veja suas fichas e escolha quem participará de uma
-              aventura.
-            </p>
-
-            <a class="botao botao-secundario" href="meus-personagens.html"> Ver personagens </a>
-          </article>
-
-          <article class="card-recurso">
-            <h3>Aventuras</h3>
-
-            <p>Conheça as histórias disponíveis e selecione um personagem para começar a jogar.</p>
-
-            <a class="botao botao-secundario" href="aventuras-disponiveis.html"> Ver aventuras </a>
-          </article>
+          <section class="janela-home" aria-labelledby="tituloSobre">
+            <h2 id="tituloSobre">Sobre a Taverna</h2>
+            <p>Um espaço para jogar sozinho, apoiar mesas reais e compartilhar aventuras.</p>
+          </section>
         </div>
-      </section>
+
+        <div class="atalhos-home" aria-label="Atalhos para RPG Solo">
+          <section class="atalho-home" aria-labelledby="tituloAventuras">
+            <h3 id="tituloAventuras">Aventuras</h3>
+            <p>Conheça as histórias disponíveis e escolha por onde começar.</p>
+            <a class="botao botao-secundario" href="aventuras-disponiveis.html">Ver aventuras</a>
+          </section>
+
+          <section class="atalho-home" aria-labelledby="tituloPersonagens">
+            <h3 id="tituloPersonagens">Personagens</h3>
+            <p>Retome uma ficha salva ou prepare um novo aventureiro.</p>
+            <a class="botao botao-secundario" href="meus-personagens.html">Meus personagens</a>
+          </section>
+          <section class="atalho-home" aria-labelledby="tituloCenarios">
+            <h3 id="tituloCenarios">Cenários</h3>
+            <p>Explore os mundos e lugares onde suas histórias podem acontecer.</p>
+            <span class="estado-experiencia">Em planejamento</span>
+          </section>
+
+          <section class="atalho-home" aria-labelledby="tituloFerramentas">
+            <h3 id="tituloFerramentas">Ferramentas de RPG</h3>
+            <p>Recursos para preparar e acompanhar suas mesas de jogo.</p>
+            <span class="estado-experiencia">Em planejamento</span>
+          </section>
+        </div>
+      </div>
     </main>
 
     <footer class="rodape-site">

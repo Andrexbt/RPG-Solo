@@ -2825,7 +2825,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             Você pode vencer o confronto derrotando-os ou encontrando uma oportunidade para escapar.`,
         },
 
-        mapa: "Imagens/Mapas/A Fuga/batalhaRuas.webp",
+        mapa: "assets/mapas/a fuga/batalharuas.webp",
 
         terreno: {
           bloqueado: [
@@ -3143,7 +3143,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
       combate: {
         textoBotaoInicio: "Enfrentar os guardas",
         dificuldadePretendida: "moderada",
-        mapa: "Imagens/Mapas/A Fuga/batalhaTorre.webp",
+        mapa: "assets/mapas/a fuga/batalhatorre.webp",
 
         terreno: {
           bloqueado: [
@@ -3533,7 +3533,7 @@ Você sorri de volta, e, com uma pontada de culpa, começa a caminhar na direç�
             Você pode vencer o confronto derrotando-os ou encontrando uma oportunidade para escapar.`,
         },
 
-        mapa: "Imagens/Mapas/A Fuga/batalhaBecos.webp",
+        mapa: "assets/mapas/a fuga/batalhabecos.webp",
 
         terreno: {
           bloqueado: [
@@ -4619,7 +4619,7 @@ modeloCena: {
     dificuldadePretendida: "moderada",
 
     // Padrao oficial do projeto: mapa 6688 x 3764 px, celulas de 64 x 64 px.
-    mapa: "Imagens/Mapas/Nome da Aventura/modeloMapa.webp",
+    mapa: "assets/mapas/Nome da Aventura/modeloMapa.webp",
 
     // `objetivos` e `areas` sao opcionais. Sem eles, o objetivo automatico
     // continua sendo derrotar todos os inimigos. Ao declarar `objetivos`,

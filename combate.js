@@ -42,6 +42,8 @@ window.SistemaCombate = (function () {
         },
       ),
 
+      sentidos: structuredClone(entidade.sentidos ?? {}),
+
       talentos: structuredClone(entidade.talentos ?? []),
 
       classeId: entidade.classeId ?? null,
@@ -72,6 +74,40 @@ window.SistemaCombate = (function () {
 
     return ["mao1", "mao2"].some(function (slot) {
       return configuracao[slot] === null || configuracao[slot] === undefined;
+    });
+  }
+
+  function participanteEmpunhaEscudoOuArma(participante) {
+    const configuracao = participante?.configuracaoEquipamentos;
+
+    if (!configuracao) {
+      return false;
+    }
+
+    const itensNasMaos = [configuracao.mao1, configuracao.mao2].filter(
+      (item) => item && !item.ocupadaPor,
+    );
+
+    if (
+      itensNasMaos.some((item) => item.categoria === "itensSecundarios" && item.id === "escudo")
+    ) {
+      return true;
+    }
+
+    const armasNasMaos = itensNasMaos.filter((item) => item.categoria === "armas");
+
+    return armasNasMaos.some((item, indice) => {
+      const arma = window.bancoEquipamentos?.armas?.[item.id];
+
+      if (arma?.tipo !== "simples" && arma?.tipo !== "marcial") {
+        return false;
+      }
+
+      const origemEquipamento = indice === 0 ? "armaPrincipal" : "armaSecundaria";
+
+      const identidade = `${item.id}:${origemEquipamento}`;
+
+      return !(participante.equipamentosArremessados ?? []).includes(identidade);
     });
   }
 
@@ -284,121 +320,105 @@ window.SistemaCombate = (function () {
     };
   }
 
-  function resolverEscaparAgarrar(
-  combate,
-  idParticipante,
-  periciaId,
-  resultadoRolagem = null,
-) {
-  const participante = combate?.participantes.find(function (
-    participanteCombate,
-  ) {
-    return participanteCombate.id === idParticipante;
-  });
-
-  if (!participante) {
-    return {
-      sucesso: false,
-      mmotivo: "participanteInexistente",
-    };
-  }
-
-  if (combate.participanteAtivoId !== participante.id) {
-    return {
-      sucesso: false,
-      motivo: "foraDoTurno",
-    };
-  }
-
-  if (participante.estado === "derrotado") {
-    return {
-      sucesso: false,
-      motivo: "participanteDerrotado",
-    };
-  }
-
-  if (!participante.acaoDisponivel) {
-    return {
-      sucesso: false,
-      motivo: "acaoIndisponivel",
-    };
-  }
-
-  const indiceCondicao = participante.condicoes?.findIndex(function (
-    condicao,
-  ) {
-    return condicao.id === "agarrado";
-  }) ?? -1;
-
-  if (indiceCondicao === -1) {
-    return {
-      sucesso: false,
-      motivo: "participanteNaoAgarrado",
-    };
-  }
-
-  const periciasPermitidas = ["atletismo", "acrobacia"];
-
-  if (!periciasPermitidas.includes(periciaId)) {
-    return {
-      sucesso: false,
-      motivo: "periciaInvalida",
-      periciasPermitidas,
-    };
-  }
-
-  const condicaoAgarrado = participante.condicoes[indiceCondicao];
-  const dificuldade = Number(condicaoAgarrado.dificuldade);
-
-  if (!Number.isFinite(dificuldade)) {
-    return {
-      sucesso: false,
-      motivo: "dificuldadeInvalida",
-    };
-  }
-
-  const bonusPericia =
-    window.SistemaTestes.calcularBonusPericia(
-      participante,
-      periciaId,
-    );
-
-  const rolagem =
-    resultadoRolagem ??
-    realizarRolagemComposta({
-      gruposDeDados: [
-        {
-          quantidade: 1,
-          numeroDeFaces: 20,
-        },
-      ],
-
-      modificador: bonusPericia,
+  function resolverEscaparAgarrar(combate, idParticipante, periciaId, resultadoRolagem = null) {
+    const participante = combate?.participantes.find(function (participanteCombate) {
+      return participanteCombate.id === idParticipante;
     });
 
-  const resultadoTeste =
-    window.SistemaTestes.resolverTesteContraCd(
-      rolagem,
+    if (!participante) {
+      return {
+        sucesso: false,
+        mmotivo: "participanteInexistente",
+      };
+    }
+
+    if (combate.participanteAtivoId !== participante.id) {
+      return {
+        sucesso: false,
+        motivo: "foraDoTurno",
+      };
+    }
+
+    if (participante.estado === "derrotado") {
+      return {
+        sucesso: false,
+        motivo: "participanteDerrotado",
+      };
+    }
+
+    if (!participante.acaoDisponivel) {
+      return {
+        sucesso: false,
+        motivo: "acaoIndisponivel",
+      };
+    }
+
+    const indiceCondicao =
+      participante.condicoes?.findIndex(function (condicao) {
+        return condicao.id === "agarrado";
+      }) ?? -1;
+
+    if (indiceCondicao === -1) {
+      return {
+        sucesso: false,
+        motivo: "participanteNaoAgarrado",
+      };
+    }
+
+    const periciasPermitidas = ["atletismo", "acrobacia"];
+
+    if (!periciasPermitidas.includes(periciaId)) {
+      return {
+        sucesso: false,
+        motivo: "periciaInvalida",
+        periciasPermitidas,
+      };
+    }
+
+    const condicaoAgarrado = participante.condicoes[indiceCondicao];
+    const dificuldade = Number(condicaoAgarrado.dificuldade);
+
+    if (!Number.isFinite(dificuldade)) {
+      return {
+        sucesso: false,
+        motivo: "dificuldadeInvalida",
+      };
+    }
+
+    const bonusPericia = window.SistemaTestes.calcularBonusPericia(participante, periciaId);
+
+    const rolagem =
+      resultadoRolagem ??
+      realizarRolagemComposta({
+        gruposDeDados: [
+          {
+            quantidade: 1,
+            numeroDeFaces: 20,
+          },
+        ],
+
+        modificador: bonusPericia,
+      });
+
+    const resultadoTeste = window.SistemaTestes.resolverTesteContraCd(rolagem, dificuldade);
+
+    consumirAcao(participante);
+
+    if (resultadoTeste.sucesso) {
+      participante.condicoes.splice(indiceCondicao, 1);
+    }
+
+    return {
+      sucesso: true,
+      participante,
+      periciaId,
+      bonusPericia,
       dificuldade,
-    );
-
-  consumirAcao(participante);
-
-  if (resultadoTeste.sucesso) {
-    participante.condicoes.splice(indiceCondicao, 1);
+      rolagem,
+      resultadoTeste,
+      escapou: resultadoTeste.sucesso,
+    };
   }
-
-  return {
-    sucesso: true,
-    participante,
-    periciaId,
-    bonusPericia,
-    dificuldade,
-    rolagem,
-    resultadoTeste,
-    escapou: resultadoTeste.sucesso,
-  };
-}
 
   function encerrarAgarramentosInvalidos(combate) {
     if (!combate?.participantes) {
@@ -454,42 +474,38 @@ window.SistemaCombate = (function () {
   }
 
   function liberarAlvoAgarrado(combate, idAgarrador, idAlvo) {
-  const alvo = combate?.participantes.find(function (participante) {
-    return participante.id === idAlvo;
-  });
+    const alvo = combate?.participantes.find(function (participante) {
+      return participante.id === idAlvo;
+    });
 
-  if (!alvo) {
+    if (!alvo) {
+      return {
+        sucesso: false,
+        motivo: "alvoInexistente",
+      };
+    }
+
+    const indiceCondicao =
+      alvo.condicoes?.findIndex(function (condicao) {
+        return condicao.id === "agarrado" && condicao.aplicadoPorId === idAgarrador;
+      }) ?? -1;
+
+    if (indiceCondicao === -1) {
+      return {
+        sucesso: false,
+        motivo: "agarramentoInexistente",
+      };
+    }
+
+    const [condicaoRemovida] = alvo.condicoes.splice(indiceCondicao, 1);
+
     return {
-      sucesso: false,
-      motivo: "alvoInexistente",
+      sucesso: true,
+      alvo,
+      condicaoRemovida,
+      custo: "nenhum",
     };
   }
-
-  const indiceCondicao =
-    alvo.condicoes?.findIndex(function (condicao) {
-      return (
-        condicao.id === "agarrado" &&
-        condicao.aplicadoPorId === idAgarrador
-      );
-    }) ?? -1;
-
-  if (indiceCondicao === -1) {
-    return {
-      sucesso: false,
-      motivo: "agarramentoInexistente",
-    };
-  }
-
-  const [condicaoRemovida] =
-    alvo.condicoes.splice(indiceCondicao, 1);
-
-  return {
-    sucesso: true,
-    alvo,
-    condicaoRemovida,
-    custo: "nenhum",
-  };
-}
 
   function criarEstadoCombate(configuracao) {
     const participantes = structuredClone(configuracao.participantes);
@@ -638,6 +654,212 @@ window.SistemaCombate = (function () {
 
     return Math.max(distanciaColunas, distanciaLinhas);
   }
+
+  function obterAlcanceSentidoEmCelulas(participante, sentidoId) {
+    const alcanceMetros = Number(participante?.sentidos?.[sentidoId]?.alcance);
+
+    if (!Number.isFinite(alcanceMetros) || alcanceMetros <= 0) {
+      return 0;
+    }
+
+    const metrosPorCelula = 1.5;
+
+    return Math.floor(alcanceMetros / metrosPorCelula);
+  }
+
+  function participantePercebeAlvoSemVisao(observador, alvo) {
+    if (!observador?.posicao || !alvo?.posicao) {
+      return false;
+    }
+
+    const alcanceVisaoAsCegas = obterAlcanceSentidoEmCelulas(observador, "visaoAsCegas");
+
+    if (alcanceVisaoAsCegas <= 0) {
+      return false;
+    }
+
+    const distancia = calcularDistancia(observador.posicao, alvo.posicao);
+
+    return distancia <= alcanceVisaoAsCegas;
+  }
+
+  function listarInterceptacoesAposAcerto(combate, resultadoAtaque) {
+  if (!combate || resultadoAtaque?.acertou !== true) {
+    return [];
+  }
+
+  const atacante = resultadoAtaque.atacante;
+  const alvo = resultadoAtaque.alvo;
+
+  if (!atacante?.posicao || !alvo?.posicao || atacante.id === alvo.id) {
+    return [];
+  }
+
+  const operacoes = [];
+
+  for (const participante of combate.participantes ?? []) {
+    if (
+      participante.id === atacante.id ||
+      participante.estado === "derrotado" ||
+      !participante.posicao
+    ) {
+      continue;
+    }
+
+    const disponiveis = window.TradutorRegras.prepararOperacoes({
+      gatilho: "aposAcertoAntesDoDano",
+      modo: "combate",
+      participante,
+      atacante,
+      alvo,
+      ataque: resultadoAtaque.ataque,
+      distanciaAlvoCelulas: calcularDistancia(
+        participante.posicao,
+        alvo.posicao,
+      ),
+      percebeAtacante:
+        participantePercebeAtacanteParaInterceptacao(
+          combate,
+          participante,
+          atacante,
+        ),
+      empunhaEscudoOuArma:
+        participanteEmpunhaEscudoOuArma(participante),
+    });
+
+    operacoes.push(
+      ...disponiveis.filter(
+        (operacao) => operacao.origem?.id === "interceptacao",
+      ),
+    );
+  }
+
+  return operacoes;
+}
+
+function ativarInterceptacao(
+  combate,
+  resultadoAtaque,
+  participanteId,
+) {
+  const danoPendente = combate?.danoPendente;
+
+  if (
+    resultadoAtaque?.acertou !== true ||
+    !danoPendente ||
+    danoPendente.atacanteId !== resultadoAtaque.atacante?.id ||
+    danoPendente.alvoId !== resultadoAtaque.alvo?.id ||
+    danoPendente.ataqueId !==
+      obterIdentificadorAtaque(resultadoAtaque.ataque)
+  ) {
+    return { sucesso: false, motivo: "acertoNaoPendente" };
+  }
+
+  if (danoPendente.interceptacao) {
+    return { sucesso: false, motivo: "interceptacaoJaAtiva" };
+  }
+
+  const operacao = listarInterceptacoesAposAcerto(
+    combate,
+    resultadoAtaque,
+  ).find(
+    (item) => item.participanteId === participanteId,
+  );
+
+  if (!operacao) {
+    return { sucesso: false, motivo: "interceptadorIndisponivel" };
+  }
+
+  const participante = combate.participantes.find(
+    (item) => item.id === participanteId,
+  );
+
+  if (!consumirReacao(participante)) {
+    return { sucesso: false, motivo: "reacaoIndisponivel" };
+  }
+
+  danoPendente.interceptacao = {
+    participanteId,
+    alvoId: operacao.alvoId,
+    gruposDeDados: structuredClone(operacao.gruposDeDados),
+    modificador: operacao.modificador,
+    reducao: null,
+  };
+
+  return {
+    sucesso: true,
+    interceptacao: structuredClone(danoPendente.interceptacao),
+  };
+}
+
+function registrarRolagemInterceptacao(combate, resultadoRolagem) {
+  const interceptacao = combate?.danoPendente?.interceptacao;
+
+  if (!interceptacao || interceptacao.reducao !== null) {
+    return { sucesso: false, motivo: "interceptacaoNaoPendente" };
+  }
+
+  const grupoD10 = resultadoRolagem?.gruposRolados?.find(
+    (grupo) => grupo.numeroDeFaces === 10,
+  );
+
+  const resultados = grupoD10?.resultados ?? [];
+  const valorDado = Number(resultados[0]);
+
+  if (
+    resultados.length !== 1 ||
+    !Number.isInteger(valorDado) ||
+    valorDado < 1 ||
+    valorDado > 10
+  ) {
+    return { sucesso: false, motivo: "d10Invalido" };
+  }
+
+  interceptacao.reducao =
+    valorDado + interceptacao.modificador;
+
+  return {
+    sucesso: true,
+    reducao: interceptacao.reducao,
+  };
+}
+
+  function participantePercebeAtacanteParaInterceptacao(
+  combate,
+  observador,
+  atacante,
+) {
+  if (!observador?.posicao || !atacante?.posicao) {
+    return false;
+  }
+
+  const linhaVisao = verificarLinhaVisao(
+    combate,
+    observador.posicao,
+    atacante.posicao,
+  );
+
+  if (!linhaVisao.sucesso || !linhaVisao.linhaLivre) {
+    return false;
+  }
+
+  const observadorCego = observador.condicoes?.some(
+    (condicao) => condicao.id === "cego",
+  );
+
+  const atacanteInvisivel = atacante.condicoes?.some(
+    (condicao) => condicao.id === "invisivel",
+  );
+
+  if (!observadorCego && !atacanteInvisivel) {
+    return true;
+  }
+
+  return participantePercebeAlvoSemVisao(
+    observador,
+    atacante,
+  );
+}
 
   function participantesSaoHostis(participanteA, participanteB) {
     if (!participanteA || !participanteB || participanteA.id === participanteB.id) {
@@ -1974,76 +2196,65 @@ window.SistemaCombate = (function () {
     return true;
   }
 
-  function recuperarArmaDoChao(
-  combate,
-  idParticipante,
-  equipamentoInstanciaId,
-) {
-  const participante = combate?.participantes.find(function (
-    participanteCombate,
-  ) {
-    return participanteCombate.id === idParticipante;
-  });
+  function recuperarArmaDoChao(combate, idParticipante, equipamentoInstanciaId) {
+    const participante = combate?.participantes.find(function (participanteCombate) {
+      return participanteCombate.id === idParticipante;
+    });
 
-  if (!participante) {
-    return {
-      sucesso: false,
-      motivo: "participanteInexistente",
-    };
-  }
+    if (!participante) {
+      return {
+        sucesso: false,
+        motivo: "participanteInexistente",
+      };
+    }
 
-  const indiceItem =
-    combate.itensNoChao?.findIndex(function (item) {
-      return (
-        item.tipo === "arma" &&
-        item.equipamentoInstanciaId === equipamentoInstanciaId
-      );
-    }) ?? -1;
+    const indiceItem =
+      combate.itensNoChao?.findIndex(function (item) {
+        return item.tipo === "arma" && item.equipamentoInstanciaId === equipamentoInstanciaId;
+      }) ?? -1;
 
-  if (indiceItem === -1) {
-    return {
-      sucesso: false,
-      motivo: "armaNaoEncontrada",
-    };
-  }
+    if (indiceItem === -1) {
+      return {
+        sucesso: false,
+        motivo: "armaNaoEncontrada",
+      };
+    }
 
-  const arma = combate.itensNoChao[indiceItem];
+    const arma = combate.itensNoChao[indiceItem];
 
-  if (arma.origemParticipanteId !== participante.id) {
-    return {
-      sucesso: false,
-      motivo: "armaPertenceAOutroParticipante",
-       };
-  }
+    if (arma.origemParticipanteId !== participante.id) {
+      return {
+        sucesso: false,
+        motivo: "armaPertenceAOutroParticipante",
+      };
+    }
 
-  const estaNaMesmaCelula =
-    participante.posicao.coluna === arma.posicao.coluna &&
-    participante.posicao.linha === arma.posicao.linha;
+    const estaNaMesmaCelula =
+      participante.posicao.coluna === arma.posicao.coluna &&
+      participante.posicao.linha === arma.posicao.linha;
 
-  if (!estaNaMesmaCelula) {
-    return {
-      sucesso: false,
-      motivo: "armaForaDeAlcance",
-      arma,
-    };
-  }
+    if (!estaNaMesmaCelula) {
+      return {
+        sucesso: false,
+        motivo: "armaForaDeAlcance",
+        arma,
+      };
+    }
 
-   const [armaRecuperada] =
-    combate.itensNoChao.splice(indiceItem, 1);
+    const [armaRecuperada] = combate.itensNoChao.splice(indiceItem, 1);
 
-  participante.equipamentosArremessados =
-    (participante.equipamentosArremessados ?? []).filter(
+    participante.equipamentosArremessados = (participante.equipamentosArremessados ?? []).filter(
       function (idEquipamento) {
         return idEquipamento !== equipamentoInstanciaId;
       },
     );
 
-  return {
-    sucesso: true,
-    participante,
-    armaRecuperada,
-  };
-}
+    return {
+      sucesso: true,
+      participante,
+      armaRecuperada,
+    };
+  }
 
   function obterIdentificadorAtaque(ataque) {
     return ataque?.instanciaId ?? ataque?.id ?? null;
@@ -2163,14 +2374,34 @@ window.SistemaCombate = (function () {
     const atacanteEstaCaido =
       atacante.condicoes?.some((condicao) => condicao.id === "caido") ?? false;
 
-      const condicaoAgarrado =
-  atacante.condicoes?.find(function (condicao) {
-    return condicao.id === "agarrado";
-  }) ?? null;
+    const condicaoAgarrado =
+      atacante.condicoes?.find(function (condicao) {
+        return condicao.id === "agarrado";
+      }) ?? null;
 
-const ataqueContraOutroEnquantoAgarrado =
-  condicaoAgarrado !== null &&
-  condicaoAgarrado.aplicadoPorId !== alvo.id;
+    const ataqueContraOutroEnquantoAgarrado =
+      condicaoAgarrado !== null && condicaoAgarrado.aplicadoPorId !== alvo.id;
+
+    const atacanteEstaCego =
+      atacante.condicoes?.some((condicao) => condicao.id === "cego") ?? false;
+
+    const alvoEstaCego = alvo.condicoes?.some((condicao) => condicao.id === "cego") ?? false;
+
+    const atacanteEstaInvisivel =
+      atacante.condicoes?.some((condicao) => condicao.id === "invisivel") ?? false;
+
+    const alvoEstaInvisivel =
+      alvo.condicoes?.some((condicao) => condicao.id === "invisivel") ?? false;
+
+    const atacantePercebeAlvoSemVisao = participantePercebeAlvoSemVisao(atacante, alvo);
+
+    const alvoPercebeAtacanteSemVisao = participantePercebeAlvoSemVisao(alvo, atacante);
+
+    const vantagemPorNaoSerPercebido =
+      (atacanteEstaInvisivel || alvoEstaCego) && !alvoPercebeAtacanteSemVisao;
+
+    const desvantagemPorNaoPerceberAlvo =
+      (atacanteEstaCego || alvoEstaInvisivel) && !atacantePercebeAlvoSemVisao;
 
     const alvoEstaCaido = alvo.condicoes?.some((condicao) => condicao.id === "caido") ?? false;
 
@@ -2213,7 +2444,11 @@ const ataqueContraOutroEnquantoAgarrado =
     const possuiDesvantagemBase = resultadoSelecao.tipoRolagem === "desvantagem";
 
     const tipoRolagem = resolverTipoRolagem({
-      vantagem: possuiVantagemBase || possuiVantagemTemporaria || ataqueProximoContraCaido,
+      vantagem:
+        possuiVantagemBase ||
+        possuiVantagemTemporaria ||
+        ataqueProximoContraCaido ||
+        vantagemPorNaoSerPercebido,
 
       desvantagem:
         possuiDesvantagemBase ||
@@ -2221,7 +2456,8 @@ const ataqueContraOutroEnquantoAgarrado =
         atacanteEstaCaido ||
         ataqueDistanteContraCaido ||
         naoAtendeRequisitoArmaPesada ||
-        ataqueContraOutroEnquantoAgarrado,
+        ataqueContraOutroEnquantoAgarrado ||
+        desvantagemPorNaoPerceberAlvo,
     });
 
     combate.ataquePendente = {
@@ -2493,6 +2729,15 @@ const ataqueContraOutroEnquantoAgarrado =
       };
     }
 
+    const interceptacoesDisponiveis = acertou
+  ? listarInterceptacoesAposAcerto(combate, {
+      acertou,
+      atacante,
+      alvo,
+      ataque: ataqueResolvido,
+    })
+  : [];
+
     return {
       sucesso: true,
       acertou,
@@ -2507,6 +2752,7 @@ const ataqueContraOutroEnquantoAgarrado =
       destinoArmaArremessada,
       atacante,
       alvo,
+      interceptacoesDisponiveis,
 
       ataque:
         ataquePendente.tipoEspecial === "cleave"
@@ -3090,6 +3336,34 @@ const ataqueContraOutroEnquantoAgarrado =
 
     const resultadoAtaque = resolverAtaque(combate, resultadoRolagemAtaque);
 
+    const interceptacoesJogador =
+      resultadoAtaque.interceptacoesDisponiveis?.filter((operacao) =>
+        combate.participantes.some(
+          (participante) =>
+            participante.id === operacao.participanteId && participante.tipo === "jogador",
+        ),
+      ) ?? [];
+
+    if (resultadoAtaque.acertou && interceptacoesJogador.length > 0) {
+      combate.decisaoPendente = {
+        tipo: "oferecerInterceptacao",
+        resultadoAtaque: structuredClone(resultadoAtaque),
+        participantesIds: interceptacoesJogador.map((operacao) => operacao.participanteId),
+      };
+
+      return {
+        sucesso: true,
+        turnoPausado: true,
+        reacaoPendente: true,
+        inimigo,
+        alvo,
+        ataque,
+        resultadoMovimento,
+        resultadoAtaque,
+        decisao: combate.decisaoPendente,
+      };
+    }
+
     let resultadoDano = null;
 
     if (resultadoAtaque.acertou) {
@@ -3123,6 +3397,61 @@ const ataqueContraOutroEnquantoAgarrado =
       resultadoCombate,
     };
   }
+
+  function concluirDanoTurnoInimigo(combate, resultadoAtaque) {
+  const pendente = combate?.danoPendente;
+
+  if (
+    resultadoAtaque?.acertou !== true ||
+    !pendente ||
+    pendente.atacanteId !== resultadoAtaque.atacante?.id ||
+    pendente.alvoId !== resultadoAtaque.alvo?.id
+  ) {
+    return { sucesso: false, motivo: "danoInimigoNaoPendente" };
+  }
+
+  if (pendente.interceptacao?.reducao === null) {
+    return { sucesso: false, motivo: "interceptacaoPendente" };
+  }
+
+  const ataque = encontrarAtaque(
+    resultadoAtaque.atacante,
+    pendente.ataqueId,
+  );
+
+  if (!ataque) {
+    return { sucesso: false, motivo: "ataqueInexistente" };
+  }
+
+  const gruposDano = structuredClone(ataque.dano.gruposDeDados);
+
+  if (pendente.critico) {
+    for (const grupo of gruposDano) {
+      grupo.quantidade *= 2;
+    }
+  }
+
+  const rolagemDano = realizarRolagemComposta({
+    gruposDeDados: gruposDano,
+    modificador: ataque.dano.modificador,
+  });
+
+  const resultadoDano = resolverDano(combate, rolagemDano);
+
+  if (!resultadoDano.sucesso) {
+    return resultadoDano;
+  }
+
+  return {
+    sucesso: true,
+    inimigo: resultadoAtaque.atacante,
+    alvo: resultadoAtaque.alvo,
+    ataque,
+    resultadoAtaque,
+    resultadoDano,
+    resultadoCombate: verificarFimCombate(combate),
+  };
+}
 
   function aplicarCondicaoCombate(participante, condicaoId, dados = {}) {
     if (!participante || !condicaoId) {
@@ -3259,7 +3588,7 @@ const ataqueContraOutroEnquantoAgarrado =
     if (efeitoDoResultado?.tipo === "aplicarCondicao") {
       resultadoCondicao = aplicarCondicaoCombate(alvo, efeitoDoResultado.condicaoId, {
         combate,
-        
+
         origem: operacao.origem,
 
         aplicadoPorId: operacao.participanteId,
@@ -3547,6 +3876,48 @@ const ataqueContraOutroEnquantoAgarrado =
     };
   }
 
+  function prepararDanoRoladoSemAcerto(combate, operacao) {
+    if (operacao?.tipo !== "solicitarDanoSemAcerto") {
+      return {
+        sucesso: false,
+        motivo: "operacaoInvalida",
+      };
+    }
+
+    const atacante = combate.participantes.find(
+      (participante) => participante.id === operacao.participanteId,
+    );
+
+    const alvo = combate.participantes.find((participante) => participante.id === operacao.alvoId);
+
+    if (!atacante || !alvo || alvo.estado === "derrotado") {
+      return {
+        sucesso: false,
+        motivo: "participantesInvalidos",
+      };
+    }
+
+    combate.danoPendente = {
+      atacanteId: atacante.id,
+      alvoId: alvo.id,
+      ataqueId: null,
+      critico: false,
+      efeitos: [],
+      tipoDano: operacao.tipoDano,
+    };
+
+    return {
+      sucesso: true,
+      atacante,
+      alvo,
+
+      rolagem: {
+        gruposDeDados: structuredClone(operacao.gruposDeDados ?? []),
+        modificador: Number(operacao.modificador) || 0,
+      },
+    };
+  }
+
   function aplicarDanoSemAcerto(combate, operacao) {
     if (!combate || operacao?.tipo !== "causarDanoSemAcerto") {
       return {
@@ -3583,6 +3954,59 @@ const ataqueContraOutroEnquantoAgarrado =
     });
   }
 
+  function ajustarDadosDanoArma(atacante, ataque, resultadoRolagem) {
+    const resultadoAjustado = structuredClone(resultadoRolagem);
+
+    if (!Array.isArray(resultadoAjustado?.gruposRolados)) {
+      return resultadoAjustado;
+    }
+
+    const efeitos =
+      window.TradutorRegras?.obterEfeitosPassivos(
+        {
+          participante: atacante,
+          arma: ataque,
+          ataqueADistancia: ataque?.categoria === "distancia",
+          empunhadaComDuasMaos: Boolean(ataque?.empunhadaComDuasMaos),
+        },
+        "ajustarDadosDanoArma",
+      ) ?? [];
+
+    if (efeitos.length === 0) {
+      return resultadoAjustado;
+    }
+
+    for (const entrada of efeitos) {
+      const resultadosSubstituidos = entrada.efeito.resultadosSubstituidos ?? [];
+
+      const resultadoMinimo = Number(entrada.efeito.resultadoMinimo) || 0;
+
+      for (const grupo of resultadoAjustado.gruposRolados ?? []) {
+        if (grupo.origem !== "arma") {
+          continue;
+        }
+
+        grupo.resultados = grupo.resultados.map(function ajustarResultado(resultado) {
+          return resultadosSubstituidos.includes(resultado) ? resultadoMinimo : resultado;
+        });
+
+        grupo.total = grupo.resultados.reduce(function somarResultados(total, resultado) {
+          return total + resultado;
+        }, 0);
+      }
+    }
+
+    resultadoAjustado.subtotal =
+      resultadoAjustado.gruposRolados?.reduce(function somarGrupos(total, grupo) {
+        return total + (Number(grupo.total) || 0);
+      }, 0) ?? 0;
+
+    resultadoAjustado.total =
+      resultadoAjustado.subtotal + (Number(resultadoAjustado.modificador) || 0);
+
+    return resultadoAjustado;
+  }
+
   function resolverDano(combate, resultadoRolagem) {
     const danoPendente = combate.danoPendente;
 
@@ -3596,6 +4020,13 @@ const ataqueContraOutroEnquantoAgarrado =
         motivo: "nenhumDanoPendente",
       };
     }
+
+    if (danoPendente.interceptacao?.reducao === null) {
+  return {
+    sucesso: false,
+    motivo: "interceptacaoPendente",
+  };
+}
 
     for (const efeito of danoPendente.efeitos ?? []) {
       if (
@@ -3626,6 +4057,8 @@ const ataqueContraOutroEnquantoAgarrado =
 
     const ataque = encontrarAtaque(atacante, danoPendente.ataqueId);
 
+    const resultadoRolagemAjustado = ajustarDadosDanoArma(atacante, ataque, resultadoRolagem);
+
     const destinoArmaArremessada = danoPendente.arremessoPendente
       ? resolverDestinoArmaArremessada({
           combate,
@@ -3633,13 +4066,18 @@ const ataqueContraOutroEnquantoAgarrado =
           alvo,
           ataque,
           acertou: true,
-          resultadoRolagemDano: resultadoRolagem,
+          resultadoRolagemDano: resultadoRolagemAjustado,
         })
       : null;
 
-    const danoOriginal = Math.max(0, resultadoRolagem.total);
+    const danoOriginal = Math.max(0, resultadoRolagemAjustado.total);
 
-    const tipoDano = ataque?.dano?.tipo ?? ataque?.dano?.tipoDano ?? ataque?.tipoDano ?? null;
+    const tipoDano =
+      danoPendente.tipoDano ??
+      ataque?.dano?.tipo ??
+      ataque?.dano?.tipoDano ??
+      ataque?.tipoDano ??
+      null;
 
     const operacoesDefensivas =
       window.TradutorRegras?.prepararOperacoes({
@@ -3652,7 +4090,19 @@ const ataqueContraOutroEnquantoAgarrado =
       return operacao.tipo === "concederResistenciaDano" && operacao.tipoDano === tipoDano;
     });
 
-    const dano = possuiResistencia ? Math.floor(danoOriginal / 2) : danoOriginal;
+    const reducaoInterceptacao = Math.max(
+  0,
+  Number(danoPendente.interceptacao?.reducao) || 0,
+);
+
+const danoAposInterceptacao = Math.max(
+  0,
+  danoOriginal - reducaoInterceptacao,
+);
+
+const dano = possuiResistencia
+  ? Math.floor(danoAposInterceptacao / 2)
+  : danoAposInterceptacao;
 
     alvo.pontosDeVida.atuais = Math.max(0, alvo.pontosDeVida.atuais - dano);
 
@@ -3712,6 +4162,8 @@ const ataqueContraOutroEnquantoAgarrado =
       sucesso: true,
 
       danoOriginal,
+      reducaoInterceptacao,
+danoAposInterceptacao,
       dano,
       tipoDano,
       resistenciaAplicada: possuiResistencia,
@@ -3864,6 +4316,27 @@ const ataqueContraOutroEnquantoAgarrado =
     };
   }
 
+  function prepararOperacoesInicioTurno(combate, participante) {
+    const alvosAgarrados = combate.participantes.filter(function encontrarAlvoAgarrado(alvo) {
+      if (alvo.id === participante.id || alvo.estado === "derrotado") {
+        return false;
+      }
+
+      return alvo.condicoes?.some(function (condicao) {
+        return condicao.id === "agarrado" && condicao.aplicadoPorId === participante.id;
+      });
+    });
+
+    return alvosAgarrados.flatMap(function prepararParaAlvo(alvo) {
+      return window.TradutorRegras.prepararOperacoes({
+        gatilho: "inicioTurno",
+        modo: "combate",
+        participante,
+        alvo,
+      });
+    });
+  }
+
   function iniciarTurnoAtual(combate) {
     const idParticipante = combate.ordemTurnos[combate.indiceTurno];
 
@@ -3881,6 +4354,8 @@ const ataqueContraOutroEnquantoAgarrado =
     atualizarExpiracaoEfeitosTemporarios(combate, participante, "inicioTurno");
 
     window.TradutorRegras.recarregarRegras(participante, "turno");
+
+    combate.operacoesInicioTurnoDisponiveis = prepararOperacoesInicioTurno(combate, participante);
 
     combate.participanteAtivoId = participante.id;
     const modificadorDeslocamento = (combate.efeitosTemporarios ?? [])
@@ -4033,6 +4508,7 @@ const ataqueContraOutroEnquantoAgarrado =
 
     criarParticipanteCombate,
     participantePossuiMaoLivre,
+    participanteEmpunhaEscudoOuArma,
     alvoPodeSerAgarrado,
     prepararAgarrar,
     resolverAgarrar,
@@ -4046,6 +4522,12 @@ const ataqueContraOutroEnquantoAgarrado =
     registrarIniciativa,
     rolarIniciativasInimigos,
     calcularDistancia,
+    obterAlcanceSentidoEmCelulas,
+    participantePercebeAtacanteParaInterceptacao,
+    ativarInterceptacao,
+    registrarRolagemInterceptacao,
+    listarInterceptacoesAposAcerto,
+    participantePercebeAlvoSemVisao,
 
     participantesSaoHostis,
     obterAlcanceAmeaca,
@@ -4076,6 +4558,7 @@ const ataqueContraOutroEnquantoAgarrado =
     prepararAtaque,
     resolverAtaque,
     aplicarDanoSemAcerto,
+    prepararDanoRoladoSemAcerto,
     aplicarCondicaoCombate,
     resolverSalvaguardaCombate,
     aplicarDeslocamentoForcado,
@@ -4096,6 +4579,7 @@ const ataqueContraOutroEnquantoAgarrado =
     escolherAtaqueInimigo,
     moverInimigoEmDirecaoAoAlvo,
     executarTurnoInimigo,
+    concluirDanoTurnoInimigo,
     encerrarTurno,
   };
 })();

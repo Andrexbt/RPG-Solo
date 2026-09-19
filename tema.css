@@ -93,9 +93,6 @@ body {
 
 .hero-personagens,
 .hero-ver-personagem {
-  --opacidade-decoracao: 0.28;
-  --opacidade-ornamento: 0.14;
-
   position: relative;
   min-height: 42vh;
   padding: clamp(44px, 5vw, 68px) max(28px, calc((100vw - var(--largura-conteudo)) / 2));
@@ -347,9 +344,7 @@ textarea {
 /* =====================================================
    Elementos temáticos compartilhados
    -----------------------------------------------------
-   Etiquetas e ornamentos têm uma única aparência-base.
-   Cada página pode mudar apenas opacidade e cor por meio
-   das propriedades personalizadas abaixo.
+   Etiquetas compartilhadas entre as páginas.
    ===================================================== */
 
 .etiqueta,
@@ -366,110 +361,6 @@ textarea {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-}
-
-.decoracao-fundo {
-  position: absolute;
-  pointer-events: none;
-  opacity: var(--opacidade-decoracao, 0.28);
-}
-
-.decoracao-um {
-  top: 14%;
-  right: 8%;
-  width: 220px;
-  height: 220px;
-  border: 1px solid var(--cor-borda-decoracao, rgba(255, 248, 235, 0.14));
-  border-radius: 50%;
-  animation: flutuarDecoracao 9s ease-in-out infinite;
-}
-
-.decoracao-dois {
-  bottom: 16%;
-  left: 8%;
-  width: 90px;
-  height: 90px;
-  border: 1px solid var(--cor-borda-decoracao, rgba(255, 248, 235, 0.14));
-  border-radius: 50%;
-  animation: flutuarDecoracao 7s ease-in-out infinite reverse;
-}
-
-.decoracao-um::before,
-.decoracao-dois::before {
-  content: "";
-  position: absolute;
-  inset: 18%;
-  border: 1px solid rgba(255, 248, 235, 0.1);
-  border-radius: inherit;
-}
-
-.ornamento-rpg {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  opacity: var(--opacidade-ornamento, 0.14);
-  color: rgba(255, 248, 235, 0.72);
-  border-color: var(--cor-borda-ornamento, rgba(255, 248, 235, 0.42));
-  animation: flutuarOrnamento 8s ease-in-out infinite;
-}
-
-.ornamento-dado {
-  right: 12%;
-  bottom: 12%;
-  width: 118px;
-  height: 118px;
-  display: grid;
-  place-items: center;
-  border: 2px solid currentColor;
-  clip-path: polygon(50% 0%, 90% 22%, 90% 78%, 50% 100%, 10% 78%, 10% 22%);
-  font-size: 2rem;
-  font-weight: 900;
-}
-
-.ornamento-dado::before,
-.ornamento-dado::after {
-  content: "";
-  position: absolute;
-  inset: 18px;
-  border: 1px solid currentColor;
-  clip-path: inherit;
-  opacity: 0.75;
-}
-
-.ornamento-ficha {
-  right: 13%;
-  bottom: 13%;
-  width: 120px;
-  height: 150px;
-  border: 2px solid currentColor;
-  border-radius: 18px;
-  transform: rotate(8deg);
-}
-
-.ornamento-ficha::before {
-  content: "";
-  position: absolute;
-  top: 34px;
-  right: 18px;
-  left: 18px;
-  height: 2px;
-  background: currentColor;
-  box-shadow:
-    0 26px 0 currentColor,
-    0 52px 0 currentColor;
-  opacity: 0.75;
-}
-
-.ornamento-ficha::after {
-  content: "";
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  width: 34px;
-  height: 34px;
-  border-bottom: 2px solid currentColor;
-  border-left: 2px solid currentColor;
-  border-radius: 0 18px 0 12px;
 }
 
 /* =====================================================
@@ -647,38 +538,6 @@ body.saindo-pagina::after {
 
   100% {
     background-position: 220% 50%;
-  }
-}
-
-@keyframes flutuarDecoracao {
-  0% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-  }
-
-  35% {
-    transform: translateY(-22px) translateX(14px) rotate(10deg);
-  }
-
-  70% {
-    transform: translateY(10px) translateX(-10px) rotate(-6deg);
-  }
-
-  100% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-  }
-}
-
-@keyframes flutuarOrnamento {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(1);
-  }
-
-  45% {
-    transform: translateY(-22px) rotate(5deg) scale(1.04);
-  }
-
-  100% {
-    transform: translateY(0) rotate(0deg) scale(1);
   }
 }
 

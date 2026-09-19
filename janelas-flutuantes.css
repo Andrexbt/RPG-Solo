@@ -11,7 +11,7 @@
   --janela-borda: rgba(195, 154, 88, 0.58);
   --janela-borda-suave: rgba(195, 154, 88, 0.25);
   --janela-sombra: 0 12px 28px rgba(0, 0, 0, 0.48);
-  --janela-textura: url("Imagens/Assets/textura-carvalho-escuro.webp");
+  --janela-textura: url("assets/recursos/textura-carvalho-escuro.webp");
 }
 
 .janela-flutuante {

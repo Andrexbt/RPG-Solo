@@ -13,7 +13,7 @@
 
   --fundo-papel-aventura:
     linear-gradient(rgba(255, 250, 226, 0.05), rgba(102, 59, 27, 0.04)),
-    url("Imagens/Assets/moldura-ficha/papel.webp") center top / 100% auto repeat-y;
+    url("assets/recursos/moldura-ficha/papel.webp") center top / 100% auto repeat-y;
 }
 
 body {

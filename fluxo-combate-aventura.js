@@ -4,6 +4,14 @@ function receberResultadoRolagem(evento) {
   const resultadoRolagem = evento.detail;
   const combate = estadoAtualJogo.combateAtual;
 
+  if (
+  combate?.decisaoPendente?.tipo === "oferecerInterceptacao" &&
+  combate.danoPendente?.interceptacao?.reducao === null
+) {
+  resolverRolagemInterceptacao(resultadoRolagem);
+  return;
+}
+
   if (combate?.efeitoPendente) {
     resolverEfeitoPendente(resultadoRolagem);
     return;
@@ -22,6 +30,30 @@ function receberResultadoRolagem(evento) {
   if (combate?.danoPendente) {
     resolverDanoJogador(resultadoRolagem);
   }
+}
+
+async function resolverRolagemInterceptacao(resultadoRolagem) {
+  const combate = estadoAtualJogo.combateAtual;
+  const decisao = combate?.decisaoPendente;
+
+  if (decisao?.tipo !== "oferecerInterceptacao") {
+    return false;
+  }
+
+  const registro = SistemaCombate.registrarRolagemInterceptacao(
+    combate,
+    resultadoRolagem,
+  );
+
+  if (!registro.sucesso) {
+    console.warn(
+      "Rolagem de Interceptação inválida:",
+      registro.motivo,
+    );
+    return false;
+  }
+
+  return concluirDecisaoInterceptacao(combate, decisao);
 }
 
 function resolverEfeitoPendente(resultadoRolagem) {
@@ -82,6 +114,97 @@ function solicitarRolagemNaCaixa(
   });
 }
 
+function oferecerOperacoesInicioTurno(
+  combate,
+  participante,
+) {
+  const operacoes =
+    combate.operacoesInicioTurnoDisponiveis ?? [];
+
+  if (
+    participante.tipo !== "jogador" ||
+    operacoes.length === 0
+  ) {
+    return false;
+  }
+
+  acoesCombate.innerHTML = "";
+
+  for (const operacao of operacoes) {
+    const alvo = combate.participantes.find(
+      (participanteAtual) =>
+        participanteAtual.id === operacao.alvoId,
+    );
+
+    if (!alvo) {
+      continue;
+    }
+
+    const botaoUsar = document.createElement("button");
+
+    botaoUsar.type = "button";
+    botaoUsar.textContent = `Usar em ${alvo.nome}`;
+
+    botaoUsar.addEventListener(
+      "click",
+      function usarEfeitoInicioTurno() {
+        const preparacao =
+          SistemaCombate.prepararDanoRoladoSemAcerto(
+            combate,
+            operacao,
+          );
+
+        if (!preparacao.sucesso) {
+          console.warn(
+            "Não foi possível preparar o dano:",
+            preparacao.motivo,
+          );
+
+          return;
+        }
+
+        combate.operacoesInicioTurnoDisponiveis = [];
+        acoesCombate.innerHTML = "";
+
+        solicitarRolagemNaCaixa(
+          preparacao.rolagem.gruposDeDados,
+          preparacao.rolagem.modificador,
+          `Dano de Combate Desarmado contra ${alvo.nome}`,
+        );
+
+        solicitacaoCombate.textContent =
+          `Role 1d4 de dano contundente contra ${alvo.nome}.`;
+
+        solicitacaoCombate.hidden = false;
+      },
+    );
+
+    acoesCombate.appendChild(botaoUsar);
+  }
+
+  const botaoIgnorar = document.createElement("button");
+
+  botaoIgnorar.type = "button";
+  botaoIgnorar.textContent = "Ignorar";
+
+  botaoIgnorar.addEventListener(
+    "click",
+    function ignorarEfeitoInicioTurno() {
+      combate.operacoesInicioTurnoDisponiveis = [];
+      processarTurnoAtual(combate);
+    },
+  );
+
+  acoesCombate.appendChild(botaoIgnorar);
+
+  solicitacaoCombate.textContent =
+    "Combate Desarmado pode causar 1d4 de dano a uma criatura agarrada.";
+
+  solicitacaoCombate.hidden = false;
+
+  return true;
+}
+
 function processarTurnoAtual(combate) {
   atualizarInterfaceTurno(combate);
 
@@ -106,9 +229,22 @@ function processarTurnoAtual(combate) {
   }
 
   if (participanteAtivo.tipo === "jogador") {
-    exibirAcaoAtualCombate(mensagensNarrativas.turno.jogador);
+  const efeitoInicioTurnoFoiOferecido =
+    oferecerOperacoesInicioTurno(
+      combate,
+      participanteAtivo,
+    );
+
+  if (efeitoInicioTurnoFoiOferecido) {
     return;
   }
+
+  exibirAcaoAtualCombate(
+    mensagensNarrativas.turno.jogador,
+  );
+
+  return;
+}
 
   exibirAcaoAtualCombate(`${participanteAtivo.nome} está decidindo o que fazer.`);
   solicitacaoCombate.textContent = "";

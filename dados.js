@@ -184,7 +184,7 @@
 
     miniatura.dataset.indice = String(indice);
 
-    miniatura.src = `Imagens/Assets/dados/d${numeroDeFaces}.webp`;
+    miniatura.src = `assets/recursos/dados/d${numeroDeFaces}.webp`;
 
     miniatura.alt = "";
 

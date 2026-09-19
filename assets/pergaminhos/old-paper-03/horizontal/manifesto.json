@@ -1,0 +1,71 @@
+{
+  "source": "assets/recursos/old-paper-03.webp",
+  "width": 1280,
+  "height": 1280,
+  "pieces": [
+    {
+      "number": 1,
+      "file": "recomponiveis/p01.png",
+      "x": 5,
+      "y": 3,
+      "width": 644,
+      "height": 327
+    },
+    {
+      "number": 2,
+      "file": "recomponiveis/p02.png",
+      "x": 615,
+      "y": 9,
+      "width": 660,
+      "height": 320
+    },
+    {
+      "number": 3,
+      "file": "recomponiveis/p03.png",
+      "x": 6,
+      "y": 312,
+      "width": 643,
+      "height": 353
+    },
+    {
+      "number": 4,
+      "file": "recomponiveis/p04.png",
+      "x": 628,
+      "y": 304,
+      "width": 650,
+      "height": 358
+    },
+    {
+      "number": 5,
+      "file": "recomponiveis/p05.png",
+      "x": 2,
+      "y": 629,
+      "width": 647,
+      "height": 339
+    },
+    {
+      "number": 6,
+      "file": "recomponiveis/p06.png",
+      "x": 637,
+      "y": 632,
+      "width": 643,
+      "height": 338
+    },
+    {
+      "number": 7,
+      "file": "recomponiveis/p07.png",
+      "x": 5,
+      "y": 956,
+      "width": 658,
+      "height": 318
+    },
+    {
+      "number": 8,
+      "file": "recomponiveis/p08.png",
+      "x": 635,
+      "y": 948,
+      "width": 634,
+      "height": 329
+    }
+  ]
+}

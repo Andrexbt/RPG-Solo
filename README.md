@@ -24,8 +24,8 @@ O projeto utiliza HTML, CSS e JavaScript sem framework ou etapa de compilação.
 - `ver-personagem.*`: visualização e exportação da ficha;
 - `banco-*.js`: dados de regras usados pelo criador;
 - `prototipos/`: experimentos que ainda não fazem parte do fluxo principal;
-- `Imagens/`: recursos visuais;
-- `Fontes/`: documentos de referência permitidos no projeto.
+- `assets/`: imagens e demais recursos visuais, organizados por uso (`avatares`, `classes`, `mapas`, `recursos` etc.);
+- `fontes/`: documentos de referência permitidos no projeto.
 
 ## Executar localmente
 
@@ -53,6 +53,6 @@ Pull requests e alterações enviadas à `main` passam por verificações de sin
 
 O código do projeto ainda não possui uma licença geral definida. A ausência de uma licença não concede permissão automática para copiar, modificar ou redistribuir o código.
 
-O conteúdo derivado do SRD 5.2.1 segue a licença CC BY 4.0 e sua atribuição obrigatória está registrada em [CREDITS.md](CREDITS.md) e no rodapé do site.
+O conteúdo derivado do SRD 5.2.1 segue a licença CC BY 4.0 e sua atribuição obrigatória está registrada em [credits.md](credits.md) e no rodapé do site.
 
 As licenças e origens dos recursos visuais devem ser documentadas individualmente antes de qualquer distribuição que ultrapasse o uso autorizado pelos respectivos autores.

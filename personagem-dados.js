@@ -607,12 +607,27 @@ personagemNormalizado.configuracaoInicialCombate.mao2 ??= null;
     personagemNormalizado.niveisPorClasse[classeId] = personagemNormalizado.nivel;
   }
 
+  // Personagens salvos antes da centralização ainda apontam para a pasta antiga.
+  if (personagemNormalizado.avatar) {
+    for (const campo of ["imagem", "frame"]) {
+      const caminho = personagemNormalizado.avatar[campo];
+      if (typeof caminho === "string" && caminho.startsWith("Imagens/Avatares/")) {
+        personagemNormalizado.avatar[campo] = caminho.replace(
+          "Imagens/Avatares/",
+          "assets/avatares/",
+        ).toLowerCase();
+      } else if (typeof caminho === "string" && caminho.startsWith("assets/avatares/")) {
+        personagemNormalizado.avatar[campo] = caminho.toLowerCase();
+      }
+    }
+  }
+
   if (personagemNormalizado.avatar && !personagemNormalizado.avatar.generoGramatical) {
     const caminhoAvatar = personagemNormalizado.avatar.imagem ?? "";
 
-    if (caminhoAvatar.includes("/Female/")) {
+    if (caminhoAvatar.includes("/female/")) {
       personagemNormalizado.avatar.generoGramatical = "feminino";
-    } else if (caminhoAvatar.includes("/Male/")) {
+    } else if (caminhoAvatar.includes("/male/")) {
       personagemNormalizado.avatar.generoGramatical = "masculino";
     }
   }

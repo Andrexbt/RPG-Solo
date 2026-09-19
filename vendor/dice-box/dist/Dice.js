@@ -33323,4 +33323,4 @@ export {
   oi as y,
   _ as z
 };
-//# sourceMappingURL=Dice.js.map
+//# sourceMappingURL=dice.js.map

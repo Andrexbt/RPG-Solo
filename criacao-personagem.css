@@ -14,10 +14,6 @@ body {
    ===================================================== */
 
 .hero-criacao {
-  --opacidade-decoracao: 0.1;
-  --opacidade-ornamento: 0.1;
-  --cor-borda-decoracao: rgba(215, 163, 95, 0.2);
-  --cor-borda-ornamento: rgba(215, 163, 95, 0.42);
 
   position: relative;
 
@@ -318,7 +314,7 @@ body {
   border: none;
   border-radius: 18px;
   color: #4b3424;
-  background-image: url("Imagens/Assets/old-paper-02.webp");
+  background-image: url("assets/recursos/old-paper-02.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -387,7 +383,7 @@ body {
 
   border: none;
 
-  background-image: url("Imagens/Assets/old-paper-02.webp");
+  background-image: url("assets/recursos/old-paper-02.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -417,7 +413,7 @@ body {
 .card-classe.selecionado {
   border: none;
 
-  background-image: url("Imagens/Assets/old-paper-02.webp");
+  background-image: url("assets/recursos/old-paper-02.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -456,7 +452,7 @@ body {
   z-index: 2;
   pointer-events: none;
 
-  background-image: url("Imagens/Assets/frame-01.webp");
+  background-image: url("assets/recursos/frame-01.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -1226,19 +1222,6 @@ label,
 
 .modal::before {
   display: none;
-}
-
-.modal::after {
-  content: "";
-  position: absolute;
-  width: 190px;
-  height: 190px;
-  right: -70px;
-  bottom: -70px;
-  border: 1px solid rgba(215, 163, 95, 0.14);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: flutuarDecoracao 9s ease-in-out infinite;
 }
 
 .modal-cabecalho {
