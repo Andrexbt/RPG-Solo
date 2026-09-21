@@ -200,15 +200,15 @@ for (const piece of pieces) {
   const { left, top, right, bottom } = piece.bounds;
   const image = await sharp(piece.pixels, { raw: { width, height, channels: 4 } })
     .extract({ left, top, width: right - left, height: bottom - top })
-    .png()
+    .webp({ lossless: true, effort: 6 })
     .toBuffer();
-  const filename = `p${String(piece.number).padStart(2, "0")}.png`;
+  const filename = `p${String(piece.number).padStart(2, "0")}.webp`;
   const outputPath = path.join(outputDirectory, "recomponiveis", filename);
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, image);
   const standalone = await sharp(finished[piece.number - 1], { raw: { width, height, channels: 4 } })
     .extract({ left, top, width: right - left, height: bottom - top })
-    .png()
+    .webp({ lossless: true, effort: 6 })
     .toBuffer();
   const standalonePath = path.join(outputDirectory, "avulsas", filename);
   await mkdir(path.dirname(standalonePath), { recursive: true });

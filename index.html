@@ -15,20 +15,23 @@
   <body>
     <header class="cabecalho-site">
       <a class="marca" href="index.html">
-  <img src="assets/home/logo-caneca-esfinge.svg" alt="" width="32" height="32" />
-  <span>Taverna da Esfinge</span>
-</a>
+        <img
+          class="marca-nome"
+          src="assets/home/logo-taverna-da-esfinge-tipografico.webp"
+          alt="Taverna da Esfinge"
+        />
+      </a>
 
       <nav class="menu-principal" aria-label="Navegação principal">
         <a href="#inicio">Início</a>
-        <a href="criacao-personagem.html">Criar personagem</a>
-        <a href="meus-personagens.html">Meus personagens</a>
+        <a href="criacao-personagem.html">Criar Personagem</a>
+        <a href="meus-personagens.html">Meus Personagens</a>
         <a href="aventuras-disponiveis.html">Aventuras</a>
         <a href="area-mestre.html" data-acesso-area-mestre hidden>Área do Mestre</a>
       </nav>
 
       <div class="perfil-reservado" aria-label="Espaço reservado para o perfil do usuário">
-        Perfil · em breve
+        Perfil - Em Breve
       </div>
     </header>
 
@@ -38,7 +41,7 @@
           <h1 id="tituloBoasVindas" class="titulo-visualmente-oculto">Bem-vindo à Taverna</h1>
           <img
             class="imagem-esfinge"
-            src="assets/home/esfinge-taverneira-balcao-esquerda-v1.png"
+            src="assets/home/esfinge-taverneira-balcao-esquerda-v1.webp"
             alt="Esfinge taverneira sorridente atrás do balcão, oferecendo uma caneca de cerveja e convidando a explorar os destaques."
             width="1216"
             height="1293"
@@ -52,24 +55,26 @@
           <div class="palco-destaques">
             <div class="lista-experiencias">
               <a class="experiencia" href="aventuras-disponiveis.html">
-  <h3>A Fuga</h3>
-  <p>Conheça a aventura e escolha como começar sua história.</p>
-</a>
+                <h3>A Fuga</h3>
+                <p>
+                  Fuja de uma cidade em conflito enquanto diferentes forças buscam a sua eliminação.
+                </p>
+              </a>
 
-<a class="experiencia" href="criacao-personagem.html">
-  <h3>Criar Personagem</h3>
-  <p>Monte seu aventureiro e prepare a ficha para suas próximas histórias.</p>
-</a>
+              <a class="experiencia" href="criacao-personagem.html">
+                <h3>Criar Personagem</h3>
+                <p>Monte seu personagem e comece sua aventura.</p>
+              </a>
 
-<a class="experiencia" href="nossa-missao.html">
-  <h3>Nossa Missão</h3>
-  <p>Descubra a ideia por trás da Taverna da Esfinge.</p>
-</a>
+              <a class="experiencia" href="nossa-missao.html">
+                <h3>Nossa Missão</h3>
+                <p>Descubra a ideia por trás da Taverna da Esfinge.</p>
+              </a>
 
-<a class="experiencia" href="atualizacoes-desenvolvimento.html">
-  <h3>Atualizações de desenvolvimento</h3>
-  <p>Acompanhe o que mudou e o que está sendo preparado na Taverna.</p>
-</a>
+              <a class="experiencia" href="atualizacoes-desenvolvimento.html">
+                <h3>Atualizações de Desenvolvimento</h3>
+                <p>Acompanhe o que mudou e o que está sendo preparado na Taverna.</p>
+              </a>
             </div>
 
             <div class="vitrine-controles" aria-label="Controles dos destaques">
@@ -103,54 +108,78 @@
         <div class="inicio-home">
           <h2>Comece por Aqui</h2>
 
-          <section class="janela-home" aria-labelledby="tituloTutoriais">
+          <section class="janela-home janela-tutoriais" aria-labelledby="tituloTutoriais">
             <h2 id="tituloTutoriais">Tutoriais</h2>
-            <p>Em breve, a Esfinge ajudará você a descobrir as regras e dar os primeiros passos.</p>
+            <p>
+              Aprenda as mecânicas de D&D do zero em guias simples e conheça os modos de jogo
+              disponíveis em nossa plataforma.
+            </p>
           </section>
 
-          <section class="janela-home" aria-labelledby="tituloSobre">
+          <a class="janela-home janela-sobre" href="nossa-missao.html">
             <h2 id="tituloSobre">Sobre a Taverna</h2>
-            <p>Um espaço para jogar sozinho, apoiar mesas reais e compartilhar aventuras.</p>
-          </section>
+            <p>
+              Conheça nossa proposta, os valores que orientam o desenvolvimento do nosso projeto, e
+              os planos que temos para o futuro.
+            </p>
+          </a>
         </div>
 
         <div class="atalhos-home" aria-label="Atalhos para RPG Solo">
-          <section class="atalho-home" aria-labelledby="tituloAventuras">
-            <h3 id="tituloAventuras">Aventuras</h3>
+          <a class="atalho-home" href="aventuras-disponiveis.html">
+            <h3>Aventuras</h3>
             <p>Conheça as histórias disponíveis e escolha por onde começar.</p>
-            <a class="botao botao-secundario" href="aventuras-disponiveis.html">Ver aventuras</a>
-          </section>
+          </a>
 
-          <section class="atalho-home" aria-labelledby="tituloPersonagens">
-            <h3 id="tituloPersonagens">Personagens</h3>
+          <a class="atalho-home" href="meus-personagens.html">
+            <h3>Personagens</h3>
             <p>Retome uma ficha salva ou prepare um novo aventureiro.</p>
-            <a class="botao botao-secundario" href="meus-personagens.html">Meus personagens</a>
-          </section>
+          </a>
+
           <section class="atalho-home" aria-labelledby="tituloCenarios">
             <h3 id="tituloCenarios">Cenários</h3>
             <p>Explore os mundos e lugares onde suas histórias podem acontecer.</p>
-            <span class="estado-experiencia">Em planejamento</span>
+            <span class="estado-experiencia">Em Desenvolvimento</span>
           </section>
 
           <section class="atalho-home" aria-labelledby="tituloFerramentas">
             <h3 id="tituloFerramentas">Ferramentas de RPG</h3>
-            <p>Recursos para preparar e acompanhar suas mesas de jogo.</p>
-            <span class="estado-experiencia">Em planejamento</span>
+            <p>Recursos e ferramentas para preparar e acompanhar suas mesas de RPG.</p>
+            <span class="estado-experiencia">Em Desenvolvimento</span>
           </section>
         </div>
       </div>
     </main>
 
     <footer class="rodape-site">
-      <small lang="en">
-        This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by
-        Wizards of the Coast LLC, available at
-        <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1 is licensed under
-        the
-        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
-          Creative Commons Attribution 4.0 International License </a
-        >.
-      </small>
+      <div class="rodape-conteudo">
+        <nav class="rodape-coluna" aria-label="Explorar">
+          <h2>Explorar</h2>
+          <a href="index.html">Início</a>
+          <a href="aventuras-disponiveis.html">Aventuras</a>
+        </nav>
+
+        <nav class="rodape-coluna" aria-label="Personagens">
+          <h2>Personagens</h2>
+          <a href="criacao-personagem.html">Criar Personagem</a>
+          <a href="meus-personagens.html">Meus Personagens</a>
+        </nav>
+
+        <nav class="rodape-coluna" aria-label="A Taverna">
+          <h2>A Taverna</h2>
+          <a href="nossa-missao.html">Nossa Missão</a>
+          <a href="atualizacoes-desenvolvimento.html">Atualizações</a>
+        </nav>
+      </div>
+
+      <div class="rodape-inferior">
+        <span>
+          Este site utiliza e adapta material do
+          <a href="https://www.dndbeyond.com/srd">SRD 5.2.1</a>, de Wizards of the Coast LLC, sob a
+          licença <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+        </span>
+        <span>© 2026 Taverna da Esfinge. Todos os direitos reservados.</span>
+      </div>
     </footer>
   </body>
 </html>

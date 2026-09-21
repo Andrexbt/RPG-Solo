@@ -8,7 +8,7 @@
   "pieces": [
     {
       "number": 1,
-      "file": "recomponiveis/p01.png",
+      "file": "recomponiveis/p01.webp",
       "x": 5,
       "y": 8,
       "width": 324,
@@ -16,7 +16,7 @@
     },
     {
       "number": 2,
-      "file": "recomponiveis/p02.png",
+      "file": "recomponiveis/p02.webp",
       "x": 303,
       "y": 3,
       "width": 346,
@@ -24,7 +24,7 @@
     },
     {
       "number": 3,
-      "file": "recomponiveis/p03.png",
+      "file": "recomponiveis/p03.webp",
       "x": 615,
       "y": 9,
       "width": 357,
@@ -32,7 +32,7 @@
     },
     {
       "number": 4,
-      "file": "recomponiveis/p04.png",
+      "file": "recomponiveis/p04.webp",
       "x": 954,
       "y": 10,
       "width": 321,
@@ -40,7 +40,7 @@
     },
     {
       "number": 5,
-      "file": "recomponiveis/p05.png",
+      "file": "recomponiveis/p05.webp",
       "x": 6,
       "y": 312,
       "width": 320,
@@ -48,7 +48,7 @@
     },
     {
       "number": 6,
-      "file": "recomponiveis/p06.png",
+      "file": "recomponiveis/p06.webp",
       "x": 317,
       "y": 313,
       "width": 332,
@@ -56,7 +56,7 @@
     },
     {
       "number": 7,
-      "file": "recomponiveis/p07.png",
+      "file": "recomponiveis/p07.webp",
       "x": 628,
       "y": 316,
       "width": 338,
@@ -64,7 +64,7 @@
     },
     {
       "number": 8,
-      "file": "recomponiveis/p08.png",
+      "file": "recomponiveis/p08.webp",
       "x": 949,
       "y": 304,
       "width": 329,
@@ -72,7 +72,7 @@
     },
     {
       "number": 9,
-      "file": "recomponiveis/p09.png",
+      "file": "recomponiveis/p09.webp",
       "x": 2,
       "y": 630,
       "width": 325,
@@ -80,7 +80,7 @@
     },
     {
       "number": 10,
-      "file": "recomponiveis/p10.png",
+      "file": "recomponiveis/p10.webp",
       "x": 314,
       "y": 629,
       "width": 335,
@@ -88,7 +88,7 @@
     },
     {
       "number": 11,
-      "file": "recomponiveis/p11.png",
+      "file": "recomponiveis/p11.webp",
       "x": 637,
       "y": 640,
       "width": 335,
@@ -96,7 +96,7 @@
     },
     {
       "number": 12,
-      "file": "recomponiveis/p12.png",
+      "file": "recomponiveis/p12.webp",
       "x": 950,
       "y": 632,
       "width": 330,
@@ -104,7 +104,7 @@
     },
     {
       "number": 13,
-      "file": "recomponiveis/p13.png",
+      "file": "recomponiveis/p13.webp",
       "x": 5,
       "y": 956,
       "width": 324,
@@ -112,7 +112,7 @@
     },
     {
       "number": 14,
-      "file": "recomponiveis/p14.png",
+      "file": "recomponiveis/p14.webp",
       "x": 314,
       "y": 958,
       "width": 349,
@@ -120,7 +120,7 @@
     },
     {
       "number": 15,
-      "file": "recomponiveis/p15.png",
+      "file": "recomponiveis/p15.webp",
       "x": 635,
       "y": 950,
       "width": 332,
@@ -128,7 +128,7 @@
     },
     {
       "number": 16,
-      "file": "recomponiveis/p16.png",
+      "file": "recomponiveis/p16.webp",
       "x": 954,
       "y": 948,
       "width": 315,

@@ -301,12 +301,16 @@ textarea {
   align-items: center;
 
   gap: 6px;
-  padding: 6px;
+  padding: 10px 8px;
 
-  border: 1px solid var(--cor-linha);
+  border: 4px solid #65462f;
   border-radius: var(--raio-botao);
 
-  background: rgba(16, 15, 20, 0.78);
+  background: url("assets/recursos/textura-carvalho-escuro.webp") center / cover;
+  box-shadow:
+  inset 0 0 0 1px #a0784c,
+  inset 0 0 12px rgba(0, 0, 0, 0.6),
+  0 5px 12px rgba(0, 0, 0, 0.3);
 
   overflow-x: auto;
   scrollbar-width: none;
@@ -319,11 +323,11 @@ textarea {
 .menu-principal a {
   flex: 0 0 auto;
 
-  padding: clamp(7px, 0.7vw, 9px) clamp(9px, 1vw, 13px);
+  padding: 10px clamp(9px, 1vw, 13px);
 
   border-radius: var(--raio-botao);
 
-  color: var(--cor-texto-suave);
+  color: #f0c98f;
   text-decoration: none;
 
   font-size: var(--texto-pequeno);
@@ -339,6 +343,70 @@ textarea {
 .menu-principal a:hover {
   color: var(--cor-texto);
   background: rgba(255, 248, 235, 0.09);
+}
+
+.rodape-site {
+  width: 100%;
+  margin: 24px 0 0;
+  padding: 56px max(24px, calc((100% - var(--largura-conteudo)) / 2)) 0;
+  box-sizing: border-box;
+  border: 0;
+  background: #000;
+  color: #d9d0c4;
+}
+
+.rodape-conteudo {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+  padding-bottom: 64px;
+}
+
+.rodape-coluna {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.rodape-coluna h2 {
+  margin: 0 0 8px;
+  color: #a99a88;
+  font: 600 0.76rem var(--fonte-interface);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.rodape-coluna a {
+  color: #ddd2c3;
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.rodape-coluna a:hover {
+  color: #f0c98f;
+}
+
+.rodape-inferior {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+  border-top: 1px solid #2b2928;
+  color: #8c8175;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 700px) {
+  .rodape-conteudo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .rodape-inferior {
+    flex-direction: column;
+  }
 }
 
 /* =====================================================
@@ -484,28 +552,6 @@ textarea {
   background: transparent !important;
 }
 
-/* =====================================================
-   Rodapé e atribuição do SRD
-   ===================================================== */
-
-.rodape-site {
-  width: min(var(--largura-conteudo), calc(100% - 32px));
-  margin: var(--espaco-lg) auto 0;
-  padding: var(--espaco-md) 0 var(--espaco-lg);
-  border-top: 1px solid var(--cor-linha);
-  color: rgba(246, 234, 215, 0.68);
-  line-height: 1.55;
-}
-
-.rodape-site a {
-  color: var(--cor-ambar);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
-
-.rodape-site a:hover {
-  color: var(--cor-texto);
-}
 
 /* =====================================================
    Transição visual entre páginas

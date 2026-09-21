@@ -1846,17 +1846,17 @@ label,
 }
 
 .vitrine-armas-compactas {
-  background: url("assets/criacao-personagem/loja-armas-laminas-fundo-v5.png") center / cover
+  background: url("assets/criacao-personagem/loja-armas-laminas-fundo-v5.webp") center / cover
     no-repeat;
 }
 
 .vitrine-armas-longas {
-  background: url("assets/criacao-personagem/loja-armas-contundentes-fundo-v5.png") center / cover
+  background: url("assets/criacao-personagem/loja-armas-contundentes-fundo-v5.webp") center / cover
     no-repeat;
 }
 
 .vitrine-armaduras {
-  background: url("assets/criacao-personagem/loja-armaduras-fundo-sem-manequins-v2.png") center /
+  background: url("assets/criacao-personagem/loja-armaduras-fundo-sem-manequins-v2.webp") center /
     cover no-repeat;
 }
 

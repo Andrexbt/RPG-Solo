@@ -204,7 +204,7 @@
   width: 100%;
   aspect-ratio: 1774 / 887;
   overflow: hidden;
-  background: url("assets/criacao-personagem/loja-armas-laminas-fundo-v5.png") center / cover
+  background: url("assets/criacao-personagem/loja-armas-laminas-fundo-v5.webp") center / cover
     no-repeat;
   box-shadow: 0 18px 38px rgba(0, 0, 0, 0.42);
 }
@@ -328,11 +328,11 @@
 }
 
 .editor-vitrine-dev.mostrando-armaduras {
-  background-image: url("assets/criacao-personagem/loja-armaduras-fundo-sem-manequins-v2.png");
+  background-image: url("assets/criacao-personagem/loja-armaduras-fundo-sem-manequins-v2.webp");
 }
 
 .editor-vitrine-dev.mostrando-armas-longas {
-  background-image: url("assets/criacao-personagem/loja-armas-contundentes-fundo-v5.png");
+  background-image: url("assets/criacao-personagem/loja-armas-contundentes-fundo-v5.webp");
 }
 
 .seletor-vitrine-dev {

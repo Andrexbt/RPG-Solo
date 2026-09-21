@@ -2,8 +2,8 @@
 
 .home-page {
   width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-conteudo));
-  margin: 18px auto 0;
-  padding-bottom: 40px;
+  margin: 0px auto 0;
+  padding-bottom: 16px;
 }
 
 .home-page .botao {
@@ -14,12 +14,28 @@
 
 .perfil-reservado {
   flex: 0 0 auto;
-  padding: 9px 14px;
-  border: 1px solid var(--cor-linha);
+  padding: 14px 18px;
+  border: 4px solid #65462f;
   border-radius: var(--raio-botao);
-  color: var(--cor-texto-suave);
-  background: rgba(16, 15, 20, 0.78);
+  color: #f0c98f;
+  background: url("assets/recursos/textura-carvalho-escuro.webp") center / cover;
+  box-shadow:
+  inset 0 0 0 1px #a0784c,
+  inset 0 0 12px rgba(0, 0, 0, 0.6),
+  0 5px 12px rgba(0, 0, 0, 0.3);
   font-size: var(--texto-pequeno);
+  font-weight: 700;
+  min-height: 66px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+#tituloExperiencias {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 2.5rem;
+  color: #f0c98f;
 }
 
 .grade-home {
@@ -132,13 +148,23 @@
 .janela-home {
   padding: 22px;
   background: linear-gradient(155deg, rgba(8, 7, 10, 0.72), rgba(33, 26, 23, 0.76));
+  display: block;
+  text-decoration: none;
+  transition: transform 180ms ease, filter 180ms ease;
 }
 
-.janela-home:first-of-type {
+a.janela-home:hover,
+a.janela-home:focus-visible {
+  transform: translate(7px, -5px);
+  filter: brightness(1.08)
+    drop-shadow(0 10px 7px rgba(0, 0, 0, 0.5));
+}
+
+.janela-tutoriais {
   position: relative;
   border: 0;
   border-radius: 0;
-  background: url("assets/pergaminhos/old-paper-03/horizontal/avulsas/p03.png")
+  background: url("assets/pergaminhos/old-paper-03/horizontal/avulsas/p03.webp")
     center / 100% 100% no-repeat;
   color: #2d2119;
   margin-inline: -8px;
@@ -147,11 +173,11 @@
   box-shadow: none;
 }
 
-.inicio-home > .janela-home:last-of-type {
+.janela-sobre {
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  background: url("assets/pergaminhos/old-paper-03/horizontal/avulsas/p07.png")
+  background: url("assets/pergaminhos/old-paper-03/horizontal/avulsas/p07.webp")
     center / 100% 100% no-repeat;
   color: #2d2119;
   margin-inline: -8px;
@@ -178,7 +204,7 @@
 
 .janela-home p,
 .atalho-home p {
-  margin: 12px 0 18px;
+  margin: 15px 0 18px;
 }
 
 .vitrine-home {
@@ -239,20 +265,56 @@ box-shadow:
 
 .experiencia {
   min-height: 215px;
-  padding: 44px 17%;
+  padding: 14% 47% 0 17%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-start;
   flex: 0 0 100%;
   box-sizing: border-box;
   scroll-snap-align: start;
-  color: inherit;
+  color: #382719;
   text-decoration: none;
   cursor: pointer;
-  justify-content: center;
-  background: url("assets/home/quadro-destaque-pergaminho-ilustrado.webp")
-    center / contain no-repeat;
-  color: #382719;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.experiencia:nth-child(even) {
+  padding-right: 17%;
+  padding-left: 57%;
+}
+
+.experiencia:nth-child(1) {
+  background-image: url("assets/home/quadro-destaque-a-fuga-v2.webp");
+}
+
+.experiencia:nth-child(2) {
+  background-image: url("assets/home/quadro-destaque-criar-personagem-v1.webp");
+}
+
+.experiencia:nth-child(3) {
+  background-image: url("assets/home/quadro-destaque-nossa-missao-v3.webp");
+}
+
+.experiencia:nth-child(4) {
+  background-image: url("assets/home/quadro-destaque-atualizacoes-v2.webp");
+}
+
+.experiencia h3 {
+  width: min(260px, 100%);
+  margin: 0;
+  font-family: var(--fonte-titulos);
+  font-size: 1.9rem;
+  line-height: 1.15;
+}
+
+.experiencia p {
+  width: min(230px, 100%);
+  margin: 25px 0 0;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .experiencia:focus-visible {
@@ -307,18 +369,6 @@ box-shadow:
   opacity: 0.9;
 }
 
-.experiencia h3 {
-  margin: 0;
-  font-family: var(--fonte-titulos);
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.experiencia p {
-  margin: 10px 0 18px;
-  font-size: 0.86rem;
-}
-
 .estado-experiencia {
   margin-top: auto;
 }
@@ -336,21 +386,79 @@ box-shadow:
 
 .atalho-home {
   min-height: 180px;
-  padding: 22px;
+  padding: 30px 22px 22px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: linear-gradient(155deg, rgba(8, 7, 10, 0.62), rgba(23, 19, 17, 0.68));
+  box-sizing: border-box;
+  border: 5px solid #65462f;
+  border-radius: 10px;
+  background: url("assets/recursos/textura-carvalho-escuro.webp") center / cover;
+  box-shadow:
+    inset 0 0 0 1px #a0784c,
+    inset 0 0 16px rgba(0, 0, 0, 0.65),
+    0 6px 14px rgba(0, 0, 0, 0.3);
+  color: #f0dfc4;
+  text-decoration: none;
 }
 
-.atalho-home .botao {
-  margin-top: auto;
+.atalho-home {
+  padding-right: 50%;
+  background-position: center, center;
+  background-size: cover, cover;
+  background-repeat: no-repeat;
+}
+
+.atalho-home:nth-child(1) {
+  background-image:
+    url("assets/home/atalho-aventuras-ilustracao-v1.webp"),
+    url("assets/recursos/textura-carvalho-escuro.webp");
+}
+
+.atalho-home:nth-child(2) {
+  background-image:
+    url("assets/home/atalho-personagens-ilustracao-v1.webp"),
+    url("assets/recursos/textura-carvalho-escuro.webp");
+}
+
+.atalho-home:nth-child(3) {
+  background-image:
+    url("assets/home/atalho-cenarios-ilustracao-v1.webp"),
+    url("assets/recursos/textura-carvalho-escuro.webp");
+}
+
+.atalho-home:nth-child(4) {
+  background-image:
+    url("assets/home/atalho-ferramentas-rpg-ilustracao-v1.webp"),
+    url("assets/recursos/textura-carvalho-escuro.webp");
+}
+
+a.atalho-home {
+  transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+}
+
+a.atalho-home:hover,
+a.atalho-home:focus-visible {
+  transform: translateY(-5px);
+  border-color: #b48656;
+  filter: brightness(1.12);
+  box-shadow:
+    inset 0 0 0 1px #a0784c,
+    inset 0 0 16px rgba(0, 0, 0, 0.65),
+    0 14px 20px rgba(0, 0, 0, 0.48);
+}
+
+.marca-nome {
+  display: block;
+  width: 250px;
+  height: auto;
+  margin-left: 80px;
 }
 
 
 
 .vitrine-home {
-  width: 100%;
+  width: 108%;
   
   aspect-ratio: 1527 / 866;
   align-self: center;
