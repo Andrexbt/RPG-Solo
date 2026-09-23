@@ -10,30 +10,11 @@
     <script src="transicoes-paginas.js"></script>
     <script src="acesso-area-mestre.js"></script>
     <script src="home.js" defer></script>
+    <script src="site-shell.js" defer></script>
   </head>
 
-  <body>
-    <header class="cabecalho-site">
-      <a class="marca" href="index.html">
-        <img
-          class="marca-nome"
-          src="assets/home/logo-taverna-da-esfinge-tipografico.webp"
-          alt="Taverna da Esfinge"
-        />
-      </a>
-
-      <nav class="menu-principal" aria-label="Navegação principal">
-        <a href="#inicio">Início</a>
-        <a href="criacao-personagem.html">Criar Personagem</a>
-        <a href="meus-personagens.html">Meus Personagens</a>
-        <a href="aventuras-disponiveis.html">Aventuras</a>
-        <a href="area-mestre.html" data-acesso-area-mestre hidden>Área do Mestre</a>
-      </nav>
-
-      <div class="perfil-reservado" aria-label="Espaço reservado para o perfil do usuário">
-        Perfil - Em Breve
-      </div>
-    </header>
+  <body class="site-com-rodape">
+    <header class="cabecalho-site" data-site-header></header>
 
     <main id="inicio" class="home-page">
       <div class="grade-home">
@@ -151,35 +132,6 @@
       </div>
     </main>
 
-    <footer class="rodape-site">
-      <div class="rodape-conteudo">
-        <nav class="rodape-coluna" aria-label="Explorar">
-          <h2>Explorar</h2>
-          <a href="index.html">Início</a>
-          <a href="aventuras-disponiveis.html">Aventuras</a>
-        </nav>
-
-        <nav class="rodape-coluna" aria-label="Personagens">
-          <h2>Personagens</h2>
-          <a href="criacao-personagem.html">Criar Personagem</a>
-          <a href="meus-personagens.html">Meus Personagens</a>
-        </nav>
-
-        <nav class="rodape-coluna" aria-label="A Taverna">
-          <h2>A Taverna</h2>
-          <a href="nossa-missao.html">Nossa Missão</a>
-          <a href="atualizacoes-desenvolvimento.html">Atualizações</a>
-        </nav>
-      </div>
-
-      <div class="rodape-inferior">
-        <span>
-          Este site utiliza e adapta material do
-          <a href="https://www.dndbeyond.com/srd">SRD 5.2.1</a>, de Wizards of the Coast LLC, sob a
-          licença <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
-        </span>
-        <span>© 2026 Taverna da Esfinge. Todos os direitos reservados.</span>
-      </div>
-    </footer>
+    <footer class="rodape-site" data-site-footer></footer>
   </body>
 </html>

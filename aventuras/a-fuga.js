@@ -6,6 +6,16 @@ bancoAventuras.aFuga = {
 
   descricao: `Fuja de uma cidade em conflito enquanto diferentes forças buscam a sua eliminação.`,
 
+  // Dados exibidos na apresentação da aventura. Valores ainda não definidos ficam sem estimativa.
+  cenario: "Yria",
+  estiloJogo: "Livro-Jogo",
+  dificuldade: null,
+  nivelRecomendado: null,
+  duracaoMedia: null,
+  xpNarrativo: null,
+  imagemApresentacao: "assets/home/a-fuga-vinheta-v1.webp",
+  imagemFolha: "assets/aventuras/a-fuga-folha-ilustrada-v1.webp",
+
   disponivel: true,
   cenaInicial: "inicio",
 

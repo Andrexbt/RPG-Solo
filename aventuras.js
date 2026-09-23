@@ -20,7 +20,10 @@ if (!aventuraAtual) {
   throw new Error(`Aventura não encontrada: ${idAventuraSelecionada}`);
 }
 
-const personagemSelecionado = window.PersonagemDados.buscarSalvoPorId(idPersonagemSelecionado);
+const personagemSalvo = window.PersonagemDados.buscarSalvoPorId(idPersonagemSelecionado);
+const personagemSelecionado = personagemSalvo
+  ? window.PersonagemDados.registrarInicioAventura(personagemSalvo, aventuraAtual.id) ?? personagemSalvo
+  : null;
 
 const estadoAtualJogo = window.estadoJogo;
 

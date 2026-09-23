@@ -578,6 +578,14 @@ personagemNormalizado.configuracaoInicialCombate.mao2 ??= null;
     personagemNormalizado.aventurasConcluidas = [];
   }
 
+  if (!Array.isArray(personagemNormalizado.aventurasIniciadas)) {
+    personagemNormalizado.aventurasIniciadas = [];
+  }
+
+  personagemNormalizado.aventurasIniciadas = personagemNormalizado.aventurasIniciadas.filter(
+    (registro) => registro && typeof registro.aventuraId === "string" && registro.aventuraId.trim() !== "",
+  );
+
   personagemNormalizado.aventurasConcluidas = personagemNormalizado.aventurasConcluidas.filter(
     function (registro) {
       return (
@@ -673,6 +681,20 @@ function personagemVenceuAventura(personagemOriginal, aventuraId) {
   return personagem.aventurasConcluidas.some(function (registro) {
     return registro.aventuraId === aventuraId && registro.resultado === "vitoria";
   });
+}
+
+function registrarInicioAventura(personagemOriginal, aventuraId) {
+  if (!personagemOriginal?.id || typeof aventuraId !== "string" || !aventuraId.trim()) {
+    return null;
+  }
+
+  const personagem = normalizarPersonagem(personagemOriginal);
+  if (personagem.aventurasIniciadas.some((registro) => registro.aventuraId === aventuraId)) {
+    return personagem;
+  }
+
+  personagem.aventurasIniciadas.push({ aventuraId, iniciadaEm: new Date().toISOString() });
+  return atualizarPersonagemSalvo(personagem);
 }
 
 function registrarVitoriaAventura(personagemOriginal, aventuraId) {
@@ -972,6 +994,8 @@ window.PersonagemDados = {
   obterNivelClasse: obterNivelClasse,
 
   venceuAventura: personagemVenceuAventura,
+
+  registrarInicioAventura: registrarInicioAventura,
 
   registrarVitoriaAventura: registrarVitoriaAventura,
 

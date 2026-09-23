@@ -1,187 +1,225 @@
 "use strict";
 
 const listaAventuras = document.querySelector("#listaAventuras");
-const secaoSelecaoPersonagem = document.querySelector("#secaoSelecaoPersonagem");
-const aventuraSelecionada = document.querySelector("#aventuraSelecionada");
-const listaPersonagensAventura = document.querySelector("#listaPersonagensAventura");
 
-let idAventuraSelecionada = null;
+const framesRoloInferior = Array.from(
+  { length: 6 },
+  (_, indice) =>
+    `assets/aventuras/pergaminho-animacao/rolo-inferior-frames/rolo-inferior-frame-${String(indice + 1).padStart(2, "0")}.webp`,
+);
 
-function criarCardAventura(idAventura, aventura) {
+for (const caminhoFrame of framesRoloInferior) {
+  const imagem = new Image();
+  imagem.src = caminhoFrame;
+}
+
+const animacoesRoloAtivas = new WeakMap();
+
+function criarDivisorFicha() {
+  const divisor = document.createElement("span");
+  divisor.className = "divisor-ficha-aventura";
+  divisor.setAttribute("aria-hidden", "true");
+  return divisor;
+}
+
+function criarListaDadosAventura(aventura) {
+  const dados = [
+    ["Cenário", aventura.cenario],
+    ["Estilo de jogo", aventura.estiloJogo],
+    ["Dificuldade", aventura.dificuldade],
+    ["Nível recomendado", aventura.nivelRecomendado],
+    ["Duração média", aventura.duracaoMedia],
+    ["XP narrativo", aventura.xpNarrativo == null ? null : `${aventura.xpNarrativo} XP`],
+  ];
+
+  const lista = document.createElement("dl");
+  lista.className = "dados-card-aventura";
+
+  for (const [rotulo, valor] of dados) {
+    const item = document.createElement("div");
+    const termo = document.createElement("dt");
+    const descricao = document.createElement("dd");
+    termo.textContent = rotulo;
+    descricao.textContent = valor ?? "A definir";
+    item.append(termo, descricao);
+    lista.append(item);
+  }
+
+  return lista;
+}
+
+
+
+
+
+function criarCardAventura(id, aventura) {
   const card = document.createElement("article");
+  card.className = "card-aventura";
+  card.dataset.idAventura = id;
+  card.setAttribute("aria-expanded", "false");
 
-  card.classList.add("card-aventura");
+  if (aventura.disponivel) {
+    card.classList.add("card-aventura-disponivel");
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+  } else {
+    card.classList.add("card-aventura-indisponivel");
+  }
 
-  const etiqueta = document.createElement("p");
+  const pergaminho = document.createElement("div");
+  pergaminho.className = "pergaminho-aventura";
 
-  etiqueta.classList.add("card-aventura-etiqueta");
+  const folha = document.createElement("img");
+  folha.className = "pergaminho-folha";
+  folha.src =
+    aventura.imagemFolha ??
+    "assets/aventuras/pergaminho-animacao/pergaminho-folha.webp";
+  folha.classList.toggle("pergaminho-folha-ilustrada", Boolean(aventura.imagemFolha));
+  folha.alt = "";
 
-  etiqueta.textContent = aventura.disponivel ? "Disponível" : "Em desenvolvimento";
+  const recorteFolha = document.createElement("div");
+  recorteFolha.className = "recorte-folha-aventura";
+  recorteFolha.append(folha);
 
-  const titulo = document.createElement("h3");
+  const roloSuperior = document.createElement("img");
+  roloSuperior.className = "pergaminho-rolo pergaminho-rolo-superior";
+  roloSuperior.src = "assets/aventuras/pergaminho-animacao/pergaminho-rolo-superior-v2.webp";
+  roloSuperior.alt = "";
 
+  const roloInferior = document.createElement("img");
+  roloInferior.className = "pergaminho-rolo pergaminho-rolo-inferior";
+  roloInferior.src = framesRoloInferior[0];
+  roloInferior.alt = "";
+
+  pergaminho.append(recorteFolha, roloSuperior, roloInferior);
+
+  const corpoPergaminho = document.createElement("div");
+  corpoPergaminho.className = "corpo-pergaminho-aventura";
+
+  const resumo = document.createElement("header");
+  resumo.className = "resumo-card-aventura";
+
+  const titulo = document.createElement("h2");
   titulo.textContent = aventura.titulo;
 
   const descricao = document.createElement("p");
-
-  descricao.classList.add("card-aventura-descricao");
-
+  descricao.className = "card-aventura-descricao";
   descricao.textContent = aventura.descricao;
+  resumo.append(titulo, descricao);
 
-  const botaoSelecionar = document.createElement("button");
+  const layoutInterno = document.createElement("div");
+  layoutInterno.className = "layout-interno-aventura";
 
-  botaoSelecionar.type = "button";
+  const colunaInformacoes = document.createElement("div");
+  colunaInformacoes.className = "coluna-informacoes-aventura";
 
-  botaoSelecionar.classList.add("botao", "botao-secundario", "botao-selecionar-aventura");
+  const conteudoExpandido = document.createElement("div");
+  conteudoExpandido.className = "conteudo-expandido-aventura";
 
-  botaoSelecionar.dataset.idAventura = idAventura;
+  conteudoExpandido.append(
+    criarDivisorFicha(),
+    criarListaDadosAventura(aventura),
+  );
 
-  botaoSelecionar.textContent = aventura.disponivel ? "Escolher aventura" : "Indisponível";
-
-  botaoSelecionar.disabled = !aventura.disponivel;
-
-  card.append(etiqueta, titulo, descricao, botaoSelecionar);
-
-  return card;
-}
-
-function exibirAventuras() {
-  listaAventuras.textContent = "";
-
-  const aventuras = Object.entries(bancoAventuras);
-
-  for (const [idAventura, aventura] of aventuras) {
-    const card = criarCardAventura(idAventura, aventura);
-
-    listaAventuras.append(card);
-  }
-}
-
-function selecionarAventura(evento) {
-  const botao = evento.target.closest(".botao-selecionar-aventura");
-
-  if (!botao) {
-    return;
-  }
-
-  const idAventura = botao.dataset.idAventura;
-
-  const aventura = bancoAventuras[idAventura];
-
-  if (!aventura || !aventura.disponivel) {
-    return;
-  }
-
-  idAventuraSelecionada = idAventura;
-
-  aventuraSelecionada.textContent = `Aventura selecionada: ${aventura.titulo}`;
-
-  secaoSelecaoPersonagem.hidden = false;
-
-  exibirPersonagensSalvos();
-
-  console.log("Aventura selecionada:", idAventuraSelecionada);
-}
-
-function carregarPersonagensSalvos() {
-  return window.PersonagemDados.listarSalvos();
-}
-
-function criarCardPersonagem(personagem) {
-  const card = document.createElement("article");
-
-  card.classList.add("card-personagem-aventura");
-
-  const nome = document.createElement("h3");
-
-  nome.textContent = personagem.detalhes?.nome || "Personagem sem nome";
-
-  const classe = document.createElement("p");
-
-  classe.classList.add("classe-personagem-aventura");
-
-  classe.textContent = personagem.classe ? `${personagem.classe} — Nível 1` : "Classe não definida";
-
-  const especie = document.createElement("p");
-
-  especie.classList.add("especie-personagem-aventura");
-
-  especie.textContent = personagem.especie
-    ? `Espécie: ${personagem.especie}`
-    : "Espécie não definida";
-
-  const botaoSelecionar = document.createElement("button");
-
-  botaoSelecionar.type = "button";
-
-  botaoSelecionar.classList.add("botao", "botao-secundario", "botao-selecionar-personagem");
-
-  botaoSelecionar.dataset.idPersonagem = personagem.id;
-
-  botaoSelecionar.textContent = "Jogar com este personagem";
-
-  card.append(nome, classe, especie, botaoSelecionar);
+  colunaInformacoes.append(resumo, conteudoExpandido);
+  layoutInterno.append(colunaInformacoes);
+  corpoPergaminho.append(layoutInterno);
+  card.append(pergaminho, corpoPergaminho);
 
   return card;
 }
 
-function exibirPersonagensSalvos() {
-  listaPersonagensAventura.textContent = "";
+function animarRoloInferior(card, abrindo) {
+  const rolo = card.querySelector(".pergaminho-rolo-inferior");
+  if (!rolo || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const personagens = carregarPersonagensSalvos();
+  const animacaoAnterior = animacoesRoloAtivas.get(rolo);
+  if (animacaoAnterior) cancelAnimationFrame(animacaoAnterior);
 
-  if (personagens.length === 0) {
-    const aviso = document.createElement("p");
+  const duracao = 600;
+  const quantidadeVoltas = 2;
+  const totalPassos = framesRoloInferior.length * quantidadeVoltas;
+  const inicio = performance.now();
 
-    aviso.classList.add("aviso-sem-personagens");
+  function atualizarQuadro(agora) {
+    const progresso = Math.min((agora - inicio) / duracao, 1);
+    const passo = Math.min(Math.floor(progresso * totalPassos), totalPassos - 1);
+    const fase = passo % framesRoloInferior.length;
+    const indiceFrame = abrindo ? fase : framesRoloInferior.length - 1 - fase;
+    rolo.src = framesRoloInferior[indiceFrame];
 
-    aviso.textContent = "Você ainda não possui personagens salvos.";
+    if (progresso < 1) {
+      const idAnimacao = requestAnimationFrame(atualizarQuadro);
+      animacoesRoloAtivas.set(rolo, idAnimacao);
+      return;
+    }
 
-    const linkCriarPersonagem = document.createElement("a");
-
-    linkCriarPersonagem.classList.add("botao", "botao-principal");
-
-    linkCriarPersonagem.href = "criacao-personagem.html";
-
-    linkCriarPersonagem.textContent = "Criar personagem";
-
-    listaPersonagensAventura.append(aviso, linkCriarPersonagem);
-
-    return;
+    rolo.src = framesRoloInferior[0];
+    animacoesRoloAtivas.delete(rolo);
   }
 
-  for (const personagem of personagens) {
-    const card = criarCardPersonagem(personagem);
-
-    listaPersonagensAventura.append(card);
-  }
+  const idAnimacao = requestAnimationFrame(atualizarQuadro);
+  animacoesRoloAtivas.set(rolo, idAnimacao);
 }
 
-function selecionarPersonagem(evento) {
-  const botao = evento.target.closest(".botao-selecionar-personagem");
-
-  if (!botao) {
-    return;
-  }
-
-  const idPersonagem = botao.dataset.idPersonagem;
-
-  if (!idAventuraSelecionada || !idPersonagem) {
-    console.warn("A aventura ou o personagem não foi selecionado.");
-
-    return;
-  }
-
-  const parametros = new URLSearchParams({
-    aventura: idAventuraSelecionada,
-
-    personagem: idPersonagem,
-  });
-
-  window.location.href = `aventuras.html?${parametros.toString()}`;
+function esperar(tempo) {
+  return new Promise((resolver) => window.setTimeout(resolver, tempo));
 }
 
-listaAventuras.addEventListener("click", selecionarAventura);
-listaPersonagensAventura.addEventListener("click", selecionarPersonagem);
+async function alternarCardAventura(card) {
+  if (card.dataset.animando === "true") return;
 
-exibirAventuras();
+  const estavaAberto = card.classList.contains("card-aventura-aberto");
+  card.dataset.animando = "true";
+
+  if (!estavaAberto) {
+    card.classList.add("card-aventura-em-foco");
+    document.body.classList.add("aventura-em-foco");
+    card.setAttribute("aria-expanded", "true");
+
+    await esperar(320);
+    card.classList.add("card-aventura-aberto");
+    
+    animarRoloInferior(card, true);
+    await esperar(900);
+  } else {
+    document.body.classList.remove("aventura-em-foco");
+    animarRoloInferior(card, false);
+    card.classList.remove("card-aventura-aberto");
+    card.setAttribute("aria-expanded", "false");
+
+    await esperar(900);
+
+    card.classList.remove("card-aventura-em-foco");
+
+    // O fundo começa a clarear enquanto o card ainda está recuando.
+    // Isso preserva a suavidade sem manter a tela escura por mais 450 ms.
+    await esperar(100);
+    
+
+    await esperar(350);
+  }
+
+  card.dataset.animando = "false";
+}
+
+listaAventuras.addEventListener("click", (evento) => {
+  if (evento.target.closest(".conteudo-expandido-aventura a")) return;
+
+  const card = evento.target.closest(".card-aventura-disponivel");
+  if (!card || evento.button !== 0) return;
+  alternarCardAventura(card);
+});
+
+listaAventuras.addEventListener("keydown", (evento) => {
+  if (evento.target.closest("button, a")) return;
+  const card = evento.target.closest(".card-aventura-disponivel");
+  if (!card || (evento.key !== "Enter" && evento.key !== " ")) return;
+
+  evento.preventDefault();
+  alternarCardAventura(card);
+});
+
+for (const [id, aventura] of Object.entries(bancoAventuras)) {
+  listaAventuras.append(criarCardAventura(id, aventura));
+}

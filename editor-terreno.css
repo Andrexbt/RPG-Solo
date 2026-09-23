@@ -22,7 +22,8 @@ body {
   min-width: 1080px;
   min-height: 100vh;
   margin: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
   background: #100d0a;
   color: var(--texto);
   font-family: Georgia, "Times New Roman", serif;
@@ -112,7 +113,7 @@ h2 {
 }
 
 .layout-editor {
-  height: calc(100vh - 82px);
+  height: max(620px, calc(100vh - 242px));
   display: grid;
   grid-template-columns: 230px minmax(0, 1fr) 330px;
 }

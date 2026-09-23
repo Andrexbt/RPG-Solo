@@ -10,60 +10,6 @@ body {
 }
 
 /* =====================================================
-   Hero do criador
-   ===================================================== */
-
-.hero-criacao {
-
-  position: relative;
-
-  width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-pagina));
-
-  min-height: auto;
-  margin-inline: auto;
-
-  padding: clamp(24px, 3vw, 42px) 0 clamp(20px, 2.4vw, 34px);
-
-  display: grid;
-  align-items: center;
-
-  overflow: hidden;
-}
-
-.conteudo-hero-criacao {
-  position: relative;
-  z-index: 2;
-  max-width: 760px;
-}
-
-.conteudo-hero-criacao::before {
-  content: "";
-  display: block;
-  width: 38px;
-  height: 4px;
-  margin-bottom: 14px;
-  border-radius: 999px;
-  background: rgba(215, 163, 95, 0.58);
-}
-
-.conteudo-hero-criacao h1 {
-  max-width: 620px;
-  margin: 0;
-  color: var(--cor-texto);
-  font-size: clamp(2rem, 3.4vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.06em;
-}
-
-.conteudo-hero-criacao p:not(.etiqueta-pagina) {
-  max-width: 560px;
-  margin: 14px 0 0;
-  color: rgba(246, 234, 215, 0.74);
-  font-size: 0.96rem;
-  line-height: 1.55;
-}
-
-/* =====================================================
    Layout principal e navegação
    ===================================================== */
 
@@ -2150,10 +2096,6 @@ button.nome-equipamento-vitrine:focus-visible {
   .criador-personagem {
     grid-template-columns: minmax(0, 1fr);
     padding: var(--espaco-md) 0 var(--espaco-xl);
-  }
-
-  .hero-criacao {
-    padding: var(--espaco-lg) 0 var(--espaco-md);
   }
 
   .area-passo {

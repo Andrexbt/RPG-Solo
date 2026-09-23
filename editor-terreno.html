@@ -4,13 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Editor de terreno</title>
+    <link rel="stylesheet" href="tema.css" />
     <link rel="stylesheet" href="editor-terreno.css?v=6" />
     <script src="aventuras/registro-aventuras.js?v=1" defer></script>
     <script src="aventuras/a-fuga.js?v=1" defer></script>
     <script src="editor-terreno.js?v=6" defer></script>
+    <script src="acesso-area-mestre.js"></script>
+    <script src="site-shell.js" defer></script>
   </head>
 
-  <body>
+  <body class="site-com-rodape">
+    <header class="cabecalho-site" data-site-header></header>
     <header class="cabecalho-editor">
       <div>
         <span class="sobretitulo">Ferramenta de desenvolvimento</span>
@@ -166,5 +170,6 @@
         <p id="mensagemEditor" class="mensagem-editor" aria-live="polite"></p>
       </aside>
     </main>
+    <footer class="rodape-site" data-site-footer></footer>
   </body>
 </html>

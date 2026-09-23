@@ -2,6 +2,10 @@
    Página de aventuras disponíveis
    ===================================================== */
 
+html {
+  scrollbar-gutter: stable;
+}
+
 .pagina-aventuras-disponiveis {
   width: min(calc(100% - (var(--margem-pagina) * 2)), var(--largura-conteudo));
 
@@ -12,31 +16,24 @@
   gap: 32px;
 }
 
-.cabecalho-pagina-aventuras {
-  max-width: 720px;
-}
-
-.cabecalho-pagina-aventuras h1 {
-  margin: 12px 0 0;
-
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1;
-}
-
-.cabecalho-pagina-aventuras > p:not(.etiqueta) {
-  margin: 16px 0 0;
-
-  color: var(--cor-texto-suave);
-  line-height: 1.6;
-}
-
 .secao-aventuras {
   display: grid;
   gap: 20px;
 }
 
+.secao-aventuras[hidden] {
+  display: none;
+}
+
 .titulo-lista-aventuras {
-  margin: 0;
+  margin: 0 0 8px;
+
+  color: #f0c98f;
+
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
 }
 
 .lista-aventuras {
@@ -46,237 +43,260 @@
   gap: 20px;
 }
 
+.fundo-foco-aventura {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  background: rgba(4, 3, 5, 0.48);
+  backdrop-filter: blur(1.5px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 320ms ease,
+    visibility 0s linear 320ms;
+}
+
+body.aventura-em-foco {
+  overflow: hidden;
+}
+
+body.aventura-em-foco .fundo-foco-aventura {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  transition-delay: 0s;
+}
+
+.card-aventura.card-aventura-em-foco {
+  z-index: 1001;
+
+  transform: translateY(
+    calc(
+      clamp(-240px, -28vh, -170px) - var(--altura-rolo)
+    )
+  )
+  scale(1.035);
+
+  filter:
+    brightness(1.06)
+    drop-shadow(0 22px 18px rgba(0, 0, 0, 0.55));
+}
+
+
+
 /* =====================================================
    Cards de aventuras
    ===================================================== */
 
 .card-aventura {
-  position: relative;
-  min-height: 250px;
-  padding: 24px;
+  --altura-rolo: 56px;
+  --altura-card-aberto: min(
+    732px,
+    calc(100vh - 145px + (var(--altura-rolo) * 2))
+  );
 
+  position: relative;
+  isolation: isolate;
+  min-height: 250px;
+  padding: 28px 32px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
-  border: 1px solid var(--cor-linha);
-  border-radius: var(--raio-card);
-
-  background: linear-gradient(155deg, rgba(8, 7, 10, 0.66), rgba(28, 20, 22, 0.78));
-
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.26);
-
-  overflow: hidden;
-
+  border: 0;
+  background: transparent;
+  overflow: visible;
   transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease;
+    min-height 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 450ms ease;
+  text-decoration: none;
 }
 
-.card-aventura::before {
-  content: "";
+
+
+.card-aventura.card-aventura-aberto {
+  min-height: var(--altura-card-aberto);
+}
+
+.pergaminho-aventura {
   position: absolute;
-  width: 220px;
-  height: 220px;
-  right: -120px;
-  top: -130px;
-
-  border: 1px solid rgba(215, 163, 95, 0.16);
-  border-radius: 50%;
-
-  background: rgba(111, 61, 75, 0.1);
-
+  inset: 0;
+  z-index: auto;
   pointer-events: none;
 }
 
-.card-aventura:hover {
+.recorte-folha-aventura {
+  position: absolute;
+  top: 42px;
+  bottom: 42px;
+  left: 8%;
+  width: 84%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.pergaminho-folha {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.pergaminho-folha-ilustrada {
+  height: calc(var(--altura-card-aberto) - 76px);
+}
+
+.pergaminho-rolo {
+  position: absolute;
+  left: 50%;
+
+  width: 110%;
+  height: auto;
+  max-width: none;
+
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.pergaminho-rolo-superior {
+  top: 0;
+  z-index: 3;
+}
+
+.pergaminho-rolo-inferior {
+  bottom: 0;
+  z-index: 3;
+
+  
+}
+
+.card-aventura-disponivel:not(.card-aventura-em-foco):hover,
+.card-aventura-disponivel:not(.card-aventura-em-foco):focus-visible {
   transform: translateY(-4px);
-
-  border-color: var(--cor-ficha-borda-forte);
-
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
+  filter: brightness(1.04) drop-shadow(0 10px 7px rgba(0, 0, 0, 0.35));
 }
 
-.card-aventura-etiqueta {
-  position: relative;
-  width: fit-content;
-  margin: 0;
-  padding: 6px 10px;
+.corpo-pergaminho-aventura {
+  position: absolute;
+  top: 38px;
+  bottom: 38px;
+  left: 8%;
 
-  border: 1px solid rgba(154, 170, 117, 0.3);
-  border-radius: var(--raio-botao);
+  width: 84%;
+  padding: 0;
 
-  color: var(--cor-musgo);
-  background: rgba(154, 170, 117, 0.1);
-
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  overflow: hidden;
+  z-index: 2;
 }
 
-.card-aventura h3 {
-  position: relative;
-  margin: 18px 0 0;
+.layout-interno-aventura {
+  width: 100%;
+  height: 100%;
 
-  color: var(--cor-texto);
+  display: grid;
+  grid-template-columns: 52% 48%;
+
+  overflow: hidden;
+}
+
+.coluna-informacoes-aventura {
+  min-width: 0;
+  padding: 30px 12px 38px 24px;
+}
+
+.resumo-card-aventura {
+  position: relative;
+  z-index: 2;
+  padding: 0;
+}
+
+
+
+
+
+.card-aventura h2 {
+  position: relative;
+  margin: -10px 0 0;
+
+  color: #2d2017;
 
   font-family: var(--fonte-titulos);
   font-size: clamp(1.65rem, 2vw, 2rem);
+  font-weight: 700;
   line-height: 1;
 }
 
 .card-aventura-descricao {
   position: relative;
-  margin: 14px 0 0;
+  margin: 5px 0px 0px;
 
-  color: var(--cor-texto-suave);
-
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.card-aventura .botao {
-  position: relative;
-  min-height: 38px;
-  margin-top: auto;
-  padding: 8px 16px;
-
-  font-size: 0.86rem;
-}
-
-.botao-selecionar-aventura:disabled {
-  cursor: not-allowed;
-  opacity: 0.48;
-}
-
-.card-aventura:has(.botao-selecionar-aventura:disabled) {
-  transform: none;
-  opacity: 0.7;
-}
-
-/* =====================================================
-   Seleção de personagem
-   ===================================================== */
-
-.secao-selecao-personagem {
-  padding-top: 28px;
-  display: grid;
-  gap: 24px;
-
-  border-top: 1px solid var(--cor-linha);
-
-  scroll-margin-top: 100px;
-}
-
-.secao-selecao-personagem[hidden] {
-  display: none;
-}
-
-.cabecalho-selecao-personagem {
-  max-width: 680px;
-}
-
-.cabecalho-selecao-personagem h2 {
-  margin: 12px 0 0;
-
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  line-height: 1;
-}
-
-.cabecalho-selecao-personagem > p:not(.etiqueta) {
-  margin: 14px 0 0;
-
-  color: var(--cor-texto-suave);
-  line-height: 1.6;
-}
-
-.lista-personagens-aventura {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
-
-  gap: 18px;
-}
-
-/* =====================================================
-   Cards de personagens
-   ===================================================== */
-
-.card-personagem-aventura {
-  min-height: 210px;
-  padding: 22px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  border: 1px solid var(--cor-linha);
-  border-radius: var(--raio-card);
-
-  background: rgba(8, 7, 10, 0.58);
-
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
-}
-
-.card-personagem-aventura h3 {
-  margin: 0;
-
-  color: var(--cor-texto);
-
+  color: #3d2c20;
   font-family: var(--fonte-titulos);
-  font-size: 1.6rem;
-  line-height: 1;
-}
 
-.classe-personagem-aventura {
-  margin: 14px 0 0;
-
-  color: var(--cor-ambar);
-
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.especie-personagem-aventura {
-  margin: 8px 0 0;
-
-  color: var(--cor-texto-suave);
-
-  font-size: 0.86rem;
-}
-
-.card-personagem-aventura .botao {
-  min-height: 38px;
-  margin-top: auto;
-  padding: 8px 16px;
-
-  font-size: 0.84rem;
-}
-
-.aviso-sem-personagens {
-  margin: 0;
-
-  color: var(--cor-texto-suave);
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.42;
+  text-align: left;
+  text-justify: inter-word;
 }
 
 /* =====================================================
-   Responsividade
+   Conteúdo revelado dentro do pergaminho
    ===================================================== */
 
-@media (max-width: 620px) {
-  .pagina-aventuras-disponiveis {
-    padding-block: 24px 48px;
+.conteudo-expandido-aventura {
+  width: 100%;
+  margin-top: 8px;
+  padding-bottom: 38px;
 
-    gap: 24px;
-  }
+  display: grid;
+  gap: 10px;
 
-  .lista-aventuras {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  color: #49392b;
+}
+.divisor-ficha-aventura {
+  width: 100%;
+  height: 5px;
+  display: block;
+  background: url("assets/recursos/linha-carvao-suave.webp") center / 100% 4px no-repeat;
+  opacity: 0.72;
+}
 
-  .card-aventura {
-    min-height: 230px;
-    padding: 20px;
-  }
+.dados-card-aventura {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+
+.dados-card-aventura > div {
+  min-width: 0;
+}
+
+.dados-card-aventura dt {
+  color: #654326;
+  font-family: var(--fonte-interface);
+  font-size: 0.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.dados-card-aventura dd {
+  margin: 3px 0 0;
+  color: #2f2118;
+  font-family: var(--fonte-titulos);
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.15;
 }

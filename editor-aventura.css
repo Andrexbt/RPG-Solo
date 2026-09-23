@@ -115,7 +115,7 @@ button:disabled {
 .layout-editor-aventura {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
-  height: calc(100vh - 88px);
+  height: max(620px, calc(100vh - 248px));
   transition: grid-template-columns 0.25s ease;
 }
 .painel-editor {

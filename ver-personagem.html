@@ -9,53 +9,20 @@
     <link rel="stylesheet" href="detalhes-ficha.css" />
     <link rel="stylesheet" href="ver-personagem.css" />
 
+    <script src="acesso-area-mestre.js"></script>
+    <script src="site-shell.js" defer></script>
   </head>
 
-  <body>
+  <body class="site-com-rodape">
     <!-- =====================================================
          Cabeçalho da página
          ===================================================== -->
-    <header class="cabecalho-site">
-      <a class="marca" href="index.html">
-        <span class="marca-simbolo">✦</span>
-        <span>Projeto RPG Solo</span>
-      </a>
-
-      <nav class="menu-principal" aria-label="Navegação principal">
-        <a href="index.html">Início</a>
-        <a href="criacao-personagem.html">Criar personagem</a>
-        <a href="meus-personagens.html">Meus personagens</a>
-      </nav>
-    </header>
+    <header class="cabecalho-site" data-site-header></header>
 
     <main class="pagina-ver-personagem">
       <!-- =====================================================
            Ações da ficha salva
            ===================================================== -->
-      <section class="hero-ver-personagem">
-
-        <div class="conteudo-hero-ver">
-          <p class="etiqueta-pagina">Ficha salva</p>
-
-          <h1>Ficha do personagem</h1>
-
-          <p>
-            Consulte os dados completos do personagem, revise atributos, habilidades, ataques,
-            equipamentos e magias preparadas.
-          </p>
-
-          <div class="acoes-ficha-salva">
-            <a class="botao botao-secundario" href="meus-personagens.html">
-              Voltar para meus personagens
-            </a>
-
-            <button type="button" class="botao botao-principal" id="botaoBaixarPdfEditavel">
-              Baixar PDF editável
-            </button>
-          </div>
-        </div>
-      </section>
-
       <!-- =====================================================
            Ficha do personagem carregado do localStorage
            -----------------------------------------------------
@@ -63,21 +30,18 @@
            pelas funções compartilhadas de ficha-personagem.js.
            ===================================================== -->
       <section class="layout-ficha-salva">
+        <div class="cabecalho-ficha-salva">
+          <h1>Ficha do personagem</h1>
+          <div class="acoes-ficha-salva">
+            <a class="botao botao-secundario" href="meus-personagens.html">Voltar para meus personagens</a>
+            <button type="button" class="botao botao-principal" id="botaoBaixarPdfEditavel">Baixar PDF editável</button>
+          </div>
+        </div>
         <aside class="ficha-personagem-salva" data-ficha-personagem></aside>
       </section>
     </main>
 
-    <footer class="rodape-site">
-      <small lang="en">
-        This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by
-        Wizards of the Coast LLC, available at
-        <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1 is licensed under
-        the
-        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
-          Creative Commons Attribution 4.0 International License </a
-        >.
-      </small>
-    </footer>
+    <footer class="rodape-site" data-site-footer></footer>
 
     <!-- =====================================================
          Modal compartilhada de detalhes da ficha

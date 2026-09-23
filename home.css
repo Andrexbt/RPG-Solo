@@ -12,25 +12,6 @@
   font-size: 0.86rem;
 }
 
-.perfil-reservado {
-  flex: 0 0 auto;
-  padding: 14px 18px;
-  border: 4px solid #65462f;
-  border-radius: var(--raio-botao);
-  color: #f0c98f;
-  background: url("assets/recursos/textura-carvalho-escuro.webp") center / cover;
-  box-shadow:
-  inset 0 0 0 1px #a0784c,
-  inset 0 0 12px rgba(0, 0, 0, 0.6),
-  0 5px 12px rgba(0, 0, 0, 0.3);
-  font-size: var(--texto-pequeno);
-  font-weight: 700;
-  min-height: 66px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-}
-
 #tituloExperiencias {
   margin: 0 0 8px;
   text-align: center;
@@ -70,18 +51,6 @@
   height: auto;
   max-width: none;
   pointer-events: none;
-}
-
-.titulo-visualmente-oculto {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 .janela-home p,
@@ -448,12 +417,6 @@ a.atalho-home:focus-visible {
     0 14px 20px rgba(0, 0, 0, 0.48);
 }
 
-.marca-nome {
-  display: block;
-  width: 250px;
-  height: auto;
-  margin-left: 80px;
-}
 
 
 

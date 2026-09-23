@@ -5,47 +5,48 @@
 // internos do próprio site.
 // =====================================================
 
-document.addEventListener("DOMContentLoaded", function () {
-  const links = document.querySelectorAll("a[href]");
+document.addEventListener("click", function (evento) {
+  const link = evento.target.closest("a[href]");
 
-  links.forEach(function (link) {
-    link.addEventListener("click", function (evento) {
-      const href = link.getAttribute("href");
+  if (!link || evento.defaultPrevented) {
+    return;
+  }
 
-      if (href === null || href === "") {
-        return;
-      }
+  const href = link.getAttribute("href");
 
-      const ehAncoraDaMesmaPagina = href.startsWith("#");
-      const abreNovaAba = link.target === "_blank";
-      const ehDownload = link.hasAttribute("download");
-      const ehLinkExterno =
-        href.startsWith("http://") ||
-        href.startsWith("https://") ||
-        href.startsWith("mailto:") ||
-        href.startsWith("tel:");
-      const cliqueComAtalho =
-        evento.ctrlKey === true ||
-        evento.metaKey === true ||
-        evento.shiftKey === true ||
-        evento.altKey === true;
+  if (href === null || href === "") {
+    return;
+  }
 
-      if (
-        ehAncoraDaMesmaPagina === true ||
-        abreNovaAba === true ||
-        ehDownload === true ||
-        ehLinkExterno === true ||
-        cliqueComAtalho === true
-      ) {
-        return;
-      }
+  const ehAncoraDaMesmaPagina = href.startsWith("#");
+  const abreNovaAba = link.target === "_blank";
+  const ehDownload = link.hasAttribute("download");
+  const ehLinkExterno =
+    href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:");
 
-      evento.preventDefault();
-      document.body.classList.add("saindo-pagina");
+  const cliqueComAtalho =
+    evento.ctrlKey ||
+    evento.metaKey ||
+    evento.shiftKey ||
+    evento.altKey;
 
-      window.setTimeout(function () {
-        window.location.href = href;
-      }, 340);
-    });
-  });
+  if (
+    ehAncoraDaMesmaPagina ||
+    abreNovaAba ||
+    ehDownload ||
+    ehLinkExterno ||
+    cliqueComAtalho
+  ) {
+    return;
+  }
+
+  evento.preventDefault();
+  document.body.classList.add("saindo-pagina");
+
+  window.setTimeout(function () {
+    window.location.href = href;
+  }, 340);
 });

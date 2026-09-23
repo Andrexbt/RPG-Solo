@@ -12,10 +12,6 @@
 }
 
 /* =====================================================
-   Hero da página
-   ===================================================== */
-
-/* =====================================================
    Lista de personagens
    ===================================================== */
 
@@ -38,10 +34,15 @@
 .cabecalho-personagens {
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
   margin-bottom: 34px;
 }
 
-.cabecalho-personagens h2 {
+.cabecalho-personagens h1 {
   margin: 0;
   font-size: clamp(1.9rem, 3.8vw, 3.4rem);
   line-height: 1;

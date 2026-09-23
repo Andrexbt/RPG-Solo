@@ -10,20 +10,11 @@
     <script src="mensagens-narrativas.js" defer></script>
     <script src="narracao-combate.js" defer></script>
     <script src="editor-mensagens.js" defer></script>
+    <script src="site-shell.js" defer></script>
   </head>
 
-  <body>
-    <header class="cabecalho-site">
-      <a class="marca" href="area-mestre.html">
-        <span class="marca-simbolo">✦</span>
-        <span>Área do Mestre</span>
-      </a>
-
-      <nav class="menu-principal" aria-label="Navegação da Central de Textos">
-        <a href="area-mestre.html">Mesa de trabalho</a>
-        <a href="editor-mensagens.html" aria-current="page">Central de textos</a>
-      </nav>
-    </header>
+  <body class="site-com-rodape">
+    <header class="cabecalho-site" data-site-header></header>
 
     <main class="central-textos">
       <header class="cabecalho-central-textos">
@@ -101,5 +92,6 @@
         aria-label="Mensagens catalogadas"
       ></section>
     </main>
+    <footer class="rodape-site" data-site-footer></footer>
   </body>
 </html>

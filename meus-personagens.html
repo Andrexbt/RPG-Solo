@@ -17,47 +17,20 @@
     <link rel="stylesheet" href="meus-personagens.css" />
 
     <script src="transicoes-paginas.js" defer></script>
+    <script src="acesso-area-mestre.js"></script>
+    <script src="site-shell.js" defer></script>
   </head>
 
-  <body>
-    <header class="cabecalho-site">
-      <a class="marca" href="index.html">
-        <span class="marca-simbolo">✦</span>
-        <span>Projeto RPG Solo</span>
-      </a>
-
-      <nav class="menu-principal" aria-label="Navegação principal">
-        <a href="index.html">Início</a>
-        <a href="criacao-personagem.html">Criar personagem</a>
-        <a href="meus-personagens.html">Meus personagens</a>
-      </nav>
-    </header>
+  <body class="site-com-rodape">
+    <header class="cabecalho-site" data-site-header></header>
 
     <main class="pagina-personagens">
-      <section class="hero-personagens">
-
-        <div class="conteudo-hero-personagens">
-          <p class="etiqueta-pagina">Arquivo de personagens</p>
-
-          <h1>Meus personagens</h1>
-
-          <p>
-            Consulte as fichas criadas, acompanhe os principais dados de cada personagem e acesse a
-            ficha completa quando quiser continuar.
-          </p>
-
-          <a class="botao botao-principal" href="criacao-personagem.html">
-            Criar novo personagem
-          </a>
-        </div>
-      </section>
-
       <section class="secao-lista-personagens">
         <div class="cabecalho-personagens">
           <div>
-            <p class="etiqueta-secao">Biblioteca</p>
-            <h2>Personagens salvos</h2>
+            <h1>Meus personagens</h1>
           </div>
+          <a class="botao botao-principal" href="criacao-personagem.html">Criar novo personagem</a>
         </div>
 
         <section id="listaPersonagens" class="lista-personagens">
@@ -66,17 +39,7 @@
       </section>
     </main>
 
-    <footer class="rodape-site">
-      <small lang="en">
-        This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by
-        Wizards of the Coast LLC, available at
-        <a href="https://www.dndbeyond.com/srd">D&amp;D Beyond</a>. The SRD 5.2.1 is licensed under
-        the
-        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">
-          Creative Commons Attribution 4.0 International License </a
-        >.
-      </small>
-    </footer>
+    <footer class="rodape-site" data-site-footer></footer>
 
     <script src="banco-equipamentos.js"></script>
     <script src="regras-equipamentos.js"></script>

@@ -5,10 +5,6 @@
   padding: clamp(28px, 4vw, 64px) var(--margem-pagina) 72px;
 }
 
-.cabecalho-area-mestre [aria-current="page"] {
-  color: var(--cor-ambar);
-}
-
 .apresentacao-area-mestre {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);

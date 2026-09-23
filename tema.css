@@ -85,63 +85,25 @@ body {
   background: transparent;
 }
 
-/* =====================================================
-   Cabeçalhos das páginas de personagem
-   -----------------------------------------------------
-   Compartilhado pela biblioteca e pela ficha salva.
-   ===================================================== */
+.site-com-rodape {
+  display: flex;
+  flex-direction: column;
+}
 
-.hero-personagens,
-.hero-ver-personagem {
-  position: relative;
-  min-height: 42vh;
-  padding: clamp(44px, 5vw, 68px) max(28px, calc((100vw - var(--largura-conteudo)) / 2));
-  display: grid;
-  align-items: center;
+.site-com-rodape > main {
+  flex: 1 0 auto;
+}
+
+.titulo-visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-}
-
-.conteudo-hero-personagens,
-.conteudo-hero-ver {
-  position: relative;
-  z-index: 2;
-  max-width: 760px;
-}
-
-.conteudo-hero-personagens::before,
-.conteudo-hero-ver::before {
-  content: "";
-  display: block;
-  width: 42px;
-  height: 4px;
-  margin-bottom: 16px;
-  border-radius: 999px;
-  background: rgba(255, 248, 235, 0.28);
-}
-
-.conteudo-hero-personagens h1,
-.conteudo-hero-ver h1 {
-  margin: 0;
-  font-size: clamp(2.25rem, 4.8vw, 4.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.065em;
-}
-
-.conteudo-hero-personagens p:not(.etiqueta-pagina),
-.conteudo-hero-ver p:not(.etiqueta-pagina) {
-  max-width: 620px;
-  margin: 20px 0 28px;
-  color: rgba(246, 234, 215, 0.76);
-  font-size: 1rem;
-  line-height: 1.65;
-}
-
-@media (max-width: 820px) {
-  .hero-personagens,
-  .hero-ver-personagem {
-    min-height: auto;
-    padding: 48px 18px 72px;
-  }
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 main,
@@ -210,7 +172,6 @@ h2,
 }
 
 /* Títulos temáticos específicos do projeto */
-.conteudo-hero-criacao h1,
 .conteudo-passo > h2,
 .conteudo-passo > h3,
 .ficha-cabecalho h2,
@@ -280,18 +241,30 @@ textarea {
   min-width: 0;
 }
 
-.marca span:last-child {
-  white-space: nowrap;
+.marca-nome {
+  display: block;
+  width: 250px;
+  height: auto;
+  margin-left: 80px;
 }
 
-.marca-simbolo {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-  color: #1a1212;
-  background: linear-gradient(135deg, var(--cor-ambar), var(--cor-coral));
+.perfil-reservado {
+  flex: 0 0 auto;
+  padding: 14px 18px;
+  border: 4px solid #65462f;
+  border-radius: var(--raio-botao);
+  color: #f0c98f;
+  background: url("assets/recursos/textura-carvalho-escuro.webp") center / cover;
+  box-shadow:
+    inset 0 0 0 1px #a0784c,
+    inset 0 0 12px rgba(0, 0, 0, 0.6),
+    0 5px 12px rgba(0, 0, 0, 0.3);
+  font-size: var(--texto-pequeno);
+  font-family: var(--fonte-interface);
+  font-weight: 700;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
 }
 
 .menu-principal {
@@ -353,6 +326,7 @@ textarea {
   border: 0;
   background: #000;
   color: #d9d0c4;
+  font-family: var(--fonte-interface);
 }
 
 .rodape-conteudo {
@@ -395,6 +369,10 @@ textarea {
   border-top: 1px solid #2b2928;
   color: #8c8175;
   font-size: 0.78rem;
+}
+
+.rodape-inferior a {
+  color: inherit;
 }
 
 @media (max-width: 700px) {
@@ -536,9 +514,6 @@ textarea {
    ===================================================== */
 
 .hero,
-.hero-criacao,
-.hero-personagens,
-.hero-ver-personagem,
 .jornada-home,
 .secao-jornada,
 .secao-criador,
