@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(48px, 5.5vw, 76px) max(28px, calc((100vw - var(--largura-conteudo)) / 2)) 96px;
+  padding: 28px max(28px, calc((100vw - var(--largura-conteudo)) / 2)) 48px;
   margin: 0;
 }
 
@@ -39,28 +39,17 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
-  margin-bottom: 32px;
+  margin-bottom: 18px;
 }
 
 .cabecalho-ficha-salva h1 {
   margin: 0;
 }
 
-.layout-ficha-salva::before {
-  content: "";
-  position: absolute;
-  left: max(28px, calc((100vw - var(--largura-conteudo)) / 2));
-  top: 64px;
-  width: 1px;
-  height: calc(100% - 128px);
-  background: linear-gradient(to bottom, transparent, rgba(255, 248, 235, 0.22), transparent);
-  opacity: 0.65;
-}
-
 .ficha-personagem-salva {
   position: relative;
   z-index: 2;
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
 }
 
@@ -73,29 +62,371 @@
   font-weight: bold;
 }
 
-/* =====================================================
-   Responsivo
-   ===================================================== */
+.ficha-organizada-em-paineis {
+  width: 100%;
+}
 
-@media (max-width: 800px) {
-  .layout-ficha-salva {
-    padding: 56px 18px 72px;
+.ficha-organizada-em-paineis .ficha-componente,
+.ficha-organizada-em-paineis .ficha-corpo,
+.ficha-organizada-em-paineis .ficha {
+  width: 100%;
+  max-width: none;
+}
+
+.ficha-organizada-em-paineis .ficha {
+  margin: 0;
+}
+
+.ficha-organizada-em-paineis .ficha-moldura {
+  display: none;
+}
+
+.ficha-organizada-em-paineis .ficha-conteudo-rolavel {
+  position: relative;
+  padding: 12px;
+  box-sizing: border-box;
+
+  overflow: visible;
+
+  border: 8px solid #65462f;
+  border-radius: 8px;
+
+  background:
+    url("assets/recursos/textura-carvalho-escuro.webp")
+    center / cover;
+
+  box-shadow:
+    inset 0 0 0 2px #a0784c,
+    inset 0 0 20px rgba(0, 0, 0, 0.68),
+    0 12px 28px rgba(0, 0, 0, 0.42);
+}
+
+.ficha-organizada-em-paineis .ficha-conteudo-rolavel::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: 4;
+
+  border-radius: 8px;
+  pointer-events: none;
+
+  opacity: 0.9;
+
+  background:
+    radial-gradient(
+      ellipse 95px 1.4px at 14% 2px,
+      #d3a16bb3,
+      transparent
+    ) top / 100% 8px no-repeat,
+
+    radial-gradient(
+      ellipse 135px 1.4px at 45% 5px,
+      #160b0980,
+      transparent
+    ) top / 100% 8px no-repeat,
+
+    radial-gradient(
+      ellipse 110px 1.4px at 76% 3px,
+      #c28d58b3,
+      transparent
+    ) bottom / 100% 8px no-repeat,
+
+    radial-gradient(
+      ellipse 1.4px 100px at 2px 30%,
+      #d3a16b80,
+      transparent
+    ) left / 8px 100% no-repeat,
+
+    radial-gradient(
+      ellipse 1.4px 110px at 6px 70%,
+      #170c0980,
+      transparent
+    ) right / 8px 100% no-repeat;
+}
+
+.ficha-organizada-em-paineis .ficha-papel {
+  position: relative;
+  width: 100%;
+  height: 693px;
+  min-height: 693px;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns:
+    305px
+    296px
+    minmax(0, 1fr);
+  grid-template-areas:
+    "basico atributos dinamicos";
+  gap: 12px;
+
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.painel-ficha-basico {
+  grid-area: basico;
+  align-self: start;
+  height: auto;
+}
+
+.painel-ficha-basico:not(.painel-ficha-em-foco) .painel-ficha-conteudo {
+  height: auto;
+}
+
+.painel-ficha-atributos {
+  grid-area: atributos;
+}
+
+.coluna-paineis-dinamicos {
+  grid-area: dinamicos;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows:
+    minmax(0, 2fr)
+    minmax(82px, 0.8fr)
+    minmax(82px, 0.8fr)
+    minmax(76px, 0.65fr);
+  grid-template-areas:
+    "equipamentos habilidades"
+    "magias magias"
+    "diario diario"
+    "conquistas estatisticas";
+  gap: 10px;
+}
+
+.painel-ficha-equipamentos {
+  grid-area: equipamentos;
+}
+
+.painel-ficha-habilidades-talentos {
+  grid-area: habilidades;
+}
+
+.painel-ficha-grimorio {
+  grid-area: magias;
+}
+
+.painel-ficha-diario {
+  grid-area: diario;
+}
+
+.painel-ficha-conquistas {
+  grid-area: conquistas;
+}
+
+.painel-ficha-estatisticas {
+  grid-area: estatisticas;
+}
+
+.painel-ficha-fragmento {
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+  padding: 4px;
+
+  overflow: hidden;
+
+  border: 0;
+  border-radius: 2px;
+
+
+  color: #3d2a1f;
+
+  background:
+    linear-gradient(
+      rgba(255, 250, 226, 0.05),
+      rgba(102, 59, 27, 0.04)
+    ),
+    url("assets/recursos/moldura-ficha/papel.webp")
+      center top / 100% auto repeat-y;
+  background-color: #ead7a9;
+
+  box-shadow: inset 0 8px 18px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.painel-ficha-basico:not(.painel-ficha-em-foco) {
+  align-self: start;
+  height: fit-content;
+}
+
+.painel-ficha-basico:not(.painel-ficha-em-foco)
+  > .painel-ficha-conteudo {
+  height: fit-content;
+}
+
+.painel-ficha-fragmento:hover {
+  filter: brightness(1.035);
+}
+
+.painel-ficha-cabecalho {
+  position: relative;
+  z-index: 2;
+
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+
+  background:
+    url("assets/recursos/linha-carvao-suave.webp")
+    left bottom / 100% 3px no-repeat;
+}
+
+.painel-ficha-cabecalho h2 {
+  margin: 0;
+
+  color: #4b2d1b;
+
+  font-family: "IM Fell English", serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.painel-ficha-conteudo {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.painel-ficha-conteudo > .ficha-bloco {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 10px;
+}
+
+.painel-ficha-fragmento:is(
+    .painel-ficha-basico,
+    .painel-ficha-atributos,
+    .painel-ficha-equipamentos,
+    .painel-ficha-habilidades-talentos,
+    .painel-ficha-grimorio
+  )
+  > .painel-ficha-cabecalho {
+  display: none;
+}
+
+.botao-alternar-painel-ficha {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+body.painel-ficha-esta-aberto {
+  overflow: hidden;
+}
+
+.pagina-ver-personagem::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(5, 4, 6, 0.58);
+  backdrop-filter: blur(1.5px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 220ms ease,
+    visibility 0s linear 220ms;
+}
+
+body.painel-ficha-esta-aberto .pagina-ver-personagem::after {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+body.painel-ficha-esta-aberto .ficha-personagem-salva {
+  z-index: 1001;
+}
+
+.painel-ficha-fragmento.painel-ficha-em-foco {
+  position: fixed;
+  top: 112px;
+  left: 50%;
+  z-index: 1002;
+  width: min(1060px, calc(100vw - 64px));
+  height: calc(100vh - 150px);
+  padding: 14px;
+  overflow: hidden;
+  cursor: default;
+  transform: translateX(-50%);
+  animation: abrir-painel-ficha 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.62);
+}
+
+.painel-ficha-fragmento.painel-ficha-fechando {
+  animation: fechar-painel-ficha 260ms ease both;
+}
+
+.painel-ficha-fragmento.painel-ficha-em-foco .painel-ficha-conteudo {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.painel-ficha-fragmento.painel-ficha-em-foco
+  .painel-ficha-conteudo
+  > .ficha-bloco {
+  width: min(900px, 100%);
+  margin-inline: auto;
+}
+
+.painel-ficha-fragmento.painel-ficha-em-foco
+  .botao-alternar-painel-ficha {
+  inset: 10px 10px auto auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(92, 55, 30, 0.46);
+  border-radius: 50%;
+  color: #4b2d1b;
+  background: rgba(246, 228, 187, 0.78);
+  font-size: 0;
+}
+
+.painel-ficha-fragmento.painel-ficha-em-foco
+  .botao-alternar-painel-ficha::before {
+  content: "×";
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+@keyframes abrir-painel-ficha {
+  from {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(0.94);
   }
-
-  .layout-ficha-salva::before {
-    left: 18px;
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
   }
+}
 
-  .acoes-ficha-salva {
-    flex-direction: column;
+@keyframes fechar-painel-ficha {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
   }
-
-  .acoes-ficha-salva .botao {
-    width: 100%;
+  to {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.94);
   }
-
-  .area-ficha-personagem {
-    grid-template-columns: 1fr;
-  }
-
 }

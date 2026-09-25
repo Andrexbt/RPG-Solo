@@ -370,7 +370,237 @@ function preencherFichaPersonagem(personagem) {
   const raizFicha = document.querySelector("[data-ficha-personagem]");
 
   window.FichaPersonagem.renderizar(personagem, raizFicha);
+  organizarFichaEmPaineis();
 }
+
+function criarPainelFicha(tipo, titulo, secoes) {
+  const painel = document.createElement("article");
+  painel.className = `painel-ficha-fragmento painel-ficha-${tipo}`;
+  painel.dataset.painelFicha = tipo;
+
+  const botaoAlternar = document.createElement("button");
+  botaoAlternar.type = "button";
+  botaoAlternar.className = "botao-alternar-painel-ficha";
+  botaoAlternar.setAttribute("aria-expanded", "false");
+  botaoAlternar.setAttribute("aria-label", `Abrir ${titulo}`);
+
+  const cabecalho = document.createElement("header");
+  cabecalho.className = "painel-ficha-cabecalho";
+
+  const tituloElemento = document.createElement("h2");
+  tituloElemento.textContent = titulo;
+
+  const conteudo = document.createElement("div");
+  conteudo.className = "painel-ficha-conteudo";
+
+  for (const secao of secoes) {
+    if (secao !== null) {
+      conteudo.append(secao);
+    }
+  }
+
+  cabecalho.append(tituloElemento);
+  painel.append(botaoAlternar, cabecalho, conteudo);
+
+  return painel;
+}
+
+function organizarFichaEmPaineis() {
+  const raizFicha = document.querySelector("[data-ficha-personagem]");
+  const papelFicha = raizFicha?.querySelector(".ficha-papel");
+
+  if (papelFicha === null || papelFicha === undefined) {
+    return;
+  }
+
+  const informacoesBasicas = papelFicha.querySelector(
+    '[data-secao-ficha="informacoes-basicas"]',
+  );
+
+  const resumoCombate = papelFicha.querySelector(
+    '[data-secao-ficha="resumo-combate"]',
+  );
+
+  const atributos = papelFicha.querySelector(
+    '[data-secao-ficha="atributos"]',
+  );
+
+  const equipamentos = papelFicha.querySelector(
+    '[data-secao-ficha="equipamentos"]',
+  );
+
+  const habilidades = papelFicha.querySelector(
+    '[data-secao-ficha="habilidades"]',
+  );
+
+  const talentos = papelFicha.querySelector(
+    '[data-secao-ficha="talentos"]',
+  );
+
+  const magias = papelFicha.querySelector(
+    '[data-secao-ficha="magias"]',
+  );
+
+  const painelBasico = criarPainelFicha(
+    "basico",
+    "Informações básicas",
+    [informacoesBasicas, resumoCombate],
+  );
+
+  const painelAtributos = criarPainelFicha(
+    "atributos",
+    "Atributos e perícias",
+    [atributos],
+  );
+
+  const painelEquipamentos = criarPainelFicha(
+    "equipamentos",
+    "Equipamentos",
+    [equipamentos],
+  );
+
+  const painelHabilidadesTalentos = criarPainelFicha(
+    "habilidades-talentos",
+    "Habilidades e talentos",
+    [habilidades, talentos],
+  );
+
+  const painelGrimorio = criarPainelFicha(
+    "grimorio",
+    "Grimório",
+    [magias],
+  );
+
+  const painelDiario = criarPainelFicha(
+    "diario",
+    "Diário",
+    [],
+  );
+
+  const mensagemDiario = document.createElement("p");
+  mensagemDiario.className = "mensagem-diario-vazio";
+  mensagemDiario.textContent =
+    "Este personagem ainda não possui acontecimentos registrados.";
+
+  painelDiario
+    .querySelector(".painel-ficha-conteudo")
+    .append(mensagemDiario);
+
+  const painelConquistas = criarPainelFicha(
+    "conquistas",
+    "Conquistas",
+    [],
+  );
+
+  const mensagemConquistas = document.createElement("p");
+  mensagemConquistas.className = "mensagem-painel-vazio";
+  mensagemConquistas.textContent =
+    "Este personagem ainda não possui conquistas.";
+
+  painelConquistas
+    .querySelector(".painel-ficha-conteudo")
+    .append(mensagemConquistas);
+
+  const painelEstatisticas = criarPainelFicha(
+    "estatisticas",
+    "Estatísticas",
+    [],
+  );
+
+  const mensagemEstatisticas = document.createElement("p");
+  mensagemEstatisticas.className = "mensagem-painel-vazio";
+  mensagemEstatisticas.textContent =
+    "As estatísticas do personagem aparecerão aqui.";
+
+  painelEstatisticas
+    .querySelector(".painel-ficha-conteudo")
+    .append(mensagemEstatisticas);
+
+  const colunaDinamica = document.createElement("div");
+  colunaDinamica.className = "coluna-paineis-dinamicos";
+  colunaDinamica.append(
+    painelEquipamentos,
+    painelHabilidadesTalentos,
+    painelGrimorio,
+    painelDiario,
+    painelConquistas,
+    painelEstatisticas,
+  );
+
+  papelFicha.replaceChildren(
+    painelBasico,
+    painelAtributos,
+    colunaDinamica,
+  );
+
+  raizFicha.classList.add("ficha-organizada-em-paineis");
+  instalarInteracoesPaineisFicha(raizFicha);
+}
+
+let painelFichaEmFoco = null;
+let temporizadorFechamentoPainel = null;
+
+function fecharPainelFicha() {
+  if (painelFichaEmFoco === null) {
+    return;
+  }
+
+  const painel = painelFichaEmFoco;
+  const botao = painel.querySelector(".botao-alternar-painel-ficha");
+
+  painelFichaEmFoco = null;
+  painel.classList.add("painel-ficha-fechando");
+  botao?.setAttribute("aria-expanded", "false");
+  botao?.setAttribute("aria-label", `Abrir ${painel.querySelector("h2, h3")?.textContent ?? "painel"}`);
+  document.body.classList.remove("painel-ficha-esta-aberto");
+
+  window.clearTimeout(temporizadorFechamentoPainel);
+  temporizadorFechamentoPainel = window.setTimeout(function () {
+    painel.classList.remove("painel-ficha-em-foco", "painel-ficha-fechando");
+  }, 260);
+}
+
+function abrirPainelFicha(painel) {
+  if (painelFichaEmFoco !== null || painel === null) {
+    return;
+  }
+
+  painelFichaEmFoco = painel;
+
+  const botao = painel.querySelector(".botao-alternar-painel-ficha");
+  const titulo = painel.querySelector("h2, h3")?.textContent ?? "painel";
+
+  painel.classList.add("painel-ficha-em-foco");
+  botao?.setAttribute("aria-expanded", "true");
+  botao?.setAttribute("aria-label", `Fechar ${titulo}`);
+  document.body.classList.add("painel-ficha-esta-aberto");
+  botao?.focus({ preventScroll: true });
+}
+
+function instalarInteracoesPaineisFicha(raizFicha) {
+  raizFicha.addEventListener("click", function (evento) {
+    const botao = evento.target.closest(".botao-alternar-painel-ficha");
+
+    if (botao === null) {
+      return;
+    }
+
+    const painel = botao.closest(".painel-ficha-fragmento");
+
+    if (painel === painelFichaEmFoco) {
+      fecharPainelFicha();
+      return;
+    }
+
+    abrirPainelFicha(painel);
+  });
+}
+
+document.addEventListener("keydown", function (evento) {
+  if (evento.key === "Escape" && painelFichaEmFoco) {
+    fecharPainelFicha();
+  }
+});
 
 // =====================================================
 // 5. Combate, espécie e valores derivados
